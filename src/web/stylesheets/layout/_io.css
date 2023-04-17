@@ -17,6 +17,11 @@
     user-select: auto;
 }
 
+#input .cm-scroller:hover,
+#output .cm-scroller:hover {
+    cursor: pointer;
+}
+
 #output-text.html-output .cm-content,
 #output-text.html-output .cm-line,
 #output-html {

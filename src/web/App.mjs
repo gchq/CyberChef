@@ -642,7 +642,7 @@ class App {
 
 
     /**
-     * Sets the compile message.
+     * Sets the compile message ( "notice" in #banner ).
      */
     setCompileMessage() {
         // Display time since last build and compile message

@@ -198,7 +198,7 @@
                          data-help="<p>The Operations list contains all the operations in CyberChef arranged into categories. Some operations may be present in multiple categories. You can search for operations using the search box.</p><p>To use an operation, either double click it, or drag it into the Recipe pane. You will then be able to configure its arguments (or 'Ingredients' in CyberChef terminology).</p>">
                         Operations
 
-<!--@TODO: this should just be removed, however that currently breaks some code-->
+                        <!--@TODO: this should just be removed, however that currently breaks some code-->
                         <span class="pane-controls hide-on-maximised-output">
                             <button type="button"
                                     class="btn btn-warning bmd-btn-icon"
@@ -207,7 +207,15 @@
                                     title="Edit favourites">
                                 <i class="material-icons">star</i>
                             </button>
+
+                            <button type="button"
+                                    class="btn bmd-btn-icon mobile-only hidden"
+                                    id="reset-operations"
+                                    title="Reset operations">
+                                <i class="material-icons">close</i>
+                            </button>
                         </span>
+
                     </div>
                     <div class="foo">
                         <input id="search"
@@ -220,8 +228,8 @@
                                data-help="<p>Use the search box to find useful operations.</p><p>Both operation names and descriptions are queried using a fuzzy matching algorithm.</p>"
                         />
                         <!--operation list and categories-->
-                        <ul id="search-results" class="op-list"></ul>
-                        <div id="categories" class="panel-group no-select"></div>
+                        <ul id="search-results" class="op-list hidden"></ul>
+                        <div id="categories" class="panel-group no-select hidden"></div>
                     </div>
                 </div>
 
@@ -243,31 +251,9 @@
                     </div>
                     <!--selected recipes list-->
                     <ul id="rec-list" class="list-area no-select"></ul>
-
-                    <!--controls-->
-                    <div id="controls" class="no-select hide-on-maximised-output">
-                        <div id="controls-content">
-                            <button type="button" class="mx-2 btn btn-lg btn-secondary" id="step" data-toggle="tooltip" title="Step through the recipe" data-help-title="Stepping through the Recipe" data-help="<p>The Step button allows you to execute one operation at a time, rather than running the whole Recipe from beginning to end.</p><p>Step allows you to inspect the data at each stage of the Recipe and understand what is being passed to the next operation.</p>">
-                                Step
-                            </button>
-
-                            <button type="button" class="mx-2 btn btn-lg btn-success btn-raised btn-block" id="bake" data-help-title="Baking" data-help="<p>Baking causes CyberChef to run the Recipe against your data. This involves three steps:</p><ol><li>The data in the Input is encoded into bytes using the character encoding selected in the Input status bar.</li><li>The data is run through each of the operations in the Recipe in turn with the output of one operation being fed into the next operation as its input.</li><li>The outcome of the final operation in the Recipe is decoded into Output text using the character encoding selected in the Output status bar.</li></ol><p>If there are multiple Inputs, the Bake button causes every Input to be baked simultaneously.</p>">
-                                <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/>
-                                <span>Bake!</span>
-                            </button>
-
-                            <div class="form-group" style="display: contents;">
-                                <div class="mx-1 checkbox" data-help-title="Auto-bake" data-help="<p>When Auto-bake is turned on, CyberChef will bake the Input using the Recipe whenever anything in the Input or Recipe changes.</p>This includes:<ul><li>Adding or removing operations</li><li>Modifying operation arguments</li><li>Editing the Input</li><li>Changing the Input character encoding</li></ul><p>If there are multiple inputs, only the currently active tab will be baked when Auto-bake triggers. You can bake all inputs manually using the Bake button.</p>">
-                                    <label id="auto-bake-label">
-                                        <input type="checkbox" checked="checked" id="auto-bake">
-                                        <br>Auto Bake
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
+                <!--IO: input/output-->
                 <div id="IO">
 
                     <!--input-->
@@ -389,6 +375,29 @@
                                     <object id="bombe" data="<%- require('../static/images/bombe.svg') %>" width="100%" height="100%" data-help-title="Loading animation" data-help="This loading animation shows an accurate representation of how rotors moved on The Bombe, an electro-mechanical device built at Bletchley Park in 1939 by Alan Turing with refinements by Gordon Welchman in 1940. The Bombe was used by the Government Code and Cipher School (the precursor to GCHQ) to discover daily settings of Enigma machines used by the German military in World War 2.<br><br>More information can be found on <a href='https://wikipedia.org/wiki/Bombe'>Wikipedia</a>."></object>
                                 </div>
                                 <div class="loading-msg"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--controls-->
+                <div id="controls" class="no-select hide-on-maximised-output">
+                    <div id="controls-content">
+                        <button type="button" class="mx-2 btn btn-lg btn-secondary" id="step" data-toggle="tooltip" title="Step through the recipe" data-help-title="Stepping through the Recipe" data-help="<p>The Step button allows you to execute one operation at a time, rather than running the whole Recipe from beginning to end.</p><p>Step allows you to inspect the data at each stage of the Recipe and understand what is being passed to the next operation.</p>">
+                            Step
+                        </button>
+
+                        <button type="button" class="mx-2 btn btn-lg btn-success btn-raised btn-block" id="bake" data-help-title="Baking" data-help="<p>Baking causes CyberChef to run the Recipe against your data. This involves three steps:</p><ol><li>The data in the Input is encoded into bytes using the character encoding selected in the Input status bar.</li><li>The data is run through each of the operations in the Recipe in turn with the output of one operation being fed into the next operation as its input.</li><li>The outcome of the final operation in the Recipe is decoded into Output text using the character encoding selected in the Output status bar.</li></ol><p>If there are multiple Inputs, the Bake button causes every Input to be baked simultaneously.</p>">
+                            <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/>
+                            <span>Bake!</span>
+                        </button>
+
+                        <div class="form-group" style="display: contents;">
+                            <div class="mx-1 checkbox" data-help-title="Auto-bake" data-help="<p>When Auto-bake is turned on, CyberChef will bake the Input using the Recipe whenever anything in the Input or Recipe changes.</p>This includes:<ul><li>Adding or removing operations</li><li>Modifying operation arguments</li><li>Editing the Input</li><li>Changing the Input character encoding</li></ul><p>If there are multiple inputs, only the currently active tab will be baked when Auto-bake triggers. You can bake all inputs manually using the Bake button.</p>">
+                                <label id="auto-bake-label">
+                                    <input type="checkbox" checked="checked" id="auto-bake">
+                                    <br>Auto Bake
+                                </label>
                             </div>
                         </div>
                     </div>

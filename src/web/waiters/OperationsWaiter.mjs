@@ -28,6 +28,25 @@ class OperationsWaiter {
         this.removeIntent = false;
     }
 
+    /**
+     * Toggle element visibility
+     *
+     * @param {HTMLElement} elm
+     * @param {boolean} isVisible
+     *
+     * @TODO: this is pretty generic so probably move it ( to manager? )
+     */
+    isVisible( elm, isVisible ){
+        if ( isVisible ) {
+            if ( elm.classList.contains("hidden")) {
+                elm.classList.remove("hidden");
+            }
+        } else if ( isVisible === false ) {
+            if ( !elm.classList.contains("hidden")){
+                elm.classList.add("hidden");
+            }
+        }
+    }
 
     /**
      * Handler for search events.
@@ -36,7 +55,31 @@ class OperationsWaiter {
      * @param {event} e
      */
     searchOperations(e) {
-        let ops, selected;
+        let ops, selected, categories, hideOperations, searchResults;
+
+        if (e.type === "click" && !e.target.value.length){
+            categories = document.getElementById("categories");
+            hideOperations = document.getElementById("reset-operations");
+            searchResults = document.getElementById("search-results" );
+
+            this.isVisible(categories, true);
+            this.isVisible(hideOperations, true);
+        }
+
+        if (e.type === "keyup"){
+            categories = document.getElementById("categories");
+            hideOperations = document.getElementById("reset-operations");
+            searchResults = document.getElementById("search-results" );
+
+            if ( e.target.value.length === 0 ) {
+                this.isVisible(categories, true);
+                this.isVisible(hideOperations, true);
+            } else {
+                this.isVisible(categories, false );
+                this.isVisible(searchResults, true );
+                this.isVisible(hideOperations, true );
+            }
+        }
 
         if (e.type === "search" || e.keyCode === 13) { // Search or Return
             e.preventDefault();
@@ -269,6 +312,27 @@ class OperationsWaiter {
         $("#favourites-modal").modal();
     }
 
+
+    /**
+     * Hide any operation lists ( #categories or #search-results ) and the close button on click
+     */
+    resetOperationsClick(){
+        let search, categories, searchResults, resetOperations;
+
+        search = document.getElementById("search");
+        categories = document.getElementById( "categories");
+        searchResults = document.getElementById( "search-results");
+        resetOperations = document.getElementById("reset-operations");
+
+        // if any input remains in #search, clear it
+        if (search.value.length) {
+            search.value = '';
+        }
+
+        this.isVisible(categories, false );
+        this.isVisible(searchResults, false );
+        this.isVisible(resetOperations, false );
+    }
 
     /**
      * Handler for save favourites click events.
