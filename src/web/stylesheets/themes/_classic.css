@@ -36,6 +36,7 @@
     --banner-font-colour: #468847;
     --banner-bg-colour: #dff0d8;
     --banner-url-colour: #1976d2;
+    --banner-height: 40px;
 
     --category-list-font-colour: #1976d2;
 
@@ -133,3 +134,4 @@
     --input-highlight-colour: #1976d2;
     --input-border-colour: #424242;
 }
+

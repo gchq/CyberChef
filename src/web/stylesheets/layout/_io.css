@@ -405,8 +405,9 @@
 .ͼ2 .cm-panels,
 .ͼ2 .cm-side-panels {
     background-color: var(--secondary-background-colour);
-    border-color: var(--primary-border-colour);
+    /*border-color: var(--primary-border-colour);*/
     color: var(--primary-font-colour);
+    border-bottom: 1px solid var(--primary-border-colour);
 }
 
 .cm-status-bar {

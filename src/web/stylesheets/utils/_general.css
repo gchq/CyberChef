@@ -86,3 +86,14 @@ body {
 .hl3 { background-color: var(--hl3); } /* Half-Life 3 confirmed :O */
 .hl4 { background-color: var(--hl4); }
 .hl5 { background-color: var(--hl5); }
+
+/* Device bound UI visibility */
+.desktop-only {
+    display: none;
+}
+
+@media only screen and ( min-width: 768px ) {
+    .desktop-only {
+        display: inline-block;
+    }
+}

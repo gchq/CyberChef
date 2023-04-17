@@ -8,13 +8,14 @@
 
 #banner {
     position: absolute;
-    height: 40px;
+    height: var(--banner-height);
     width: 100%;
-    line-height: 40px;
+    line-height: var(--banner-height);
     border-bottom: 1px solid var(--primary-border-colour);
     color: var(--banner-font-colour);
     background-color: var(--banner-bg-colour);
     margin: 0;
+    /* flex is applied through .row */
     justify-content: space-between;
 }
 
