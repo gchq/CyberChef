@@ -7,7 +7,7 @@
  */
 
 .operation {
-    cursor: pointer;
+    cursor: grab;
     padding: 10px;
     list-style-type: none;
     position: relative;
@@ -16,12 +16,6 @@
     border-top: none;
     border-left: none;
     border-right: none;
-}
-
-@media only screen and ( min-width: 768px ) {
-    .operation {
-        cursor: grab;
-    }
 }
 
 #rec-list .operation {
