@@ -252,9 +252,6 @@ class App {
      * @fires Manager#oplistcreate
      */
     populateOperationsList() {
-        // Move edit button away before we overwrite it
-        document.body.appendChild(document.getElementById("edit-favourites"));
-
         let html = "";
         let i;
 

@@ -179,21 +179,26 @@
                         <span class="desktop-only">About / Support</span>
                         <i class="material-icons">help</i>
                     </a>
-<!--                    @TODO:-->
-<!--                    <button type="button" class="btn btn-warning bmd-btn-icon" id="edit-favourites" data-toggle="tooltip" title="Edit favourites">-->
-<!--                        <i class="material-icons">star</i>-->
-<!--                    </button>-->
                 </div>
             </div>
 
             <div id="workspace-wrapper">
                 <!--operations-->
-                <div id="operations" class="no-select">
+                <div id="operations"
+                     class="no-select">
                     <div class="title no-select"
                          data-help-title="Operations list"
-                         data-help="<p>The Operations list contains all the operations in CyberChef arranged into
-                         categories. Some operations may be present in multiple categories. You can search for operations using the search box.</p><p>To use an operation, either double click it, or drag it into the Recipe pane. You will then be able to configure its arguments (or 'Ingredients' in CyberChef terminology).</p>">
+                         data-help="<p>The Operations list contains all the operations in CyberChef arranged into categories. Some operations may be present in multiple categories. You can search for operations using the search box.</p><p>To use an operation, either double click it, or drag it into the Recipe pane. You will then be able to configure its arguments (or 'Ingredients' in CyberChef terminology).</p>">
                         Operations
+                        <span class="pane-controls hide-on-maximised-output">
+                            <button type="button"
+                                    class="btn btn-warning bmd-btn-icon"
+                                    id="edit-favourites"
+                                    data-toggle="tooltip"
+                                    title="Edit favourites">
+                                <i class="material-icons">star</i>
+                            </button>
+                        </span>
                     </div>
                     <input id="search"
                            type="search"

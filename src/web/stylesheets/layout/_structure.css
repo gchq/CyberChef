@@ -37,6 +37,7 @@ body {
     height: 20vh;
 }
 
+#operations .title,
 #recipe .title,
 #input .title,
 #output .title {

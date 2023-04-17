@@ -15,7 +15,7 @@
     color: var(--banner-font-colour);
     background-color: var(--banner-bg-colour);
     margin: 0;
-    /* flex is applied through .row */
+    /* flex is applied through .row on the banner element */
     justify-content: space-between;
 }
 
