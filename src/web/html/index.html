@@ -197,6 +197,8 @@
                          data-help-title="Operations list"
                          data-help="<p>The Operations list contains all the operations in CyberChef arranged into categories. Some operations may be present in multiple categories. You can search for operations using the search box.</p><p>To use an operation, either double click it, or drag it into the Recipe pane. You will then be able to configure its arguments (or 'Ingredients' in CyberChef terminology).</p>">
                         Operations
+
+<!--@TODO: this should just be removed, however that currently breaks some code-->
                         <span class="pane-controls hide-on-maximised-output">
                             <button type="button"
                                     class="btn btn-warning bmd-btn-icon"
@@ -207,16 +209,20 @@
                             </button>
                         </span>
                     </div>
-                    <input id="search"
-                           type="search"
-                           class="form-control"
-                           placeholder="Search..."
-                           autocomplete="off"
-                           tabindex="2"
-                           data-help-title="Searching for operations"
-                           data-help="<p>Use the search box to find useful operations.</p><p>Both operation names and descriptions are queried using a fuzzy matching algorithm.</p>"/>
-<!--                    <ul id="search-results" class="op-list"></ul>-->
-<!--                    <div id="categories" class="panel-group no-select"></div>-->
+                    <div class="foo">
+                        <input id="search"
+                               type="search"
+                               class="form-control"
+                               placeholder="Search..."
+                               autocomplete="off"
+                               tabindex="2"
+                               data-help-title="Searching for operations"
+                               data-help="<p>Use the search box to find useful operations.</p><p>Both operation names and descriptions are queried using a fuzzy matching algorithm.</p>"
+                        />
+                        <!--operation list and categories-->
+                        <ul id="search-results" class="op-list"></ul>
+                        <div id="categories" class="panel-group no-select"></div>
+                    </div>
                 </div>
 
                 <!--recipe-->
@@ -235,7 +241,8 @@
                             </button>
                         </span>
                     </div>
-<!--                    <ul id="rec-list" class="list-area no-select"></ul>-->
+                    <!--selected recipes list-->
+                    <ul id="rec-list" class="list-area no-select"></ul>
 
                     <!--controls-->
                     <div id="controls" class="no-select hide-on-maximised-output">

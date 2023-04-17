@@ -10,10 +10,6 @@ body {
     overflow: hidden;
 }
 
-#workspace-wrapper {
-    margin-top: var(--banner-height);
-}
-
 #content-wrapper {
     position: absolute;
     top: 0;
@@ -22,19 +18,27 @@ body {
     left: 0;
 }
 
-#recipe,
-#input .cm-scroller,
-#output .cm-scroller {
-    overflow-y: auto;
+/*@TODO: test with keyboard popping up because that messes with the viewheight probably*/
+
+#workspace-wrapper {
+    /* The workspaces' available height minus the top banner and control element at the bottom */
+    height: calc( 100vh - calc( var(--banner-height) + var(--controls-height)) );
+    margin-top: var(--banner-height);
+}
+
+#operations {
+    height: auto;
 }
 
 #recipe {
     height: 15vh;
+    overflow-y: auto;
 }
 
 #input .cm-scroller,
 #output .cm-scroller {
     height: 20vh;
+    overflow-y: auto;
 }
 
 #operations .title,

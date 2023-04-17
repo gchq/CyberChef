@@ -7,7 +7,7 @@
  */
 
 .operation {
-    cursor: grab;
+    cursor: pointer;
     padding: 10px;
     list-style-type: none;
     position: relative;
@@ -16,6 +16,12 @@
     border-top: none;
     border-left: none;
     border-right: none;
+}
+
+@media only screen and ( min-width: 768px ) {
+    .operation {
+        cursor: grab;
+    }
 }
 
 #rec-list .operation {
@@ -320,3 +326,22 @@ input.toggle-string {
     color: var(--disabled-font-colour) !important;
     background-color: var(--disabled-border-colour) !important;
 }
+
+/* ================ experimentation ================ */
+.foo {
+    position: relative;
+}
+
+#search-results,
+#categories {
+    position: absolute;
+    top: 40px; /* the height of the search input */
+    left: 0;
+    right: 0;
+    z-index: 10;
+    height: auto;
+    max-height: 60vh;
+    overflow: scroll;
+    border-bottom: 1px solid var(--primary-border-colour);
+}
+

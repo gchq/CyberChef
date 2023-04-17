@@ -13,6 +13,8 @@
     padding: 10px 0;
     border-top: 1px solid var(--primary-border-colour);
     background-color: var(--secondary-background-colour);
+    height: var(--controls-height);
+    overflow: hidden;
 }
 
 #controls-content {
@@ -31,15 +33,6 @@
     color: var(--primary-font-colour);
     font-size: 14px;
     cursor: pointer;
-    /*line-height: 0;*/
-}
-
-#auto-bake {
-    position: relative;
-    width: auto;
-    height: auto;
-    opacity: 1;
-    z-index: initial;
 }
 
 #auto-bake-label .check,
