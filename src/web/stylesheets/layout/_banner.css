@@ -17,6 +17,8 @@
     margin: 0;
     /* flex is applied through .row on the banner element */
     justify-content: space-between;
+    padding-left: 12px;
+    padding-right: 4px;
 }
 
 #banner i {
