@@ -35,7 +35,7 @@ class OperationsWaiter {
      * @param {boolean} isVisible
      *
      */
-    isVisible( elm, isVisible ){
+    setVisibility( elm, isVisible ){
         if ( isVisible ) {
             if ( elm.classList.contains("hidden")) {
                 elm.classList.remove("hidden");
@@ -61,8 +61,8 @@ class OperationsWaiter {
             hideOperations = document.getElementById("reset-operations");
             searchResults = document.getElementById("search-results" );
 
-            this.isVisible(categories, true);
-            this.isVisible(hideOperations, true);
+            this.setVisibility(categories, true);
+            this.setVisibility(hideOperations, true);
         }
 
         if (e.type === "keyup"){
@@ -71,13 +71,17 @@ class OperationsWaiter {
             searchResults = document.getElementById("search-results" );
 
             if ( e.target.value.length === 0 ) {
-                this.isVisible(categories, true);
-                this.isVisible(hideOperations, true);
+                this.setVisibility(categories, true);
+                this.setVisibility(hideOperations, true);
             } else {
-                this.isVisible(categories, false );
-                this.isVisible(searchResults, true );
-                this.isVisible(hideOperations, true );
+                this.setVisibility(categories, false );
+                this.setVisibility(searchResults, true );
+                this.setVisibility(hideOperations, true );
             }
+        }
+
+        if (e.type === "keyup" && e.keyCode === 27 ) { // Escape
+            this.resetOperations();
         }
 
         if (e.type === "search" || e.keyCode === 13) { // Search or Return
@@ -313,9 +317,10 @@ class OperationsWaiter {
 
 
     /**
-     * Hide any operation lists ( #categories or #search-results ) and the close button on click
+     * Hide any operation lists ( #categories or #search-results ) and the reset-operations button itself,
+     * clear any search input
      */
-    resetOperationsClick(){
+    resetOperations(){
         let search, categories, searchResults, resetOperations;
 
         search = document.getElementById("search");
@@ -328,9 +333,9 @@ class OperationsWaiter {
             search.value = '';
         }
 
-        this.isVisible(categories, false );
-        this.isVisible(searchResults, false );
-        this.isVisible(resetOperations, false );
+        this.setVisibility(categories, false );
+        this.setVisibility(searchResults, false );
+        this.setVisibility(resetOperations, false );
     }
 
     /**

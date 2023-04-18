@@ -145,7 +145,7 @@ class Manager {
         // Operations
         this.addMultiEventListener("#search", "keyup paste search click", this.ops.searchOperations, this.ops);
         this.addDynamicListener(".op-list li.operation", "dblclick", this.ops.operationDblclick, this.ops);
-        document.getElementById("reset-operations").addEventListener("click", this.ops.resetOperationsClick.bind(this.ops));
+        document.getElementById("reset-operations").addEventListener("click", this.ops.resetOperations.bind(this.ops));
         document.getElementById("edit-favourites").addEventListener("click", this.ops.editFavouritesClick.bind(this.ops));
         document.getElementById("save-favourites").addEventListener("click", this.ops.saveFavouritesClick.bind(this.ops));
         document.getElementById("reset-favourites").addEventListener("click", this.ops.resetFavouritesClick.bind(this.ops));
