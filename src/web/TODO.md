@@ -7,7 +7,6 @@
 - restore desktop UI
 
 ### Mobile UI:
-- on load, initial `#edit-favourites` in operations should be hidden until the dropdown is opened
 - bootstrap native 'x' in `input[type="search"]` should clear input value and
   then display `categories` rather than close the entire dropdown
 - on click of `input[type="search]`, `favourites` briefly opens and closes. Would be nice not to have that
@@ -22,11 +21,12 @@
 
 ### JS:
 - `core/Recipe.mjs`, `core/lib/Magic.js` return imports to original
-- `waiters/OperationsWaiter.mjs` isVisible is pretty generic so probably move it ( to manager? )
+- `waiters/OperationsWaiter.mjs` setVisibility is pretty generic so probably move it ( to manager? )
 - `App.mjs` add a window resize listener for functions in setup if ( breakpoint )
 
 ### Misc:
 - check for remaining todos
+- check for remaining comments to be deleted
 - check and add browser vendor prefixes throughout stylesheets where needed
 - comb through CSS and improve organisation for better DevX
 - write / complete UI tests
