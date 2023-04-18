@@ -8,17 +8,17 @@
 
 #banner {
     position: absolute;
-    height: var(--banner-height);
-    width: 100%;
-    line-height: var(--banner-height);
-    border-bottom: 1px solid var(--primary-border-colour);
-    color: var(--banner-font-colour);
-    background-color: var(--banner-bg-colour);
-    margin: 0;
-    /* flex is applied through .row on the banner element */
-    justify-content: space-between;
     padding-left: 12px;
     padding-right: 4px;
+    margin: 0;
+    width: 100%;
+    height: var(--banner-height);
+    line-height: var(--banner-height);
+    color: var(--banner-font-colour);
+    background-color: var(--banner-bg-colour);
+    border-bottom: 1px solid var(--primary-border-colour);
+    justify-content: space-between; /* flex is applied through .row on the banner element */
+
 }
 
 #banner i {
@@ -26,8 +26,18 @@
     padding-right: 10px;
 }
 
-#banner a {
+.banner-link {
     color: var(--banner-url-colour);
+}
+
+.banner-link:hover {
+    text-decoration: none;
+}
+
+@media only screen and (min-width: 768px){
+    .banner-link:hover span {
+        text-decoration: underline;
+    }
 }
 
 #notice-wrapper {
