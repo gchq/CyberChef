@@ -7,11 +7,5 @@
  */
 
 #rec-list {
-    overflow: auto;
-}
-
-#rec-list .operation {
-    color: var(--rec-list-operation-font-colour);
-    background-color: var(--rec-list-operation-bg-colour);
-    border-color: var(--rec-list-operation-border-colour);
+    overflow-y: scroll;
 }

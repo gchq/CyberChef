@@ -25,6 +25,13 @@
 @import "./components/_list.css";
 @import "./components/_operation.css";
 @import "./components/_pane.css";
+@import "./components/_recipe.css";
+@import "./components/io/_search-results.css";
+@import "./components/io/_tabs.css";
+@import "./components/io/_icons.css";
+@import "./components/io/_highlighting.css";
+@import "./components/io/_status-bar.css";
+@import "./components/io/_file-details.css";
 
 /* Layout */
 @import "./layout/_banner.css";

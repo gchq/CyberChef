@@ -41,3 +41,16 @@
     border-radius: 0 !important;
     border: none;
 }
+
+#search-results,
+#categories {
+    position: absolute;
+    top: 40px; /* the height of the input[type="search"] with pos relative */
+    left: 0;
+    right: 0;
+    height: auto;
+    max-height: 60vh;
+    overflow: scroll;
+    border-bottom: 1px solid var(--primary-border-colour);
+    z-index: 20; /* to dropdown on top of all the other elements */
+}

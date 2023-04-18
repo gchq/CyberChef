@@ -18,32 +18,17 @@ body {
     left: 0;
 }
 
-/*@TODO: test with keyboard popping up because that messes with the viewheight probably*/
-/*@TODO: make sure the panels are nicely divided / flex-grow to make up the full height of workspace-wrapper*/
-
 #workspace-wrapper {
-    /* The workspaces' available height minus the top banner and control element at the bottom */
     height: calc( 100vh - calc( var(--banner-height) + var(--controls-height)) );
     margin-top: var(--banner-height);
 }
 
-#operations {
-    height: auto;
-}
-
 #recipe {
-    height: 15vh;
+    height: 20vh;
 }
 
-#input,
-#output {
+#input, #output {
     height: 25vh;
-}
-
-#input .cm-scroller,
-#output .cm-scroller {
-    height: 100%;
-    overflow-y: scroll;
 }
 
 #operations .title,
@@ -54,10 +39,11 @@ body {
     justify-content: space-between;
 }
 
-/* To vertically align the title nicely in the center */
-label[for="input-text"],
-label[for="output-text"] {
-    line-height: revert;
+#controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 @media only screen and ( min-width: 768px ) {

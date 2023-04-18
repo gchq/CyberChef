@@ -1,0 +1,28 @@
+temporary file to list todos to keep oversight
+
+desktop UI:
+- restore desktop UI
+
+mobile UI:
+- initial favourites icon in operations should be hidden until the dropdown is opened
+- bootstrap native 'x' in input[type="search"] should clear input value and
+  then display categories rather than close the entire dropdown
+- test with keyboard popping up because that messes with the viewheights on mobile probably
+- make sure panels in workspace-wrapper grow and add up to 100%
+
+general ui:
+- fix up key events so UI can be navigated comfortably with keys ( inc. visual focus feedback )
+
+js:
+- core/Recipe.mjs:
+- core/lib/Magic.js:
+  // @TODO: return import to original? ( it breaks dev though )
+- waiters/OperationsWaiter.mjs:
+  // @TODO: isVisible is pretty generic so probably move it ( to manager? )
+- App.mjs:
+  // @TODO: in setup, add a window resize listener for responsive functions
+
+misc:
+- write / complete UI tests
+- delete this file when done :)
+

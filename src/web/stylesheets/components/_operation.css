@@ -321,21 +321,9 @@ input.toggle-string {
     background-color: var(--disabled-border-colour) !important;
 }
 
-/* ================ experimentation ================ */
-
-#search-results,
-#categories {
-    position: absolute;
-    top: 40px; /* the height of the search input */
-    left: 0;
-    right: 0;
-    height: auto;
-    max-height: 60vh;
-    overflow: scroll;
-    border-bottom: 1px solid var(--primary-border-colour);
-
-    z-index: 20;
-    display: inline-block;
+/* Mobile UI for the dropdown operations search */
+.dropdown-operations {
+    position: relative;
 }
 
 #reset-operations.hidden,
@@ -344,24 +332,11 @@ input.toggle-string {
     z-index: -10;
     display: none;
 }
+/* end mobile UI for the dropdown operations search */
 
-.foo,
-#recipe {
-    position: relative;
-}
 
-#rec-list {
-    position: absolute;
-    top: 48px; /* the height of recipe title */
-    left: 0;
-    right: 0;
-    height: 100%;
-}
 
-#controls {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
+
+
+
 
