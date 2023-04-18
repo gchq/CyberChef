@@ -59,7 +59,6 @@ class App {
     setup() {
         document.dispatchEvent(this.manager.appstart);
 
-        // @TODO: add a window resize listener
         if (  window.innerWidth >= this.breakpoint ) {
             this.initialiseSplitter();
             this.setCompileMessage();

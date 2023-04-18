@@ -34,7 +34,6 @@ class OperationsWaiter {
      * @param {HTMLElement} elm
      * @param {boolean} isVisible
      *
-     * @TODO: this is pretty generic so probably move it ( to manager? )
      */
     isVisible( elm, isVisible ){
         if ( isVisible ) {
