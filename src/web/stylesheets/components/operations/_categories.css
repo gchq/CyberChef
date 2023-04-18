@@ -1,17 +1,3 @@
-/**
- * Operation list styles
- *
- * @author n1474335 [n1474335@gmail.com]
- * @copyright Crown Copyright 2017
- * @license Apache-2.0
- */
-
-.op-list {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-}
-
 .category-title {
     display: block;
     padding: 10px;
@@ -42,7 +28,6 @@
     border: none;
 }
 
-#search-results,
 #categories {
     position: absolute;
     top: 40px; /* the height of the input[type="search"] with pos relative */
@@ -54,3 +39,20 @@
     border-bottom: 1px solid var(--primary-border-colour);
     z-index: 20; /* to dropdown on top of all the other elements */
 }
+
+#categories a {
+    color: var(--category-list-font-colour);
+    cursor: pointer;
+}
+
+#categories a:hover {
+    filter: brightness(98%);
+}
+
+.favourites-hover {
+    color: var(--rec-list-operation-font-colour);
+    background-color: var(--rec-list-operation-bg-colour);
+    border: 2px dashed var(--rec-list-operation-font-colour) !important;
+    padding: 8px 8px 9px 8px;
+}
+

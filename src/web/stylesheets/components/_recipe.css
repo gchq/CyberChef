@@ -1,9 +1,22 @@
+/**
+ * Recipe area styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
 #recipe {
     position: relative;
+}
+
+#rec-list {
+    overflow-y: scroll;
 }
 
 #rec-list .operation {
     color: var(--rec-list-operation-font-colour);
     background-color: var(--rec-list-operation-bg-colour);
     border-color: var(--rec-list-operation-border-colour);
+    padding: 14px;
 }

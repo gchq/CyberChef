@@ -18,10 +18,6 @@
     border-right: none;
 }
 
-#rec-list .operation {
-    padding: 14px;
-}
-
 .op-title {
     font-weight: var(--op-title-font-weight);
 }
@@ -321,6 +317,7 @@ input.toggle-string {
     background-color: var(--disabled-border-colour) !important;
 }
 
+/*@TODO: move below block elsewhere, think of a better name*/
 /* Mobile UI for the dropdown operations search */
 .dropdown-operations {
     position: relative;

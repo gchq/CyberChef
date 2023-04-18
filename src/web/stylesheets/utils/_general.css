@@ -59,26 +59,6 @@ body {
     transform: rotate(180deg);
 }
 
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background-color: var(--scrollbar-track);
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: var(--scrollbar-thumb);
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background-color: var(--scrollbar-hover);
-}
-
-::-webkit-scrollbar-corner {
-    background-color: var(--scrollbar-track);
-}
 
 /* Highlighters */
 .hl1 { background-color: var(--hl1); }
@@ -87,7 +67,8 @@ body {
 .hl4 { background-color: var(--hl4); }
 .hl5 { background-color: var(--hl5); }
 
-/* Device bound UI visibility */
+
+/* Screen-bound UI visibility */
 .desktop-only {
     display: none;
 }

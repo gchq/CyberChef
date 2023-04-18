@@ -7,13 +7,9 @@
  */
 
 #controls {
-    position: absolute;
-    width: 100%;
-    bottom: 0;
     padding: 10px 0;
     border-top: 1px solid var(--primary-border-colour);
     background-color: var(--secondary-background-colour);
-    height: var(--controls-height);
     overflow: hidden;
 }
 
@@ -58,14 +54,4 @@
     display: none !important;
 }
 
-.spin {
-    animation-name: spin;
-    animation-duration: 3s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-}
 
-@keyframes spin {
-    0%      {transform: rotate(0deg);}
-    100%    {transform: rotate(360deg);}
-}

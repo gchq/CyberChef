@@ -7,18 +7,13 @@
  */
 
 #banner {
-    position: absolute;
     padding-left: 12px;
     padding-right: 4px;
-    margin: 0;
-    width: 100%;
-    height: var(--banner-height);
     line-height: var(--banner-height);
     color: var(--banner-font-colour);
     background-color: var(--banner-bg-colour);
     border-bottom: 1px solid var(--primary-border-colour);
     justify-content: space-between; /* flex is applied through .row on the banner element */
-
 }
 
 #banner i {

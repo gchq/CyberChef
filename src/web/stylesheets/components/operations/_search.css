@@ -1,0 +1,19 @@
+#search {
+    padding-left: 10px;
+    padding-right: 10px;
+    background-image:
+        linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(0, 0, 0, 0) 2px),
+        linear-gradient(to top, var(--primary-border-colour) 1px, rgba(0, 0, 0, 0) 1px);
+}
+
+#search-results {
+    position: absolute;
+    top: 40px; /* the height of the input[type="search"] with pos relative */
+    left: 0;
+    right: 0;
+    height: auto;
+    max-height: 60vh;
+    overflow: scroll;
+    border-bottom: 1px solid var(--primary-border-colour);
+    z-index: 20; /* to dropdown on top of all the other elements */
+}

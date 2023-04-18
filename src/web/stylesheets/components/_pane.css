@@ -20,6 +20,8 @@
     color: var(--title-colour);
     background-color: var(--title-background-colour);
     line-height: calc(var(--title-height) - 14px);
+    display: flex;
+    justify-content: space-between;
 }
 
 .pane-controls {

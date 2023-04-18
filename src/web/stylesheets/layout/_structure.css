@@ -10,6 +10,14 @@ body {
     overflow: hidden;
 }
 
+#banner {
+    position: absolute;
+    top: 0;
+    margin: 0;
+    width: 100%;
+    height: var(--banner-height);
+}
+
 #content-wrapper {
     position: absolute;
     top: 0;
@@ -27,16 +35,9 @@ body {
     height: 20vh;
 }
 
-#input, #output {
+#input,
+#output {
     height: 25vh;
-}
-
-#operations .title,
-#recipe .title,
-#input .title,
-#output .title {
-    display: flex;
-    justify-content: space-between;
 }
 
 #controls {
@@ -44,6 +45,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
+    height: var(--controls-height);
 }
 
 @media only screen and ( min-width: 768px ) {

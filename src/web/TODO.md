@@ -26,6 +26,7 @@
 - `App.mjs` add a window resize listener for functions in setup if ( breakpoint )
 
 ### Misc:
+- check for remaining todos
 - check and add browser vendor prefixes throughout stylesheets where needed
 - comb through CSS and improve organisation for better DevX
 - write / complete UI tests
