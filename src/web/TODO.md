@@ -9,8 +9,8 @@
 ### Mobile UI:
 - bootstrap native 'x' in `input[type="search"]` should clear input value and
   then display `categories` rather than close the entire dropdown
-- on click of `input[type="search]`, `favourites` briefly opens and closes. Would be nice not to have that
-  ( no content jumping around! )
+- on click of `input[type="search]`, `favourites` briefly opens and closes. Initially, it should be opened
+- on invalid search input ( and no results ), categories should be displayed
 - test with keyboard popping up because that messes with the viewheights on mobile probably
 - make sure panels in `workspace-wrapper` grow and add up to 100%
 
@@ -20,13 +20,11 @@
 - hover / active states can use a bit of TLC
 
 ### JS:
-- track down where `69px bottom` on `rec-list` comes from and remove it
-- can probably refactor the Splitter funcs to be a little more reusable etc.
 - `core/Recipe.mjs`, `core/lib/Magic.js` return imports to original
 - `waiters/OperationsWaiter.mjs` setVisibility is pretty generic so probably move it ( to manager? )
-- `App.mjs` add a window resize listener for functions in setup if ( breakpoint )
 - `operations` dropdowns don't close on Escape once `input[type="search"]` is not in focus ( for instance, when you
-  have added some operations from the category list
+  have added some operations from the category list ). Low priority though
+- - can probably refactor the Splitter funcs to be a little more reusable etc. Low priority
 
 ### Misc:
 - check for remaining todos
