@@ -65,6 +65,8 @@
             "Parse TLV",
             "CSV to JSON",
             "JSON to CSV",
+            "YAML to JSON",
+            "JSON to YAML",
             "Avro to JSON",
             "CBOR Encode",
             "CBOR Decode"
