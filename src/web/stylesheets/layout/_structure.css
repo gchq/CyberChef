@@ -35,9 +35,12 @@ body {
     height: 20vh;
 }
 
-#input,
-#output {
-    height: 25vh;
+/*A short note for reference:
+*
+* #input and #outputs individual heights are set in App.js, both to 50(%)
+*/
+#IO {
+    height: 50vh;
 }
 
 #controls {

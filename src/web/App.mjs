@@ -59,12 +59,8 @@ class App {
     setup() {
         document.dispatchEvent(this.manager.appstart);
 
-        if (  window.innerWidth >= this.breakpoint ) {
-            this.initialiseSplitter();
-            this.setCompileMessage();
-            this.adjustComponentSizes();
-        }
-
+        this.initialiseSplitter();
+        this.setCompileMessage();
         this.loadLocalStorage();
         this.populateOperationsList();
         this.manager.setup();
@@ -74,7 +70,6 @@ class App {
         this.appLoaded = true;
         this.loaded();
     }
-
 
     /**
      * Fires once all setup activities have completed.
@@ -306,23 +301,46 @@ class App {
         if (this.columnSplitter) this.columnSplitter.destroy();
         if (this.ioSplitter) this.ioSplitter.destroy();
 
+        if ( window.innerWidth < this.breakpoint ){
+            this.setMobileLayout();
+        } else {
+            this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
+                sizes: [20, 30, 50],
+                minSize: minimise ? [0, 0, 0] : [240, 310, 450],
+                gutterSize: 4,
+                expandToMin: true,
+                onDrag: debounce(function() {
+                    this.adjustComponentSizes();
+                }, 50, "dragSplitter", this, [])
+            });
+
+            this.ioSplitter = Split(["#input", "#output"], {
+                direction: "vertical",
+                gutterSize: 4,
+                minSize: minimise ? [0, 0] : [100, 100]
+            });
+
+            this.adjustComponentSizes();
+        }
+    }
+
+    /**
+     * Set mobile splitter UI ( there is some code repetition in regard to the splitters above, but
+     * I think the tradeoff for ease of (DevX) use is worth it )
+     */
+    setMobileLayout() {
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
-            sizes: [20, 30, 50],
-            minSize: minimise ? [0, 0, 0] : [240, 310, 450],
-            gutterSize: 4,
+            sizes: [100, 100, 100],
+            minSize: [0, 0, 0],
+            gutterSize: 0,
             expandToMin: true,
-            onDrag: debounce(function() {
-                this.adjustComponentSizes();
-            }, 50, "dragSplitter", this, [])
         });
 
         this.ioSplitter = Split(["#input", "#output"], {
             direction: "vertical",
-            gutterSize: 4,
-            minSize: minimise ? [0, 0] : [100, 100]
+            gutterSize: 0,
+            minSize: [50, 50]
         });
-
-        this.adjustComponentSizes();
     }
 
 

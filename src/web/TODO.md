@@ -20,9 +20,13 @@
 - hover / active states can use a bit of TLC
 
 ### JS:
+- track down where `69px bottom` on `rec-list` comes from and remove it
+- can probably refactor the Splitter funcs to be a little more reusable etc.
 - `core/Recipe.mjs`, `core/lib/Magic.js` return imports to original
 - `waiters/OperationsWaiter.mjs` setVisibility is pretty generic so probably move it ( to manager? )
 - `App.mjs` add a window resize listener for functions in setup if ( breakpoint )
+- `operations` dropdowns don't close on Escape once `input[type="search"]` is not in focus ( for instance, when you
+  have added some operations from the category list
 
 ### Misc:
 - check for remaining todos
