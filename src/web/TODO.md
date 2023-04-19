@@ -6,8 +6,7 @@
 ### Desktop UI:
 - restore desktop UI
 - `search-results` should really be at the top once input, with `categories` below it
-- something not quite right yet on resizing ( double tab on browser from small - full screen doesn't seem to load well )
-  and vice versa ( sometimes a 4px gutter remains between panels for instance ). Check App.js / window events etc.
+- `calcControlsHeight` and `adjustComponentSizes` sometimes cause trouble in `recipe` `rec-list`
 
 ### Mobile UI:
 - bootstrap native 'x' in `input[type="search"]` should clear input value and

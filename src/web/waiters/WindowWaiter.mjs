@@ -30,7 +30,7 @@ class WindowWaiter {
         debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();
 
         if ( window.innerWidth >= this.app.breakpoint ) {
-            this.app.resetLayout();
+            this.app.setDesktopLayout(false);
         } else {
             this.app.setMobileLayout();
         }

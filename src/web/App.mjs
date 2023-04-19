@@ -298,37 +298,51 @@ class App {
      * @param {boolean} [minimise=false] - Set this flag if attempting to minimise frames to 0 width
      */
     initialiseSplitter(minimise=false) {
-        if (this.columnSplitter) this.columnSplitter.destroy();
-        if (this.ioSplitter) this.ioSplitter.destroy();
-
         if ( window.innerWidth < this.breakpoint ){
             this.setMobileLayout();
         } else {
-            this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
-                sizes: [20, 30, 50],
-                minSize: minimise ? [0, 0, 0] : [240, 310, 450],
-                gutterSize: 4,
-                expandToMin: true,
-                onDrag: debounce(function() {
-                    this.adjustComponentSizes();
-                }, 50, "dragSplitter", this, [])
-            });
-
-            this.ioSplitter = Split(["#input", "#output"], {
-                direction: "vertical",
-                gutterSize: 4,
-                minSize: minimise ? [0, 0] : [100, 100]
-            });
-
-            this.adjustComponentSizes();
+            this.setDesktopLayout(minimise);
         }
     }
 
     /**
-     * Set mobile splitter UI ( there is some code repetition in regard to the splitters above, but
-     * I think the tradeoff for ease of (DevX) use is worth it )
+     * Set desktop layout
+     */
+    setDesktopLayout(minimise){
+        if (this.columnSplitter) this.columnSplitter.destroy();
+        if (this.ioSplitter) this.ioSplitter.destroy();
+
+        this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
+            sizes: [20, 30, 50],
+            minSize: minimise ? [0, 0, 0] : [240, 310, 450],
+            gutterSize: 4,
+            expandToMin: true,
+            onDrag: debounce(function() {
+                this.adjustComponentSizes();
+            }, 50, "dragSplitter", this, [])
+        });
+
+        this.ioSplitter = Split(["#input", "#output"], {
+            direction: "vertical",
+            gutterSize: 4,
+            minSize: minimise ? [0, 0] : [100, 100]
+        });
+
+        this.adjustComponentSizes();
+    }
+
+    /**
+     * Set mobile layout.
+     *
+     * A note: there is some code repetition here ( re setDesktopLayout ),
+     * but I found some lingering gutters or odd behaviour on window resizing that is
+     * resolved by always destroying splitters. Now setDesktopLayout and setMobileLayout
+     * can be called on window resizing events and the switch gets handled smoothly.
      */
     setMobileLayout() {
+        if (this.columnSplitter) this.columnSplitter.destroy();
+        if (this.ioSplitter) this.ioSplitter.destroy();
+
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [100, 100, 100],
             minSize: [0, 0, 0],
