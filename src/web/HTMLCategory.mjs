@@ -43,7 +43,7 @@ class HTMLCategory {
         <a class="category-title" data-toggle="collapse" data-target="#${catName}">
             ${this.name}
         </a>
-        <div id="${catName}" class="panel-collapse collapse ${(this.selected ? " show" : "")}" data-parent="#categories">
+        <div id="${catName}" class="panel-collapse collapse ${(this.selected ? "show" : "")}" data-parent="#categories">
             <ul class="op-list">`;
 
         for (let i = 0; i < this.opList.length; i++) {

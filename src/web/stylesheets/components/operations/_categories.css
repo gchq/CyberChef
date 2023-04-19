@@ -1,13 +1,18 @@
 .category-title {
-    display: block;
+    display: flex;
+    justify-content: space-between;
     padding: 10px;
     background-color: var(--secondary-background-colour);
     border-bottom: 1px solid var(--secondary-border-colour);
     font-weight: var(--title-weight);
 }
 
-.category-title[href='#catFavourites'] {
-    border-bottom-color: var(--primary-border-colour);
+.category-title[data-target="#catFavourites"] {
+    height: 41px;
+}
+
+#edit-favourites {
+    transform: translateY(-7px);
 }
 
 .category-title[aria-expanded=true] {

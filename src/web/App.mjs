@@ -280,7 +280,7 @@ class App {
         }
 
         // Add edit button to first category (Favourites)
-        const favCat = document.querySelector("#categories a");
+        const favCat = document.querySelector("#categories a[data-target='#catFavourites']");
         favCat.appendChild(document.getElementById("edit-favourites"));
         favCat.setAttribute("data-help-title", "Favourite operations");
         favCat.setAttribute("data-help", `<p>This category displays your favourite operations.</p>
