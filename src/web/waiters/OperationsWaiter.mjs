@@ -29,7 +29,7 @@ class OperationsWaiter {
     }
 
     /**
-     * Toggle element visibility
+     * Set element visibility
      *
      * @param {HTMLElement} elm
      * @param {boolean} isVisible
