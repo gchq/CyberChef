@@ -6,6 +6,8 @@
 ### Desktop UI:
 - restore desktop UI
 - `search-results` should really be at the top once input, with `categories` below it
+- something not quite right yet on resizing ( double tab on browser from small - full screen doesn't seem to load well )
+  and vice versa ( sometimes a 4px gutter remains between panels for instance ). Check App.js / window events etc.
 
 ### Mobile UI:
 - bootstrap native 'x' in `input[type="search"]` should clear input value and
@@ -14,7 +16,6 @@
 - on invalid search input ( and no results ), categories should be displayed
 - test with keyboard popping up because that messes with the viewheights on mobile probably
 - make sure panels in `workspace-wrapper` grow and add up to 100%
-- see how to make it work with `controls` nested in `recipe`
 
 ### General UI:
 - fix up key / tab events so UI can be navigated comfortably with keys ( inc. visual focus feedback ). Probably a lot

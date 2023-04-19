@@ -7,17 +7,16 @@
  */
 
 #controls {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
     padding: 10px 0;
     border-top: 1px solid var(--primary-border-colour);
     background-color: var(--secondary-background-colour);
     overflow: hidden;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
 }
 
 #controls-content {
-    position: relative;
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
