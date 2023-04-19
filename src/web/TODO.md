@@ -4,7 +4,6 @@
 ---
 
 ### Desktop UI:
-- restore desktop UI
 - `search-results` should really be at the top once input, with `categories` below it
 - `calcControlsHeight` and `adjustComponentSizes` cause trouble in `recipe` `rec-list` when resizing from desktop to mobile
 
@@ -22,10 +21,6 @@
 
 ### JS:
 - `core/Recipe.mjs`, `core/lib/Magic.js` return imports to original
-- `waiters/OperationsWaiter.mjs` setVisibility is pretty generic so probably move it ( to manager? )
-- `operations` dropdowns don't close on Escape once `input[type="search"]` is not in focus ( for instance, when you
-  have added some operations from the category list ). Low priority though
-- - can probably refactor the Splitter funcs to be a little more reusable etc. Low priority
 
 ### Misc:
 - check for remaining todos

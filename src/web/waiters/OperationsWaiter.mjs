@@ -29,25 +29,6 @@ class OperationsWaiter {
     }
 
     /**
-     * Set element visibility
-     *
-     * @param {HTMLElement} elm
-     * @param {boolean} isVisible
-     *
-     */
-    setVisibility( elm, isVisible ){
-        if ( isVisible ) {
-            if ( elm.classList.contains("hidden")) {
-                elm.classList.remove("hidden");
-            }
-        } else if ( isVisible === false ) {
-            if ( !elm.classList.contains("hidden")){
-                elm.classList.add("hidden");
-            }
-        }
-    }
-
-    /**
      * Handler for search events.
      * Finds operations which match the given search term and displays them under the search box.
      *
@@ -61,8 +42,8 @@ class OperationsWaiter {
             hideOperations = document.getElementById("reset-operations");
             searchResults = document.getElementById("search-results" );
 
-            this.setVisibility(categories, true);
-            this.setVisibility(hideOperations, true);
+            this.app.setVisibility(categories, true);
+            this.app.setVisibility(hideOperations, true);
         }
 
         if (e.type === "keyup"){
@@ -71,12 +52,12 @@ class OperationsWaiter {
             searchResults = document.getElementById("search-results" );
 
             if ( e.target.value.length === 0 ) {
-                this.setVisibility(categories, true);
-                this.setVisibility(hideOperations, true);
+                this.app.setVisibility(categories, true);
+                this.app.setVisibility(hideOperations, true);
             } else {
-                this.setVisibility(categories, false );
-                this.setVisibility(searchResults, true );
-                this.setVisibility(hideOperations, true );
+                this.app.setVisibility(categories, false );
+                this.app.setVisibility(searchResults, true );
+                this.app.setVisibility(hideOperations, true );
             }
         }
 
@@ -333,9 +314,9 @@ class OperationsWaiter {
             search.value = '';
         }
 
-        this.setVisibility(categories, false );
-        this.setVisibility(searchResults, false );
-        this.setVisibility(resetOperations, false );
+        this.app.setVisibility(categories, false );
+        this.app.setVisibility(searchResults, false );
+        this.app.setVisibility(resetOperations, false );
     }
 
     /**

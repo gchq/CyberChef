@@ -860,6 +860,25 @@ class App {
         this.loadURIParams();
     }
 
+
+    /**
+     * Set element visibility
+     *
+     * @param {HTMLElement} elm
+     * @param {boolean} isVisible
+     *
+     */
+    setVisibility( elm, isVisible ){
+        if ( isVisible ) {
+            if ( elm.classList.contains("hidden")) {
+                elm.classList.remove("hidden");
+            }
+        } else if ( isVisible === false ) {
+            if ( !elm.classList.contains("hidden")){
+                elm.classList.add("hidden");
+            }
+        }
+    }
 }
 
 export default App;
