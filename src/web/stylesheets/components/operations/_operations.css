@@ -1,0 +1,14 @@
+/**
+ * Operations component styles
+ */
+
+.operations-wrapper {
+    position: relative;
+}
+
+#reset-operations.hidden,
+#search-results.hidden,
+#categories.hidden {
+    z-index: -10;
+    display: none;
+}

@@ -6,6 +6,16 @@
  * @license Apache-2.0
  */
 
+/* Together, they make up 100vh */
+:root {
+    --banner-height: 40px;
+    --controls-height: 70px;
+    --workspace-height: calc( 100vh - calc( var(--banner-height) + var(--controls-height)));;
+    --recipe-height: 20vh;
+    --operations-height: 88px;
+    --io-height: calc(100vh - var(--banner-height) - var(--controls-height) - var(--recipe-height) - var(--operations-height));
+}
+
 body {
     overflow: hidden;
 }
@@ -16,28 +26,24 @@ body {
     width: 100%;
 }
 
-#workspace-wrapper {
-    height: calc( 100vh - calc( var(--banner-height) + var(--controls-height)) );
-    margin-top: var(--banner-height);
-}
-
-#banner {
-    top: 0;
-    margin: 0;
-    height: var(--banner-height);
-}
-
 #content-wrapper {
     top: 0;
     bottom: 0;
 }
 
-#recipe { height: 20vh;}
-#IO { height: 50vh; }
+#workspace-wrapper {
+    height: var(--workspace-height);
+    margin-top: var(--banner-height);
+}
+
+#banner { height: var(--banner-height); }
+#operations { height: var(--operations-height); }
+#recipe { height: var(--recipe-height); }
+#IO { height: var(--io-height); }
+#controls { height: var(--controls-height); }
 
 #controls {
     bottom: 0;
-    height: var(--controls-height);
 }
 
 @media only screen and ( min-width: 768px ) {

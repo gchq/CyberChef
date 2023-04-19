@@ -22,20 +22,21 @@
 @import "./preloader.css";
 
 /* Components */
-@import "./components/_banner.css";
 @import "./components/_button.css";
 @import "./components/_op-list.css";
 @import "./components/_operation.css";
 @import "./components/_pane.css";
-@import "./components/_modals.css";
-@import "./components/_recipe.css";
 @import "./components/_scrollbar.css";
-@import "./components/_controls.css";
 @import "./components/_dividers.css";
-/* Components: Operations group */
+@import "./components/_modals.css";
+@import "./components/_banner.css";
+@import "./components/_recipe.css";
+@import "./components/_controls.css";
+/* Components: Operations */
+@import "./components/operations/_operations.css";
 @import "./components/operations/_search.css";
 @import "./components/operations/_categories.css";
-/* Components: IO group */
+/* Components: IO */
 @import "./components/io/_io.css";
 @import "./components/io/_search-results.css";
 @import "./components/io/_tabs.css";

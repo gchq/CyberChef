@@ -317,21 +317,6 @@ input.toggle-string {
     background-color: var(--disabled-border-colour) !important;
 }
 
-/*@TODO: move below block elsewhere, think of a better name*/
-/* Mobile UI for the dropdown operations search */
-.dropdown-operations {
-    position: relative;
-}
-
-#reset-operations.hidden,
-#search-results.hidden,
-#categories.hidden {
-    z-index: -10;
-    display: none;
-}
-/* end mobile UI for the dropdown operations search */
-
-
 
 
 

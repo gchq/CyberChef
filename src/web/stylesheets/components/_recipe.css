@@ -11,7 +11,7 @@
 }
 
 #rec-list {
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 #rec-list .operation {
