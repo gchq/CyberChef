@@ -7,13 +7,14 @@
  */
 
 #banner {
+    display: flex;
+    justify-content: space-between;
     padding-left: 12px;
     padding-right: 4px;
     line-height: var(--banner-height);
     color: var(--banner-font-colour);
     background-color: var(--banner-bg-colour);
     border-bottom: 1px solid var(--primary-border-colour);
-    justify-content: space-between; /* flex is applied through .row on the banner element */
 }
 
 #banner i {
@@ -21,6 +22,17 @@
     padding-right: 10px;
 }
 
+
+/* Notice wrapper */
+#notice-wrapper {
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* Banner links ( options, about / support ) */
 .banner-link {
     color: var(--banner-url-colour);
 }
@@ -35,9 +47,5 @@
     }
 }
 
-#notice-wrapper {
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+
+

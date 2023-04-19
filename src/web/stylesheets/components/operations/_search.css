@@ -9,8 +9,7 @@
 #search-results {
     position: absolute;
     top: 40px; /* the height of the input[type="search"] with pos relative */
-    left: 0;
-    right: 0;
+    width: 100%;
     height: auto;
     max-height: 60vh;
     overflow: scroll;

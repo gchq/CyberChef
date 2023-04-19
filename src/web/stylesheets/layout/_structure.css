@@ -52,6 +52,38 @@ body {
 }
 
 @media only screen and ( min-width: 768px ) {
+    #workspace-wrapper {
+        height: calc( 100vh - var(--banner-height));
+    }
+
+    #categories,
+    #search-results {
+        max-height: max-content;
+        overflow: revert;
+    }
+
+    #operations, #recipe, #IO {
+        height: 100%;
+    }
+
+    #operations.split {
+        overflow: auto;
+    }
+
+    .split {
+        box-sizing: border-box;
+        /* overflow: auto; */
+        /* Removed to enable Background Magic button pulse to overflow.
+        Replace this rule if it seems to be causing problems. */
+        position: relative;
+    }
+
+    .gutter.gutter-horizontal,
+    .split.split-horizontal {
+        float: left;
+        height: 100%;
+    }
+
     .gutter {
         background-color: var(--secondary-border-colour);
         background-repeat: no-repeat;

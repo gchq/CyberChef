@@ -60,6 +60,7 @@ class App {
         document.dispatchEvent(this.manager.appstart);
 
         this.initialiseSplitter();
+        this.adjustComponentSizes();
         this.setCompileMessage();
         this.loadLocalStorage();
         this.populateOperationsList();
