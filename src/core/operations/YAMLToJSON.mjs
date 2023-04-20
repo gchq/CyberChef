@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import YAML from 'yaml'
+import YAML from "yaml";
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 

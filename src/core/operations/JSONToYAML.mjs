@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import YAML from 'yaml'
+import YAML from "yaml";
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
@@ -37,7 +37,7 @@ class JSONToYAML extends Operation {
         const doc = new YAML.Document();
         try {
             doc.contents = JSON.parse(input.replace(/(\w+):/gm, `"$1":`));
-            return doc.toString()
+            return doc.toString();
         } catch (err) {
             throw new OperationError("Unable to parse JSON to YAML: " + err.toString());
         }
