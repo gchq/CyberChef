@@ -28,6 +28,7 @@ class OperationsWaiter {
         this.removeIntent = false;
     }
 
+
     /**
      * Handler for search events.
      * Finds operations which match the given search term and displays them under the search box.
@@ -35,34 +36,31 @@ class OperationsWaiter {
      * @param {event} e
      */
     searchOperations(e) {
-        let ops, selected, hideOperations, categories, searchResults;
+        let ops, selected;
+
+        // 'close' button in Operations component mobile UI
+        const closeOperationsDropdown = document.getElementById("close-operations-dropdown");
+        const categories = document.getElementById("categories");
+        const searchResults = document.getElementById("search-results");
 
         if (e.type === "click" && !e.target.value.length){
-            categories = document.getElementById("categories");
-            hideOperations = document.getElementById("reset-operations");
-            searchResults = document.getElementById("search-results" );
-
             this.app.setVisibility(categories, true);
-            this.app.setVisibility(hideOperations, true);
+            this.app.setVisibility(closeOperationsDropdown, true);
         }
 
         if (e.type === "keyup"){
-            categories = document.getElementById("categories");
-            hideOperations = document.getElementById("reset-operations");
-            searchResults = document.getElementById("search-results" );
-
             if ( e.target.value.length === 0 ) {
                 this.app.setVisibility(categories, true);
-                this.app.setVisibility(hideOperations, true);
+                this.app.setVisibility(closeOperationsDropdown, true);
             } else {
                 this.app.setVisibility(categories, true );
                 this.app.setVisibility(searchResults, true );
-                this.app.setVisibility(hideOperations, true );
+                this.app.setVisibility(closeOperationsDropdown, true );
             }
         }
 
         if (e.type === "keyup" && e.keyCode === 27 ) { // Escape
-            this.resetOperations();
+            this.closeOperationsDropdown();
         }
 
         if (e.type === "search" || e.keyCode === 13) { // Search or Return
@@ -301,13 +299,13 @@ class OperationsWaiter {
      * Hide any operation lists ( #categories or #search-results ) and the reset-operations button itself,
      * clear any search input
      */
-    resetOperations(){
-        let search, categories, searchResults, resetOperations;
+    closeOperationsDropdown(){
+        let search, categories, searchResults, closeOperationsDropdown;
 
         search = document.getElementById("search");
         categories = document.getElementById( "categories");
         searchResults = document.getElementById( "search-results");
-        resetOperations = document.getElementById("reset-operations");
+        closeOperationsDropdown = document.getElementById("close-operations-dropdown");
 
         // if any input remains in #search, clear it
         if (search.value.length) {
@@ -316,7 +314,7 @@ class OperationsWaiter {
 
         this.app.setVisibility(categories, false );
         this.app.setVisibility(searchResults, false );
-        this.app.setVisibility(resetOperations, false );
+        this.app.setVisibility(closeOperationsDropdown, false );
     }
 
     /**

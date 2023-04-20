@@ -20,7 +20,7 @@
     border-bottom: 1px solid var(--primary-border-colour);
 }
 
-#reset-operations.hidden,
+#close-operations-dropdown.hidden,
 #search-results.hidden,
 #categories.hidden {
     z-index: -10;
@@ -32,6 +32,7 @@
         border-bottom: none;
     }
 
+    /* On desktop UI, the dropdown is always open */
     #search-results.hidden,
     #categories.hidden {
         z-index: initial;
