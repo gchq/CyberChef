@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import what from 'jswhat';
+import what from "jswhat";
 
 /**
  * WhatIsIt operation
@@ -51,14 +51,14 @@ class WhatIsIt extends Operation {
      */
     run(input, args) {
         const [search, filter, exclude] = args;
-        let fOptions = { search };
+        const fOptions = { search };
         if (filter.length) {
             fOptions.filter = filter.split(/,\s?/);
         }
         if (exclude.length) {
             fOptions.exclude = exclude.split(/,\s?/);
         }
-        console.log(fOptions)
+
         return what.is(input, fOptions);
     }
     /**
@@ -81,7 +81,7 @@ class WhatIsIt extends Operation {
             output += `<tr>
                 <td>${option.name}</td>
                 <td>${option.matched}</td>
-                <td>${option.description}(${option.tags.join(', ')})</td>
+                <td>${option.description}(${option.tags.join(", ")})</td>
             </tr>`;
         });
 
