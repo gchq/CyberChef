@@ -38,24 +38,17 @@ class OperationsWaiter {
     searchOperations(e) {
         let ops, selected;
 
-        // 'close' button in Operations component mobile UI
-        const closeOperationsDropdown = document.getElementById("close-operations-dropdown");
-        const categories = document.getElementById("categories");
-        const searchResults = document.getElementById("search-results");
-
         if (e.type === "click" && !e.target.value.length){
-            this.app.setVisibility(categories, true);
-            this.app.setVisibility(closeOperationsDropdown, true);
+            this.openOperationsDropdown();
         }
 
         if (e.type === "keyup"){
-            if ( e.target.value.length === 0 ) {
-                this.app.setVisibility(categories, true);
-                this.app.setVisibility(closeOperationsDropdown, true);
-            } else {
-                this.app.setVisibility(categories, true );
+            const searchResults = document.getElementById("search-results");
+
+            this.openOperationsDropdown();
+
+            if ( e.target.value.length !== 0 ){
                 this.app.setVisibility(searchResults, true );
-                this.app.setVisibility(closeOperationsDropdown, true );
             }
         }
 
@@ -296,16 +289,27 @@ class OperationsWaiter {
 
 
     /**
-     * Hide any operation lists ( #categories or #search-results ) and the reset-operations button itself,
-     * clear any search input
+     * Open operations dropdown
+     */
+    openOperationsDropdown(){
+        // 'close' icon in Operations component mobile UI
+        const closeOperationsDropdown = document.getElementById("close-operations-dropdown");
+        const categories = document.getElementById("categories");
+
+        this.app.setVisibility(categories, true);
+        this.app.setVisibility(closeOperationsDropdown, true);
+    }
+
+
+    /**
+     * Hide any operation lists ( #categories or #search-results ) and the close-operations-dropdown
+     * icon itself, clear any search input
      */
     closeOperationsDropdown(){
-        let search, categories, searchResults, closeOperationsDropdown;
-
-        search = document.getElementById("search");
-        categories = document.getElementById( "categories");
-        searchResults = document.getElementById( "search-results");
-        closeOperationsDropdown = document.getElementById("close-operations-dropdown");
+        const search = document.getElementById("search");
+        const categories = document.getElementById( "categories");
+        const searchResults = document.getElementById( "search-results");
+        const closeOperationsDropdown = document.getElementById("close-operations-dropdown");
 
         // if any input remains in #search, clear it
         if (search.value.length) {
