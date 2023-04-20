@@ -2,6 +2,9 @@
  * Operations - Categories list
  */
 
+#categories {
+    border-top: 1px solid var(--primary-border-colour);
+}
 
 .category-title {
     display: flex;

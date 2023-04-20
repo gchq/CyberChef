@@ -25,12 +25,12 @@ label[for="output-text"] {
 
 #input .cm-scroller,
 #output .cm-scroller {
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 #input .cm-scroller:hover,
 #output .cm-scroller:hover {
-    cursor: pointer;
+    cursor: initial;
 }
 
 #output-text.html-output .cm-content,
@@ -79,7 +79,6 @@ label[for="output-text"] {
     display: flex;
     justify-content: center;
     align-items: center;
-
     transition: all 0.5s ease;
 }
 

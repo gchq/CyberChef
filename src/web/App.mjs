@@ -336,8 +336,9 @@ class App {
      *
      * A note: there is some code repetition here ( re setDesktopLayout ),
      * but I found some lingering gutters or odd behaviour on window resizing that is
-     * resolved by always destroying splitters. Now setDesktopLayout and setMobileLayout
-     * can be called on window resizing events and the switch gets handled smoothly.
+     * resolved by always destroying and rebuilding the splitters. Now setDesktopLayout
+     * and setMobileLayout can be called on window resizing events and the switch
+     * gets handled smoothly.
      */
     setMobileLayout() {
         if (this.columnSplitter) this.columnSplitter.destroy();
@@ -353,7 +354,6 @@ class App {
         this.ioSplitter = Split(["#input", "#output"], {
             direction: "vertical",
             gutterSize: 0,
-            minSize: [50, 50]
         });
     }
 

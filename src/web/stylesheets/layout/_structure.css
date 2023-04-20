@@ -6,18 +6,13 @@
  * @license Apache-2.0
  */
 
-/* Together, they make up 100vh */
 :root {
     --banner-height: 40px;
     --controls-height: 70px;
-    --workspace-height: calc( 100vh - calc( var(--banner-height) + var(--controls-height)));;
-    --recipe-height: 20vh;
-    --operations-height: 88px;
+    --workspace-height: calc( 100vh - var(--banner-height) - var(--controls-height));
+    --recipe-height: 16vh;
+    --operations-height: 89px;
     --io-height: calc(100vh - var(--banner-height) - var(--controls-height) - var(--recipe-height) - var(--operations-height));
-}
-
-body {
-    overflow: hidden;
 }
 
 #banner,
@@ -46,7 +41,23 @@ body {
     bottom: 0;
 }
 
+#IO {
+    padding-bottom: var(--controls-height);
+}
+
 @media only screen and ( min-width: 768px ) {
+    #IO {
+        padding-bottom: 0;
+    }
+
+    #recipe {
+        padding-bottom: var(--controls-height);
+    }
+
+    #recipe .list-area  {
+        bottom: var(--controls-height);
+    }
+
     #workspace-wrapper {
         height: calc( 100vh - var(--banner-height));
     }

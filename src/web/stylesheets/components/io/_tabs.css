@@ -21,7 +21,7 @@
     width: 100%;
     min-width: 120px;
     float: left;
-    padding: 0px;
+    padding: 0;
     text-align: center;
     border-right: 1px solid var(--primary-border-colour);
     height: var(--tab-height);
