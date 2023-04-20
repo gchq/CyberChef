@@ -12,9 +12,6 @@
 - test drag and drop etc. Regular mobile events / UX
 
 ### Desktop UI:
-#### Bug
-- `calcControlsHeight` and `adjustComponentSizes` cause trouble in `recipe` `rec-list` when resizing from desktop to mobile
-
 ### General UI:
 - fix up key / tab events so UI can be navigated comfortably with keys ( inc. visual focus feedback ). Probably a lot of work though
 

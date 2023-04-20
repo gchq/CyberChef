@@ -668,7 +668,6 @@ class App {
         this.manager.recipe.adjustWidth();
         this.manager.input.calcMaxTabs();
         this.manager.output.calcMaxTabs();
-        this.manager.controls.calcControlsHeight(); //@TODO
     }
 
 
