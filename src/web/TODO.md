@@ -19,7 +19,6 @@
 - `core/Recipe.mjs`, `core/lib/Magic.js` return imports to original
 
 ### Misc:
-- check and add browser vendor prefixes throughout stylesheets where needed
 - comb through CSS and improve organisation for better DevX
 - special checks for features removed from mobile ( like multiple tabs, minimise, maximise etc. )
 - write / complete UI tests
