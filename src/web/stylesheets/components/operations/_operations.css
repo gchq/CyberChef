@@ -1,9 +1,23 @@
 /**
  * Operations component styles
+ *
+ * For consistency sake I'm using an ID, but the custom wrapper / dropdown component
+ * can ( should ) be made into a reusable, generic component
  */
 
-.operations-wrapper {
+#operations-wrapper {
     position: relative;
+}
+
+#operations-dropdown {
+    position: absolute;
+    top: 40px; /* the height of the input[type="search"] with pos relative */
+    width: 100%;
+    height: auto;
+    max-height: 60vh;
+    overflow: auto;
+    z-index: 20; /* to dropdown on top of all the other elements */
+    border-bottom: 1px solid var(--primary-border-colour);
 }
 
 #reset-operations.hidden,
@@ -11,4 +25,10 @@
 #categories.hidden {
     z-index: -10;
     display: none;
+}
+
+@media only screen and ( min-width: 768px ){
+    #operations-dropdown {
+        border-bottom: none;
+    }
 }

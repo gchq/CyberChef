@@ -5,9 +5,6 @@
 
 ### Mobile UI:
 #### Operations:
-- `categories` and `search-results` shouldn't really alter one another, rather `search-results` if there are any, should be placed at the top of `categories`
-- bootstrap native 'x' in `input[type="search"]` should clear input value and then display `categories` rather than close the entire dropdown
-- related: on invalid search input ( and no results ) or no input but focus on `search`, `categories` should be displayed
 - on click of `input[type="search]`, `favourites` briefly opens and closes. It should remain open until further action
 - on mobile, there is almost no visual feedback when adding an operation to the recipe list. Since the recipe list is not visible like on desktop, this is very confusing UX
 
@@ -27,6 +24,7 @@
 
 ### JS:
 - `core/Recipe.mjs`, `core/lib/Magic.js` return imports to original
+- adopted existing codestyle but check with CC `let ops, selected` etc in `searchOperations` ( can't we just declare and assign them once? maybe there is a reason )
 
 ### Misc:
 - check for remaining todos

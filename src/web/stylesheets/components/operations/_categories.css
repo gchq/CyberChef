@@ -1,3 +1,8 @@
+/**
+ * Operations - Categories list
+ */
+
+
 .category-title {
     display: flex;
     justify-content: space-between;
@@ -31,17 +36,6 @@
     margin: 0 !important;
     border-radius: 0 !important;
     border: none;
-}
-
-#categories {
-    position: absolute;
-    top: 40px; /* the height of the input[type="search"] with pos relative */
-    width: 100%;
-    height: auto;
-    max-height: 60vh;
-    overflow: scroll;
-    border-bottom: 1px solid var(--primary-border-colour);
-    z-index: 20; /* to dropdown on top of all the other elements */
 }
 
 #categories a {

@@ -51,8 +51,7 @@ body {
         height: calc( 100vh - var(--banner-height));
     }
 
-    #categories,
-    #search-results {
+    #operations-dropdown {
         max-height: max-content;
         overflow: revert;
     }

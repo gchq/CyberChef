@@ -35,7 +35,7 @@ class OperationsWaiter {
      * @param {event} e
      */
     searchOperations(e) {
-        let ops, selected, categories, hideOperations, searchResults;
+        let ops, selected, hideOperations, categories, searchResults;
 
         if (e.type === "click" && !e.target.value.length){
             categories = document.getElementById("categories");
@@ -55,7 +55,7 @@ class OperationsWaiter {
                 this.app.setVisibility(categories, true);
                 this.app.setVisibility(hideOperations, true);
             } else {
-                this.app.setVisibility(categories, false );
+                this.app.setVisibility(categories, true );
                 this.app.setVisibility(searchResults, true );
                 this.app.setVisibility(hideOperations, true );
             }
