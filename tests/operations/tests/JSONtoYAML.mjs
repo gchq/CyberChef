@@ -13,7 +13,7 @@ const EXPECTED_YAML = "version: 1.0.0\ndependencies:\n  yaml: ^1.10.0\npackage:\
 TestRegister.addTests([
     {
         name: "JSON to YAML: no spacing",
-        input: JSON.stringify({"version":"1.0.0","dependencies":{"yaml":"^1.10.0"},"package":{"exclude":[".idea/**",".gitignore"]}}),
+        input: JSON.stringify({ "version": "1.0.0", "dependencies": { "yaml": "^1.10.0" }, "package": { "exclude": [".idea/**", ".gitignore"]}}),
         expectedOutput: EXPECTED_YAML,
         recipeConfig: [
             {
@@ -24,7 +24,7 @@ TestRegister.addTests([
     },
     {
         name: "JSON to YAML: with spacing",
-        input: JSON.stringify({"version":"1.0.0","dependencies":{"yaml":"^1.10.0"},"package":{"exclude":[".idea/**",".gitignore"]}}, null, 4),
+        input: JSON.stringify({ "version": "1.0.0", "dependencies": { "yaml": "^1.10.0" }, "package": { "exclude": [".idea/**", ".gitignore"]}}, null, 4),
         expectedOutput: EXPECTED_YAML,
         recipeConfig: [
             {
