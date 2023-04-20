@@ -31,4 +31,10 @@
     #operations-dropdown {
         border-bottom: none;
     }
+
+    #search-results.hidden,
+    #categories.hidden {
+        z-index: initial;
+        display: block;
+    }
 }

@@ -13,9 +13,6 @@
 - test drag and drop etc. Regular mobile events / UX
 
 ### Desktop UI:
-#### Operations:
-- dropdown must be open by default and not closable at all. Inherit any other behaviour from mobile Operations fixes
-
 #### Bug
 - `calcControlsHeight` and `adjustComponentSizes` cause trouble in `recipe` `rec-list` when resizing from desktop to mobile
 
