@@ -17,11 +17,8 @@
 
 ### JS:
 - `core/Recipe.mjs`, `core/lib/Magic.js` return imports to original
-- adopted existing codestyle but check with CC `let ops, selected` etc in `searchOperations` ( can't we just declare and assign them once? maybe there is a reason )
 
 ### Misc:
-- check for remaining todos
-- check for remaining comments to be deleted
 - check and add browser vendor prefixes throughout stylesheets where needed
 - comb through CSS and improve organisation for better DevX
 - special checks for features removed from mobile ( like multiple tabs, minimise, maximise etc. )

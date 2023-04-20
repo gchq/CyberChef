@@ -193,13 +193,11 @@
                 </div>
             </div>
             <div id="workspace-wrapper">
-
                 <div id="operations" class="split split-horizontal no-select">
                     <div class="title no-select"
                          data-help-title="Operations list"
                          data-help="<p>The Operations list contains all the operations in CyberChef arranged into categories. Some operations may be present in multiple categories. You can search for operations using the search box.</p><p>To use an operation, either double click it, or drag it into the Recipe pane. You will then be able to configure its arguments (or 'Ingredients' in CyberChef terminology).</p>">
                         Operations
-
                         <span class="pane-controls hide-on-maximised-output">
                             <button type="button"
                                     class="btn bmd-btn-icon mobile-only hidden"
@@ -219,7 +217,6 @@
                                data-help-title="Searching for operations"
                                data-help="<p>Use the search box to find useful operations.</p><p>Both operation names and descriptions are queried using a fuzzy matching algorithm.</p>"
                         />
-                        <!--operation list and categories-->
                         <div id="operations-dropdown">
                             <ul id="search-results" class="op-list hidden"></ul>
                             <div id="categories" class="panel-group no-select hidden"></div>
@@ -267,9 +264,7 @@
                         </div>
                     </div>
                 </div>
-
                 <div id="IO" class="split split-horizontal">
-                    <!--input-->
                     <div id="input" class="split no-select" data-help-title="Input pane" data-help="<p>Input data can be entered by typing it in, pasting it in, dragging it in, or using the 'Load file' or 'Load folder' buttons.</p><p>CyberChef does its best to represent data as accurately as possible to ensure you know exactly what you are working with. Non-printable characters are represented using control character pictures, for example a null byte (0x00) is displayed like this: <span title='Control character null' aria-label='Control character null' class='cm-specialChar'>␀</span>.</p>">
                         <div class="title no-select">
                             <label for="input-text">Input</label>
@@ -323,8 +318,6 @@
                             <div id="input-text"></div>
                         </div>
                     </div>
-
-                    <!--output-->
                     <div id="output" class="split" data-help-title="Output pane" data-help="<p>This pane displays the results of the Recipe after it has processed your Input.</p><p>CyberChef does its best to represent data as accurately as possible to ensure you know exactly what you are working with. Non-printable characters are represented using control character pictures, for example a null byte (0x00) is displayed like this: <span title='Control character null' aria-label='Control character null' class='cm-specialChar'>␀</span>.</p><p>When copying these characters from the Output, the original byte value should be copied into your clipboard, rather than the control character picture itself.</p>">
                         <div class="title no-select">
                             <label for="output-text">Output</label>
