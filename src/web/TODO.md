@@ -5,7 +5,6 @@
 
 ### Mobile UI:
 #### Operations:
-- on click of `input[type="search]`, `favourites` briefly opens and closes. It should remain open until further action.
 - on mobile, there is almost no visual feedback when adding an operation to the recipe list. Since the recipe list is not visible like on desktop, this is very confusing UX
 
 #### General mobile UX:

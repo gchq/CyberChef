@@ -38,10 +38,6 @@ class OperationsWaiter {
     searchOperations(e) {
         let ops, selected;
 
-        if (e.type === "click" && !e.target.value.length){
-            this.openOperationsDropdown();
-        }
-
         if (e.type === "keyup"){
             const searchResults = document.getElementById("search-results");
 
@@ -50,10 +46,6 @@ class OperationsWaiter {
             if ( e.target.value.length !== 0 ){
                 this.app.setVisibility(searchResults, true );
             }
-        }
-
-        if (e.type === "keyup" && e.keyCode === 27 ) { // Escape
-            this.closeOperationsDropdown();
         }
 
         if (e.type === "search" || e.keyCode === 13) { // Search or Return
@@ -67,7 +59,11 @@ class OperationsWaiter {
             }
         }
 
-        if (e.keyCode === 40) { // Down
+        if (e.type === "click" && !e.target.value.length){
+            this.openOperationsDropdown();
+        } else if (e.keyCode === 27 ) { // Escape
+            this.closeOperationsDropdown();
+        } else if (e.keyCode === 40) { // Down
             e.preventDefault();
             ops = document.querySelectorAll("#search-results li");
             if (ops.length) {
