@@ -7,7 +7,6 @@
  */
 
 .operation {
-    cursor: grab;
     padding: 10px;
     list-style-type: none;
     position: relative;
@@ -16,6 +15,22 @@
     border-top: none;
     border-left: none;
     border-right: none;
+}
+
+@media only screen and (min-width: 768px){
+    .operation {
+        cursor: grab;
+    }
+}
+
+.op-icon {
+    float: right;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.op-icon.remove-icon {
+    color: #f44336;
 }
 
 .op-title {
@@ -229,13 +244,6 @@ input.toggle-string {
     word-break: break-all;
 }
 
-.op-icon {
-    float: right;
-    color: #f44336;
-    font-size: 18px;
-    cursor: pointer;
-}
-
 .recip-icons {
     position: absolute;
     top: 13px;
@@ -316,9 +324,3 @@ input.toggle-string {
     color: var(--disabled-font-colour) !important;
     background-color: var(--disabled-border-colour) !important;
 }
-
-
-
-
-
-

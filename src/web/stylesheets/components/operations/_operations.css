@@ -18,6 +18,7 @@
     overflow: auto;
     z-index: 20; /* to dropdown on top of all the other elements */
     border-bottom: 1px solid var(--primary-border-colour);
+    background-color: var(--secondary-background-colour);
 }
 
 #close-operations-dropdown.hidden,

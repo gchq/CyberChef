@@ -182,7 +182,11 @@ class OperationsWaiter {
      */
     opListCreate(e) {
         this.manager.recipe.createSortableSeedList(e.target);
-        this.enableOpsListPopovers(e.target);
+        if ( window.innerWidth < this.app.breakpoint ){
+            this.disableOpsListPopovers();
+        } else {
+            this.enableOpsListPopovers(e.target);
+        }
     }
 
 
@@ -212,6 +216,13 @@ class OperationsWaiter {
                     }
                 }, 50);
             });
+    }
+
+    /**
+     * Disable popovers on all op-list list items
+     */
+    disableOpsListPopovers() {
+        $(document.querySelectorAll(".op-list .operation")).popover("disable");
     }
 
 
@@ -339,7 +350,6 @@ class OperationsWaiter {
     resetFavouritesClick() {
         this.app.resetFavourites();
     }
-
 }
 
 export default OperationsWaiter;
