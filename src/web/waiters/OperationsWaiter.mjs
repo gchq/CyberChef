@@ -185,18 +185,18 @@ class OperationsWaiter {
         if ( window.innerWidth < this.app.breakpoint ){
             this.disableOpsListPopovers();
         } else {
-            this.enableOpsListPopovers(e.target);
+            this.enableOpPopover(e.target);
         }
     }
 
 
     /**
-     * Sets up popovers, allowing the popover itself to gain focus which enables scrolling
-     * and other interactions.
+     * Enable the target operation popover itself to gain focus which
+     * enables scrolling and other interactions.
      *
      * @param {Element} el - The element to start selecting from
      */
-    enableOpsListPopovers(el) {
+    enableOpPopover(el) {
         $(el).find("[data-toggle=popover]").addBack("[data-toggle=popover]")
             .popover({trigger: "manual"})
             .on("mouseenter", function(e) {
@@ -218,11 +218,19 @@ class OperationsWaiter {
             });
     }
 
+
     /**
      * Disable popovers on all op-list list items
      */
     disableOpsListPopovers() {
         $(document.querySelectorAll(".op-list .operation")).popover("disable");
+    }
+
+    /**
+     * Enable popovers on all op-list list items
+     */
+    enableOpsListPopovers(){
+        $(document.querySelectorAll(".op-list .operation")).popover("enable");
     }
 
 

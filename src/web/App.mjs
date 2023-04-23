@@ -878,6 +878,29 @@ class App {
             }
         }
     }
+
+    /**
+     * Aggregate all the desktop UI functions.
+     *
+     * Popovers and desktop layout are set on init, but we also need to
+     * update the UI correctly on window resizing events
+     */
+    setDesktopUI(minimise){
+        this.setDesktopLayout(minimise);
+        this.manager.ops.enableOpsListPopovers();
+    }
+
+
+    /**
+     * Aggregate all the mobile UI functions.
+     *
+     * Popovers and desktop layout are set on init, but we also need to
+     * update the UI correctly on window resizing events
+     */
+    setMobileUI(){
+        this.setMobileLayout();
+        this.manager.ops.disableOpsListPopovers();
+    }
 }
 
 export default App;

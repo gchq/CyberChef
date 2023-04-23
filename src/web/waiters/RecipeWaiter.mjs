@@ -139,7 +139,7 @@ class RecipeWaiter {
             enableOpsElement = evt.item;
             $(evt.item).attr("data-toggle", "popover");
         }
-        this.manager.ops.enableOpsListPopovers(enableOpsElement);
+        this.manager.ops.enableOpPopover(enableOpsElement);
 
         if (evt.item.parentNode.id !== "rec-list") {
             return;
