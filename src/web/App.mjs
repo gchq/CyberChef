@@ -878,30 +878,6 @@ class App {
             }
         }
     }
-
-    /**
-     * Aggregate all the desktop UI functions.
-     *
-     * Fires on window resize event ( on min-width breakpoint )
-     */
-    setDesktopUI(minimise){
-        this.setDesktopLayout(minimise);
-        this.manager.ops.enableOpsListPopovers();
-        // enable drag and drop
-    }
-
-
-    /**
-     * Aggregate all the mobile UI functions.
-     *
-     * Popovers and desktop layout are set on init, but we also need to
-     * update the UI correctly on window resizing events
-     */
-    setMobileUI(){
-        this.setMobileLayout();
-        this.manager.ops.disableOpsListPopovers();
-        // disable drag and drop / long press and drag and drop for favourites
-    }
 }
 
 export default App;
