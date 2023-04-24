@@ -30,10 +30,13 @@ class WindowWaiter {
         debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();
 
         if ( window.innerWidth >= this.app.breakpoint ) {
-            this.app.setDesktopUI(false);
+            this.app.setDesktopLayout(false);
         } else {
-            this.app.setMobileUI();
+            this.app.setMobileLayout();
         }
+
+        // we must repopulate the op lists to handle sortable, draggable, popovers etc.
+        debounce(this.app.populateOperationsList, 200, "windowResize", this.app, [])();
     }
 
 
