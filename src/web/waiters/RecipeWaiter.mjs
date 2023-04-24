@@ -85,14 +85,16 @@ class RecipeWaiter {
      * Creates a drag-n-droppable seed list of operations.
      *
      * @param {element} listEl - The list to initialise
+     * @param {boolean} draggable - Are list items draggable
      */
-    createSortableSeedList(listEl) {
+    createSortableSeedList(listEl, draggable = true) {
         Sortable.create(listEl, {
             group: {
                 name: "recipe",
                 pull: "clone",
                 put: false,
             },
+            draggable: draggable ? ".operation" : null,
             sort: false,
             setData: function(dataTransfer, dragEl) {
                 dataTransfer.setData("Text", dragEl.textContent);
@@ -396,7 +398,7 @@ class RecipeWaiter {
         const item = document.createElement("li");
 
         item.classList.add("operation");
-        item.innerHTML = name;
+        item.innerText = name;
         this.buildRecipeOperation(item);
         document.getElementById("rec-list").appendChild(item);
 
