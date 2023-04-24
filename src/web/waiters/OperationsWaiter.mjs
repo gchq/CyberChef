@@ -298,7 +298,9 @@ class OperationsWaiter {
             this.removeIntent = false;
         }.bind(this));
 
-        $("#edit-favourites-list [data-toggle=popover]").popover();
+        if (window.innerWidth >= this.app.breakpoint) {
+            $("#edit-favourites-list [data-toggle=popover]").popover();
+        }
         $("#favourites-modal").modal();
     }
 

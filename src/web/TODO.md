@@ -15,7 +15,6 @@
 - test drag and drop etc. Regular mobile events / UX
 - view-heights not correct due to variable taskbar on mobile devices
 
-- minor issue w popovers glitching in modal ( edit favourites ), but it only occurs on (laptop) browser < breakpoint, not on a real mobile device. It's minor but bothers me
 
 ### Desktop UI:
 ### General UI:
