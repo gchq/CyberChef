@@ -46,7 +46,7 @@ class HTMLOperation {
      * @returns {string}
      */
     toStubHtml(removeIcon) {
-        let html = "<li class='operation'";
+        let html = `<li data-name="${this.name}" class="operation"`;
 
         if (this.description) {
             const infoLink = this.infoURL ? `<hr>${titleFromWikiLink(this.infoURL)}` : "";
@@ -60,6 +60,8 @@ class HTMLOperation {
 
         if (removeIcon) {
             html += "<i class='material-icons remove-icon op-icon'>delete</i>";
+        } else if (!removeIcon && window.innerWidth < this.app.breakpoint ){
+            html += "<i class='material-icons check-icon op-icon'>check</i>";
         }
 
         html += "</li>";
