@@ -181,10 +181,11 @@ class OperationsWaiter {
      * @param {event} e
      */
     opListCreate(e) {
-        this.manager.recipe.createSortableSeedList(e.target);
         if ( window.innerWidth < this.app.breakpoint ){
+            this.manager.recipe.createSortableSeedList(e.target, false);
             this.disableOpsListPopovers();
         } else {
+            this.manager.recipe.createSortableSeedList(e.target);
             this.enableOpPopover(e.target);
         }
     }
@@ -243,7 +244,7 @@ class OperationsWaiter {
     operationDblclick(e) {
         const li = e.target;
 
-        this.manager.recipe.addOperation(li.textContent);
+        this.manager.recipe.addOperation(li.getAttribute('data-name'));
     }
 
 
@@ -309,7 +310,7 @@ class OperationsWaiter {
      * Open operations dropdown
      */
     openOperationsDropdown(){
-        // 'close' icon in Operations component mobile UI
+        // 'close' ( dropdown ) icon in Operations component mobile UI
         const closeOperationsDropdown = document.getElementById("close-operations-dropdown");
         const categories = document.getElementById("categories");
 
@@ -324,18 +325,15 @@ class OperationsWaiter {
      */
     closeOperationsDropdown(){
         const search = document.getElementById("search");
-        const categories = document.getElementById( "categories");
-        const searchResults = document.getElementById( "search-results");
-        const closeOperationsDropdown = document.getElementById("close-operations-dropdown");
 
         // if any input remains in #search, clear it
         if (search.value.length) {
             search.value = '';
         }
 
-        this.app.setVisibility(categories, false );
-        this.app.setVisibility(searchResults, false );
-        this.app.setVisibility(closeOperationsDropdown, false );
+        this.app.setVisibility(document.getElementById( "categories"), false );
+        this.app.setVisibility(document.getElementById( "search-results"), false );
+        this.app.setVisibility(document.getElementById("close-operations-dropdown"), false );
     }
 
     /**
