@@ -21,6 +21,11 @@
     .operation {
         cursor: grab;
     }
+
+    /* never display check icons on desktop views */
+    .op-icon.check-icon {
+        display: none;
+    }
 }
 
 .op-icon {
@@ -31,6 +36,15 @@
 
 .op-icon.remove-icon {
     color: #f44336;
+}
+
+.op-icon.check-icon {
+    display: none;
+    color: #47d047;
+}
+
+.operation.selected > .op-icon.check-icon {
+    display: initial;
 }
 
 .op-title {
