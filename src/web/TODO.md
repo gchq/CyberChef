@@ -4,12 +4,10 @@
 ---
 
 #### Mobile UI ( on real device ):
-- on mobile UI, there is almost no visual feedback when adding an operation to the recipe list. Since the recipe list is not visible like on desktop, this is very confusing UX
-- adding an operation only works with drag and drop, not on double tap or the like. This todo is related to the remaining mobile UI one.
-  Dragging and dropping won't be an option on mobile, because then you can't scroll the operations list. I'm thinking to add
-  operations on mobile via double tap, then add a checkmark at the right end of the op list item. Remove an item directly in the list via
-  another double tap ( or clearing the recipe list via trash icon as normal ).
-- the above causes a problem for adding favourites though, there is some UX difficulty here.
+- OperationsWaiter operationDblClick:  class 'selected' needs to be removed once it is deleted from recipe list, through any type of event
+- How to add operations to favourites since drag and drop is now disabled on mobile ( maybe a star icon...? )
+- 'name' in recipe waiter > addOperation is <b>what</b>ever instead of a plain title..
+- Recipe list on mobile panel is too small to comfortably scroll and change order of recipes
 
 - test *thoroughly* with keyboard popping up because that messes with view-heights on mobile probably and might make it a very frustrating experience
 - test drag and drop etc. Regular mobile events / UX

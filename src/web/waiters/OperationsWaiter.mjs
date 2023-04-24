@@ -227,13 +227,6 @@ class OperationsWaiter {
         $(document.querySelectorAll(".op-list .operation")).popover("disable");
     }
 
-    /**
-     * Enable popovers on all op-list list items
-     */
-    enableOpsListPopovers(){
-        $(document.querySelectorAll(".op-list .operation")).popover("enable");
-    }
-
 
     /**
      * Handler for operation doubleclick events.
@@ -243,10 +236,8 @@ class OperationsWaiter {
      */
     operationDblclick(e) {
         const li = e.target;
-
-        e.target.classList.add('selected');
-
-        this.manager.recipe.addOperation(li.getAttribute('data-name'));
+        e.target.classList.add("selected");
+        this.manager.recipe.addOperation(li.getAttribute("data-name"));
     }
 
 
