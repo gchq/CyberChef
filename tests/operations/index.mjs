@@ -30,6 +30,7 @@ import "./tests/ByteRepr.mjs";
 import "./tests/CartesianProduct.mjs";
 import "./tests/CetaceanCipherEncode.mjs";
 import "./tests/CetaceanCipherDecode.mjs";
+import "./tests/ChaCha.mjs";
 import "./tests/CharEnc.mjs";
 import "./tests/ChangeIPFormat.mjs";
 import "./tests/Charts.mjs";
@@ -136,7 +137,16 @@ import "./tests/CaesarBoxCipher.mjs";
 import "./tests/UnescapeString.mjs";
 import "./tests/LS47.mjs";
 import "./tests/LZString.mjs";
-
+import "./tests/NTLM.mjs";
+import "./tests/Shuffle.mjs";
+import "./tests/FletcherChecksum.mjs";
+import "./tests/CMAC.mjs";
+import "./tests/AESKeyWrap.mjs";
+import "./tests/Rabbit.mjs";
+import "./tests/LevenshteinDistance.mjs";
+import "./tests/SwapCase.mjs";
+import "./tests/HKDF.mjs";
+import "./tests/GenerateDeBruijnSequence.mjs";
 
 // Cannot test operations that use the File type yet
 // import "./tests/SplitColourChannels.mjs";

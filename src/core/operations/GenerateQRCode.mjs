@@ -44,7 +44,7 @@ class GenerateQRCode extends Operation {
             {
                 "name": "Margin (num modules)",
                 "type": "number",
-                "value": 2,
+                "value": 4,
                 "min": 0
             },
             {

@@ -10,8 +10,7 @@ import Utils from "../Utils.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { runHash } from "../lib/Hash.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import jimplib from "jimp/es/index.js";
-const jimp = jimplib.default ? jimplib.default : jimplib;
+import jimp from "jimp";
 
 /**
  * Randomize Colour Palette operation

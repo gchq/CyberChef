@@ -9,8 +9,7 @@ import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import jimplib from "jimp/es/index.js";
-const jimp = jimplib.default ? jimplib.default : jimplib;
+import jimp from "jimp";
 
 /**
  * View Bit Plane operation
@@ -90,7 +89,7 @@ class ViewBitPlane extends Operation {
      * @returns {html}
      */
     present(data) {
-        if (!data.length) return "";
+        if (!data.byteLength) return "";
         const type = isImage(data);
 
         return `<img src="data:${type};base64,${toBase64(data)}">`;

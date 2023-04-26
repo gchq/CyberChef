@@ -77,7 +77,7 @@ class PlayMedia extends Operation {
      * Displays an audio or video element that may be able to play the media
      * file.
      *
-     * @param data {byteArray} Data containing an audio or video file.
+     * @param {byteArray} data Data containing an audio or video file.
      * @returns {string} Markup to display a media player.
      */
     async present(data) {

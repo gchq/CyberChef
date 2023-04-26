@@ -1,7 +1,7 @@
 {
     "parser": "@babel/eslint-parser",
     "parserOptions": {
-        "ecmaVersion": 9,
+        "ecmaVersion": 2022,
         "ecmaFeatures": {
             "impliedStrict": true
         },

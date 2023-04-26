@@ -32,14 +32,16 @@ jobs:
 
     - name: Production Build
       if: success()
-      run: npx grunt prod
+      run: npx grunt prod --msg="Version 10 is here! Read about the new features <a href='https://github.com/gchq/CyberChef/wiki/Character-encoding,-EOL-separators,-and-editor-features'>here</a>"
 
     - name: Generate sitemap
       run: npx grunt exec:sitemap
 
-    # - name: UI Tests
-    #   if: success()
-    #   run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+    - name: UI Tests
+      if: success()
+      run: |
+        sudo apt-get install xvfb
+        xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
     - name: Prepare for GitHub Pages
       if: success()

@@ -13,7 +13,7 @@
     font-family: 'Material Icons';
     font-style: normal;
     font-weight: 400;
-    src: url("../static/fonts/MaterialIcons-Regular.woff2") format('woff2');
+    src: url("../static/fonts/MaterialIcons-Regular.ttf") format('truetype');
 }
 
 .material-icons {
@@ -246,4 +246,12 @@ optgroup {
 .colorpicker-color,
 .colorpicker-color div {
     height: 100px;
+}
+
+
+/* CodeMirror */
+
+.ͼ2 .cm-specialChar,
+.cm-specialChar {
+    color: red;
 }

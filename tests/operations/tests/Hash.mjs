@@ -1109,7 +1109,7 @@ TestRegister.addTests([
                 args: ["D-A"]
             }
         ]
-    }
+    },
     /* { // This takes a LONG time to run (over a minute usually).
         name: "Scrypt: RFC test vector 4",
         input: "pleaseletmein",
@@ -1127,4 +1127,36 @@ TestRegister.addTests([
             }
         ]
     }, */
+    {
+        name: "Argon2",
+        input: "argon2password",
+        expectedOutput: "$argon2i$v=19$m=4096,t=3,p=1$c29tZXNhbHQ$s43my9eBljQADuF/LWCG8vGqwAJzOorKQ0Yog8jFvbw",
+        recipeConfig: [
+            {
+                op: "Argon2",
+                args: [
+                    {"option": "UTF8", "string": "somesalt"},
+                    3,
+                    4096,
+                    1,
+                    32,
+                    "Argon2i",
+                    "Encoded hash"
+                ]
+            }
+        ]
+    },
+    {
+        name: "Argon2 compare",
+        input: "argon2password",
+        expectedOutput: "Match: argon2password",
+        recipeConfig: [
+            {
+                op: "Argon2 compare",
+                args: [
+                    "$argon2i$v=19$m=4096,t=3,p=1$c29tZXNhbHQ$s43my9eBljQADuF/LWCG8vGqwAJzOorKQ0Yog8jFvbw"
+                ]
+            }
+        ]
+    }
 ]);

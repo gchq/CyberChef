@@ -125,9 +125,9 @@
     /* Highlighter colours */
     --hl1: var(--base01);
     --hl2: var(--sol-blue);
-    --hl3: var(--sol-magenta);
+    --hl3: var(--sol-green);
     --hl4: var(--sol-yellow);
-    --hl5: var(--sol-green);
+    --hl5: var(--sol-magenta);
 
 
     /* Scrollbar */

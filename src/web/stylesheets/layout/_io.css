@@ -7,41 +7,36 @@
  */
 
 #input-text,
-#output-text,
-#output-html {
+#output-text {
     position: relative;
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 3px;
-    -moz-padding-start: 3px;
-    -moz-padding-end: 3px;
-    border: none;
-    border-width: 0px;
-    resize: none;
     background-color: transparent;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-}
-
-#output-wrapper{
-    margin: 0;
-    padding: 0;
-}
-
-#output-wrapper .textarea-wrapper {
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
     overflow: hidden;
-    pointer-events: auto;
+    user-select: auto;
 }
 
-
+#output-text.html-output .cm-content,
+#output-text.html-output .cm-line,
 #output-html {
+    display: block;
+    height: 100%;
+    user-select: auto;
+}
+#output-text.html-output .cm-line .cm-widgetBuffer,
+#output-text.html-output .cm-line>br {
     display: none;
-    overflow-y: auto;
-    -moz-padding-start: 1px; /* Fixes bug in Firefox */
+}
+
+.cm-editor {
+    height: 100%;
+}
+
+.cm-editor .cm-content {
+    font-family: var(--fixed-width-font-family);
+    font-size: var(--fixed-width-font-size);
+    color: var(--fixed-width-font-colour);
 }
 
 #input-tabs-wrapper #input-tabs,
@@ -162,59 +157,13 @@
 }
 
 #input-wrapper,
-#output-wrapper,
-#input-wrapper > * ,
-#output-wrapper > .textarea-wrapper > div,
-#output-wrapper > .textarea-wrapper > textarea {
+#output-wrapper {
     height: calc(100% - var(--title-height));
 }
 
 #input-wrapper.show-tabs,
-#input-wrapper.show-tabs > *,
-#output-wrapper.show-tabs,
-#output-wrapper.show-tabs > .textarea-wrapper > div,
-#output-wrapper.show-tabs > .textarea-wrapper > textarea {
+#output-wrapper.show-tabs {
     height: calc(100% - var(--tab-height) - var(--title-height));
-}
-
-#output-wrapper > .textarea-wrapper > #output-html {
-    height: 100%;
-}
-
-#show-file-overlay {
-    height: 32px;
-}
-
-.input-wrapper.textarea-wrapper {
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
-    pointer-events: auto;
-}
-
-.textarea-wrapper textarea,
-.textarea-wrapper>div {
-    font-family: var(--fixed-width-font-family);
-    font-size: var(--fixed-width-font-size);
-    color: var(--fixed-width-font-colour);
-}
-
-#input-highlighter,
-#output-highlighter {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    padding: 3px;
-    margin: 0;
-    overflow: hidden;
-    letter-spacing: normal;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    color: #fff;
-    background-color: transparent;
-    border: none;
-    pointer-events: none;
 }
 
 #output-loader {
@@ -222,10 +171,11 @@
     bottom: 0;
     left: 0;
     width: 100%;
+    height: 100%;
     margin: 0;
-    background-color: var(--primary-background-colour);
-    visibility: hidden;
+    background-color: var(--secondary-background-colour);
     opacity: 0;
+    visibility: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -254,31 +204,6 @@
     transition: all 0.5s ease;
 }
 
-#input-file,
-#output-file {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    display: none;
-}
-
-.file-overlay {
-    position: absolute;
-    opacity: 0.8;
-    background-color: var(--title-background-colour);
-    width: 100%;
-    height: 100%;
-}
-
-#show-file-overlay {
-    position: absolute;
-    right: 15px;
-    top: calc(var(--title-height) + 10px);
-    cursor: pointer;
-    display: none;
-}
-
 .io-info {
     margin-right: 18px;
     margin-top: 1px;
@@ -290,10 +215,6 @@
     font-size: 8pt;
     display: flex;
     align-items: center;
-}
-
-#input-info {
-    line-height: 15px;
 }
 
 .dropping-file {
@@ -457,4 +378,215 @@
 #output-search-results li:hover {
     cursor: pointer;
     filter: brightness(98%);
+}
+
+/* Highlighting */
+.ͼ2.cm-focused .cm-selectionBackground {
+    background-color: var(--hl5);
+}
+
+.ͼ2 .cm-selectionBackground {
+    background-color: var(--hl1);
+}
+
+.ͼ1 .cm-selectionMatch {
+    background-color: var(--hl2);
+}
+
+.ͼ1.cm-focused .cm-cursor.cm-cursor-primary {
+    border-color: var(--primary-font-colour);
+}
+
+.ͼ1 .cm-cursor.cm-cursor-primary {
+    display: block;
+    border-color: var(--subtext-font-colour);
+}
+
+
+/* Status bar */
+
+.cm-panel input::placeholder {
+    font-size: 12px !important;
+}
+
+.ͼ2 .cm-panels,
+.ͼ2 .cm-side-panels {
+    background-color: var(--secondary-background-colour);
+    border-color: var(--primary-border-colour);
+    color: var(--primary-font-colour);
+}
+
+.cm-status-bar {
+    font-family: var(--fixed-width-font-family);
+    font-weight: normal;
+    font-size: 8pt;
+    margin: 0 5px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cm-status-bar i {
+    font-size: 12pt;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+.cm-status-bar>div>span:first-child i {
+    margin-left: 0;
+}
+
+.cm-status-bar .disabled {
+    background-color: unset !important;
+    cursor: not-allowed;
+}
+
+/* Dropup Button */
+.cm-status-bar-select-btn {
+    border: none;
+    cursor: pointer;
+}
+
+/* The container <div> - needed to position the dropup content */
+.cm-status-bar-select {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropup content (Hidden by Default) */
+.cm-status-bar-select-content {
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    right: 0;
+    background-color: #f1f1f1;
+    min-width: 200px;
+    box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropup */
+.cm-status-bar-select-content a {
+    color: black;
+    padding: 2px 5px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropup links on hover */
+.cm-status-bar-select-content a:hover {
+    background-color: #ddd
+}
+
+/* Change the background color of the dropup button when the dropup content is shown */
+.cm-status-bar-select:hover .cm-status-bar-select-btn {
+    background-color: #f1f1f1;
+}
+
+/* The search field */
+.cm-status-bar-filter-input {
+    box-sizing: border-box;
+    font-size: 12px;
+    padding-left: 10px !important;
+    border: none;
+}
+
+.cm-status-bar-filter-search {
+    border-top: 1px solid #ddd;
+}
+
+/* Show the dropup menu */
+.cm-status-bar-select .show {
+    display: block;
+}
+
+.cm-status-bar-select-scroll {
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.chr-enc-value {
+    max-width: 150px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+
+/* File details panel */
+
+.cm-file-details {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    padding-bottom: 21px;
+    height: 100%;
+}
+
+.file-details-toggle-shown,
+.file-details-toggle-hidden {
+    width: 8px;
+    height: 40px;
+    border: 1px solid var(--secondary-border-colour);
+    position: absolute;
+    top: calc(50% - 20px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--secondary-border-colour);
+    color: var(--subtext-font-colour);
+    z-index: 1;
+}
+
+.file-details-toggle-shown {
+    left: 0;
+    border-left: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.file-details-toggle-hidden {
+    left: -8px;
+    border-right: none;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.file-details-toggle-shown:hover,
+.file-details-toggle-hidden:hover {
+    background-color: var(--primary-border-colour);
+    border-color: var(--primary-border-colour);
+    color: var(--primary-font-colour);
+}
+
+.file-details-heading {
+    font-weight: bold;
+    margin: 10px 0 10px 0;
+}
+
+.file-details-data {
+    text-align: left;
+    margin: 10px 2px;
+}
+
+.file-details-data td {
+    padding: 0 3px;
+    max-width: 130px;
+    min-width: 60px;
+    overflow: hidden;
+    vertical-align: top;
+    word-break: break-all;
+}
+
+.file-details-error {
+    color: #f00;
+}
+
+.file-details-thumbnail {
+    max-width: 180px;
 }
