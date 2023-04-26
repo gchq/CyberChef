@@ -22,6 +22,7 @@
 
 ### Misc:
 - Gruntfile revert dev config
+- check for lingering @TODO across code
 - comb through CSS and improve organisation for better DevX. Ask repo owners to open another issue perhaps and just redo all of the stylesheets ( preferably with SASS )
 - delete this file when done :)
 

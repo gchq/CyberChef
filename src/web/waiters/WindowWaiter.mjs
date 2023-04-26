@@ -28,9 +28,9 @@ class WindowWaiter {
      */
     windowResize() {
         if ( window.innerWidth >= this.app.breakpoint ) {
-            this.app.setDesktopLayout(false); //@TODO: use setDesktopUI() func
+            this.app.setDesktopUI(false);
         } else {
-            this.app.setMobileLayout(); //@TODO: use mobileUI() if needed
+            this.app.setMobileUI();
         }
 
         debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();

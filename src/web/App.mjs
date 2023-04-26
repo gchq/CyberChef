@@ -881,6 +881,18 @@ class App {
             }
         }
     }
+
+    setDesktopUI(minimise){
+        this.setDesktopLayout(minimise);
+        // we don't want to display any checkmarks on desktop, so we clear them
+        this.manager.recipe.clearAllSelectedClasses();
+    }
+
+    setMobileUI(){
+        this.setMobileLayout();
+        // on window resizing below breakpoint, we want to put the checkmarks back
+        this.manager.recipe.updateSelectedOperations();
+    }
 }
 
 export default App;
