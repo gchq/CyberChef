@@ -27,16 +27,13 @@ class WindowWaiter {
      * continuous resetting).
      */
     windowResize() {
-        debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();
-
         if ( window.innerWidth >= this.app.breakpoint ) {
-            this.app.setDesktopLayout(false);
+            this.app.setDesktopLayout(false); //@TODO: use setDesktopUI() func
         } else {
-            this.app.setMobileLayout();
+            this.app.setMobileLayout(); //@TODO: use mobileUI() if needed
         }
 
-        // we must repopulate the op lists to handle sortable, draggable, popovers etc.
-        debounce(this.app.populateOperationsList, 200, "windowResize", this.app, [])();
+        debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();
     }
 
 

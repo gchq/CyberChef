@@ -4,9 +4,8 @@
 ---
 
 #### Mobile UI ( on real device ):
-- OperationsWaiter operationDblClick:  class 'selected' needs to be removed once it is deleted from recipe list, through any type of event
 - How to add operations to favourites since drag and drop is now disabled on mobile ( maybe a star icon...? )
-- 'name' in recipe waiter > addOperation is <b>what</b>ever instead of a plain title..
+- 'name' in recipe waiter > addOperation is <b>what</b>ever instead of a plain data-name, updateSelectedOperations not working for search results because of that
 - Recipe list on mobile panel is too small to comfortably scroll and change order of recipes
 
 - test *thoroughly* with keyboard popping up because that messes with view-heights on mobile probably and might make it a very frustrating experience

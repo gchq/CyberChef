@@ -236,7 +236,6 @@ class OperationsWaiter {
      */
     operationDblclick(e) {
         const li = e.target;
-        e.target.classList.add("selected");
         this.manager.recipe.addOperation(li.getAttribute("data-name"));
     }
 
@@ -340,6 +339,7 @@ class OperationsWaiter {
         this.app.saveFavourites(favouritesList);
         this.app.loadFavourites();
         this.app.populateOperationsList();
+        this.manager.recipe.updateSelectedOperations();
         this.manager.recipe.initialiseOperationDragNDrop();
     }
 

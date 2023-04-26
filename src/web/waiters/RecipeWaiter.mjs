@@ -388,7 +388,8 @@ class RecipeWaiter {
 
 
     /**
-     * Adds the specified operation to the recipe.
+     * Adds the specified operation to the recipe and
+     * adds a checkmark to the operation in Operations op-list
      *
      * @fires Manager#operationadd
      * @param {string} name - The name of the operation to add
@@ -396,6 +397,7 @@ class RecipeWaiter {
      */
     addOperation(name) {
         const item = document.createElement("li");
+        item.setAttribute("data-name", name);
 
         item.classList.add("operation");
         item.innerText = name;
@@ -403,6 +405,8 @@ class RecipeWaiter {
         document.getElementById("rec-list").appendChild(item);
 
         $(item).find("[data-toggle='tooltip']").tooltip();
+
+        this.updateSelectedOperations();
 
         item.dispatchEvent(this.manager.operationadd);
         return item;
@@ -419,6 +423,7 @@ class RecipeWaiter {
         while (recList.firstChild) {
             recList.removeChild(recList.firstChild);
         }
+        this.clearAllSelectedClasses();
         recList.dispatchEvent(this.manager.operationremove);
     }
 
@@ -466,8 +471,8 @@ class RecipeWaiter {
      * @param {event} e
      */
     opAdd(e) {
-        log.debug(`'${e.target.querySelector(".op-title").textContent}' added to recipe`);
-
+        log.debug(`'${e.target.getAttribute("data-name")}' added to recipe`);
+        this.updateSelectedOperations();
         this.triggerArgEvents(e.target);
         window.dispatchEvent(this.manager.statechange);
     }
@@ -482,6 +487,7 @@ class RecipeWaiter {
      */
     opRemove(e) {
         log.debug("Operation removed from recipe");
+        this.updateSelectedOperations();
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -605,6 +611,70 @@ class RecipeWaiter {
         controlsContent.style.transform = `scale(${scale})`;
     }
 
+
+    /**
+     * Remove all "selected" classes for op-list list items at once
+     *
+     * This hides all the checkmark icons of previously added ( selected )
+     * operations to the recipe list
+     */
+    clearAllSelectedClasses(){
+        const list = document.querySelectorAll(".operation.selected");
+
+        // check if any operations are selected at all to prevent errors
+        if (list.length){
+            list.forEach((item) => {
+                item.classList.remove("selected");
+            })
+        }
+    }
+
+    /**
+     * Add "selected" to the operation that is added to the recipe
+     *
+     * This displays a checkmark icon to the operation in the op-list
+     *
+     * @param {string} opDataName the data-name of the target operation
+     */
+    addSelectedClass(opDataName){
+        const list = document.querySelectorAll(".operation");
+        const item = Array.from(list).find((item) => item.getAttribute("data-name") === opDataName );
+
+        item.classList.add("selected");
+    }
+
+    /**
+     * Update which items are selected in op-list.
+     *
+     * First, all selected classes are removed from op-list, then we get the current
+     * recipe-list ingredient names and add 'selected' back to the matching operations.
+     *
+     * Note: It seems a little overkill, but with the current tightly coupled code this is
+     * a reliable way to make sure the 'selected' operations are always in sync with
+     * the recipe list ( I think this is preferable to complicating a lot of existing
+     * code ), I'd recommend to refactor this at one point, but that will mean a huge code
+     * overhaul for another time / issue.
+     */
+    updateSelectedOperations(){
+        let recipeList, operations;
+
+        recipeList = document.querySelectorAll("#rec-list > li");
+        operations =  document.querySelectorAll(".operation");
+
+        this.clearAllSelectedClasses();
+
+        if ( recipeList.length ){
+            recipeList.forEach((ingredient) => {
+                const ingredientName = ingredient.getAttribute("data-name");
+
+                operations.forEach((operation) => {
+                    if ( ingredientName === operation.getAttribute("data-name")){
+                        this.addSelectedClass(ingredientName);
+                    }
+                })
+            })
+        }
+    }
 }
 
 export default RecipeWaiter;

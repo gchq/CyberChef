@@ -63,6 +63,7 @@ class App {
         this.setCompileMessage();
         this.loadLocalStorage();
         this.populateOperationsList();
+        this.manager.recipe.updateSelectedOperations();
         this.manager.setup();
         this.manager.output.saveBombe();
         this.uriParams = this.getURIParams();
@@ -329,6 +330,8 @@ class App {
         });
 
         this.adjustComponentSizes();
+
+        // @TODO: handle sortable, draggable, popovers functionality etc.
     }
 
     /**
@@ -801,7 +804,7 @@ class App {
 
 
     /**
-     * Handler for CyerChef statechange events.
+     * Handler for CyberChef statechange events.
      * Fires whenever the input or recipe changes in any way.
      *
      * @listens Manager#statechange
