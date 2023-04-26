@@ -330,8 +330,6 @@ class App {
         });
 
         this.adjustComponentSizes();
-
-        // @TODO: handle sortable, draggable, popovers functionality etc.
     }
 
     /**
@@ -882,16 +880,36 @@ class App {
         }
     }
 
+    /**
+     * A collection of function calls that need to fire on
+     * window resizing when the window inner width >= the
+     * breakpoint
+     *
+     * @param {boolean} minimise
+     */
     setDesktopUI(minimise){
         this.setDesktopLayout(minimise);
-        // we don't want to display any checkmarks on desktop, so we clear them
+
+        /**
+         * We don't want to display any checkmarks on desktop, so we clear them.
+         * It has no effect on the recipe list, it's purely a visual indicator
+         */
         this.manager.recipe.clearAllSelectedClasses();
+
+        // @TODO: handle sortable, draggable, popovers functionality. Works fine on init but needs to work on window resizing too
     }
 
+    /**
+     * A collection of function calls that need to fire on
+     * window resizing when the window inner width < the
+     * breakpoint
+     */
     setMobileUI(){
         this.setMobileLayout();
-        // on window resizing below breakpoint, we want to put the checkmarks back
+        // on window resizing below breakpoint, we need to put the checkmarks back
         this.manager.recipe.updateSelectedOperations();
+
+        // @TODO: handle sortable, draggable, popovers functionality. Works fine on init but needs to work on window resizing too
     }
 }
 
