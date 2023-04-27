@@ -108,6 +108,7 @@ class OperationsWaiter {
                 searchResultsEl.innerHTML = matchedOpsHtml;
                 searchResultsEl.dispatchEvent(this.manager.oplistcreate);
             }
+            this.manager.recipe.updateSelectedOperations();
         }
     }
 
@@ -139,6 +140,7 @@ class OperationsWaiter {
 
             if (nameMatch || descPos >= 0) {
                 const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
+
                 if (highlight) {
                     operation.highlightSearchStrings(calcMatchRanges(idxs), [[descPos, inStr.length]]);
                 }

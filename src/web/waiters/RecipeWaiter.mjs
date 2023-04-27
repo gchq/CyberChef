@@ -147,7 +147,6 @@ class RecipeWaiter {
             return;
         }
 
-        console.log("opSortEnd ==>", evt.item);
         this.buildRecipeOperation(evt.item);
         evt.item.dispatchEvent(this.manager.operationadd);
     }
@@ -372,7 +371,6 @@ class RecipeWaiter {
      * @param {element} el - The operation stub element from the operations pane
      */
     buildRecipeOperation(el) {
-        console.log("buildRecipeOperation ==>", el);
         const opName = el.textContent;
         const op = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
         el.innerHTML = op.toFullHtml();
@@ -398,7 +396,6 @@ class RecipeWaiter {
      * @returns {element}
      */
     addOperation(name) {
-        console.log("addOperation ==>", name);
         const item = document.createElement("li");
         item.setAttribute("data-name", name);
 

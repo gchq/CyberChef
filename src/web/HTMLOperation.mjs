@@ -46,8 +46,11 @@ class HTMLOperation {
      * @returns {string}
      */
     toStubHtml(removeIcon) {
-        console.log("toStubHtml ==>",this.name);
-        let html = `<li data-name="${this.name}" class="operation"`;
+        // this.name is pollute with HTML if it originates from search-results, so before
+        // returning the HTML we purge this.name from any HTML for the data-name attribute
+        const name = this.name.replace(/(<([^>]+)>)/ig, "");
+
+        let html = `<li data-name="${name}" class="operation"`;
 
         if (this.description) {
             const infoLink = this.infoURL ? `<hr>${titleFromWikiLink(this.infoURL)}` : "";
