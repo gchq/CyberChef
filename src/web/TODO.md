@@ -12,6 +12,7 @@
 - test drag and drop etc. Regular mobile events / UX
 - view-heights not correct due to variable taskbar on mobile devices
 
+- see if i can use OpWaiter > getSelectedOp for getting selected ops. Although I dont see 'selected-op' on any op?
 
 ### Desktop UI:
 ### General UI:

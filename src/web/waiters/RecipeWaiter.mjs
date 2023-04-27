@@ -43,7 +43,7 @@ class RecipeWaiter {
             filter: ".arg",
             preventOnFilter: false,
             setData: function(dataTransfer, dragEl) {
-                dataTransfer.setData("Text", dragEl.querySelector(".op-title").textContent);
+                dataTransfer.setData("Text", dragEl.getAttribute("data-name"));
             },
             onEnd: function(evt) {
                 if (this.removeIntent) {
@@ -97,7 +97,7 @@ class RecipeWaiter {
             draggable: draggable ? ".operation" : null,
             sort: false,
             setData: function(dataTransfer, dragEl) {
-                dataTransfer.setData("Text", dragEl.textContent);
+                dataTransfer.setData("Text", dragEl.getAttribute("data-name"));
             },
             onStart: function(evt) {
                 // Removes popover element and event bindings from the dragged operation but not the
@@ -147,6 +147,7 @@ class RecipeWaiter {
             return;
         }
 
+        console.log("opSortEnd ==>", evt.item);
         this.buildRecipeOperation(evt.item);
         evt.item.dispatchEvent(this.manager.operationadd);
     }
@@ -327,7 +328,7 @@ class RecipeWaiter {
             }
 
             item = {
-                op: operations[i].querySelector(".op-title").textContent,
+                op: operations[i].getAttribute("data-name"),
                 args: ingredients
             };
 
@@ -371,6 +372,7 @@ class RecipeWaiter {
      * @param {element} el - The operation stub element from the operations pane
      */
     buildRecipeOperation(el) {
+        console.log("buildRecipeOperation ==>", el);
         const opName = el.textContent;
         const op = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
         el.innerHTML = op.toFullHtml();
@@ -396,6 +398,7 @@ class RecipeWaiter {
      * @returns {element}
      */
     addOperation(name) {
+        console.log("addOperation ==>", name);
         const item = document.createElement("li");
         item.setAttribute("data-name", name);
 
@@ -638,9 +641,13 @@ class RecipeWaiter {
      */
     addSelectedClass(opDataName){
         const list = document.querySelectorAll(".operation");
-        const item = Array.from(list).find((item) => item.getAttribute("data-name") === opDataName );
+        const item = Array.from(list).filter((item) => item.getAttribute("data-name") === opDataName );
 
-        item.classList.add("selected");
+        // when an item is listed in favourites, there are 2 of
+        // them and both need the 'selected' class ( checkmark )
+        item.forEach((op) => {
+            op.classList.add("selected");
+        })
     }
 
     /**

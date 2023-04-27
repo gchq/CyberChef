@@ -46,6 +46,7 @@ class HTMLOperation {
      * @returns {string}
      */
     toStubHtml(removeIcon) {
+        console.log("toStubHtml ==>",this.name);
         let html = `<li data-name="${this.name}" class="operation"`;
 
         if (this.description) {

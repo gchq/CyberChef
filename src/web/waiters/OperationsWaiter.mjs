@@ -11,6 +11,7 @@ import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
 
 /**
  * Waiter to handle events related to the operations.
+ * Waiter to handle events related to the operations
  */
 class OperationsWaiter {
 
@@ -54,7 +55,7 @@ class OperationsWaiter {
             if (ops.length) {
                 selected = this.getSelectedOp(ops);
                 if (selected > -1) {
-                    this.manager.recipe.addOperation(ops[selected].innerHTML);
+                    this.manager.recipe.addOperation(ops[selected].getAttribute("data-name"));
                 }
             }
         }
@@ -350,6 +351,7 @@ class OperationsWaiter {
      */
     resetFavouritesClick() {
         this.app.resetFavourites();
+        this.manager.recipe.updateSelectedOperations();
     }
 }
 
