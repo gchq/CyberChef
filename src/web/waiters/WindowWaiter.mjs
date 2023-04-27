@@ -27,7 +27,7 @@ class WindowWaiter {
      * continuous resetting).
      */
     windowResize() {
-        // @TODO: maybe a debounce  is desireable although genrally people won't be resizing like crazy
+        // @TODO: maybe a debounce is desirable although generally people won't be resizing like crazy.. I think
         if ( window.innerWidth >= this.app.breakpoint ) {
             this.app.setDesktopUI(false);
         } else {

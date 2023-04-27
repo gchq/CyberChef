@@ -889,14 +889,13 @@ class App {
      */
     setDesktopUI(minimise){
         this.setDesktopLayout(minimise);
-
+        // repopulate to enable popovers and drag events
+        this.populateOperationsList();
         /**
          * We don't want to display any checkmarks on desktop, so we clear them.
          * It has no effect on the recipe list, it's purely a visual indicator
          */
         this.manager.recipe.clearAllSelectedClasses();
-
-        // @TODO: handle sortable, draggable, popovers functionality. Works fine on init but needs to work on window resizing too
     }
 
     /**
@@ -906,10 +905,10 @@ class App {
      */
     setMobileUI(){
         this.setMobileLayout();
-        // on window resizing below breakpoint, we need to put the checkmarks back
+        // repopulate to disable popovers and drag events
+        this.populateOperationsList();
+        // restore the appropriate checkmarks
         this.manager.recipe.updateSelectedOperations();
-
-        // @TODO: handle sortable, draggable, popovers functionality. Works fine on init but needs to work on window resizing too
     }
 }
 
