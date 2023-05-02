@@ -59,11 +59,10 @@ class App {
     setup() {
         document.dispatchEvent(this.manager.appstart);
 
-        this.initialiseSplitter();
+        this.initialiseUI();
         this.setCompileMessage();
         this.loadLocalStorage();
         this.populateOperationsList();
-        this.manager.recipe.updateSelectedOperations();
         this.manager.setup();
         this.manager.output.saveBombe();
         this.uriParams = this.getURIParams();
@@ -298,11 +297,11 @@ class App {
      *
      * @param {boolean} [minimise=false] - Set this flag if attempting to minimise frames to 0 width
      */
-    initialiseSplitter(minimise=false) {
+    initialiseUI() {
         if ( window.innerWidth < this.breakpoint ){
-            this.setMobileLayout();
+            this.setMobileUI();
         } else {
-            this.setDesktopLayout(minimise);
+            this.setDesktopUI(false);
         }
     }
 
@@ -346,7 +345,7 @@ class App {
         });
 
         this.ioSplitter = Split(["#input", "#output"], {
-            sizes: [40,60],
+            sizes: [45,55],
             direction: "vertical",
             gutterSize: 0,
         });
@@ -879,6 +878,8 @@ class App {
      * @param {boolean} minimise
      */
     setDesktopUI(minimise){
+        // enable tooltips on desktop as normal
+        $("[data-toggle=tooltip]").tooltip("enable");
         this.setDesktopLayout(minimise);
         // repopulate to enable popovers and drag events
         this.populateOperationsList();
@@ -890,6 +891,8 @@ class App {
     }
 
     setMobileUI(){
+        // tooltips on mobile are reducing UX, so we disable it
+        $("[data-toggle=tooltip]").tooltip("disable");
         this.setMobileLayout();
         // repopulate to disable popovers and drag events
         this.populateOperationsList();
