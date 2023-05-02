@@ -8,8 +8,8 @@
 - test drag and drop etc. Regular mobile events / UX
 - view-heights not correct due to variable taskbar on mobile devices
 
-- loading gears on mobile ( some ingredient labels 'shine through' and the cancel button isnt visible )
 - need long press checks on mobile to add favourites and switch ingredient order
+- fix "hitbox" ( event bubbling ) for maximiser icon / button
 
 ### Desktop UI:
 ### General UI:

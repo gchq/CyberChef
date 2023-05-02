@@ -6,15 +6,6 @@
  * @license Apache-2.0
  */
 
-:root {
-    --banner-height: 40px;
-    --controls-height: 70px;
-    --workspace-height: calc( 100vh - var(--banner-height) - var(--controls-height));
-    --recipe-height: 38vh;
-    --operations-height: 89px;
-    --io-height: calc(100vh - var(--banner-height) - var(--controls-height) - var(--recipe-height) - var(--operations-height));
-}
-
 #banner,
 #content-wrapper {
     position: absolute;
@@ -42,9 +33,9 @@
     bottom: 0;
 }
 
-#IO {
-    padding-bottom: var(--controls-height);
-}
+/*#IO {*/
+/*    padding-bottom: var(--controls-height);*/
+/*}*/
 
 #recipe.maximised-pane,
 #input.maximised-pane,
