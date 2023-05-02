@@ -6,6 +6,11 @@
  * @license Apache-2.0
  */
 
+#input,
+#output {
+    background-color: var(--primary-background-colour);
+}
+
 #input-text,
 #output-text {
     position: relative;

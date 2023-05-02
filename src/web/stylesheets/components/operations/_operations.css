@@ -5,6 +5,10 @@
  * can ( should ) be made into a reusable, generic component
  */
 
+#operations {
+    background-color: var(--primary-background-colour);
+}
+
 #operations-wrapper {
     position: relative;
 }

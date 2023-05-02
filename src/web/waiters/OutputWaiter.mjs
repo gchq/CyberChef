@@ -1404,26 +1404,29 @@ class OutputWaiter {
      * Handler for maximise output click events.
      * Resizes the output frame to be as large as possible, or restores it to its original size.
      */
-    maximiseOutputClick(e) {
-        const el = e.target.id === "maximise-output" ? e.target : e.target.parentNode;
+    // maximiseOutputClick(e) {
+    //     const el = e.target.id === "maximise-output" ? e.target : e.target.parentNode;
+    //
+    //     if (el.getAttribute("data-original-title").indexOf("Maximise") === 0) {
+    //         document.body.classList.add("output-maximised");
+    //         this.app.initialiseSplitter(true);
+    //         this.app.columnSplitter.collapse(0);
+    //         this.app.columnSplitter.collapse(1);
+    //         this.app.ioSplitter.collapse(0);
+    //
+    //         $(el).attr("data-original-title", "Restore output pane");
+    //         el.querySelector("i").innerHTML = "fullscreen_exit";
+    //     } else {
+    //         document.body.classList.remove("output-maximised");
+    //         $(el).attr("data-original-title", "Maximise output pane");
+    //         el.querySelector("i").innerHTML = "fullscreen";
+    //         this.app.initialiseSplitter(false);
+    //         // if ( window.innerWidth >= this.app.breakpoint ){
+    //         //     this.app.resetLayout();
+    //         // }
+    //     }
+    // }
 
-        if (el.getAttribute("data-original-title").indexOf("Maximise") === 0) {
-            document.body.classList.add("output-maximised");
-            this.app.initialiseSplitter(true);
-            this.app.columnSplitter.collapse(0);
-            this.app.columnSplitter.collapse(1);
-            this.app.ioSplitter.collapse(0);
-
-            $(el).attr("data-original-title", "Restore output pane");
-            el.querySelector("i").innerHTML = "fullscreen_exit";
-        } else {
-            document.body.classList.remove("output-maximised");
-            $(el).attr("data-original-title", "Maximise output pane");
-            el.querySelector("i").innerHTML = "fullscreen";
-            this.app.initialiseSplitter(false);
-            this.app.resetLayout();
-        }
-    }
 
     /**
      * Handler for find tab button clicked

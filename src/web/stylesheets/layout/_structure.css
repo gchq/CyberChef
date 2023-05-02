@@ -24,6 +24,7 @@
 #content-wrapper {
     top: 0;
     bottom: 0;
+    overflow: hidden;
 }
 
 #workspace-wrapper {
@@ -43,6 +44,22 @@
 
 #IO {
     padding-bottom: var(--controls-height);
+}
+
+#recipe.maximised-pane,
+#input.maximised-pane,
+#output.maximised-pane {
+    position: fixed;
+    min-height: calc( 100vh - var(--banner-height ));
+    height: auto;
+    top: var(--banner-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+#recipe.maximised-pane #controls {
+    display: none;
 }
 
 @media only screen and ( min-width: 768px ) {

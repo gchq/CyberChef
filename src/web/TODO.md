@@ -4,12 +4,12 @@
 ---
 
 #### Mobile UI ( on real device ):
-- How to add operations to favourites since drag and drop is now disabled on mobile ( maybe a star icon...? )
-- Recipe list on mobile panel is too small to comfortably scroll and change order of recipes
-
 - test *thoroughly* with keyboard popping up because that messes with view-heights on mobile probably and might make it a very frustrating experience
 - test drag and drop etc. Regular mobile events / UX
 - view-heights not correct due to variable taskbar on mobile devices
+
+- loading gears on mobile ( some ingredient labels 'shine through' and the cancel button isnt visible )
+- need long press checks on mobile to add favourites and switch ingredient order
 
 ### Desktop UI:
 ### General UI:

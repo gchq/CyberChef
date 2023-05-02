@@ -315,7 +315,7 @@ class App {
 
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [20, 30, 50],
-            minSize: minimise ? [0, 0, 0] : [240, 310, 450],
+            minSize: minimise ? [0, 0, 0] : [20, 30, 50],
             gutterSize: 4,
             expandToMin: true,
             onDrag: debounce(function() {
@@ -326,7 +326,7 @@ class App {
         this.ioSplitter = Split(["#input", "#output"], {
             direction: "vertical",
             gutterSize: 4,
-            minSize: minimise ? [0, 0] : [100, 100]
+            minSize: minimise ? [0, 0] : [50, 50]
         });
 
         this.adjustComponentSizes();
@@ -341,7 +341,6 @@ class App {
 
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [100, 100, 100],
-            minSize: [0, 0, 0],
             gutterSize: 0,
             expandToMin: true,
         });
@@ -649,13 +648,14 @@ class App {
 
 
     /**
-     * Resets the splitter positions to default.
+     * Resets the splitter positions to default for desktop UI.
      */
     resetLayout() {
         this.columnSplitter.setSizes([20, 30, 50]);
         this.ioSplitter.setSizes([50, 50]);
         this.adjustComponentSizes();
     }
+
 
     /**
      * Adjust components to fit their containers.
@@ -857,13 +857,13 @@ class App {
 
 
     /**
-     * Set element visibility
+     * Update element visibility
      *
      * @param {HTMLElement} elm
      * @param {boolean} isVisible
      *
      */
-    setVisibility( elm, isVisible ){
+    updateVisibility( elm, isVisible ){
         if ( isVisible ) {
             if ( elm.classList.contains("hidden")) {
                 elm.classList.remove("hidden");
@@ -876,10 +876,6 @@ class App {
     }
 
     /**
-     * A collection of function calls that need to fire on
-     * window resizing when the window inner width >= the
-     * breakpoint
-     *
      * @param {boolean} minimise
      */
     setDesktopUI(minimise){
@@ -893,11 +889,6 @@ class App {
         this.manager.recipe.clearAllSelectedClasses();
     }
 
-    /**
-     * A collection of function calls that need to fire on
-     * window resizing when the window inner width < the
-     * breakpoint
-     */
     setMobileUI(){
         this.setMobileLayout();
         // repopulate to disable popovers and drag events

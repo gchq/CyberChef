@@ -141,6 +141,7 @@ class Manager {
         document.getElementById("load-button").addEventListener("click", this.controls.loadButtonClick.bind(this.controls));
         document.getElementById("support").addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
         this.addMultiEventListeners("#save-texts textarea", "keyup paste", this.controls.saveTextChange, this.controls);
+        this.addDynamicListener(".btn-maximise", "click", this.controls.handlePaneMaximising, this.controls);
 
         // Operations
         this.addMultiEventListener("#search", "keyup paste search click", this.ops.searchOperations, this.ops);
@@ -199,7 +200,7 @@ class Manager {
         document.getElementById("save-all-to-file").addEventListener("click", this.output.saveAllClick.bind(this.output));
         document.getElementById("copy-output").addEventListener("click", this.output.copyClick.bind(this.output));
         document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
-        document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
+        // document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
         document.getElementById("magic").addEventListener("click", this.output.magicClick.bind(this.output));
         this.addDynamicListener(".extract-file,.extract-file i", "click", this.output.extractFileClick, this.output);
         this.addDynamicListener("#output-tabs-wrapper #output-tabs li .output-tab-content", "click", this.output.changeTabClick, this.output);

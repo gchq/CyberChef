@@ -198,7 +198,7 @@
                          data-help-title="Operations list"
                          data-help="<p>The Operations list contains all the operations in CyberChef arranged into categories. Some operations may be present in multiple categories. You can search for operations using the search box.</p><p>To use an operation, either double click it, or drag it into the Recipe pane. You will then be able to configure its arguments (or 'Ingredients' in CyberChef terminology).</p>">
                         Operations
-                        <span class="pane-controls hide-on-maximised-output">
+                        <span class="pane-controls">
                             <button type="button"
                                     class="btn bmd-btn-icon mobile-only hidden"
                                     id="close-operations-dropdown"
@@ -226,7 +226,7 @@
                 <div id="recipe" class="split split-horizontal no-select" data-help-title="Recipe pane" data-help="<p>The Recipe pane is where your chosen Operations are configured. If you are a programmer, think of these as functions. If you are not a programmer, these are like steps in a cake recipe. The Input data will be processed based on the Operations in your Recipe.</p><ul><li>To reorder, simply drag and drop the Operations into the order your require</li><li>To remove an operation, either double click it, or drag it outside of the Recipe pane</li></ul><p>The arguments (or 'Ingredients' in CyberChef terminology) can be configured to change how an Operation processes the data.</p>">
                     <div class="title no-select">
                         Recipe
-                        <span class="pane-controls hide-on-maximised-output">
+                        <span class="pane-controls">
                             <button type="button" class="btn btn-primary bmd-btn-icon" id="save" data-toggle="tooltip" title="Save recipe" data-help-title="Saving a recipe" data-help="<p>Recipes can be represented in a few different formats and saved for use at a later date. You can either copy the Recipe configuration and save it somewhere offline for later use, or use your browser's local storage.</p><ul><li><b>Deep link:</b> The easiest way to share a CyberChef Recipe is to copy the deep link, either from the address bar (which is updated as the Recipe or Input changes), or from the 'Save recipe' pane. When you visit this link, the Recipe and Input should be populated from where you left off.</li><li><b>Chef format:</b> This custom format is designed to be compact and easily readable. It is the format used in CyberChef's URL, so it largely uses characters that do not have to be escaped in URL encoding, making it a little easier to understand what a CyberChef URL contains.</li><li><b>Clean JSON:</b> This JSON format uses whitespace and indentation in a way that makes the Recipe easy to read.</li><li><b>Compact JSON:</b> This is the most compact way that the Recipe can be represented in JSON.</li><li><b>Local storage:</b> Alternatively, you can enter a name into the 'Recipe name' field and save to your browser's local storage. The Recipe will then be available to load from the 'Load Recipe' pane as long as you are using the same browser profile. Be aware that if your browser profile is cleaned, you may lose this data.</li></ul>">
                                 <i class="material-icons">save</i>
                             </button>
@@ -236,10 +236,13 @@
                             <button type="button" class="btn btn-primary bmd-btn-icon" id="clr-recipe" data-toggle="tooltip" title="Clear recipe" data-help-title="Clearing a recipe" data-help="Clicking the 'Clear recipe' button will remove all operations from the Recipe. It will not clear the Input, but it will trigger a Bake if Auto-bake is turned on, which will change the value of the Output.">
                                 <i class="material-icons">delete</i>
                             </button>
+                            <button type="button" class="mobile-only btn btn-primary bmd-btn-icon btn-maximise" id="maximise-recipe" data-toggle="tooltip" title="Maximise pane" data-help-title="Maximise pane" data-help="This button allows you to view the Recipe pane at maximum size, hiding the Operations, Input and Output panes. You can restore the pane to its normal size by clicking the same button again.">
+                                <i class="material-icons">fullscreen</i>
+                            </button>
                         </span>
                     </div>
                     <ul id="rec-list" class="list-area no-select"></ul>
-                    <div id="controls" class="no-select hide-on-maximised-output">
+                    <div id="controls" class="no-select">
                         <div id="controls-content">
                             <button type="button" class="mx-2 btn btn-lg btn-secondary" id="step" data-toggle="tooltip" title="Step through the recipe" data-help-title="Stepping through the Recipe" data-help="<p>The Step button allows you to execute one operation at a time, rather than running the whole Recipe from beginning to end.</p><p>Step allows you to inspect the data at each stage of the Recipe and understand what is being passed to the next operation.</p>">
                                 Step
@@ -280,6 +283,9 @@
                                 </button>
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="clr-io" data-toggle="tooltip" title="Clear input and output" data-help-title="Clearing the Input and Output" data-help="Clicking the 'Clear input and output' button will remove all Inputs and Outputs. It will not clear the Recipe.">
                                     <i class="material-icons">delete</i>
+                                </button>
+                                 <button type="button" class="mobile-only btn btn-primary bmd-btn-icon btn-maximise" id="maximise-input" data-toggle="tooltip" title="Maximise pane" data-help-title="Maximise pane" data-help="This button allows you to view the Input pane at maximum size, hiding the Operations, Recipe and Output panes. You can restore the pane to its normal size by clicking the same button again.">
+                                    <i class="material-icons">fullscreen</i>
                                 </button>
                                 <button type="button" class="desktop-only btn btn-primary bmd-btn-icon" id="reset-layout" data-toggle="tooltip" title="Reset pane layout" data-help-title="Resetting the pane layout" data-help="CyberChef's panes can be resized to suit your area of focus. This button will reset the pane sizes to their default configuration.">
                                     <i class="material-icons">view_compact</i>
@@ -341,7 +347,7 @@
                                     <button type="button" class="btn btn-primary bmd-btn-icon" id="switch" data-toggle="tooltip" title="Replace input with output" data-help-title="Replacing input with output" data-help="<p>This button moves the currently active Output data into the currently active Input tab, overwriting whatever data was already there.</p><p>The Input character encoding and EOL sequence will be changed to match the current Output values, so that the data is interpreted correctly.</p>">
                                         <i class="material-icons">open_in_browser</i>
                                     </button>
-                                    <button type="button" class="desktop-only btn btn-primary bmd-btn-icon" id="maximise-output" data-toggle="tooltip" title="Maximise output pane" data-help-title="Maximising the Output pane" data-help="This button allows you to view the Output pane at maximum size, hiding the Operations, Recipe and Input panes. You can restore the pane to its normal size by clicking the same button again.">
+                                    <button type="button" class="btn btn-primary bmd-btn-icon btn-maximise" id="maximise-output" data-toggle="tooltip" title="Maximise pane" data-help-title="Maximise pane" data-help="This button allows you to view the Output pane at maximum size, hiding the Operations, Recipe and Input panes. You can restore the pane to its normal size by clicking the same button again.">
                                         <i class="material-icons">fullscreen</i>
                                     </button>
                                 </span>

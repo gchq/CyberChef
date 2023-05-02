@@ -52,8 +52,8 @@
     margin: 0;
 }
 
-.output-maximised .hide-on-maximised-output {
-    display: none !important;
+.top-zindex {
+    z-index: 200;
 }
 
 

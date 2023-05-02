@@ -418,6 +418,92 @@ ${navigator.userAgent}
                 bakeButton.classList.add("btn-success");
         }
     }
+
+
+    /**
+     * Handle the maximising and resetting to default state of
+     * panels.
+     *
+     * On mobile UI, #recipe, #input and #output can be maximised,
+     * on desktop UI it's available only for #output
+     *
+     * @param {Event} e
+     */
+    handlePaneMaximising(e){
+        // the event target btn can be one of ( currently ) 3 'maximiser' buttons
+        const btn = e.target.classList.contains("btn-maximise") ? e.target : e.target.parentNode;
+        // find the parent ( target ) pane to be maximised that belongs to the btn
+        const pane = this.resolveMaximiserParentPane( btn.id )
+
+        if (btn.getAttribute("data-original-title") === "Maximise pane") {
+            this.maximisePane(btn,pane);
+        } else {
+            this.resetPane(btn, pane);
+        }
+    }
+
+    /**
+     * Get the parent pane of the 'maximise' button / icon that was
+     * clicked through the buttons' ID
+     *
+     * @param {string} id
+     */
+    resolveMaximiserParentPane(id){
+        switch(id) {
+            case "maximise-recipe":
+                return document.getElementById("recipe");
+            case "maximise-input":
+                return document.getElementById("input");
+            case "maximise-output":
+                return document.getElementById("output");
+        }
+    }
+
+    /**
+     * Set the pane from default state to Maximised
+     *
+     * @param {HTMLElement} btn
+     * @param {HTMLElement} pane
+     */
+    maximisePane(btn, pane){
+        this.togglePane(pane,true);
+        this.toggleIcon(btn, true);
+    }
+
+    /**
+     * Reset the pane from Maximised state to default
+     *
+     * @param {HTMLElement} btn
+     * @param {HTMLElement} pane
+     */
+    resetPane(btn, pane) {
+        this.togglePane(pane, false);
+        this.toggleIcon(btn, false);
+    }
+
+    /**
+     * Toggle the pane to or from maximised size,
+     * based on the 'isMaximised' flag
+     *
+     * @param {HTMLElement} pane
+     * @param {boolean} isMaximised
+     */
+    togglePane(pane, isMaximised) {
+        isMaximised ? pane.classList.add("top-zindex") : pane.classList.remove("top-zindex");
+        isMaximised ? pane.classList.add("maximised-pane") : pane.classList.remove("maximised-pane");
+    }
+
+    /**
+     * Toggle the 'maximise' icon and attribute text based on
+     * the 'isMaximised' flag
+     *
+     * @param {HTMLElement} btn
+     * @param {boolean} isMaximised
+     */
+    toggleIcon(btn, isMaximised ) {
+        btn.querySelector("i").innerHTML = isMaximised ? "fullscreen_exit" : "fullscreen";
+        $(btn).attr("data-original-title", isMaximised ? "Reset pane" : "Maximise pane");
+    }
 }
 
 export default ControlsWaiter;
