@@ -9,7 +9,6 @@
 - view-heights not correct due to variable taskbar on mobile devices
 
 - need long press checks on mobile to add favourites and switch ingredient order
-- fix "hitbox" ( event bubbling ) for maximiser icon / button
 
 ### Desktop UI:
 ### General UI:

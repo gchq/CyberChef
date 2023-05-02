@@ -141,7 +141,16 @@ class Manager {
         document.getElementById("load-button").addEventListener("click", this.controls.loadButtonClick.bind(this.controls));
         document.getElementById("support").addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
         this.addMultiEventListeners("#save-texts textarea", "keyup paste", this.controls.saveTextChange, this.controls);
-        this.addDynamicListener(".btn-maximise", "click", this.controls.handlePaneMaximising, this.controls);
+        /**
+         *  A note for the Controls listeners below:
+         *
+         *  I would strongly prefer to just add one listener to all elements with the .btn-maximise class,
+         *  but for a reason I have not been able to uncover ( something to do with addDynamicListener? ) click events
+         *  don't properly bubble and the hitbox to maximise is unacceptably tiny
+         */
+        document.getElementById("maximise-recipe").addEventListener("click", this.controls.handlePaneMaximising.bind(this.controls))
+        document.getElementById("maximise-input").addEventListener("click", this.controls.handlePaneMaximising.bind(this.controls))
+        document.getElementById("maximise-output").addEventListener("click", this.controls.handlePaneMaximising.bind(this.controls))
 
         // Operations
         this.addMultiEventListener("#search", "keyup paste search click", this.ops.searchOperations, this.ops);
@@ -291,7 +300,7 @@ class Manager {
      * @param {Object} [scope=this] - The object to bind to the callback function
      *
      * @example
-     * // Calls the save function whenever the the keyup or paste events are triggered on any element
+     * // Calls the save function whenever the keyup or paste events are triggered on any element
      * // with the .saveable class
      * this.addMultiEventListener(".saveable", "keyup paste", this.save, this);
      */

@@ -6,6 +6,12 @@
  * @license Apache-2.0
  */
 
+#banner { height: var(--banner-height); }
+#operations { height: var(--operations-height); }
+#recipe { height: var(--recipe-height); }
+#IO { height: var(--io-height); }
+#controls { height: var(--controls-height); }
+
 #banner,
 #content-wrapper {
     position: absolute;
@@ -22,12 +28,6 @@
     height: var(--workspace-height);
     margin-top: var(--banner-height);
 }
-
-#banner { height: var(--banner-height); }
-#operations { height: var(--operations-height); }
-#recipe { height: var(--recipe-height); }
-#IO { height: var(--io-height); }
-#controls { height: var(--controls-height); }
 
 #controls {
     bottom: 0;
