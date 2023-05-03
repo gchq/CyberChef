@@ -33,13 +33,15 @@ class RecipeWaiter {
      */
     initialiseOperationDragNDrop() {
         const recList = document.getElementById("rec-list");
+        const isMobileView = window.innerWidth < this.app.breakpoint;
 
         // Recipe list
         Sortable.create(recList, {
             group: "recipe",
             sort: true,
-            animation: 0,
-            delay: 0,
+            swapThreshold: isMobileView ? 0.60 : 0.3,
+            animation: isMobileView ? 400 : 200,
+            delay: isMobileView ? 200 : 0,
             filter: ".arg",
             preventOnFilter: false,
             setData: function(dataTransfer, dragEl) {

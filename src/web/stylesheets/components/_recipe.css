@@ -21,3 +21,7 @@
     border-color: var(--rec-list-operation-border-colour);
     padding: 14px;
 }
+
+#rec-list li.sortable-chosen{
+    filter: brightness(0.8);
+}

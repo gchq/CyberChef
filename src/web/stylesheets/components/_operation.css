@@ -7,6 +7,7 @@
  */
 
 .operation {
+    cursor: grab;
     padding: 10px;
     list-style-type: none;
     position: relative;
@@ -18,10 +19,6 @@
 }
 
 @media only screen and (min-width: 768px){
-    .operation {
-        cursor: grab;
-    }
-
     /* never display check icons on desktop views */
     .op-icon.check-icon {
         display: none;
