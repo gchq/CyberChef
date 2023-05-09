@@ -325,7 +325,7 @@ class OperationsWaiter {
      * Open operations dropdown
      */
     openOperationsDropdown(){
-        // 'close' ( dropdown ) icon in Operations component mobile UI
+        // the 'close' ( dropdown ) icon in Operations component mobile UI
         const closeOperationsDropdown = document.getElementById("close-operations-dropdown");
         const categories = document.getElementById("categories");
 
@@ -373,7 +373,15 @@ class OperationsWaiter {
      */
     resetFavouritesClick() {
         this.app.resetFavourites();
-        this.manager.recipe.updateSelectedOperations();
+    }
+
+    /**
+     * Add a favourite op, for mobile UI only
+     *
+     * @param {Event} e
+     */
+    onIconFavouriteClick(e){
+        this.app.addFavourite(e.target.getAttribute("title"));
     }
 }
 

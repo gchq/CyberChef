@@ -451,7 +451,7 @@ ${navigator.userAgent}
             pane.style.height = `${window.innerHeight - 40}px`;
         } else {
             if ( window.innerWidth < this.app.breakpoint ){
-                this.app.divideAvailableSpace();
+                this.app.assignAvailableHeight();
             }
         }
     }

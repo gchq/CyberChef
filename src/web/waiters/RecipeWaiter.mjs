@@ -658,7 +658,7 @@ class RecipeWaiter {
      * Note: It seems a little overkill, but with the current tightly coupled code this is
      * a reliable way to make sure the 'selected' operations are always in sync with
      * the recipe list ( I think this is preferable to complicating a lot of existing
-     * code ), I'd recommend to refactor this at one point, but that will mean a huge code
+     * code ), I'd recommend to refactor this at one point, but that would mean a huge code
      * overhaul for another time / issue.
      */
     updateSelectedOperations(){

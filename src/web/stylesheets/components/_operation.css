@@ -7,7 +7,6 @@
  */
 
 .operation {
-    cursor: grab;
     padding: 10px;
     list-style-type: none;
     position: relative;
@@ -19,6 +18,10 @@
 }
 
 @media only screen and (min-width: 768px){
+    .operation {
+        cursor: grab;
+    }
+
     /* never display check icons on desktop views */
     .op-icon.check-icon {
         display: none;
@@ -29,6 +32,20 @@
     float: right;
     font-size: 18px;
     cursor: pointer;
+}
+
+/*mobile only favourite icon in operation list*/
+.icon-add-favourite {
+    float: left;
+    margin: 0 10px 0 0;
+    padding: 0;
+    color: var(--category-list-font-colour);
+    opacity: .5;
+    cursor: pointer;
+}
+
+.icon-add-favourite.fav-op {
+    opacity: 1;
 }
 
 .op-icon.remove-icon {

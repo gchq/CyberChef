@@ -451,6 +451,7 @@ class App {
         this.loadFavourites();
         this.populateOperationsList();
         this.manager.recipe.initialiseOperationDragNDrop();
+        this.manager.recipe.updateSelectedOperations();
     }
 
 
@@ -471,6 +472,7 @@ class App {
         this.saveFavourites(favourites);
         this.loadFavourites();
         this.populateOperationsList();
+        this.manager.recipe.updateSelectedOperations();
         this.manager.recipe.initialiseOperationDragNDrop();
     }
 
@@ -886,7 +888,7 @@ class App {
     setMobileUI(){
         $("[data-toggle=tooltip]").tooltip("disable");
         this.setMobileSplitter();
-        this.divideAvailableSpace();
+        this.assignAvailableHeight();
         this.populateOperationsList();
         this.manager.recipe.updateSelectedOperations();
     }
@@ -902,12 +904,16 @@ class App {
      * Be mindful to update these accordingly in the stylesheets
      * ( themes/_structure ) if you want to make changes.
      */
-    divideAvailableSpace( isMobile ){
-        const remainingSpace = window.innerHeight - (40+70+90-2); // banner, operations, controls height + borders
+    assignAvailableHeight( isMobile ){
+        const remainingSpace = window.innerHeight - (40+70+90-2); // banner, operations, controls height
 
+        // equally divide among recipe, input and output
         ["recipe", "input", "output"].forEach(( div ) => {
             document.getElementById(div).style.height = `${remainingSpace/3}px`;
         });
+
+        // set the ops-dropdown height
+        document.getElementById("operations-dropdown").style.maxHeight = `${remainingSpace}px`;
     }
 }
 

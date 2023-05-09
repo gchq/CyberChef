@@ -18,10 +18,8 @@
     top: 41px;
     width: 100%;
     height: auto;
-    max-height: 60vh;
     overflow: auto;
     z-index: 20; /* to dropdown on top of all the other elements */
-    border-bottom: 1px solid var(--primary-border-colour);
     background-color: var(--secondary-background-colour);
 }
 
