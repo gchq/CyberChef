@@ -98,7 +98,7 @@ async function bufferToStr(data) {
         try {
             str = cptable.utils.decode(data.encoding, new Uint8Array(data.buffer));
         } catch (err) {
-            str = err;
+            str = err.message;
         }
     }
 
