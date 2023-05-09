@@ -14,7 +14,6 @@
     font-family: var(--fixed-width-font-family);
     font-weight: normal;
     font-size: 8pt;
-    /*0 5px for desktop*/
     margin: 5px 15px;
     display: flex;
     flex-flow: row nowrap;
@@ -48,7 +47,6 @@
     display: inline-block;
 }
 
-/*@TODO: update this one for mobile*/
 /* Dropup content (Hidden by Default) */
 .cm-status-bar-select-content {
     display: none;
@@ -57,7 +55,7 @@
     right: 0;
     background-color: #f1f1f1;
     min-width: 200px;
-    box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 4px 0 rgba(0,0,0,0.2);
     z-index: 1;
 }
 
@@ -96,11 +94,9 @@
     display: block;
 }
 
-
-/*@TODO: and update this one for mobile*/
 .cm-status-bar-select-scroll {
     overflow-y: auto;
-    max-height: 300px;
+    height: auto;
 }
 
 .chr-enc-value {
@@ -112,4 +108,10 @@
     vertical-align: middle;
 }
 
+
+/* Right hand side icons */
+.rhs {
+    position: fixed;
+    right: 15px;
+}
 
