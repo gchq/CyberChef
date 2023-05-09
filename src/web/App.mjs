@@ -330,7 +330,11 @@ class App {
     }
 
     /**
-     * Set mobile splitters
+     * Set mobile layout
+     *
+     * We don't actually use splitters on mobile, but we leverage the splitters
+     * to create our desired layout. This prevents some problems when resizing
+     * from mobile to desktop and vice versa
      */
     setMobileSplitter() {
         if (this.columnSplitter) this.columnSplitter.destroy();
@@ -860,15 +864,7 @@ class App {
      *
      */
     updateVisibility( elm, isVisible ){
-        if ( isVisible ) {
-            if ( elm.classList.contains("hidden")) {
-                elm.classList.remove("hidden");
-            }
-        } else if ( isVisible === false ) {
-            if ( !elm.classList.contains("hidden")){
-                elm.classList.add("hidden");
-            }
-        }
+        isVisible ? elm.classList.remove("hidden") : elm.classList.add("hidden");
     }
 
     /**

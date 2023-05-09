@@ -7,7 +7,6 @@
 - need long press checks on mobile to add favourites ( recipe is done ) >
         - check on window resizing
 
-- raw bites dropup thingy is unusable
 - shannon entropy thingies
 
 - backspace on fs view should close max view. Keep making the same mistake and navigating away when for instance recipe is expanded and double click the window to fs > resolve. Reset layout

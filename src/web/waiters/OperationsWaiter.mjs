@@ -346,9 +346,9 @@ class OperationsWaiter {
             search.value = '';
         }
 
-        this.app.updateVisibility(document.getElementById( "categories"), false );
-        this.app.updateVisibility(document.getElementById( "search-results"), false );
-        this.app.updateVisibility(document.getElementById("close-operations-dropdown"), false );
+        this.app.updateVisibility(document.getElementById("categories"), false);
+        this.app.updateVisibility(document.getElementById("search-results"), false);
+        this.app.updateVisibility(document.getElementById("close-operations-dropdown"), false);
     }
 
     /**
