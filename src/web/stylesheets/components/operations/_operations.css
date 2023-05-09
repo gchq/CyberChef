@@ -15,7 +15,7 @@
 
 #operations-dropdown {
     position: absolute;
-    top: 40px; /* the height of the input[type="search"] with pos relative */
+    top: 41px;
     width: 100%;
     height: auto;
     max-height: 60vh;

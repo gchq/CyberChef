@@ -306,9 +306,9 @@ class App {
     }
 
     /**
-     * Set desktop layout
+     * Set desktop splitters
      */
-    setDesktopLayout(minimise){
+    setDesktopSplitter(minimise){
         if (this.columnSplitter) this.columnSplitter.destroy();
         if (this.ioSplitter) this.ioSplitter.destroy();
 
@@ -327,14 +327,12 @@ class App {
             gutterSize: 4,
             minSize: minimise ? [0, 0] : [50, 50]
         });
-
-        this.adjustComponentSizes();
     }
 
     /**
-     * Set mobile layout
+     * Set mobile splitters
      */
-    setMobileLayout() {
+    setMobileSplitter() {
         if (this.columnSplitter) this.columnSplitter.destroy();
         if (this.ioSplitter) this.ioSplitter.destroy();
 
@@ -345,7 +343,6 @@ class App {
         });
 
         this.ioSplitter = Split(["#input", "#output"], {
-            sizes: [45,55],
             direction: "vertical",
             gutterSize: 0,
         });
@@ -875,29 +872,46 @@ class App {
     }
 
     /**
+     * Set desktop UI ( on init and on window resize events )
+     *
      * @param {boolean} minimise
      */
     setDesktopUI(minimise){
-        // enable tooltips on desktop as normal
         $("[data-toggle=tooltip]").tooltip("enable");
-        this.setDesktopLayout(minimise);
-        // repopulate to enable popovers and drag events
+        this.setDesktopSplitter(minimise);
+        this.adjustComponentSizes();
         this.populateOperationsList();
-        /**
-         * We don't want to display any checkmarks on desktop, so we clear them.
-         * It has no effect on the recipe list, it's purely a visual indicator
-         */
         this.manager.recipe.clearAllSelectedClasses();
     }
 
+    /**
+     *  Set mobile UI ( on init and on window resize events )
+     */
     setMobileUI(){
-        // tooltips on mobile are reducing UX, so we disable it
         $("[data-toggle=tooltip]").tooltip("disable");
-        this.setMobileLayout();
-        // repopulate to disable popovers and drag events
+        this.setMobileSplitter();
+        this.divideAvailableSpace();
         this.populateOperationsList();
-        // restore the appropriate checkmarks
         this.manager.recipe.updateSelectedOperations();
+    }
+
+    /**
+     * Due to variable available heights on mobile devices ( due to the
+     * address bar etc. ), we need to calculate the available space and
+     * set some heights programmatically.
+     *
+     * The numbers 40, 70 and 90 refer to divs with fixed heights,
+     * that is: #banner, #operations and #controls. -2 is accounting for
+     * some borders.
+     * Be mindful to update these accordingly in the stylesheets
+     * ( themes/_structure ) if you want to make changes.
+     */
+    divideAvailableSpace( isMobile ){
+        const remainingSpace = window.innerHeight - (40+70+90-2); // banner, operations, controls height + borders
+
+        ["recipe", "input", "output"].forEach(( div ) => {
+            document.getElementById(div).style.height = `${remainingSpace/3}px`;
+        });
     }
 }
 

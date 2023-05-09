@@ -1,5 +1,4 @@
 /* Status bar */
-
 .cm-panel input::placeholder {
     font-size: 12px !important;
 }
@@ -7,7 +6,6 @@
 .ͼ2 .cm-panels,
 .ͼ2 .cm-side-panels {
     background-color: var(--secondary-background-colour);
-    /*border-color: var(--primary-border-colour);*/
     color: var(--primary-font-colour);
     border-bottom: 1px solid var(--primary-border-colour);
 }
@@ -50,6 +48,7 @@
     display: inline-block;
 }
 
+/*@TODO: update this one for mobile*/
 /* Dropup content (Hidden by Default) */
 .cm-status-bar-select-content {
     display: none;
@@ -97,6 +96,8 @@
     display: block;
 }
 
+
+/*@TODO: and update this one for mobile*/
 .cm-status-bar-select-scroll {
     overflow-y: auto;
     max-height: 300px;

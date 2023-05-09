@@ -62,7 +62,7 @@ class Manager {
         // Define Waiter objects to handle various areas
         this.timing      = new TimingWaiter(this.app, this);
         this.worker      = new WorkerWaiter(this.app, this);
-        this.window      = new WindowWaiter(this.app);
+        this.window      = new WindowWaiter(this.app, this);
         this.controls    = new ControlsWaiter(this.app, this);
         this.recipe      = new RecipeWaiter(this.app, this);
         this.ops         = new OperationsWaiter(this.app, this);
@@ -141,16 +141,10 @@ class Manager {
         document.getElementById("load-button").addEventListener("click", this.controls.loadButtonClick.bind(this.controls));
         document.getElementById("support").addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
         this.addMultiEventListeners("#save-texts textarea", "keyup paste", this.controls.saveTextChange, this.controls);
-        /**
-         *  A note for the Controls listeners below:
-         *
-         *  I would strongly prefer to just add one listener to all elements with the .btn-maximise class,
-         *  but for a reason I have not been able to uncover ( something to do with addDynamicListener? ) click events
-         *  don't properly bubble and the hitbox to maximise is unacceptably tiny
-         */
-        document.getElementById("maximise-recipe").addEventListener("click", this.controls.handlePaneMaximising.bind(this.controls))
-        document.getElementById("maximise-input").addEventListener("click", this.controls.handlePaneMaximising.bind(this.controls))
-        document.getElementById("maximise-output").addEventListener("click", this.controls.handlePaneMaximising.bind(this.controls))
+        // A note for the Maximise Controls listeners below: click events via addDynamicListener don't properly bubble and the hit box to maximise is unacceptably tiny, hence this solution
+        document.getElementById("maximise-recipe").addEventListener("click", this.controls.onMaximiseButtonClick.bind(this.controls))
+        document.getElementById("maximise-input").addEventListener("click", this.controls.onMaximiseButtonClick.bind(this.controls))
+        document.getElementById("maximise-output").addEventListener("click", this.controls.onMaximiseButtonClick.bind(this.controls))
 
         // Operations
         this.addMultiEventListener("#search", "keyup paste search click", this.ops.searchOperations, this.ops);

@@ -8,8 +8,6 @@
 
 #banner { height: var(--banner-height); }
 #operations { height: var(--operations-height); }
-#recipe { height: var(--recipe-height); }
-#IO { height: var(--io-height); }
 #controls { height: var(--controls-height); }
 
 #banner,
@@ -25,24 +23,18 @@
 }
 
 #workspace-wrapper {
-    height: var(--workspace-height);
     margin-top: var(--banner-height);
 }
 
 #controls {
+    position: fixed;
     bottom: 0;
-}
-
-#IO {
-    padding-bottom: var(--controls-height);
 }
 
 #recipe.maximised-pane,
 #input.maximised-pane,
 #output.maximised-pane {
     position: fixed;
-    min-height: calc( 100vh - var(--banner-height ));
-    height: auto;
     top: var(--banner-height);
     left: 0;
     right: 0;
@@ -54,10 +46,6 @@
 }
 
 @media only screen and ( min-width: 768px ) {
-    #IO {
-        padding-bottom: 0;
-    }
-
     #recipe {
         padding-bottom: var(--controls-height);
     }
@@ -67,7 +55,7 @@
     }
 
     #workspace-wrapper {
-        height: calc( 100vh - var(--banner-height));
+        height: calc(100vh - var(--banner-height));
     }
 
     #operations-dropdown {

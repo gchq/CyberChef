@@ -1,9 +1,17 @@
 :root {
+    /* Fixed heights */
     --banner-height: 40px;
     --controls-height: 70px;
-    --workspace-height: calc( 100vh - var(--banner-height) - var(--controls-height));
-    --recipe-height: 22vh;
-    --operations-height: 89px;
-    /* io gets the remaining space */
-    --io-height: calc(100vh - var(--banner-height) - var(--controls-height) - var(--recipe-height) - var(--operations-height));
+    /*initial mobile height*/
+    --operations-height: 90px;
 }
+
+/**
+ * A note:
+ *
+ * Heights of #recipe, #input and #output are set programmatically
+ * in App.js > divideAvailableSpace(), please see the docs for that
+ * function for more information.
+ */
+
+

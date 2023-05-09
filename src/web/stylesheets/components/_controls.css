@@ -7,8 +7,6 @@
  */
 
 #controls {
-    position: fixed;
-    bottom: 0;
     width: 100%;
     padding: 10px 0;
     border-top: 1px solid var(--primary-border-colour);

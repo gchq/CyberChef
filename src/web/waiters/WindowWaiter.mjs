@@ -15,25 +15,58 @@ class WindowWaiter {
      * WindowWaiter constructor.
      *
      * @param {App} app - The main view object for CyberChef.
+     * @param {Manager} manager - The CyberChef event manager.
      */
-    constructor(app) {
+    constructor(app, manager) {
         this.app = app;
+        this.manager = manager;
     }
 
 
     /**
      * Handler for window resize events.
+     *
      * Resets adjustable component sizes after 200ms (so that continuous resizing doesn't cause
      * continuous resetting).
      */
     windowResize() {
         if ( window.innerWidth >= this.app.breakpoint ) {
-            this.app.setDesktopUI(false);
+            this.onResizeToDesktop();
         } else {
-            this.app.setMobileUI();
+            this.onResizeToMobile();
+        }
+
+        // #output can be maximised on all screen sizes, so if it was open while resizing,
+        // it can be kept maximised until minimised manually
+        if ( document.getElementById("output").classList.contains("maximised-pane") ) {
+            this.manager.controls.setPaneMaximised( "output", true );
         }
 
         debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();
+    }
+
+
+    onResizeToDesktop(){
+        this.app.setDesktopUI(false);
+
+        // if a window is resized past breakpoint while #recipe or #input is maximised,
+        // the maximised pane is set to its default ( non-maximised ) state
+        ["recipe", "input"].forEach( paneId => this.manager.controls.setPaneMaximised(paneId, false));
+
+        // to prevent #recipe from keeping the height set in divideAvailableSpace
+        document.getElementById("recipe").style.height = "100%";
+    }
+
+
+    onResizeToMobile(){
+        this.app.setMobileUI();
+
+        // when mobile devices' keyboards pop up, it triggers a window resize event. Here
+        // we keep the maximised panes open until the minimise button is clicked / tapped
+        ["recipe", "input", "output"]
+            .map( paneId => document.getElementById(paneId))
+            .filter( pane => pane.classList.contains("maximised-pane"))
+            .forEach( pane => this.manager.controls.setPaneMaximised(pane.id, true));
     }
 
 

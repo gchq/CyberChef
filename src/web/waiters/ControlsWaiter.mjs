@@ -419,90 +419,75 @@ ${navigator.userAgent}
         }
     }
 
-
     /**
-     * Handle the maximising and resetting to default state of
-     * panels.
+     * Maximise control button click handler.
      *
-     * On mobile UI, #recipe, #input and #output can be maximised,
-     * on desktop UI it's available only for #output
+     * The buttons have IDs like 'maximise-input', 'maximise-output' etc. We grab the
+     * to-be-maximised pane ID itself by stripping the pane ID from the button ID.
      *
      * @param {Event} e
      */
-    handlePaneMaximising(e){
-        // the event target btn can be one of ( currently ) 3 'maximiser' buttons
-        const btn = e.target.classList.contains("btn-maximise") ? e.target : e.target.parentNode;
-        // find the parent ( target ) pane to be maximised that belongs to the btn
-        const pane = this.resolveMaximiserParentPane( btn.id )
+    onMaximiseButtonClick(e) {
+        // the target pane is not already maximised because it does not have the 'maximised-pane' class..
+        const maximise = !document.getElementById(e.currentTarget.id.replace('maximise-', '')).classList.contains("maximised-pane");
+        this.setPaneMaximised(e.currentTarget.id.replace('maximise-', ''), maximise);
+    }
 
-        if (btn.getAttribute("data-original-title") === "Maximise pane") {
-            this.maximisePane(btn,pane);
+    /**
+     * Handle the maximising ( and resetting to default state ) of
+     * panes.
+     *
+     * @param {string} paneId
+     * @param {boolean} maximise
+     */
+    setPaneMaximised( paneId, maximise ){
+        const pane = document.getElementById( paneId );
+        const btn = document.getElementById( `maximise-${paneId}` );
+
+        this.setMaximiseControlButton(btn, maximise);
+        this.setPaneMaximisedClasses(pane, maximise);
+
+        if ( maximise ) {
+            pane.style.height = `${window.innerHeight - 40}px`;
         } else {
-            this.resetPane(btn, pane);
+            if ( window.innerWidth < this.app.breakpoint ){
+                this.app.divideAvailableSpace();
+            }
         }
     }
 
     /**
-     * Get the parent pane of the 'maximise' button / icon that was
-     * clicked through the buttons' ID
+     * Set and remove the appropriate classes on maximise / minimise actions
      *
-     * @param {string} id
+     * @param {HTMLElement} pane
+     * @param {boolean} maximise
      */
-    resolveMaximiserParentPane(id){
-        switch(id) {
-            case "maximise-recipe":
-                return document.getElementById("recipe");
-            case "maximise-input":
-                return document.getElementById("input");
-            case "maximise-output":
-                return document.getElementById("output");
+    setPaneMaximisedClasses(pane, maximise) {
+        if ( maximise ) {
+            pane.classList.add("top-zindex");
+            pane.classList.add("maximised-pane");
+        } else {
+            pane.classList.remove("top-zindex");
+            pane.classList.remove("maximised-pane");
         }
     }
 
-    /**
-     * Set the pane from default state to Maximised
-     *
-     * @param {HTMLElement} btn
-     * @param {HTMLElement} pane
-     */
-    maximisePane(btn, pane){
-        this.togglePane(pane,true);
-        this.toggleIcon(btn, true);
-    }
 
     /**
-     * Reset the pane from Maximised state to default
+     * Set the correct icon and data title attribute text based on
+     * the 'maximise' flag
      *
      * @param {HTMLElement} btn
-     * @param {HTMLElement} pane
+     * @param {boolean} maximise
      */
-    resetPane(btn, pane) {
-        this.togglePane(pane, false);
-        this.toggleIcon(btn, false);
-    }
-
-    /**
-     * Toggle the pane to or from maximised size,
-     * based on the 'isMaximised' flag
-     *
-     * @param {HTMLElement} pane
-     * @param {boolean} isMaximised
-     */
-    togglePane(pane, isMaximised) {
-        isMaximised ? pane.classList.add("top-zindex") : pane.classList.remove("top-zindex");
-        isMaximised ? pane.classList.add("maximised-pane") : pane.classList.remove("maximised-pane");
-    }
-
-    /**
-     * Toggle the 'maximise' icon and attribute text based on
-     * the 'isMaximised' flag
-     *
-     * @param {HTMLElement} btn
-     * @param {boolean} isMaximised
-     */
-    toggleIcon(btn, isMaximised ) {
-        btn.querySelector("i").innerHTML = isMaximised ? "fullscreen_exit" : "fullscreen";
-        $(btn).attr("data-original-title", isMaximised ? "Reset pane" : "Maximise pane");
+    setMaximiseControlButton(btn, maximise ) {
+        if ( maximise ) {
+            btn.querySelector("i").innerHTML = "fullscreen_exit";
+            btn.setAttribute("data-original-title", "Reset pane");
+        } else {
+            btn.querySelector("i").innerHTML = "fullscreen";
+            btn.setAttribute("data-original-title", "Maximise pane");
+        }
     }
 }
 
