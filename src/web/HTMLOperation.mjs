@@ -46,7 +46,7 @@ class HTMLOperation {
      * @returns {string}
      */
     toStubHtml(removeIcon) {
-        // this.name is pollute with HTML if it originates from search-results, so before
+        // this.name is polluted with HTML if it originates from search-results, so before
         // returning the HTML we purge this.name from any HTML for the data-name attribute
         const name = this.name.replace(/(<([^>]+)>)/ig, "");
 
