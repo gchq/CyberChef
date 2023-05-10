@@ -906,7 +906,7 @@ class App {
         const controlsHeight = 50;
         const operationsHeight = 80;
 
-        const remainingSpace = window.innerHeight - (bannerHeight+controlsHeight+operationsHeight);
+        const remainingSpace = window.innerHeight - (bannerHeight+controlsHeight+operationsHeight - 1); // - 1 is accounting for a border
 
         // equally divide among recipe, input and output
         ["recipe", "input", "output"].forEach(( div ) => {
@@ -914,7 +914,7 @@ class App {
         });
 
         // set the ops-dropdown height
-        document.getElementById("operations-dropdown").style.maxHeight = `${remainingSpace}px`;
+        document.getElementById("operations-dropdown").style.maxHeight = `${window.innerHeight - (bannerHeight+operationsHeight)}px`;
     }
 }
 

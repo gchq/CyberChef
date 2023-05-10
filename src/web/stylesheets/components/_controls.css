@@ -8,14 +8,9 @@
 
 #controls {
     width: 100%;
+    border-top: 1px solid var(--primary-border-colour);
     background-color: var(--secondary-background-colour);
     overflow: hidden;
-}
-
-@media only screen and (min-width: 768px) {
-    #controls {
-        border-top: 1px solid var(--primary-border-colour);
-    }
 }
 
 #controls-content {
