@@ -60,7 +60,6 @@ class App {
         document.dispatchEvent(this.manager.appstart);
 
         this.initialiseUI();
-        this.setCompileMessage();
         this.loadLocalStorage();
         this.populateOperationsList();
         this.manager.setup();
@@ -472,8 +471,9 @@ class App {
         this.saveFavourites(favourites);
         this.loadFavourites();
         this.populateOperationsList();
-        this.manager.recipe.updateSelectedOperations();
         this.manager.recipe.initialiseOperationDragNDrop();
+        this.manager.recipe.updateSelectedOperations();
+
     }
 
     /**
@@ -875,6 +875,7 @@ class App {
      */
     setDesktopUI(minimise) {
         $("[data-toggle=tooltip]").tooltip("enable");
+        this.setCompileMessage();
         this.setDesktopSplitter(minimise);
         this.adjustComponentSizes();
         this.populateOperationsList();

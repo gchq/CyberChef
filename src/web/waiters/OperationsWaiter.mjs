@@ -11,7 +11,6 @@ import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
 
 /**
  * Waiter to handle events related to the operations.
- * Waiter to handle events related to the operations
  */
 class OperationsWaiter {
 
