@@ -6,28 +6,24 @@
  * @license Apache-2.0
  */
 
-:root {
-    --title-height: 48px;
-    --tab-height: 40px;
-}
-
 .title {
     padding: 8px 12px;
-    height: var(--title-height);
     border-bottom: 1px solid var(--primary-border-colour);
     font-weight: var(--title-weight);
     font-size: var(--title-size);
     color: var(--title-colour);
     background-color: var(--title-background-colour);
-    line-height: calc(var(--title-height) - 14px);
     display: flex;
     justify-content: space-between;
+    height: var(--title-height);
+    align-items: center;
 }
 
 .pane-controls {
     right: 8px;
     top: 8px;
     display: inline-flex;
+    align-items: center;
 }
 
 .pane-controls .btn {
@@ -47,4 +43,3 @@
 #files .card-header .float-right a:hover {
     text-decoration: none;
 }
-

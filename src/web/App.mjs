@@ -904,9 +904,9 @@ class App {
     assignAvailableHeight( isMobile ){
         const bannerHeight = 40;
         const controlsHeight = 50;
-        const operationsHeight = 90;
+        const operationsHeight = 80;
 
-        const remainingSpace = window.innerHeight - (bannerHeight+controlsHeight+operationsHeight-2);
+        const remainingSpace = window.innerHeight - (bannerHeight+controlsHeight+operationsHeight);
 
         // equally divide among recipe, input and output
         ["recipe", "input", "output"].forEach(( div ) => {

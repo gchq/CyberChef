@@ -15,7 +15,7 @@
 
 #operations-dropdown {
     position: absolute;
-    top: 41px;
+    top: var(--banner-height);
     width: 100%;
     height: auto;
     overflow: auto;
