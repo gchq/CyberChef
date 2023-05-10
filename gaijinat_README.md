@@ -4,14 +4,15 @@ CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" 
 
 **This is the Gaijin.at version with additional operations not included in the original version.**
 
-Get the source code for [Gaijin.at CyberChef on GitHub](https://github.com/gaijinat/CyberChef/).
+Get the source code for [Gaijin.at CyberChef on GitHub](https://github.com/gaijinat/CyberChef/) or get the original [GCHQ CyberChef on GitHub](https://github.com/gchq/CyberChef/).
 
-You can find the original [GCHQ CyberChef on GitHub](https://github.com/gchq/CyberChef/).
+#### More about CyberChef on Gaijin.at
 
+- [A live demo of the Gaijin.at version](https://www.gaijin.at/CyberChef/) - have fun!
 
-## Live demo
+- [A brief overview of CyberChef](https://www.gaijin.at/en/infos/cyberchef) and a description of its main features
 
-[A live demo can be found at Gaijin.at](https://www.gaijin.at/CyberChef/) - have fun!
+- [Ready to use CyberChef recipes](https://www.gaijin.at/en/infos/cyberchef-recipes)
 
 
 
