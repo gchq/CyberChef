@@ -4,7 +4,8 @@
  * @license Apache-2.0
  */
 
-import OperationConfig from "./config/OperationConfig.json" assert {type: "json"};
+// @TODO: fix import OperationConfig from "./config/OperationConfig.json" assert {type: "json"};
+import OperationConfig from "./config/OperationConfig.json";
 import OperationError from "./errors/OperationError.mjs";
 import Operation from "./Operation.mjs";
 import DishError from "./errors/DishError.mjs";
