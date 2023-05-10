@@ -2,14 +2,16 @@
 
 CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms.
 
-**This is the Gaijin.at version with additional operations, not included in the original version.**
+**This is the Gaijin.at version with additional operations not included in the original version.**
 
-You can find the original [GCHQ CyberChef on GitHub](https://github.com/gchq/CyberChef)
+Get the source code for [Gaijin.at CyberChef on GitHub](https://github.com/gaijinat/CyberChef/).
+
+You can find the original [GCHQ CyberChef on GitHub](https://github.com/gchq/CyberChef/).
 
 
 ## Live demo
 
-[A live demo can be found at Gaijin.at](https://www.gaijin.at/CyberChef) - have fun!
+[A live demo can be found at Gaijin.at](https://www.gaijin.at/CyberChef/) - have fun!
 
 
 
