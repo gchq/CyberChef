@@ -6,7 +6,7 @@
     {
         "name": "Gaijin",
         "ops": [
-            "ByteAnalyser",
+            "Byte Analyser",
             "Output",
             "Pad",
             "Prepend / Append",
