@@ -1,7 +1,7 @@
 :root {
     /* Fixed heights */
     --banner-height: 40px;
-    --controls-height: 70px;
+    --controls-height: 50px;
     /*initial mobile height*/
     --operations-height: 90px;
 }
@@ -10,8 +10,7 @@
  * A note:
  *
  * Heights of #recipe, #input and #output are set programmatically
- * in App.js > divideAvailableSpace(), please see the docs for that
- * function for more information.
+ * in App.js
  */
 
 

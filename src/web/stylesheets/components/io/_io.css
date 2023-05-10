@@ -198,3 +198,8 @@ label[for="output-text"] {
 #output .cm-panels {
     border-color: var(--primary-border-colour);
 }
+
+/* maximise pane and lay on top of everything ( mobile UI )*/
+.top-zindex {
+    z-index: 200;
+}

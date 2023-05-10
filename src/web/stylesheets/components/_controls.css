@@ -8,7 +8,6 @@
 
 #controls {
     width: 100%;
-    padding: 10px 0;
     border-top: 1px solid var(--primary-border-colour);
     background-color: var(--secondary-background-colour);
     overflow: hidden;
@@ -16,18 +15,19 @@
 
 #controls-content {
     display: flex;
-    flex-flow: row nowrap;
     align-items: center;
+    padding: 10px 0;
 }
 
 #auto-bake-label {
-    display: inline-block;
-    width: 100px;
+    /*display: inline-block;*/
+    /*width: 100px;*/
     padding: 0;
     margin: 0;
-    text-align: center;
+    font-size: initial;
+    /*text-align: center;*/
     color: var(--primary-font-colour);
-    font-size: 14px;
+    /*font-size: 14px;*/
     cursor: pointer;
 }
 
@@ -39,19 +39,28 @@
 
 #auto-bake-label .checkbox-decorator {
     position: relative;
+    margin: 0;
+    padding: 0;
 }
 
+/* bake button */
 #bake {
     box-shadow: none;
 }
 
+/* bake and step buttons */
 #controls .btn {
     border-radius: 30px;
     margin: 0;
+    font-size: initial;
+    line-height: 0;
+    height: 30px;
 }
 
-.top-zindex {
-    z-index: 200;
+#controls-content .form-group {
+    text-align: center;
 }
+
+
 
 

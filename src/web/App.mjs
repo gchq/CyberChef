@@ -877,7 +877,7 @@ class App {
     setDesktopUI(minimise){
         $("[data-toggle=tooltip]").tooltip("enable");
         this.setDesktopSplitter(minimise);
-        this.adjustComponentSizes();
+        // this.adjustComponentSizes();
         this.populateOperationsList();
         this.manager.recipe.clearAllSelectedClasses();
     }
@@ -896,16 +896,14 @@ class App {
     /**
      * Due to variable available heights on mobile devices ( due to the
      * address bar etc. ), we need to calculate the available space and
-     * set some heights programmatically.
+     * set some heights programmatically based on the full view height,
+     * minus fixed height elements.
      *
-     * The numbers 40, 70 and 90 refer to divs with fixed heights,
-     * that is: #banner, #operations and #controls. -2 is accounting for
-     * some borders.
-     * Be mindful to update these accordingly in the stylesheets
-     * ( themes/_structure ) if you want to make changes.
+     * Be mindful to update these fixed numbers accordingly in the stylesheets
+     * ( themes/_structure ) if you make changes to those elements' height.
      */
     assignAvailableHeight( isMobile ){
-        const remainingSpace = window.innerHeight - (40+70+90-2); // banner, operations, controls height
+        const remainingSpace = window.innerHeight - (40+50+90-2); // banner, controls height, operations, accounting for some borders
 
         // equally divide among recipe, input and output
         ["recipe", "input", "output"].forEach(( div ) => {

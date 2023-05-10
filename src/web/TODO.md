@@ -13,5 +13,6 @@
 
 ### Misc:
 - Gruntfile revert dev config
+- Update README instructions per Mobile UI
 - delete this file when done :)
 

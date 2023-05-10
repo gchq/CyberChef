@@ -244,21 +244,25 @@
                     <ul id="rec-list" class="list-area no-select"></ul>
                     <div id="controls" class="no-select">
                         <div id="controls-content">
-                            <button type="button" class="mx-2 btn btn-lg btn-secondary" id="step" data-toggle="tooltip" title="Step through the recipe" data-help-title="Stepping through the Recipe" data-help="<p>The Step button allows you to execute one operation at a time, rather than running the whole Recipe from beginning to end.</p><p>Step allows you to inspect the data at each stage of the Recipe and understand what is being passed to the next operation.</p>">
-                                Step
-                            </button>
-
-                            <button type="button" class="mx-2 btn btn-lg btn-success btn-raised btn-block" id="bake" data-help-title="Baking" data-help="<p>Baking causes CyberChef to run the Recipe against your data. This involves three steps:</p><ol><li>The data in the Input is encoded into bytes using the character encoding selected in the Input status bar.</li><li>The data is run through each of the operations in the Recipe in turn with the output of one operation being fed into the next operation as its input.</li><li>The outcome of the final operation in the Recipe is decoded into Output text using the character encoding selected in the Output status bar.</li></ol><p>If there are multiple Inputs, the Bake button causes every Input to be baked simultaneously.</p>">
-                                <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/>
-                                <span>Bake!</span>
-                            </button>
-
-                            <div class="form-group" style="display: contents;">
-                                <div class="mx-1 checkbox" data-help-title="Auto-bake" data-help="<p>When Auto-bake is turned on, CyberChef will bake the Input using the Recipe whenever anything in the Input or Recipe changes.</p>This includes:<ul><li>Adding or removing operations</li><li>Modifying operation arguments</li><li>Editing the Input</li><li>Changing the Input character encoding</li></ul><p>If there are multiple inputs, only the currently active tab will be baked when Auto-bake triggers. You can bake all inputs manually using the Bake button.</p>">
-                                    <label id="auto-bake-label">
-                                        <input type="checkbox" checked="checked" id="auto-bake">
-                                        <br>Auto Bake
-                                    </label>
+                            <div class="col-3">
+                                <button type="button" class="btn btn-block btn-secondary" id="step" data-toggle="tooltip" title="Step through the recipe" data-help-title="Stepping through the Recipe" data-help="<p>The Step button allows you to execute one operation at a time, rather than running the whole Recipe from beginning to end.</p><p>Step allows you to inspect the data at each stage of the Recipe and understand what is being passed to the next operation.</p>">
+                                    Step
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-success btn-raised btn-block" id="bake" data-help-title="Baking" data-help="<p>Baking causes CyberChef to run the Recipe against your data. This involves three steps:</p><ol><li>The data in the Input is encoded into bytes using the character encoding selected in the Input status bar.</li><li>The data is run through each of the operations in the Recipe in turn with the output of one operation being fed into the next operation as its input.</li><li>The outcome of the final operation in the Recipe is decoded into Output text using the character encoding selected in the Output status bar.</li></ol><p>If there are multiple Inputs, the Bake button causes every Input to be baked simultaneously.</p>">
+<!--                                    <img aria-hidden="true" class="desktop-only" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/>-->
+                                    <span>Bake!</span>
+                                </button>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group" style="display: contents;">
+                                    <div class="checkbox" data-help-title="Auto-bake" data-help="<p>When Auto-bake is turned on, CyberChef will bake the Input using the Recipe whenever anything in the Input or Recipe changes.</p>This includes:<ul><li>Adding or removing operations</li><li>Modifying operation arguments</li><li>Editing the Input</li><li>Changing the Input character encoding</li></ul><p>If there are multiple inputs, only the currently active tab will be baked when Auto-bake triggers. You can bake all inputs manually using the Bake button.</p>">
+                                        <label id="auto-bake-label">
+                                            <input type="checkbox" checked="checked" id="auto-bake">
+                                            <small>Auto</small>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

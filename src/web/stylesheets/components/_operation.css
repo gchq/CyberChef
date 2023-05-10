@@ -40,7 +40,7 @@
     margin: 0 10px 0 0;
     padding: 0;
     color: var(--category-list-font-colour);
-    opacity: .5;
+    opacity: .35;
     cursor: pointer;
 }
 
