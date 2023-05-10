@@ -314,7 +314,7 @@ class App {
 
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [20, 30, 50],
-            minSize: minimise ? [0, 0, 0] : [20, 330, 50],
+            minSize: minimise ? [0, 0, 0] : [20, 330, 310],
             gutterSize: 4,
             expandToMin: true,
             onDrag: debounce(function() {
