@@ -1,5 +1,4 @@
-// @TODO dolphin: import OperationConfig from "../config/OperationConfig.json" assert {type: "json"};
-import OperationConfig from "../config/OperationConfig.json";
+import OperationConfig from "../config/OperationConfig.json" assert {type: "json"};
 import Utils, { isWorkerEnvironment } from "../Utils.mjs";
 import Recipe from "../Recipe.mjs";
 import Dish from "../Dish.mjs";

@@ -9,9 +9,9 @@
   is expanded and double click the window to fs > resolve. Reset layout
 
 ### JS:
-- `core/Recipe.mjs`, `core/lib/Magic.js` return imports to original
+- `core/Recipe.mjs`, `core/lib/Magic.js`, `core/ChefWorker.js` return imports to original
+> but then dev wont run anymore :(
 
 ### Misc:
-- Gruntfile revert dev config
 - delete this file when done :)
 

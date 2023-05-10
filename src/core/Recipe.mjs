@@ -4,8 +4,7 @@
  * @license Apache-2.0
  */
 
-// @TODO dolphin: import OperationConfig from "./config/OperationConfig.json" assert {type: "json"};
-import OperationConfig from "./config/OperationConfig.json";
+import OperationConfig from "./config/OperationConfig.json" assert {type: "json"};
 import OperationError from "./errors/OperationError.mjs";
 import Operation from "./Operation.mjs";
 import DishError from "./errors/DishError.mjs";
