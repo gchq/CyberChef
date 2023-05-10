@@ -595,14 +595,14 @@ class RecipeWaiter {
      * This hides all the checkmark icons of previously added ( selected )
      * operations to the recipe list
      */
-    clearAllSelectedClasses(){
+    clearAllSelectedClasses() {
         const list = document.querySelectorAll(".operation.selected");
 
         // check if any operations are selected at all to prevent errors
-        if (list.length){
+        if (list.length) {
             list.forEach((item) => {
                 item.classList.remove("selected");
-            })
+            });
         }
     }
 
@@ -613,15 +613,15 @@ class RecipeWaiter {
      *
      * @param {string} opDataName the data-name of the target operation
      */
-    addSelectedClass(opDataName){
+    addSelectedClass(opDataName) {
         const list = document.querySelectorAll(".operation");
-        const item = Array.from(list).filter((item) => item.getAttribute("data-name") === opDataName );
+        const item = Array.from(list).filter((item) => item.getAttribute("data-name") === opDataName);
 
         // when an item is listed in favourites, there are 2 of
         // them and both need the 'selected' class ( checkmark )
         item.forEach((op) => {
             op.classList.add("selected");
-        })
+        });
     }
 
     /**
@@ -636,24 +636,22 @@ class RecipeWaiter {
      * code ), I'd recommend to refactor this at one point, but that would mean a huge code
      * overhaul for another time / issue.
      */
-    updateSelectedOperations(){
-        let recipeList, operations;
-
-        recipeList = document.querySelectorAll("#rec-list > li");
-        operations =  document.querySelectorAll(".operation");
+    updateSelectedOperations() {
+        const recipeList = document.querySelectorAll("#rec-list > li");
+        const operations =  document.querySelectorAll(".operation");
 
         this.clearAllSelectedClasses();
 
-        if ( recipeList.length ){
+        if (recipeList.length) {
             recipeList.forEach((ingredient) => {
                 const ingredientName = ingredient.getAttribute("data-name");
 
                 operations.forEach((operation) => {
-                    if ( ingredientName === operation.getAttribute("data-name")){
+                    if (ingredientName === operation.getAttribute("data-name")) {
                         this.addSelectedClass(ingredientName);
                     }
-                })
-            })
+                });
+            });
         }
     }
 }

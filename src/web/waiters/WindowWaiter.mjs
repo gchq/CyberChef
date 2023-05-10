@@ -30,7 +30,7 @@ class WindowWaiter {
      * continuous resetting).
      */
     windowResize() {
-        if ( window.innerWidth >= this.app.breakpoint ) {
+        if (window.innerWidth >= this.app.breakpoint) {
             this.onResizeToDesktop();
         } else {
             this.onResizeToMobile();
@@ -38,35 +38,41 @@ class WindowWaiter {
 
         // #output can be maximised on all screen sizes, so if it was open while resizing,
         // it can be kept maximised until minimised manually
-        if ( document.getElementById("output").classList.contains("maximised-pane") ) {
-            this.manager.controls.setPaneMaximised( "output", true );
+        if (document.getElementById("output").classList.contains("maximised-pane")) {
+            this.manager.controls.setPaneMaximised("output", true);
         }
 
         debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();
     }
 
 
-    onResizeToDesktop(){
+    /**
+     * Set desktop UI and close #recipe / #input maximised panes if there were any.
+     * Correct the height of #recipe
+     */
+    onResizeToDesktop() {
         this.app.setDesktopUI(false);
 
         // if a window is resized past breakpoint while #recipe or #input is maximised,
         // the maximised pane is set to its default ( non-maximised ) state
-        ["recipe", "input"].forEach( paneId => this.manager.controls.setPaneMaximised(paneId, false));
+        ["recipe", "input"].forEach(paneId => this.manager.controls.setPaneMaximised(paneId, false));
 
         // to prevent #recipe from keeping the height set in divideAvailableSpace
         document.getElementById("recipe").style.height = "100%";
     }
 
-
-    onResizeToMobile(){
+    /**
+     * Set mobile UI and close any maximised panes if there were any
+     */
+    onResizeToMobile() {
         this.app.setMobileUI();
 
         // when mobile devices' keyboards pop up, it triggers a window resize event. Here
         // we keep the maximised panes open until the minimise button is clicked / tapped
         ["recipe", "input", "output"]
-            .map( paneId => document.getElementById(paneId))
-            .filter( pane => pane.classList.contains("maximised-pane"))
-            .forEach( pane => this.manager.controls.setPaneMaximised(pane.id, true));
+            .map(paneId => document.getElementById(paneId))
+            .filter(pane => pane.classList.contains("maximised-pane"))
+            .forEach(pane => this.manager.controls.setPaneMaximised(pane.id, true));
     }
 
 

@@ -429,8 +429,8 @@ ${navigator.userAgent}
      */
     onMaximiseButtonClick(e) {
         // the target pane is not already maximised because it does not have the 'maximised-pane' class..
-        const maximise = !document.getElementById(e.currentTarget.id.replace('maximise-', '')).classList.contains("maximised-pane");
-        this.setPaneMaximised(e.currentTarget.id.replace('maximise-', ''), maximise);
+        const maximise = !document.getElementById(e.currentTarget.id.replace("maximise-", "")).classList.contains("maximised-pane");
+        this.setPaneMaximised(e.currentTarget.id.replace("maximise-", ""), maximise);
     }
 
     /**
@@ -440,17 +440,17 @@ ${navigator.userAgent}
      * @param {string} paneId
      * @param {boolean} maximise
      */
-    setPaneMaximised( paneId, maximise ){
-        const pane = document.getElementById( paneId );
-        const btn = document.getElementById( `maximise-${paneId}` );
+    setPaneMaximised(paneId, maximise) {
+        const pane = document.getElementById(paneId);
+        const btn = document.getElementById(`maximise-${paneId}`);
 
         this.setMaximiseControlButton(btn, maximise);
         this.setPaneMaximisedClasses(pane, maximise);
 
-        if ( maximise ) {
+        if (maximise) {
             pane.style.height = `${window.innerHeight - 40}px`;
         } else {
-            if ( window.innerWidth < this.app.breakpoint ){
+            if (window.innerWidth < this.app.breakpoint) {
                 this.app.assignAvailableHeight();
             }
         }
@@ -463,7 +463,7 @@ ${navigator.userAgent}
      * @param {boolean} maximise
      */
     setPaneMaximisedClasses(pane, maximise) {
-        if ( maximise ) {
+        if (maximise) {
             pane.classList.add("top-zindex");
             pane.classList.add("maximised-pane");
         } else {
@@ -480,8 +480,8 @@ ${navigator.userAgent}
      * @param {HTMLElement} btn
      * @param {boolean} maximise
      */
-    setMaximiseControlButton(btn, maximise ) {
-        if ( maximise ) {
+    setMaximiseControlButton(btn, maximise) {
+        if (maximise) {
             btn.querySelector("i").innerHTML = "fullscreen_exit";
             btn.setAttribute("data-original-title", "Reset pane");
         } else {

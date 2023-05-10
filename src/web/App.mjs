@@ -298,7 +298,7 @@ class App {
      * @param {boolean} [minimise=false] - Set this flag if attempting to minimise frames to 0 width
      */
     initialiseUI() {
-        if ( window.innerWidth < this.breakpoint ){
+        if (window.innerWidth < this.breakpoint) {
             this.setMobileUI();
         } else {
             this.setDesktopUI(false);
@@ -308,7 +308,7 @@ class App {
     /**
      * Set desktop splitters
      */
-    setDesktopSplitter(minimise){
+    setDesktopSplitter(minimise) {
         if (this.columnSplitter) this.columnSplitter.destroy();
         if (this.ioSplitter) this.ioSplitter.destroy();
 
@@ -864,16 +864,16 @@ class App {
      * @param {boolean} isVisible
      *
      */
-    updateVisibility( elm, isVisible ){
-        isVisible ? elm.classList.remove("hidden") : elm.classList.add("hidden");
-    }h
+    updateVisibility(elm, isVisible) {
+        return isVisible ? elm.classList.remove("hidden") : elm.classList.add("hidden");
+    }
 
     /**
      * Set desktop UI ( on init and on window resize events )
      *
      * @param {boolean} minimise
      */
-    setDesktopUI(minimise){
+    setDesktopUI(minimise) {
         $("[data-toggle=tooltip]").tooltip("enable");
         this.setDesktopSplitter(minimise);
         this.adjustComponentSizes();
@@ -884,7 +884,7 @@ class App {
     /**
      *  Set mobile UI ( on init and on window resize events )
      */
-    setMobileUI(){
+    setMobileUI()  {
         $("[data-toggle=tooltip]").tooltip("disable");
         this.setMobileSplitter();
         this.assignAvailableHeight();
@@ -901,7 +901,7 @@ class App {
      * Be mindful to update these fixed numbers accordingly in the stylesheets
      * ( themes/_structure ) if you make changes to those elements' height.
      */
-    assignAvailableHeight(){
+    assignAvailableHeight() {
         const bannerHeight = 40;
         const controlsHeight = 50;
         const operationsHeight = 80;
@@ -909,7 +909,7 @@ class App {
         const remainingSpace = window.innerHeight - (bannerHeight+controlsHeight+operationsHeight - 1); // - 1 is accounting for a border
 
         // equally divide among recipe, input and output
-        ["recipe", "input", "output"].forEach(( div ) => {
+        ["recipe", "input", "output"].forEach((div) => {
             document.getElementById(div).style.height = `${remainingSpace/3}px`;
         });
 

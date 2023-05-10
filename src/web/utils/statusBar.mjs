@@ -292,7 +292,7 @@ class StatusBarPanel {
 
         this.dom.querySelectorAll(".cm-status-bar-select-scroll").forEach(
             el => {
-                el.style.maxHeight = window.innerWidth >= 768 ? (viewHeight - 50) + "px" : '250px';
+                el.style.maxHeight = window.innerWidth >= 768 ? (viewHeight - 50) + "px" : "250px";
             }
         );
     }
@@ -476,7 +476,7 @@ function makePanel(opts) {
                 sbPanel.updateSelection(update.state, update.selectionSet);
                 sbPanel.updateTiming();
                 sbPanel.monitorHTMLOutput();
-                if ( update.geometryChanged) {
+                if (update.geometryChanged) {
                     sbPanel.updateSizing(update.view);
                 }
                 if (update.docChanged) {

@@ -64,17 +64,17 @@ class HTMLOperation {
 
         if (removeIcon) {
             html += "<i class='material-icons remove-icon op-icon'>delete</i>";
-        } else if (!removeIcon && window.innerWidth < this.app.breakpoint ){
+        } else if (!removeIcon && window.innerWidth < this.app.breakpoint) {
             html += "<i class='material-icons check-icon op-icon'>check</i>";
         }
 
         const favourites = JSON.parse(localStorage.favourites);
         const isFavourite = favourites.includes(this.name);
 
-        if ( window.innerWidth < this.app.breakpoint ){
+        if (window.innerWidth < this.app.breakpoint) {
             html += `<i title="${this.name}" class='material-icons icon-add-favourite star-icon op-icon ${isFavourite ? "fav-op" : ""}'>
                     ${isFavourite ? "star" : "star_outline"}
-                </i>`
+                </i>`;
         }
 
         html += "</li>";

@@ -39,13 +39,13 @@ class OperationsWaiter {
     searchOperations(e) {
         let ops, selected;
 
-        if (e.type === "keyup"){
+        if (e.type === "keyup") {
             const searchResults = document.getElementById("search-results");
 
             this.openOperationsDropdown();
 
-            if ( e.target.value.length !== 0 ){
-                this.app.updateVisibility(searchResults, true );
+            if (e.target.value.length !== 0) {
+                this.app.updateVisibility(searchResults, true);
             }
         }
 
@@ -60,9 +60,9 @@ class OperationsWaiter {
             }
         }
 
-        if (e.type === "click" && !e.target.value.length){
+        if (e.type === "click" && !e.target.value.length) {
             this.openOperationsDropdown();
-        } else if (e.keyCode === 27 ) { // Escape
+        } else if (e.keyCode === 27) { // Escape
             this.closeOperationsDropdown();
         } else if (e.keyCode === 40) { // Down
             e.preventDefault();
@@ -184,7 +184,7 @@ class OperationsWaiter {
      * @param {event} e
      */
     opListCreate(e) {
-        if ( window.innerWidth < this.app.breakpoint ){
+        if (window.innerWidth < this.app.breakpoint) {
             this.mobileOpListCreate(e);
         } else {
             this.desktopOpListCreate(e);
@@ -197,7 +197,7 @@ class OperationsWaiter {
      *
      * @param {event} e
      */
-    desktopOpListCreate(e){
+    desktopOpListCreate(e) {
         this.manager.recipe.createSortableSeedList(e.target);
         this.enableOpPopover(e.target);
     }
@@ -208,7 +208,7 @@ class OperationsWaiter {
      *
      * @param {event} e
      */
-    mobileOpListCreate(e){
+    mobileOpListCreate(e) {
         this.manager.recipe.createSortableSeedList(e.target, false);
         this.disableOpsListPopovers();
     }
@@ -324,7 +324,7 @@ class OperationsWaiter {
     /**
      * Open operations dropdown
      */
-    openOperationsDropdown(){
+    openOperationsDropdown() {
         // the 'close' ( dropdown ) icon in Operations component mobile UI
         const closeOperationsDropdown = document.getElementById("close-operations-dropdown");
         const categories = document.getElementById("categories");
@@ -338,12 +338,12 @@ class OperationsWaiter {
      * Hide any operation lists ( #categories or #search-results ) and the close-operations-dropdown
      * icon itself, clear any search input
      */
-    closeOperationsDropdown(){
+    closeOperationsDropdown() {
         const search = document.getElementById("search");
 
         // if any input remains in #search, clear it
         if (search.value.length) {
-            search.value = '';
+            search.value = "";
         }
 
         this.app.updateVisibility(document.getElementById("categories"), false);
@@ -380,7 +380,7 @@ class OperationsWaiter {
      *
      * @param {Event} e
      */
-    onIconFavouriteClick(e){
+    onIconFavouriteClick(e) {
         this.app.addFavourite(e.target.getAttribute("title"));
     }
 }
