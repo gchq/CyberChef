@@ -4,6 +4,17 @@
         "ops": []
     },
     {
+        "name": "Gaijin",
+        "ops": [
+            "Byte Analyser",
+            "Output",
+            "Pad",
+            "Prepend / Append",
+            "Store / Restore Input",
+            "Trim"
+        ]
+    },
+    {
         "name": "Data format",
         "ops": [
             "To Hexdump",
