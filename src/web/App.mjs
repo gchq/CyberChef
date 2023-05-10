@@ -866,7 +866,7 @@ class App {
      */
     updateVisibility( elm, isVisible ){
         isVisible ? elm.classList.remove("hidden") : elm.classList.add("hidden");
-    }
+    }h
 
     /**
      * Set desktop UI ( on init and on window resize events )
@@ -901,7 +901,7 @@ class App {
      * Be mindful to update these fixed numbers accordingly in the stylesheets
      * ( themes/_structure ) if you make changes to those elements' height.
      */
-    assignAvailableHeight( isMobile ){
+    assignAvailableHeight(){
         const bannerHeight = 40;
         const controlsHeight = 50;
         const operationsHeight = 80;

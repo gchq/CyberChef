@@ -71,9 +71,11 @@ class HTMLOperation {
         const favourites = JSON.parse(localStorage.favourites);
         const isFavourite = favourites.includes(this.name);
 
-        html += `<i title="${this.name}" class='material-icons icon-add-favourite mobile-only star-icon op-icon ${isFavourite ? "fav-op" : ""}'>
+        if ( window.innerWidth < this.app.breakpoint ){
+            html += `<i title="${this.name}" class='material-icons icon-add-favourite star-icon op-icon ${isFavourite ? "fav-op" : ""}'>
                     ${isFavourite ? "star" : "star_outline"}
                 </i>`
+        }
 
         html += "</li>";
 
