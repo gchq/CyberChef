@@ -15,19 +15,47 @@
 
 #controls-content {
     display: flex;
-    align-items: center;
+    /*align-items: center;*/
     padding: 10px 0;
+    height: 100%;
+}
+
+#controls-content > div {
+    height: 100%;
+}
+
+/* bake button */
+#bake {
+    box-shadow: none;
+}
+
+/* bake and step buttons */
+#controls .btn {
+    border-radius: 30px;
+    margin: 0;
+    font-size: initial;
+    line-height: 0;
+    height: 100%;
+}
+
+/* auto bake */
+#controls-content .form-group {
+    text-align: center;
+    height: 100%;
+}
+
+#controls-content .form-group > .checkbox {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #auto-bake-label {
-    /*display: inline-block;*/
-    /*width: 100px;*/
     padding: 0;
     margin: 0;
     font-size: initial;
-    /*text-align: center;*/
     color: var(--primary-font-colour);
-    /*font-size: 14px;*/
     cursor: pointer;
 }
 
@@ -42,25 +70,6 @@
     margin: 0;
     padding: 0;
 }
-
-/* bake button */
-#bake {
-    box-shadow: none;
-}
-
-/* bake and step buttons */
-#controls .btn {
-    border-radius: 30px;
-    margin: 0;
-    font-size: initial;
-    line-height: 0;
-    height: 30px;
-}
-
-#controls-content .form-group {
-    text-align: center;
-}
-
 
 
 

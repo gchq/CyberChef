@@ -590,31 +590,6 @@ class RecipeWaiter {
 
 
     /**
-     * Adjusts the number of ingredient columns as the width of the recipe changes.
-     */
-    adjustWidth() {
-        const recList = document.getElementById("rec-list");
-
-        // Hide Chef icon on Bake button if the page is compressed
-        const bakeIcon = document.querySelector("#bake img");
-
-        if (recList.clientWidth < 370) {
-            // Hide Chef icon on Bake button
-            bakeIcon.style.display = "none";
-        } else {
-            bakeIcon.style.display = "inline-block";
-        }
-
-        // Scale controls to fit pane width
-        const controls = document.getElementById("controls");
-        const controlsContent = document.getElementById("controls-content");
-        const scale = (controls.clientWidth - 1) / controlsContent.scrollWidth;
-
-        controlsContent.style.transform = `scale(${scale})`;
-    }
-
-
-    /**
      * Remove all "selected" classes for op-list list items at once
      *
      * This hides all the checkmark icons of previously added ( selected )

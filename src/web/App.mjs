@@ -314,7 +314,7 @@ class App {
 
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [20, 30, 50],
-            minSize: minimise ? [0, 0, 0] : [20, 30, 50],
+            minSize: minimise ? [0, 0, 0] : [20, 330, 50],
             gutterSize: 4,
             expandToMin: true,
             onDrag: debounce(function() {
@@ -663,7 +663,6 @@ class App {
      * Adjust components to fit their containers.
      */
     adjustComponentSizes() {
-        this.manager.recipe.adjustWidth();
         this.manager.input.calcMaxTabs();
         this.manager.output.calcMaxTabs();
     }
@@ -877,7 +876,7 @@ class App {
     setDesktopUI(minimise){
         $("[data-toggle=tooltip]").tooltip("enable");
         this.setDesktopSplitter(minimise);
-        // this.adjustComponentSizes();
+        this.adjustComponentSizes();
         this.populateOperationsList();
         this.manager.recipe.clearAllSelectedClasses();
     }
@@ -903,7 +902,11 @@ class App {
      * ( themes/_structure ) if you make changes to those elements' height.
      */
     assignAvailableHeight( isMobile ){
-        const remainingSpace = window.innerHeight - (40+50+90-2); // banner, controls height, operations, accounting for some borders
+        const bannerHeight = 40;
+        const controlsHeight = 50;
+        const operationsHeight = 90;
+
+        const remainingSpace = window.innerHeight - (bannerHeight+controlsHeight+operationsHeight-2);
 
         // equally divide among recipe, input and output
         ["recipe", "input", "output"].forEach(( div ) => {

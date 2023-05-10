@@ -10,6 +10,10 @@
 #operations { height: var(--operations-height); }
 #controls { height: var(--controls-height); }
 
+@media only screen and ( min-width: 768px ) {
+    #controls { height: var(--desktop-controls-height); }
+}
+
 #banner,
 #content-wrapper {
     position: absolute;
@@ -47,11 +51,11 @@
 
 @media only screen and ( min-width: 768px ) {
     #recipe {
-        padding-bottom: var(--controls-height);
+        padding-bottom: var(--desktop-controls-height);
     }
 
     #recipe .list-area  {
-        bottom: var(--controls-height);
+        bottom: var(--desktop-controls-height);
     }
 
     #workspace-wrapper {

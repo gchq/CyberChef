@@ -1,9 +1,11 @@
 :root {
     /* Fixed heights */
     --banner-height: 40px;
-    --controls-height: 50px;
     /*initial mobile height*/
+    --controls-height: 50px;
     --operations-height: 90px;
+
+    --desktop-controls-height: 70px;
 }
 
 /**
