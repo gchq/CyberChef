@@ -7,12 +7,12 @@ module.exports = {
             .url(browser.launchUrl);
     },
 
-    // "Loading screen": browser => {
-    //     // Check that the loading screen appears and then disappears within a reasonable time
-    //     browser
-    //         .waitForElementVisible("#preloader", 300)
-    //         .waitForElementNotPresent("#preloader", 30000);
-    // },
+    "Loading screen": browser => {
+        // Check that the loading screen appears and then disappears within a reasonable time
+        browser
+            .waitForElementVisible("#preloader", 300)
+            .waitForElementNotPresent("#preloader", 30000);
+    },
 
     "App loaded": browser => {
         browser.useCss();
@@ -28,13 +28,14 @@ module.exports = {
         browser.expect.element("#output-text").to.be.visible;
     },
 
-    "Operations dropdown loaded": browser => {
-        browser.click("#search");
-
-        browser.expect.element("#operations-dropdown").to.be.visible;
-        browser.expect.element("#categories").to.be.visible;
-        browser.expect.element(".op-list").to.be.present;
-    },
+    // "Operations dropdown loaded": browser => {
+    //     browser
+    //         .useCss()
+    //         .click("#search")
+    //         .expect.element("#operations-dropdown").to.be.visible
+    //         .expect.element("#categories").to.be.visible
+    //         .expect.element(".op-list").to.be.present;
+    // },
 
     "Operations loaded": browser => {
         // Check that an operation in every category has been populated

@@ -68,8 +68,18 @@ class HTMLOperation {
             html += "<i class='material-icons check-icon op-icon'>check</i>";
         }
 
-        const favourites = JSON.parse(localStorage.favourites);
-        const isFavourite = favourites.includes(this.name);
+        let isFavourite;
+
+        if ( localStorage.favourites ) {
+            console.log(localStorage.favourites);
+            const favourites = JSON.parse(localStorage.favourites);
+            isFavourite = favourites.includes(this.name);
+        } else {
+            isFavourite = false;
+        }
+
+        console.log(isFavourite);
+
 
         if (window.innerWidth < this.app.breakpoint) {
             html += `<i title="${this.name}" class='material-icons icon-add-favourite star-icon op-icon ${isFavourite ? "fav-op" : ""}'>
