@@ -627,13 +627,13 @@ class RecipeWaiter {
      * overhaul for another time / issue.
      */
     updateSelectedOperations() {
-        const recipeList = document.querySelectorAll("#rec-list > li");
+        const recipeListItems = document.querySelectorAll("#rec-list > li");
         const operations =  document.querySelectorAll(".operation");
 
         this.clearAllSelectedClasses();
 
-        recipeList.forEach((ingredient) => {
-            const ingredientName = ingredient.getAttribute("data-name");
+        recipeListItems.forEach((item) => {
+            const ingredientName = item.getAttribute("data-name");
 
             operations.forEach((operation) => {
                 if (ingredientName === operation.getAttribute("data-name")) {
