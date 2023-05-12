@@ -183,7 +183,7 @@ class OperationsWaiter {
      * @param {event} e
      */
     opListCreate(e) {
-        if (window.innerWidth < this.app.breakpoint) {
+        if (this.app.isMobileView()) {
             this.createMobileOpList(e);
         } else {
             this.createDesktopOpList(e);
@@ -313,7 +313,7 @@ class OperationsWaiter {
             this.removeIntent = false;
         }.bind(this));
 
-        if (window.innerWidth >= this.app.breakpoint) {
+        if (!this.app.isMobileView()) {
             $("#edit-favourites-list [data-toggle=popover]").popover();
         }
         $("#favourites-modal").modal();

@@ -30,7 +30,7 @@ class WindowWaiter {
      * continuous resetting).
      */
     windowResize() {
-        if (window.innerWidth >= this.app.breakpoint) {
+        if (!this.app.isMobileView()) {
             this.onResizeToDesktop();
         } else {
             this.onResizeToMobile();

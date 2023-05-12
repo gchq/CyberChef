@@ -33,7 +33,7 @@ class RecipeWaiter {
      */
     initialiseOperationDragNDrop() {
         const recList = document.getElementById("rec-list");
-        const isMobileView = window.innerWidth < this.app.breakpoint;
+        const isMobileView = this.app.isMobileView();
 
         // Recipe list
         Sortable.create(recList, {

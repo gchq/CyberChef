@@ -450,7 +450,7 @@ ${navigator.userAgent}
         if (maximise) {
             pane.style.height = `${window.innerHeight - 40}px`;
         } else {
-            if (window.innerWidth < this.app.breakpoint) {
+            if (this.app.isMobileView()) {
                 this.app.assignAvailableHeight();
             }
         }

@@ -64,14 +64,14 @@ class HTMLOperation {
 
         if (removeIcon) {
             html += "<i class='material-icons remove-icon op-icon'>delete</i>";
-        } else if (!removeIcon && window.innerWidth < this.app.breakpoint) {
+        } else if (!removeIcon && this.app.isMobileView()) {
             html += "<i class='material-icons check-icon op-icon'>check</i>";
         }
 
         // check if local storage is available *and* has favourites at all ( otherwise we use the default favs )
         const isFavourite = this.app.isLocalStorageAvailable() && localStorage.favourites?.includes(this.name);
 
-        if (window.innerWidth < this.app.breakpoint) {
+        if (this.app.isMobileView()) {
             html += `<i title="${this.name}" class='material-icons icon-add-favourite star-icon op-icon ${isFavourite ? "fav-op" : ""}'>
                     ${isFavourite ? "star" : "star_outline"}
                 </i>`;

@@ -50,6 +50,9 @@ class App {
         this.breakpoint = 768;
     }
 
+    isMobileView() {
+        return window.innerWidth < this.breakpoint;
+    }
 
     /**
      * This function sets up the stage and creates listeners for all events.
@@ -297,7 +300,7 @@ class App {
      * @param {boolean} [minimise=false] - Set this flag if attempting to minimise frames to 0 width
      */
     initialiseUI() {
-        if (window.innerWidth < this.breakpoint) {
+        if (this.isMobileView()) {
             this.setMobileUI();
         } else {
             this.setDesktopUI(false);
