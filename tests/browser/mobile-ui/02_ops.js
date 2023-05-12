@@ -1,3 +1,18 @@
+/**
+ * Tests for operations.
+ * The primary purpose for these test is to ensure that the operations
+ * output something vaguely expected (i.e. they aren't completely broken
+ * after a dependency update or changes to the UI), rather than to confirm
+ * that this output is actually accurate. Accuracy of output and testing
+ * of edge cases should be carried out in the operations test suite found
+ * in /tests/operations as this is much faster and easier to configure
+ * than the UI tests found here.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ */
+
 const utils = require("./browserUtils.js");
 
 module.exports = {

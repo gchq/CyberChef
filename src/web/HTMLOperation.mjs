@@ -68,8 +68,8 @@ class HTMLOperation {
             html += "<i class='material-icons check-icon op-icon'>check</i>";
         }
 
-        // check if local storage has favourites at all
-        const isFavourite = localStorage.favourites?.includes(this.name)
+        // check if local storage is available *and* has favourites at all ( otherwise we use the default favs )
+        const isFavourite = this.app.isLocalStorageAvailable() && localStorage.favourites?.includes(this.name);
 
         if (window.innerWidth < this.app.breakpoint) {
             html += `<i title="${this.name}" class='material-icons icon-add-favourite star-icon op-icon ${isFavourite ? "fav-op" : ""}'>

@@ -1,9 +1,17 @@
+/**
+ * Tests to ensure that the app loads correctly in a reasonable time and that operations can be run.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
 const utils = require("./browserUtils.js");
 
 module.exports = {
     before: browser => {
         browser
-            .resizeWindow(412, 915) // Galaxy S20 Ultra-ish size
+            .resizeWindow(1280, 800)
             .url(browser.launchUrl);
     },
 
@@ -11,33 +19,25 @@ module.exports = {
         // Check that the loading screen appears and then disappears within a reasonable time
         browser
             .waitForElementVisible("#preloader", 300)
-            .waitForElementNotPresent("#preloader", 30000);
+            .waitForElementNotPresent("#preloader", 10000);
     },
 
     "App loaded": browser => {
         browser.useCss();
         // Check that various important elements are loaded
         browser.expect.element("#operations").to.be.visible;
-        browser.expect.element("#search").to.be.visible;
         browser.expect.element("#recipe").to.be.visible;
         browser.expect.element("#input").to.be.present;
         browser.expect.element("#output").to.be.present;
+        browser.expect.element(".op-list").to.be.present;
         browser.expect.element("#rec-list").to.be.visible;
         browser.expect.element("#controls").to.be.visible;
         browser.expect.element("#input-text").to.be.visible;
         browser.expect.element("#output-text").to.be.visible;
     },
 
-    // "Operations dropdown loaded": browser => {
-    //     browser
-    //         .useCss()
-    //         .click("#search")
-    //         .expect.element("#operations-dropdown").to.be.visible
-    //         .expect.element("#categories").to.be.visible
-    //         .expect.element(".op-list").to.be.present;
-    // },
-
     "Operations loaded": browser => {
+        browser.useXpath();
         // Check that an operation in every category has been populated
         browser.expect.element("//li[contains(@class, 'operation') and text()='To Base64']").to.be.present;
         browser.expect.element("//li[contains(@class, 'operation') and text()='To Binary']").to.be.present;
