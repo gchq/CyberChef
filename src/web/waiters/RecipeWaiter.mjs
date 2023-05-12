@@ -598,12 +598,9 @@ class RecipeWaiter {
     clearAllSelectedClasses() {
         const list = document.querySelectorAll(".operation.selected");
 
-        // check if any operations are selected at all to prevent errors
-        if (list.length) {
-            list.forEach((item) => {
-                item.classList.remove("selected");
-            });
-        }
+        list.forEach((item) => {
+            item.classList.remove("selected");
+        });
     }
 
     /**
@@ -642,17 +639,15 @@ class RecipeWaiter {
 
         this.clearAllSelectedClasses();
 
-        if (recipeList.length) {
-            recipeList.forEach((ingredient) => {
-                const ingredientName = ingredient.getAttribute("data-name");
+        recipeList.forEach((ingredient) => {
+            const ingredientName = ingredient.getAttribute("data-name");
 
-                operations.forEach((operation) => {
-                    if (ingredientName === operation.getAttribute("data-name")) {
-                        this.addSelectedClass(ingredientName);
-                    }
-                });
+            operations.forEach((operation) => {
+                if (ingredientName === operation.getAttribute("data-name")) {
+                    this.addSelectedClass(ingredientName);
+                }
             });
-        }
+        });
     }
 }
 
