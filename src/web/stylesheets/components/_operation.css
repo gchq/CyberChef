@@ -58,7 +58,7 @@
 }
 
 .operation.selected > .op-icon.check-icon {
-    display: initial;
+    display: inline-block;
 }
 
 .op-title {

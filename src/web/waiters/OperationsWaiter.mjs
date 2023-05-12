@@ -44,7 +44,7 @@ class OperationsWaiter {
             this.openOperationsDropdown();
 
             if (e.target.value.length !== 0) {
-                this.app.updateVisibility(searchResults, true);
+                this.app.setElementVisibility(searchResults, true);
             }
         }
 
@@ -328,8 +328,8 @@ class OperationsWaiter {
         const closeOperationsDropdown = document.getElementById("close-operations-dropdown");
         const categories = document.getElementById("categories");
 
-        this.app.updateVisibility(categories, true);
-        this.app.updateVisibility(closeOperationsDropdown, true);
+        this.app.setElementVisibility(categories, true);
+        this.app.setElementVisibility(closeOperationsDropdown, true);
     }
 
 
@@ -345,9 +345,9 @@ class OperationsWaiter {
             search.value = "";
         }
 
-        this.app.updateVisibility(document.getElementById("categories"), false);
-        this.app.updateVisibility(document.getElementById("search-results"), false);
-        this.app.updateVisibility(document.getElementById("close-operations-dropdown"), false);
+        this.app.setElementVisibility(document.getElementById("categories"), false);
+        this.app.setElementVisibility(document.getElementById("search-results"), false);
+        this.app.setElementVisibility(document.getElementById("close-operations-dropdown"), false);
     }
 
     /**

@@ -858,13 +858,13 @@ class App {
 
 
     /**
-     * Update element visibility
+     * Set element visibility
      *
      * @param {HTMLElement} elm
      * @param {boolean} isVisible
      *
      */
-    updateVisibility(elm, isVisible) {
+    setElementVisibility(elm, isVisible) {
         return isVisible ? elm.classList.remove("hidden") : elm.classList.add("hidden");
     }
 
