@@ -611,14 +611,7 @@ class RecipeWaiter {
      * @param {string} opDataName the data-name of the target operation
      */
     addSelectedClass(opDataName) {
-        const list = document.querySelectorAll(".operation");
-        const item = Array.from(list).filter((item) => item.getAttribute("data-name") === opDataName);
-
-        // when an item is listed in favourites, there are 2 of
-        // them and both need the 'selected' class ( checkmark )
-        item.forEach((op) => {
-            op.classList.add("selected");
-        });
+        document.querySelector(`.operation[data-name="${opDataName}"]`).classList.add("selected");
     }
 
     /**
