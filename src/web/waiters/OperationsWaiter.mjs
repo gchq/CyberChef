@@ -184,9 +184,9 @@ class OperationsWaiter {
      */
     opListCreate(e) {
         if (window.innerWidth < this.app.breakpoint) {
-            this.mobileOpListCreate(e);
+            this.createMobileOpList(e);
         } else {
-            this.desktopOpListCreate(e);
+            this.createDesktopOpList(e);
         }
     }
 
@@ -196,7 +196,7 @@ class OperationsWaiter {
      *
      * @param {event} e
      */
-    desktopOpListCreate(e) {
+    createDesktopOpList(e) {
         this.manager.recipe.createSortableSeedList(e.target);
         this.enableOpPopover(e.target);
     }
@@ -207,7 +207,7 @@ class OperationsWaiter {
      *
      * @param {event} e
      */
-    mobileOpListCreate(e) {
+    createMobileOpList(e) {
         this.manager.recipe.createSortableSeedList(e.target, false);
         this.disableOpsListPopovers();
     }
