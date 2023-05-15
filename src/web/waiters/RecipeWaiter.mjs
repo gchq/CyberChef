@@ -611,7 +611,12 @@ class RecipeWaiter {
      * @param {string} opDataName the data-name of the target operation
      */
     addSelectedClass(opDataName) {
-        document.querySelector(`.operation[data-name="${opDataName}"]`).classList.add("selected");
+        const ops = document.querySelectorAll(`.operation[data-name="${opDataName}"]`);
+
+        // A selected operation can occur twice if it's in favourites and the original category op-list
+        ops.forEach((op => {
+            op.classList.add("selected");
+        }))
     }
 
     /**
