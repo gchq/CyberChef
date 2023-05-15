@@ -57,6 +57,17 @@
     color: #47d047;
 }
 
+.operation.selected {
+    background-color: var(--selected-operation-bg-colour);
+}
+
+@media only screen and (min-width: 768px){
+    .operation.selected {
+        background-color: var(--op-list-operation-bg-colour);
+    }
+}
+
+
 .operation.selected > .op-icon.check-icon {
     display: inline-block;
 }
