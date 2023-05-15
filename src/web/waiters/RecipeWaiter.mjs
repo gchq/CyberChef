@@ -624,14 +624,8 @@ class RecipeWaiter {
     /**
      * Update which items are selected in op-list.
      *
-     * First, all selected classes are removed from op-list, then we get the current
-     * recipe-list ingredient names and add 'selected' back to the matching operations.
-     *
-     * Note: It seems a little overkill to nuke all selected classes, but with the current
-     * code this is a reliable way to make sure the 'selected' operations are always in sync with
-     * the recipe list ( I think this is preferable to complicating a lot of existing
-     * code ), I'd recommend to refactor this at one point, but that should go hand in hand
-     * with a huge code overhaul for another time / issue.
+     * First all selected classes are removed from all op-lists, then we get the current
+     * recipe-list ingredient names and add 'selected' to the matching operations.
      */
     updateSelectedOperations() {
         const recipeListItems = document.querySelectorAll("#rec-list > li");

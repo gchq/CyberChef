@@ -445,7 +445,7 @@ class App {
 
 
     /**
-     * Resets favourite operations back to the default as specified in the view constructor and
+     * Resets favourite operations to the default as specified in the view constructor and
      * refreshes the operation list.
      */
     resetFavourites() {
