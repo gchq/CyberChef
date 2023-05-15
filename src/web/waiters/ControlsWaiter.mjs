@@ -489,6 +489,24 @@ ${navigator.userAgent}
             btn.setAttribute("data-original-title", "Maximise pane");
         }
     }
+
+    /**
+     * If #recipe is maximised and #rec-list is empty, clicking / tapping on
+     * the ( empty ) list will open #operations-dropdown to help guide users
+     * with that they are supposed to do
+     */
+    onMaximisedRecipeClick() {
+        if (this.app.isMobileView()
+            // if #recipe is maximised
+            && document.querySelector("#recipe.maximised-pane")
+            // and #rec-list is empty
+            && document.querySelectorAll("#rec-list > li").length === 0 ) {
+
+            // close max pane and display the expanded #operations-dropdown
+            this.setPaneMaximised("recipe", false);
+            this.manager.ops.openOperationsDropdown();
+        }
+    }
 }
 
 export default ControlsWaiter;

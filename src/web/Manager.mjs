@@ -141,6 +141,7 @@ class Manager {
         document.getElementById("load-button").addEventListener("click", this.controls.loadButtonClick.bind(this.controls));
         document.getElementById("support").addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
         this.addMultiEventListeners("#save-texts textarea", "keyup paste", this.controls.saveTextChange, this.controls);
+        document.getElementById("rec-list").addEventListener("click", this.controls.onMaximisedRecipeClick.bind(this.controls));
         // A note for the Maximise Controls listeners below: click events via addDynamicListener don't properly bubble and the hit box to maximise is unacceptably tiny, hence this solution
         document.getElementById("maximise-recipe").addEventListener("click", this.controls.onMaximiseButtonClick.bind(this.controls));
         document.getElementById("maximise-input").addEventListener("click", this.controls.onMaximiseButtonClick.bind(this.controls));
