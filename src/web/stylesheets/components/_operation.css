@@ -39,7 +39,7 @@
     float: left;
     margin: 0 10px 0 0;
     padding: 0;
-    color: var(--category-list-font-colour);
+    color: var(--op-list-operation-font-colour);
     opacity: .35;
     cursor: pointer;
 }
@@ -54,7 +54,7 @@
 
 .op-icon.check-icon {
     display: none;
-    color: #47d047;
+    color: var(--checkmark-color);
 }
 
 .operation.selected {
