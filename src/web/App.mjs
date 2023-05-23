@@ -50,6 +50,9 @@ class App {
         this.breakpoint = 768;
     }
 
+    /**
+     * Is current view < breakpoint
+     */
     isMobileView() {
         return window.innerWidth < this.breakpoint;
     }
@@ -64,7 +67,7 @@ class App {
 
         this.initialiseUI();
         this.loadLocalStorage();
-        this.populateOperationsList();
+        this.buildOperationsList();
         this.manager.setup();
         this.manager.output.saveBombe();
         this.uriParams = this.getURIParams();
@@ -242,59 +245,6 @@ class App {
 
 
     /**
-     * Populates the operations accordion list with the categories and operations specified in the
-     * view constructor.
-     *
-     * @fires Manager#oplistcreate
-     */
-    populateOperationsList() {
-        // Move edit button away before we overwrite it
-        document.body.appendChild(document.getElementById("edit-favourites"));
-
-        let html = "";
-        let i;
-
-        for (i = 0; i < this.categories.length; i++) {
-            const catConf = this.categories[i],
-                selected = i === 0,
-                cat = new HTMLCategory(catConf.name, selected);
-
-            for (let j = 0; j < catConf.ops.length; j++) {
-                const opName = catConf.ops[j];
-                if (!(opName in this.operations)) {
-                    log.warn(`${opName} could not be found.`);
-                    continue;
-                }
-
-                const op = new HTMLOperation(opName, this.operations[opName], this, this.manager);
-                cat.addOperation(op);
-            }
-
-            html += cat.toHtml();
-        }
-
-        document.getElementById("categories").innerHTML = html;
-
-        const opLists = document.querySelectorAll("#categories .op-list");
-
-        for (i = 0; i < opLists.length; i++) {
-            opLists[i].dispatchEvent(this.manager.oplistcreate);
-        }
-
-        // Add edit button to first category (Favourites)
-        const favCat = document.querySelector("#categories a[data-target='#catFavourites']");
-        favCat.appendChild(document.getElementById("edit-favourites"));
-        favCat.setAttribute("data-help-title", "Favourite operations");
-        favCat.setAttribute("data-help", `<p>This category displays your favourite operations.</p>
-        <ul>
-            <li><b>To add:</b> drag an operation over the Favourites category</li>
-            <li><b>To reorder:</b> Click on the 'Edit favourites' button and drag operations up and down in the list provided</li>
-            <li><b>To remove:</b> Click on the 'Edit favourites' button and hit the delete button next to the operation you want to remove</li>
-        </ul>`);
-    }
-
-
-    /**
      * Sets up the adjustable splitter to allow the user to resize areas of the page.
      *
      * @param {boolean} [minimise=false] - Set this flag if attempting to minimise frames to 0 width
@@ -367,7 +317,6 @@ class App {
         }
         this.manager.options.load(lOptions);
 
-        // Load favourites
         this.loadFavourites();
     }
 
@@ -449,11 +398,7 @@ class App {
      * refreshes the operation list.
      */
     resetFavourites() {
-        this.saveFavourites(this.dfavourites);
-        this.loadFavourites();
-        this.populateOperationsList();
-        this.manager.recipe.initialiseOperationDragNDrop();
-        this.manager.recipe.updateSelectedOperations();
+        this.updateFavourites(this.dfavourites);
     }
 
 
@@ -471,13 +416,53 @@ class App {
         }
 
         favourites.push(name);
+        this.updateFavourites(favourites, false);
+    }
+
+
+    /**
+     * Update favourites in localstorage, load the updated
+     * favourites and re-render the favourites category.
+     *
+     * Apply 'favourite' classes and set icons appropriately
+     *
+     * @param {string[]} favourites
+     * @param {boolean} updateAllIcons
+     */
+    updateFavourites(favourites, updateAllIcons = true)  {
         this.saveFavourites(favourites);
         this.loadFavourites();
-        this.populateOperationsList();
-        this.manager.recipe.initialiseOperationDragNDrop();
-        this.manager.recipe.updateSelectedOperations();
+        this.buildFavouritesCategory();
 
+        if (updateAllIcons) {
+            this.manager.ops.updateOpsFavouriteIcons();
+        }
+
+        if (!this.isMobileView()) {
+            this.manager.recipe.initialiseOperationDragNDrop();
+        }
     }
+
+
+    /**
+     * Build the Favourites category and insert it into #categories
+     */
+    buildFavouritesCategory() {
+        // Move the edit button away before we re-render the favourite category
+        // A note: this is hacky and should be solved in a proper way once the entire
+        // codebase and architecture gets a thorough refactoring.
+        document.body.appendChild(document.getElementById("edit-favourites"));
+
+        // rerender the favourites category
+        const catConf = this.categories.find((cat) => cat.name === "Favourites");
+        this.removeCategoryFromDOM("catFavourites");
+        this.addCategoryToElement(catConf, document.getElementById("categories"));
+
+        // Restore "edit favourites" after the favourites category has been re-rendered, and reinitialize the listener
+        this.setEditFavourites();
+        document.getElementById("edit-favourites").addEventListener("click", this.manager.ops.editFavouritesClick.bind(this.manager.ops));
+    }
+
 
     /**
      * Gets the URI params from the window and parses them to extract the actual values.
@@ -881,8 +866,6 @@ class App {
         this.setCompileMessage();
         this.setDesktopSplitter(minimise);
         this.adjustComponentSizes();
-        this.populateOperationsList();
-        this.manager.recipe.clearAllSelectedClasses();
     }
 
     /**
@@ -892,8 +875,6 @@ class App {
         $("[data-toggle=tooltip]").tooltip("disable");
         this.setMobileSplitter();
         this.assignAvailableHeight();
-        this.populateOperationsList();
-        this.manager.recipe.updateSelectedOperations();
     }
 
     /**
@@ -919,6 +900,100 @@ class App {
 
         // set the ops-dropdown height
         document.getElementById("operations-dropdown").style.maxHeight = `${window.innerHeight - (bannerHeight+operationsHeight)}px`;
+    }
+
+
+    /**
+     * Create the template for a single category
+     *
+     * @param {object} catConf
+     * @param {boolean} selected
+     */
+    createCategory(catConf, selected) {
+        const cat = new HTMLCategory(catConf.name, selected);
+
+        catConf.ops.forEach(opName => {
+            if (!(opName in this.operations)) {
+                log.warn(`${opName} could not be found.`);
+                return;
+            }
+
+            const op = new HTMLOperation(opName, this.operations[opName], this, this.manager);
+            cat.addOperation(op);
+        });
+
+        return cat;
+    }
+
+    /**
+     * Add a category to an element
+     *
+     * @param {object} catConf
+     * @param {HTMLElement} targetElement
+     * @param {boolean} selected ( false by default )
+     */
+    addCategoryToElement(catConf, targetElement, selected = false) {
+        const cat = this.createCategory(catConf, selected);
+        const catName = "cat" + cat.name.replace(/[\s/\-:_]/g, "");
+
+        if (catConf.name === "Favourites") {
+            targetElement.innerHTML = cat.toHtml() + targetElement.innerHTML;
+        } else {
+            targetElement.innerHTML += cat.toHtml();
+        }
+
+        targetElement.querySelector(`#${catName} > .op-list`).dispatchEvent(this.manager.oplistcreate);
+    }
+
+    /**
+     * Remove a category from the DOM
+     *
+     * @param {string} catName
+     */
+    removeCategoryFromDOM(catName) {
+        document.querySelector(`#${catName}`).parentNode.remove();
+    }
+
+    /**
+     * Build the #operations accordion list with the categories and operations specified in the
+     * view constructor.
+     *
+     * @fires Manager#oplistcreate
+     */
+    buildOperationsList() {
+        const targetElement = document.getElementById("categories");
+
+        // Move the edit button away before we overwrite the categories.
+        // A note: this is hacky and should be solved in a proper way once the entire
+        // codebase and architecture gets a thorough refactoring.
+        document.body.appendChild(document.getElementById("edit-favourites"));
+
+        this.categories.forEach((catConf, index) => {
+            this.addCategoryToElement(catConf, targetElement, index === 0);
+        });
+
+        this.setEditFavourites();
+
+        this.manager.ops.updateListItemsClasses("#catFavourites > .op-list", "favourite");
+        this.manager.ops.updateListItemsClasses("#rec-list", "selected");
+    }
+
+
+    /**
+     * Set appropriate attributes and values and append "edit-favourites"
+     * to the favourites category
+     */
+    setEditFavourites() {
+        // Add edit button to first category (Favourites)
+        const favCat = document.querySelector("#categories a[data-target='#catFavourites']");
+        favCat.appendChild(document.getElementById("edit-favourites"));
+        favCat.setAttribute("data-help-title", "Favourite operations");
+        favCat.setAttribute("data-help", `<p>This category displays your favourite operations.</p>
+        <ul>
+            <li><b>To add:</b> drag an operation over the Favourites category</li>
+            <li><b>To reorder:</b> Click on the 'Edit favourites' button and drag operations up and down in the list provided</li>
+            <li><b>To remove:</b> Click on the 'Edit favourites' button and hit the delete button next to the operation you want to remove</li>
+        </ul>`);
     }
 }
 
