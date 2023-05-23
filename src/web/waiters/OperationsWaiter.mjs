@@ -8,7 +8,6 @@ import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
 
-
 /**
  * Waiter to handle events related to the operations.
  */
@@ -41,7 +40,7 @@ class OperationsWaiter {
         if (e.type === "keyup") {
             const searchResults = document.getElementById("search-results");
 
-            this.openOperationsDropdown();
+            this.openOpsDropdown();
 
             if (e.target.value.length !== 0) {
                 this.app.setElementVisibility(searchResults, true);
@@ -60,9 +59,9 @@ class OperationsWaiter {
         }
 
         if (e.type === "click" && !e.target.value.length) {
-            this.openOperationsDropdown();
+            this.openOpsDropdown();
         } else if (e.keyCode === 27) { // Escape
-            this.closeOperationsDropdown();
+            this.closeOpsDropdown();
         } else if (e.keyCode === 40) { // Down
             e.preventDefault();
             ops = document.querySelectorAll("#search-results li");
@@ -107,7 +106,7 @@ class OperationsWaiter {
                 searchResultsEl.innerHTML = matchedOpsHtml;
                 searchResultsEl.dispatchEvent(this.manager.oplistcreate);
             }
-            this.manager.recipe.updateSelectedOperations();
+            this.manager.ops.updateListItemsClasses("#rec-list", "selected");
         }
     }
 
@@ -116,7 +115,7 @@ class OperationsWaiter {
      * Filters operations based on the search string and returns the matching ones.
      *
      * @param {string} searchStr
-     * @param {boolean} highlight - Whether or not to highlight the matching string in the operation
+     * @param {boolean} highlight - Whether to highlight the matching string in the operation
      *   name and description
      * @returns {string[]}
      */
@@ -323,13 +322,13 @@ class OperationsWaiter {
     /**
      * Open operations dropdown
      */
-    openOperationsDropdown() {
+    openOpsDropdown() {
         // the 'close' ( dropdown ) icon in Operations component mobile UI
-        const closeOperationsDropdown = document.getElementById("close-operations-dropdown");
+        const closeOpsDropdownIcon = document.getElementById("close-ops-dropdown-icon");
         const categories = document.getElementById("categories");
 
         this.app.setElementVisibility(categories, true);
-        this.app.setElementVisibility(closeOperationsDropdown, true);
+        this.app.setElementVisibility(closeOpsDropdownIcon, true);
     }
 
 
@@ -337,7 +336,7 @@ class OperationsWaiter {
      * Hide any operation lists ( #categories or #search-results ) and the close-operations-dropdown
      * icon itself, clear any search input
      */
-    closeOperationsDropdown() {
+    closeOpsDropdown() {
         const search = document.getElementById("search");
 
         // if any input remains in #search, clear it
@@ -347,7 +346,7 @@ class OperationsWaiter {
 
         this.app.setElementVisibility(document.getElementById("categories"), false);
         this.app.setElementVisibility(document.getElementById("search-results"), false);
-        this.app.setElementVisibility(document.getElementById("close-operations-dropdown"), false);
+        this.app.setElementVisibility(document.getElementById("close-ops-dropdown-icon"), false);
     }
 
     /**
@@ -358,11 +357,7 @@ class OperationsWaiter {
         const favs = document.querySelectorAll("#edit-favourites-list li");
         const favouritesList = Array.from(favs, e => e.childNodes[0].textContent);
 
-        this.app.saveFavourites(favouritesList);
-        this.app.loadFavourites();
-        this.app.populateOperationsList();
-        this.manager.recipe.updateSelectedOperations();
-        this.manager.recipe.initialiseOperationDragNDrop();
+        this.app.updateFavourites(favouritesList);
     }
 
 
@@ -374,13 +369,113 @@ class OperationsWaiter {
         this.app.resetFavourites();
     }
 
+
     /**
-     * Add a favourite op, for mobile UI only
+     * Add op to Favourites and add the 'favourite' class to the list item,
+     * set the star icon to a filled star
      *
      * @param {Event} e
      */
     onIconFavouriteClick(e) {
         this.app.addFavourite(e.target.getAttribute("title"));
+        document.querySelectorAll(`li[data-name="${e.target.getAttribute("title")}"]`).forEach(listItem => {
+            listItem.querySelector("i.star-icon").innerText = "star";
+            listItem.classList.add("favourite");
+        });
+    }
+
+
+    /**
+     * Update classes in the #dropdown-operations op-lists based on the
+     * list items of a srcListSelector.
+     *
+     * e.g: the operations currently listed in the recipe-list and the appropriate
+     * list items in operations-dropdown that need to have the 'selected' class added
+     * or removed. Another use case is using the current 'Favourite' category op-list
+     * as a source and handle the 'favourite' class on operations-dropdown op-lists
+     * accordingly
+     *
+     * @param {string} srcListSelector - the UL element list to compare to
+     * @param {string} className - the className to update
+     */
+    updateListItemsClasses(srcListSelector, className) {
+        const listItems = document.querySelectorAll(`${srcListSelector} > li`);
+        const ops =  document.querySelectorAll(".op-list > li.operation");
+
+        this.removeClassFromOps(className);
+
+        if (listItems.length !== 0) {
+            listItems.forEach((item => {
+                const targetDataName = item.getAttribute("data-name");
+
+                ops.forEach((op) => {
+                    if (targetDataName === op.getAttribute("data-name")) {
+                        this.addClassToOp(targetDataName, className);
+                    }
+                });
+            }));
+        }
+    }
+
+
+    /**
+     * Set 'favourite' classes to all ops currently listed in the Favourites
+     * category, and update the ops-list operation favourite icons
+     */
+    updateOpsFavouriteIcons() {
+        this.updateListItemsClasses("#catFavourites > .op-list", "favourite");
+        document.querySelectorAll("li.operation.favourite > i.star-icon").forEach((icon) => {
+            icon.innerText = "star";
+        });
+        document.querySelectorAll("li.operation:not(.favourite) > i.star-icon").forEach((icon) => {
+            icon.innerText = "star_outline";
+        });
+    }
+
+
+    /**
+     * Generic function to remove a class from > ALL < operation list items
+     *
+     * @param {string} className  - the class to remove
+     */
+    removeClassFromOps(className) {
+        const ops = document.querySelectorAll(".op-list > li.operation");
+
+        ops.forEach((op => {
+            this.removeClassFromOp(op.getAttribute("data-name"), className);
+        }));
+    }
+
+
+    /**
+     * Generic function to remove a class from target operation list item
+     *
+     * @param {string} opDataName - data-name attribute of the target operation
+     * @param {string} className - the class to remove
+     */
+    removeClassFromOp(opDataName, className) {
+        const ops = document.querySelectorAll(`.op-list > li.operation[data-name="${opDataName}"].${className}`);
+
+        // the same operation may occur twice if it is also in #catFavourites
+        ops.forEach((op) => {
+            op.classList.remove(`${className}`);
+        });
+    }
+
+
+    /**
+     * Generic function to add a class to an operation list item
+     *
+     * @param {string} opDataName - data-name attribute of the target operation
+     * @param {string} className - the class to add to the operation list item
+     */
+    addClassToOp(opDataName, className) {
+        const ops = document.querySelectorAll(`.op-list > li.operation[data-name="${opDataName}"]`);
+
+        // the same operation may occur twice if it is also in #catFavourites
+        ops.forEach((op => {
+            op.classList.add(`${className}`);
+        }));
     }
 }
 
