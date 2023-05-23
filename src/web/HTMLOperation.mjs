@@ -50,7 +50,10 @@ class HTMLOperation {
         // returning the HTML we purge this.name from any HTML for the data-name attribute
         const name = this.name.replace(/(<([^>]+)>)/ig, "");
 
-        let html = `<li data-name="${name}" class="operation"`;
+        // check if local storage is available *and* has favourites at all ( otherwise default favs are used )
+        const isFavourite = this.app.isLocalStorageAvailable() && localStorage.favourites?.includes(name);
+
+        let html = `<li data-name="${name}" class="operation ${isFavourite && "favourite"}"`;
 
         if (this.description) {
             const infoLink = this.infoURL ? `<hr>${titleFromWikiLink(this.infoURL)}` : "";
@@ -68,13 +71,8 @@ class HTMLOperation {
             html += "<i class='material-icons check-icon op-icon'>check</i>";
         }
 
-        // check if local storage is available *and* has favourites at all ( otherwise we use the default favs )
-        const isFavourite = this.app.isLocalStorageAvailable() && localStorage.favourites?.includes(this.name);
-
         if (this.app.isMobileView()) {
-            html += `<i title="${this.name}" class='material-icons icon-add-favourite star-icon op-icon ${isFavourite ? "fav-op" : ""}'>
-                    ${isFavourite ? "star" : "star_outline"}
-                </i>`;
+            html += `<i title="${this.name}" class="material-icons icon-add-favourite star-icon op-icon">${isFavourite ? "star" : "star_outline"}</i>`;
         }
 
         html += "</li>";
