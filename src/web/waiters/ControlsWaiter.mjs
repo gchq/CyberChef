@@ -496,15 +496,11 @@ ${navigator.userAgent}
      * with that they are supposed to do
      */
     onMaximisedRecipeClick() {
-        if (this.app.isMobileView()
-            // if #recipe is maximised
-            && document.querySelector("#recipe.maximised-pane")
-            // and #rec-list is empty
-            && document.querySelectorAll("#rec-list > li").length === 0 ) {
-
+        // if #recipe is maximised & rec-list is empty on mobile UI
+        if (this.app.isMobileView() && document.querySelector("#recipe.maximised-pane") && document.querySelectorAll("#rec-list > li").length === 0) {
             // close max pane and display the expanded #operations-dropdown
             this.setPaneMaximised("recipe", false);
-            this.manager.ops.openOperationsDropdown();
+            this.manager.ops.openOpsDropdown();
         }
     }
 }
