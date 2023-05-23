@@ -390,8 +390,7 @@ class RecipeWaiter {
 
 
     /**
-     * Adds the specified operation to the recipe and
-     * adds a checkmark to the operation in Operations op-list
+     * Adds the specified operation to the recipe
      *
      * @fires Manager#operationadd
      * @param {string} name - The name of the operation to add
@@ -408,8 +407,6 @@ class RecipeWaiter {
 
         $(item).find("[data-toggle='tooltip']").tooltip();
 
-        this.updateSelectedOperations();
-
         item.dispatchEvent(this.manager.operationadd);
         return item;
     }
@@ -425,7 +422,6 @@ class RecipeWaiter {
         while (recList.firstChild) {
             recList.removeChild(recList.firstChild);
         }
-        this.clearAllSelectedClasses();
         recList.dispatchEvent(this.manager.operationremove);
     }
 
@@ -467,6 +463,7 @@ class RecipeWaiter {
 
     /**
      * Handler for operationadd events.
+     * Adds 'selected' class to the added operations in #operations-dropdown
      *
      * @listens Manager#operationadd
      * @fires Manager#statechange
@@ -474,7 +471,7 @@ class RecipeWaiter {
      */
     opAdd(e) {
         log.debug(`'${e.target.getAttribute("data-name")}' added to recipe`);
-        this.updateSelectedOperations();
+        this.manager.ops.addClassToOp(e.target.getAttribute("data-name"), "selected");
         this.triggerArgEvents(e.target);
         window.dispatchEvent(this.manager.statechange);
     }
@@ -482,6 +479,7 @@ class RecipeWaiter {
 
     /**
      * Handler for operationremove events.
+     * Updates 'selected' classes in #operations
      *
      * @listens Manager#operationremove
      * @fires Manager#statechange
@@ -489,7 +487,7 @@ class RecipeWaiter {
      */
     opRemove(e) {
         log.debug("Operation removed from recipe");
-        this.updateSelectedOperations();
+        this.manager.ops.updateListItemsClasses("#rec-list", "selected");
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -587,64 +585,6 @@ class RecipeWaiter {
 
         op.insertAdjacentHTML("beforeend", registerListEl);
     }
-
-
-    /**
-     * Remove all "selected" classes for op-list list items at once
-     *
-     * This hides all the checkmark icons of previously added ( selected )
-     * operations to the recipe list
-     */
-    clearAllSelectedClasses() {
-        const list = document.querySelectorAll(".operation.selected");
-
-        list.forEach((item) => {
-            item.classList.remove("selected");
-        });
-    }
-
-    /**
-     * Add "selected" to the operation that is added to the recipe
-     *
-     * This displays a checkmark icon to the operation in the op-list
-     *
-     * @param {string} opDataName the data-name of the target operation
-     */
-    addSelectedClass(opDataName) {
-        const ops = document.querySelectorAll(`.operation[data-name="${opDataName}"]`);
-
-        // A selected operation can occur twice if it's in favourites
-        // and the original category op-list
-        ops.forEach((op => {
-            op.classList.add("selected");
-        }))
-    }
-
-
-    /**
-     * Update which items are selected in op-list.
-     *
-     * First all selected classes are removed from all op-lists, then we get the current
-     * recipe-list ingredient names and add 'selected' to the matching operations.
-     */
-    updateSelectedOperations() {
-        const recipeListItems = document.querySelectorAll("#rec-list > li");
-        const operations =  document.querySelectorAll(".operation");
-
-        this.clearAllSelectedClasses();
-
-        recipeListItems.forEach((item) => {
-            const ingredientName = item.getAttribute("data-name");
-
-            operations.forEach((operation) => {
-                if (ingredientName === operation.getAttribute("data-name")) {
-                    this.addSelectedClass(ingredientName);
-                }
-            });
-        });
-    }
-
-
 }
 
 export default RecipeWaiter;
