@@ -23,7 +23,7 @@
     background-color: var(--secondary-background-colour);
 }
 
-#close-operations-dropdown.hidden,
+#close-ops-dropdown-icon.hidden,
 #search-results.hidden,
 #categories.hidden {
     z-index: -10;

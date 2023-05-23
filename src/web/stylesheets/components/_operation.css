@@ -44,8 +44,9 @@
     cursor: pointer;
 }
 
-.icon-add-favourite.fav-op {
+li.operation.favourite > .icon-add-favourite {
     opacity: 1;
+    pointer-events: none;
 }
 
 .op-icon.remove-icon {
