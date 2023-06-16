@@ -19,7 +19,7 @@ class RefangURL extends Operation {
 
         this.name = "Refang URL";
         this.module = "Default";
-        this.description = "Takes a defanged Universal Resource Locator (URL) and 'Refangs' it, making the URL valid again.<br><br>This can be used to revert a URL that has been defanged once again allowing you to potentially click on a malicious link.<br><br>Use carefully and only with trusted links.";
+        this.description = "Takes a defanged Universal Resource Locator (URL) and 'Refangs' it, making the URL valid again.<br><br>This can be used to revert a URL that has been defanged once again allowing you to potentially click on a malicious link.<br><br>Use carefully and only with trusted links.<br><br>This is probably irresposible.";
 		this.infoURL = "https://isc.sans.edu/forums/diary/Defang+all+the+things/22744/";
         this.inputType = "string";
         this.outputType = "string";
