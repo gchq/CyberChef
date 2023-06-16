@@ -2,8 +2,11 @@
  * Operations - Categories list
  */
 
-#categories {
+c-category-list > ul {
     border-top: 1px solid var(--primary-border-colour);
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 0;
 }
 
 .category-title {

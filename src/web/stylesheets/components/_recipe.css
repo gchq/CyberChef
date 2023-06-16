@@ -20,6 +20,7 @@
     background-color: var(--rec-list-operation-bg-colour);
     border-color: var(--rec-list-operation-border-colour);
     padding: 14px;
+    cursor: grab;
 }
 
 #rec-list li.sortable-chosen{

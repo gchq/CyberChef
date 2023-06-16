@@ -106,6 +106,7 @@ class OperationsWaiter {
                 searchResultsEl.innerHTML = matchedOpsHtml;
                 searchResultsEl.dispatchEvent(this.manager.oplistcreate);
             }
+
             this.manager.ops.updateListItemsClasses("#rec-list", "selected");
         }
     }
@@ -183,32 +184,12 @@ class OperationsWaiter {
      */
     opListCreate(e) {
         if (this.app.isMobileView()) {
-            this.createMobileOpList(e);
+            $(document.querySelectorAll(".op-list .operation")).popover("disable");
         } else {
-            this.createDesktopOpList(e);
+            $(document.querySelectorAll(".op-list .operation")).popover("enable");
+            this.enableOpPopover(e.target);
+            this.manager.recipe.createSortableSeedList(e.target);
         }
-    }
-
-    /**
-     * Create the desktop op-list which allows popovers
-     * and dragging
-     *
-     * @param {event} e
-     */
-    createDesktopOpList(e) {
-        this.manager.recipe.createSortableSeedList(e.target);
-        this.enableOpPopover(e.target);
-    }
-
-    /**
-     * Create the mobile op-list which does not allow
-     * popovers and dragging
-     *
-     * @param {event} e
-     */
-    createMobileOpList(e) {
-        this.manager.recipe.createSortableSeedList(e.target, false);
-        this.disableOpsListPopovers();
     }
 
 
@@ -219,7 +200,9 @@ class OperationsWaiter {
      * @param {Element} el - The element to start selecting from
      */
     enableOpPopover(el) {
-        $(el).find("[data-toggle=popover]").addBack("[data-toggle=popover]")
+        $(el)
+            .find("[data-toggle=popover]")
+            .addBack("[data-toggle=popover]")
             .popover({trigger: "manual"})
             .on("mouseenter", function(e) {
                 if (e.buttons > 0) return; // Mouse button held down - likely dragging an operation
@@ -238,14 +221,6 @@ class OperationsWaiter {
                     }
                 }, 50);
             });
-    }
-
-
-    /**
-     * Disable popovers on all op-list list items
-     */
-    disableOpsListPopovers() {
-        $(document.querySelectorAll(".op-list .operation")).popover("disable");
     }
 
 
@@ -371,21 +346,6 @@ class OperationsWaiter {
 
 
     /**
-     * Add op to Favourites and add the 'favourite' class to the list item,
-     * set the star icon to a filled star
-     *
-     * @param {Event} e
-     */
-    onIconFavouriteClick(e) {
-        this.app.addFavourite(e.target.getAttribute("title"));
-        document.querySelectorAll(`li[data-name="${e.target.getAttribute("title")}"]`).forEach(listItem => {
-            listItem.querySelector("i.star-icon").innerText = "star";
-            listItem.classList.add("favourite");
-        });
-    }
-
-
-    /**
      * Update classes in the #dropdown-operations op-lists based on the
      * list items of a srcListSelector.
      *
@@ -400,7 +360,7 @@ class OperationsWaiter {
      */
     updateListItemsClasses(srcListSelector, className) {
         const listItems = document.querySelectorAll(`${srcListSelector} > li`);
-        const ops =  document.querySelectorAll(".op-list > li.operation");
+        const ops =  document.querySelectorAll("c-operation-li > li.operation");
 
         this.removeClassFromOps(className);
 
@@ -417,29 +377,13 @@ class OperationsWaiter {
         }
     }
 
-
-    /**
-     * Set 'favourite' classes to all ops currently listed in the Favourites
-     * category, and update the ops-list operation favourite icons
-     */
-    updateOpsFavouriteIcons() {
-        this.updateListItemsClasses("#catFavourites > .op-list", "favourite");
-        document.querySelectorAll("li.operation.favourite > i.star-icon").forEach((icon) => {
-            icon.innerText = "star";
-        });
-        document.querySelectorAll("li.operation:not(.favourite) > i.star-icon").forEach((icon) => {
-            icon.innerText = "star_outline";
-        });
-    }
-
-
     /**
      * Generic function to remove a class from > ALL < operation list items
      *
      * @param {string} className  - the class to remove
      */
     removeClassFromOps(className) {
-        const ops = document.querySelectorAll(".op-list > li.operation");
+        const ops = document.querySelectorAll("c-operation-li > li.operation");
 
         ops.forEach((op => {
             this.removeClassFromOp(op.getAttribute("data-name"), className);
@@ -450,11 +394,11 @@ class OperationsWaiter {
     /**
      * Generic function to remove a class from target operation list item
      *
-     * @param {string} opDataName - data-name attribute of the target operation
+     * @param {string} opName - operation name through data-name attribute of the target operation
      * @param {string} className - the class to remove
      */
-    removeClassFromOp(opDataName, className) {
-        const ops = document.querySelectorAll(`.op-list > li.operation[data-name="${opDataName}"].${className}`);
+    removeClassFromOp(opName, className) {
+        const ops = document.querySelectorAll(`c-operation-li > li.operation[data-name="${opName}"].${className}`);
 
         // the same operation may occur twice if it is also in #catFavourites
         ops.forEach((op) => {
@@ -466,11 +410,11 @@ class OperationsWaiter {
     /**
      * Generic function to add a class to an operation list item
      *
-     * @param {string} opDataName - data-name attribute of the target operation
+     * @param {string} opName - operation name through data-name attribute of the target operation
      * @param {string} className - the class to add to the operation list item
      */
-    addClassToOp(opDataName, className) {
-        const ops = document.querySelectorAll(`.op-list > li.operation[data-name="${opDataName}"]`);
+    addClassToOp(opName, className) {
+        const ops = document.querySelectorAll(`c-operation-li > li.operation[data-name="${opName}"]`);
 
         // the same operation may occur twice if it is also in #catFavourites
         ops.forEach((op => {

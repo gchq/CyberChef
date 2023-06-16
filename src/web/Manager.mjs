@@ -156,7 +156,7 @@ class Manager {
         document.getElementById("reset-favourites").addEventListener("click", this.ops.resetFavouritesClick.bind(this.ops));
         this.addDynamicListener(".op-list", "oplistcreate", this.ops.opListCreate, this.ops);
         this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd, this.recipe);
-        this.addDynamicListener(".icon-add-favourite", "click", this.ops.onIconFavouriteClick, this.ops);
+        // this.addDynamicListener(".op-icon.star-icon", "click", this.ops.onIconFavouriteClick, this.ops);
 
         // Recipe
         this.addDynamicListener(".arg:not(select)", "input", this.recipe.ingChange, this.recipe);

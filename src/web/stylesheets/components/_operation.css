@@ -15,16 +15,12 @@
     border-top: none;
     border-left: none;
     border-right: none;
+    cursor: pointer;
 }
 
 @media only screen and (min-width: 768px){
     .operation {
         cursor: grab;
-    }
-
-    /* never display check icons on desktop views */
-    .op-icon.check-icon {
-        display: none;
     }
 }
 
@@ -34,8 +30,8 @@
     cursor: pointer;
 }
 
-/*mobile only favourite icon in operation list*/
-.icon-add-favourite {
+
+.op-icon.star-icon {
     float: left;
     margin: 0 10px 0 0;
     padding: 0;
@@ -44,7 +40,7 @@
     cursor: pointer;
 }
 
-li.operation.favourite > .icon-add-favourite {
+li.operation.favourite > .op-icon.star-icon {
     opacity: 1;
     pointer-events: none;
 }
@@ -62,14 +58,7 @@ li.operation.favourite > .icon-add-favourite {
     background-color: var(--selected-operation-bg-colour);
 }
 
-@media only screen and (min-width: 768px){
-    .operation.selected {
-        background-color: var(--op-list-operation-bg-colour);
-    }
-}
-
-
-.operation.selected > .op-icon.check-icon {
+.operation.selected > i.op-icon.check-icon {
     display: inline-block;
 }
 

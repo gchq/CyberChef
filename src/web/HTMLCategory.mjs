@@ -35,14 +35,11 @@ class HTMLCategory {
     /**
      * Renders the category and all operations within it in HTML.
      *
-     * @returns {string}
-     *
-     * @TODO: it will be better if this, and the other HTMLX.js, toHTML() functions
-     * created HTML elements rather than insert and change stringified html, but that
-     * would be part of a bigger refactoring adventure
+     * @returns {HTMLElement}
      */
     toHtml() {
         const catName = "cat" + this.name.replace(/[\s/\-:_]/g, "");
+
         let html = `<div class="panel category">
         <a class="category-title" data-toggle="collapse" data-target="#${catName}">
             ${this.name}
@@ -55,9 +52,9 @@ class HTMLCategory {
         }
 
         html += "</ul></div></div>";
+
         return html;
     }
-
 }
 
 export default HTMLCategory;

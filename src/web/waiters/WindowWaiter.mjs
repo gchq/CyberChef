@@ -53,8 +53,7 @@ class WindowWaiter {
     onResizeToDesktop() {
         this.app.setDesktopUI(false);
 
-        // if a window is resized past breakpoint while #recipe or #input is maximised,
-        // the maximised pane is set to its default ( non-maximised ) state
+        // if a window is resized past breakpoint while #recipe or #input is maximised, close these maxed panes
         ["recipe", "input"].forEach(paneId => this.manager.controls.setPaneMaximised(paneId, false));
 
         // to prevent #recipe from keeping the height set in divideAvailableSpace

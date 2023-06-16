@@ -23,6 +23,7 @@
     background-color: var(--secondary-background-colour);
 }
 
+/* 'hidden' is used to handle the visibility of a variety of mobile only elements */
 #close-ops-dropdown-icon.hidden,
 #search-results.hidden,
 #categories.hidden {
@@ -35,8 +36,8 @@
         border-bottom: none;
     }
 
-    /* On desktop UI, the dropdown is always open */
-    #search-results.hidden,
+    /* On desktop UI, the categories are always visible */
+    /*#search-results.hidden,*/
     #categories.hidden {
         z-index: initial;
         display: block;

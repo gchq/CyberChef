@@ -7,6 +7,7 @@
 import HTMLIngredient from "./HTMLIngredient.mjs";
 import Utils from "../core/Utils.mjs";
 import url from "url";
+import {COperationLi} from "./components/c-operation-li.mjs";
 
 
 /**
@@ -37,47 +38,6 @@ class HTMLOperation {
             const ing = new HTMLIngredient(config.args[i], this.app, this.manager);
             this.ingList.push(ing);
         }
-    }
-
-
-    /**
-     * Renders the operation in HTML as a stub operation with no ingredients.
-     *
-     * @returns {string}
-     */
-    toStubHtml(removeIcon) {
-        // this.name is polluted with HTML if it originates from search-results, so before
-        // returning the HTML we purge this.name from any HTML for the data-name attribute
-        const name = this.name.replace(/(<([^>]+)>)/ig, "");
-
-        // check if local storage is available *and* has favourites at all ( otherwise default favs are used )
-        const isFavourite = this.app.isLocalStorageAvailable() && localStorage.favourites?.includes(name);
-
-        let html = `<li data-name="${name}" class="operation ${isFavourite && "favourite"}"`;
-
-        if (this.description) {
-            const infoLink = this.infoURL ? `<hr>${titleFromWikiLink(this.infoURL)}` : "";
-
-            html += ` data-container='body' data-toggle='popover' data-placement='left'
-                data-content="${this.description}${infoLink}" data-html='true' data-trigger='hover'
-                data-boundary='viewport'`;
-        }
-
-        html += ">" + this.name;
-
-        if (removeIcon) {
-            html += "<i class='material-icons remove-icon op-icon'>delete</i>";
-        } else if (!removeIcon && this.app.isMobileView()) {
-            html += "<i class='material-icons check-icon op-icon'>check</i>";
-        }
-
-        if (this.app.isMobileView()) {
-            html += `<i title="${this.name}" class="material-icons icon-add-favourite star-icon op-icon">${isFavourite ? "star" : "star_outline"}</i>`;
-        }
-
-        html += "</li>";
-
-        return html;
     }
 
 
@@ -154,36 +114,6 @@ class HTMLOperation {
             this.description = desc;
         }
     }
-
-}
-
-
-/**
- * Given a URL for a Wikipedia (or other wiki) page, this function returns a link to that page.
- *
- * @param {string} urlStr
- * @returns {string}
- */
-function titleFromWikiLink(urlStr) {
-    const urlObj = url.parse(urlStr);
-    let wikiName = "",
-        pageTitle = "";
-
-    switch (urlObj.host) {
-        case "forensicswiki.xyz":
-            wikiName = "Forensics Wiki";
-            pageTitle = urlObj.query.substr(6).replace(/_/g, " "); // Chop off 'title='
-            break;
-        case "wikipedia.org":
-            wikiName = "Wikipedia";
-            pageTitle = urlObj.pathname.substr(6).replace(/_/g, " "); // Chop off '/wiki/'
-            break;
-        default:
-            // Not a wiki link, return full URL
-            return `<a href='${urlStr}' target='_blank'>More Information<i class='material-icons inline-icon'>open_in_new</i></a>`;
-    }
-
-    return `<a href='${urlObj.href}' target='_blank'>${pageTitle}<i class='material-icons inline-icon'>open_in_new</i></a> on ${wikiName}`;
 }
 
 export default HTMLOperation;

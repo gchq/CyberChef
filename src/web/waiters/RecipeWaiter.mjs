@@ -87,16 +87,15 @@ class RecipeWaiter {
      * Creates a drag-n-droppable seed list of operations.
      *
      * @param {element} listEl - The list to initialise
-     * @param {boolean} draggable - Are list items draggable
      */
-    createSortableSeedList(listEl, draggable = true) {
+    createSortableSeedList(listEl) {
         Sortable.create(listEl, {
             group: {
                 name: "recipe",
                 pull: "clone",
                 put: false,
             },
-            draggable: draggable ? ".operation" : null,
+            draggable: ".operation",
             sort: false,
             setData: function(dataTransfer, dragEl) {
                 dataTransfer.setData("Text", dragEl.getAttribute("data-name"));
@@ -408,6 +407,10 @@ class RecipeWaiter {
         $(item).find("[data-toggle='tooltip']").tooltip();
 
         item.dispatchEvent(this.manager.operationadd);
+
+        this.manager.ops.updateListItemsClasses("#rec-list", "selected");
+        console.log("operation add");
+
         return item;
     }
 
@@ -471,7 +474,7 @@ class RecipeWaiter {
      */
     opAdd(e) {
         log.debug(`'${e.target.getAttribute("data-name")}' added to recipe`);
-        this.manager.ops.addClassToOp(e.target.getAttribute("data-name"), "selected");
+        this.manager.ops.updateListItemsClasses("#rec-list", "selected");
         this.triggerArgEvents(e.target);
         window.dispatchEvent(this.manager.statechange);
     }
@@ -487,8 +490,9 @@ class RecipeWaiter {
      */
     opRemove(e) {
         log.debug("Operation removed from recipe");
-        this.manager.ops.updateListItemsClasses("#rec-list", "selected");
         window.dispatchEvent(this.manager.statechange);
+        this.manager.ops.updateListItemsClasses("#rec-list", "selected");
+        console.log("operation remove");
     }
 
 

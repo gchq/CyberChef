@@ -90,7 +90,7 @@ CyberChef is built to support
 
 ## Node.js support
 
-CyberChef is built to fully support Node.js `v16`. For more information, see the Node API page in the project [wiki pages](https://github.com/gchq/CyberChef/wiki)
+CyberChef is built to fully support Node.js `v18`. For more information, see the Node API page in the project [wiki pages](https://github.com/gchq/CyberChef/wiki)
 
 
 ## Contributing
