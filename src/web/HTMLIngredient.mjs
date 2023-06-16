@@ -319,7 +319,7 @@ class HTMLIngredient {
      * Handler for populate option changes.
      * Populates the relevant argument with the specified value.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     populateOptionChange(e) {
         e.preventDefault();
@@ -343,7 +343,7 @@ class HTMLIngredient {
      * Handler for populate multi option changes.
      * Populates the relevant arguments with the specified values.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     populateMultiOptionChange(e) {
         e.preventDefault();
@@ -374,7 +374,7 @@ class HTMLIngredient {
      * Handler for editable option clicks.
      * Populates the input box with the selected value.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     editableOptionClick(e) {
         e.preventDefault();
@@ -395,7 +395,7 @@ class HTMLIngredient {
      * Handler for argument selector changes.
      * Shows or hides the relevant arguments for this operation.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     argSelectorChange(e) {
         e.preventDefault();

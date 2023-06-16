@@ -151,12 +151,11 @@ class Manager {
         this.addMultiEventListener("#search", "keyup paste search click", this.ops.searchOperations, this.ops);
         this.addDynamicListener(".op-list li.operation", "dblclick", this.ops.operationDblclick, this.ops);
         document.getElementById("close-ops-dropdown-icon").addEventListener("click", this.ops.closeOpsDropdown.bind(this.ops));
-        document.getElementById("edit-favourites").addEventListener("click", this.ops.editFavouritesClick.bind(this.ops));
+        // document.getElementById("edit-favourites").addEventListener("click", this.ops.editFavouritesClick.bind(this.ops));
         document.getElementById("save-favourites").addEventListener("click", this.ops.saveFavouritesClick.bind(this.ops));
         document.getElementById("reset-favourites").addEventListener("click", this.ops.resetFavouritesClick.bind(this.ops));
         this.addDynamicListener(".op-list", "oplistcreate", this.ops.opListCreate, this.ops);
         this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd, this.recipe);
-        // this.addDynamicListener(".op-icon.star-icon", "click", this.ops.onIconFavouriteClick, this.ops);
 
         // Recipe
         this.addDynamicListener(".arg:not(select)", "input", this.recipe.ingChange, this.recipe);

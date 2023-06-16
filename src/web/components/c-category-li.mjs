@@ -1,4 +1,4 @@
-import {COperationLi} from "./c-operation-li.mjs";
+import {COperationList} from "./c-operation-list.mjs";
 
 /**
  * c(ustom element)-category-li ( list item )
@@ -7,38 +7,66 @@ import {COperationLi} from "./c-operation-li.mjs";
  * @param {CatConf} category - The category and operations to be populated.
  * @param {Object.<string, OpConf>} operations - The list of operation configuration objects.
  * @param {Boolean} isExpanded - expand the category on init or not
+ * @param {Boolean} includeOpLiStarIcon - Include the left side 'star' icon to favourite an operation easily
  * */
 export class CCategoryLi extends HTMLElement {
     constructor(
         app,
         category,
         operations,
-        isExpanded
+        isExpanded,
+        includeOpLiStarIcon,
     ) {
         super();
 
         this.app = app;
-        this.category = category;
-        this.operations = operations;
+        this.category = category; // contains a string[] of operation names under .ops
+        this.operations = operations; // opConfig[]
         this.label = category.name;
         this.isExpanded = isExpanded;
+        this.includeOpLiStarIcon = includeOpLiStarIcon;
 
         this.build();
 
         this.addEventListener("click", this.handleClick.bind(this));
     }
 
-    // /**
-    //  * Handle click
-    //  *
-    //  * @param {Event} e
-    //  */
-    // handleClick(e) {
-    //     if (e.target === this.querySelector("button")) {
-    //         // todo back to this "hitbox" issue w the icon inside the button
-    //         this.app.manager.ops.editFavouritesClick(e);
-    //     }
-    // }
+    /**
+     * Handle click
+     *
+     * @param {Event} e
+     */
+    handleClick(e) {
+        // todo some event (target ) bs here
+        if (e.target === this.querySelector("button")) {
+            // todo back to this "hitbox" issue w the icon inside the button
+            console.log(e.target);
+            this.app.manager.ops.editFavouritesClick(e);
+        }
+    }
+
+    /**
+     * Build c-category-li containing a nested c-operation-list ( op-list )
+     */
+    build() {
+        const li = this.buildListItem();
+        const a = this.buildAnchor();
+        const div = this.buildCollapsablePanel();
+
+        li.appendChild(a);
+        li.appendChild(div);
+        this.appendChild(li);
+
+        const opList = new COperationList(
+            this.app,
+            this.category.ops,
+            this.includeOpLiStarIcon,
+        )
+
+        opList.build();
+
+        div.appendChild(opList);
+    }
 
     /**
      * Build the li element
@@ -100,53 +128,6 @@ export class CCategoryLi extends HTMLElement {
 
         return div;
     };
-
-    /**
-     * Build the op-list for this category
-     *
-     * @param {string[]} opNames
-     */
-    buildOperationList(opNames) {
-        return opNames.map(opName => {
-            if (!(opName in this.operations)) {
-                log.warn(`${opName} could not be found.`);
-                return;
-            }
-
-            return new COperationLi(
-                this.app,
-                opName,
-                {
-                    class: "check-icon",
-                    innerText: "check"
-                },
-                this.operations[opName]
-            );
-        });
-    }
-
-    /**
-     * Build c-category-li and dispatch event oplistcreate
-     */
-    build() {
-        const ul = document.createElement("ul");
-        ul.classList.add("op-list");
-
-        const li = this.buildListItem();
-        const a = this.buildAnchor();
-        const div = this.buildCollapsablePanel();
-
-        li.appendChild(a);
-        li.appendChild(div);
-        div.appendChild(ul);
-        this.appendChild(li);
-
-        this.buildOperationList(this.category.ops).forEach(operationListItem =>
-            ul.appendChild(operationListItem)
-        );
-
-        ul.dispatchEvent(this.app.manager.oplistcreate);
-    }
 
     /**
      * Append a c-operation-li to this op-list

@@ -26,7 +26,7 @@ class BindingsWaiter {
      * Checks whether valid keyboard shortcut has been instated
      *
      * @fires Manager#statechange
-     * @param {event} e
+     * @param {Event} e
      */
     parseInput(e) {
         const modKey = this.app.options.useMetaKey ? e.metaKey : e.altKey;

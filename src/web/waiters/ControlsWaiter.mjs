@@ -347,7 +347,7 @@ class ControlsWaiter {
     /**
      * Populates the bug report information box with useful technical info.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     supportButtonClick(e) {
         e.preventDefault();

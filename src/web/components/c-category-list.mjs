@@ -5,15 +5,17 @@ import {CCategoryLi} from "./c-category-li.mjs";
  *
  * @param {App} app - The main view object for CyberChef
  * @param {CatConf[]} categories - The list of categories and operations to be populated.
- * @param {Object.<string, OpConf>} operations - The list of operation configuration objects.
+ * @param {Object.<string, OpConf>} operations - A list of operation configuration objects.
+ * @param {boolean} includeOpLiStarIcon - optionally add the 'star' icon to the left of an individual operation
  **/
 export class CCategoryList extends HTMLElement {
-    constructor( app, categories, operations ) {
+    constructor(app, categories, operations, includeOpLiStarIcon) {
         super();
 
         this.app = app;
         this.categories = categories;
         this.operations = operations;
+        this.includeOpLiStarIcon = includeOpLiStarIcon;
     }
 
     /**
@@ -27,9 +29,9 @@ export class CCategoryList extends HTMLElement {
                 this.app,
                 category,
                 this.operations,
-                index === 0
+                index === 0,
+                this.includeOpLiStarIcon
             );
-
             ul.appendChild(cat);
         });
 

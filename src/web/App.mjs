@@ -66,8 +66,8 @@ class App {
         document.dispatchEvent(this.manager.appstart);
 
         this.loadLocalStorage();
-        this.buildUI();
         this.buildCategoryList();
+        this.buildUI();
         this.manager.setup();
         this.manager.output.saveBombe();
         this.uriParams = this.getURIParams();
@@ -427,23 +427,30 @@ class App {
      * @param {string[]} favourites
      */
     updateFavourites(favourites)  {
+        // @todo: probably need this elsewhere
+        // // Destroy the current list items we no longer need in the edit Favourites modal
+        // const operations = document.querySelectorAll("#editable-favourites ....");
+        // listItems.forEach((li => {
+        //     li.remove();
+        // }))
+
         this.saveFavourites(favourites);
         this.loadFavourites();
 
         /* Rebuild only the favourites category */
-
         // double-check if the first category is indeed "catFavourites",
         if (document.querySelector("c-category-list > ul > c-category-li > li > a[data-target='#catFavourites']")) {
             // then destroy
             document.querySelectorAll("c-category-list > ul > c-category-li")[0].remove();
 
             // and rebuild it
-            const favCatConfig = this.categories.find( catConfig => catConfig.name === "Favourites");
+            const favCatConfig = this.categories.find(catConfig => catConfig.name === "Favourites");
             const favouriteCategory = new CCategoryLi(
                 this,
                 favCatConfig,
                 this.operations,
-                false
+                false,
+                true
             );
 
             // finally prepend it to c-category-list
@@ -777,7 +784,7 @@ class App {
      * Fires whenever the input or recipe changes in any way.
      *
      * @listens Manager#statechange
-     * @param {event} e
+     * @param {Event} e
      */
     stateChange(e) {
         debounce(function() {
@@ -890,17 +897,18 @@ class App {
     }
 
     /**
-     * @fires Manager#oplistcreate in nested c-category-li build() function
+     * @fires Manager#oplistcreate from nested c-category-li > c-operation-list build() function
      */
     buildCategoryList() {
         const categoryList = new CCategoryList(
             this,
             this.categories,
-            this.operations
+            this.operations,
+            true
         );
         categoryList.build();
 
-        document.querySelector("#categories").appendChild( categoryList );
+        document.querySelector("#categories").appendChild(categoryList);
     }
 }
 

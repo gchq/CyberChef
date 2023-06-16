@@ -6,28 +6,32 @@ import url from "url";
  * @param {App} app - The main view object for CyberChef
  * @param {string} name - The name of the operation
  * @param {Object} icon - { class: string, innerText: string } - The optional and customizable icon displayed on the right side of the operation
- * @param {Object} config - The configuration object for this operation.
+ * @param {Boolean} includeStarIcon - Include the left side 'star' icon to favourite an operation easily
  */
 export class COperationLi extends HTMLElement {
     constructor(
         app,
         name,
         icon,
-        config
+        includeStarIcon,
     ) {
         super();
 
         this.app = app;
         this.name = name;
-        this.isFavourite = this.app.isLocalStorageAvailable() && localStorage.favourites?.includes(name);
         this.icon = icon;
-        this.config = config;
+        this.includeStarIcon = includeStarIcon;
+
+        this.config = this.app.operations[name];
+        this.isFavourite = this.app.isLocalStorageAvailable() && localStorage.favourites?.includes(name);
 
         this.build();
 
         this.addEventListener('click', this.handleClick.bind(this));
         this.addEventListener('dblclick', this.handleDoubleClick.bind(this));
     }
+
+    // todo: dont think I need config separately, just use this.app.operations[name].xx?
 
     /**
      * @fires OperationsWaiter#operationDblclick on double click
@@ -48,6 +52,23 @@ export class COperationLi extends HTMLElement {
             this.app.addFavourite(this.name);
             this.updateFavourite(true);
         }
+    }
+
+    /**
+     * Build c-operation-li
+     */
+    build() {
+        const li = this.buildListItem();
+        const icon = this.buildIcon();
+
+        if ( this.includeStarIcon ){
+            const starIcon = this.buildStarIcon();
+            li.appendChild(starIcon);
+        }
+
+        li.appendChild(icon);
+
+        this.appendChild(li);
     }
 
     /**
@@ -128,7 +149,7 @@ export class COperationLi extends HTMLElement {
     }
 
     /**
-     * Build the star icon
+     * Build the ( optional ) star icon
      */
     buildStarIcon() {
         const icon = document.createElement("i");
@@ -145,20 +166,6 @@ export class COperationLi extends HTMLElement {
         }
 
         return icon;
-    }
-
-    /**
-     * Build c-operation-li
-     */
-    build() {
-        const li = this.buildListItem();
-        const icon = this.buildIcon();
-        const starIcon = this.buildStarIcon();
-
-        li.appendChild(icon);
-        li.appendChild(starIcon);
-
-        this.appendChild(li);
     }
 
     updateFavourite(isFavourite) {

@@ -125,7 +125,7 @@ class RecipeWaiter {
      * at the appropriate place and initialises it.
      *
      * @fires Manager#operationadd
-     * @param {event} evt
+     * @param {Event} evt
      */
     opSortEnd(evt) {
         if (this.removeIntent && evt.item.parentNode.id === "rec-list") {
@@ -158,7 +158,7 @@ class RecipeWaiter {
      * If the element being dragged is an operation, displays a visual cue so that the user knows it can
      * be dropped here.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     favDragover(e) {
         if (e.dataTransfer.effectAllowed !== "move")
@@ -183,7 +183,7 @@ class RecipeWaiter {
      * Handler for favourite dragleave events.
      * Removes the visual cue.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     favDragleave(e) {
         e.stopPropagation();
@@ -196,7 +196,7 @@ class RecipeWaiter {
      * Handler for favourite drop events.
      * Adds the dragged operation to the favourites list.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     favDrop(e) {
         e.stopPropagation();
@@ -224,7 +224,7 @@ class RecipeWaiter {
      * Updates the icon status.
      *
      * @fires Manager#statechange
-     * @param {event} e
+     * @param {Event} e
      */
     disableClick(e) {
         const icon = e.target;
@@ -249,7 +249,7 @@ class RecipeWaiter {
      * Updates the icon status.
      *
      * @fires Manager#statechange
-     * @param {event} e
+     * @param {Event} e
      */
     breakpointClick(e) {
         const bp = e.target;
@@ -271,7 +271,7 @@ class RecipeWaiter {
      * Removes the operation from the recipe and auto bakes.
      *
      * @fires Manager#statechange
-     * @param {event} e
+     * @param {Event} e
      */
     operationDblclick(e) {
         e.target.remove();
@@ -284,7 +284,7 @@ class RecipeWaiter {
      * Removes the operation from the recipe.
      *
      * @fires Manager#statechange
-     * @param {event} e
+     * @param {Event} e
      */
     operationChildDblclick(e) {
         e.target.parentNode.remove();
@@ -409,7 +409,6 @@ class RecipeWaiter {
         item.dispatchEvent(this.manager.operationadd);
 
         this.manager.ops.updateListItemsClasses("#rec-list", "selected");
-        console.log("operation add");
 
         return item;
     }
@@ -433,7 +432,7 @@ class RecipeWaiter {
      * Handler for operation dropdown events from toggleString arguments.
      * Sets the selected option as the name of the button.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     dropdownToggleClick(e) {
         e.stopPropagation();
@@ -470,7 +469,7 @@ class RecipeWaiter {
      *
      * @listens Manager#operationadd
      * @fires Manager#statechange
-     * @param {event} e
+     * @param {Event} e
      */
     opAdd(e) {
         log.debug(`'${e.target.getAttribute("data-name")}' added to recipe`);
@@ -486,13 +485,12 @@ class RecipeWaiter {
      *
      * @listens Manager#operationremove
      * @fires Manager#statechange
-     * @param {event} e
+     * @param {Event} e
      */
     opRemove(e) {
         log.debug("Operation removed from recipe");
         window.dispatchEvent(this.manager.statechange);
         this.manager.ops.updateListItemsClasses("#rec-list", "selected");
-        console.log("operation remove");
     }
 
 
@@ -500,7 +498,7 @@ class RecipeWaiter {
      * Handler for text argument dragover events.
      * Gives the user a visual cue to show that items can be dropped here.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     textArgDragover (e) {
         // This will be set if we're dragging an operation
@@ -517,7 +515,7 @@ class RecipeWaiter {
      * Handler for text argument dragleave events.
      * Removes the visual cue.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     textArgDragLeave (e) {
         e.stopPropagation();
@@ -530,7 +528,7 @@ class RecipeWaiter {
      * Handler for text argument drop events.
      * Loads the dragged data into the argument textarea.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     textArgDrop(e) {
         // This will be set if we're dragging an operation

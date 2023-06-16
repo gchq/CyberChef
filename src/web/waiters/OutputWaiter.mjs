@@ -982,7 +982,7 @@ class OutputWaiter {
     /**
      * Handler for changing tabs event
      *
-     * @param {event} mouseEvent
+     * @param {Event} mouseEvent
      */
     changeTabClick(mouseEvent) {
         if (!mouseEvent.target) return;
@@ -996,7 +996,7 @@ class OutputWaiter {
     /**
      * Handler for scrolling on the output tabs area
      *
-     * @param {event} wheelEvent
+     * @param {Event} wheelEvent
      */
     scrollTab(wheelEvent) {
         wheelEvent.preventDefault();
@@ -1510,7 +1510,7 @@ class OutputWaiter {
      * Handler for clicking on a filter result.
      * Changes to the clicked output
      *
-     * @param {event} e
+     * @param {Event} e
      */
     filterItemClick(e) {
         if (!e.target) return;

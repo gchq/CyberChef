@@ -7,6 +7,9 @@
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
+import {COperationLi} from "../components/c-operation-li.mjs";
+import {CCategoryList} from "../components/c-category-list.mjs";
+import {COperationList} from "../components/c-operation-list.mjs";
 
 /**
  * Waiter to handle events related to the operations.
@@ -32,7 +35,7 @@ class OperationsWaiter {
      * Handler for search events.
      * Finds operations which match the given search term and displays them under the search box.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     searchOperations(e) {
         let ops, selected;
@@ -180,7 +183,7 @@ class OperationsWaiter {
      * Handler for oplistcreate events.
      *
      * @listens Manager#oplistcreate
-     * @param {event} e
+     * @param {Event} e
      */
     opListCreate(e) {
         if (this.app.isMobileView()) {
@@ -228,7 +231,7 @@ class OperationsWaiter {
      * Handler for operation doubleclick events.
      * Adds the operation to the recipe and auto bakes.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     operationDblclick(e) {
         const li = e.target;
@@ -240,56 +243,59 @@ class OperationsWaiter {
      * Handler for edit favourites click events.
      * Sets up the 'Edit favourites' pane and displays it.
      *
-     * @param {event} e
+     // * @param {Event} e
      */
-    editFavouritesClick(e) {
-        e.preventDefault();
-        e.stopPropagation();
+    editFavouritesClick() {
+        // Get list of Favourite operation names
+        const favCatConfig = this.app.categories.find(catConfig => catConfig.name === "Favourites");
+        const div = document.getElementById("editable-favourites");
 
-        // Add favourites to modal
-        const favCat = this.app.categories.filter(function(c) {
-            return c.name === "Favourites";
-        })[0];
+        if(favCatConfig !== undefined) {
+            const opList = new COperationList(
+                this.app,
+                favCatConfig.ops,
+                false,
+                {
+                    class: "remove-icon",
+                    innerText: "delete"
+                }
+            )
 
-        let html = "";
-        for (let i = 0; i < favCat.ops.length; i++) {
-            const opName = favCat.ops[i];
-            const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
-            html += operation.toStubHtml(true);
+            opList.build();
+
+            div.appendChild(opList);
         }
 
-        const editFavouritesList = document.getElementById("edit-favourites-list");
-        editFavouritesList.innerHTML = html;
-        this.removeIntent = false;
+        // this.removeIntent = false;
+        //
+        // const editableList = Sortable.create(ul, {
+        //     filter: ".remove-icon",
+        //     onFilter: function (evt) {
+        //         const el = editableList.closest(evt.item);
+        //         if (el && el.parentNode) {
+        //             $(el).popover("dispose");
+        //             el.parentNode.removeChild(el);
+        //         }
+        //     },
+        //     onEnd: function(evt) {
+        //         if (this.removeIntent) {
+        //             $(evt.item).popover("dispose");
+        //             evt.item.remove();
+        //         }
+        //     }.bind(this),
+        // });
+        //
+        // Sortable.utils.on(ul, "dragleave", function() {
+        //     this.removeIntent = true;
+        // }.bind(this));
+        //
+        // Sortable.utils.on(ul, "dragover", function() {
+        //     this.removeIntent = false;
+        // }.bind(this));
 
-        const editableList = Sortable.create(editFavouritesList, {
-            filter: ".remove-icon",
-            onFilter: function (evt) {
-                const el = editableList.closest(evt.item);
-                if (el && el.parentNode) {
-                    $(el).popover("dispose");
-                    el.parentNode.removeChild(el);
-                }
-            },
-            onEnd: function(evt) {
-                if (this.removeIntent) {
-                    $(evt.item).popover("dispose");
-                    evt.item.remove();
-                }
-            }.bind(this),
-        });
-
-        Sortable.utils.on(editFavouritesList, "dragleave", function() {
-            this.removeIntent = true;
-        }.bind(this));
-
-        Sortable.utils.on(editFavouritesList, "dragover", function() {
-            this.removeIntent = false;
-        }.bind(this));
-
-        if (!this.app.isMobileView()) {
-            $("#edit-favourites-list [data-toggle=popover]").popover();
-        }
+        // if (!this.app.isMobileView()) {
+        //     $("#editable-favourites [data-toggle=popover]").popover();
+        // }
         $("#favourites-modal").modal();
     }
 
@@ -329,10 +335,10 @@ class OperationsWaiter {
      * Saves the selected favourites and reloads them.
      */
     saveFavouritesClick() {
-        const favs = document.querySelectorAll("#edit-favourites-list li");
-        const favouritesList = Array.from(favs, e => e.childNodes[0].textContent);
+        const listItems = document.querySelectorAll("#editable-favourites c-operation-li > li");
+        const favourites = Array.from(listItems, li => li.getAttribute("data-name"));
 
-        this.app.updateFavourites(favouritesList);
+        this.app.updateFavourites(favourites);
     }
 
 
