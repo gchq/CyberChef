@@ -53,5 +53,4 @@ TestRegister.addTests([
             },
         ],
     }
-    
 ]);

@@ -6,8 +6,6 @@
  * @license ISC
  */
 
-
-
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import forge from "node-forge";
