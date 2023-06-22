@@ -40,7 +40,6 @@ class ExtractIPAddresses extends Operation {
                 type: "boolean",
                 value: false
             },
-            ,
             {
                 name: "Defanged IPv4 Addresses",
                 type: "boolean",
@@ -72,18 +71,19 @@ class ExtractIPAddresses extends Operation {
     run(input, args) {
         const [includeIpv4, includeIpv6, removeLocal, includeDefangedIpv4, displayTotal, sort, unique] = args,
             ipv4 = "(?:(?:\\d|[01]?\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d|\\d)(?:\\/\\d{1,2})?",
-            ipv4_defanged = "(?:(?:\\d|[01]?\\d\\d|2[0-4]\\d|25[0-5])\\[\\.\\]){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d|\\d)(?:\\/\\d{1,2})?",
+            ipv4Defanged = "(?:(?:\\d|[01]?\\d\\d|2[0-4]\\d|25[0-5])\\[\\.\\]){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d|\\d)(?:\\/\\d{1,2})?",
             ipv6 = "((?=.*::)(?!.*::.+::)(::)?([\\dA-F]{1,4}:(:|\\b)|){5}|([\\dA-F]{1,4}:){6})((([\\dA-F]{1,4}((?!\\3)::|:\\b|(?![\\dA-F])))|(?!\\2\\3)){2}|(((2[0-4]|1\\d|[1-9])?\\d|25[0-5])\\.?\\b){4})";
         let ips  = "";
 
-        if (includeIpv4 && includeIpv6) {
+
+        if (includeIpv4 && includeDefangedIpv4 && includeIpv6){
+            ips = ipv4 + "|" + ipv4Defanged + "|" + ipv6;
+        } else if (includeIpv4 && includeDefangedIpv4){
+            ips = ipv4 + "|" + ipv4Defanged;
+        } else if (includeIpv4 && includeIpv6) {
             ips = ipv4 + "|" + ipv6;
         } else if (includeIpv4) {
             ips = ipv4;
-        } else if (includeIpv4 && includeDefangedIpv4){
-            ips = ipv4 + "|" + ipv4_defanged
-        } else if (includeIpv4 && includeDefangedIpv4 && includeIpv6){
-            ips = ipv4 + "|" + ipv4_defanged + "|" + ipv6
         } else if (includeIpv6) {
             ips = ipv6;
         }
