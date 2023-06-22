@@ -76,9 +76,9 @@ class ExtractIPAddresses extends Operation {
         let ips  = "";
 
 
-        if (includeIpv4 && includeDefangedIpv4 && includeIpv6){
+        if (includeIpv4 && includeDefangedIpv4 && includeIpv6) {
             ips = ipv4 + "|" + ipv4Defanged + "|" + ipv6;
-        } else if (includeIpv4 && includeDefangedIpv4){
+        } else if (includeIpv4 && includeDefangedIpv4) {
             ips = ipv4 + "|" + ipv4Defanged;
         } else if (includeIpv4 && includeIpv6) {
             ips = ipv4 + "|" + ipv6;
