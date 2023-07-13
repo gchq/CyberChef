@@ -37,7 +37,7 @@ class JsonataQuery extends Operation {
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {JSON}
+     * @returns {string}
      */
     async run(input, args) {
         const [query] = args;
