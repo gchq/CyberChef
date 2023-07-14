@@ -196,6 +196,7 @@ module.exports = function (grunt) {
             tests: ["tests/**/*.{js,mjs}"],
         },
         webpack: {
+            options: webpackConfig,
             myConfig: webpackConfig,
             web: webpackProdConf(),
         },
