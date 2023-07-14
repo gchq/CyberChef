@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.5.0] - 2023-07-14
+- Added GOST Encrypt, Decrypt, Sign, Verify, Key Wrap, and Key Unwrap operations [@n1474335] | [#592]
+
 ### [10.4.0] - 2023-03-24
 - Added 'Generate De Bruijn Sequence' operation [@gchq77703] | [#493]
 
@@ -371,6 +374,7 @@ All major and minor version changes will be documented in this file. Details of 
 
 
 
+[10.5.0]: https://github.com/gchq/CyberChef/releases/tag/v10.5.0
 [10.4.0]: https://github.com/gchq/CyberChef/releases/tag/v10.4.0
 [10.3.0]: https://github.com/gchq/CyberChef/releases/tag/v10.3.0
 [10.2.0]: https://github.com/gchq/CyberChef/releases/tag/v10.2.0
@@ -641,4 +645,5 @@ All major and minor version changes will be documented in this file. Details of 
 [#1528]: https://github.com/gchq/CyberChef/pull/1528
 [#661]: https://github.com/gchq/CyberChef/pull/661
 [#493]: https://github.com/gchq/CyberChef/pull/493
+[#592]: https://github.com/gchq/CyberChef/issues/592
 
