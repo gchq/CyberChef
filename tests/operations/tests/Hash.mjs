@@ -1094,8 +1094,8 @@ TestRegister.addTests([
         expectedOutput: "981e5f3ca30c841487830f84fb433e13ac1101569b9c13584ac483234cd656c0",
         recipeConfig: [
             {
-                op: "GOST hash",
-                args: ["D-A"]
+                op: "GOST Hash",
+                args: ["GOST 28147 (1994)", "256", "D-A"]
             }
         ]
     },
@@ -1105,8 +1105,8 @@ TestRegister.addTests([
         expectedOutput: "2cefc2f7b7bdc514e18ea57fa74ff357e7fa17d652c75f69cb1be7893ede48eb",
         recipeConfig: [
             {
-                op: "GOST hash",
-                args: ["D-A"]
+                op: "GOST Hash",
+                args: ["GOST 28147 (1994)", "256", "D-A"]
             }
         ]
     },
