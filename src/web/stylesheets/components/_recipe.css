@@ -9,6 +9,7 @@
 #recipe {
     position: relative;
     background-color: var(--primary-background-colour);
+    border-bottom: 1px solid var(--primary-border-colour);
 }
 
 #rec-list {
