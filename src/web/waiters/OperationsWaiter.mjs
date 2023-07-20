@@ -242,13 +242,17 @@ class OperationsWaiter {
     /**
      * Handler for edit favourites click events.
      * Sets up the 'Edit favourites' pane and displays it.
-     *
-     // * @param {Event} e
      */
     editFavouritesClick() {
+        const div = document.getElementById("editable-favourites");
+
+        // Remove c-operation-list if there already was one
+        if ( div.querySelector("c-operation-list") ){
+            div.removeChild(div.querySelector("c-operation-list"));
+        }
+
         // Get list of Favourite operation names
         const favCatConfig = this.app.categories.find(catConfig => catConfig.name === "Favourites");
-        const div = document.getElementById("editable-favourites");
 
         if(favCatConfig !== undefined) {
             const opList = new COperationList(
@@ -263,6 +267,7 @@ class OperationsWaiter {
 
             opList.build();
 
+            // Append the new opList<COperationList>
             div.appendChild(opList);
         }
 
@@ -366,7 +371,7 @@ class OperationsWaiter {
      */
     updateListItemsClasses(srcListSelector, className) {
         const listItems = document.querySelectorAll(`${srcListSelector} > li`);
-        const ops =  document.querySelectorAll("c-operation-li > li.operation");
+        const ops =  document.querySelectorAll("#categories c-operation-li > li.operation");
 
         this.removeClassFromOps(className);
 
@@ -389,7 +394,7 @@ class OperationsWaiter {
      * @param {string} className  - the class to remove
      */
     removeClassFromOps(className) {
-        const ops = document.querySelectorAll("c-operation-li > li.operation");
+        const ops = document.querySelectorAll("#categories c-operation-li > li.operation");
 
         ops.forEach((op => {
             this.removeClassFromOp(op.getAttribute("data-name"), className);
@@ -404,7 +409,7 @@ class OperationsWaiter {
      * @param {string} className - the class to remove
      */
     removeClassFromOp(opName, className) {
-        const ops = document.querySelectorAll(`c-operation-li > li.operation[data-name="${opName}"].${className}`);
+        const ops = document.querySelectorAll(`#categories c-operation-li > li.operation[data-name="${opName}"].${className}`);
 
         // the same operation may occur twice if it is also in #catFavourites
         ops.forEach((op) => {
@@ -420,7 +425,7 @@ class OperationsWaiter {
      * @param {string} className - the class to add to the operation list item
      */
     addClassToOp(opName, className) {
-        const ops = document.querySelectorAll(`c-operation-li > li.operation[data-name="${opName}"]`);
+        const ops = document.querySelectorAll(`#categories c-operation-li > li.operation[data-name="${opName}"]`);
 
         // the same operation may occur twice if it is also in #catFavourites
         ops.forEach((op => {

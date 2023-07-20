@@ -417,27 +417,27 @@ class App {
 
         favourites.push(name);
         this.updateFavourites(favourites);
+        this.manager.ops.updateListItemsClasses('#rec-list', 'selected');
     }
 
 
     /**
      * Update favourites in localstorage, load the updated
-     * favourites and re-render c-category-li [favourites]
+     * favourites and rebuild cat fav-list to reflect the updates
      *
      * @param {string[]} favourites
      */
-    updateFavourites(favourites)  {
-        // @todo: probably need this elsewhere
-        // // Destroy the current list items we no longer need in the edit Favourites modal
-        // const operations = document.querySelectorAll("#editable-favourites ....");
-        // listItems.forEach((li => {
-        //     li.remove();
-        // }))
-
+    updateFavourites(favourites) {
         this.saveFavourites(favourites);
         this.loadFavourites();
+        this.buildFavouritesCategory();
+    }
 
-        /* Rebuild only the favourites category */
+    /**
+     * (Re)render only the favourites category after adding
+     * an operation to favourites
+     */
+    buildFavouritesCategory() {
         // double-check if the first category is indeed "catFavourites",
         if (document.querySelector("c-category-list > ul > c-category-li > li > a[data-target='#catFavourites']")) {
             // then destroy
@@ -900,6 +900,12 @@ class App {
      * @fires Manager#oplistcreate from nested c-category-li > c-operation-list build() function
      */
     buildCategoryList() {
+        // double-check if the c-category-list already exists,
+        if (document.querySelector("#categories > c-category-list")){
+            // then destroy it
+            document.querySelector("#categories > c-category-list").remove();
+        }
+
         const categoryList = new CCategoryList(
             this,
             this.categories,
