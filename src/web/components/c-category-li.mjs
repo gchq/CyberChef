@@ -32,15 +32,20 @@ export class CCategoryLi extends HTMLElement {
     }
 
     /**
+     * Remove listeners on disconnectedCallback
+     */
+    disconnectedCallback() {
+        this.removeEventListener("click", this.handleClick.bind(this));
+    }
+
+    /**
      * Handle click
      *
      * @param {Event} e
      */
     handleClick(e) {
-        // todo some event (target ) bs here
-        if (e.target === this.querySelector("button")) {
-            // todo back to this "hitbox" issue w the icon inside the button
-            console.log(e.target);
+        if (e.target === this.querySelector("button") || e.target === this.querySelector("button > i")) {
+            e.stopPropagation(); // stop the event from propagating to the collapsable panel
             this.app.manager.ops.editFavouritesClick(e);
         }
     }

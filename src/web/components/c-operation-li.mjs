@@ -31,7 +31,13 @@ export class COperationLi extends HTMLElement {
         this.addEventListener('dblclick', this.handleDoubleClick.bind(this));
     }
 
-    // todo: dont think I need config separately, just use this.app.operations[name].xx?
+    /**
+     * Remove listeners on disconnectedCallback
+     */
+    disconnectedCallback() {
+        this.removeEventListener("click", this.handleClick.bind(this));
+        this.removeEventListener("dblclick", this.handleDoubleClick.bind(this));
+    }
 
     /**
      * @fires OperationsWaiter#operationDblclick on double click
@@ -51,6 +57,9 @@ export class COperationLi extends HTMLElement {
         if (e.target === this.querySelector("i.star-icon")) {
             this.app.addFavourite(this.name);
             this.updateFavourite(true);
+        }
+        if (e.target === this.querySelector("i.remove-icon")) {
+            this.remove();
         }
     }
 
@@ -168,6 +177,9 @@ export class COperationLi extends HTMLElement {
         return icon;
     }
 
+    /**
+     * Update favourite icon for this list item and add 'favourite' class
+     */
     updateFavourite(isFavourite) {
         if (isFavourite) {
             this.querySelector("li").classList.add("favourite");

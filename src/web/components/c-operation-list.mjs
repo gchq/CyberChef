@@ -18,6 +18,9 @@ export class COperationList extends HTMLElement {
         this.icon = icon;
     }
 
+    /**
+     * Build c-operation-list
+     */
     build() {
         const ul =  document.createElement("ul");
         ul.classList.add("op-list");
