@@ -230,6 +230,7 @@ module.exports = {
 
         // Alert bar shows and contains correct content
         browser
+            .waitForElementNotVisible("#snackbar-container")
             .click("#copy-output")
             .waitForElementVisible("#snackbar-container")
             .waitForElementVisible("#snackbar-container .snackbar-content")

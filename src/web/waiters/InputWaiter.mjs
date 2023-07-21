@@ -42,7 +42,7 @@ import {
 
 import {statusBar} from "../utils/statusBar.mjs";
 import {fileDetailsPanel} from "../utils/fileDetails.mjs";
-import {renderSpecialChar} from "../utils/editorUtils.mjs";
+import {eolCodeToSeq, eolCodeToName, renderSpecialChar} from "../utils/editorUtils.mjs";
 
 
 /**
@@ -62,6 +62,7 @@ class InputWaiter {
 
         this.inputTextEl = document.getElementById("input-text");
         this.inputChrEnc = 0;
+        this.eolSetManually = false;
         this.initEditor();
 
         this.inputWorker = null;
@@ -92,6 +93,7 @@ class InputWaiter {
             fileDetailsPanel: new Compartment
         };
 
+        const self = this;
         const initialState = EditorState.create({
             doc: null,
             extensions: [
@@ -141,6 +143,15 @@ class InputWaiter {
                     if (e.docChanged && !this.silentInputChange)
                         this.inputChange(e);
                     this.silentInputChange = false;
+                }),
+
+                // Event handlers
+                EditorView.domEventHandlers({
+                    paste(event, view) {
+                        setTimeout(() => {
+                            self.afterPaste(event);
+                        });
+                    }
                 })
             ]
         });
@@ -154,12 +165,35 @@ class InputWaiter {
     /**
      * Handler for EOL change events
      * Sets the line separator
-     * @param {string} eolVal
+     * @param {string} eol
+     * @param {boolean} manual - a flag for whether this was set by the user or automatically
      */
-    eolChange(eolVal) {
-        const oldInputVal = this.getInput();
+    eolChange(eol, manual=false) {
+        const eolVal = eolCodeToSeq[eol];
+        if (eolVal === undefined) return;
+
+        const eolBtn = document.querySelector("#input-text .eol-value");
+        if (manual) {
+            this.eolSetManually = true;
+            eolBtn.classList.remove("font-italic");
+        } else {
+            eolBtn.classList.add("font-italic");
+        }
+
+        if (eolVal === this.getEOLSeq()) return;
+
+        if (!manual) {
+            // Pulse
+            eolBtn.classList.add("pulse");
+            setTimeout(() => {
+                eolBtn.classList.remove("pulse");
+            }, 2000);
+            // Alert
+            this.app.alert(`Input EOL separator has been changed to ${eolCodeToName[eol]}`, 5000);
+        }
 
         // Update the EOL value
+        const oldInputVal = this.getInput();
         this.inputEditorView.dispatch({
             effects: this.inputEditorConf.eol.reconfigure(EditorState.lineSeparator.of(eolVal))
         });
@@ -867,6 +901,49 @@ class InputWaiter {
     }
 
     /**
+     * Handler that fires just after input paste events.
+     * Checks whether the EOL separator or character encoding should be updated.
+     *
+     * @param {event} e
+     */
+    afterPaste(e) {
+        // If EOL has been fixed, skip this.
+        if (this.eolSetManually) return;
+
+        const inputText = this.getInput();
+
+        // Detect most likely EOL sequence
+        const eolCharCounts = {
+            "LF": inputText.count("\u000a"),
+            "VT": inputText.count("\u000b"),
+            "FF": inputText.count("\u000c"),
+            "CR": inputText.count("\u000d"),
+            "CRLF": inputText.count("\u000d\u000a"),
+            "NEL": inputText.count("\u0085"),
+            "LS": inputText.count("\u2028"),
+            "PS": inputText.count("\u2029")
+        };
+
+        // If all zero, leave alone
+        const total = Object.values(eolCharCounts).reduce((acc, curr) => {
+            return acc + curr;
+        }, 0);
+        if (total === 0) return;
+
+        // If CRLF not zero and more than half the highest alternative, choose CRLF
+        const highest = Object.entries(eolCharCounts).reduce((acc, curr) => {
+            return curr[1] > acc[1] ? curr : acc;
+        }, ["LF", 0]);
+        if ((eolCharCounts.CRLF * 2) > highest[1]) {
+            this.eolChange("CRLF");
+            return;
+        }
+
+        // Else choose max
+        this.eolChange(highest[0]);
+    }
+
+    /**
      * Handler for input dragover events.
      * Gives the user a visual cue to show that items can be dropped here.
      *
@@ -1198,6 +1275,9 @@ class InputWaiter {
         this.manager.worker.loaded = false;
         this.manager.output.removeAllOutputs();
         this.manager.output.terminateZipWorker();
+
+        this.eolSetManually = false;
+        this.manager.output.eolSetManually = false;
 
         const tabsList = document.getElementById("input-tabs");
         const tabsListChildren = tabsList.children;

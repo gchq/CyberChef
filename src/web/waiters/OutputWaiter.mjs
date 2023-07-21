@@ -38,7 +38,7 @@ import {
 import {statusBar} from "../utils/statusBar.mjs";
 import {htmlPlugin} from "../utils/htmlWidget.mjs";
 import {copyOverride} from "../utils/copyOverride.mjs";
-import {renderSpecialChar} from "../utils/editorUtils.mjs";
+import {eolCodeToSeq, eolCodeToName, renderSpecialChar} from "../utils/editorUtils.mjs";
 
 
 /**
@@ -70,6 +70,7 @@ class OutputWaiter {
         this.zipWorker = null;
         this.maxTabs = this.manager.tabs.calcMaxTabs();
         this.tabTimeout = null;
+        this.eolSetManually = false;
     }
 
     /**
@@ -146,9 +147,33 @@ class OutputWaiter {
     /**
      * Handler for EOL change events
      * Sets the line separator
-     * @param {string} eolVal
+     * @param {string} eol
+     * @param {boolean} manual - a flag for whether this was set by the user or automatically
      */
-    async eolChange(eolVal) {
+    async eolChange(eol, manual=false) {
+        const eolVal = eolCodeToSeq[eol];
+        if (eolVal === undefined) return;
+
+        const eolBtn = document.querySelector("#output-text .eol-value");
+        if (manual) {
+            this.eolSetManually = true;
+            eolBtn.classList.remove("font-italic");
+        } else {
+            eolBtn.classList.add("font-italic");
+        }
+
+        if (eolVal === this.getEOLSeq()) return;
+
+        if (!manual) {
+            // Pulse
+            eolBtn.classList.add("pulse");
+            setTimeout(() => {
+                eolBtn.classList.remove("pulse");
+            }, 2000);
+            // Alert
+            this.app.alert(`Output EOL separator has been changed to ${eolCodeToName[eol]}`, 5000);
+        }
+
         const currentTabNum = this.manager.tabs.getActiveTab("output");
         if (currentTabNum >= 0) {
             this.outputs[currentTabNum].eolSequence = eolVal;
@@ -276,6 +301,9 @@ class OutputWaiter {
         // If turning word wrap off, do it before we populate the editor for performance reasons
         if (!wrap) this.setWordWrap(wrap);
 
+        // Detect suitable EOL sequence
+        this.detectEOLSequence(data);
+
         // We use setTimeout here to delay the editor dispatch until the next event cycle,
         // ensuring all async actions have completed before attempting to set the contents
         // of the editor. This is mainly with the above call to setWordWrap() in mind.
@@ -343,6 +371,48 @@ class OutputWaiter {
                 insert: ""
             }
         });
+    }
+
+    /**
+     * Checks whether the EOL separator should be updated
+     *
+     * @param {string} data
+     */
+    detectEOLSequence(data) {
+        // If EOL has been fixed, skip this.
+        if (this.eolSetManually) return;
+        // If data is too long, skip this.
+        if (data.length > 1000000) return;
+
+        // Detect most likely EOL sequence
+        const eolCharCounts = {
+            "LF": data.count("\u000a"),
+            "VT": data.count("\u000b"),
+            "FF": data.count("\u000c"),
+            "CR": data.count("\u000d"),
+            "CRLF": data.count("\u000d\u000a"),
+            "NEL": data.count("\u0085"),
+            "LS": data.count("\u2028"),
+            "PS": data.count("\u2029")
+        };
+
+        // If all zero, leave alone
+        const total = Object.values(eolCharCounts).reduce((acc, curr) => {
+            return acc + curr;
+        }, 0);
+        if (total === 0) return;
+
+        // If CRLF not zero and more than half the highest alternative, choose CRLF
+        const highest = Object.entries(eolCharCounts).reduce((acc, curr) => {
+            return curr[1] > acc[1] ? curr : acc;
+        }, ["LF", 0]);
+        if ((eolCharCounts.CRLF * 2) > highest[1]) {
+            this.eolChange("CRLF");
+            return;
+        }
+
+        // Else choose max
+        this.eolChange(highest[0]);
     }
 
     /**
