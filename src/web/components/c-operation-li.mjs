@@ -23,7 +23,7 @@ export class COperationLi extends HTMLElement {
         this.includeStarIcon = includeStarIcon;
 
         this.config = this.app.operations[name];
-        this.isFavourite = this.app.isLocalStorageAvailable() && localStorage.favourites?.includes(name);
+        this.isFavourite = this.app.isLocalStorageAvailable() && JSON.parse(localStorage.favourites).indexOf(name) >= 0;
 
         this.build();
 
@@ -63,7 +63,6 @@ export class COperationLi extends HTMLElement {
      */
     handleClick(e) {
         if (e.target === this.querySelector("i.star-icon")) {
-            this.querySelector("li").classList.add("favourite");
             this.app.addFavourite(this.name);
         }
         if (e.target === this.querySelector("i.remove-icon")) {
