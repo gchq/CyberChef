@@ -42,7 +42,6 @@
 
 li.operation.favourite > .op-icon.star-icon {
     opacity: 1;
-    pointer-events: none;
 }
 
 .op-icon.remove-icon {
