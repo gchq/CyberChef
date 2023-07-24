@@ -135,15 +135,6 @@ export class CCategoryLi extends HTMLElement {
     };
 
     /**
-     * Append a c-operation-li to this op-list
-     *
-     * @param {HTMLElement} cOperationLiElement
-     */
-    appendOperation(cOperationLiElement) {
-        this.querySelector('li > div > ul').appendChild(cOperationLiElement);
-    }
-
-    /**
      *  If this category is Favourites, build and return the star icon to the category
      */
     buildEditFavourites() {
