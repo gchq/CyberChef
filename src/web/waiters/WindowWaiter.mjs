@@ -53,6 +53,9 @@ class WindowWaiter {
     onResizeToDesktop() {
         this.app.setDesktopUI(false);
 
+        // disable app popovers on li.operation elements
+        $(document.querySelectorAll("li.operation")).popover("enable");
+
         // if a window is resized past breakpoint while #recipe or #input is maximised, close these maxed panes
         ["recipe", "input"].forEach(paneId => this.manager.controls.setPaneMaximised(paneId, false));
 
@@ -65,6 +68,9 @@ class WindowWaiter {
      */
     onResizeToMobile() {
         this.app.setMobileUI();
+
+        // disable app popovers on li.operation elements
+        $(document.querySelectorAll("li.operation")).popover("disable");
 
         // when mobile devices' keyboards pop up, it triggers a window resize event. Here
         // we keep the maximised panes open until the minimise button is clicked / tapped
