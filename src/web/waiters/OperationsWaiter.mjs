@@ -7,8 +7,6 @@
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
-import {COperationLi} from "../components/c-operation-li.mjs";
-import {CCategoryList} from "../components/c-category-list.mjs";
 import {COperationList} from "../components/c-operation-list.mjs";
 
 /**
@@ -226,19 +224,6 @@ class OperationsWaiter {
             });
     }
 
-
-    /**
-     * Handler for operation doubleclick events.
-     * Adds the operation to the recipe and auto bakes.
-     *
-     * @param {Event} e
-     */
-    operationDblclick(e) {
-        const li = e.target;
-        this.manager.recipe.addOperation(li.getAttribute("data-name"));
-    }
-
-
     /**
      * Handler for edit favourites click events.
      * Sets up the 'Edit favourites' pane and displays it.
@@ -370,7 +355,7 @@ class OperationsWaiter {
      * @param {string} className - the className to update
      */
     updateListItemsClasses(srcListSelector, className) {
-        const listItems = document.querySelectorAll(`${srcListSelector} > li`);
+        const listItems = document.querySelectorAll(`${srcListSelector} li`);
         const ops =  document.querySelectorAll("#categories c-operation-li > li.operation");
 
         this.removeClassFromOps(className);
