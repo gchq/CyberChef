@@ -398,7 +398,7 @@ class App {
      * refreshes the operation list.
      */
     resetFavourites() {
-        this.updateFavourites(this.dfavourites);
+        this.updateFavourites(this.dfavourites, true);
     }
 
 
@@ -406,8 +406,9 @@ class App {
      * Adds an operation to the user's favourites.
      *
      * @param {string} name - The name of the operation
+     * @param {Boolean} isExpanded - false by default
      */
-    addFavourite(name) {
+    addFavourite(name, isExpanded = false) {
         const favourites = JSON.parse(localStorage.favourites);
 
         if (favourites.indexOf(name) >= 0) {
@@ -416,7 +417,7 @@ class App {
         }
 
         favourites.push(name);
-        this.updateFavourites(favourites);
+        this.updateFavourites(favourites, isExpanded);
     }
 
 
@@ -425,12 +426,13 @@ class App {
      * favourites and rebuild cat fav-list to reflect the updates
      *
      * @param {string[]} favourites
+     * @param {Boolean} isExpanded, false by default
      */
-    updateFavourites(favourites) {
+    updateFavourites(favourites, isExpanded = false) {
         this.saveFavourites(favourites);
         this.loadFavourites();
 
-        this.buildFavouritesCategory();
+        this.buildFavouritesCategory(isExpanded);
 
         // update all op-lists to reflect the current recipe list ( selected ops ) and favourite category list ( favourite ops )
         this.manager.ops.updateListItemsClasses("#rec-list", "selected");
@@ -440,8 +442,10 @@ class App {
     /**
      * (Re)render only the favourites category after adding
      * an operation to favourites
+     *
+     * @param {Boolean} isExpanded ( false by default )
      */
-    buildFavouritesCategory() {
+    buildFavouritesCategory(isExpanded = false) {
         // double-check if the first category is indeed "catFavourites",
         if (document.querySelector("c-category-list > ul > c-category-li > li > a[data-target='#catFavourites']")) {
             // then destroy
@@ -453,7 +457,7 @@ class App {
                 this,
                 favCatConfig,
                 this.operations,
-                false,
+                isExpanded,
                 true
             );
 
