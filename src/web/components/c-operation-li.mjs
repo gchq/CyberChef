@@ -27,8 +27,11 @@ export class COperationLi extends HTMLElement {
 
         this.build();
 
-        this.addEventListener('click', this.handleClick.bind(this));
-        this.addEventListener('dblclick', this.handleDoubleClick.bind(this));
+        this.addEventListener("click", this.handleClick.bind(this));
+        this.addEventListener("dblclick", this.handleDoubleClick.bind(this));
+
+        this.observer = new MutationObserver(this.updateFavourite.bind(this));
+        this.observer.observe( this.querySelector("li"), { attributes: true } );
     }
 
     /**
@@ -37,6 +40,7 @@ export class COperationLi extends HTMLElement {
     disconnectedCallback() {
         this.removeEventListener("click", this.handleClick.bind(this));
         this.removeEventListener("dblclick", this.handleDoubleClick.bind(this));
+        this.observer.disconnect();
     }
 
     /**
@@ -45,7 +49,7 @@ export class COperationLi extends HTMLElement {
      */
     handleDoubleClick(e) {
         if (e.target === this.querySelector("li")) {
-            this.querySelector("li.operation").classList.add("selected");
+            this.app.manager.recipe.addOperation(this.name);
         }
     }
 
@@ -55,8 +59,8 @@ export class COperationLi extends HTMLElement {
      */
     handleClick(e) {
         if (e.target === this.querySelector("i.star-icon")) {
+            this.querySelector("li").classList.add("favourite");
             this.app.addFavourite(this.name);
-            this.updateFavourite(true);
         }
         if (e.target === this.querySelector("i.remove-icon")) {
             this.remove();
@@ -178,14 +182,12 @@ export class COperationLi extends HTMLElement {
     }
 
     /**
-     * Update favourite icon for this list item and add 'favourite' class
+     * Update fav icon and 'fav' class on this li
      */
-    updateFavourite(isFavourite) {
-        if (isFavourite) {
-            this.querySelector("li").classList.add("favourite");
+    updateFavourite() {
+        if (this.querySelector("li").classList.contains("favourite")) {
             this.querySelector("i.star-icon").innerText = "star";
         } else {
-            this.querySelector("li").classList.remove("favourite");
             this.querySelector("i.star-icon").innerText = "star_outline";
         }
     }
