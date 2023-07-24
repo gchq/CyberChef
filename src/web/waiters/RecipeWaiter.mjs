@@ -465,7 +465,6 @@ class RecipeWaiter {
 
     /**
      * Handler for operationadd events.
-     * Adds 'selected' class to the added operations in #operations-dropdown
      *
      * @listens Manager#operationadd
      * @fires Manager#statechange
@@ -473,7 +472,6 @@ class RecipeWaiter {
      */
     opAdd(e) {
         log.debug(`'${e.target.getAttribute("data-name")}' added to recipe`);
-        this.manager.ops.updateListItemsClasses("#rec-list", "selected");
         this.triggerArgEvents(e.target);
         window.dispatchEvent(this.manager.statechange);
     }
