@@ -25,7 +25,6 @@ class OperationsWaiter {
         this.manager = manager;
 
         this.options = {};
-        this.removeIntent = false;
     }
 
 
@@ -176,63 +175,17 @@ class OperationsWaiter {
         return -1;
     }
 
-
-    /**
-     * Handler for oplistcreate events.
-     *
-     * @listens Manager#oplistcreate
-     * @param {Event} e
-     */
-    opListCreate(e) {
-        if (this.app.isMobileView()) {
-            $(document.querySelectorAll(".op-list .operation")).popover("disable");
-        } else {
-            $(document.querySelectorAll(".op-list .operation")).popover("enable");
-            this.enableOpPopover(e.target);
-            this.manager.recipe.createSortableSeedList(e.target);
-        }
-    }
-
-
-    /**
-     * Enable the target operation popover itself to gain focus which
-     * enables scrolling and other interactions.
-     *
-     * @param {Element} el - The element to start selecting from
-     */
-    enableOpPopover(el) {
-        $(el)
-            .find("[data-toggle=popover]")
-            .addBack("[data-toggle=popover]")
-            .popover({trigger: "manual"})
-            .on("mouseenter", function(e) {
-                if (e.buttons > 0) return; // Mouse button held down - likely dragging an operation
-                const _this = this;
-                $(this).popover("show");
-                $(".popover").on("mouseleave", function () {
-                    $(_this).popover("hide");
-                });
-            }).on("mouseleave", function () {
-                const _this = this;
-                setTimeout(function() {
-                    // Determine if the popover associated with this element is being hovered over
-                    if ($(_this).data("bs.popover") &&
-                        ($(_this).data("bs.popover").tip && !$($(_this).data("bs.popover").tip).is(":hover"))) {
-                        $(_this).popover("hide");
-                    }
-                }, 50);
-            });
-    }
-
     /**
      * Handler for edit favourites click events.
      * Sets up the 'Edit favourites' pane and displays it.
+     *
+     * @param {Event} e
      */
-    editFavouritesClick() {
+    editFavouritesClick(e) {
         const div = document.getElementById("editable-favourites");
 
         // Remove c-operation-list if there already was one
-        if ( div.querySelector("c-operation-list") ){
+        if (div.querySelector("c-operation-list")) {
             div.removeChild(div.querySelector("c-operation-list"));
         }
 
@@ -247,45 +200,18 @@ class OperationsWaiter {
                 {
                     class: "remove-icon",
                     innerText: "delete"
-                }
+                },
+                true
             )
 
             opList.build();
-
-            // Append the new opList<COperationList>
             div.appendChild(opList);
         }
 
-        // this.removeIntent = false;
-        //
-        // const editableList = Sortable.create(ul, {
-        //     filter: ".remove-icon",
-        //     onFilter: function (evt) {
-        //         const el = editableList.closest(evt.item);
-        //         if (el && el.parentNode) {
-        //             $(el).popover("dispose");
-        //             el.parentNode.removeChild(el);
-        //         }
-        //     },
-        //     onEnd: function(evt) {
-        //         if (this.removeIntent) {
-        //             $(evt.item).popover("dispose");
-        //             evt.item.remove();
-        //         }
-        //     }.bind(this),
-        // });
-        //
-        // Sortable.utils.on(ul, "dragleave", function() {
-        //     this.removeIntent = true;
-        // }.bind(this));
-        //
-        // Sortable.utils.on(ul, "dragover", function() {
-        //     this.removeIntent = false;
-        // }.bind(this));
+        if (!this.app.isMobileView()) {
+            $("#editable-favourites [data-toggle=popover]").popover();
+        }
 
-        // if (!this.app.isMobileView()) {
-        //     $("#editable-favourites [data-toggle=popover]").popover();
-        // }
         $("#favourites-modal").modal();
     }
 
@@ -328,7 +254,7 @@ class OperationsWaiter {
         const listItems = document.querySelectorAll("#editable-favourites c-operation-li > li");
         const favourites = Array.from(listItems, li => li.getAttribute("data-name"));
 
-        this.app.updateFavourites(favourites);
+        this.app.updateFavourites(favourites, true);
     }
 
 
