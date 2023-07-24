@@ -417,7 +417,6 @@ class App {
 
         favourites.push(name);
         this.updateFavourites(favourites);
-        this.manager.ops.updateListItemsClasses('#rec-list', 'selected');
     }
 
 
@@ -430,7 +429,12 @@ class App {
     updateFavourites(favourites) {
         this.saveFavourites(favourites);
         this.loadFavourites();
+
         this.buildFavouritesCategory();
+
+        // update all op-lists to reflect the current recipe list ( selected ops ) and favourite category list ( favourite ops )
+        this.manager.ops.updateListItemsClasses("#rec-list", "selected");
+        this.manager.ops.updateListItemsClasses("#catFavourites > c-operation-list > ul.op-list", "favourite");
     }
 
     /**
