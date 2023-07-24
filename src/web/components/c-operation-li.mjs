@@ -30,8 +30,10 @@ export class COperationLi extends HTMLElement {
         this.addEventListener("click", this.handleClick.bind(this));
         this.addEventListener("dblclick", this.handleDoubleClick.bind(this));
 
-        this.observer = new MutationObserver(this.updateFavourite.bind(this));
-        this.observer.observe( this.querySelector("li"), { attributes: true } );
+        if (this.includeStarIcon) {
+            this.observer = new MutationObserver(this.updateFavourite.bind(this));
+            this.observer.observe(this.querySelector("li"), { attributes: true });
+        }
     }
 
     /**
@@ -40,7 +42,9 @@ export class COperationLi extends HTMLElement {
     disconnectedCallback() {
         this.removeEventListener("click", this.handleClick.bind(this));
         this.removeEventListener("dblclick", this.handleDoubleClick.bind(this));
-        this.observer.disconnect();
+        if (this.includeStarIcon) {
+            this.observer.disconnect();
+        }
     }
 
     /**
@@ -67,6 +71,22 @@ export class COperationLi extends HTMLElement {
         }
     }
 
+
+    /**
+     * Disable or enable popover for an element
+     *
+     * @param {HTMLElement} el
+     */
+    handlePopover(el){
+        if (this.app.isMobileView()){
+            $(el).popover("disable");
+        } else {
+            $(el).popover("enable");
+            this.setPopover(el);
+        }
+    }
+
+
     /**
      * Build c-operation-li
      */
@@ -80,8 +100,39 @@ export class COperationLi extends HTMLElement {
         }
 
         li.appendChild(icon);
-
         this.appendChild(li);
+        this.handlePopover(li);
+    }
+
+
+    /**
+     * Set the target operation popover itself to gain focus which
+     * enables scrolling and other interactions.
+     *
+     * @param {Element} el - The element to start selecting from
+     */
+    setPopover(el) {
+        $(el)
+            .find("[data-toggle=popover]")
+            .addBack("[data-toggle=popover]")
+            .popover({trigger: "manual"})
+            .on("mouseenter", function(e) {
+                if (e.buttons > 0) return; // Mouse button held down - likely dragging an operation
+                const _this = this;
+                $(this).popover("show");
+                $(".popover").on("mouseleave", function () {
+                    $(_this).popover("hide");
+                });
+            }).on("mouseleave", function () {
+            const _this = this;
+            setTimeout(function() {
+                // Determine if the popover associated with this element is being hovered over
+                if ($(_this).data("bs.popover") &&
+                    ($(_this).data("bs.popover").tip && !$($(_this).data("bs.popover").tip).is(":hover"))) {
+                    $(_this).popover("hide");
+                }
+            }, 50);
+        });
     }
 
     /**
