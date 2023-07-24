@@ -99,7 +99,7 @@ export class CCategoryLi extends HTMLElement {
         a.innerText = this.label;
 
         if (this.label === "Favourites"){
-            const editFavouritesButton = this.buildEditFavourites(a);
+            const editFavouritesButton = this.buildEditFavouritesButton(a);
 
             a.setAttribute("data-help-title", "Favourite operations");
             a.setAttribute("data-help", `<p>This category displays your favourite operations.</p>
@@ -137,7 +137,7 @@ export class CCategoryLi extends HTMLElement {
     /**
      *  If this category is Favourites, build and return the star icon to the category
      */
-    buildEditFavourites() {
+    buildEditFavouritesButton() {
         const button = document.createElement("button");
         const icon = document.createElement("i");
 
