@@ -1,4 +1,5 @@
 import {COperationLi} from "./c-operation-li.mjs";
+import Sortable from "sortablejs";
 
 /**
  * c(ustom element)-operation-list
@@ -9,13 +10,20 @@ import {COperationLi} from "./c-operation-li.mjs";
  * @param {Object} icon ( { class: string, innerText: string } ). check-icon by default
  */
 export class COperationList extends HTMLElement {
-    constructor(app, opNames, includeStarIcon, icon) {
+    constructor(
+        app,
+        opNames,
+        includeStarIcon,
+        icon,
+        isSortable = false
+    ) {
         super();
 
         this.app = app;
         this.opNames = opNames;
         this.includeStarIcon = includeStarIcon;
         this.icon = icon;
+        this.isSortable = isSortable;
     }
 
     /**
@@ -38,6 +46,27 @@ export class COperationList extends HTMLElement {
 
             ul.appendChild(li);
         }))
+
+        if (this.isSortable) {
+            const sortableList = Sortable.create(ul, {
+                group: "sorting",
+                sort: true,
+                draggable: "c-operation-li",
+                onFilter: function (e) {
+                    const el = sortableList.closest(e.item);
+                    if (el && el.parentNode) {
+                        $(el).popover("dispose");
+                        el.parentNode.removeChild(el);
+                    }
+                },
+                onEnd: function(e) {
+                    if (this.removeIntent) {
+                        $(e.item).popover("dispose");
+                        e.item.remove();
+                    }
+                }.bind(this),
+            });
+        }
 
         ul.dispatchEvent(this.app.manager.oplistcreate);
 
