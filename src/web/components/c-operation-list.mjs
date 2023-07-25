@@ -14,16 +14,19 @@ export class COperationList extends HTMLElement {
         app,
         opNames,
         includeStarIcon,
+        isSortable = false,
+        isCloneable = true,
         icon,
-        isSortable = false
+
     ) {
         super();
 
         this.app = app;
         this.opNames = opNames;
         this.includeStarIcon = includeStarIcon;
-        this.icon = icon;
         this.isSortable = isSortable;
+        this.isCloneable = isCloneable;
+        this.icon = icon;
     }
 
     /**
@@ -66,9 +69,16 @@ export class COperationList extends HTMLElement {
                     }
                 }.bind(this),
             });
+        } else if (!this.app.isMobileView() && this.isCloneable) {
+            const cloneableList = Sortable.create(ul, {
+                group: {
+                    name: "recipe",
+                    pull: "clone",
+                },
+                draggable: "c-operation-li",
+                sort: false
+            })
         }
-
-        ul.dispatchEvent(this.app.manager.oplistcreate);
 
         this.append(ul);
     }
