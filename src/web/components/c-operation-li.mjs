@@ -1,4 +1,5 @@
 import url from "url";
+import HTMLIngredient from "../HTMLIngredient.mjs";
 
 /**
  * c(ustom element)-operation-li ( list item )
@@ -23,6 +24,8 @@ export class COperationLi extends HTMLElement {
         this.includeStarIcon = includeStarIcon;
 
         this.config = this.app.operations[name];
+        // this.ingList = [];
+
         this.isFavourite = this.app.isLocalStorageAvailable() && JSON.parse(localStorage.favourites).indexOf(name) >= 0;
 
         this.build();
@@ -34,6 +37,11 @@ export class COperationLi extends HTMLElement {
             this.observer = new MutationObserver(this.updateFavourite.bind(this));
             this.observer.observe(this.querySelector("li"), { attributes: true });
         }
+
+        // for (let i = 0; i < this.config.args.length; i++) {
+        //     const ing = new HTMLIngredient(this.config.args[i], this.app, this.manager);
+        //     this.ingList.push(ing);
+        // }
     }
 
     /**

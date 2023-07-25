@@ -5,7 +5,6 @@
  */
 
 import HTMLOperation from "../HTMLOperation.mjs";
-import Sortable from "sortablejs";
 import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
 import {COperationList} from "../components/c-operation-list.mjs";
 
@@ -271,18 +270,15 @@ class OperationsWaiter {
      * Update classes in the #dropdown-operations op-lists based on the
      * list items of a srcListSelector.
      *
-     * e.g: the operations currently listed in the recipe-list and the appropriate
-     * list items in operations-dropdown that need to have the 'selected' class added
-     * or removed. Another use case is using the current 'Favourite' category op-list
-     * as a source and handle the 'favourite' class on operations-dropdown op-lists
-     * accordingly
+     * e.g: update all list items to add or remove the 'selected' class based on the operations
+     * in the current recipe-list, or 'favourite' classes on the current list of favourites.
      *
      * @param {string} srcListSelector - the UL element list to compare to
      * @param {string} className - the className to update
      */
     updateListItemsClasses(srcListSelector, className) {
         const listItems = document.querySelectorAll(`${srcListSelector} li`);
-        const ops =  document.querySelectorAll("#categories c-operation-li > li.operation");
+        const ops =  document.querySelectorAll("c-operation-li > li.operation");
 
         this.removeClassFromOps(className);
 
@@ -305,7 +301,7 @@ class OperationsWaiter {
      * @param {string} className  - the class to remove
      */
     removeClassFromOps(className) {
-        const ops = document.querySelectorAll("#categories c-operation-li > li.operation");
+        const ops = document.querySelectorAll("c-operation-li > li.operation");
 
         ops.forEach((op => {
             this.removeClassFromOp(op.getAttribute("data-name"), className);
@@ -314,15 +310,15 @@ class OperationsWaiter {
 
 
     /**
-     * Generic function to remove a class from target operation list item
+     * Generic function to remove a class from target operation list item. This operation li may occur twice ( when the op is in
+     * 'favourites' and in the category for instance )
      *
      * @param {string} opName - operation name through data-name attribute of the target operation
      * @param {string} className - the class to remove
      */
     removeClassFromOp(opName, className) {
-        const ops = document.querySelectorAll(`#categories c-operation-li > li.operation[data-name="${opName}"].${className}`);
+        const ops = document.querySelectorAll(`c-operation-li > li.operation[data-name="${opName}"].${className}`);
 
-        // the same operation may occur twice if it is also in #catFavourites
         ops.forEach((op) => {
             op.classList.remove(`${className}`);
         });
@@ -330,15 +326,15 @@ class OperationsWaiter {
 
 
     /**
-     * Generic function to add a class to an operation list item
+     * Generic function to add a class to a specific operation. This operation li may occur twice ( when the op is in
+     * 'favourites' and in the category for instance )
      *
      * @param {string} opName - operation name through data-name attribute of the target operation
      * @param {string} className - the class to add to the operation list item
      */
     addClassToOp(opName, className) {
-        const ops = document.querySelectorAll(`#categories c-operation-li > li.operation[data-name="${opName}"]`);
+        const ops = document.querySelectorAll(`c-operation-li > li.operation[data-name="${opName}"]`);
 
-        // the same operation may occur twice if it is also in #catFavourites
         ops.forEach((op => {
             op.classList.add(`${className}`);
         }));
