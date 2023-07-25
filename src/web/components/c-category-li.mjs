@@ -66,6 +66,8 @@ export class CCategoryLi extends HTMLElement {
             this.app,
             this.category.ops,
             this.includeOpLiStarIcon,
+            false,
+            true
         )
 
         opList.build();
