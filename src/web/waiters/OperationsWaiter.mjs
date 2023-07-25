@@ -103,7 +103,6 @@ class OperationsWaiter {
                     .join("");
 
                 searchResultsEl.innerHTML = matchedOpsHtml;
-                searchResultsEl.dispatchEvent(this.manager.oplistcreate);
             }
 
             this.manager.ops.updateListItemsClasses("#rec-list", "selected");
@@ -196,11 +195,12 @@ class OperationsWaiter {
                 this.app,
                 favCatConfig.ops,
                 false,
+                true,
+                false,
                 {
                     class: "remove-icon",
                     innerText: "delete"
                 },
-                true
             )
 
             opList.build();
