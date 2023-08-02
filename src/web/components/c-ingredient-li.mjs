@@ -1,8 +1,7 @@
-import Utils from "../../core/Utils.mjs";
 import HTMLIngredient from "../HTMLIngredient.mjs";
 
 export class CIngredientLi extends HTMLElement {
-    constructor(app, name, args) {
+    constructor(app, name, args = []) {
         super();
 
         this.app = app;
@@ -15,6 +14,8 @@ export class CIngredientLi extends HTMLElement {
         }
 
         this.build();
+
+        this.addEventListener("dblclick", this.handleDoubleClick.bind(this));
     }
 
     build() {
@@ -66,6 +67,20 @@ export class CIngredientLi extends HTMLElement {
         li.appendChild(clearfixDiv);
 
         this.appendChild(li);
+    }
+
+    /**
+     * Remove listeners on disconnectedCallback
+     */
+    disconnectedCallback() {
+        this.removeEventListener("dblclick", this.handleDoubleClick.bind(this));
+    }
+
+    /**
+     * Handle double click
+     */
+    handleDoubleClick() {
+        this.remove();
     }
 }
 

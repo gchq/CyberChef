@@ -123,11 +123,6 @@ export class COperationList extends HTMLElement {
                 if (item.parentNode.id === targetListId) {
                     this.app.manager.recipe.addOperation(item.name);
                     item.remove();
-                    return;
-                }
-
-                if (item.parentNode.id !== targetListId) {
-                    return;
                 }
             }
         });

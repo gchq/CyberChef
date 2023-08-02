@@ -30,7 +30,7 @@ class RecipeWaiter {
 
 
     /**
-     * Sets up the drag and drop capability for operations in the operations and recipe areas.
+     * Sets up the drag and drop capability for recipe-list
      */
     initDragAndDrop() {
         const recList = document.getElementById("rec-list");
@@ -40,8 +40,8 @@ class RecipeWaiter {
             group: "recipe",
             sort: true,
             draggable: "c-ingredient-li",
-            swapThreshold: this.app.isMobileView ? 0.60 : 0.3,
-            animation: this.app.isMobileView ? 400 : 200,
+            swapThreshold: this.app.isMobileView ? 0.60 : 0.40,
+            animation: this.app.isMobileView() ? 400 : 0,
             delay: this.app.isMobileView ? 200 : 0,
             filter: ".arg",
             preventOnFilter: false,
@@ -93,7 +93,6 @@ class RecipeWaiter {
      * @param {Event} evt
      */
     opSortEnd(evt) {
-        console.log(evt);
         if (this.removeIntent && evt.item.parentNode.id === "rec-list") {
             evt.item.remove();
             return;
