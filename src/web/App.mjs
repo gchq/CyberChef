@@ -792,13 +792,12 @@ class App {
      * Fires whenever the input or recipe changes in any way.
      *
      * @listens Manager#statechange
-     * @param {Event} e
      */
-    stateChange(e) {
-        debounce(function() {
+    stateChange() {
+        debounce(() => {
             this.progress = 0;
             this.autoBake();
-            this.updateURL(true, null, true);
+            this.updateURL(true);
         }, 20, "stateChange", this, [])();
     }
 
@@ -905,7 +904,7 @@ class App {
     }
 
     /**
-     * @fires Manager#oplistcreate from nested c-category-li > c-operation-list build() function
+     * Build a CCategoryList element and append it to #categories
      */
     buildCategoryList() {
         // double-check if the c-category-list already exists,

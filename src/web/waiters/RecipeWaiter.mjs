@@ -8,6 +8,7 @@ import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import Utils from "../../core/Utils.mjs";
 import {escapeControlChars} from "../utils/editorUtils.mjs";
+import {CIngredientLi} from "../components/c-ingredient-li.mjs";
 
 
 /**
@@ -31,30 +32,30 @@ class RecipeWaiter {
     /**
      * Sets up the drag and drop capability for operations in the operations and recipe areas.
      */
-    initialiseOperationDragNDrop() {
+    initDragAndDrop() {
         const recList = document.getElementById("rec-list");
-        const isMobileView = this.app.isMobileView();
 
         // Recipe list
         Sortable.create(recList, {
             group: "recipe",
             sort: true,
-            swapThreshold: isMobileView ? 0.60 : 0.3,
-            animation: isMobileView ? 400 : 200,
-            delay: isMobileView ? 200 : 0,
+            draggable: "c-ingredient-li",
+            swapThreshold: this.app.isMobileView ? 0.60 : 0.3,
+            animation: this.app.isMobileView ? 400 : 200,
+            delay: this.app.isMobileView ? 200 : 0,
             filter: ".arg",
             preventOnFilter: false,
             setData: function(dataTransfer, dragEl) {
-                dataTransfer.setData("Text", dragEl.getAttribute("data-name"));
+                dataTransfer.setData("Text", dragEl.querySelector("li").getAttribute("data-name"));
             },
-            onEnd: function(evt) {
+            onEnd: function(e) {
                 if (this.removeIntent) {
-                    evt.item.remove();
-                    evt.target.dispatchEvent(this.manager.operationremove);
+                    e.item.remove();
+                    e.target.dispatchEvent(this.manager.operationremove);
                 }
             }.bind(this),
-            onSort: function(evt) {
-                if (evt.from.id === "rec-list") {
+            onSort: function(e) {
+                if (e.from.id === "rec-list") {
                     document.dispatchEvent(this.manager.statechange);
                 }
             }.bind(this)
@@ -84,42 +85,6 @@ class RecipeWaiter {
 
 
     /**
-     * Creates a drag-n-droppable seed list of operations.
-     *
-     * @param {element} listEl - The list to initialise
-     */
-    createSortableSeedList(listEl) {
-        Sortable.create(listEl, {
-            group: {
-                name: "recipe",
-                pull: "clone",
-                put: false,
-            },
-            draggable: ".operation",
-            sort: false,
-            setData: function(dataTransfer, dragEl) {
-                dataTransfer.setData("Text", dragEl.getAttribute("data-name"));
-            },
-            onStart: function(evt) {
-                // Removes popover element and event bindings from the dragged operation but not the
-                // event bindings from the one left in the operations list. Without manually removing
-                // these bindings, we cannot re-initialise the popover on the stub operation.
-                $(evt.item)
-                    .popover("dispose")
-                    .removeData("bs.popover")
-                    .off("mouseenter")
-                    .off("mouseleave")
-                    .attr("data-toggle", "popover-disabled");
-                $(evt.clone)
-                    .off(".popover")
-                    .removeData("bs.popover");
-            },
-            onEnd: this.opSortEnd.bind(this)
-        });
-    }
-
-
-    /**
      * Handler for operation sort end events.
      * Removes the operation from the list if it has been dropped outside. If not, adds it to the list
      * at the appropriate place and initialises it.
@@ -128,6 +93,7 @@ class RecipeWaiter {
      * @param {Event} evt
      */
     opSortEnd(evt) {
+        console.log(evt);
         if (this.removeIntent && evt.item.parentNode.id === "rec-list") {
             evt.item.remove();
             return;
@@ -135,21 +101,22 @@ class RecipeWaiter {
 
         // Reinitialise the popover on the original element in the ops list because for some reason it
         // gets destroyed and recreated. If the clone isn't in the ops list, we use the original item instead.
-        let enableOpsElement;
-        if (evt.clone?.parentNode?.classList?.contains("op-list")) {
-            enableOpsElement = evt.clone;
-        } else {
-            enableOpsElement = evt.item;
-            $(evt.item).attr("data-toggle", "popover");
-        }
-        this.manager.ops.enableOpPopover(enableOpsElement);
+        // let enableOpsElement;
+        // if (evt.clone?.parentNode?.classList?.contains("op-list")) {
+        //     enableOpsElement = evt.clone;
+        // } else {
+        //     enableOpsElement = evt.item;
+        //     $(evt.item).attr("data-toggle", "popover");
+        // }
+
+        // this.manager.ops.enableOpPopover(enableOpsElement);
 
         if (evt.item.parentNode.id !== "rec-list") {
             return;
         }
 
-        this.buildRecipeOperation(evt.item);
-        evt.item.dispatchEvent(this.manager.operationadd);
+        this.buildRecipeOperation(evt.item.name);
+        // evt.item.dispatchEvent(this.manager.operationadd);
     }
 
 
@@ -369,15 +336,13 @@ class RecipeWaiter {
      * Given an operation stub element, this function converts it into a full recipe element with
      * arguments.
      *
-     * @param {element} el - The operation stub element from the operations pane
+     * @param {string} name - The operation stub element from the operations pane
      */
-    buildRecipeOperation(el) {
-        const opName = el.textContent;
-        const op = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
-        el.innerHTML = op.toFullHtml();
+    buildRecipeOperation(name) {
+        const op = new CIngredientLi(this.app, name, this.app.operations[name].args);
 
-        if (this.app.operations[opName].flowControl) {
-            el.classList.add("flow-control-op");
+        if (this.app.operations[name].flowControl) {
+            op.classList.add("flow-control-op");
         }
 
         // Disable auto-bake if this is a manual op
@@ -385,6 +350,8 @@ class RecipeWaiter {
             this.manager.controls.setAutoBake(false);
             this.app.alert("Auto-Bake is disabled by default when using this operation.", 5000);
         }
+
+        return op;
     }
 
 
@@ -392,24 +359,19 @@ class RecipeWaiter {
      * Adds the specified operation to the recipe
      *
      * @fires Manager#operationadd
+     * @fires Manager#statechange
      * @param {string} name - The name of the operation to add
-     * @returns {element}
      */
     addOperation(name) {
-        const item = document.createElement("li");
-        item.setAttribute("data-name", name);
-
-        item.classList.add("operation");
-        item.innerText = name;
-        this.buildRecipeOperation(item);
+        let item = this.buildRecipeOperation(name);
         document.getElementById("rec-list").appendChild(item);
 
         $(item).find("[data-toggle='tooltip']").tooltip();
 
         item.dispatchEvent(this.manager.operationadd);
+        document.dispatchEvent(this.app.manager.statechange);
 
         this.manager.ops.updateListItemsClasses("#rec-list", "selected");
-
         return item;
     }
 
@@ -471,7 +433,9 @@ class RecipeWaiter {
      * @param {Event} e
      */
     opAdd(e) {
-        log.debug(`'${e.target.getAttribute("data-name")}' added to recipe`);
+        console.log(e);
+        log.debug(`'${e.target.querySelector("li").getAttribute("data-name")}' added to recipe`);
+        console.log(e.target.querySelector("li").getAttribute("data-name"));
         this.triggerArgEvents(e.target);
         window.dispatchEvent(this.manager.statechange);
     }

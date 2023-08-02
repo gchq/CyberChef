@@ -51,10 +51,6 @@ class Manager {
          */
         this.operationremove = new CustomEvent("operationremove", {bubbles: true});
         /**
-         * @event Manager#oplistcreate
-         */
-        this.oplistcreate = new CustomEvent("oplistcreate", {bubbles: true});
-        /**
          * @event Manager#statechange
          */
         this.statechange = new CustomEvent("statechange", {bubbles: true});
@@ -89,7 +85,7 @@ class Manager {
         this.input.setupInputWorker();
         this.input.addInput(true);
         this.worker.setupChefWorker();
-        this.recipe.initialiseOperationDragNDrop();
+        this.recipe.initDragAndDrop();
         this.controls.initComponents();
         this.controls.autoBakeChange();
         this.bindings.updateKeybList();
@@ -152,7 +148,7 @@ class Manager {
         document.getElementById("close-ops-dropdown-icon").addEventListener("click", this.ops.closeOpsDropdown.bind(this.ops));
         document.getElementById("save-favourites").addEventListener("click", this.ops.saveFavouritesClick.bind(this.ops));
         document.getElementById("reset-favourites").addEventListener("click", this.ops.resetFavouritesClick.bind(this.ops));
-        this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd, this.recipe);
+        this.addDynamicListener("c-operation-li", "operationadd", this.recipe.opAdd, this.recipe);
 
         // Recipe
         this.addDynamicListener(".arg:not(select)", "input", this.recipe.ingChange, this.recipe);

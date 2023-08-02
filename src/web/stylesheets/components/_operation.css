@@ -15,7 +15,7 @@
     border-top: none;
     border-left: none;
     border-right: none;
-    cursor: pointer;
+    cursor: default;
 }
 
 @media only screen and (min-width: 768px){
@@ -272,14 +272,14 @@ input.toggle-string {
     word-break: break-all;
 }
 
-.recip-icons {
+.recipe-icons {
     position: absolute;
     top: 13px;
     right: 10px;
     height: 16px;
 }
 
-.recip-icons i {
+.recipe-icons i {
     margin-right: 10px;
     vertical-align: baseline;
     float: right;

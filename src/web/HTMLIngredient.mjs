@@ -8,6 +8,9 @@ import Utils from "../core/Utils.mjs";
 
 /**
  * Object to handle the creation of operation ingredients.
+ *
+ * @TODO: would be nice to refactor this. Move everything to c-ingredient-li and
+ * implement there accordingly, delete this file
  */
 class HTMLIngredient {
 

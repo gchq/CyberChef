@@ -24,7 +24,6 @@ export class COperationLi extends HTMLElement {
         this.includeStarIcon = includeStarIcon;
 
         this.config = this.app.operations[name];
-        // this.ingList = [];
 
         this.isFavourite = this.app.isLocalStorageAvailable() && JSON.parse(localStorage.favourites).indexOf(name) >= 0;
 
@@ -37,11 +36,6 @@ export class COperationLi extends HTMLElement {
             this.observer = new MutationObserver(this.updateFavourite.bind(this));
             this.observer.observe(this.querySelector("li"), { attributes: true });
         }
-
-        // for (let i = 0; i < this.config.args.length; i++) {
-        //     const ing = new HTMLIngredient(this.config.args[i], this.app, this.manager);
-        //     this.ingList.push(ing);
-        // }
     }
 
     /**
@@ -248,6 +242,15 @@ export class COperationLi extends HTMLElement {
         } else {
             this.querySelector("i.star-icon").innerText = "star_outline";
         }
+    }
+
+    /**
+     * Override native cloneNode method so we can clone c-operation-li properly
+     * with constructor arguments for sortable and cloneable lists
+     */
+    cloneNode() {
+        const { app, name, icon, includeStarIcon } = this;
+        return new COperationLi( app, name, icon, includeStarIcon );
     }
 }
 

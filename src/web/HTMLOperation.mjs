@@ -4,12 +4,6 @@
  * @license Apache-2.0
  */
 
-import HTMLIngredient from "./HTMLIngredient.mjs";
-import Utils from "../core/Utils.mjs";
-import url from "url";
-import {COperationLi} from "./components/c-operation-li.mjs";
-
-
 /**
  * Object to handle the creation of operations.
  */
@@ -32,36 +26,6 @@ class HTMLOperation {
         this.infoURL     = config.infoURL;
         this.manualBake  = config.manualBake || false;
         this.config      = config;
-        this.ingList     = [];
-
-        for (let i = 0; i < config.args.length; i++) {
-            const ing = new HTMLIngredient(config.args[i], this.app, this.manager);
-            this.ingList.push(ing);
-        }
-    }
-
-
-    /**
-     * Renders the operation in HTML as a full operation with ingredients.
-     *
-     * @returns {string}
-     */
-    toFullHtml() {
-        let html = `<div class="op-title">${Utils.escapeHtml(this.name)}</div>
-        <div class="ingredients">`;
-
-        for (let i = 0; i < this.ingList.length; i++) {
-            html += this.ingList[i].toHtml();
-        }
-
-        html += `</div>
-        <div class="recip-icons">
-            <i class="material-icons breakpoint" title="Set breakpoint" break="false" data-help-title="Setting breakpoints" data-help="Setting a breakpoint on an operation will cause execution of the Recipe to pause when it reaches that operation.">pause</i>
-            <i class="material-icons disable-icon" title="Disable operation" disabled="false" data-help-title="Disabling operations" data-help="Disabling an operation will prevent it from being executed when the Recipe is baked. Execution will skip over the disabled operation and continue with subsequent operations.">not_interested</i>
-        </div>
-        <div class="clearfix">&nbsp;</div>`;
-
-        return html;
     }
 
 
