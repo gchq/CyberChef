@@ -35,14 +35,18 @@ class RecipeWaiter {
     initDragAndDrop() {
         const recList = document.getElementById("rec-list");
 
+        let swapThreshold = this.app.isMobileView() ? 0.60 : 0.40;
+        let animation = this.app.isMobileView() ? 400 : 200;
+        let delay = this.app.isMobileView() ? 200 : 0;
+
         // Recipe list
         Sortable.create(recList, {
             group: "recipe",
             sort: true,
             draggable: "c-ingredient-li",
-            swapThreshold: this.app.isMobileView ? 0.60 : 0.40,
-            animation: this.app.isMobileView() ? 400 : 0,
-            delay: this.app.isMobileView ? 200 : 0,
+            swapThreshold: swapThreshold,
+            animation: animation,
+            delay: delay,
             filter: ".arg",
             preventOnFilter: false,
             setData: function(dataTransfer, dragEl) {
