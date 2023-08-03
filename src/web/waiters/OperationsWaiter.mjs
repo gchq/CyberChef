@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import HTMLOperation from "../HTMLOperation.mjs";
 import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
 import {COperationList} from "../components/c-operation-list.mjs";
+import {COperationLi} from "../components/c-operation-li.mjs";
 
 /**
  * Waiter to handle events related to the operations.
@@ -46,9 +46,9 @@ class OperationsWaiter {
             }
         }
 
-        if (e.type === "search" || e.keyCode === 13) { // Search or Return
+        if (e.type === "search" || e.key === "Enter") { // Search or Return ( enter )
             e.preventDefault();
-            ops = document.querySelectorAll("#search-results li");
+            ops = document.querySelectorAll("#search-results c-operation-list c-operation-li li");
             if (ops.length) {
                 selected = this.getSelectedOp(ops);
                 if (selected > -1) {
@@ -59,11 +59,11 @@ class OperationsWaiter {
 
         if (e.type === "click" && !e.target.value.length) {
             this.openOpsDropdown();
-        } else if (e.keyCode === 27) { // Escape
-            this.closeOpsDropdown();
-        } else if (e.keyCode === 40) { // Down
+        } else if (e.key === "Escape") { // Escape
+            this.closeOpsDropdown()
+        } else if (e.key === "ArrowDown") { // Down
             e.preventDefault();
-            ops = document.querySelectorAll("#search-results li");
+            ops = document.querySelectorAll("#search-results c-operation-list c-operation-li li");
             if (ops.length) {
                 selected = this.getSelectedOp(ops);
                 if (selected > -1) {
@@ -72,9 +72,9 @@ class OperationsWaiter {
                 if (selected === ops.length-1) selected = -1;
                 ops[selected+1].classList.add("selected-op");
             }
-        } else if (e.keyCode === 38) { // Up
+        } else if (e.key === "ArrowUp") { // Up
             e.preventDefault();
-            ops = document.querySelectorAll("#search-results li");
+            ops = document.querySelectorAll("#search-results c-operation-list c-operation-li li");
             if (ops.length) {
                 selected = this.getSelectedOp(ops);
                 if (selected > -1) {
@@ -96,13 +96,29 @@ class OperationsWaiter {
             }
 
             $("#categories .show").collapse("hide");
+
             if (str) {
                 const matchedOps = this.filterOperations(str, true);
-                const matchedOpsHtml = matchedOps
-                    .map(v => v.toStubHtml())
-                    .join("");
+                let formattedOpNames = [];
 
-                searchResultsEl.innerHTML = matchedOpsHtml;
+                matchedOps.forEach((operation) => {
+                    formattedOpNames.push(operation.name.replace(/(<([^>]+)>)/ig, ""));
+                })
+
+                const cOpList = new COperationList(
+                    this.app,
+                    formattedOpNames,
+                    true,
+                    false,
+                    true,
+                    {
+                        class: "check-icon",
+                        innerText: "check"
+                    }
+                );
+
+                cOpList.build();
+                searchResultsEl.append(cOpList);
             }
 
             this.manager.ops.updateListItemsClasses("#rec-list", "selected");
@@ -136,7 +152,14 @@ class OperationsWaiter {
             const descPos = op.description.toLowerCase().indexOf(inStr.toLowerCase());
 
             if (nameMatch || descPos >= 0) {
-                const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
+                const operation = new COperationLi(
+                    this.app,
+                    opName,
+                    {
+                        class: "check-icon",
+                        innerText: "check"
+                    },
+                    true );
 
                 if (highlight) {
                     operation.highlightSearchStrings(calcMatchRanges(idxs), [[descPos, inStr.length]]);

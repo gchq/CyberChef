@@ -4,7 +4,6 @@
  * @license Apache-2.0
  */
 
-import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import Utils from "../../core/Utils.mjs";
 import {escapeControlChars} from "../utils/editorUtils.mjs";
@@ -35,7 +34,7 @@ class RecipeWaiter {
     initDragAndDrop() {
         const recList = document.getElementById("rec-list");
 
-        let swapThreshold = this.app.isMobileView() ? 0.60 : 0.40;
+        let swapThreshold = this.app.isMobileView() ? 0.60 : 0.10;
         let animation = this.app.isMobileView() ? 400 : 200;
         let delay = this.app.isMobileView() ? 200 : 0;
 

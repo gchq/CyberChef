@@ -16,8 +16,7 @@ export class COperationList extends HTMLElement {
         includeStarIcon,
         isSortable = false,
         isCloneable = true,
-        icon,
-
+        icon
     ) {
         super();
 
@@ -118,7 +117,6 @@ export class COperationList extends HTMLElement {
                     .off(".popover")
                     .removeData("bs.popover");
             },
-            // @todo: popovers dont display anymore after dragging into recipe list and then hovering the op
             onEnd: ({item}) => {
                 if (item.parentNode.id === targetListId) {
                     this.app.manager.recipe.addOperation(item.name);

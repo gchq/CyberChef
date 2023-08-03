@@ -246,8 +246,6 @@ class App {
 
     /**
      * Sets up the adjustable splitter to allow the user to resize areas of the page.
-     *
-     * @param {boolean} [minimise=false] - Set this flag if attempting to minimise frames to 0 width
      */
     buildUI() {
         if (this.isMobileView()) {
@@ -259,6 +257,8 @@ class App {
 
     /**
      * Set desktop splitters
+     *
+     * @param {boolean} minimise
      */
     setDesktopSplitter(minimise) {
         if (this.columnSplitter) this.columnSplitter.destroy();
@@ -269,7 +269,7 @@ class App {
             minSize: minimise ? [0, 0, 0] : [360, 330, 310],
             gutterSize: 4,
             expandToMin: true,
-            onDrag: debounce(function() {
+            onDrag: debounce(() => {
                 this.adjustComponentSizes();
             }, 50, "dragSplitter", this, [])
         });
