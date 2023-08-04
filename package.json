@@ -182,7 +182,7 @@
     "build": "npx grunt prod",
     "node": "npx grunt node",
     "repl": "node --experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-experimental-fetch --no-warnings src/node/repl.mjs",
-    "test": "npx grunt configTests && node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation --openssl-legacy-provider --no-experimental-fetch tests/node/index.mjs && node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation  --openssl-legacy-provider --no-experimental-fetch tests/operations/index.mjs",
+    "test": "npx grunt configTests && node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation --openssl-legacy-provider --no-experimental-fetch tests/node/index.mjs && node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation  --openssl-legacy-provider --no-experimental-fetch --trace-uncaught tests/operations/index.mjs",
     "testnodeconsumer": "npx grunt testnodeconsumer",
     "testui": "npx grunt testui",
     "testuidev": "npx nightwatch --env=dev",
