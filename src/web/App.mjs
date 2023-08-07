@@ -265,7 +265,7 @@ class App {
         if (this.ioSplitter) this.ioSplitter.destroy();
 
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
-            sizes: [20, 30, 50],
+            sizes: [20, 40, 40],
             minSize: minimise ? [0, 0, 0] : [360, 330, 310],
             gutterSize: 4,
             expandToMin: true,
@@ -510,7 +510,7 @@ class App {
             // Search for nearest match and add it
             const matchedOps = this.manager.ops.filterOperations(this.uriParams.op, false);
             if (matchedOps.length) {
-                this.manager.recipe.addOperation(matchedOps[0].name);
+                this.manager.recipe.addOperation(matchedOps[0][0]);
             }
 
             // Populate search with the string

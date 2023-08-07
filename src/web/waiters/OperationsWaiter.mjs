@@ -34,8 +34,7 @@ class OperationsWaiter {
      * @param {Event} e
      */
     searchOperations(e) {
-        let ops, selected;
-
+        let ops, focused;
         if (e.type === "keyup") {
             const searchResults = document.getElementById("search-results");
 
@@ -46,13 +45,13 @@ class OperationsWaiter {
             }
         }
 
-        if (e.type === "search" || e.key === "Enter") { // Search or Return ( enter )
+        if (e.key === "Enter") { // Search or Return ( enter )
             e.preventDefault();
             ops = document.querySelectorAll("#search-results c-operation-list c-operation-li li");
             if (ops.length) {
-                selected = this.getSelectedOp(ops);
-                if (selected > -1) {
-                    this.manager.recipe.addOperation(ops[selected].getAttribute("data-name"));
+                focused = this.getFocusedOp(ops);
+                if (focused > -1) {
+                    this.manager.recipe.addOperation(ops[focused].getAttribute("data-name"));
                 }
             }
         }
@@ -60,28 +59,28 @@ class OperationsWaiter {
         if (e.type === "click" && !e.target.value.length) {
             this.openOpsDropdown();
         } else if (e.key === "Escape") { // Escape
-            this.closeOpsDropdown()
+            this.closeOpsDropdown();
         } else if (e.key === "ArrowDown") { // Down
             e.preventDefault();
             ops = document.querySelectorAll("#search-results c-operation-list c-operation-li li");
             if (ops.length) {
-                selected = this.getSelectedOp(ops);
-                if (selected > -1) {
-                    ops[selected].classList.remove("selected-op");
+                focused = this.getFocusedOp(ops);
+                if (focused > -1) {
+                    ops[focused].classList.remove("focused-op");
                 }
-                if (selected === ops.length-1) selected = -1;
-                ops[selected+1].classList.add("selected-op");
+                if (focused === ops.length-1) focused = -1;
+                ops[focused+1].classList.add("focused-op");
             }
         } else if (e.key === "ArrowUp") { // Up
             e.preventDefault();
             ops = document.querySelectorAll("#search-results c-operation-list c-operation-li li");
             if (ops.length) {
-                selected = this.getSelectedOp(ops);
-                if (selected > -1) {
-                    ops[selected].classList.remove("selected-op");
+                focused = this.getFocusedOp(ops);
+                if (focused > -1) {
+                    ops[focused].classList.remove("focused-op");
                 }
-                if (selected === 0) selected = ops.length;
-                ops[selected-1].classList.add("selected-op");
+                if (focused === 0) focused = ops.length;
+                ops[focused-1].classList.add("focused-op");
             }
         } else {
             const searchResultsEl = document.getElementById("search-results");
@@ -99,15 +98,10 @@ class OperationsWaiter {
 
             if (str) {
                 const matchedOps = this.filterOperations(str, true);
-                let formattedOpNames = [];
-
-                matchedOps.forEach((operation) => {
-                    formattedOpNames.push(operation.name.replace(/(<([^>]+)>)/ig, ""));
-                })
 
                 const cOpList = new COperationList(
                     this.app,
-                    formattedOpNames,
+                    matchedOps,
                     true,
                     false,
                     true,
@@ -132,15 +126,15 @@ class OperationsWaiter {
      * @param {string} searchStr
      * @param {boolean} highlight - Whether to highlight the matching string in the operation
      *   name and description
-     * @returns {string[]}
+     * @returns {[[string, number[]]]}
      */
-    filterOperations(inStr, highlight) {
+    filterOperations(searchStr, highlight) {
         const matchedOps = [];
         const matchedDescs = [];
 
         // Create version with no whitespace for the fuzzy match
         // Helps avoid missing matches e.g. query "TCP " would not find "Parse TCP"
-        const inStrNWS = inStr.replace(/\s/g, "");
+        const inStrNWS = searchStr.replace(/\s/g, "");
 
         for (const opName in this.app.operations) {
             const op = this.app.operations[opName];
@@ -149,26 +143,13 @@ class OperationsWaiter {
             const [nameMatch, score, idxs] = fuzzyMatch(inStrNWS, opName);
 
             // Match description based on exact match
-            const descPos = op.description.toLowerCase().indexOf(inStr.toLowerCase());
+            const descPos = op.description.toLowerCase().indexOf(searchStr.toLowerCase());
 
             if (nameMatch || descPos >= 0) {
-                const operation = new COperationLi(
-                    this.app,
-                    opName,
-                    {
-                        class: "check-icon",
-                        innerText: "check"
-                    },
-                    true );
-
-                if (highlight) {
-                    operation.highlightSearchStrings(calcMatchRanges(idxs), [[descPos, inStr.length]]);
-                }
-
                 if (nameMatch) {
-                    matchedOps.push([operation, score]);
+                    matchedOps.push([[opName, calcMatchRanges(idxs)], score]);
                 } else {
-                    matchedDescs.push(operation);
+                    matchedDescs.push([opName]);
                 }
             }
         }
@@ -181,15 +162,15 @@ class OperationsWaiter {
 
 
     /**
-     * Finds the operation which has been selected using keyboard shortcuts. This will have the class
-     * 'selected-op' set. Returns the index of the operation within the given list.
+     * Finds the operation which has been focused on using keyboard shortcuts. This will have the class
+     * 'focused-op' set. Returns the index of the operation within the given list.
      *
      * @param {element[]} ops
      * @returns {number}
      */
-    getSelectedOp(ops) {
+    getFocusedOp(ops) {
         for (let i = 0; i < ops.length; i++) {
-            if (ops[i].classList.contains("selected-op")) {
+            if (ops[i].classList.contains("focused-op")) {
                 return i;
             }
         }
@@ -216,7 +197,7 @@ class OperationsWaiter {
         if(favCatConfig !== undefined) {
             const opList = new COperationList(
                 this.app,
-                favCatConfig.ops,
+                favCatConfig.ops.map( op => [op]),
                 false,
                 true,
                 false,

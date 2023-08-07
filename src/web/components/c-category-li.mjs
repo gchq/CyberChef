@@ -64,7 +64,7 @@ export class CCategoryLi extends HTMLElement {
 
         const opList = new COperationList(
             this.app,
-            this.category.ops,
+            this.category.ops.map( op => [op]),
             this.includeOpLiStarIcon,
             false,
             true
@@ -81,7 +81,6 @@ export class CCategoryLi extends HTMLElement {
     buildListItem() {
         const li = document.createElement("li");
 
-        li.classList.add("panel");
         li.classList.add("category");
 
         return li;

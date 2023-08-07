@@ -144,7 +144,7 @@ class Manager {
         document.getElementById("maximise-output").addEventListener("click", this.controls.onMaximiseButtonClick.bind(this.controls));
 
         // Operations
-        this.addMultiEventListener("#search", "keyup paste search click", this.ops.searchOperations, this.ops);
+        this.addMultiEventListener("#search", "keyup paste click", this.ops.searchOperations, this.ops);
         document.getElementById("close-ops-dropdown-icon").addEventListener("click", this.ops.closeOpsDropdown.bind(this.ops));
         document.getElementById("save-favourites").addEventListener("click", this.ops.saveFavouritesClick.bind(this.ops));
         document.getElementById("reset-favourites").addEventListener("click", this.ops.resetFavouritesClick.bind(this.ops));

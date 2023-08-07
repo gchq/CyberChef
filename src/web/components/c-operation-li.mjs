@@ -1,5 +1,4 @@
 import url from "url";
-import HTMLIngredient from "../HTMLIngredient.mjs";
 
 /**
  * c(ustom element)-operation-li ( list item )
@@ -8,6 +7,7 @@ import HTMLIngredient from "../HTMLIngredient.mjs";
  * @param {string} name - The name of the operation
  * @param {Object} icon - { class: string, innerText: string } - The optional and customizable icon displayed on the right side of the operation
  * @param {Boolean} includeStarIcon - Include the left side 'star' icon to favourite an operation easily
+ * @param {[number[]]} charIndicesToHighlight - optional array of indices that indicate characters to highlight (bold) in operation name
  */
 export class COperationLi extends HTMLElement {
     constructor(
@@ -15,6 +15,7 @@ export class COperationLi extends HTMLElement {
         name,
         icon,
         includeStarIcon,
+        charIndicesToHighlight = []
     ) {
         super();
 
@@ -22,6 +23,7 @@ export class COperationLi extends HTMLElement {
         this.name = name;
         this.icon = icon;
         this.includeStarIcon = includeStarIcon;
+        this.charIndicesToHighlight = charIndicesToHighlight;
 
         this.config = this.app.operations[name];
 
@@ -54,7 +56,8 @@ export class COperationLi extends HTMLElement {
      * @param {Event} e
      */
     handleDoubleClick(e) {
-        if (e.target === this.querySelector("li")) {
+        // Span contains operation title (highlighted or not)
+        if (e.target === this.querySelector("li") || e.target === this.querySelector("span")) {
             this.app.manager.recipe.addOperation(this.name);
         }
     }
@@ -169,6 +172,8 @@ export class COperationLi extends HTMLElement {
     buildListItem() {
         const li = document.createElement("li");
 
+        li.appendChild( this.buildOperationName() );
+
         li.setAttribute("data-name", this.name);
         li.classList.add("operation");
 
@@ -176,7 +181,6 @@ export class COperationLi extends HTMLElement {
             li.classList.add("favourite");
         }
 
-        li.textContent = this.name;
 
         if (this.config.description){
             let dataContent = this.config.description;
@@ -193,7 +197,6 @@ export class COperationLi extends HTMLElement {
             li.setAttribute("data-boundary", "viewport");
             li.setAttribute("data-content", dataContent);
         }
-
         return li;
     }
 
@@ -248,59 +251,62 @@ export class COperationLi extends HTMLElement {
      * with constructor arguments for sortable and cloneable lists
      */
     cloneNode() {
-        const { app, name, icon, includeStarIcon } = this;
-        return new COperationLi( app, name, icon, includeStarIcon );
+        const { app, name, icon, includeStarIcon, charIndicesToHighlight } = this;
+        return new COperationLi( app, name, icon, includeStarIcon, charIndicesToHighlight );
     }
 
 
     /**
      * Highlights searched strings in the name and description of the operation.
-     *
-     * @param {[[number]]} nameIdxs - Indexes of the search strings in the operation name [[start, length]]
-     * @param {[[number]]} descIdxs - Indexes of the search strings in the operation description [[start, length]]
      */
-    highlightSearchStrings(nameIdxs, descIdxs) {
-        if (nameIdxs.length && typeof nameIdxs[0][0] === "number") {
+    buildOperationName() {
+        const span = document.createElement('span');
+
+        if (this.charIndicesToHighlight.length) {
             let opName = "",
                 pos = 0;
 
-            nameIdxs.forEach(idxs => {
+            this.charIndicesToHighlight.forEach(idxs => {
                 const [start, length] = idxs;
                 if (typeof start !== "number") return;
-                opName += this.name.slice(pos, start) + "<b>" +
-                    this.name.slice(start, start + length) + "</b>";
+                opName += this.name.slice(pos, start) + "<strong>" +
+                    this.name.slice(start, start + length) + "</strong>";
                 pos = start + length;
             });
             opName += this.name.slice(pos, this.name.length);
-            this.name = opName;
+            span.innerHTML = opName;
+        } else {
+            span.innerText = this.name;
         }
 
-        if (this.description && descIdxs.length && descIdxs[0][0] >= 0) {
-            // Find HTML tag offsets
-            const re = /<[^>]+>/g;
-            let match;
-            while ((match = re.exec(this.description))) {
-                // If the search string occurs within an HTML tag, return without highlighting it.
-                const inHTMLTag = descIdxs.reduce((acc, idxs) => {
-                    const start = idxs[0];
-                    return start >= match.index && start <= (match.index + match[0].length);
-                }, false);
+        return span;
 
-                if (inHTMLTag) return;
-            }
-
-            let desc = "",
-                pos = 0;
-
-            descIdxs.forEach(idxs => {
-                const [start, length] = idxs;
-                desc += this.description.slice(pos, start) + "<b><u>" +
-                    this.description.slice(start, start + length) + "</u></b>";
-                pos = start + length;
-            });
-            desc += this.description.slice(pos, this.description.length);
-            this.description = desc;
-        }
+        // if (this.description && descIdxs.length && descIdxs[0][0] >= 0) {
+        //     // Find HTML tag offsets
+        //     const re = /<[^>]+>/g;
+        //     let match;
+        //     while ((match = re.exec(this.description))) {
+        //         // If the search string occurs within an HTML tag, return without highlighting it.
+        //         const inHTMLTag = descIdxs.reduce((acc, idxs) => {
+        //             const start = idxs[0];
+        //             return start >= match.index && start <= (match.index + match[0].length);
+        //         }, false);
+        //
+        //         if (inHTMLTag) return;
+        //     }
+        //
+        //     let desc = "",
+        //         pos = 0;
+        //
+        //     descIdxs.forEach(idxs => {
+        //         const [start, length] = idxs;
+        //         desc += this.description.slice(pos, start) + "<b><u>" +
+        //             this.description.slice(start, start + length) + "</u></b>";
+        //         pos = start + length;
+        //     });
+        //     desc += this.description.slice(pos, this.description.length);
+        //     this.description = desc;
+        // }
     }
 }
 

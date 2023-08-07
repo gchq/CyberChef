@@ -311,13 +311,13 @@ input.toggle-string {
 
 .break .form-group * { color: var(--breakpoint-font-colour) !important; }
 
-li.operation.selected-op {
-    /*color: var(--selected-operation-font-color) !important;*/
-    background-color: var(--selected-operation-bg-colour) !important;
-    /*border-color: var(--selected-operation-border-colour) !important;*/
+c-operation-li li.operation.focused-op {
+    color: var(--focused-operation-font-color) !important;
+    background-color: var(--focused-operation-bg-colour) !important;
+    border-color: var(--focused-operation-border-colour) !important;
 }
 
-/*.selected-op .form-group * { color: var(--selected-operation-font-color) !important; }*/
+/*.focused-op .form-group * { color: var(--focused-operation-font-color) !important; }*/
 
 .flow-control-op {
     color: var(--fc-operation-font-colour) !important;
