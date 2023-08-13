@@ -7,15 +7,15 @@ import Operation from "../Operation.mjs";
  /**
   * Gootloader decode operation
   */
-class GootLoaderDecode extends Operation {
+class GootloaderDecode extends Operation {
      /**
-      * GootLoader constructor
+      * Gootloader constructor
       */
     constructor() {
         super();
-        this.name = "GootLoader Decode";
+        this.name = "Gootloader Decode";
         this.module = "Code";
-        this.description = "Decodes GootLoader JScript code block obfuscation";
+        this.description = "Decodes Gootloader JScript code block obfuscation";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
@@ -41,4 +41,4 @@ class GootLoaderDecode extends Operation {
     }
 }
 
-export default GootLoaderDecode;
+export default GootloaderDecode;
