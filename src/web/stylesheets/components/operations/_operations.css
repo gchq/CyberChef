@@ -7,7 +7,10 @@
 
 #operations {
     background-color: var(--primary-background-colour);
-    border-bottom: 1px solid var(--primary-border-colour);
+}
+
+#operations > .title {
+    padding: 8px 8px 8px 12px;
 }
 
 #operations-wrapper {
