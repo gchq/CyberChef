@@ -280,11 +280,17 @@ input.toggle-string {
 }
 
 .recipe-icons i {
-    margin-right: 10px;
+    height: 30px;
+    width: 30px;
+    text-align: center;
     vertical-align: baseline;
     float: right;
     font-size: 18px;
     cursor: pointer;
+}
+
+.recipe-icons i:last-child {
+    margin-right: 10px;
 }
 
 .disable-icon {

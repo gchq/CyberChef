@@ -34,6 +34,11 @@ export class CIngredientLi extends HTMLElement {
         this.addEventListener("dblclick", this.handleDoubleClick.bind(this));
     }
 
+    cloneNode() {
+        const { app, name, args } = this;
+        return new CIngredientLi( app, name, args );
+    }
+
     /**
      * Remove listeners on disconnectedCallback
      */
