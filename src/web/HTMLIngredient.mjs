@@ -9,8 +9,8 @@ import Utils from "../core/Utils.mjs";
 /**
  * Object to handle the creation of operation ingredients.
  *
- * @TODO: would be nice to refactor this. Move everything to c-ingredient-li and
- * implement there accordingly, delete this file
+ * Note: Not to be confused with the native web component c-ingredient-li, which is the component that makes the parent
+ * list item 'ingredient' in recipe-list.
  */
 class HTMLIngredient {
 

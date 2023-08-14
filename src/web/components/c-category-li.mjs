@@ -6,8 +6,9 @@ import {COperationList} from "./c-operation-list.mjs";
  * @param {App} app - The main view object for CyberChef
  * @param {CatConf} category - The category and operations to be populated.
  * @param {Object.<string, OpConf>} operations - The list of operation configuration objects.
- * @param {Boolean} isExpanded - expand the category on init or not
- * @param {Boolean} includeOpLiStarIcon - Include the left side 'star' icon to favourite an operation easily
+ * @param {Boolean} isExpanded - expand the category by default on init or not
+ * @param {Boolean} includeOpLiStarIcon - Include the left side 'star' icon to each of the c-category-li >
+ * c-operation-list > c-operation-li list items in this category
  * */
 export class CCategoryLi extends HTMLElement {
     constructor(
@@ -102,6 +103,9 @@ export class CCategoryLi extends HTMLElement {
         if (this.label === "Favourites"){
             const editFavouritesButton = this.buildEditFavouritesButton(a);
 
+            // Note: I'm leaving this here as it was in the code originally, but it's not doing anything and it didn't
+            // do anything before my refactoring. I imagine we may want to fix that at some point though,
+            // hence I'm leaving this here.
             a.setAttribute("data-help-title", "Favourite operations");
             a.setAttribute("data-help", `<p>This category displays your favourite operations.</p>
             <ul>
@@ -136,7 +140,7 @@ export class CCategoryLi extends HTMLElement {
     };
 
     /**
-     *  If this category is Favourites, build and return the star icon to the category
+     *  If this category is Favourites, build and return the star icon button
      */
     buildEditFavouritesButton() {
         const button = document.createElement("button");

@@ -1,5 +1,16 @@
 import HTMLIngredient from "../HTMLIngredient.mjs";
 
+/**
+ * c(ustom element)-ingredient-li ( list item ).
+ *
+ * Note: This is the #recipe-list list item component, not to be confused with HTMLIngredient which make up the smaller
+ * components of this list item. It would be good to eventually fuse that code into this component or alternatively, to
+ * turn that into a separate native web component .
+ *
+ * @param {App} app - The main view object for CyberChef
+ * @param {string} name - The operation ( or aka ingredient- in this context ) name
+ * @param {object[]} args - The args properties of the operation ( see operation config file )
+ * */
 export class CIngredientLi extends HTMLElement {
     constructor(app, name, args = []) {
         super();
@@ -18,6 +29,28 @@ export class CIngredientLi extends HTMLElement {
         this.addEventListener("dblclick", this.handleDoubleClick.bind(this));
     }
 
+    /**
+     * Remove listeners on disconnectedCallback
+     */
+    disconnectedCallback() {
+        this.removeEventListener("dblclick", this.handleDoubleClick.bind(this));
+    }
+
+    /**
+     * Handle double click
+     *
+     * @param {Event} e
+     */
+    handleDoubleClick(e) {
+        // do not remove if icons or form elements are double clicked
+        if ( e.target === this.querySelector("li") || e.target === this.querySelector("div.op-title") ) {
+            this.remove();
+        }
+    }
+
+    /**
+     * Build the ingredient list item
+     */
     build() {
         const li = document.createElement("li");
         li.classList.add("operation");
@@ -37,8 +70,22 @@ export class CIngredientLi extends HTMLElement {
             ingredientDiv.innerHTML += (this.args[i].toHtml());
         }
 
-        const iconsDiv = document.createElement("div");
-        iconsDiv.classList.add("recipe-icons");
+       const icons = this.buildIcons();
+
+        const clearfixDiv = document.createElement("div");
+
+        li.appendChild(icons);
+        li.appendChild(clearfixDiv);
+
+        this.appendChild(li);
+    }
+
+    /**
+     * Build the icons ( disable and breakpoint / pause )
+     */
+    buildIcons() {
+        const div = document.createElement("div");
+        div.classList.add("recipe-icons");
 
         const breakPointIcon = document.createElement("i");
         breakPointIcon.classList.add("material-icons");
@@ -58,29 +105,10 @@ export class CIngredientLi extends HTMLElement {
         disableIcon.setAttribute("data-help", "Disabling an operation will prevent it from being executed when the Recipe is baked. Execution will skip over the disabled operation and continue with subsequent operations.");
         disableIcon.innerText = "not_interested";
 
-        iconsDiv.appendChild(breakPointIcon);
-        iconsDiv.appendChild(disableIcon);
+        div.appendChild(breakPointIcon);
+        div.appendChild(disableIcon);
 
-        const clearfixDiv = document.createElement("div");
-
-        li.appendChild(iconsDiv);
-        li.appendChild(clearfixDiv);
-
-        this.appendChild(li);
-    }
-
-    /**
-     * Remove listeners on disconnectedCallback
-     */
-    disconnectedCallback() {
-        this.removeEventListener("dblclick", this.handleDoubleClick.bind(this));
-    }
-
-    /**
-     * Handle double click
-     */
-    handleDoubleClick() {
-        this.remove();
+        return div;
     }
 }
 

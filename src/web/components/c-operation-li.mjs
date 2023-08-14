@@ -5,9 +5,11 @@ import url from "url";
  *
  * @param {App} app - The main view object for CyberChef
  * @param {string} name - The name of the operation
- * @param {Object} icon - { class: string, innerText: string } - The optional and customizable icon displayed on the right side of the operation
- * @param {Boolean} includeStarIcon - Include the left side 'star' icon to favourite an operation easily
- * @param {[number[]]} charIndicesToHighlight - optional array of indices that indicate characters to highlight (bold) in operation name
+ * @param {Object} icon - { class: string, innerText: string } - The optional and customizable icon displayed on the
+ * right side of the operation
+ * @param {Boolean} includeStarIcon - Include the left-side 'star' icon to favourite an operation
+ * @param {[number[]]} charIndicesToHighlight - optional array of indices that indicate characters to highlight (bold)
+ * in the operation name, for instance when the user searches for an operation by typing
  */
 export class COperationLi extends HTMLElement {
     constructor(
@@ -46,6 +48,7 @@ export class COperationLi extends HTMLElement {
     disconnectedCallback() {
         this.removeEventListener("click", this.handleClick.bind(this));
         this.removeEventListener("dblclick", this.handleDoubleClick.bind(this));
+
         if (this.includeStarIcon) {
             this.observer.disconnect();
         }
@@ -53,10 +56,11 @@ export class COperationLi extends HTMLElement {
 
     /**
      * Handle double click
+     *
      * @param {Event} e
      */
     handleDoubleClick(e) {
-        // Span contains operation title (highlighted or not)
+        // this span is element holding the operation title
         if (e.target === this.querySelector("li") || e.target === this.querySelector("span")) {
             this.app.manager.recipe.addOperation(this.name);
         }
@@ -64,12 +68,15 @@ export class COperationLi extends HTMLElement {
 
     /**
      * Handle click
+     *
      * @param {Event} e
      */
     handleClick(e) {
         if (e.target === this.querySelector("i.star-icon")) {
             this.app.addFavourite(this.name);
         }
+        // current use case: in the 'Edit favourites' modal, the c-operation-li components have a trashcan icon to the
+        // right
         if (e.target === this.querySelector("i.remove-icon")) {
             this.remove();
         }
@@ -81,6 +88,7 @@ export class COperationLi extends HTMLElement {
      * @param {HTMLElement} el
      */
     handlePopover(el){
+        // never display popovers on mobile on this component
         if (this.app.isMobileView()){
             $(el).popover("disable");
         } else {
@@ -112,7 +120,7 @@ export class COperationLi extends HTMLElement {
      * Set the target operation popover itself to gain focus which
      * enables scrolling and other interactions.
      *
-     * @param {Element} el - The element to start selecting from
+     * @param {HTMLElement} el - The element to start selecting from
      */
     setPopover(el) {
         $(el)
@@ -248,7 +256,8 @@ export class COperationLi extends HTMLElement {
 
     /**
      * Override native cloneNode method so we can clone c-operation-li properly
-     * with constructor arguments for sortable and cloneable lists
+     * with constructor arguments for sortable and cloneable lists. This function
+     * is needed for the drag and drop functionality of the Sortable lists
      */
     cloneNode() {
         const { app, name, icon, includeStarIcon, charIndicesToHighlight } = this;
@@ -257,7 +266,8 @@ export class COperationLi extends HTMLElement {
 
 
     /**
-     * Highlights searched strings in the name and description of the operation.
+     * Highlights searched strings ( if applicable ) in the name and description of the operation
+     * or simply sets the name in the span element
      */
     buildOperationName() {
         const span = document.createElement('span');
@@ -280,33 +290,6 @@ export class COperationLi extends HTMLElement {
         }
 
         return span;
-
-        // if (this.description && descIdxs.length && descIdxs[0][0] >= 0) {
-        //     // Find HTML tag offsets
-        //     const re = /<[^>]+>/g;
-        //     let match;
-        //     while ((match = re.exec(this.description))) {
-        //         // If the search string occurs within an HTML tag, return without highlighting it.
-        //         const inHTMLTag = descIdxs.reduce((acc, idxs) => {
-        //             const start = idxs[0];
-        //             return start >= match.index && start <= (match.index + match[0].length);
-        //         }, false);
-        //
-        //         if (inHTMLTag) return;
-        //     }
-        //
-        //     let desc = "",
-        //         pos = 0;
-        //
-        //     descIdxs.forEach(idxs => {
-        //         const [start, length] = idxs;
-        //         desc += this.description.slice(pos, start) + "<b><u>" +
-        //             this.description.slice(start, start + length) + "</u></b>";
-        //         pos = start + length;
-        //     });
-        //     desc += this.description.slice(pos, this.description.length);
-        //     this.description = desc;
-        // }
     }
 }
 

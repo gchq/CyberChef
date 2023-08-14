@@ -6,7 +6,9 @@ import Sortable from "sortablejs";
  *
  * @param {App} app - The main view object for CyberChef
  * @param {[string, number[]]} operations - A list of operation names and indexes of characters to highlight
- * @param {boolean} includeStarIcon - optionally add the 'star' icon to the left of the operation
+ * @param {Boolean} includeOpLiStarIcon - Include the left side 'star' icon to each of the c-category-li >
+ * c-operation-list > c-operation-li list items in this c-category-list
+ *
  * @param {Object} icon ( { class: string, innerText: string } ). check-icon by default
  */
 export class COperationList extends HTMLElement {
