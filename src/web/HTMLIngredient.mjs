@@ -9,8 +9,8 @@ import Utils from "../core/Utils.mjs";
 /**
  * Object to handle the creation of operation ingredients.
  *
- * Note: Not to be confused with the native web component c-ingredient-li, which is the component that makes the parent
- * list item 'ingredient' in recipe-list.
+ * Note: Not to be confused with the native web component c-recipe-li, which is the component that is the (parent)
+ * list item in recipe-list.
  */
 class HTMLIngredient {
 

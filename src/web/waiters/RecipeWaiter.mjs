@@ -7,7 +7,7 @@
 import Sortable from "sortablejs";
 import Utils from "../../core/Utils.mjs";
 import {escapeControlChars} from "../utils/editorUtils.mjs";
-import {CIngredientLi} from "../components/c-ingredient-li.mjs";
+import {CRecipeLi} from "../components/c-recipe-li.mjs";
 
 
 /**
@@ -51,7 +51,7 @@ class RecipeWaiter {
         Sortable.create(recList, {
             group: "recipe",
             sort: true,
-            draggable: "c-ingredient-li",
+            draggable: "c-recipe-li",
             swapThreshold: swapThreshold,
             animation: animation,
             delay: delay,
@@ -314,7 +314,7 @@ class RecipeWaiter {
      * @param {string} name - The operation stub element from the operations pane
      */
     buildRecipeOperation(name) {
-        const op = new CIngredientLi(this.app, name, this.app.operations[name].args);
+        const op = new CRecipeLi(this.app, name, this.app.operations[name].args);
 
         if (this.app.operations[name].flowControl) {
             op.classList.add("flow-control-op");

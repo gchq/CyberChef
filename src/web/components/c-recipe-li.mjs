@@ -1,16 +1,16 @@
 import HTMLIngredient from "../HTMLIngredient.mjs";
 
 /**
- * c(ustom element)-ingredient-li ( list item ).
+ * c(ustom element)-recipe-li ( list item ).
  *
  * Note: This is the #recipe-list list item component, not to be confused with HTMLIngredient which make up the smaller
  * components of this list item. It would be good to eventually fuse that code into this component or alternatively, to
  * turn that into a separate native web component .
  */
-export class CIngredientLi extends HTMLElement {
+export class CRecipeLi extends HTMLElement {
     /**
      * @param {App} app - The main view object for CyberChef
-     * @param {string} name - The operation ( or aka ingredient- in this context ) name
+     * @param {string} name - The operation name
      * @param {object[]} args - The args properties of the operation ( see operation config file )
      */
     constructor(
@@ -36,7 +36,7 @@ export class CIngredientLi extends HTMLElement {
 
     cloneNode() {
         const { app, name, args } = this;
-        return new CIngredientLi( app, name, args );
+        return new CRecipeLi( app, name, args );
     }
 
     /**
@@ -121,4 +121,4 @@ export class CIngredientLi extends HTMLElement {
     }
 }
 
-customElements.define("c-ingredient-li", CIngredientLi);
+customElements.define("c-recipe-li", CRecipeLi);

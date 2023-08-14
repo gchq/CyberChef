@@ -497,7 +497,7 @@ ${navigator.userAgent}
      */
     onMaximisedRecipeClick() {
         // if #recipe is maximised & rec-list is empty on mobile UI
-        if (this.app.isMobileView() && document.querySelector("#recipe.maximised-pane") && document.querySelectorAll("#rec-list > c-ingredient-li").length === 0) {
+        if (this.app.isMobileView() && document.querySelector("#recipe.maximised-pane") && document.querySelectorAll("#rec-list > c-recipe-li").length === 0) {
             // close max pane and display the expanded #operations-dropdown
             this.setPaneMaximised("recipe", false);
             this.manager.ops.openOpsDropdown();
