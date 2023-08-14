@@ -34,9 +34,18 @@ class RecipeWaiter {
     initDragAndDrop() {
         const recList = document.getElementById("rec-list");
 
-        let swapThreshold = this.app.isMobileView() ? 0.60 : 0.10;
-        let animation = this.app.isMobileView() ? 400 : 200;
-        let delay = this.app.isMobileView() ? 200 : 0;
+        let swapThreshold, animation, delay;
+
+        // tweak these values for better user experiences per device type and UI
+        if (this.app.isMobileView()) {
+            swapThreshold = 0.60;
+            animation = 400;
+            delay = 200;
+        } else {
+            swapThreshold = 0.10;
+            animation = 200;
+            delay = 0;
+        }
 
         // Recipe list
         Sortable.create(recList, {
@@ -365,7 +374,7 @@ class RecipeWaiter {
      * @param {string} name - The name of the operation to add
      */
     addOperation(name) {
-        let item = this.buildRecipeOperation(name);
+        const item = this.buildRecipeOperation(name);
         document.getElementById("rec-list").appendChild(item);
 
         $(item).find("[data-toggle='tooltip']").tooltip();

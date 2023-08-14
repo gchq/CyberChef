@@ -3,15 +3,17 @@ import Sortable from "sortablejs";
 
 /**
  * c(ustom element)-operation-list
- *
- * @param {App} app - The main view object for CyberChef
- * @param {[string, number[]]} operations - A list of operation names and indexes of characters to highlight
- * @param {Boolean} includeOpLiStarIcon - Include the left side 'star' icon to each of the c-category-li >
- * c-operation-list > c-operation-li list items in this c-category-list
- *
- * @param {Object} icon ( { class: string, innerText: string } ). check-icon by default
  */
 export class COperationList extends HTMLElement {
+    /**
+     * @param {App} app - The main view object for CyberChef
+     * @param {[string, number[]]} operations - A list of operation names and indexes of characters to highlight
+     * @param {Boolean} includeStarIcon - Include the left side 'star' icon to each of the c-category-li >
+     * c-operation-list > c-operation-li list items in this c-category-list
+     * @param {Boolean} isSortable - List items may be sorted ( reordered ). False by default
+     * @param {Boolean} isCloneable - List items are cloneable to a target list. True by default
+     * @param {Object} icon ( { class: string, innerText: string } ). 'check-icon' by default
+     */
     constructor(
         app,
         operations,
@@ -50,19 +52,19 @@ export class COperationList extends HTMLElement {
             );
 
             ul.appendChild(cOpLi);
-        }))
+        }));
 
         if (this.isSortable) {
             this.createSortableList(ul);
         } else if (!this.app.isMobileView() && this.isCloneable) {
-            this.createCloneableList(ul, "recipe", "rec-list"); // target name and id can be component params if needed to make it reusable
+            this.createCloneableList(ul, "recipe", "rec-list");
         }
 
         this.append(ul);
     }
 
     /**
-     * Create a sortable ( not cloneable ) list
+     * Create a sortable ( but not cloneable ) list
      *
      * @param { HTMLElement } ul
      * */

@@ -908,7 +908,7 @@ class App {
      */
     buildCategoryList() {
         // double-check if the c-category-list already exists,
-        if (document.querySelector("#categories > c-category-list")){
+        if (document.querySelector("#categories > c-category-list")) {
             // then destroy it
             document.querySelector("#categories > c-category-list").remove();
         }

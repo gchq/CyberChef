@@ -6,7 +6,6 @@
 
 import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
 import {COperationList} from "../components/c-operation-list.mjs";
-import {COperationLi} from "../components/c-operation-li.mjs";
 
 /**
  * Waiter to handle events related to the operations.
@@ -194,10 +193,10 @@ class OperationsWaiter {
         // Get list of Favourite operation names
         const favCatConfig = this.app.categories.find(catConfig => catConfig.name === "Favourites");
 
-        if(favCatConfig !== undefined) {
+        if (favCatConfig !== undefined) {
             const opList = new COperationList(
                 this.app,
-                favCatConfig.ops.map( op => [op]),
+                favCatConfig.ops.map(op => [op]),
                 false,
                 true,
                 false,
@@ -205,7 +204,7 @@ class OperationsWaiter {
                     class: "remove-icon",
                     innerText: "delete"
                 },
-            )
+            );
 
             opList.build();
             div.appendChild(opList);

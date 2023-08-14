@@ -2,15 +2,16 @@ import {COperationList} from "./c-operation-list.mjs";
 
 /**
  * c(ustom element)-category-li ( list item )
- *
- * @param {App} app - The main view object for CyberChef
- * @param {CatConf} category - The category and operations to be populated.
- * @param {Object.<string, OpConf>} operations - The list of operation configuration objects.
- * @param {Boolean} isExpanded - expand the category by default on init or not
- * @param {Boolean} includeOpLiStarIcon - Include the left side 'star' icon to each of the c-category-li >
- * c-operation-list > c-operation-li list items in this category
- * */
+ */
 export class CCategoryLi extends HTMLElement {
+    /**
+     * @param {App} app - The main view object for CyberChef
+     * @param {CatConf} category - The category and operations to be populated.
+     * @param {Object.<string, OpConf>} operations - The list of operation configuration objects.
+     * @param {Boolean} isExpanded - expand the category by default on init or not
+     * @param {Boolean} includeOpLiStarIcon - Include the left side 'star' icon to each of the c-category-li >
+     * c-operation-list > c-operation-li list items in this category
+     */
     constructor(
         app,
         category,
@@ -65,11 +66,11 @@ export class CCategoryLi extends HTMLElement {
 
         const opList = new COperationList(
             this.app,
-            this.category.ops.map( op => [op]),
+            this.category.ops.map(op => [op]),
             this.includeOpLiStarIcon,
             false,
             true
-        )
+        );
 
         opList.build();
 
@@ -85,7 +86,7 @@ export class CCategoryLi extends HTMLElement {
         li.classList.add("category");
 
         return li;
-    };
+    }
 
     /**
      * Build the anchor element
@@ -100,7 +101,7 @@ export class CCategoryLi extends HTMLElement {
 
         a.innerText = this.label;
 
-        if (this.label === "Favourites"){
+        if (this.label === "Favourites") {
             const editFavouritesButton = this.buildEditFavouritesButton(a);
 
             // Note: I'm leaving this here as it was in the code originally, but it's not doing anything and it didn't
@@ -118,12 +119,12 @@ export class CCategoryLi extends HTMLElement {
         }
 
         return a;
-    };
+    }
 
     /**
      * Build the collapsable panel that contains the op-list for this category
      */
-    buildCollapsablePanel(){
+    buildCollapsablePanel() {
         const div = document.createElement("div");
 
         div.setAttribute("id", `${"cat" + this.label.replace(/[\s/\-:_]/g, "")}`);
@@ -137,7 +138,7 @@ export class CCategoryLi extends HTMLElement {
         }
 
         return div;
-    };
+    }
 
     /**
      *  If this category is Favourites, build and return the star icon button

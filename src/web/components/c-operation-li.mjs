@@ -2,16 +2,17 @@ import url from "url";
 
 /**
  * c(ustom element)-operation-li ( list item )
- *
- * @param {App} app - The main view object for CyberChef
- * @param {string} name - The name of the operation
- * @param {Object} icon - { class: string, innerText: string } - The optional and customizable icon displayed on the
- * right side of the operation
- * @param {Boolean} includeStarIcon - Include the left-side 'star' icon to favourite an operation
- * @param {[number[]]} charIndicesToHighlight - optional array of indices that indicate characters to highlight (bold)
- * in the operation name, for instance when the user searches for an operation by typing
  */
 export class COperationLi extends HTMLElement {
+    /**
+     * @param {App} app - The main view object for CyberChef
+     * @param {string} name - The name of the operation
+     * @param {Object} icon - { class: string, innerText: string } - The optional and customizable icon displayed on the
+     * right side of the operation
+     * @param {Boolean} includeStarIcon - Include the left-side 'star' icon to favourite an operation
+     * @param {[number[]]} charIndicesToHighlight - optional array of indices that indicate characters to highlight (bold)
+     * in the operation name, for instance when the user searches for an operation by typing
+     */
     constructor(
         app,
         name,
@@ -87,9 +88,9 @@ export class COperationLi extends HTMLElement {
      *
      * @param {HTMLElement} el
      */
-    handlePopover(el){
+    handlePopover(el) {
         // never display popovers on mobile on this component
-        if (this.app.isMobileView()){
+        if (this.app.isMobileView()) {
             $(el).popover("disable");
         } else {
             $(el).popover("enable");
@@ -105,7 +106,7 @@ export class COperationLi extends HTMLElement {
         const li = this.buildListItem();
         const icon = this.buildIcon();
 
-        if ( this.includeStarIcon ){
+        if (this.includeStarIcon) {
             const starIcon = this.buildStarIcon();
             li.appendChild(starIcon);
         }
@@ -134,16 +135,16 @@ export class COperationLi extends HTMLElement {
                 $(".popover").on("mouseleave", function () {
                     $(_this).popover("hide");
                 });
-            }).on("mouseleave", function () {
-            const _this = this;
-            setTimeout(function() {
-                // Determine if the popover associated with this element is being hovered over
-                if ($(_this).data("bs.popover") &&
-                    ($(_this).data("bs.popover").tip && !$($(_this).data("bs.popover").tip).is(":hover"))) {
-                    $(_this).popover("hide");
-                }
-            }, 50);
-        });
+            })
+            .on("mouseleave", function () {
+                const _this = this;
+                setTimeout(function() {
+                    // Determine if the popover associated with this element is being hovered over
+                    if ($(_this).data("bs.popover") && ($(_this).data("bs.popover").tip && !$($(_this).data("bs.popover").tip).is(":hover"))) {
+                        $(_this).popover("hide");
+                    }
+                }, 50);
+            });
     }
 
     /**
@@ -180,7 +181,7 @@ export class COperationLi extends HTMLElement {
     buildListItem() {
         const li = document.createElement("li");
 
-        li.appendChild( this.buildOperationName() );
+        li.appendChild(this.buildOperationName());
 
         li.setAttribute("data-name", this.name);
         li.classList.add("operation");
@@ -190,7 +191,7 @@ export class COperationLi extends HTMLElement {
         }
 
 
-        if (this.config.description){
+        if (this.config.description) {
             let dataContent = this.config.description;
 
             if (this.config.infoURL) {
@@ -234,7 +235,7 @@ export class COperationLi extends HTMLElement {
         icon.classList.add("op-icon");
         icon.classList.add("star-icon");
 
-        if (this.isFavourite){
+        if (this.isFavourite) {
             icon.innerText = "star";
         } else {
             icon.innerText = "star_outline";
@@ -261,7 +262,7 @@ export class COperationLi extends HTMLElement {
      */
     cloneNode() {
         const { app, name, icon, includeStarIcon, charIndicesToHighlight } = this;
-        return new COperationLi( app, name, icon, includeStarIcon, charIndicesToHighlight );
+        return new COperationLi(app, name, icon, includeStarIcon, charIndicesToHighlight);
     }
 
 
@@ -270,7 +271,7 @@ export class COperationLi extends HTMLElement {
      * or simply sets the name in the span element
      */
     buildOperationName() {
-        const span = document.createElement('span');
+        const span = document.createElement("span");
 
         if (this.charIndicesToHighlight.length) {
             let opName = "",

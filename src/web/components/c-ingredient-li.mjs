@@ -6,13 +6,18 @@ import HTMLIngredient from "../HTMLIngredient.mjs";
  * Note: This is the #recipe-list list item component, not to be confused with HTMLIngredient which make up the smaller
  * components of this list item. It would be good to eventually fuse that code into this component or alternatively, to
  * turn that into a separate native web component .
- *
- * @param {App} app - The main view object for CyberChef
- * @param {string} name - The operation ( or aka ingredient- in this context ) name
- * @param {object[]} args - The args properties of the operation ( see operation config file )
- * */
+ */
 export class CIngredientLi extends HTMLElement {
-    constructor(app, name, args = []) {
+    /**
+     * @param {App} app - The main view object for CyberChef
+     * @param {string} name - The operation ( or aka ingredient- in this context ) name
+     * @param {object[]} args - The args properties of the operation ( see operation config file )
+     */
+    constructor(
+        app,
+        name,
+        args = []
+    ) {
         super();
 
         this.app = app;
@@ -38,12 +43,11 @@ export class CIngredientLi extends HTMLElement {
 
     /**
      * Handle double click
-     *
      * @param {Event} e
      */
     handleDoubleClick(e) {
         // do not remove if icons or form elements are double clicked
-        if ( e.target === this.querySelector("li") || e.target === this.querySelector("div.op-title") ) {
+        if (e.target === this.querySelector("li") || e.target === this.querySelector("div.op-title")) {
             this.remove();
         }
     }
@@ -64,13 +68,13 @@ export class CIngredientLi extends HTMLElement {
         ingredientDiv.classList.add("ingredients");
 
         li.appendChild(titleDiv);
-        li.appendChild(ingredientDiv)
+        li.appendChild(ingredientDiv);
 
         for (let i = 0; i < this.args.length; i++) {
             ingredientDiv.innerHTML += (this.args[i].toHtml());
         }
 
-       const icons = this.buildIcons();
+        const icons = this.buildIcons();
 
         const clearfixDiv = document.createElement("div");
 
