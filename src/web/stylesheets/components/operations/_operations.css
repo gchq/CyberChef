@@ -35,7 +35,6 @@
 @media only screen and ( min-width: 768px ){
     #operations-dropdown {
         border-bottom: none;
-        border-top: 1px solid var(--primary-border-colour);
     }
 
     /* On desktop UI, the categories are always visible */

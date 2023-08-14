@@ -95,42 +95,6 @@ class RecipeWaiter {
         document.querySelector("#categories a").addEventListener("drop", this.favDrop.bind(this));
     }
 
-
-    /**
-     * Handler for operation sort end events.
-     * Removes the operation from the list if it has been dropped outside. If not, adds it to the list
-     * at the appropriate place and initialises it.
-     *
-     * @fires Manager#operationadd
-     * @param {Event} evt
-     */
-    opSortEnd(evt) {
-        if (this.removeIntent && evt.item.parentNode.id === "rec-list") {
-            evt.item.remove();
-            return;
-        }
-
-        // Reinitialise the popover on the original element in the ops list because for some reason it
-        // gets destroyed and recreated. If the clone isn't in the ops list, we use the original item instead.
-        // let enableOpsElement;
-        // if (evt.clone?.parentNode?.classList?.contains("op-list")) {
-        //     enableOpsElement = evt.clone;
-        // } else {
-        //     enableOpsElement = evt.item;
-        //     $(evt.item).attr("data-toggle", "popover");
-        // }
-
-        // this.manager.ops.enableOpPopover(enableOpsElement);
-
-        if (evt.item.parentNode.id !== "rec-list") {
-            return;
-        }
-
-        this.buildRecipeOperation(evt.item.name);
-        // evt.item.dispatchEvent(this.manager.operationadd);
-    }
-
-
     /**
      * Handler for favourite dragover events.
      * If the element being dragged is an operation, displays a visual cue so that the user knows it can
