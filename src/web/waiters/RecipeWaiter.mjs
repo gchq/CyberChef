@@ -209,32 +209,6 @@ class RecipeWaiter {
 
 
     /**
-     * Handler for operation doubleclick events.
-     * Removes the operation from the recipe and auto bakes.
-     *
-     * @fires Manager#statechange
-     * @param {Event} e
-     */
-    operationDblclick(e) {
-        e.target.remove();
-        this.opRemove(e);
-    }
-
-
-    /**
-     * Handler for operation child doubleclick events.
-     * Removes the operation from the recipe.
-     *
-     * @fires Manager#statechange
-     * @param {Event} e
-     */
-    operationChildDblclick(e) {
-        e.target.parentNode.remove();
-        this.opRemove(e);
-    }
-
-
-    /**
      * Generates a configuration object to represent the current recipe.
      *
      * @returns {recipeConfig}
@@ -413,21 +387,6 @@ class RecipeWaiter {
         console.log(e.target.querySelector("li").getAttribute("data-name"));
         this.triggerArgEvents(e.target);
         window.dispatchEvent(this.manager.statechange);
-    }
-
-
-    /**
-     * Handler for operationremove events.
-     * Updates 'selected' classes in #operations
-     *
-     * @listens Manager#operationremove
-     * @fires Manager#statechange
-     * @param {Event} e
-     */
-    opRemove(e) {
-        log.debug("Operation removed from recipe");
-        window.dispatchEvent(this.manager.statechange);
-        this.manager.ops.updateListItemsClasses("#rec-list", "selected");
     }
 
 

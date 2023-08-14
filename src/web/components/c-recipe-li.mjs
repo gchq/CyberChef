@@ -31,20 +31,23 @@ export class CRecipeLi extends HTMLElement {
 
         this.build();
 
+        this.addEventListener("click", this.handleClick.bind(this));
         this.addEventListener("dblclick", this.handleDoubleClick.bind(this));
-    }
-
-    cloneNode() {
-        const { app, name, args } = this;
-        return new CRecipeLi( app, name, args );
     }
 
     /**
      * Remove listeners on disconnectedCallback
      */
     disconnectedCallback() {
+        this.removeEventListener("click", this.handleClick.bind(this));
         this.removeEventListener("dblclick", this.handleDoubleClick.bind(this));
     }
+
+    /**
+     * Handle click
+     * @param {Event} e
+     */
+    handleClick(e) {}
 
     /**
      * Handle double click
@@ -53,8 +56,20 @@ export class CRecipeLi extends HTMLElement {
     handleDoubleClick(e) {
         // do not remove if icons or form elements are double clicked
         if (e.target === this.querySelector("li") || e.target === this.querySelector("div.op-title")) {
-            this.remove();
+            this.removeOperation();
         }
+    }
+
+    /**
+     * Remove this operation from the recipe list
+     */
+    removeOperation(){
+        this.remove();
+        log.debug("Operation removed from recipe");
+        window.dispatchEvent(this.app.manager.statechange);
+
+        // @TODO: this func can be moved to c-operation-list
+        this.app.manager.ops.updateListItemsClasses("#rec-list", "selected");
     }
 
     /**
@@ -118,6 +133,16 @@ export class CRecipeLi extends HTMLElement {
         div.appendChild(disableIcon);
 
         return div;
+    }
+
+    /**
+     * Override native cloneNode method so we can clone c-recipe-li properly
+     * with constructor arguments for sortable and cloneable lists. This function
+     * is needed for the drag and drop functionality of the Sortable lists
+     */
+    cloneNode() {
+        const { app, name, args } = this;
+        return new CRecipeLi( app, name, args );
     }
 }
 
