@@ -40,7 +40,7 @@ class RecipeWaiter {
         if (this.app.isMobileView()) {
             swapThreshold = 0.60;
             animation = 400;
-            delay = 200;
+            delay = 50;
         } else {
             swapThreshold = 0.10;
             animation = 200;

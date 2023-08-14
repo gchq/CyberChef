@@ -34,7 +34,8 @@ export class COperationLi extends HTMLElement {
 
         this.build();
 
-        this.addEventListener("click", this.handleClick.bind(this));
+        // Use mousedown event instead of click to prevent accidentally firing the handler twice on mobile
+        this.addEventListener("mousedown", this.handleMousedown.bind(this));
         this.addEventListener("dblclick", this.handleDoubleClick.bind(this));
 
         if (this.includeStarIcon) {
@@ -47,12 +48,14 @@ export class COperationLi extends HTMLElement {
      * Remove listeners on disconnectedCallback
      */
     disconnectedCallback() {
-        this.removeEventListener("click", this.handleClick.bind(this));
+        this.removeEventListener("mousedown", this.handleMousedown.bind(this));
         this.removeEventListener("dblclick", this.handleDoubleClick.bind(this));
 
         if (this.includeStarIcon) {
             this.observer.disconnect();
         }
+
+        $(this).find("[data-toggle=popover]").popover("dispose").popover("hide");
     }
 
     /**
@@ -68,11 +71,11 @@ export class COperationLi extends HTMLElement {
     }
 
     /**
-     * Handle click
+     * Handle mousedown
      *
      * @param {Event} e
      */
-    handleClick(e) {
+    handleMousedown(e) {
         if (e.target === this.querySelector("i.star-icon")) {
             this.app.addFavourite(this.name);
         }
@@ -124,24 +127,22 @@ export class COperationLi extends HTMLElement {
      * @param {HTMLElement} el - The element to start selecting from
      */
     setPopover(el) {
-        $(el)
+        $(this)
             .find("[data-toggle=popover]")
             .addBack("[data-toggle=popover]")
             .popover({trigger: "manual"})
             .on("mouseenter", function(e) {
                 if (e.buttons > 0) return; // Mouse button held down - likely dragging an operation
-                const _this = this;
-                $(this).popover("show");
+                $(el).popover("show");
                 $(".popover").on("mouseleave", function () {
-                    $(_this).popover("hide");
+                    $(el).popover("hide");
                 });
             })
             .on("mouseleave", function () {
-                const _this = this;
                 setTimeout(function() {
                     // Determine if the popover associated with this element is being hovered over
-                    if ($(_this).data("bs.popover") && ($(_this).data("bs.popover").tip && !$($(_this).data("bs.popover").tip).is(":hover"))) {
-                        $(_this).popover("hide");
+                    if ($(el).data("bs.popover") && ($(el).data("bs.popover").tip && !$($(el).data("bs.popover").tip).is(":hover"))) {
+                        $(el).popover("hide");
                     }
                 }, 50);
             });
@@ -190,7 +191,6 @@ export class COperationLi extends HTMLElement {
             li.classList.add("favourite");
         }
 
-
         if (this.config.description) {
             let dataContent = this.config.description;
 
@@ -200,9 +200,7 @@ export class COperationLi extends HTMLElement {
 
             li.setAttribute("data-container", "body");
             li.setAttribute("data-toggle", "popover");
-            li.setAttribute("data-placement", "left");
             li.setAttribute("data-html", "true");
-            li.setAttribute("data-trigger", "hover");
             li.setAttribute("data-boundary", "viewport");
             li.setAttribute("data-content", dataContent);
         }

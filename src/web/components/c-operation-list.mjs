@@ -73,6 +73,7 @@ export class COperationList extends HTMLElement {
             group: "sorting",
             sort: true,
             draggable: "c-operation-li",
+            filter: "i.material-icons",
             onFilter: function (e) {
                 const el = sortableList.closest(e.item);
                 if (el && el.parentNode) {
@@ -97,6 +98,17 @@ export class COperationList extends HTMLElement {
      * @param { string } targetListId
      * */
     createCloneableList(ul, targetListName, targetListId) {
+        let dragOverRecList = false;
+        const recList = document.querySelector(`#${targetListId}`);
+
+        Sortable.utils.on(recList, "dragover", function () {
+            dragOverRecList = true;
+        });
+
+        Sortable.utils.on(recList, "dragleave", function () {
+            dragOverRecList = false;
+        });
+
         Sortable.create(ul, {
             group: {
                 name: targetListName,
@@ -113,18 +125,18 @@ export class COperationList extends HTMLElement {
                 // event bindings from the one left in the operations list. Without manually removing
                 // these bindings, we cannot re-initialise the popover on the stub operation.
                 $(e.item)
-                    .popover("dispose")
-                    .removeData("bs.popover")
-                    .off("mouseenter")
-                    .off("mouseleave")
-                    .attr("data-toggle", "popover-disabled");
+                    .find("[data-toggle=popover]")
+                    .popover("dispose");
                 $(e.clone)
+                    .find("[data-toggle=popover]")
                     .off(".popover")
                     .removeData("bs.popover");
             },
-            onEnd: ({item}) => {
-                if (item.parentNode.id === targetListId) {
+            onEnd: ({item, to}) => {
+                if (item.parentNode.id === targetListId && dragOverRecList) {
                     this.app.manager.recipe.addOperation(item.name);
+                    item.remove();
+                } else if (!dragOverRecList && !to.classList.contains("op-list")) {
                     item.remove();
                 }
             }
