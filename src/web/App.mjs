@@ -836,6 +836,7 @@ class App {
     setMobileUI()  {
         this.setSplitter(false);
         this.assignAvailableHeight();
+        $("[data-toggle=tooltip]").tooltip("disable");
     }
 
     /**

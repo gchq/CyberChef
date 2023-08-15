@@ -49,6 +49,18 @@ export class CRecipeLi extends HTMLElement {
     }
 
     /**
+     * Handle double click
+     *
+     * @param {Event} e
+     */
+    handleDoubleClick(e) {
+        // do not remove if icons or form elements are double-clicked
+        if (e.target === this.querySelector("li") || e.target === this.querySelector("div.op-title")) {
+            this.removeOperation();
+        }
+    }
+
+    /**
      * Handle mousedown
      * @fires Manager#statechange
      * @param {Event} e
@@ -84,18 +96,6 @@ export class CRecipeLi extends HTMLElement {
             }
 
             window.dispatchEvent(this.app.manager.statechange);
-        }
-    }
-
-    /**
-     * Handle double click
-     *
-     * @param {Event} e
-     */
-    handleDoubleClick(e) {
-        // do not remove if icons or form elements are double-clicked
-        if (e.target === this.querySelector("li") || e.target === this.querySelector("div.op-title")) {
-            this.removeOperation();
         }
     }
 
