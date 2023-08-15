@@ -163,7 +163,7 @@ class Manager {
         this.addDynamicListener("textarea.arg", "drop", this.recipe.textArgDrop, this.recipe);
 
         // Input
-        document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
+        document.getElementById("reset-layout").addEventListener("click", this.app.setDesktopUI.bind(this.app));
         this.addListeners("#clr-io,#btn-close-all-tabs", "click", this.input.clearAllIoClick, this.input);
         this.addListeners("#open-file,#open-folder", "change", this.input.inputOpen, this.input);
         document.getElementById("btn-open-file").addEventListener("click", this.input.inputOpenClick.bind(this.input));

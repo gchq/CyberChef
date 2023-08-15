@@ -164,7 +164,7 @@ class RecipeWaiter {
     /**
      * Generates a configuration object to represent the current recipe.
      *
-     * @returns {recipeConfig}
+     * @returns {Object[]} recipeConfig - The recipe configuration
      */
     getConfig() {
         const config = [];

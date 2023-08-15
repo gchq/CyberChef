@@ -251,56 +251,40 @@ class App {
         if (this.isMobileView()) {
             this.setMobileUI();
         } else {
-            this.setDesktopUI(false);
+            this.setDesktopUI();
         }
     }
 
     /**
-     * Set desktop splitters
+     * Set splitter
      *
-     * @param {boolean} minimise
+     * We don't actually functionally use splitters on mobile, but we leverage the splitters
+     * to create our desired layout. This prevents some problems when resizing
+     * from mobile to desktop and vice versa and reduces code complexity
      */
-    setDesktopSplitter(minimise) {
+    setSplitter() {
         if (this.columnSplitter) this.columnSplitter.destroy();
         if (this.ioSplitter) this.ioSplitter.destroy();
 
+        const isMobileView = this.isMobileView();
+
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
-            sizes: [20, 40, 40],
-            minSize: minimise ? [0, 0, 0] : [360, 330, 310],
-            gutterSize: 4,
+            sizes: isMobileView ? [100, 100, 100] : [20, 40, 40],
+            minSize: [360, 330, 310],
+            gutterSize: isMobileView ? 0 : 4,
             expandToMin: true,
             onDrag: debounce(() => {
-                this.adjustComponentSizes();
+                if (!isMobileView) {
+                    this.manager.input.calcMaxTabs();
+                    this.manager.output.calcMaxTabs();
+                }
             }, 50, "dragSplitter", this, [])
         });
 
         this.ioSplitter = Split(["#input", "#output"], {
             direction: "vertical",
-            gutterSize: 4,
-            minSize: minimise ? [0, 0] : [50, 50]
-        });
-    }
-
-    /**
-     * Set mobile layout
-     *
-     * We don't actually use splitters on mobile, but we leverage the splitters
-     * to create our desired layout. This prevents some problems when resizing
-     * from mobile to desktop and vice versa
-     */
-    setMobileSplitter() {
-        if (this.columnSplitter) this.columnSplitter.destroy();
-        if (this.ioSplitter) this.ioSplitter.destroy();
-
-        this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
-            sizes: [100, 100, 100],
-            gutterSize: 0,
-            expandToMin: true,
-        });
-
-        this.ioSplitter = Split(["#input", "#output"], {
-            direction: "vertical",
-            gutterSize: 0,
+            gutterSize: isMobileView ? 0 : 4,
+            minSize: [50, 50]
         });
     }
 
@@ -431,7 +415,6 @@ class App {
     updateFavourites(favourites, isExpanded = false) {
         this.saveFavourites(favourites);
         this.loadFavourites();
-
         this.buildFavouritesCategory(isExpanded);
 
         window.dispatchEvent(this.manager.favouritesupdate);
@@ -440,8 +423,7 @@ class App {
     }
 
     /**
-     * (Re)render only the favourites category after adding
-     * an operation to favourites
+     * (Re)render only the favourites category after updating favourites
      *
      * @param {Boolean} isExpanded ( false by default )
      */
@@ -579,7 +561,7 @@ class App {
     /**
      * Gets the current recipe configuration.
      *
-     * @returns {Object[]}
+     * @returns {Object[]} recipeConfig - The recipe configuration
      */
     getRecipeConfig() {
         return this.manager.recipe.getConfig();
@@ -636,25 +618,6 @@ class App {
 
         // Unpause auto bake
         this.autoBakePause = false;
-    }
-
-
-    /**
-     * Resets the splitter positions to default for desktop UI.
-     */
-    resetLayout() {
-        this.columnSplitter.setSizes([20, 30, 50]);
-        this.ioSplitter.setSizes([50, 50]);
-        this.adjustComponentSizes();
-    }
-
-
-    /**
-     * Adjust components to fit their containers.
-     */
-    adjustComponentSizes() {
-        this.manager.input.calcMaxTabs();
-        this.manager.output.calcMaxTabs();
     }
 
 
@@ -845,7 +808,6 @@ class App {
         this.loadURIParams();
     }
 
-
     /**
      * Set element visibility
      *
@@ -859,23 +821,21 @@ class App {
 
     /**
      * Set desktop UI ( on init and on window resize events )
-     *
-     * @param {boolean} minimise
      */
-    setDesktopUI(minimise) {
+    setDesktopUI() {
         this.setCompileMessage();
-        this.setDesktopSplitter(minimise);
-        this.adjustComponentSizes();
-        $("[data-toggle=tooltip]").tooltip("enable");
+        this.setSplitter();
+
+        this.manager.input.calcMaxTabs();
+        this.manager.output.calcMaxTabs();
     }
 
     /**
      *  Set mobile UI ( on init and on window resize events )
      */
     setMobileUI()  {
-        this.setMobileSplitter();
+        this.setSplitter(false);
         this.assignAvailableHeight();
-        $("[data-toggle=tooltip]").tooltip("disable");
     }
 
     /**
@@ -904,7 +864,7 @@ class App {
     }
 
     /**
-     * Build a CCategoryList element and append it to #categories
+     * Build a CCategoryList component and append it to #categories
      */
     buildCategoryList() {
         // double-check if the c-category-list already exists,
@@ -919,8 +879,8 @@ class App {
             this.operations,
             true
         );
-        categoryList.build();
 
+        categoryList.build();
         document.querySelector("#categories").appendChild(categoryList);
     }
 }

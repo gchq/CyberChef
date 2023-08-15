@@ -25,9 +25,6 @@ class WindowWaiter {
 
     /**
      * Handler for window resize events.
-     *
-     * Resets adjustable component sizes after 200ms (so that continuous resizing doesn't cause
-     * continuous resetting).
      */
     windowResize() {
         if (!this.app.isMobileView()) {
@@ -41,8 +38,6 @@ class WindowWaiter {
         if (document.getElementById("output").classList.contains("maximised-pane")) {
             this.manager.controls.setPaneMaximised("output", true);
         }
-
-        debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();
     }
 
 
@@ -51,9 +46,9 @@ class WindowWaiter {
      * Correct the height of #recipe
      */
     onResizeToDesktop() {
-        this.app.setDesktopUI(false);
+        this.app.setDesktopUI();
 
-        // disable app popovers on li.operation elements
+        // enable popovers on li.operation elements
         $(document.querySelectorAll("li.operation")).popover("enable");
 
         // if a window is resized past breakpoint while #recipe or #input is maximised, close these maxed panes
