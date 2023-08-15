@@ -162,31 +162,6 @@ class RecipeWaiter {
 
 
     /**
-     * Handler for disable click events.
-     * Updates the icon status.
-     *
-     * @fires Manager#statechange
-     * @param {Event} e
-     */
-    disableClick(e) {
-        const icon = e.target;
-
-        if (icon.getAttribute("disabled") === "false") {
-            icon.setAttribute("disabled", "true");
-            icon.classList.add("disable-icon-selected");
-            icon.parentNode.parentNode.classList.add("disabled");
-        } else {
-            icon.setAttribute("disabled", "false");
-            icon.classList.remove("disable-icon-selected");
-            icon.parentNode.parentNode.classList.remove("disabled");
-        }
-
-        this.app.progress = 0;
-        window.dispatchEvent(this.manager.statechange);
-    }
-
-
-    /**
      * Handler for breakpoint click events.
      * Updates the icon status.
      *

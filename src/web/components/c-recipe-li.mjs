@@ -45,12 +45,31 @@ export class CRecipeLi extends HTMLElement {
 
     /**
      * Handle click
+     * @fires Manager#statechange
      * @param {Event} e
      */
-    handleClick(e) {}
+    handleClick(e) {
+        const disableIcon = this.querySelector("i.disable-icon");
+
+        if (e.target === disableIcon) {
+            if (disableIcon.getAttribute("disabled") === "false") {
+                disableIcon.setAttribute("disabled", "true");
+                disableIcon.classList.add("disable-icon-selected");
+                this.querySelector("li.operation").classList.add("disabled");
+            } else {
+                disableIcon.setAttribute("disabled", "false");
+                disableIcon.classList.remove("disable-icon-selected");
+                this.querySelector("li.operation").classList.remove("disabled");
+            }
+
+            this.app.progress = 0;
+            window.dispatchEvent(this.app.manager.statechange);
+        }
+    }
 
     /**
      * Handle double click
+     *
      * @param {Event} e
      */
     handleDoubleClick(e) {
@@ -62,13 +81,13 @@ export class CRecipeLi extends HTMLElement {
 
     /**
      * Remove this operation from the recipe list
+     *
+     * @fires Manager#statechange
      */
     removeOperation(){
         this.remove();
         log.debug("Operation removed from recipe");
         window.dispatchEvent(this.app.manager.statechange);
-
-        // @TODO: this func can be moved to c-operation-list
         this.app.manager.ops.updateListItemsClasses("#rec-list", "selected");
     }
 
