@@ -283,7 +283,7 @@ export class COperationLi extends HTMLElement {
                 pos = start + length;
             });
             opName += this.name.slice(pos, this.name.length);
-            span.innerHTML = opName;
+            span.innerHTML = `${opName}`;
         } else {
             span.innerText = this.name;
         }
