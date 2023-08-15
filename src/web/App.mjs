@@ -627,7 +627,7 @@ class App {
                 item.querySelector(".disable-icon").click();
             }
             if (recipeConfig[i].breakpoint) {
-                item.querySelector(".breakpoint").click();
+                item.querySelector(".breakpoint-icon").click();
             }
 
             this.manager.recipe.triggerArgEvents(item);

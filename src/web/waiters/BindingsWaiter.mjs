@@ -64,7 +64,7 @@ class BindingsWaiter {
                 case "KeyB": // Set breakpoint
                     e.preventDefault();
                     try {
-                        elem = document.activeElement.closest(".operation").querySelectorAll(".breakpoint")[0];
+                        elem = document.activeElement.closest(".operation").querySelectorAll(".breakpoint-icon")[0];
                         if (elem.getAttribute("break") === "false") {
                             elem.setAttribute("break", "true"); // add break point if not already enabled
                             elem.classList.add("breakpoint-selected");

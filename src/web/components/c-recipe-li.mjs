@@ -50,7 +50,9 @@ export class CRecipeLi extends HTMLElement {
      */
     handleClick(e) {
         const disableIcon = this.querySelector("i.disable-icon");
+        const breakpointIcon = this.querySelector("i.breakpoint-icon");
 
+        // handle click on 'disable-icon'
         if (e.target === disableIcon) {
             if (disableIcon.getAttribute("disabled") === "false") {
                 disableIcon.setAttribute("disabled", "true");
@@ -63,6 +65,19 @@ export class CRecipeLi extends HTMLElement {
             }
 
             this.app.progress = 0;
+            window.dispatchEvent(this.app.manager.statechange);
+        }
+
+        // handle click on 'breakpoint-icon'
+        if (e.target === breakpointIcon) {
+            if (breakpointIcon.getAttribute("break") === "false") {
+                breakpointIcon.setAttribute("break", "true");
+                breakpointIcon.classList.add("breakpoint-selected");
+            } else {
+                breakpointIcon.setAttribute("break", "false");
+                breakpointIcon.classList.remove("breakpoint-selected");
+            }
+
             window.dispatchEvent(this.app.manager.statechange);
         }
     }
@@ -132,7 +147,7 @@ export class CRecipeLi extends HTMLElement {
 
         const breakPointIcon = document.createElement("i");
         breakPointIcon.classList.add("material-icons");
-        breakPointIcon.classList.add("breakpoint");
+        breakPointIcon.classList.add("breakpoint-icon");
         breakPointIcon.setAttribute("title", "Set breakpoint");
         breakPointIcon.setAttribute("break", "false");
         breakPointIcon.setAttribute("data-help-title", "Setting breakpoints");

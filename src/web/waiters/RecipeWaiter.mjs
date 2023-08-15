@@ -162,28 +162,6 @@ class RecipeWaiter {
 
 
     /**
-     * Handler for breakpoint click events.
-     * Updates the icon status.
-     *
-     * @fires Manager#statechange
-     * @param {Event} e
-     */
-    breakpointClick(e) {
-        const bp = e.target;
-
-        if (bp.getAttribute("break") === "false") {
-            bp.setAttribute("break", "true");
-            bp.classList.add("breakpoint-selected");
-        } else {
-            bp.setAttribute("break", "false");
-            bp.classList.remove("breakpoint-selected");
-        }
-
-        window.dispatchEvent(this.manager.statechange);
-    }
-
-
-    /**
      * Generates a configuration object to represent the current recipe.
      *
      * @returns {recipeConfig}
@@ -196,7 +174,7 @@ class RecipeWaiter {
         for (let i = 0; i < operations.length; i++) {
             ingredients = [];
             disabled = operations[i].querySelector(".disable-icon");
-            bp = operations[i].querySelector(".breakpoint");
+            bp = operations[i].querySelector(".breakpoint-icon");
             ingList = operations[i].querySelectorAll(".arg");
 
             for (let j = 0; j < ingList.length; j++) {

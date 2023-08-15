@@ -301,7 +301,7 @@ input.toggle-string {
     color: var(--disable-icon-selected-colour);
 }
 
-.breakpoint {
+.breakpoint-icon {
     color: var(--breakpoint-icon-colour);
 }
 
