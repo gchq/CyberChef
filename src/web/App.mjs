@@ -434,9 +434,8 @@ class App {
 
         this.buildFavouritesCategory(isExpanded);
 
-        // update all op-lists to reflect the current recipe list ( selected ops ) and favourite category list ( favourite ops )
-        this.manager.ops.updateListItemsClasses("#rec-list", "selected");
-        this.manager.ops.updateListItemsClasses("#catFavourites > c-operation-list > ul.op-list", "favourite");
+        window.dispatchEvent(this.manager.favouritesupdate);
+
         this.manager.recipe.initDragAndDrop();
     }
 

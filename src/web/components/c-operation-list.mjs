@@ -30,6 +30,28 @@ export class COperationList extends HTMLElement {
         this.isSortable = isSortable;
         this.isCloneable = isCloneable;
         this.icon = icon;
+
+        window.addEventListener("operationadd", this.handleChange.bind(this))
+        window.addEventListener("operationremove", this.handleChange.bind(this))
+        window.addEventListener("favouritesupdate", this.handleChange.bind(this))
+    }
+
+    /**
+     * Remove listeners on disconnectedCallback
+     */
+    disconnectedCallback() {
+        this.removeEventListener("operationadd", this.handleChange.bind(this));
+        this.removeEventListener("operationremove", this.handleChange.bind(this));
+        this.removeEventListener("favouritesupdate", this.handleChange.bind(this));
+    }
+
+    /**
+     * Handle change
+     * Fires on custom operationadd, operationremove, favouritesupdate events
+     */
+    handleChange() {
+        this.updateListItemsClasses("#catFavourites c-operation-list ul", "favourite");
+        this.updateListItemsClasses("#rec-list", "selected");
     }
 
     /**
@@ -141,6 +163,36 @@ export class COperationList extends HTMLElement {
                 }
             }
         });
+    }
+
+    /**
+     * Update classes ( className ) on the li.operation elements in this list, based on the current state of a
+     * list of choice ( srcListSelector )
+     *
+     * @param {string} srcListSelector - the selector of the UL that we want to use as source of truth
+     * @param {string} className - the className to update
+     */
+    updateListItemsClasses(srcListSelector, className) {
+        const srcListItems= document.querySelectorAll(`${srcListSelector} li`);
+        const listItems =  this.querySelectorAll("c-operation-li li.operation");
+
+        listItems.forEach((li => {
+            if (li.classList.contains(`${className}`)) {
+                li.classList.remove(`${className}`);
+            }
+        }))
+
+        if (srcListItems.length !== 0) {
+            srcListItems.forEach((item => {
+                const targetDataName = item.getAttribute("data-name");
+
+                listItems.forEach((listItem) => {
+                    if (targetDataName === listItem.getAttribute("data-name")) {
+                        listItem.classList.add(`${className}`);
+                    }
+                });
+            }));
+        }
     }
 }
 

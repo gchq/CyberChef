@@ -250,8 +250,6 @@ class RecipeWaiter {
 
         item.dispatchEvent(this.manager.operationadd);
         document.dispatchEvent(this.app.manager.statechange);
-
-        this.manager.ops.updateListItemsClasses("#rec-list", "selected");
         return item;
     }
 
@@ -269,8 +267,6 @@ class RecipeWaiter {
         recList.dispatchEvent(this.manager.operationremove);
 
         window.dispatchEvent(this.app.manager.statechange);
-
-        this.app.manager.ops.updateListItemsClasses("#rec-list", "selected");
     }
 
 

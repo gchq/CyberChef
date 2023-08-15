@@ -106,7 +106,7 @@ export class CRecipeLi extends HTMLElement {
         this.remove();
         log.debug("Operation removed from recipe");
         window.dispatchEvent(this.app.manager.statechange);
-        this.app.manager.ops.updateListItemsClasses("#rec-list", "selected");
+        window.dispatchEvent(this.app.manager.operationremove);
     }
 
     /**

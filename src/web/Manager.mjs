@@ -54,6 +54,10 @@ class Manager {
          * @event Manager#statechange
          */
         this.statechange = new CustomEvent("statechange", {bubbles: true});
+        /**
+         * @event Manager#favouritesupdate
+         */
+        this.favouritesupdate = new CustomEvent("favouritesupdate", {bubbles: true});
 
         // Define Waiter objects to handle various areas
         this.timing      = new TimingWaiter(this.app, this);
