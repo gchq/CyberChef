@@ -154,7 +154,6 @@ class Manager {
         this.addDynamicListener(".arg:not(select)", "input", this.recipe.ingChange, this.recipe);
         this.addDynamicListener(".arg[type=checkbox], .arg[type=radio], select.arg", "change", this.recipe.ingChange, this.recipe);
         this.addDynamicListener("#rec-list .dropdown-menu.toggle-dropdown a", "click", this.recipe.dropdownToggleClick, this.recipe);
-        this.addDynamicListener("#rec-list", "operationremove", this.recipe.clearRecipe.bind(this.recipe));
         this.addDynamicListener("textarea.arg", "dragover", this.recipe.textArgDragover, this.recipe);
         this.addDynamicListener("textarea.arg", "dragleave", this.recipe.textArgDragLeave, this.recipe);
         this.addDynamicListener("textarea.arg", "drop", this.recipe.textArgDrop, this.recipe);

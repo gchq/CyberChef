@@ -235,25 +235,6 @@ class RecipeWaiter {
 
 
     /**
-     * Given an operation stub element, this function converts it into a full recipe element with
-     * arguments.
-     *
-     * @param {string} name - The operation stub element from the operations pane
-     */
-    buildRecipeOperation(name) {
-        const op = new CRecipeLi(this.app, name, this.app.operations[name].args);
-
-        // Disable auto-bake if this is a manual op
-        if (op.manualBake && this.app.autoBake_) {
-            this.manager.controls.setAutoBake(false);
-            this.app.alert("Auto-Bake is disabled by default when using this operation.", 5000);
-        }
-
-        return op;
-    }
-
-
-    /**
      * Adds the specified operation to the recipe
      *
      * @fires Manager#operationadd
@@ -261,7 +242,8 @@ class RecipeWaiter {
      * @param {string} name - The name of the operation to add
      */
     addOperation(name) {
-        const item = this.buildRecipeOperation(name);
+        const item = new CRecipeLi(this.app, name, this.app.operations[name].args);
+
         document.getElementById("rec-list").appendChild(item);
 
         $(item).find("[data-toggle='tooltip']").tooltip();
@@ -285,7 +267,9 @@ class RecipeWaiter {
             recList.removeChild(recList.firstChild);
         }
         recList.dispatchEvent(this.manager.operationremove);
+
         window.dispatchEvent(this.app.manager.statechange);
+
         this.app.manager.ops.updateListItemsClasses("#rec-list", "selected");
     }
 
@@ -335,7 +319,6 @@ class RecipeWaiter {
     opAdd(e) {
         console.log(e);
         log.debug(`'${e.target.querySelector("li").getAttribute("data-name")}' added to recipe`);
-        console.log(e.target.querySelector("li").getAttribute("data-name"));
         this.triggerArgEvents(e.target);
         window.dispatchEvent(this.manager.statechange);
     }

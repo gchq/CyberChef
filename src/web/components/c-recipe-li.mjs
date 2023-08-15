@@ -24,6 +24,9 @@ export class CRecipeLi extends HTMLElement {
         this.name = name;
         this.args = [];
 
+        this.flowControl = this.app.operations[this.name].flowControl;
+        this.manualBake = this.app.operations[this.name].manualBake;
+
         for (let i = 0; i < args.length; i++) {
             const ing = new HTMLIngredient(args[i], this.app, this.app.manager);
             this.args.push(ing);
@@ -132,8 +135,13 @@ export class CRecipeLi extends HTMLElement {
 
         const clearfixDiv = document.createElement("div");
 
-        if (this.app.operations[this.name].flowControl) {
+        if (this.flowControl) {
             li.classList.add("flow-control-op");
+        }
+
+        if (this.manualBake && this.app.autoBake_) {
+            this.manager.controls.setAutoBake(false);
+            this.app.alert("Auto-Bake is disabled by default when using this operation.", 5000);
         }
 
         li.appendChild(icons);

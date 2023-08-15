@@ -280,7 +280,6 @@ class OperationsWaiter {
      * @param {string} className - the className to update
      */
     updateListItemsClasses(srcListSelector, className) {
-        console.log("li update");
         const listItems = document.querySelectorAll(`${srcListSelector} li`);
         const ops =  document.querySelectorAll("c-operation-li > li.operation");
 
