@@ -204,7 +204,6 @@ class OperationsWaiter {
                 },
             );
 
-            opList.build();
             div.appendChild(opList);
         }
 

@@ -31,6 +31,8 @@ export class COperationList extends HTMLElement {
         this.isCloneable = isCloneable;
         this.icon = icon;
 
+        this.build();
+
         window.addEventListener("operationadd", this.handleChange.bind(this));
         window.addEventListener("operationremove", this.handleChange.bind(this));
         window.addEventListener("favouritesupdate", this.handleChange.bind(this));
@@ -56,6 +58,8 @@ export class COperationList extends HTMLElement {
 
     /**
      * Build c-operation-list
+     *
+     * @returns {HTMLElement}
      */
     build() {
         const ul =  document.createElement("ul");

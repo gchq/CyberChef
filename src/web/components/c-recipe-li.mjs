@@ -113,6 +113,8 @@ export class CRecipeLi extends HTMLElement {
 
     /**
      * Build the ingredient list item
+     *
+     * @returns {HTMLElement}
      */
     build() {
         const li = document.createElement("li");
@@ -154,6 +156,8 @@ export class CRecipeLi extends HTMLElement {
 
     /**
      * Build the icons ( disable and breakpoint / pause )
+     *
+     * @returns {HTMLElement}
      */
     buildIcons() {
         const div = document.createElement("div");

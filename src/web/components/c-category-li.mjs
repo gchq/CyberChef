@@ -7,7 +7,7 @@ export class CCategoryLi extends HTMLElement {
     /**
      * @param {App} app - The main view object for CyberChef
      * @param {CatConf} category - The category and operations to be populated.
-     * @param {Object.<string, OpConf>} operations - The list of operation configuration objects.
+     * @param {OpConfig[]} operations - The list of operation configuration objects.
      * @param {Boolean} isExpanded - expand the category by default on init or not
      * @param {Boolean} includeOpLiStarIcon - Include the left side 'star' icon to each of the c-category-li >
      * c-operation-list > c-operation-li list items in this category
@@ -54,6 +54,8 @@ export class CCategoryLi extends HTMLElement {
 
     /**
      * Build c-category-li containing a nested c-operation-list ( op-list )
+     *
+     * @returns {HTMLElement}
      */
     build() {
         const li = this.buildListItem();
@@ -72,13 +74,13 @@ export class CCategoryLi extends HTMLElement {
             true
         );
 
-        opList.build();
-
         div.appendChild(opList);
     }
 
     /**
      * Build the li element
+     *
+     * @returns {HTMLElement}
      */
     buildListItem() {
         const li = document.createElement("li");
@@ -90,6 +92,8 @@ export class CCategoryLi extends HTMLElement {
 
     /**
      * Build the anchor element
+     *
+     * @returns {HTMLElement}
      */
     buildAnchor() {
         const a = document.createElement("a");
@@ -123,6 +127,8 @@ export class CCategoryLi extends HTMLElement {
 
     /**
      * Build the collapsable panel that contains the op-list for this category
+     *
+     * @returns {HTMLElement}
      */
     buildCollapsablePanel() {
         const div = document.createElement("div");
@@ -142,6 +148,8 @@ export class CCategoryLi extends HTMLElement {
 
     /**
      *  If this category is Favourites, build and return the star icon button
+     *
+     *  @returns {HTMLElement}
      */
     buildEditFavouritesButton() {
         const button = document.createElement("button");

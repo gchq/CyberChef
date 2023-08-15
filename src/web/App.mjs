@@ -881,7 +881,6 @@ class App {
             true
         );
 
-        categoryList.build();
         document.querySelector("#categories").appendChild(categoryList);
     }
 }

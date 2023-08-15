@@ -104,6 +104,8 @@ export class COperationLi extends HTMLElement {
 
     /**
      * Build c-operation-li
+     *
+     * @returns {HTMLElement}
      */
     build() {
         const li = this.buildListItem();
@@ -178,6 +180,8 @@ export class COperationLi extends HTMLElement {
 
     /**
      * Build the li element
+     *
+     * @returns {HTMLElement}
      */
     buildListItem() {
         const li = document.createElement("li");
@@ -209,6 +213,8 @@ export class COperationLi extends HTMLElement {
 
     /**
      * Build the operation list item right side icon
+     *
+     * @returns {HTMLElement}
      */
     buildIcon() {
         const icon = document.createElement("i");
@@ -224,6 +230,8 @@ export class COperationLi extends HTMLElement {
 
     /**
      * Build the ( optional ) star icon
+     *
+     * @returns {HTMLElement}
      */
     buildStarIcon() {
         const icon = document.createElement("i");
@@ -267,6 +275,8 @@ export class COperationLi extends HTMLElement {
     /**
      * Highlights searched strings ( if applicable ) in the name and description of the operation
      * or simply sets the name in the span element
+     *
+     * @returns {HTMLElement}
      */
     buildOperationName() {
         const span = document.createElement("span");
@@ -283,7 +293,7 @@ export class COperationLi extends HTMLElement {
                 pos = start + length;
             });
             opName += this.name.slice(pos, this.name.length);
-            span.innerHTML = `${opName}`;
+            span.innerHTML = opName;
         } else {
             span.innerText = this.name;
         }
