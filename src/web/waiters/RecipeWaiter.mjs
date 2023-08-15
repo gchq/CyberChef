@@ -243,10 +243,6 @@ class RecipeWaiter {
     buildRecipeOperation(name) {
         const op = new CRecipeLi(this.app, name, this.app.operations[name].args);
 
-        if (this.app.operations[name].flowControl) {
-            op.classList.add("flow-control-op");
-        }
-
         // Disable auto-bake if this is a manual op
         if (op.manualBake && this.app.autoBake_) {
             this.manager.controls.setAutoBake(false);
@@ -289,6 +285,8 @@ class RecipeWaiter {
             recList.removeChild(recList.firstChild);
         }
         recList.dispatchEvent(this.manager.operationremove);
+        window.dispatchEvent(this.app.manager.statechange);
+        this.app.manager.ops.updateListItemsClasses("#rec-list", "selected");
     }
 
 

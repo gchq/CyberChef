@@ -132,6 +132,10 @@ export class CRecipeLi extends HTMLElement {
 
         const clearfixDiv = document.createElement("div");
 
+        if (this.app.operations[this.name].flowControl) {
+            li.classList.add("flow-control-op");
+        }
+
         li.appendChild(icons);
         li.appendChild(clearfixDiv);
 
