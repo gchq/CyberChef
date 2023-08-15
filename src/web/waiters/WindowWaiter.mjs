@@ -4,8 +4,6 @@
  * @license Apache-2.0
  */
 
-import { debounce } from "../../core/Utils.mjs";
-
 /**
  * Waiter to handle events related to the window object.
  */

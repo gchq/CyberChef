@@ -145,7 +145,7 @@ class HTMLIngredient {
                                for="${this.id}">
                                ${this.name}
                         </label>
-                    </div>`
+                    </div>`;
                 break;
             case "option":
                 html += `<div class="form-group ing-medium">

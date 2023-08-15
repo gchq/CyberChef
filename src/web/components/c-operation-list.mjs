@@ -31,9 +31,9 @@ export class COperationList extends HTMLElement {
         this.isCloneable = isCloneable;
         this.icon = icon;
 
-        window.addEventListener("operationadd", this.handleChange.bind(this))
-        window.addEventListener("operationremove", this.handleChange.bind(this))
-        window.addEventListener("favouritesupdate", this.handleChange.bind(this))
+        window.addEventListener("operationadd", this.handleChange.bind(this));
+        window.addEventListener("operationremove", this.handleChange.bind(this));
+        window.addEventListener("favouritesupdate", this.handleChange.bind(this));
     }
 
     /**
@@ -180,7 +180,7 @@ export class COperationList extends HTMLElement {
             if (li.classList.contains(`${className}`)) {
                 li.classList.remove(`${className}`);
             }
-        }))
+        }));
 
         if (srcListItems.length !== 0) {
             srcListItems.forEach((item => {

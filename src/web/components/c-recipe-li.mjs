@@ -104,7 +104,7 @@ export class CRecipeLi extends HTMLElement {
      *
      * @fires Manager#statechange
      */
-    removeOperation(){
+    removeOperation() {
         this.remove();
         log.debug("Operation removed from recipe");
         window.dispatchEvent(this.app.manager.statechange);
@@ -190,7 +190,7 @@ export class CRecipeLi extends HTMLElement {
      */
     cloneNode() {
         const { app, name, args } = this;
-        return new CRecipeLi( app, name, args );
+        return new CRecipeLi(app, name, args);
     }
 }
 
