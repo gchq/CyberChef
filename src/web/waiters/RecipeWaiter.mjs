@@ -168,31 +168,31 @@ class RecipeWaiter {
      */
     getConfig() {
         const config = [];
-        let ingredients, ingList, disabled, bp, item;
+        let ingredients, args, disableIcon, breakPointIcon, item;
         const operations = document.querySelectorAll("#rec-list li.operation");
 
         for (let i = 0; i < operations.length; i++) {
             ingredients = [];
-            disabled = operations[i].querySelector(".disable-icon");
-            bp = operations[i].querySelector(".breakpoint-icon");
-            ingList = operations[i].querySelectorAll(".arg");
+            disableIcon = operations[i].querySelector(".disable-icon");
+            breakPointIcon = operations[i].querySelector(".breakpoint-icon");
+            args = operations[i].querySelectorAll(".arg");
 
-            for (let j = 0; j < ingList.length; j++) {
-                if (ingList[j].getAttribute("type") === "checkbox") {
+            for (let j = 0; j < args.length; j++) {
+                if (args[j].getAttribute("type") === "checkbox") {
                     // checkbox
-                    ingredients[j] = ingList[j].checked;
-                } else if (ingList[j].classList.contains("toggle-string")) {
+                    ingredients[j] = args[j].checked;
+                } else if (args[j].classList.contains("toggle-string")) {
                     // toggleString
                     ingredients[j] = {
-                        option: ingList[j].parentNode.parentNode.querySelector("button").textContent,
-                        string: ingList[j].value
+                        option: args[j].parentNode.parentNode.querySelector("button").textContent,
+                        string: args[j].value
                     };
-                } else if (ingList[j].getAttribute("type") === "number") {
+                } else if (args[j].getAttribute("type") === "number") {
                     // number
-                    ingredients[j] = parseFloat(ingList[j].value);
+                    ingredients[j] = parseFloat(args[j].value);
                 } else {
                     // all others
-                    ingredients[j] = ingList[j].value;
+                    ingredients[j] = args[j].value;
                 }
             }
 
@@ -201,11 +201,11 @@ class RecipeWaiter {
                 args: ingredients
             };
 
-            if (disabled && disabled.getAttribute("disabled") === "true") {
+            if (disableIcon && disableIcon.getAttribute("disabled") === "true") {
                 item.disabled = true;
             }
 
-            if (bp && bp.getAttribute("break") === "true") {
+            if (breakPointIcon && breakPointIcon.getAttribute("break") === "true") {
                 item.breakpoint = true;
             }
 

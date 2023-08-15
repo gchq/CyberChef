@@ -176,14 +176,14 @@ class OperationsWaiter {
 
     /**
      * Handler for edit favourites click events.
-     * Sets up the 'Edit favourites' pane and displays it.
+     * Displays the 'Edit favourites' modal and handles the c-operation-list in the modal
      *
      * @param {Event} e
      */
     editFavouritesClick(e) {
         const div = document.getElementById("editable-favourites");
 
-        // Remove c-operation-list if there already was one
+        // First remove the existing c-operation-list if there already was one
         if (div.querySelector("c-operation-list")) {
             div.removeChild(div.querySelector("c-operation-list"));
         }
