@@ -265,6 +265,30 @@ input.toggle-string {
     top: 13px;
 }
 
+.custom-control-label {
+    line-height: 1.5rem;
+}
+
+.custom-control-label:hover {
+    cursor: pointer;
+}
+
+.custom-control-label::before {
+    height: 20px;
+    width: 20px;
+    border: 1px solid var(--input-border-colour);
+}
+
+.custom-control-input:checked + .custom-control-label::before {
+    background-color: var(--input-highlight-colour);
+    border: 1px solid var(--input-highlight-colour);
+}
+
+.custom-control-label::after {
+    height: 20px;
+    width: 20px;
+}
+
 .register-list {
     background-color: var(--fc-operation-border-colour);
     font-family: var(--fixed-width-font-family);

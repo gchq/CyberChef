@@ -22,19 +22,21 @@ export class CRecipeLi extends HTMLElement {
 
         this.app = app;
         this.name = name;
-        this.args = [];
+        this.args = args;
+        this.ingredients = [];
 
         this.flowControl = this.app.operations[this.name].flowControl;
         this.manualBake = this.app.operations[this.name].manualBake;
 
         for (let i = 0; i < args.length; i++) {
             const ing = new HTMLIngredient(args[i], this.app, this.app.manager);
-            this.args.push(ing);
+            this.ingredients.push(ing);
         }
 
         this.build();
 
-        this.addEventListener("click", this.handleClick.bind(this));
+        // Use mousedown event instead of click to prevent accidentally firing the handler twice on mobile
+        this.addEventListener("mousedown", this.handleMousedown.bind(this));
         this.addEventListener("dblclick", this.handleDoubleClick.bind(this));
     }
 
@@ -42,16 +44,16 @@ export class CRecipeLi extends HTMLElement {
      * Remove listeners on disconnectedCallback
      */
     disconnectedCallback() {
-        this.removeEventListener("click", this.handleClick.bind(this));
+        this.removeEventListener("mousedown", this.handleMousedown.bind(this));
         this.removeEventListener("dblclick", this.handleDoubleClick.bind(this));
     }
 
     /**
-     * Handle click
+     * Handle mousedown
      * @fires Manager#statechange
      * @param {Event} e
      */
-    handleClick(e) {
+    handleMousedown(e) {
         const disableIcon = this.querySelector("i.disable-icon");
         const breakpointIcon = this.querySelector("i.breakpoint-icon");
 
@@ -91,7 +93,7 @@ export class CRecipeLi extends HTMLElement {
      * @param {Event} e
      */
     handleDoubleClick(e) {
-        // do not remove if icons or form elements are double clicked
+        // do not remove if icons or form elements are double-clicked
         if (e.target === this.querySelector("li") || e.target === this.querySelector("div.op-title")) {
             this.removeOperation();
         }
@@ -127,8 +129,8 @@ export class CRecipeLi extends HTMLElement {
         li.appendChild(titleDiv);
         li.appendChild(ingredientDiv);
 
-        for (let i = 0; i < this.args.length; i++) {
-            ingredientDiv.innerHTML += (this.args[i].toHtml());
+        for (let i = 0; i < this.ingredients.length; i++) {
+            ingredientDiv.innerHTML += (this.ingredients[i].toHtml());
         }
 
         const icons = this.buildIcons();

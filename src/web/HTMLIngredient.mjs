@@ -131,20 +131,21 @@ class HTMLIngredient {
                 </div>`;
                 break;
             case "boolean":
-                html += `<div class="form-group inline boolean-arg ing-flexible">
-                    <div class="checkbox">
-                        <label ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}>
-                            <input type="checkbox"
-                                class="arg"
-                                id="${this.id}"
-                                tabindex="${this.tabIndex}"
-                                arg-name="${this.name}"
-                                ${this.value ? " checked" : ""}
-                                ${this.disabled ? " disabled" : ""}
-                                value="${this.name}"> ${this.name}
+                html += `<div class="form-group boolean-arg ing-flexible custom-control custom-checkbox">
+                        <input type="checkbox"
+                               class="custom-control-input arg"
+                               id="${this.id}"
+                               tabindex="${this.tabIndex}"
+                               arg-name="${this.name}"
+                               ${this.value ? " checked" : ""}
+                               ${this.disabled ? " disabled" : ""}
+                               value="${this.name}"/>
+                        <label class="custom-control-label"
+                               ${this.hint && `data-toggle="tooltip" title="${this.hint}"`}
+                               for="${this.id}">
+                               ${this.name}
                         </label>
-                    </div>
-                </div>`;
+                    </div>`
                 break;
             case "option":
                 html += `<div class="form-group ing-medium">
