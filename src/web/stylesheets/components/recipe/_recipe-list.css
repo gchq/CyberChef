@@ -1,0 +1,110 @@
+#rec-list {
+    overflow-y: auto;
+}
+
+#rec-list .operation {
+    color: var(--rec-list-operation-font-colour);
+    background-color: var(--rec-list-operation-bg-colour);
+    border-color: var(--rec-list-operation-border-colour);
+    padding: 14px;
+    cursor: grab;
+}
+
+#rec-list li.sortable-chosen{
+    filter: brightness(0.8);
+}
+
+.operation [class^='bmd-label'],
+.operation [class*=' bmd-label'] {
+    top: 13px !important;
+    left: 12px;
+    z-index: 10;
+}
+
+.register-list {
+    background-color: var(--fc-operation-border-colour);
+    font-family: var(--fixed-width-font-family);
+    padding: 10px;
+    word-break: break-all;
+}
+
+.recipe-icons {
+    position: absolute;
+    top: 13px;
+    right: 10px;
+    height: 16px;
+}
+
+.recipe-icons i {
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    vertical-align: baseline;
+    float: right;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.recipe-icons i:last-child {
+    margin-right: 10px;
+}
+
+.disable-icon {
+    color: var(--disable-icon-colour);
+}
+
+.disable-icon-selected {
+    color: var(--disable-icon-selected-colour);
+}
+
+.breakpoint-icon {
+    color: var(--breakpoint-icon-colour);
+}
+
+.breakpoint-selected {
+    color: var(--breakpoint-icon-selected-colour);
+}
+
+.break {
+    color: var(--breakpoint-font-colour) !important;
+    background-color: var(--breakpoint-bg-colour) !important;
+    border-color: var(--breakpoint-border-colour) !important;
+}
+
+.break .form-group * { color: var(--breakpoint-font-colour) !important; }
+
+/*.focused-op .form-group * { color: var(--focused-operation-font-color) !important; }*/
+
+.flow-control-op {
+    color: var(--fc-operation-font-colour) !important;
+    background-color: var(--fc-operation-bg-colour) !important;
+    border-color: var(--fc-operation-border-colour) !important;
+}
+
+.flow-control-op .form-group *:not(.arg) { color: var(--fc-operation-font-colour) }
+
+.flow-control-op.break {
+    color: var(--fc-breakpoint-operation-font-colour) !important;
+    background-color: var(--fc-breakpoint-operation-bg-colour) !important;
+    border-color: var(--fc-breakpoint-operation-border-colour) !important;
+}
+
+.flow-control-op.break .form-group * { color: var(--fc-breakpoint-operation-font-colour) !important; }
+
+.disabled {
+    color: var(--disabled-font-colour) !important;
+    background-color: var(--disabled-bg-colour) !important;
+    border-color: var(--disabled-border-colour) !important;
+}
+
+.disabled .form-group * { color: var(--disabled-font-colour) !important; }
+
+.break .register-list {
+    color: var(--fc-breakpoint-operation-font-colour) !important;
+    background-color: var(--fc-breakpoint-operation-border-colour) !important;
+}
+
+.disabled .register-list {
+    color: var(--disabled-font-colour) !important;
+    background-color: var(--disabled-border-colour) !important;
+}

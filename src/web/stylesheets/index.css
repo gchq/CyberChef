@@ -31,12 +31,15 @@
 @import "./components/_dividers.css";
 @import "./components/_modals.css";
 @import "./components/_banner.css";
-@import "./components/_recipe.css";
 @import "./components/_controls.css";
 /* Components: Operations */
 @import "./components/operations/_operations.css";
 @import "./components/operations/_search.css";
 @import "./components/operations/_categories.css";
+/* Components: Recipe */
+@import "./components/recipe/_recipe.css";
+@import "./components/recipe/_recipe-list.css";
+@import "./components/recipe/_ingredients.css";
 /* Components: IO */
 @import "./components/io/_io.css";
 @import "./components/io/_search-results.css";
