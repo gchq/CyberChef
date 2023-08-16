@@ -1,5 +1,4 @@
 import url from "url";
-import Utils from "../../core/Utils.mjs";
 
 /**
  * c(ustom element)-operation-li ( list item )
