@@ -267,8 +267,8 @@ export class COperationLi extends HTMLElement {
      * is needed for the drag and drop functionality of the Sortable lists
      */
     cloneNode() {
-        const { app, name, icon, includeStarIcon, charIndicesToHighlight } = this;
-        return new COperationLi(app, name, icon, includeStarIcon, charIndicesToHighlight);
+        const { app, operationName, icon, includeStarIcon, charIndicesToHighlight } = this;
+        return new COperationLi(app, operationName, icon, includeStarIcon, charIndicesToHighlight);
     }
 
 
