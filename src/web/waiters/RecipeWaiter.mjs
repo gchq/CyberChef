@@ -240,11 +240,18 @@ class RecipeWaiter {
      * @fires Manager#operationadd
      * @fires Manager#statechange
      * @param {string} name - The name of the operation to add
+     * @param {number} index - The index where the operation should be displayed
      */
-    addOperation(name) {
+    addOperation(name, index = undefined) {
         const item = new CRecipeLi(this.app, name, this.app.operations[name].args);
 
-        document.getElementById("rec-list").appendChild(item);
+        const recipeList = document.getElementById("rec-list");
+
+        if (index !== undefined) {
+            recipeList.insertBefore(item, recipeList.children[index + 1]);
+        } else {
+            recipeList.appendChild(item);
+        }
 
         $(item).find("[data-toggle='tooltip']").tooltip();
 

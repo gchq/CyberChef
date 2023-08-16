@@ -298,7 +298,7 @@ export class COperationLi extends HTMLElement {
             const parser = new DOMParser();
             opName = parser.parseFromString(opName, "text/html");
 
-            span.append( ...opName.body.children );
+            span.append(...opName.body.children);
         } else {
             span.innerText = this.name;
         }
