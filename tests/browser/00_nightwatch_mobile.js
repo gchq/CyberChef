@@ -6,8 +6,6 @@
  * @license Apache-2.0
  */
 
-const utils = require("./browserUtils.js");
-
 module.exports = {
     // desktop UI
     before: browser => {
@@ -154,16 +152,3 @@ module.exports = {
         browser.end();
     }
 };
-
-/**
- * Clears the current recipe and loads a new operation.
- *
- * @param {string} opName
- * @param {Browser} browser
- */
-function loadOp(opName, browser) {
-    return browser
-        .useCss()
-        .click("#clr-recipe")
-        .urlHash("op=" + opName);
-}
