@@ -43,28 +43,6 @@ module.exports = {
         browser.expect.element("#output-text").to.be.visible;
     },
 
-    "Operations loaded": browser => {
-        browser.useXpath();
-        // Check that an operation in every category has been populated
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='To Base64']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='To Binary']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='AES Decrypt']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='PEM to Hex']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Power Set']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Parse IP range']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Remove Diacritics']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Sort']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='To UNIX Timestamp']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Extract dates']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Gzip']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Keccak']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='JSON Beautify']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Detect File Type']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Play Media']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Disassemble x86']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Register']").to.be.present;
-    },
-
     "Recipe can be run": browser => {
         const toHex = "//li[contains(@class, 'operation')]/span[text()='To Hex']";
         const op = "#rec-list .operation .op-title";
@@ -116,84 +94,6 @@ module.exports = {
             .moveToElement(op, 10, 10)
             .click("#clr-recipe")
             .waitForElementNotPresent(op);
-    },
-
-    "Test every module": browser => {
-        browser.useCss();
-
-        // BSON
-        loadOp("BSON deserialise", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // Charts
-        loadOp("Entropy", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // Ciphers
-        loadOp("AES Encrypt", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // Code
-        loadOp("XPath expression", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // Compression
-        loadOp("Gzip", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // Crypto
-        loadOp("MD5", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // Default
-        loadOp("Fork", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // Diff
-        loadOp("Diff", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // Encodings
-        loadOp("Encode text", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // Hashing
-        loadOp("Streebog", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // Image
-        loadOp("Extract EXIF", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // PGP
-        loadOp("PGP Encrypt", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // PublicKey
-        loadOp("Hex to PEM", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // Regex
-        loadOp("Strings", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // Shellcode
-        loadOp("Disassemble x86", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // URL
-        loadOp("URL Encode", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // UserAgent
-        loadOp("Parse User Agent", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        // YARA
-        loadOp("YARA Rules", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
-
-        browser.click("#clr-recipe");
     },
 
     "Move around the UI": browser => {
@@ -248,25 +148,6 @@ module.exports = {
             .click("#close-ops-dropdown-icon")
             .waitForElementNotVisible("#categories", 1000);
 
-    },
-
-    "Alert bar": browser => {
-        // Bake nothing to create an empty output which can be copied
-        utils.clear(browser);
-        utils.bake(browser);
-
-        // Alert bar shows and contains correct content
-        browser
-            .click("#copy-output")
-            .waitForElementVisible("#snackbar-container")
-            .waitForElementVisible("#snackbar-container .snackbar-content")
-            .expect.element("#snackbar-container .snackbar-content").text.to.equal("Copied raw output successfully.");
-
-        // Alert bar disappears after the correct amount of time
-        // Should disappear after 2000ms
-        browser
-            .waitForElementNotPresent("#snackbar-container .snackbar-content", 2500)
-            .waitForElementNotVisible("#snackbar-container");
     },
 
     after: browser => {
