@@ -1,4 +1,5 @@
 import url from "url";
+import Utils from "../../core/Utils.mjs";
 
 /**
  * c(ustom element)-operation-li ( list item )
@@ -285,14 +286,16 @@ export class COperationLi extends HTMLElement {
             let opName = "",
                 pos = 0;
 
-            this.charIndicesToHighlight.forEach(idxs => {
-                const [start, length] = idxs;
+            this.charIndicesToHighlight.forEach(charIndices => {
+                const [start, length] = charIndices;
                 if (typeof start !== "number") return;
-                opName += this.name.slice(pos, start) + "<strong>" +
+                opName +=
+                    this.name.slice(pos, start) + "<strong>" +
                     this.name.slice(start, start + length) + "</strong>";
                 pos = start + length;
             });
             opName += this.name.slice(pos, this.name.length);
+
             span.innerHTML = opName;
         } else {
             span.innerText = this.name;

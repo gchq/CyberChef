@@ -110,7 +110,6 @@ class OperationsWaiter {
                     }
                 );
 
-                cOpList.build();
                 searchResultsEl.append(cOpList);
             }
         }
