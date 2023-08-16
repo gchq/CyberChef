@@ -23,7 +23,7 @@ export class COperationLi extends HTMLElement {
         super();
 
         this.app = app;
-        this.name = name;
+        this.operationName = name;
         this.icon = icon;
         this.includeStarIcon = includeStarIcon;
         this.charIndicesToHighlight = charIndicesToHighlight;
@@ -66,7 +66,7 @@ export class COperationLi extends HTMLElement {
     handleDoubleClick(e) {
         // this span is element holding the operation title
         if (e.target === this.querySelector("li") || e.target === this.querySelector("span")) {
-            this.app.manager.recipe.addOperation(this.name);
+            this.app.manager.recipe.addOperation(this.operationName);
         }
     }
 
@@ -77,7 +77,7 @@ export class COperationLi extends HTMLElement {
      */
     handleMousedown(e) {
         if (e.target === this.querySelector("i.star-icon")) {
-            this.app.addFavourite(this.name);
+            this.app.addFavourite(this.operationName);
         }
         // current use case: in the 'Edit favourites' modal, the c-operation-li components have a trashcan icon to the
         // right
@@ -188,7 +188,7 @@ export class COperationLi extends HTMLElement {
 
         li.appendChild(this.buildOperationName());
 
-        li.setAttribute("data-name", this.name);
+        li.setAttribute("data-name", this.operationName);
         li.classList.add("operation");
 
         if (this.isFavourite) {
@@ -235,7 +235,7 @@ export class COperationLi extends HTMLElement {
      */
     buildStarIcon() {
         const icon = document.createElement("i");
-        icon.setAttribute("title", this.name);
+        icon.setAttribute("title", this.operationName);
 
         icon.classList.add("material-icons");
         icon.classList.add("op-icon");
@@ -289,18 +289,18 @@ export class COperationLi extends HTMLElement {
                 const [start, length] = charIndices;
                 if (typeof start !== "number") return;
                 opName +=
-                    "<span>" + this.name.slice(pos, start) + "</span>" + "<strong>" +
-                    this.name.slice(start, start + length) + "</strong>";
+                    "<span>" + this.operationName.slice(pos, start) + "</span>" + "<strong>" +
+                    this.operationName.slice(start, start + length) + "</strong>";
                 pos = start + length;
             });
-            opName += "<span>" + this.name.slice(pos, this.name.length) + "</span>";
+            opName += "<span>" + this.operationName.slice(pos, this.operationName.length) + "</span>";
 
             const parser = new DOMParser();
             opName = parser.parseFromString(opName, "text/html");
 
             span.append(...opName.body.children);
         } else {
-            span.innerText = this.name;
+            span.innerText = this.operationName;
         }
 
         return span;
