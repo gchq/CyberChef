@@ -289,13 +289,16 @@ export class COperationLi extends HTMLElement {
                 const [start, length] = charIndices;
                 if (typeof start !== "number") return;
                 opName +=
-                    this.name.slice(pos, start) + "<strong>" +
+                    "<span>" + this.name.slice(pos, start) + "</span>" + "<strong>" +
                     this.name.slice(start, start + length) + "</strong>";
                 pos = start + length;
             });
-            opName += this.name.slice(pos, this.name.length);
+            opName += "<span>" + this.name.slice(pos, this.name.length) + "</span>";
 
-            span.innerHTML = opName;
+            const parser = new DOMParser();
+            opName = parser.parseFromString(opName, "text/html");
+
+            span.append( ...opName.body.children );
         } else {
             span.innerText = this.name;
         }
