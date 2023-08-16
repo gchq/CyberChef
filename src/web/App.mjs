@@ -47,7 +47,7 @@ class App {
         this.workerLoaded  = false;
         this.waitersLoaded = false;
 
-        this.breakpoint = 768;
+        this.breakpoint = 1024;
     }
 
     /**

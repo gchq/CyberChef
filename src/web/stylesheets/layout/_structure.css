@@ -10,7 +10,7 @@
 #operations { height: var(--operations-height); }
 #controls { height: var(--controls-height); }
 
-@media only screen and ( min-width: 768px ) {
+@media only screen and ( min-width: 1024px ) {
     #controls { height: var(--desktop-controls-height); }
 }
 
@@ -49,7 +49,7 @@
     display: none;
 }
 
-@media only screen and ( min-width: 768px ) {
+@media only screen and ( min-width: 1024px ) {
     #recipe {
         padding-bottom: var(--desktop-controls-height);
     }

@@ -292,7 +292,7 @@ class StatusBarPanel {
 
         this.dom.querySelectorAll(".cm-status-bar-select-scroll").forEach(
             el => {
-                el.style.maxHeight = window.innerWidth >= 768 ? (viewHeight - 50) + "px" : "250px";
+                el.style.maxHeight = window.innerWidth >= 1024 ? (viewHeight - 50) + "px" : "250px";
             }
         );
     }

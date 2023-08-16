@@ -1,5 +1,5 @@
 /* Gutters and splitters */
-@media only screen and (min-width: 768px){
+@media only screen and (min-width: 1024px){
     .split {
         box-sizing: border-box;
         /* overflow: auto; */

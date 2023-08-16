@@ -88,7 +88,7 @@ label[for="output-text"] {
     transition: all 0.5s ease;
 }
 
-@media only screen and (min-width: 768px){
+@media only screen and (min-width: 1024px){
     #output-loader {
         bottom: 0;
     }
