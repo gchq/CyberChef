@@ -26,7 +26,6 @@
     "prod": {
       "launch_url": "http://localhost:8000/index.html"
     }
-
   }
 }
 
