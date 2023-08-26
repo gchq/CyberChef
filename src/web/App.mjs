@@ -538,6 +538,16 @@ class App {
             this.manager.options.changeTheme(Utils.escapeHtml(this.uriParams.theme));
         }
 
+        // Read in logging level from URI params
+        if (this.uriParams.logging) {
+            const validOptions = ["Silent", "Error", "Warn", "Info", "Debug", "Trace"];
+            if (validOptions.indexOf(this.uriParams.logging) > -1) {
+                this.manager.options.logLevelChange(this.uriParams.logging);
+            } else {
+                log.warn(`Invalid logging level: ${this.uriParams.logging}`);
+            }
+        }
+
         this.autoBakePause = false;
         window.dispatchEvent(this.manager.statechange);
     }
