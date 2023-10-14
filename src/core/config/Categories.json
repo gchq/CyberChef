@@ -180,7 +180,8 @@
             "RSA Encrypt",
             "RSA Decrypt",
             "Parse SSH Host Key",
-            "Parse CSR"
+            "Parse CSR",
+            "Public Key from Certificate"
         ]
     },
     {
