@@ -121,6 +121,7 @@ import "./tests/PHP.mjs";
 import "./tests/PowerSet.mjs";
 import "./tests/Protobuf.mjs";
 import "./tests/PubKeyFromCert.mjs";
+import "./tests/PubKeyFromPrivKey.mjs";
 import "./tests/Rabbit.mjs";
 import "./tests/RAKE.mjs";
 import "./tests/Regex.mjs";
