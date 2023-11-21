@@ -33,7 +33,7 @@ docker run --rm --name cyberchef -it -p 80:80 cyberchef
 Or you can use our image directly:
 
 ```bash
-docker run --rm --name cyberchef -it -p 80:80 ghcr.io/gchq/CyberChef:latest
+docker run --rm --name cyberchef -it -p 80:80 ghcr.io/gchq/cyberchef:latest
 ```
 
 This image is built and published through our [GitHub Workflows](.github/workflows/docker.yml)

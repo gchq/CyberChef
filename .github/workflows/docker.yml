@@ -1,10 +1,8 @@
 name: Docker
 
 on:
-    push:
-        # Publish `v1.2.3` tags as releases.
-        tags:
-            - v*
+    release:
+        types: [release]
 
     # Run tests for all PRs to master.
     pull_request:
