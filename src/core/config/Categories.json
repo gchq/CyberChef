@@ -65,7 +65,7 @@
             "CBOR Encode",
             "CBOR Decode",
             "YAML to JSON",
-            "JSON to YAML"
+            "Beatufiy YAML"
         ]
     },
     {
