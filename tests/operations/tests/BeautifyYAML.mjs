@@ -4,7 +4,7 @@
  *
  * @author ccarpo [ccarpo@gmx.net]
  *
- * @copyright Crown Copyright 2018
+ * @copyright Crown Copyright 2021
  * @license Apache-2.0
  */
 import TestRegister from "../../lib/TestRegister.mjs";
@@ -29,12 +29,12 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "JSON to YAML",
+        name: "Beautify YAML",
         input: EXAMPLE_JSON,
         expectedOutput: `number: 3\nplain: string\n`,
         recipeConfig: [
             {
-                op: "JSON to YAML",
+                op: "Beautify YAML",
                 args: [],
             }
         ],
