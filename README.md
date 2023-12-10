@@ -20,7 +20,6 @@ Cryptographic operations in CyberChef should not be relied upon to provide secur
 
 [A live demo can be found here][1] - have fun!
 
-
 ## How it works
 
 There are four main areas in CyberChef:
@@ -101,6 +100,17 @@ An installation walkthrough, how-to guides for adding new operations and themes,
  - Push your changes to your fork.
  - Submit a pull request. If you are doing this for the first time, you will be prompted to sign the [GCHQ Contributor Licence Agreement](https://cla-assistant.io/gchq/CyberChef) via the CLA assistant on the pull request. This will also ask whether you are happy for GCHQ to contact you about a token of thanks for your contribution, or about job opportunities at GCHQ.
 
+
+## Running in Docker
+
+If you would like to run the app locally in docker please follow the steps below:
+
+```
+git clone https://github.com/gchq/CyberChef.git
+cd CyberChef
+docker build --tag cyberchef .
+docker run --rm --name cyberchef -it -p 8080:8080 cyberchef
+```
 
 ## Licencing
 
