@@ -46,53 +46,46 @@ class FileTree extends Operation {
     run(input, args) {
 
         // Set up arrow and pipe for nice output display
-        const ARROW = '|---';
-        const PIPE = '|   ';
+        const ARROW = "|---";
+        const PIPE = "|   ";
 
         // Get args from input
-        const file_delim = args[0];
-        const entry_delim = Utils.charRep(args[1]); 
+        const fileDelim = args[0];
+        const entryDelim = Utils.charRep(args[1]);
 
         // Store path to print
-        let completed_list = [];
-        let print_list = [];
+        const completedList = [];
+        const printList = [];
 
         // Loop through all entries
-        const file_paths = input.split(entry_delim).unique().sort();
-        for (var i = 0; i < file_paths.length; i++)
-        {
+        const filePaths = input.split(entryDelim).unique().sort();
+        for (let i = 0; i < filePaths.length; i++) {
             // Split by file delimiter
-            let path = file_paths[i].split(file_delim);
+            let path = filePaths[i].split(fileDelim);
 
-            if (path[0] == '')
-            {
-                path  = path.slice(1, path.length);
+            if (path[0] === "") {
+                path = path.slice(1, path.length);
             }
 
-            for (var j = 0; j < path.length; j++)
-            {
-                let print_line;
+            for (let j = 0; j < path.length; j++) {
+                let printLine;
                 let key;
-                if (j == 0)
-                {
-                    print_line = path[j];
+                if (j === 0) {
+                    printLine = path[j];
                     key = path[j];
-                }
-                else
-                {
-                    print_line = PIPE.repeat(j-1) + ARROW + path[j]
+                } else {
+                    printLine = PIPE.repeat(j-1) + ARROW + path[j];
                     key = path.slice(0, j+1).join("/");
                 }
 
                 // Check to see we have already added that path
-                if (!completed_list.includes(key))
-                {
-                    completed_list.push(key);
-                    print_list.push(print_line);
+                if (!completedList.includes(key)) {
+                    completedList.push(key);
+                    printList.push(printLine);
                 }
             }
         }
-        return print_list.join("\n");
+        return printList.join("\n");
     }
 
 }
