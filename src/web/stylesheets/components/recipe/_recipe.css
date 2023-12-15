@@ -1,0 +1,13 @@
+/**
+ * Recipe area styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+#recipe {
+    position: relative;
+    background-color: var(--primary-background-colour);
+    border-bottom: 1px solid var(--primary-border-colour);
+}

@@ -4,10 +4,8 @@
  * @license Apache-2.0
  */
 
-import HTMLOperation from "../HTMLOperation.mjs";
-import Sortable from "sortablejs";
 import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
-
+import {COperationList} from "../components/c-operation-list.mjs";
 
 /**
  * Waiter to handle events related to the operations.
@@ -25,7 +23,6 @@ class OperationsWaiter {
         this.manager = manager;
 
         this.options = {};
-        this.removeIntent = false;
     }
 
 
@@ -33,43 +30,56 @@ class OperationsWaiter {
      * Handler for search events.
      * Finds operations which match the given search term and displays them under the search box.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     searchOperations(e) {
-        let ops, selected;
+        let ops, focused;
+        if (e.type === "keyup") {
+            const searchResults = document.getElementById("search-results");
 
-        if (e.type === "search" || e.keyCode === 13) { // Search or Return
+            this.openOpsDropdown();
+
+            if (e.target.value.length !== 0) {
+                this.app.setElementVisibility(searchResults, true);
+            }
+        }
+
+        if (e.key === "Enter") { // Search or Return ( enter )
             e.preventDefault();
-            ops = document.querySelectorAll("#search-results li");
+            ops = document.querySelectorAll("#search-results c-operation-list c-operation-li li");
             if (ops.length) {
-                selected = this.getSelectedOp(ops);
-                if (selected > -1) {
-                    this.manager.recipe.addOperation(ops[selected].innerHTML);
+                focused = this.getFocusedOp(ops);
+                if (focused > -1) {
+                    this.manager.recipe.addOperation(ops[focused].getAttribute("data-name"));
                 }
             }
         }
 
-        if (e.keyCode === 40) { // Down
+        if (e.type === "click" && !e.target.value.length) {
+            this.openOpsDropdown();
+        } else if (e.key === "Escape") { // Escape
+            this.closeOpsDropdown();
+        } else if (e.key === "ArrowDown") { // Down
             e.preventDefault();
-            ops = document.querySelectorAll("#search-results li");
+            ops = document.querySelectorAll("#search-results c-operation-list c-operation-li li");
             if (ops.length) {
-                selected = this.getSelectedOp(ops);
-                if (selected > -1) {
-                    ops[selected].classList.remove("selected-op");
+                focused = this.getFocusedOp(ops);
+                if (focused > -1) {
+                    ops[focused].classList.remove("focused-op");
                 }
-                if (selected === ops.length-1) selected = -1;
-                ops[selected+1].classList.add("selected-op");
+                if (focused === ops.length-1) focused = -1;
+                ops[focused+1].classList.add("focused-op");
             }
-        } else if (e.keyCode === 38) { // Up
+        } else if (e.key === "ArrowUp") { // Up
             e.preventDefault();
-            ops = document.querySelectorAll("#search-results li");
+            ops = document.querySelectorAll("#search-results c-operation-list c-operation-li li");
             if (ops.length) {
-                selected = this.getSelectedOp(ops);
-                if (selected > -1) {
-                    ops[selected].classList.remove("selected-op");
+                focused = this.getFocusedOp(ops);
+                if (focused > -1) {
+                    ops[focused].classList.remove("focused-op");
                 }
-                if (selected === 0) selected = ops.length;
-                ops[selected-1].classList.add("selected-op");
+                if (focused === 0) focused = ops.length;
+                ops[focused-1].classList.add("focused-op");
             }
         } else {
             const searchResultsEl = document.getElementById("search-results");
@@ -84,14 +94,23 @@ class OperationsWaiter {
             }
 
             $("#categories .show").collapse("hide");
+
             if (str) {
                 const matchedOps = this.filterOperations(str, true);
-                const matchedOpsHtml = matchedOps
-                    .map(v => v.toStubHtml())
-                    .join("");
 
-                searchResultsEl.innerHTML = matchedOpsHtml;
-                searchResultsEl.dispatchEvent(this.manager.oplistcreate);
+                const cOpList = new COperationList(
+                    this.app,
+                    matchedOps,
+                    true,
+                    false,
+                    true,
+                    {
+                        class: "check-icon",
+                        innerText: "check"
+                    }
+                );
+
+                searchResultsEl.append(cOpList);
             }
         }
     }
@@ -101,17 +120,17 @@ class OperationsWaiter {
      * Filters operations based on the search string and returns the matching ones.
      *
      * @param {string} searchStr
-     * @param {boolean} highlight - Whether or not to highlight the matching string in the operation
+     * @param {boolean} highlight - Whether to highlight the matching string in the operation
      *   name and description
-     * @returns {string[]}
+     * @returns {[[string, number[]]]}
      */
-    filterOperations(inStr, highlight) {
+    filterOperations(searchStr, highlight) {
         const matchedOps = [];
         const matchedDescs = [];
 
         // Create version with no whitespace for the fuzzy match
         // Helps avoid missing matches e.g. query "TCP " would not find "Parse TCP"
-        const inStrNWS = inStr.replace(/\s/g, "");
+        const inStrNWS = searchStr.replace(/\s/g, "");
 
         for (const opName in this.app.operations) {
             const op = this.app.operations[opName];
@@ -120,18 +139,13 @@ class OperationsWaiter {
             const [nameMatch, score, idxs] = fuzzyMatch(inStrNWS, opName);
 
             // Match description based on exact match
-            const descPos = op.description.toLowerCase().indexOf(inStr.toLowerCase());
+            const descPos = op.description.toLowerCase().indexOf(searchStr.toLowerCase());
 
             if (nameMatch || descPos >= 0) {
-                const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
-                if (highlight) {
-                    operation.highlightSearchStrings(calcMatchRanges(idxs), [[descPos, inStr.length]]);
-                }
-
                 if (nameMatch) {
-                    matchedOps.push([operation, score]);
+                    matchedOps.push([[opName, calcMatchRanges(idxs)], score]);
                 } else {
-                    matchedDescs.push(operation);
+                    matchedDescs.push([opName]);
                 }
             }
         }
@@ -144,144 +158,101 @@ class OperationsWaiter {
 
 
     /**
-     * Finds the operation which has been selected using keyboard shortcuts. This will have the class
-     * 'selected-op' set. Returns the index of the operation within the given list.
+     * Finds the operation which has been focused on using keyboard shortcuts. This will have the class
+     * 'focused-op' set. Returns the index of the operation within the given list.
      *
      * @param {element[]} ops
      * @returns {number}
      */
-    getSelectedOp(ops) {
+    getFocusedOp(ops) {
         for (let i = 0; i < ops.length; i++) {
-            if (ops[i].classList.contains("selected-op")) {
+            if (ops[i].classList.contains("focused-op")) {
                 return i;
             }
         }
         return -1;
     }
 
-
-    /**
-     * Handler for oplistcreate events.
-     *
-     * @listens Manager#oplistcreate
-     * @param {event} e
-     */
-    opListCreate(e) {
-        this.manager.recipe.createSortableSeedList(e.target);
-        this.enableOpsListPopovers(e.target);
-    }
-
-
-    /**
-     * Sets up popovers, allowing the popover itself to gain focus which enables scrolling
-     * and other interactions.
-     *
-     * @param {Element} el - The element to start selecting from
-     */
-    enableOpsListPopovers(el) {
-        $(el).find("[data-toggle=popover]").addBack("[data-toggle=popover]")
-            .popover({trigger: "manual"})
-            .on("mouseenter", function(e) {
-                if (e.buttons > 0) return; // Mouse button held down - likely dragging an operation
-                const _this = this;
-                $(this).popover("show");
-                $(".popover").on("mouseleave", function () {
-                    $(_this).popover("hide");
-                });
-            }).on("mouseleave", function () {
-                const _this = this;
-                setTimeout(function() {
-                    // Determine if the popover associated with this element is being hovered over
-                    if ($(_this).data("bs.popover") &&
-                        ($(_this).data("bs.popover").tip && !$($(_this).data("bs.popover").tip).is(":hover"))) {
-                        $(_this).popover("hide");
-                    }
-                }, 50);
-            });
-    }
-
-
-    /**
-     * Handler for operation doubleclick events.
-     * Adds the operation to the recipe and auto bakes.
-     *
-     * @param {event} e
-     */
-    operationDblclick(e) {
-        const li = e.target;
-
-        this.manager.recipe.addOperation(li.textContent);
-    }
-
-
     /**
      * Handler for edit favourites click events.
-     * Sets up the 'Edit favourites' pane and displays it.
+     * Displays the 'Edit favourites' modal and handles the c-operation-list in the modal
      *
-     * @param {event} e
+     * @param {Event} e
      */
     editFavouritesClick(e) {
-        e.preventDefault();
-        e.stopPropagation();
+        const div = document.getElementById("editable-favourites");
 
-        // Add favourites to modal
-        const favCat = this.app.categories.filter(function(c) {
-            return c.name === "Favourites";
-        })[0];
-
-        let html = "";
-        for (let i = 0; i < favCat.ops.length; i++) {
-            const opName = favCat.ops[i];
-            const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
-            html += operation.toStubHtml(true);
+        // First remove the existing c-operation-list if there already was one
+        if (div.querySelector("c-operation-list")) {
+            div.removeChild(div.querySelector("c-operation-list"));
         }
 
-        const editFavouritesList = document.getElementById("edit-favourites-list");
-        editFavouritesList.innerHTML = html;
-        this.removeIntent = false;
+        // Get list of Favourite operation names
+        const favCatConfig = this.app.categories.find(catConfig => catConfig.name === "Favourites");
 
-        const editableList = Sortable.create(editFavouritesList, {
-            filter: ".remove-icon",
-            onFilter: function (evt) {
-                const el = editableList.closest(evt.item);
-                if (el && el.parentNode) {
-                    $(el).popover("dispose");
-                    el.parentNode.removeChild(el);
-                }
-            },
-            onEnd: function(evt) {
-                if (this.removeIntent) {
-                    $(evt.item).popover("dispose");
-                    evt.item.remove();
-                }
-            }.bind(this),
-        });
+        if (favCatConfig !== undefined) {
+            const opList = new COperationList(
+                this.app,
+                favCatConfig.ops.map(op => [op]),
+                false,
+                true,
+                false,
+                {
+                    class: "remove-icon",
+                    innerText: "delete"
+                },
+            );
 
-        Sortable.utils.on(editFavouritesList, "dragleave", function() {
-            this.removeIntent = true;
-        }.bind(this));
+            div.appendChild(opList);
+        }
 
-        Sortable.utils.on(editFavouritesList, "dragover", function() {
-            this.removeIntent = false;
-        }.bind(this));
+        if (!this.app.isMobileView()) {
+            $("#editable-favourites [data-toggle=popover]").popover();
+        }
 
-        $("#edit-favourites-list [data-toggle=popover]").popover();
         $("#favourites-modal").modal();
     }
 
+
+    /**
+     * Open operations dropdown
+     */
+    openOpsDropdown() {
+        // the 'close' ( dropdown ) icon in Operations component mobile UI
+        const closeOpsDropdownIcon = document.getElementById("close-ops-dropdown-icon");
+        const categories = document.getElementById("categories");
+
+        this.app.setElementVisibility(categories, true);
+        this.app.setElementVisibility(closeOpsDropdownIcon, true);
+    }
+
+
+    /**
+     * Hide any operation lists ( #categories or #search-results ) and the close-operations-dropdown
+     * icon itself, clear any search input
+     */
+    closeOpsDropdown() {
+        const search = document.getElementById("search");
+
+        // if any input remains in #search, clear it
+        if (search.value.length) {
+            search.value = "";
+        }
+
+        this.app.setElementVisibility(document.getElementById("categories"), false);
+        this.app.setElementVisibility(document.getElementById("search-results"), false);
+        this.app.setElementVisibility(document.getElementById("close-ops-dropdown-icon"), false);
+    }
 
     /**
      * Handler for save favourites click events.
      * Saves the selected favourites and reloads them.
      */
     saveFavouritesClick() {
-        const favs = document.querySelectorAll("#edit-favourites-list li");
-        const favouritesList = Array.from(favs, e => e.childNodes[0].textContent);
+        const listItems = document.querySelectorAll("#editable-favourites c-operation-li > li");
+        const favourites = Array.from(listItems, li => li.getAttribute("data-name"));
 
-        this.app.saveFavourites(favouritesList);
-        this.app.loadFavourites();
-        this.app.populateOperationsList();
-        this.manager.recipe.initialiseOperationDragNDrop();
+        this.app.updateFavourites(favourites, true);
     }
 
 
@@ -292,7 +263,6 @@ class OperationsWaiter {
     resetFavouritesClick() {
         this.app.resetFavourites();
     }
-
 }
 
 export default OperationsWaiter;

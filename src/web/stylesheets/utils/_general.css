@@ -59,26 +59,6 @@ body {
     transform: rotate(180deg);
 }
 
-::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background-color: var(--scrollbar-track);
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: var(--scrollbar-thumb);
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background-color: var(--scrollbar-hover);
-}
-
-::-webkit-scrollbar-corner {
-    background-color: var(--scrollbar-track);
-}
 
 /* Highlighters */
 .hl1 { background-color: var(--hl1); }
@@ -86,3 +66,21 @@ body {
 .hl3 { background-color: var(--hl3); } /* Half-Life 3 confirmed :O */
 .hl4 { background-color: var(--hl4); }
 .hl5 { background-color: var(--hl5); }
+
+
+/* Screen-bound UI visibility */
+.desktop-only {
+    display: none;
+}
+
+@media only screen and ( min-width: 1024px ) {
+    .desktop-only {
+        display: inline-block;
+    }
+}
+
+@media only screen and ( min-width: 1024px ){
+    .mobile-only {
+        display: none;
+    }
+}

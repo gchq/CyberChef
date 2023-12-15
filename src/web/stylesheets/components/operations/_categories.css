@@ -1,0 +1,61 @@
+/**
+ * Operations - Categories list
+ */
+
+c-category-list > ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.category-title {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: var(--secondary-background-colour);
+    border-bottom: 1px solid var(--secondary-border-colour);
+    font-weight: var(--title-weight);
+}
+
+.category-title[data-target="#catFavourites"] {
+    height: 41px;
+}
+
+#edit-favourites {
+    transform: translateY(-7px);
+}
+
+.category-title[aria-expanded=true] {
+    border-bottom-color: var(--primary-border-colour);
+}
+
+.category-title.collapsed {
+    border-bottom-color: var(--secondary-border-colour);
+}
+
+.category-title:hover {
+    color: var(--op-list-operation-font-colour);
+}
+
+.category {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none;
+}
+
+#categories a {
+    color: var(--category-list-font-colour);
+    cursor: pointer;
+}
+
+#categories a:hover {
+    filter: brightness(98%);
+}
+
+.favourites-hover {
+    color: var(--rec-list-operation-font-colour);
+    background-color: var(--rec-list-operation-bg-colour);
+    border: 2px dashed var(--rec-list-operation-font-colour) !important;
+    padding: 8px 8px 9px 8px;
+}
+

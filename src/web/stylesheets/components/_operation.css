@@ -6,8 +6,12 @@
  * @license Apache-2.0
  */
 
+/*
+    Note: .operation is used in the c-operation-li custom web components, but also
+    for list items in #recipe-list
+*/
+
 .operation {
-    cursor: grab;
     padding: 10px;
     list-style-type: none;
     position: relative;
@@ -16,307 +20,60 @@
     border-top: none;
     border-left: none;
     border-right: none;
+    cursor: default;
 }
 
-#rec-list .operation {
-    padding: 14px;
+@media only screen and (min-width: 1024px){
+    .operation {
+        cursor: grab;
+    }
+}
+
+.op-icon {
+    float: right;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+
+.op-icon.star-icon {
+    float: left;
+    margin: 0 10px 0 0;
+    padding: 0;
+    color: var(--op-list-operation-font-colour);
+    opacity: .35;
+    cursor: pointer;
+}
+
+li.operation.favourite > .op-icon.star-icon {
+    opacity: 1;
+}
+
+.op-icon.remove-icon {
+    color: #f44336;
+}
+
+.op-icon.check-icon {
+    display: none;
+    color: var(--checkmark-color);
+}
+
+.operation.selected {
+    background-color: var(--selected-operation-bg-colour);
+}
+
+.operation.selected > i.op-icon.check-icon {
+    display: inline-block;
 }
 
 .op-title {
     font-weight: var(--op-title-font-weight);
 }
 
-.ingredients {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
-    column-gap: 14px;
-    row-gap: 0;
+c-operation-li li.operation.focused-op {
+    color: var(--focused-operation-font-color) !important;
+    background-color: var(--focused-operation-bg-colour) !important;
+    border-color: var(--focused-operation-border-colour) !important;
 }
 
-.ing-very-wide {
-    flex: 4 400px;
-}
 
-.ing-wide {
-    flex: 3 200px;
-}
-
-.ing-medium {
-    flex: 2 120px;
-}
-
-.ing-short {
-    flex: 1 80px;
-}
-
-.ing-flexible {
-    flex-grow: 1;
-}
-
-.ingredients .form-group {
-    margin-top: 1rem;
-    padding-top: 0;
-}
-
-.arg {
-    font-family: var(--fixed-width-font-family);
-    text-overflow: ellipsis;
-}
-
-select.arg {
-    font-family: var(--primary-font-family);
-    min-width: 100px;
-}
-
-textarea.arg {
-    min-height: 74px;
-    resize: vertical;
-}
-
-div.toggle-string {
-    flex: 1;
-}
-
-input.toggle-string {
-    border-top-right-radius: 0 !important;
-    height: 42px !important;
-}
-
-.operation [class^='bmd-label'],
-.operation [class*=' bmd-label'] {
-    top: 13px !important;
-    left: 12px;
-    z-index: 10;
-}
-
-.operation label,
-.operation .checkbox label {
-    color: var(--arg-label-colour);
-}
-
-.operation .is-focused [class^='bmd-label'],
-.operation .is-focused [class*=' bmd-label'],
-.operation .is-focused [class^='bmd-label'],
-.operation .is-focused [class*=' bmd-label'],
-.operation .is-focused label,
-.operation .checkbox label:hover {
-    color: var(--input-highlight-colour);
-}
-
-.ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
-.ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before {
-    border-color: var(--input-border-colour);
-    color: var(--input-highlight-colour);
-}
-
-.ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
-.ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
-    border-color: var(--input-highlight-colour);
-    color: var(--input-highlight-colour);
-}
-
-.disabled .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
-.disabled .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before,
-.disabled .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
-.disabled .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
-    border-color: var(--disabled-font-colour);
-    color: var(--disabled-font-colour);
-}
-
-.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
-.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before,
-.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
-.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
-    border-color: var(--breakpoint-font-colour);
-    color: var(--breakpoint-font-colour);
-}
-
-.flow-control-op.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
-.flow-control-op.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before,
-.flow-control-op.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
-.flow-control-op.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
-    border-color: var(--fc-breakpoint-operation-font-colour);
-    color: var(--fc-breakpoint-operation-font-colour);
-}
-
-.operation .form-control {
-    padding: 20px 12px 6px 12px !important;
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    background-image: none;
-    background-color: var(--arg-background);
-    background-position-y: 100%, 100%;
-    color: var(--arg-font-colour);
-}
-
-.operation .form-control:hover {
-    background-image:
-        linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(25, 118, 210, 0) 2px),
-        linear-gradient(to top, rgba(0, 0, 0, 0.26) 1px, rgba(0, 0, 0, 0) 1px);
-    filter: brightness(97%);
-}
-
-.operation .form-control:focus {
-    background-color: var(--arg-background);
-    background-image:
-        linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(25, 118, 210, 0) 2px),
-        linear-gradient(to top, rgba(0, 0, 0, 0.26) 1px, rgba(0, 0, 0, 0) 1px);
-    filter: brightness(100%);
-}
-
-.operation .bmd-form-group.is-filled label.bmd-label-floating,
-.operation .bmd-form-group.is-focused label.bmd-label-floating {
-    top: 4px !important;
-    left: 12px;
-}
-
-.operation label.bmd-label-floating {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    width: calc(100% - 13px);
-}
-
-.input-group .form-control {
-    border-top-left-radius: 4px;
-}
-
-.input-group-append button {
-    border-top-right-radius: 4px;
-    background-color: var(--arg-background) !important;
-    margin: unset;
-}
-
-.input-group-append button:hover {
-    filter: brightness(97%);
-}
-
-.editable-option-menu {
-    height: auto;
-    max-height: 350px;
-    overflow-x: hidden;
-}
-
-.editable-option-menu .dropdown-item {
-    padding: 0.3rem 1rem 0.3rem 1rem;
-    min-height: 1.6rem;
-    max-width: 20rem;
-}
-
-.ingredients .dropdown-toggle-split {
-    height: 40px !important;
-}
-
-.boolean-arg {
-    height: 46px;
-}
-
-.boolean-arg .checkbox {
-    height: 100%;
-}
-
-.boolean-arg .checkbox label {
-    height: 100%;
-    display: flex;
-    align-items: center;
-}
-
-.boolean-arg .checkbox-decorator {
-    top: 13px;
-}
-
-.register-list {
-    background-color: var(--fc-operation-border-colour);
-    font-family: var(--fixed-width-font-family);
-    padding: 10px;
-    word-break: break-all;
-}
-
-.op-icon {
-    float: right;
-    color: #f44336;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-.recip-icons {
-    position: absolute;
-    top: 13px;
-    right: 10px;
-    height: 16px;
-}
-
-.recip-icons i {
-    margin-right: 10px;
-    vertical-align: baseline;
-    float: right;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-.disable-icon {
-    color: var(--disable-icon-colour);
-}
-
-.disable-icon-selected {
-    color: var(--disable-icon-selected-colour);
-}
-
-.breakpoint {
-    color: var(--breakpoint-icon-colour);
-}
-
-.breakpoint-selected {
-    color: var(--breakpoint-icon-selected-colour);
-}
-
-.break {
-    color: var(--breakpoint-font-colour) !important;
-    background-color: var(--breakpoint-bg-colour) !important;
-    border-color: var(--breakpoint-border-colour) !important;
-}
-
-.break .form-group * { color: var(--breakpoint-font-colour) !important; }
-
-.selected-op {
-    color: var(--selected-operation-font-color) !important;
-    background-color: var(--selected-operation-bg-colour) !important;
-    border-color: var(--selected-operation-border-colour) !important;
-}
-
-.selected-op .form-group * { color: var(--selected-operation-font-color) !important; }
-
-.flow-control-op {
-    color: var(--fc-operation-font-colour) !important;
-    background-color: var(--fc-operation-bg-colour) !important;
-    border-color: var(--fc-operation-border-colour) !important;
-}
-
-.flow-control-op .form-group *:not(.arg) { color: var(--fc-operation-font-colour) }
-
-.flow-control-op.break {
-    color: var(--fc-breakpoint-operation-font-colour) !important;
-    background-color: var(--fc-breakpoint-operation-bg-colour) !important;
-    border-color: var(--fc-breakpoint-operation-border-colour) !important;
-}
-
-.flow-control-op.break .form-group * { color: var(--fc-breakpoint-operation-font-colour) !important; }
-
-.disabled {
-    color: var(--disabled-font-colour) !important;
-    background-color: var(--disabled-bg-colour) !important;
-    border-color: var(--disabled-border-colour) !important;
-}
-
-.disabled .form-group * { color: var(--disabled-font-colour) !important; }
-
-.break .register-list {
-    color: var(--fc-breakpoint-operation-font-colour) !important;
-    background-color: var(--fc-breakpoint-operation-border-colour) !important;
-}
-
-.disabled .register-list {
-    color: var(--disabled-font-colour) !important;
-    background-color: var(--disabled-border-colour) !important;
-}
