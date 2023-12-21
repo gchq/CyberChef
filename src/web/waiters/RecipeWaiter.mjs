@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
+import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import Utils from "../../core/Utils.mjs";
 import {escapeControlChars} from "../utils/editorUtils.mjs";
-import {CRecipeLi} from "../components/c-recipe-li.mjs";
 
 
 /**
@@ -29,45 +29,30 @@ class RecipeWaiter {
 
 
     /**
-     * Sets up the drag and drop capability for recipe-list
+     * Sets up the drag and drop capability for operations in the operations and recipe areas.
      */
-    initDragAndDrop() {
+    initialiseOperationDragNDrop() {
         const recList = document.getElementById("rec-list");
-
-        let swapThreshold, animation, delay;
-
-        // tweak these values for better user experiences per device type and UI
-        if (this.app.isMobileView()) {
-            swapThreshold = 0.30;
-            animation = 300;
-            delay = 50;
-        } else {
-            swapThreshold = 1;
-            animation = 100;
-            delay = 0;
-        }
 
         // Recipe list
         Sortable.create(recList, {
             group: "recipe",
             sort: true,
-            draggable: "c-recipe-li",
-            swapThreshold: swapThreshold,
-            animation: animation,
-            delay: delay,
+            animation: 0,
+            delay: 0,
             filter: ".arg",
             preventOnFilter: false,
             setData: function(dataTransfer, dragEl) {
-                dataTransfer.setData("Text", dragEl.querySelector("li").getAttribute("data-name"));
+                dataTransfer.setData("Text", dragEl.querySelector(".op-title").textContent);
             },
-            onEnd: function(e) {
+            onEnd: function(evt) {
                 if (this.removeIntent) {
-                    e.item.remove();
-                    e.target.dispatchEvent(this.manager.operationremove);
+                    evt.item.remove();
+                    evt.target.dispatchEvent(this.manager.operationremove);
                 }
             }.bind(this),
-            onSort: function(e) {
-                if (e.from.id === "rec-list") {
+            onSort: function(evt) {
+                if (evt.from.id === "rec-list") {
                     document.dispatchEvent(this.manager.statechange);
                 }
             }.bind(this)
@@ -95,12 +80,82 @@ class RecipeWaiter {
         document.querySelector("#categories a").addEventListener("drop", this.favDrop.bind(this));
     }
 
+
+    /**
+     * Creates a drag-n-droppable seed list of operations.
+     *
+     * @param {element} listEl - The list to initialise
+     */
+    createSortableSeedList(listEl) {
+        Sortable.create(listEl, {
+            group: {
+                name: "recipe",
+                pull: "clone",
+                put: false,
+            },
+            sort: false,
+            setData: function(dataTransfer, dragEl) {
+                dataTransfer.setData("Text", dragEl.textContent);
+            },
+            onStart: function(evt) {
+                // Removes popover element and event bindings from the dragged operation but not the
+                // event bindings from the one left in the operations list. Without manually removing
+                // these bindings, we cannot re-initialise the popover on the stub operation.
+                $(evt.item)
+                    .popover("dispose")
+                    .removeData("bs.popover")
+                    .off("mouseenter")
+                    .off("mouseleave")
+                    .attr("data-toggle", "popover-disabled");
+                $(evt.clone)
+                    .off(".popover")
+                    .removeData("bs.popover");
+            },
+            onEnd: this.opSortEnd.bind(this)
+        });
+    }
+
+
+    /**
+     * Handler for operation sort end events.
+     * Removes the operation from the list if it has been dropped outside. If not, adds it to the list
+     * at the appropriate place and initialises it.
+     *
+     * @fires Manager#operationadd
+     * @param {event} evt
+     */
+    opSortEnd(evt) {
+        if (this.removeIntent && evt.item.parentNode.id === "rec-list") {
+            evt.item.remove();
+            return;
+        }
+
+        // Reinitialise the popover on the original element in the ops list because for some reason it
+        // gets destroyed and recreated. If the clone isn't in the ops list, we use the original item instead.
+        let enableOpsElement;
+        if (evt.clone?.parentNode?.classList?.contains("op-list")) {
+            enableOpsElement = evt.clone;
+        } else {
+            enableOpsElement = evt.item;
+            $(evt.item).attr("data-toggle", "popover");
+        }
+        this.manager.ops.enableOpsListPopovers(enableOpsElement);
+
+        if (evt.item.parentNode.id !== "rec-list") {
+            return;
+        }
+
+        this.buildRecipeOperation(evt.item);
+        evt.item.dispatchEvent(this.manager.operationadd);
+    }
+
+
     /**
      * Handler for favourite dragover events.
      * If the element being dragged is an operation, displays a visual cue so that the user knows it can
      * be dropped here.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     favDragover(e) {
         if (e.dataTransfer.effectAllowed !== "move")
@@ -125,7 +180,7 @@ class RecipeWaiter {
      * Handler for favourite dragleave events.
      * Removes the visual cue.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     favDragleave(e) {
         e.stopPropagation();
@@ -138,7 +193,7 @@ class RecipeWaiter {
      * Handler for favourite drop events.
      * Adds the dragged operation to the favourites list.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     favDrop(e) {
         e.stopPropagation();
@@ -162,50 +217,123 @@ class RecipeWaiter {
 
 
     /**
+     * Handler for disable click events.
+     * Updates the icon status.
+     *
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    disableClick(e) {
+        const icon = e.target;
+
+        if (icon.getAttribute("disabled") === "false") {
+            icon.setAttribute("disabled", "true");
+            icon.classList.add("disable-icon-selected");
+            icon.parentNode.parentNode.classList.add("disabled");
+        } else {
+            icon.setAttribute("disabled", "false");
+            icon.classList.remove("disable-icon-selected");
+            icon.parentNode.parentNode.classList.remove("disabled");
+        }
+
+        this.app.progress = 0;
+        window.dispatchEvent(this.manager.statechange);
+    }
+
+
+    /**
+     * Handler for breakpoint click events.
+     * Updates the icon status.
+     *
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    breakpointClick(e) {
+        const bp = e.target;
+
+        if (bp.getAttribute("break") === "false") {
+            bp.setAttribute("break", "true");
+            bp.classList.add("breakpoint-selected");
+        } else {
+            bp.setAttribute("break", "false");
+            bp.classList.remove("breakpoint-selected");
+        }
+
+        window.dispatchEvent(this.manager.statechange);
+    }
+
+
+    /**
+     * Handler for operation doubleclick events.
+     * Removes the operation from the recipe and auto bakes.
+     *
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    operationDblclick(e) {
+        e.target.remove();
+        this.opRemove(e);
+    }
+
+
+    /**
+     * Handler for operation child doubleclick events.
+     * Removes the operation from the recipe.
+     *
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    operationChildDblclick(e) {
+        e.target.parentNode.remove();
+        this.opRemove(e);
+    }
+
+
+    /**
      * Generates a configuration object to represent the current recipe.
      *
-     * @returns {Object[]} recipeConfig - The recipe configuration
+     * @returns {recipeConfig}
      */
     getConfig() {
         const config = [];
-        let ingredients, args, disableIcon, breakPointIcon, item;
+        let ingredients, ingList, disabled, bp, item;
         const operations = document.querySelectorAll("#rec-list li.operation");
 
         for (let i = 0; i < operations.length; i++) {
             ingredients = [];
-            disableIcon = operations[i].querySelector(".disable-icon");
-            breakPointIcon = operations[i].querySelector(".breakpoint-icon");
-            args = operations[i].querySelectorAll(".arg");
+            disabled = operations[i].querySelector(".disable-icon");
+            bp = operations[i].querySelector(".breakpoint");
+            ingList = operations[i].querySelectorAll(".arg");
 
-            for (let j = 0; j < args.length; j++) {
-                if (args[j].getAttribute("type") === "checkbox") {
+            for (let j = 0; j < ingList.length; j++) {
+                if (ingList[j].getAttribute("type") === "checkbox") {
                     // checkbox
-                    ingredients[j] = args[j].checked;
-                } else if (args[j].classList.contains("toggle-string")) {
+                    ingredients[j] = ingList[j].checked;
+                } else if (ingList[j].classList.contains("toggle-string")) {
                     // toggleString
                     ingredients[j] = {
-                        option: args[j].parentNode.parentNode.querySelector("button").textContent,
-                        string: args[j].value
+                        option: ingList[j].parentNode.parentNode.querySelector("button").textContent,
+                        string: ingList[j].value
                     };
-                } else if (args[j].getAttribute("type") === "number") {
+                } else if (ingList[j].getAttribute("type") === "number") {
                     // number
-                    ingredients[j] = parseFloat(args[j].value);
+                    ingredients[j] = parseFloat(ingList[j].value);
                 } else {
                     // all others
-                    ingredients[j] = args[j].value;
+                    ingredients[j] = ingList[j].value;
                 }
             }
 
             item = {
-                op: operations[i].getAttribute("data-name"),
+                op: operations[i].querySelector(".op-title").textContent,
                 args: ingredients
             };
 
-            if (disableIcon && disableIcon.getAttribute("disabled") === "true") {
+            if (disabled && disabled.getAttribute("disabled") === "true") {
                 item.disabled = true;
             }
 
-            if (breakPointIcon && breakPointIcon.getAttribute("break") === "true") {
+            if (bp && bp.getAttribute("break") === "true") {
                 item.breakpoint = true;
             }
 
@@ -235,28 +363,46 @@ class RecipeWaiter {
 
 
     /**
-     * Adds the specified operation to the recipe
+     * Given an operation stub element, this function converts it into a full recipe element with
+     * arguments.
+     *
+     * @param {element} el - The operation stub element from the operations pane
+     */
+    buildRecipeOperation(el) {
+        const opName = el.textContent;
+        const op = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
+        el.innerHTML = op.toFullHtml();
+
+        if (this.app.operations[opName].flowControl) {
+            el.classList.add("flow-control-op");
+        }
+
+        // Disable auto-bake if this is a manual op
+        if (op.manualBake && this.app.autoBake_) {
+            this.manager.controls.setAutoBake(false);
+            this.app.alert("Auto-Bake is disabled by default when using this operation.", 5000);
+        }
+    }
+
+
+    /**
+     * Adds the specified operation to the recipe.
      *
      * @fires Manager#operationadd
-     * @fires Manager#statechange
      * @param {string} name - The name of the operation to add
-     * @param {number} index - The index where the operation should be displayed
+     * @returns {element}
      */
-    addOperation(name, index = undefined) {
-        const item = new CRecipeLi(this.app, name, this.app.operations[name].args);
+    addOperation(name) {
+        const item = document.createElement("li");
 
-        const recipeList = document.getElementById("rec-list");
-
-        if (index !== undefined) {
-            recipeList.insertBefore(item, recipeList.children[index + 1]);
-        } else {
-            recipeList.appendChild(item);
-        }
+        item.classList.add("operation");
+        item.innerHTML = name;
+        this.buildRecipeOperation(item);
+        document.getElementById("rec-list").appendChild(item);
 
         $(item).find("[data-toggle='tooltip']").tooltip();
 
         item.dispatchEvent(this.manager.operationadd);
-        document.dispatchEvent(this.app.manager.statechange);
         return item;
     }
 
@@ -272,8 +418,6 @@ class RecipeWaiter {
             recList.removeChild(recList.firstChild);
         }
         recList.dispatchEvent(this.manager.operationremove);
-
-        window.dispatchEvent(this.app.manager.statechange);
     }
 
 
@@ -281,7 +425,7 @@ class RecipeWaiter {
      * Handler for operation dropdown events from toggleString arguments.
      * Sets the selected option as the name of the button.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     dropdownToggleClick(e) {
         e.stopPropagation();
@@ -317,12 +461,25 @@ class RecipeWaiter {
      *
      * @listens Manager#operationadd
      * @fires Manager#statechange
-     * @param {Event} e
+     * @param {event} e
      */
     opAdd(e) {
-        console.log(e);
-        log.debug(`'${e.target.querySelector("li").getAttribute("data-name")}' added to recipe`);
+        log.debug(`'${e.target.querySelector(".op-title").textContent}' added to recipe`);
+
         this.triggerArgEvents(e.target);
+        window.dispatchEvent(this.manager.statechange);
+    }
+
+
+    /**
+     * Handler for operationremove events.
+     *
+     * @listens Manager#operationremove
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    opRemove(e) {
+        log.debug("Operation removed from recipe");
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -331,7 +488,7 @@ class RecipeWaiter {
      * Handler for text argument dragover events.
      * Gives the user a visual cue to show that items can be dropped here.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     textArgDragover (e) {
         // This will be set if we're dragging an operation
@@ -348,7 +505,7 @@ class RecipeWaiter {
      * Handler for text argument dragleave events.
      * Removes the visual cue.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     textArgDragLeave (e) {
         e.stopPropagation();
@@ -361,7 +518,7 @@ class RecipeWaiter {
      * Handler for text argument drop events.
      * Loads the dragged data into the argument textarea.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     textArgDrop(e) {
         // This will be set if we're dragging an operation
@@ -420,6 +577,32 @@ class RecipeWaiter {
 
         op.insertAdjacentHTML("beforeend", registerListEl);
     }
+
+
+    /**
+     * Adjusts the number of ingredient columns as the width of the recipe changes.
+     */
+    adjustWidth() {
+        const recList = document.getElementById("rec-list");
+
+        // Hide Chef icon on Bake button if the page is compressed
+        const bakeIcon = document.querySelector("#bake img");
+
+        if (recList.clientWidth < 370) {
+            // Hide Chef icon on Bake button
+            bakeIcon.style.display = "none";
+        } else {
+            bakeIcon.style.display = "inline-block";
+        }
+
+        // Scale controls to fit pane width
+        const controls = document.getElementById("controls");
+        const controlsContent = document.getElementById("controls-content");
+        const scale = (controls.clientWidth - 1) / controlsContent.scrollWidth;
+
+        controlsContent.style.transform = `scale(${scale})`;
+    }
+
 }
 
 export default RecipeWaiter;

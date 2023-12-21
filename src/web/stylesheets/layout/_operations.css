@@ -1,0 +1,43 @@
+/**
+ * Operation area styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+.op-list .operation {
+    color: var(--op-list-operation-font-colour);
+    background-color: var(--op-list-operation-bg-colour);
+    border-color: var(--op-list-operation-border-colour);
+}
+
+#search {
+    padding-left: 10px;
+    padding-right: 10px;
+    background-image:
+        linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(0, 0, 0, 0) 2px),
+        linear-gradient(to top, var(--primary-border-colour) 1px, rgba(0, 0, 0, 0) 1px);
+}
+
+#edit-favourites {
+    float: right;
+    margin-top: -7px;
+}
+
+.favourites-hover {
+    color: var(--rec-list-operation-font-colour);
+    background-color: var(--rec-list-operation-bg-colour);
+    border: 2px dashed var(--rec-list-operation-font-colour) !important;
+    padding: 8px 8px 9px 8px;
+}
+
+#categories a {
+    color: var(--category-list-font-colour);
+    cursor: pointer;
+}
+
+#categories a:hover,
+.op-list .operation:hover {
+    filter: brightness(98%);
+}

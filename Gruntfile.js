@@ -215,7 +215,6 @@ module.exports = function (grunt) {
                 },
                 devServer: {
                     port: grunt.option("port") || 8080,
-                    host: "0.0.0.0",
                     client: {
                         logging: "error",
                         overlay: true

@@ -46,21 +46,17 @@
 
 
     /* Operation colours */
-    --op-list-operation-font-colour: #2f6d8c;
-    --op-list-operation-bg-colour: #e7f3f8;
+    --op-list-operation-font-colour: #3a87ad;
+    --op-list-operation-bg-colour: #d9edf7;
     --op-list-operation-border-colour: #bce8f1;
 
     --rec-list-operation-font-colour: #468847;
     --rec-list-operation-bg-colour: #dff0d8;
     --rec-list-operation-border-colour: #d3e8c0;
 
-    --focused-operation-font-color: #c09853;
-    --focused-operation-bg-colour: #fcf8e3;
-    --focused-operation-border-colour: #fbeed5;
-
-    --selected-operation-bg-colour: #d5ebf5;
-
-    --checkmark-color: var(--op-list-operation-font-colour);
+    --selected-operation-font-color: #c09853;
+    --selected-operation-bg-colour: #fcf8e3;
+    --selected-operation-border-colour: #fbeed5;
 
     --breakpoint-font-colour: #b94a48;
     --breakpoint-bg-colour: #f2dede;
@@ -137,4 +133,3 @@
     --input-highlight-colour: #1976d2;
     --input-border-colour: #424242;
 }
-
