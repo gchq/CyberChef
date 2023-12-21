@@ -18,7 +18,7 @@ const utils = require("./browserUtils.js");
 module.exports = {
     before: browser => {
         browser
-            .resizeWindow(1024, 800)
+            .resizeWindow(1280, 800)
             .url(browser.launchUrl)
             .useCss()
             .waitForElementNotPresent("#preloader", 10000)

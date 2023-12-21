@@ -4,6 +4,8 @@
  * @license Apache-2.0
  */
 
+import { debounce } from "../../core/Utils.mjs";
+
 /**
  * Waiter to handle events related to the window object.
  */
@@ -13,64 +15,19 @@ class WindowWaiter {
      * WindowWaiter constructor.
      *
      * @param {App} app - The main view object for CyberChef.
-     * @param {Manager} manager - The CyberChef event manager.
      */
-    constructor(app, manager) {
+    constructor(app) {
         this.app = app;
-        this.manager = manager;
     }
 
 
     /**
      * Handler for window resize events.
+     * Resets adjustable component sizes after 200ms (so that continuous resizing doesn't cause
+     * continuous resetting).
      */
     windowResize() {
-        if (!this.app.isMobileView()) {
-            this.onResizeToDesktop();
-        } else {
-            this.onResizeToMobile();
-        }
-
-        // #output can be maximised on all screen sizes, so if it was open while resizing,
-        // it can be kept maximised until minimised manually
-        if (document.getElementById("output").classList.contains("maximised-pane")) {
-            this.manager.controls.setPaneMaximised("output", true);
-        }
-    }
-
-
-    /**
-     * Set desktop UI and close #recipe / #input maximised panes if there were any.
-     * Correct the height of #recipe
-     */
-    onResizeToDesktop() {
-        this.app.setDesktopUI();
-
-        // enable popovers on li.operation elements
-        $(document.querySelectorAll("li.operation")).popover("enable");
-
-        // if a window is resized past breakpoint while #recipe or #input is maximised, close these maxed panes
-        ["recipe", "input"].forEach(paneId => this.manager.controls.setPaneMaximised(paneId, false));
-
-        // to prevent #recipe from keeping the height set in divideAvailableSpace
-        document.getElementById("recipe").style.height = "100%";
-    }
-
-    /**
-     * Set mobile UI and close any maximised panes if there were any
-     */
-    onResizeToMobile() {
-        this.app.setMobileUI();
-
-        // disable app popovers on li.operation elements
-        $(document.querySelectorAll("li.operation")).popover("disable");
-
-        // when mobile devices' keyboards pop up, it triggers a window resize event. Here
-        // we keep the maximised panes open until the minimise button is clicked / tapped
-        ["recipe", "input", "output"]
-            .map(paneId => document.getElementById(paneId))
-            .filter(pane => pane.classList.contains("maximised-pane"))
-            .forEach(pane => this.manager.controls.setPaneMaximised(pane.id, true));
+        debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();
     }
 
 

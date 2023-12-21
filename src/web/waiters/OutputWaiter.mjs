@@ -982,7 +982,7 @@ class OutputWaiter {
     /**
      * Handler for changing tabs event
      *
-     * @param {Event} mouseEvent
+     * @param {event} mouseEvent
      */
     changeTabClick(mouseEvent) {
         if (!mouseEvent.target) return;
@@ -996,7 +996,7 @@ class OutputWaiter {
     /**
      * Handler for scrolling on the output tabs area
      *
-     * @param {Event} wheelEvent
+     * @param {event} wheelEvent
      */
     scrollTab(wheelEvent) {
         wheelEvent.preventDefault();
@@ -1400,6 +1400,30 @@ class OutputWaiter {
         switchButton.firstElementChild.innerHTML = "open_in_browser";
     }
 
+    /**
+     * Handler for maximise output click events.
+     * Resizes the output frame to be as large as possible, or restores it to its original size.
+     */
+    maximiseOutputClick(e) {
+        const el = e.target.id === "maximise-output" ? e.target : e.target.parentNode;
+
+        if (el.getAttribute("data-original-title").indexOf("Maximise") === 0) {
+            document.body.classList.add("output-maximised");
+            this.app.initialiseSplitter(true);
+            this.app.columnSplitter.collapse(0);
+            this.app.columnSplitter.collapse(1);
+            this.app.ioSplitter.collapse(0);
+
+            $(el).attr("data-original-title", "Restore output pane");
+            el.querySelector("i").innerHTML = "fullscreen_exit";
+        } else {
+            document.body.classList.remove("output-maximised");
+            $(el).attr("data-original-title", "Maximise output pane");
+            el.querySelector("i").innerHTML = "fullscreen";
+            this.app.initialiseSplitter(false);
+            this.app.resetLayout();
+        }
+    }
 
     /**
      * Handler for find tab button clicked
@@ -1510,7 +1534,7 @@ class OutputWaiter {
      * Handler for clicking on a filter result.
      * Changes to the clicked output
      *
-     * @param {Event} e
+     * @param {event} e
      */
     filterItemClick(e) {
         if (!e.target) return;

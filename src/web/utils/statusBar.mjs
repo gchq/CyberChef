@@ -45,7 +45,6 @@ class StatusBarPanel {
         dom.setAttribute("data-help", `This status bar provides information about data in the ${this.label}. Help topics are available for each of the components by activating help when hovering over them.`);
         lhs.innerHTML = this.constructLHS();
         rhs.innerHTML = this.constructRHS();
-        rhs.classList.add("rhs");
 
         dom.appendChild(lhs);
         dom.appendChild(rhs);
@@ -289,10 +288,9 @@ class StatusBarPanel {
      */
     updateSizing(view) {
         const viewHeight = view.contentDOM.parentNode.clientHeight;
-
         this.dom.querySelectorAll(".cm-status-bar-select-scroll").forEach(
             el => {
-                el.style.maxHeight = window.innerWidth >= 1024 ? (viewHeight - 50) + "px" : "250px";
+                el.style.maxHeight = (viewHeight - 50) + "px";
             }
         );
     }

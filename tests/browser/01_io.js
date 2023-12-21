@@ -93,7 +93,7 @@ const CONTROL_CHAR_NAMES = {
 module.exports = {
     before: browser => {
         browser
-            .resizeWindow(1024, 800)
+            .resizeWindow(1280, 800)
             .url(browser.launchUrl)
             .useCss()
             .waitForElementNotPresent("#preloader", 10000)

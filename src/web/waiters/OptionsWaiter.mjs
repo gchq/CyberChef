@@ -57,7 +57,7 @@ class OptionsWaiter {
      * Handler for options click events.
      * Displays the options pane.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     optionsClick(e) {
         e.preventDefault();
@@ -77,7 +77,7 @@ class OptionsWaiter {
     /**
      * Handler for switch change events.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     switchChange(e) {
         const el = e.target;
@@ -91,7 +91,7 @@ class OptionsWaiter {
     /**
      * Handler for number change events.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     numberChange(e) {
         const el = e.target;
@@ -105,7 +105,7 @@ class OptionsWaiter {
     /**
      * Handler for select change events.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     selectChange(e) {
         const el = e.target;

@@ -8,9 +8,6 @@ import Utils from "../core/Utils.mjs";
 
 /**
  * Object to handle the creation of operation ingredients.
- *
- * Note: Not to be confused with the native web component c-recipe-li, which is the component that is the (parent)
- * list item in recipe-list.
  */
 class HTMLIngredient {
 
@@ -131,21 +128,20 @@ class HTMLIngredient {
                 </div>`;
                 break;
             case "boolean":
-                html += `<div class="form-group boolean-arg ing-flexible custom-control custom-checkbox">
-                        <input type="checkbox"
-                               class="custom-control-input arg"
-                               id="${this.id}"
-                               tabindex="${this.tabIndex}"
-                               arg-name="${this.name}"
-                               ${this.value ? " checked" : ""}
-                               ${this.disabled ? " disabled" : ""}
-                               value="${this.name}"/>
-                        <label class="custom-control-label"
-                               ${this.hint && `data-toggle="tooltip" title="${this.hint}"`}
-                               for="${this.id}">
-                               ${this.name}
+                html += `<div class="form-group inline boolean-arg ing-flexible">
+                    <div class="checkbox">
+                        <label ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}>
+                            <input type="checkbox"
+                                class="arg"
+                                id="${this.id}"
+                                tabindex="${this.tabIndex}"
+                                arg-name="${this.name}"
+                                ${this.value ? " checked" : ""}
+                                ${this.disabled ? " disabled" : ""}
+                                value="${this.name}"> ${this.name}
                         </label>
-                    </div>`;
+                    </div>
+                </div>`;
                 break;
             case "option":
                 html += `<div class="form-group ing-medium">
@@ -323,7 +319,7 @@ class HTMLIngredient {
      * Handler for populate option changes.
      * Populates the relevant argument with the specified value.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     populateOptionChange(e) {
         e.preventDefault();
@@ -347,7 +343,7 @@ class HTMLIngredient {
      * Handler for populate multi option changes.
      * Populates the relevant arguments with the specified values.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     populateMultiOptionChange(e) {
         e.preventDefault();
@@ -378,7 +374,7 @@ class HTMLIngredient {
      * Handler for editable option clicks.
      * Populates the input box with the selected value.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     editableOptionClick(e) {
         e.preventDefault();
@@ -399,7 +395,7 @@ class HTMLIngredient {
      * Handler for argument selector changes.
      * Shows or hides the relevant arguments for this operation.
      *
-     * @param {Event} e
+     * @param {event} e
      */
     argSelectorChange(e) {
         e.preventDefault();
