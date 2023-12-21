@@ -1,7 +1,3 @@
-import * as d3temp from "d3";
-const d3 = d3temp.default ? d3temp.default : d3temp;
-import cloud from "d3-cloud";
-
 /**
  * Various components for drawing diagrams on an HTML5 canvas.
  *
@@ -206,56 +202,3 @@ export function drawScaleBar(canvas, score, max, markings) {
         ctx.fillText(markings[i].label, x0, y0);
     }
 }
-
-
-/**
- * Draws a word cloud chart.
- *
- * @param canvas
- * @param words
- */
-export function drawWordCloudChart(canvas, words) {
-    const dimension = 500;
-    let svg = document.createElement("svg");
-    svg = d3.select(svg)
-        .attr("width", "100%")
-        .attr("height", "100%")
-        .attr("viewBox", `0 0 ${dimension} ${dimension}`);
-
-    const margin = {
-            top: 10,
-            right: 0,
-            bottom: 40,
-            left: 30,
-        },
-        width = dimension - margin.left - margin.right,
-        height = dimension - margin.top - margin.bottom,
-        marginedSpace = svg.append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    marginedSpace.append("clipPath")
-        .attr("id", "clip")
-        .append("rect")
-        .attr("width", width)
-        .attr("height", height);
-
-    marginedSpace.append("g")
-        .attr("class", "bins")
-        .attr("clip-path", "url(#clip)");
-// Constructs a new cloud layout instance. It run an algorithm to find the position of words that suits your requirements
-
-    cloud().size([960, 500])
-        .canvas(canvas)
-        .words(words)
-        .padding(2)
-        .rotate(() => Math.floor(Math.random() * 2) * 90)
-        .font("sans-serif")
-        .fontSize(d => {
-            return d.size * 30;
-        })
-        .fontWeight("lighter")
-        .on("end", (data) => {
-        })
-        .start();
-}
-
