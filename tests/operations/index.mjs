@@ -43,6 +43,7 @@ import "./tests/Compress.mjs";
 import "./tests/ConditionalJump.mjs";
 import "./tests/Crypt.mjs";
 import "./tests/CSV.mjs";
+import "./tests/Cut.mjs";
 import "./tests/DateTime.mjs";
 import "./tests/ExtractEmailAddresses.mjs";
 import "./tests/Fork.mjs";
