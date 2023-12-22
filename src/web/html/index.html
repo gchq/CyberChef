@@ -23,7 +23,7 @@
 <html lang="en" class="classic">
     <head>
         <meta charset="UTF-8">
-        <title>CyberChef</title>
+        <title>CyberFork</title>
 
         <meta name="copyright" content="Crown Copyright 2016" />
         <meta name="description" content="The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis" />
@@ -54,7 +54,6 @@
                 "Navigating neural network...",
                 "Importing machine learning...",
                 "Issuing Alice and Bob one-time pads...",
-                "Mining bitcoin cash...",
                 "Generating key material by trying to escape vim...",
                 "for i in range(additional): Pylon()",
                 "(creating unresolved tension...",
@@ -62,7 +61,14 @@
                 "Training branch predictor...",
                 "Timing cache hits...",
                 "Speculatively executing recipes...",
-                "Adding LLM hallucinations..."
+                "Adding LLM hallucinations...",
+                "Bee-Sec is the best hacker",
+                "Rest in peace Ollie Unix Montgomery",
+                "Do a barrel roll",
+                "HACK THE PLANET!!!!",
+                "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                "Trans rights are human rights",
+                "Blahaj :3"
             ];
 
             // Shuffle array using Durstenfeld algorithm
@@ -116,13 +122,13 @@
                     (e.colno ? "\nColumn: " + e.colno : "") +
                     (e.error ? "\nError: " + e.error : "") +
                     "\nUser-Agent: " + navigator.userAgent +
-                    "\nCyberChef version: <%= htmlWebpackPlugin.options.version %>";
+                    "\nCyberFork version: <%= htmlWebpackPlugin.options.version %>";
 
                 clearInterval(window.loadingMsgsInt);
                 document.getElementById("preloader").remove();
                 document.getElementById("preloader-msg").remove();
                 document.getElementById("preloader-error").innerHTML =
-                    "CyberChef encountered an error while loading.<br><br>" +
+                    "CyberFork encountered an error while loading.<br><br>" +
                     "The following browser versions are supported:" +
                     "<ul><li>Google Chrome 50+</li><li>Mozilla Firefox 38+</li></ul>" +
                     "Your user agent is:<br>" + escapeHtml(navigator.userAgent) + "<br><br>" +
@@ -147,7 +153,7 @@
         <div id="content-wrapper">
             <div id="banner" class="row">
                 <div class="col" style="text-align: left; padding-left: 10px;">
-                    <a href="#" data-toggle="modal" data-target="#download-modal" data-help-title="Downloading CyberChef" data-help="<p>CyberChef can be downloaded to run locally or hosted within your own network. It has no server-side component so all that is required is that the ZIP file is uncompressed and the files are accessible.</p><p>As a user, it is worth noting that unofficial versions of CyberChef could have been modified to introduce Input and/or Recipe exfiltration. We recommend always using the official, open source, up-to-date version of CyberChef hosted at <a href='https://gchq.github.io/CyberChef'>https://gchq.github.io/CyberChef</a> if accessible.</p><p>The Network tab in your browser's Developer console (F12) can be used to inspect the network requests made by a website. This can confirm that no data is uploaded when a CyberChef recipe is baked.</p>">Download CyberChef <i class="material-icons">file_download</i></a>
+                    <a href="#" data-toggle="modal" data-target="#download-modal" data-help-title="Downloading CyberFork" data-help="<p>CyberFork can be downloaded to run locally or hosted within your own network. It has no server-side component so all that is required is that the ZIP file is uncompressed and the files are accessible.</p><p>As a user, it is worth noting that unofficial versions of CyberChef could have been modified to introduce Input and/or Recipe exfiltration. We recommend always using the official, open source, up-to-date version of CyberChef hosted at <a href='https://gchq.github.io/CyberChef'>https://gchq.github.io/CyberChef</a> if accessible.</p><p>The Network tab in your browser's Developer console (F12) can be used to inspect the network requests made by a website. This can confirm that no data is uploaded when a CyberChef recipe is baked.</p>">Download CyberChef <i class="material-icons">file_download</i></a>
                 </div>
                 <div class="col-md-6" id="notice-wrapper">
                     <span id="notice">
@@ -162,13 +168,13 @@
                     </span>
                 </div>
                 <div class="col" style="text-align: right; padding-right: 0;">
-                    <a href="#" id="options" data-help-title="Options and Settings" data-help="Configurable options to change how CyberChef behaves. These settings are stored in your browser's local storage, meaning they will persist between sessions that use the same browser profile.">Options <i class="material-icons">settings</i></a>
+                    <a href="#" id="options" data-help-title="Options and Settings" data-help="Configurable options to change how CyberFork behaves. These settings are stored in your browser's local storage, meaning they will persist between sessions that use the same browser profile.">Options <i class="material-icons">settings</i></a>
                     <a href="#" id="support" data-toggle="modal" data-target="#support-modal" data-help-title="About / Support" data-help="This pane provides information about the CyberChef web app, how to use some of the features, and how to raise bug reports.">About / Support <i class="material-icons">help</i></a>
                 </div>
             </div>
             <div id="workspace-wrapper">
                 <div id="operations" class="split split-horizontal no-select">
-                    <div class="title no-select" data-help-title="Operations list" data-help="<p>The Operations list contains all the operations in CyberChef arranged into categories. Some operations may be present in multiple categories. You can search for operations using the search box.</p><p>To use an operation, either double click it, or drag it into the Recipe pane. You will then be able to configure its arguments (or 'Ingredients' in CyberChef terminology).</p>">
+                    <div class="title no-select" data-help-title="Operations list" data-help="<p>The Operations list contains all the operations in CyberFork arranged into categories. Some operations may be present in multiple categories. You can search for operations using the search box.</p><p>To use an operation, either double click it, or drag it into the Recipe pane. You will then be able to configure its arguments (or 'Ingredients' in CyberChef terminology).</p>">
                         Operations
                     </div>
                     <input id="search" type="search" class="form-control" placeholder="Search..." autocomplete="off" tabindex="2" data-help-title="Searching for operations" data-help="<p>Use the search box to find useful operations.</p><p>Both operation names and descriptions are queried using a fuzzy matching algorithm.</p>">
@@ -205,7 +211,7 @@
                             </button>
 
                             <div class="form-group" style="display: contents;">
-                                <div class="mx-1 checkbox" data-help-title="Auto-bake" data-help="<p>When Auto-bake is turned on, CyberChef will bake the Input using the Recipe whenever anything in the Input or Recipe changes.</p>This includes:<ul><li>Adding or removing operations</li><li>Modifying operation arguments</li><li>Editing the Input</li><li>Changing the Input character encoding</li></ul><p>If there are multiple inputs, only the currently active tab will be baked when Auto-bake triggers. You can bake all inputs manually using the Bake button.</p>">
+                                <div class="mx-1 checkbox" data-help-title="Auto-bake" data-help="<p>When Auto-bake is turned on, CyberFork will bake the Input using the Recipe whenever anything in the Input or Recipe changes.</p>This includes:<ul><li>Adding or removing operations</li><li>Modifying operation arguments</li><li>Editing the Input</li><li>Changing the Input character encoding</li></ul><p>If there are multiple inputs, only the currently active tab will be baked when Auto-bake triggers. You can bake all inputs manually using the Bake button.</p>">
                                     <label id="auto-bake-label">
                                         <input type="checkbox" checked="checked" id="auto-bake">
                                         <br>Auto Bake
@@ -566,7 +572,7 @@
                         </p>
                         <p>&copy; Crown Copyright 2016.</p>
                         <p>Released under the Apache Licence, Version 2.0.</p>
-                        <p><a href="https://gitter.im/gchq/CyberChef">
+                        <p><a href="http://discord.skerritt.blog">
                             <img src="<%- require('../static/images/gitter-badge.svg') %>">
                         </a></p>
 
