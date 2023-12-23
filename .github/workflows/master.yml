@@ -32,7 +32,7 @@ jobs:
 
     - name: Production Build
       if: success()
-      run: npx grunt prod --msg="Version 10 is here! Read about the new features <a href='https://github.com/gchq/CyberChef/wiki/Character-encoding,-EOL-separators,-and-editor-features'>here</a>"
+      run: npx grunt prod --msg="<a href='skerritt.blog/cyberfork/'>Release Blog Post</a> <a href='http://discord.skerritt.blog'>Discord</a>"
 
     - name: Generate sitemap
       run: npx grunt exec:sitemap
