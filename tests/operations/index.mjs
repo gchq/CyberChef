@@ -62,6 +62,7 @@ import "./tests/JSONtoCSV.mjs";
 import "./tests/JWTDecode.mjs";
 import "./tests/JWTSign.mjs";
 import "./tests/JWTVerify.mjs";
+import "./tests/LZNT1Decompress.mjs";
 import "./tests/MS.mjs";
 import "./tests/Magic.mjs";
 import "./tests/MorseCode.mjs";
