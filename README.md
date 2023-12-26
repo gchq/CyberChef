@@ -111,7 +111,7 @@ An installation walkthrough, how-to guides for adding new operations and themes,
 If you would like to run the app locally in docker please follow the steps below:
 
 ```
-git clone https://github.com/gchq/CyberChef.git
+git clone https://github.com/bee-san/CyberFork.git
 cd CyberFork
 docker build --tag CyberFork .
 docker run --rm --name CyberFork -it -p 8080:8080 CyberFork
