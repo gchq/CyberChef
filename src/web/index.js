@@ -36,7 +36,8 @@ function main() {
         "Regular expression",
         "Entropy",
         "Fork",
-        "Magic"
+        "Magic",
+        "What Is It"
     ];
 
     const defaultOptions = {
