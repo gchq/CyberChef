@@ -57,7 +57,7 @@ jobs:
         sudo apt-get install xvfb
         xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
-    - name: Deploy to GitHub Pages
+    - name: Upload artifacts
       if: success() && github.ref == 'refs/heads/master'
       uses: actions/upload-pages-artifact@v3
       with:
