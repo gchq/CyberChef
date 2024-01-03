@@ -203,7 +203,7 @@ function regexList(input, regex, displayTotal, matches, captureGroups) {
         if (captureGroups) {
             for (let i = 1; i < match.length; i++) {
                 if (matches) {
-                    output += "  Group " + i + ": ";
+                    output += "  Group " + i + " (" + regex.xregexp.captureNames[i - 1] + "): ";
                 }
                 output += match[i] + "\n";
             }
