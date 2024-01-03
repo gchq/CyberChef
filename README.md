@@ -8,8 +8,7 @@
 
 ## Why CyberFork instead of CyberChef?
 
-Please view this blogpost:
-https://skerritt.blog/p/a12ec27a-f33e-4a29-8539-4ac278856f00/
+Please view this blogpost (to be posted):tm:
 
 #### *The Cyber Swiss Army Knife*
 
