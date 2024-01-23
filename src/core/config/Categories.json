@@ -369,6 +369,7 @@
             "SHA2",
             "SHA3",
             "SM3",
+            "MurmurHash3",
             "Keccak",
             "Shake",
             "RIPEMD",
