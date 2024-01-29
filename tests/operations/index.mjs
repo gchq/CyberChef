@@ -59,6 +59,7 @@ import "./tests/Jump.mjs";
 import "./tests/JSONBeautify.mjs";
 import "./tests/JSONMinify.mjs";
 import "./tests/JSONtoCSV.mjs";
+import "./tests/JSONToGoStruct.mjs";
 import "./tests/JWTDecode.mjs";
 import "./tests/JWTSign.mjs";
 import "./tests/JWTVerify.mjs";

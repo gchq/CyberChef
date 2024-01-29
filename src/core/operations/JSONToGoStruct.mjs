@@ -5,12 +5,12 @@
  */
 
 import Operation from "../Operation.mjs";
-import { jsonToGo } from "../lib/JSONToGoStruct.mjs";
+import { jsonToGo } from "../vendor/JSONToGoStruct.mjs";
 import JSON5 from "json5";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
- * JSON To Go Struct operation
+ * JSON to Go Struct operation
  */
 class JSONToGoStruct extends Operation {
     /**
@@ -19,7 +19,7 @@ class JSONToGoStruct extends Operation {
     constructor() {
         super();
 
-        this.name = "JSON To Go Struct";
+        this.name = "JSON to Go Struct";
         this.module = "Default";
         this.description = "converts JSON into a Go type definition.";
         this.infoURL = "https://mholt.github.io/json-to-go/";
@@ -34,7 +34,7 @@ class JSONToGoStruct extends Operation {
             {
                 name: "Flatten",
                 type: "boolean",
-                value: false,
+                value: true,
             },
             {
                 name: "All Omit Empty",
@@ -59,7 +59,7 @@ class JSONToGoStruct extends Operation {
             throw new OperationError("Unable to parse input as JSON.\n" + err);
         }
         const result = jsonToGo(code, typename, flatten, false, allOmitempty);
-        return result["go"];
+        return result.go;
     }
 }
 

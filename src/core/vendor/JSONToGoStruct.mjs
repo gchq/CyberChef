@@ -171,6 +171,9 @@ export function jsonToGo(
             ++innerTabs;
             const keys = Object.keys(scope);
             for (let i in keys) {
+                if (!Object.prototype.hasOwnProperty.call(keys, i)) {
+                    continue;
+                }
                 const keyname = getOriginalName(keys[i]);
                 indenter(innerTabs);
                 const typename = uniqueTypeName(format(keyname), seenTypeNames);
@@ -195,6 +198,9 @@ export function jsonToGo(
             ++tabs;
             const keys = Object.keys(scope);
             for (let i in keys) {
+                if (!Object.prototype.hasOwnProperty.call(keys, i)) {
+                    continue;
+                }
                 const keyname = getOriginalName(keys[i]);
                 indent(tabs);
                 const typename = uniqueTypeName(format(keyname), seenTypeNames);
@@ -450,6 +456,9 @@ export function jsonToGo(
 
     function formatScopeKeys(keys) {
         for (let i in keys) {
+            if (!Object.prototype.hasOwnProperty.call(keys, i)) {
+                continue;
+            }
             keys[i] = format(keys[i]);
         }
         return keys;

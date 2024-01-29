@@ -4,12 +4,6 @@
         "ops": []
     },
     {
-        "name": "Wangkechun",
-        "ops": [
-            "JSON To Go Struct"
-        ]
-    },
-    {
         "name": "Data format",
         "ops": [
             "To Hexdump",
@@ -420,6 +414,7 @@
             "JavaScript Minify",
             "JSON Beautify",
             "JSON Minify",
+            "JSON to Go Struct",
             "XML Beautify",
             "XML Minify",
             "SQL Beautify",
