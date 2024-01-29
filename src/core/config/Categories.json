@@ -4,6 +4,12 @@
         "ops": []
     },
     {
+        "name": "Wangkechun",
+        "ops": [
+            "JSON To Go Struct"
+        ]
+    },
+    {
         "name": "Data format",
         "ops": [
             "To Hexdump",
