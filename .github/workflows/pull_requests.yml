@@ -38,3 +38,7 @@ jobs:
       run: |
         sudo apt-get install xvfb
         xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+  image:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3

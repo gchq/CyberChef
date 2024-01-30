@@ -6,6 +6,12 @@ on:
     tags:
     - 'v*'
 
+env:
+  REGISTRY: ghcr.io
+  REGISTRY_USER: ${{ github.actor }}
+  REGISTRY_PASSWORD: ${{ github.token }}
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   main:
     runs-on: ubuntu-latest
@@ -16,10 +22,14 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18.x'
+    - name: Install qemu dependency
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y qemu-user-static
 
     - name: Install
       run: |
-        npm install
+        npm ci
         npm run setheapsize
 
     - name: Lint
@@ -40,6 +50,31 @@ jobs:
         sudo apt-get install xvfb
         xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
+    - name: Image Metadata
+      if: success()
+      id: image-metadata
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=semver,pattern={{major}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{version}}
+
+    - name: Production Image Build
+      if: success()
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: ${{ steps.image-metadata.outputs.tags }}
+        labels: ${{ steps.image-metadata.outputs.labels }}
+        containerfiles: ./Containerfile
+        platforms: linux/arm64, linux/amd64
+        oci: true
+        extra-args: |
+          --ulimit nofile=4096:4096
+
     - name: Upload Release Assets
       if: success()
       id: upload-release-assets
@@ -57,3 +92,13 @@ jobs:
       uses: JS-DevTools/npm-publish@v1
       with:
         token: ${{ secrets.NPM_TOKEN }}
+
+    - name: Publish to GHCR
+      if: success()
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.build-image.outputs.image }}
+        tags: ${{ steps.build-image.outputs.tags }}
+        registry: ${{ env.REGISTRY }}
+        username: ${{ env.REGISTRY_USER }}
+        password: ${{ env.REGISTRY_PASSWORD }}
