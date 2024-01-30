@@ -5,6 +5,10 @@ on:
   pull_request:
     types: [synchronize, opened, reopened]
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   main:
     runs-on: ubuntu-latest
@@ -32,6 +36,16 @@ jobs:
     - name: Production Build
       if: success()
       run: npx grunt prod
+
+    - name: Production Image Build
+      if: success()
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        containerfiles: ./Containerfile
+        platforms: linux/arm64, linux/amd64
+        oci: true
 
     - name: UI Tests
       if: success()

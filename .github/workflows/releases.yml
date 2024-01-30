@@ -72,8 +72,6 @@ jobs:
         containerfiles: ./Containerfile
         platforms: linux/arm64, linux/amd64
         oci: true
-        extra-args: |
-          --ulimit nofile=4096:4096
 
     - name: Upload Release Assets
       if: success()
