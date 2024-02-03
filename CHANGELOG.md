@@ -13,6 +13,12 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.6.0] -  2024-02-03
+- Updated 'Forensics Wiki' URLs to new domain [@a3957273] | [#1703]
+- Added 'LZNT1 Decompress' operation [@0xThiebaut] | [#1675]
+- Updated 'Regex Expression' UUID matcher [@cnotin] | [#1678]
+- Removed duplicate 'hover' message within baking info [#KevinSJ] | [#1541]
+
 ### [10.5.0] - 2023-07-14
 - Added GOST Encrypt, Decrypt, Sign, Verify, Key Wrap, and Key Unwrap operations [@n1474335] | [#592]
 
