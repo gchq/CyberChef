@@ -1,0 +1,49 @@
+/**
+ * Operations component styles
+ *
+ * For consistency sake I'm using an ID, but the custom wrapper / dropdown component
+ * can ( should ) be made into a reusable, generic component
+ */
+
+#operations {
+    background-color: var(--primary-background-colour);
+}
+
+#operations > .title {
+    padding: 8px 8px 8px 12px;
+}
+
+#operations-wrapper {
+    position: relative;
+}
+
+#operations-dropdown {
+    position: absolute;
+    top: var(--banner-height);
+    width: 100%;
+    height: auto;
+    overflow: auto;
+    z-index: 20; /* to dropdown on top of all the other elements */
+    background-color: var(--secondary-background-colour);
+}
+
+/* 'hidden' is used to handle the visibility of a variety of mobile only elements */
+#close-ops-dropdown-icon.hidden,
+#search-results.hidden,
+#categories.hidden {
+    z-index: -10;
+    display: none;
+}
+
+@media only screen and ( min-width: 1024px ){
+    #operations-dropdown {
+        border-bottom: none;
+    }
+
+    /* On desktop UI, the categories are always visible */
+    /*#search-results.hidden,*/
+    #categories.hidden {
+        z-index: initial;
+        display: block;
+    }
+}

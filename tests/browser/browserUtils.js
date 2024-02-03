@@ -17,7 +17,7 @@ function clear(browser) {
         .click("#clr-recipe")
         .click("#clr-io")
         .waitForElementNotPresent("#rec-list li.operation")
-        .expect.element("#input-text .cm-content").text.that.equals("");
+        .expect.element("#input-text .cm-content .cm-line").text.that.equals("");
 }
 
 /** @function

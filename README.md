@@ -27,7 +27,7 @@ There are four main areas in CyberChef:
 
  1. The **input** box in the top right, where you can paste, type or drag the text or file you want to operate on.
  2. The **output** box in the bottom right, where the outcome of your processing will be displayed.
- 3. The **operations** list on the far left, where you can find all the operations that CyberChef is capable of in categorised lists, or by searching.
+ 3. The **operations** list on the far left ( or in the dropdown at the top on mobile ), where you can find all the operations that CyberChef is capable of in categorised lists, or by searching.
  4. The **recipe** area in the middle, where you can drag the operations that you want to use and specify arguments and options.
 
 You can use as many operations as you like in simple or complex ways. Some examples are as follows:
@@ -49,6 +49,7 @@ You can use as many operations as you like in simple or complex ways. Some examp
  - Drag and drop
      - Operations can be dragged in and out of the recipe list, or reorganised.
      - Files up to 2GB can be dragged over the input box to load them directly into the browser.
+     - On mobile devices, double-click the operations to add them to the recipe list.
  - Auto Bake
      - Whenever you modify the input or the recipe, CyberChef will automatically "bake" for you and produce the output immediately.
      - This can be turned off and operated manually if it is affecting performance (if the input is very large, for instance).
@@ -89,8 +90,7 @@ CyberChef is built to support
 
 ## Node.js support
 
-CyberChef is built to fully support Node.js `v16`. For more information, see the ["Node API" wiki page](https://github.com/gchq/CyberChef/wiki/Node-API)
-
+CyberChef is built to fully support Node.js `v18`. For more information, see the Node API page in the project ["Node API" wiki page](https://github.com/gchq/CyberChef/wiki/Node-API)
 
 ## Contributing
 

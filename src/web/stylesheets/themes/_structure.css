@@ -1,0 +1,22 @@
+:root {
+    /* Fixed heights */
+    --banner-height: 40px;
+
+    /* Mobile height */
+    --title-height: 40px;
+    --controls-height: 50px;
+    --operations-height: 80px;
+
+    /* Desktop specific height */
+    --desktop-controls-height: 70px;
+    --tab-height: 40px;
+}
+
+/**
+ * A note:
+ *
+ * Heights of #recipe, #input and #output are set programmatically
+ * in App.js
+ */
+
+
