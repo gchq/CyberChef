@@ -269,7 +269,7 @@ class App {
         const isMobileView = this.isMobileView();
 
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
-            sizes: isMobileView ? [100, 100, 100] : [20, 40, 40],
+            sizes: isMobileView ? [100, 100, 100] : [20, 30, 50],
             minSize: [360, 330, 310],
             gutterSize: isMobileView ? 0 : 4,
             expandToMin: true,
