@@ -19,7 +19,7 @@
 
 #operations-dropdown {
     position: absolute;
-    top: var(--banner-height);
+    top: calc(var(--banner-height) + 1);
     width: 100%;
     height: auto;
     overflow: auto;
