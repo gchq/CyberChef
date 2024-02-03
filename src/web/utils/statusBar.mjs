@@ -276,7 +276,6 @@ class StatusBarPanel {
             bakingTime.textContent = this.timing.duration(this.tabNumGetter());
 
             const info = this.timing.printStages(this.tabNumGetter()).replace(/\n/g, "<br>");
-            bakingTimeInfo.setAttribute("title", info);
             bakingTimeInfo.setAttribute("data-original-title", info);
         } else {
             bakingTimeInfo.style.display = "none";

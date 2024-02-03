@@ -90,14 +90,13 @@ CyberChef is built to support
 
 ## Node.js support
 
-CyberChef is built to fully support Node.js `v18`. For more information, see the Node API page in the project [wiki pages](https://github.com/gchq/CyberChef/wiki)
-
+CyberChef is built to fully support Node.js `v18`. For more information, see the Node API page in the project ["Node API" wiki page](https://github.com/gchq/CyberChef/wiki/Node-API)
 
 ## Contributing
 
 Contributing a new operation to CyberChef is super easy! The quickstart script will walk you through the process. If you can write basic JavaScript, you can write a CyberChef operation.
 
-An installation walkthrough, how-to guides for adding new operations and themes, descriptions of the repository structure, available data types and coding conventions can all be found in the project [wiki pages](https://github.com/gchq/CyberChef/wiki).
+An installation walkthrough, how-to guides for adding new operations and themes, descriptions of the repository structure, available data types and coding conventions can all be found in the ["Contributing" wiki page](https://github.com/gchq/CyberChef/wiki/Contributing).
 
  - Push your changes to your fork.
  - Submit a pull request. If you are doing this for the first time, you will be prompted to sign the [GCHQ Contributor Licence Agreement](https://cla-assistant.io/gchq/CyberChef) via the CLA assistant on the pull request. This will also ask whether you are happy for GCHQ to contact you about a token of thanks for your contribution, or about job opportunities at GCHQ.
