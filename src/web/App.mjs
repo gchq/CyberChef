@@ -842,14 +842,14 @@ class App {
     /**
      * Due to variable available heights on mobile devices ( due to the
      * address bar etc. ), we need to calculate the available space and
-     * set some heights programmatically based on the full view height,
-     * minus fixed height elements.
+     * set some heights programmatically based on the full viewport
+     * minus fixed-height elements.
      *
      * Be mindful to update these fixed numbers accordingly in the stylesheets
      * ( themes/_structure ) if you make changes to those elements' height.
      */
     assignAvailableHeight() {
-        const bannerHeight = 40;
+        const bannerHeight = 30;
         const controlsHeight = 50;
         const operationsHeight = 80;
 

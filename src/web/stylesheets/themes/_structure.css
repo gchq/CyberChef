@@ -1,6 +1,6 @@
 :root {
     /* Fixed heights */
-    --banner-height: 40px;
+    --banner-height: 30px;
 
     /* Mobile height */
     --title-height: 40px;
@@ -16,7 +16,7 @@
  * A note:
  *
  * Heights of #recipe, #input and #output are set programmatically
- * in App.js
+ * in App.js assignAvailableHeight();
  */
 
 
