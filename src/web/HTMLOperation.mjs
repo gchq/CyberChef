@@ -157,9 +157,9 @@ function titleFromWikiLink(urlStr) {
         pageTitle = "";
 
     switch (urlObj.host) {
-        case "forensicswiki.xyz":
+        case "forensics.wiki":
             wikiName = "Forensics Wiki";
-            pageTitle = urlObj.query.substr(6).replace(/_/g, " "); // Chop off 'title='
+            pageTitle = Utils.toTitleCase(urlObj.path.replace(/\//g, "").replace(/_/g, " "));
             break;
         case "wikipedia.org":
             wikiName = "Wikipedia";
