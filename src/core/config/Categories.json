@@ -93,6 +93,12 @@
             "Rabbit",
             "SM4 Encrypt",
             "SM4 Decrypt",
+            "GOST Encrypt",
+            "GOST Decrypt",
+            "GOST Sign",
+            "GOST Verify",
+            "GOST Key Wrap",
+            "GOST Key Unwrap",
             "ROT13",
             "ROT13 Brute Force",
             "ROT47",
@@ -347,7 +353,8 @@
             "LZMA Decompress",
             "LZMA Compress",
             "LZ4 Decompress",
-            "LZ4 Compress"
+            "LZ4 Compress",
+            "LZNT1 Decompress"
         ]
     },
     {
@@ -372,7 +379,7 @@
             "Snefru",
             "BLAKE2b",
             "BLAKE2s",
-            "GOST hash",
+            "GOST Hash",
             "Streebog",
             "SSDEEP",
             "CTPH",
