@@ -37,17 +37,14 @@ jobs:
         npm run testnodeconsumer
 
     - name: Production Build
-      if: success()
       run: npx grunt prod
 
     - name: UI Tests
-      if: success()
       run: |
         sudo apt-get install xvfb
         xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
     - name: Image Metadata
-      if: success()
       id: image-metadata
       uses: docker/metadata-action@v4
       with:
@@ -58,7 +55,6 @@ jobs:
           type=semver,pattern={{version}}
 
     - name: Production Image Build
-      if: success()
       id: build-image
       uses: redhat-actions/buildah-build@v2
       with:
@@ -74,7 +70,6 @@ jobs:
 
 
     - name: Upload Release Assets
-      if: success()
       id: upload-release-assets
       uses: svenstaro/upload-release-action@v2
       with:
@@ -86,13 +81,11 @@ jobs:
         body: "See the [CHANGELOG](https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md) and [commit messages](https://github.com/gchq/CyberChef/commits/master) for details."
 
     - name: Publish to NPM
-      if: success()
       uses: JS-DevTools/npm-publish@v1
       with:
         token: ${{ secrets.NPM_TOKEN }}
 
     - name: Publish to GHCR
-      if: success()
       uses: redhat-actions/push-to-registry@v2
       with:
         image: ${{ steps.build-image.outputs.image }}
