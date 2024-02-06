@@ -1,4 +1,8 @@
 /**
+ * Based on murmurhash-js (https://github.com/garycourt/murmurhash-js)
+ * @author Gary Court
+ * @license MIT
+ *
  * @author AliceGrey [alice@grey.systems]
  * @copyright Crown Copyright 2024
  * @license Apache-2.0
