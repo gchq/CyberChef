@@ -51,5 +51,27 @@ TestRegister.addTests([
                 args: [1337],
             },
         ],
+    },
+    {
+        name: "To MurmurHash3: foo",
+        input: "foo",
+        expectedOutput: "4138058784",
+        recipeConfig: [
+            {
+                op: "MurmurHash3",
+                args: [0],
+            },
+        ],
+    },
+    {
+        name: "To MurmurHash3: foo signed",
+        input: "foo",
+        expectedOutput: "-156908512",
+        recipeConfig: [
+            {
+                op: "MurmurHash3",
+                args: [0, true],
+            },
+        ],
     }
 ]);

@@ -32,27 +32,33 @@ class MurmurHash3 extends Operation {
                 name: "Seed",
                 type: "number",
                 value: 0
+            },
+            {
+                name: "Convert to Signed",
+                type: "boolean",
+                value: false
             }
         ];
     }
 
-    /**
-     * Calculates the MurmurHash3 hash of the input.
-     * Based on Gary Court's JS MurmurHash implementation
-     * @see http://github.com/garycourt/murmurhash-js
-     * @author AliceGrey [alice@grey.systems]
-     * @param {string} input ASCII only
-     * @param {number} seed Positive integer only
-     * @return {number} 32-bit positive integer hash
-     */
+ /**
+ * Calculates the MurmurHash3 hash of the input.
+ * Based on Gary Court's JS MurmurHash implementation
+ * @see http://github.com/garycourt/murmurhash-js
+ * @author AliceGrey [alice@grey.systems]
+ * @param {string} input ASCII only
+ * @param {number} seed Positive integer only
+ * @return {number} 32-bit positive integer hash
+ */
     mmh3(input, seed) {
-        let h1, h1b, k1, i;
+        let h1b;
+        let k1;
         const remainder = input.length & 3; // input.length % 4
         const bytes = input.length - remainder;
-        h1 = seed;
+        let h1 = seed;
         const c1 = 0xcc9e2d51;
         const c2 = 0x1b873593;
-        i = 0;
+        let i = 0;
 
         while (i < bytes) {
             k1 =
@@ -77,16 +83,19 @@ class MurmurHash3 extends Operation {
         if (remainder === 3) {
             k1 ^= (input.charCodeAt(i + 2) & 0xff) << 16;
         }
-        if (remainder === 2) {
+
+        if (remainder === 3 || remainder === 2) {
             k1 ^= (input.charCodeAt(i + 1) & 0xff) << 8;
         }
-        if (remainder === 1) {
+
+        if (remainder === 3 || remainder === 2 || remainder === 1) {
             k1 ^= (input.charCodeAt(i) & 0xff);
+
+            k1 = (((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16)) & 0xffffffff;
+            k1 = (k1 << 15) | (k1 >>> 17);
+            k1 = (((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16)) & 0xffffffff;
+            h1 ^= k1;
         }
-        k1 = (((k1 & 0xffff) * c1) + ((((k1 >>> 16) * c1) & 0xffff) << 16)) & 0xffffffff;
-        k1 = (k1 << 15) | (k1 >>> 17);
-        k1 = (((k1 & 0xffff) * c2) + ((((k1 >>> 16) * c2) & 0xffff) << 16)) & 0xffffffff;
-        h1 ^= k1;
 
         h1 ^= input.length;
 
@@ -100,18 +109,35 @@ class MurmurHash3 extends Operation {
     }
 
     /**
+    * Converts an unsigned 32-bit integer to a signed 32-bit integer
+    * @author AliceGrey [alice@grey.systems]
+    * @param {value} 32-bit unsigned integer
+    * @return {number} 32-bit signed integer
+    */
+    unsignedToSigned(value) {
+        if (value & 0x80000000) {
+            return -0x100000000 + value;
+        } else {
+            return value;
+        }
+    }
+
+    /**
      * @param {string} input
      * @param {Object[]} args
      * @returns {number}
      */
     run(input, args) {
-        let seed;
-        if (args && args.length > 0) {
-            seed = args[0];
+        if (args && args.length >= 1) {
+            const seed = args[0];
+            const hash = this.mmh3(input, seed);
+            if (args.length > 1 && args[1]) {
+                return this.unsignedToSigned(hash);
+            }
+            return hash;
         }
-        return this.mmh3(input, seed);
+        return this.mmh3(input);
     }
-
 }
 
 export default MurmurHash3;
