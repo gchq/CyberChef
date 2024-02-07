@@ -71,6 +71,7 @@ import "./tests/NormaliseUnicode.mjs";
 import "./tests/OTP.mjs";
 import "./tests/PGP.mjs";
 import "./tests/PHP.mjs";
+import "./tests/ParityBit.mjs";
 import "./tests/ParseIPRange.mjs";
 import "./tests/ParseQRCode.mjs";
 import "./tests/PEMtoHex.mjs";
