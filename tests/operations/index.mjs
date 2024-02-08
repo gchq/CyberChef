@@ -66,6 +66,7 @@ import "./tests/LZNT1Decompress.mjs";
 import "./tests/MS.mjs";
 import "./tests/Magic.mjs";
 import "./tests/MorseCode.mjs";
+import "./tests/MurmurHash3.mjs";
 import "./tests/NetBIOS.mjs";
 import "./tests/NormaliseUnicode.mjs";
 import "./tests/OTP.mjs";
