@@ -13,6 +13,11 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.7.0] - 2024-02-09
+- Added 'File Tree' operation [@sw5678] | [#1667]
+- Added 'RISON' operation [@sg5506844] | [#1555]
+- Added 'MurmurHash3' operation [@AliceGrey] | [#1694]
+
 ### [10.6.0] -  2024-02-03
 - Updated 'Forensics Wiki' URLs to new domain [@a3957273] | [#1703]
 - Added 'LZNT1 Decompress' operation [@0xThiebaut] | [#1675]
@@ -378,7 +383,7 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
-
+[10.7.0]: https://github.com/gchq/CyberChef/releases/tag/v10.7.0
 [10.6.0]: https://github.com/gchq/CyberChef/releases/tag/v10.6.0
 [10.5.0]: https://github.com/gchq/CyberChef/releases/tag/v10.5.0
 [10.4.0]: https://github.com/gchq/CyberChef/releases/tag/v10.4.0
@@ -538,6 +543,10 @@ All major and minor version changes will be documented in this file. Details of 
 [@0xThiebaut]: https://github.com/0xThiebaut
 [@cnotin]: https://github.com/cnotin
 [@KevinSJ]: https://github.com/KevinSJ
+[@sw5678]: https://github.com/sw5678
+[@sg5506844]: https://github.com/sg5506844
+[@AliceGrey]: https://github.com/AliceGrey
+
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
 [9a33498]: https://github.com/gchq/CyberChef/commit/9a33498fed26a8df9c9f35f39a78a174bf50a513
@@ -660,3 +669,6 @@ All major and minor version changes will be documented in this file. Details of 
 [#1675]: https://github.com/gchq/CyberChef/issues/1675
 [#1678]: https://github.com/gchq/CyberChef/issues/1678
 [#1541]: https://github.com/gchq/CyberChef/issues/1541
+[#1667]: https://github.com/gchq/CyberChef/issues/1667
+[#1555]: https://github.com/gchq/CyberChef/issues/1555
+[#1694]: https://github.com/gchq/CyberChef/issues/1694
