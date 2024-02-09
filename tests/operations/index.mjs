@@ -25,6 +25,7 @@ import "./tests/Base58.mjs";
 import "./tests/Base64.mjs";
 import "./tests/Base62.mjs";
 import "./tests/Base85.mjs";
+import "./tests/Base92.mjs";
 import "./tests/BitwiseOp.mjs";
 import "./tests/ByteRepr.mjs";
 import "./tests/CartesianProduct.mjs";
