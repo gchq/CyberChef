@@ -85,6 +85,9 @@ CyberChef is built to support
 
  - Google Chrome 50+
  - Mozilla Firefox 38+
+ - MacOS (Desktop App)
+ - Windows (Desktop App)
+ - Linux (Desktop App)
 
 
 ## Node.js support
