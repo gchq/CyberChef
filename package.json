@@ -161,6 +161,7 @@
     "protobufjs": "^7.2.6",
     "qr-image": "^3.2.0",
     "reflect-metadata": "^0.2.1",
+    "rison": "^0.1.1",
     "scryptsy": "^2.1.0",
     "snackbarjs": "^1.1.0",
     "sortablejs": "^1.15.2",
