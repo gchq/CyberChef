@@ -46,7 +46,7 @@ class HTMLOperation {
      * @returns {string}
      */
     toStubHtml(removeIcon) {
-        let html = "<li class='operation'";
+        let html = "<li tabIndex='0' class='operation'";
 
         if (this.description) {
             const infoLink = this.infoURL ? `<hr>${titleFromWikiLink(this.infoURL)}` : "";

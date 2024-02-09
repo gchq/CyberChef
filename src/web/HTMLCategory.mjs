@@ -39,7 +39,7 @@ class HTMLCategory {
      */
     toHtml() {
         const catName = "cat" + this.name.replace(/[\s/\-:_]/g, "");
-        let html = `<div class="panel category">
+        let html = `<div class="panel category" tabIndex="0">
         <a class="category-title" data-toggle="collapse" data-target="#${catName}">
             ${this.name}
         </a>
