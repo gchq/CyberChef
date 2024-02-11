@@ -80,6 +80,7 @@ import "./tests/PowerSet.mjs";
 import "./tests/Regex.mjs";
 import "./tests/Register.mjs";
 import "./tests/Rotate.mjs";
+import "./tests/Searcn.mjs";
 import "./tests/SeqUtils.mjs";
 import "./tests/SetDifference.mjs";
 import "./tests/SetIntersection.mjs";
