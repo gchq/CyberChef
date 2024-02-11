@@ -4,6 +4,6 @@ COPY . .
 RUN npm ci
 RUN npm run build
 
-FROM ghcr.io/static-web-server/static-web-server:2.25-alpine
+FROM nginx:1.25-alpine3.18 AS cyberchef
 
-COPY --from=build ./build/prod /public
+COPY --from=build ./build/prod /usr/share/nginx/html/
