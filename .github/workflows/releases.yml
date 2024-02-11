@@ -63,7 +63,7 @@ jobs:
         image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         tags: ${{ steps.image-metadata.outputs.tags }}
         labels: ${{ steps.image-metadata.outputs.labels }}
-        containerfiles: ./Containerfile
+        containerfiles: ./Dockerfile
         platforms: linux/amd64
         oci: true
         # Webpack seems to use a lot of open files, increase the max open file limit to accomodate.

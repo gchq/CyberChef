@@ -43,7 +43,7 @@ jobs:
       uses: redhat-actions/buildah-build@v2
       with:
         image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        containerfiles: ./Containerfile
+        containerfiles: ./Dockerfile
         platforms: linux/amd64
         oci: true
         # Webpack seems to use a lot of open files, increase the max open file limit to accomodate.
