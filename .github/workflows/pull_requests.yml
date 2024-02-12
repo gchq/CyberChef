@@ -38,6 +38,8 @@ jobs:
       id: build-image
       uses: redhat-actions/buildah-build@v2
       with:
+        # Not being uploaded to any registry, use a simple name to allow Buildah to build correctly.
+        image: cyberchef
         containerfiles: ./Dockerfile
         platforms: linux/amd64
         oci: true
