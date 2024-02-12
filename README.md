@@ -35,7 +35,7 @@ Or you can use our image directly:
 docker run -it -p 8080:80 ghcr.io/gchq/cyberchef:latest
 ```
 
-This image is built and published through our [GitHub Workflows](.github/workflows/docker.yml)
+This image is built and published through our [GitHub Workflows](.github/workflows/releases.yml)
 
 ## How it works
 
