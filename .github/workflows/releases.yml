@@ -60,7 +60,6 @@ jobs:
       id: build-image
       uses: redhat-actions/buildah-build@v2
       with:
-        image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         tags: ${{ steps.image-metadata.outputs.tags }}
         labels: ${{ steps.image-metadata.outputs.labels }}
         containerfiles: ./Dockerfile
@@ -90,7 +89,6 @@ jobs:
     - name: Publish to GHCR
       uses: redhat-actions/push-to-registry@v2
       with:
-        image: ${{ steps.build-image.outputs.image }}
         tags: ${{ steps.build-image.outputs.tags }}
         registry: ${{ env.REGISTRY }}
         username: ${{ env.REGISTRY_USER }}

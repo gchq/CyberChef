@@ -5,10 +5,6 @@ on:
   pull_request:
     types: [synchronize, opened, reopened]
 
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-
 jobs:
   main:
     runs-on: ubuntu-latest
@@ -42,7 +38,6 @@ jobs:
       id: build-image
       uses: redhat-actions/buildah-build@v2
       with:
-        image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         containerfiles: ./Dockerfile
         platforms: linux/amd64
         oci: true
