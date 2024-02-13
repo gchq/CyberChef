@@ -34,6 +34,7 @@ import "./tests/Bombe.mjs";
 import "./tests/BSON.mjs";
 import "./tests/ByteRepr.mjs";
 import "./tests/CaesarBoxCipher.mjs";
+import "./tests/CaretMdecode.mjs";
 import "./tests/CartesianProduct.mjs";
 import "./tests/CBORDecode.mjs";
 import "./tests/CBOREncode.mjs";
