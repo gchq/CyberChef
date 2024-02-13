@@ -24,7 +24,7 @@ class CompareSSDEEPHashes extends Operation {
         this.name = "Compare SSDEEP hashes";
         this.module = "Crypto";
         this.description = "Compares two SSDEEP fuzzy hashes to determine the similarity between them on a scale of 0 to 100.";
-        this.infoURL = "https://forensicswiki.xyz/wiki/index.php?title=Ssdeep";
+        this.infoURL = "https://forensics.wiki/ssdeep/";
         this.inputType = "string";
         this.outputType = "Number";
         this.args = [

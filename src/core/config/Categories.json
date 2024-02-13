@@ -29,6 +29,8 @@
             "To Base64",
             "From Base64",
             "Show Base64 offsets",
+            "To Base92",
+            "From Base92",
             "To Base85",
             "From Base85",
             "To Base",
@@ -69,6 +71,8 @@
             "CBOR Encode",
             "CBOR Decode",
             "Caret/M-decode"
+            "Rison Encode",
+            "Rison Decode"
         ]
     },
     {
@@ -295,7 +299,8 @@
             "Escape string",
             "Unescape string",
             "Pseudo-Random Number Generator",
-            "Sleep"
+            "Sleep",
+            "File Tree"
         ]
     },
     {
@@ -352,7 +357,8 @@
             "LZMA Decompress",
             "LZMA Compress",
             "LZ4 Decompress",
-            "LZ4 Compress"
+            "LZ4 Compress",
+            "LZNT1 Decompress"
         ]
     },
     {
@@ -369,6 +375,7 @@
             "SHA2",
             "SHA3",
             "SM3",
+            "MurmurHash3",
             "Keccak",
             "Shake",
             "RIPEMD",
