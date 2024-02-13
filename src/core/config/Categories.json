@@ -70,7 +70,7 @@
             "Avro to JSON",
             "CBOR Encode",
             "CBOR Decode",
-            "JSON to Go Struct"
+            "JSON to Go Struct",
             "Rison Encode",
             "Rison Decode"
         ]
