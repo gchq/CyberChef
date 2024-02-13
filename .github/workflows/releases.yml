@@ -15,8 +15,6 @@ env:
 jobs:
   main:
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
     steps:
     - uses: actions/checkout@v3
 
