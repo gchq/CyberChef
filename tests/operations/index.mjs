@@ -84,6 +84,7 @@ import "./tests/JA3SFingerprint.mjs";
 import "./tests/JSONBeautify.mjs";
 import "./tests/JSONMinify.mjs";
 import "./tests/JSONtoCSV.mjs";
+import "./tests/JSONToGoStruct.mjs";
 import "./tests/Jump.mjs";
 import "./tests/JWTDecode.mjs";
 import "./tests/JWTSign.mjs";
