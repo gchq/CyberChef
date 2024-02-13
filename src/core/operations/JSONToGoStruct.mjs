@@ -21,7 +21,7 @@ class JSONToGoStruct extends Operation {
 
         this.name = "JSON to Go Struct";
         this.module = "Default";
-        this.description = "converts JSON into a Go type definition.";
+        this.description = "Converts JSON into a Go type definition.";
         this.infoURL = "https://mholt.github.io/json-to-go/";
         this.inputType = "string";
         this.outputType = "string";

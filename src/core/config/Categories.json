@@ -67,7 +67,8 @@
             "JSON to CSV",
             "Avro to JSON",
             "CBOR Encode",
-            "CBOR Decode"
+            "CBOR Decode",
+            "JSON to Go Struct"
         ]
     },
     {
@@ -414,7 +415,6 @@
             "JavaScript Minify",
             "JSON Beautify",
             "JSON Minify",
-            "JSON to Go Struct",
             "XML Beautify",
             "XML Minify",
             "SQL Beautify",
