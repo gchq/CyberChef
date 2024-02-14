@@ -70,6 +70,7 @@
             "Avro to JSON",
             "CBOR Encode",
             "CBOR Decode",
+            "Caret/M-decode",
             "Rison Encode",
             "Rison Decode"
         ]

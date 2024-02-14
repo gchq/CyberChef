@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.8.0] - 2024-02-13
+- Add official Docker images [@AshCorr] | [#1699]
+
 ### [10.7.0] - 2024-02-09
 - Added 'File Tree' operation [@sw5678] | [#1667]
 - Added 'RISON' operation [@sg5506844] | [#1555]
@@ -383,6 +386,7 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[10.8.0]: https://github.com/gchq/CyberChef/releases/tag/v10.7.0
 [10.7.0]: https://github.com/gchq/CyberChef/releases/tag/v10.7.0
 [10.6.0]: https://github.com/gchq/CyberChef/releases/tag/v10.6.0
 [10.5.0]: https://github.com/gchq/CyberChef/releases/tag/v10.5.0
@@ -546,6 +550,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@sw5678]: https://github.com/sw5678
 [@sg5506844]: https://github.com/sg5506844
 [@AliceGrey]: https://github.com/AliceGrey
+[@AshCorr]: https://github.com/AshCorr
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
@@ -672,3 +677,4 @@ All major and minor version changes will be documented in this file. Details of 
 [#1667]: https://github.com/gchq/CyberChef/issues/1667
 [#1555]: https://github.com/gchq/CyberChef/issues/1555
 [#1694]: https://github.com/gchq/CyberChef/issues/1694
+[#1699]: https://github.com/gchq/CyberChef/issues/1694
