@@ -333,7 +333,7 @@ class OperationsWaiter {
      * @param {Event} ev
      */
     keysPopulateRecipe(ev){
-        if(ev.ctrlKey && ev.key ==="Enter"){
+        if(ev.ctrlKey && ev.key === "Enter"){
             const li = ev.target
             this.manager.recipe.addOperation(li.textContent);
         }
