@@ -302,53 +302,37 @@ class OperationsWaiter {
     EventHandler(ev){
         if(ev.key === "Enter" || ev.key === "Space" || ev.key === " " ){
             ev.preventDefault();
-            console.log("Enter Pressed");
-
             const el = ev.target.childNodes[3].classList;
-            console.log(el);
-
             if(!el.contains("show")){
-                const add = ev.target.childNodes[3].classList.add("show");
-                console.log("add" , add);
-                return add;
+                ev.target.childNodes[3].classList.add("show");
             }else if(el.contains("show")){
-                const remove = ev.target.childNodes[3].classList.remove("show");
-                console.log("remove" , remove);
-                return remove;
+                ev.target.childNodes[3].classList.remove("show");
             }
             
         }
 
     };
 
-    // /**
-    //  * Handler for to hide panels with Enter/Space events.
-    //  * When "Enter" or "Space" if pressed it will mimick the click function and close the operations panels .
-    //  * @param {Event} ev
-    //  * @param {Element} ele
-    //  */
-    // closeEventHandler(ev, ele){
-    //     if(ev.key === "Enter" || ev.key === "Space" || ev.key === " "  ){
-    //         ev.preventDefault();
-    //         console.log("Enter Pressed");
-    //         if(ele.contains(ev.target) && ev.timeStamp !== instantiatingEvent.timeStamp){
-    //             hidePanelOperation(ele);
-    //         }
-    //         const cl = ev.target.childNodes[3].classList.remove("show");
-    //         console.log(cl);
-    //     }
-    // }
+    operationDblEnter(){
+        let cat = document.querySelectorAll(".op-list li.operation");
+        console.log("cat=" , cat);
+        for(let i = 0; i < cat.children.length; i++){
+            cat.children[i].addEventListener("keydown", this.ddlEnter, false);
+        };
 
-    // /**
-    //  * Hides the panels and remove the keydown listener from it. 
-    //  * @param {Element} ele
-    //  */
-    // hidePanelOperation(ele){
-    //     ele.classList.remove("show");
-    //     document.removeEventListener("keydown", this.closeEventHandler, false)
-    // }
+    }
 
-
+    /**
+     * Handler to add operators to recipe with keyboard.
+     * @param {Event} ev
+     */
+    ddlEnter(ev){
+        if(ev.ctrlKey && ev.key ==="Enter"){
+            const li = ev.target
+            this.manager.recipe.addOperation(li.textContent);
+        }
+    }
+    
     /**
      * Handler for reset favourites click events.
      * Resets favourites to their defaults.
