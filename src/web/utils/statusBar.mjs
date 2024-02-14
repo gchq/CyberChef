@@ -55,9 +55,12 @@ class StatusBarPanel {
         dom.appendChild(rhs);
 
         // Event listeners
-        dom.querySelectorAll(".cm-status-bar-select-btn").forEach((el) =>
-            el.addEventListener("click", this.showDropUp.bind(this), false)
-        );
+        const eventHandler = this.showDropUp.bind(this);
+
+        dom.querySelectorAll(".cm-status-bar-select-btn").forEach((el) => {
+            el.addEventListener("click", eventHandler, false),
+                el.addEventListener("keydown", eventHandler, false);
+        });
         dom.querySelector(".eol-select").addEventListener(
             "click",
             this.eolSelectClick.bind(this),
@@ -78,26 +81,30 @@ class StatusBarPanel {
     }
 
     /**
-     * Handler for dropup clicks
+     * Handler for dropup clicks/Enter press
      * Shows/Hides the dropup
      * @param {Event} e
      */
     showDropUp(e) {
-        const el = e.target
-            .closest(".cm-status-bar-select")
-            .querySelector(".cm-status-bar-select-content");
-        const btn = e.target.closest(".cm-status-bar-select-btn");
+        if (e.type === "click" || e.keyCode === 13) {
+            const el = e.target
+                .closest(".cm-status-bar-select")
+                .querySelector(".cm-status-bar-select-content");
+            const btn = e.target.closest(".cm-status-bar-select-btn");
 
-        if (btn.classList.contains("disabled")) return;
+            if (btn.classList.contains("disabled")) return;
 
-        el.classList.add("show");
+            el.classList.add("show");
 
-        // Focus the filter input if present
-        const filter = el.querySelector(".cm-status-bar-filter-input");
-        if (filter) filter.focus();
+            // Focus the filter input if present
+            const filter = el.querySelector(".cm-status-bar-filter-input");
+            if (filter) filter.focus();
 
-        // Set up a listener to close the menu if the user clicks outside of it
-        hideOnClickOutside(el, e);
+            // Set up a listener to close the menu if the user clicks outside of it
+            hideOnClickOutside(el, e);
+            // Set up a listener to close the menu if the user presses key outside of it
+            hideOnMoveFocus(el, e);
+        }
     }
 
     /**
@@ -490,8 +497,46 @@ function hideOnClickOutside(element, instantiatingEvent) {
     }
 }
 
+const elementsWithKeyDownListeners = {};
 /**
- * Hides the specified element and removes the click listener for it
+ * Hides the provided element when a key press is made outside of it
+ * @param {Element} element
+ * @param {Event} instantiatingEvent
+ */
+function hideOnMoveFocus(element, instantiatingEvent) {
+    /**
+     * Handler for document keydown events
+     * Closes element if key press is outside it.
+     * @param {Event} event
+     */
+    const outsideClickListener = (event) => {
+        // Don't trigger if we're pressing keys while inside the element, or if the element
+        // is not visible, or if this is the same click event that opened it.
+        if (
+            !element.contains(event.target) &&
+            event.timeStamp !== instantiatingEvent.timeStamp
+        ) {
+            hideElement(element);
+        }
+    };
+
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            elementsWithKeyDownListeners,
+            element
+        )
+    ) {
+        elementsWithKeyDownListeners[element] = outsideClickListener;
+        document.addEventListener(
+            "keydown",
+            elementsWithKeyDownListeners[element],
+            false
+        );
+    }
+}
+
+/**
+ * Hides the specified element and removes the click or keydown listener for it
  * @param {Element} element
  */
 function hideElement(element) {
@@ -501,7 +546,13 @@ function hideElement(element) {
         elementsWithListeners[element],
         false
     );
+    document.removeEventListener(
+        "keydown",
+        elementsWithKeyDownListeners[element],
+        false
+    );
     delete elementsWithListeners[element];
+    delete elementsWithKeyDownListeners[element];
 }
 
 /**
