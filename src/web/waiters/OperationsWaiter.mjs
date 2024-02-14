@@ -284,7 +284,8 @@ class OperationsWaiter {
     }
 
       /**
-     * Handler for Enter/Space events.
+     * Handler for on key press events.
+     * Get the children of categories and add event listener to them.
      */
     onKeyPress() {
         let cat = document.getElementById("categories");
@@ -295,8 +296,8 @@ class OperationsWaiter {
     }
 
      /**
-     * Handler for Enter/Space events.
-     * When "Enter" or "Space" if pressed it will mimick the click function and open the operations panels .
+     * Handler for keyboard enter/space events.
+     * Uses "Enter" or "Space" to mimick the click function and open the operations panels .
      * @param {Event} ev
      */
     EventHandler(ev){
@@ -313,20 +314,25 @@ class OperationsWaiter {
 
     };
 
-    operationDblEnter(){
+    /**
+     * Handler to populate recipe. 
+     * Get the children of op-list and add event listener to them. 
+     */
+    operationPopulateRecipe(){
         let cat = document.querySelectorAll(".op-list li.operation");
         console.log("cat=" , cat);
         for(let i = 0; i < cat.children.length; i++){
-            cat.children[i].addEventListener("keydown", this.ddlEnter, false);
+            cat.children[i].addEventListener("keydown", this.keysPopulateRecipe, false);
         };
 
     }
 
     /**
      * Handler to add operators to recipe with keyboard.
+     * Uses keyboard shortcut "CTRl + Enter" to mimick operationDblClick handler function
      * @param {Event} ev
      */
-    ddlEnter(ev){
+    keysPopulateRecipe(ev){
         if(ev.ctrlKey && ev.key ==="Enter"){
             const li = ev.target
             this.manager.recipe.addOperation(li.textContent);
