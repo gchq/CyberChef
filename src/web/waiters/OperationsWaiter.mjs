@@ -7,6 +7,8 @@
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
+import { curveBumpX } from "d3";
+import { recognize } from "tesseract.js";
 
 
 /**
@@ -283,6 +285,71 @@ class OperationsWaiter {
         this.app.populateOperationsList();
         this.manager.recipe.initialiseOperationDragNDrop();
     }
+
+      /**
+     * Handler for Enter/Space events.
+     */
+    onKeyPress() {
+        let cat = document.getElementById("categories");
+        console.log("cat=" , cat);
+        for(let i = 0; i < cat.children.length; i++){
+            cat.children[i].addEventListener("keydown", this.EventHandler, false);
+        };
+    }
+
+     /**
+     * Handler for Enter/Space events.
+     * When "Enter" or "Space" if pressed it will mimick the click function and open the operations panels .
+     * @param {Event} ev
+     */
+    EventHandler(ev){
+        if(ev.key === "Enter" || ev.key === "Space" || ev.key === " " ){
+            ev.preventDefault();
+            console.log("Enter Pressed");
+
+            const el = ev.target.childNodes[3].classList;
+            console.log(el);
+
+            if(!el.contains("show")){
+                const add = ev.target.childNodes[3].classList.add("show");
+                console.log("add" , add);
+                return add;
+            }else if(el.contains("show")){
+                const remove = ev.target.childNodes[3].classList.remove("show");
+                console.log("remove" , remove);
+                return remove;
+            }
+            
+        }
+
+    };
+
+    // /**
+    //  * Handler for to hide panels with Enter/Space events.
+    //  * When "Enter" or "Space" if pressed it will mimick the click function and close the operations panels .
+    //  * @param {Event} ev
+    //  * @param {Element} ele
+    //  */
+    // closeEventHandler(ev, ele){
+    //     if(ev.key === "Enter" || ev.key === "Space" || ev.key === " "  ){
+    //         ev.preventDefault();
+    //         console.log("Enter Pressed");
+    //         if(ele.contains(ev.target) && ev.timeStamp !== instantiatingEvent.timeStamp){
+    //             hidePanelOperation(ele);
+    //         }
+    //         const cl = ev.target.childNodes[3].classList.remove("show");
+    //         console.log(cl);
+    //     }
+    // }
+
+    // /**
+    //  * Hides the panels and remove the keydown listener from it. 
+    //  * @param {Element} ele
+    //  */
+    // hidePanelOperation(ele){
+    //     ele.classList.remove("show");
+    //     document.removeEventListener("keydown", this.closeEventHandler, false)
+    // }
 
 
     /**
