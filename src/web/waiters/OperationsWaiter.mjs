@@ -7,9 +7,6 @@
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
-import { curveBumpX } from "d3";
-import { recognize } from "tesseract.js";
-
 
 /**
  * Waiter to handle events related to the operations.
