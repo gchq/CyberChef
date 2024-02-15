@@ -303,13 +303,18 @@ class OperationsWaiter {
     EventHandler(ev){
         if(ev.key === "Enter" || ev.key === "Space" || ev.key === " " ){
             ev.preventDefault();
-            const el = ev.target.childNodes[3].classList;
-            if(!el.contains("show")){
-                ev.target.childNodes[3].classList.add("show");
-            }else if(el.contains("show")){
-                ev.target.childNodes[3].classList.remove("show");
+            for(let i = 0; i < ev.target.childNodes.length; i++){
+                let targetChild = ev.target.childNodes[i].classList;
+                if(targetChild !== undefined && targetChild.value.includes("panel-collapse collapse")){
+                    if(!targetChild.contains("show")){
+                        targetChild.add("show");
+                    }else if(targetChild.contains("show")){
+                        targetChild.remove("show");
+                    }
+                    
+                };
+                
             }
-            
         }
 
     };
