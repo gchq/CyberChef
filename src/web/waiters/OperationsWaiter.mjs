@@ -291,7 +291,7 @@ class OperationsWaiter {
         let cat = document.getElementById("categories");
         console.log("cat=" , cat);
         for(let i = 0; i < cat.children.length; i++){
-            cat.children[i].addEventListener("keydown", this.EventHandler, false);
+            cat.children[i].addEventListener("keydown", this.keyboardEventHandler, false);
         };
     }
 
@@ -300,7 +300,7 @@ class OperationsWaiter {
      * Uses "Enter" or "Space" to mimick the click function and open the operations panels .
      * @param {Event} ev
      */
-    EventHandler(ev){
+    keyboardEventHandler(ev){
         if(ev.key === "Enter" || ev.key === "Space" || ev.key === " " ){
             ev.preventDefault();
             for(let i = 0; i < ev.target.childNodes.length; i++){
@@ -327,7 +327,7 @@ class OperationsWaiter {
         let cat = document.querySelectorAll(".op-list li.operation");
         console.log("cat=" , cat);
         for(let i = 0; i < cat.children.length; i++){
-            cat.children[i].addEventListener("keydown", this.keysPopulateRecipe, false);
+            cat.children[i].addEventListener("keydown", this.keyboardPopulateRecipe, false);
         };
 
     }
@@ -337,7 +337,7 @@ class OperationsWaiter {
      * Uses keyboard shortcut "CTRl + Enter" to mimick operationDblClick handler function
      * @param {Event} ev
      */
-    keysPopulateRecipe(ev){
+    keyboardPopulateRecipe(ev){
         if(ev.ctrlKey && ev.key === "Enter"){
             const li = ev.target
             this.manager.recipe.addOperation(li.textContent);
