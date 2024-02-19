@@ -296,7 +296,7 @@ class OperationsWaiter {
 
      /**
      * Handler for keyboard enter/space events.
-     * Uses "Enter" or "Space" to mimick the click function and open the operations panels .
+     * Uses "Enter" or "Space" to mimic the click function and open the operations panels .
      * @param {Event} ev
      */
     keyboardEventHandler(ev){
@@ -324,7 +324,6 @@ class OperationsWaiter {
      */
     operationPopulateRecipe(){
         let cat = document.querySelectorAll(".op-list li.operation");
-        console.log("cat=" , cat);
         for(let i = 0; i < cat.children.length; i++){
             cat.children[i].addEventListener("keydown", this.keyboardPopulateRecipe, false);
         };
@@ -333,7 +332,7 @@ class OperationsWaiter {
 
     /**
      * Handler to add operators to recipe with keyboard.
-     * Uses keyboard shortcut "CTRl + Enter" to mimick operationDblClick handler function
+     * Uses keyboard shortcut "CTRl + Enter" to mimic operationDblClick handler function
      * @param {Event} ev
      */
     keyboardPopulateRecipe(ev){
