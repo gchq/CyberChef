@@ -289,7 +289,6 @@ class OperationsWaiter {
      */
     onKeyPress() {
         let cat = document.getElementById("categories");
-        console.log("cat=" , cat);
         for(let i = 0; i < cat.children.length; i++){
             cat.children[i].addEventListener("keydown", this.keyboardEventHandler, false);
         };
