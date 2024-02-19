@@ -288,8 +288,8 @@ class OperationsWaiter {
      * Get the children of categories and add event listener to them.
      */
     onKeyPress() {
-        let cat = document.getElementById("categories");
-        for(let i = 0; i < cat.children.length; i++){
+        const cat = document.getElementById("categories");
+        for (let i = 0; i < cat.children.length; i++){
             cat.children[i].addEventListener("keydown", this.keyboardEventHandler, false);
         };
     }
