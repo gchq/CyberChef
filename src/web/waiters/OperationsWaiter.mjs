@@ -283,50 +283,50 @@ class OperationsWaiter {
         this.manager.recipe.initialiseOperationDragNDrop();
     }
 
-      /**
-     * Handler for on key press events.
-     * Get the children of categories and add event listener to them.
-     */
+    /**
+   * Handler for on key press events.
+   * Get the children of categories and add event listener to them.
+   */
     onKeyPress() {
         const cat = document.getElementById("categories");
-        for (let i = 0; i < cat.children.length; i++){
+        for (let i = 0; i < cat.children.length; i++) {
             cat.children[i].addEventListener("keydown", this.keyboardEventHandler, false);
-        };
+        }
     }
 
-     /**
-     * Handler for keyboard enter/space events.
-     * Uses "Enter" or "Space" to mimic the click function and open the operations panels .
-     * @param {Event} ev
-     */
-    keyboardEventHandler(ev){
-        if(ev.key === "Enter" || ev.key === "Space" || ev.key === " " ){
+    /**
+    * Handler for keyboard enter/space events.
+    * Uses "Enter" or "Space" to mimic the click function and open the operations panels .
+    * @param {Event} ev
+    */
+    keyboardEventHandler(ev) {
+        if (ev.key === "Enter" || ev.key === "Space" || ev.key === " ") {
             ev.preventDefault();
-            for(let i = 0; i < ev.target.childNodes.length; i++){
-                let targetChild = ev.target.childNodes[i].classList;
-                if(targetChild !== undefined && targetChild.value.includes("panel-collapse collapse")){
-                    if(!targetChild.contains("show")){
+            for (let i = 0; i < ev.target.childNodes.length; i++) {
+                const targetChild = ev.target.childNodes[i].classList;
+                if (targetChild !== undefined && targetChild.value.includes("panel-collapse collapse")) {
+                    if (!targetChild.contains("show")) {
                         targetChild.add("show");
-                    }else if(targetChild.contains("show")){
+                    } else if (targetChild.contains("show")) {
                         targetChild.remove("show");
                     }
-                    
-                };
-                
+
+                }
+
             }
         }
 
-    };
+    }
 
     /**
-     * Handler to populate recipe. 
-     * Get the children of op-list and add event listener to them. 
+     * Handler to populate recipe.
+     * Get the children of op-list and add event listener to them.
      */
-    operationPopulateRecipe(){
-        let cat = document.querySelectorAll(".op-list li.operation");
-        for(let i = 0; i < cat.children.length; i++){
+    operationPopulateRecipe() {
+        const cat = document.querySelectorAll(".op-list li.operation");
+        for (let i = 0; i < cat.children.length; i++) {
             cat.children[i].addEventListener("keydown", this.keyboardPopulateRecipe, false);
-        };
+        }
 
     }
 
@@ -335,13 +335,13 @@ class OperationsWaiter {
      * Uses keyboard shortcut "CTRl + Enter" to mimic operationDblClick handler function
      * @param {Event} ev
      */
-    keyboardPopulateRecipe(ev){
-        if(ev.ctrlKey && ev.key === "Enter"){
-            const li = ev.target
+    keyboardPopulateRecipe(ev) {
+        if (ev.ctrlKey && ev.key === "Enter") {
+            const li = ev.target;
             this.manager.recipe.addOperation(li.textContent);
         }
     }
-    
+
     /**
      * Handler for reset favourites click events.
      * Resets favourites to their defaults.
