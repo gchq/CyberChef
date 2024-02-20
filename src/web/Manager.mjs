@@ -129,7 +129,7 @@ class Manager {
         // Controls
         document.getElementById("bake").addEventListener("click", this.controls.bakeClick.bind(this.controls));
         document.getElementById("auto-bake").addEventListener("change", this.controls.autoBakeChange.bind(this.controls));
-        document.getElementById("auto-bake").addEventListener("keydown", this.controls.keyboardCheckAutoBake.bind(this.controls));
+        document.getElementById("auto-bake").addEventListener("keydown", this.controls.autoBakeKeyboardHandler.bind(this.controls));
         document.getElementById("step").addEventListener("click", this.controls.stepClick.bind(this.controls));
         document.getElementById("clr-recipe").addEventListener("click", this.controls.clearRecipeClick.bind(this.controls));
         document.getElementById("save").addEventListener("click", this.controls.saveClick.bind(this.controls));
