@@ -70,6 +70,7 @@
             "Avro to JSON",
             "CBOR Encode",
             "CBOR Decode",
+            "Caret/M-decode",
             "Rison Encode",
             "Rison Decode"
         ]
@@ -333,7 +334,8 @@
             "CSS selector",
             "Extract EXIF",
             "Extract ID3",
-            "Extract Files"
+            "Extract Files",
+            "RAKE"
         ]
     },
     {
