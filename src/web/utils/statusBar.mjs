@@ -83,24 +83,24 @@ class StatusBarPanel {
      * @param {Event} e
      */
     showDropUp(e) {
-        if (e.type === "click" || e.key === 'Enter'|| e.key === ' ') {
+        if (e.type === "click" || e.key === "Enter"|| e.key === " ") {
             const el = e.target
                 .closest(".cm-status-bar-select")
                 .querySelector(".cm-status-bar-select-content");
             const btn = e.target.closest(".cm-status-bar-select-btn");
 
-        if (btn.classList.contains("disabled")) return;
+            if (btn.classList.contains("disabled")) return;
 
-        el.classList.add("show");
+            el.classList.add("show");
 
-        // Focus the filter input if present
-        const filter = el.querySelector(".cm-status-bar-filter-input");
-        if (filter) filter.focus();
+            // Focus the filter input if present
+            const filter = el.querySelector(".cm-status-bar-filter-input");
+            if (filter) filter.focus();
 
-        // Set up a listener to close the menu if the user clicks outside of it
-        hideOnClickOutside(el, e);
-        // Set up a listener to close the menu if the user presses key outside of it
-        hideOnMoveFocus(el, e);
+            // Set up a listener to close the menu if the user clicks outside of it
+            hideOnClickOutside(el, e);
+            // Set up a listener to close the menu if the user presses key outside of it
+            hideOnMoveFocus(el, e);
         }
     }
 
