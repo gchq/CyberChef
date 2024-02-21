@@ -121,8 +121,8 @@ class ControlsWaiter {
         recipeConfig = recipeConfig || this.app.getRecipeConfig();
 
         const link = baseURL || window.location.protocol + "//" +
-                window.location.host +
-                window.location.pathname;
+            window.location.host +
+            window.location.pathname;
         const recipeStr = Utils.generatePrettyRecipe(recipeConfig);
 
         includeRecipe = includeRecipe && (recipeConfig.length > 0);
@@ -185,7 +185,7 @@ class ControlsWaiter {
 
         document.getElementById("save-text-chef").value = Utils.generatePrettyRecipe(recipeConfig, true);
         document.getElementById("save-text-clean").value = JSON.stringify(recipeConfig, null, 2)
-            .replace(/{\n\s+"/g, '{ "')
+            .replace(/{\n\s+"/g, "{ \"")
             .replace(/\[\n\s{3,}/g, "[")
             .replace(/\n\s{3,}]/g, "]")
             .replace(/\s*\n\s*}/g, " }")
@@ -235,14 +235,14 @@ class ControlsWaiter {
         }
 
         const recipeName = Utils.escapeHtml(document.getElementById("save-name").value);
-        const recipeStr = document.querySelector("#save-texts .tab-pane.active textarea").value;
+        const recipeStr  = document.querySelector("#save-texts .tab-pane.active textarea").value;
 
         if (!recipeName) {
             this.app.alert("Please enter a recipe name", 3000);
             return;
         }
 
-        const savedRecipes = localStorage.savedRecipes ? 
+        const savedRecipes = localStorage.savedRecipes ?
             JSON.parse(localStorage.savedRecipes) : [];
         let recipeId = localStorage.recipeId || 0;
 
@@ -274,7 +274,7 @@ class ControlsWaiter {
         }
 
         // Add recipes to select
-        const savedRecipes = localStorage.savedRecipes ? 
+        const savedRecipes = localStorage.savedRecipes ?
             JSON.parse(localStorage.savedRecipes) : [];
 
         for (i = 0; i < savedRecipes.length; i++) {
@@ -318,7 +318,7 @@ class ControlsWaiter {
         if (!this.app.isLocalStorageAvailable()) return false;
 
         const el = e.target;
-        const savedRecipes = localStorage.savedRecipes ? 
+        const savedRecipes = localStorage.savedRecipes ?
             JSON.parse(localStorage.savedRecipes) : [];
         const id = parseInt(el.value, 10);
 
@@ -429,7 +429,7 @@ ${navigator.userAgent}
 
         recList.style.bottom = controls.clientHeight + "px";
     }
-    
+
 }
 
 export default ControlsWaiter;

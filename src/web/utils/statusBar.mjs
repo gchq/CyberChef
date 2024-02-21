@@ -11,6 +11,7 @@ import {CHR_ENC_SIMPLE_LOOKUP, CHR_ENC_SIMPLE_REVERSE_LOOKUP} from "../../core/l
  * A Status bar extension for CodeMirror
  */
 class StatusBarPanel {
+
     /**
      * StatusBarPanel constructor
      * @param {Object} opts
@@ -264,6 +265,7 @@ class StatusBarPanel {
         this.eolVal = state.lineBreak;
     }
 
+
     /**
      * Sets the current character encoding of the document
      */
@@ -446,8 +448,7 @@ function hideOnClickOutside(element, instantiatingEvent) {
     const outsideClickListener = event => {
         // Don't trigger if we're clicking inside the element, or if the element
         // is not visible, or if this is the same click event that opened it.
-        if (
-            !element.contains(event.target) &&
+        if (!element.contains(event.target) &&
             event.timeStamp !== instantiatingEvent.timeStamp) {
             hideElement(element);
         }
