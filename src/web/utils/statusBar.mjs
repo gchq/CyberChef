@@ -82,24 +82,24 @@ class StatusBarPanel {
      * @param {Event} e
      */
     showDropUp(e) {
-        if (e.type === "click" || e.keyCode === 13) {
+        if (e.type === "click" || e.key === 'Enter'|| e.key === ' ') {
             const el = e.target
                 .closest(".cm-status-bar-select")
                 .querySelector(".cm-status-bar-select-content");
             const btn = e.target.closest(".cm-status-bar-select-btn");
 
-            if (btn.classList.contains("disabled")) return;
+        if (btn.classList.contains("disabled")) return;
 
-            el.classList.add("show");
+        el.classList.add("show");
 
-            // Focus the filter input if present
-            const filter = el.querySelector(".cm-status-bar-filter-input");
-            if (filter) filter.focus();
+        // Focus the filter input if present
+        const filter = el.querySelector(".cm-status-bar-filter-input");
+        if (filter) filter.focus();
 
-            // Set up a listener to close the menu if the user clicks outside of it
-            hideOnClickOutside(el, e);
-            // Set up a listener to close the menu if the user presses key outside of it
-            hideOnMoveFocus(el, e);
+        // Set up a listener to close the menu if the user clicks outside of it
+        hideOnClickOutside(el, e);
+        // Set up a listener to close the menu if the user presses key outside of it
+        hideOnMoveFocus(el, e);
         }
     }
 
@@ -181,8 +181,7 @@ class StatusBarPanel {
         // CodeMirror always counts line breaks as one character.
         // We want to show an accurate reading of how many bytes there are.
         if (state.lineBreak.length !== 1) {
-            docLength +=
-                state.lineBreak.length * state.doc.lines - state.doc.lines - 1;
+            docLength += (state.lineBreak.length * state.doc.lines) - state.doc.lines - 1;
         }
         length.textContent = docLength;
         lines.textContent = state.doc.lines;
@@ -236,6 +235,7 @@ class StatusBarPanel {
             offset.textContent = from;
         }
     }
+
 
     /**
      * Sets the current EOL separator in the status bar
@@ -344,7 +344,7 @@ class StatusBarPanel {
      */
     constructLHS() {
         return `
-        <span data-toggle="tooltip" tabindex="0" title="${this.label} length" data-help-title="${this.label} length" data-help="This number represents the number of characters in the ${this.label}.<br><br>The CRLF end of line separator is counted as two characters which impacts this value.">
+            <span data-toggle="tooltip" tabindex="0" title="${this.label} length" data-help-title="${this.label} length" data-help="This number represents the number of characters in the ${this.label}.<br><br>The CRLF end of line separator is counted as two characters which impacts this value.">
                 <i class="material-icons">abc</i>
                 <span class="stats-length-value"></span>
             </span>
@@ -386,13 +386,13 @@ class StatusBarPanel {
         }
 
         return `
-        <span class="baking-time-info" style="display: none" data-toggle="tooltip" tabindex="0" data-html="true" title="Baking time" data-help-title="Baking time" data-help="The baking time is the total time between data being read from the input, processed, and then displayed in the output.<br><br>The 'Threading overhead' value accounts for the transfer of data between different processing threads, as well as some garbage collection. It is not included in the overall bake time displayed in the status bar as it is largely influenced by background operating system and browser activity which can fluctuate significantly.">
+            <span class="baking-time-info" style="display: none" data-toggle="tooltip" tabindex="0" data-html="true" title="Baking time" data-help-title="Baking time" data-help="The baking time is the total time between data being read from the input, processed, and then displayed in the output.<br><br>The 'Threading overhead' value accounts for the transfer of data between different processing threads, as well as some garbage collection. It is not included in the overall bake time displayed in the status bar as it is largely influenced by background operating system and browser activity which can fluctuate significantly.">
                 <i class="material-icons">schedule</i>
                 <span class="baking-time-value"></span>ms
             </span>
 
             <div class="cm-status-bar-select chr-enc-select" data-help-title="${this.label} character encoding" data-help="${chrEncHelpText}">
-            <span class="cm-status-bar-select-btn" data-toggle="tooltip" tabindex="0" data-html="true" data-placement="left" title="${this.label} character encoding">
+                <span class="cm-status-bar-select-btn" data-toggle="tooltip" tabindex="0" data-html="true" data-placement="left" title="${this.label} character encoding">
                     <i class="material-icons">text_fields</i> <span class="chr-enc-value">Raw Bytes</span>
                 </span>
                 <div class="cm-status-bar-select-content">
@@ -427,6 +427,7 @@ class StatusBarPanel {
                 </div>
             </div>`;
     }
+
 }
 
 const elementsWithListeners = {};
@@ -447,19 +448,14 @@ function hideOnClickOutside(element, instantiatingEvent) {
         // is not visible, or if this is the same click event that opened it.
         if (
             !element.contains(event.target) &&
-            event.timeStamp !== instantiatingEvent.timeStamp
-        ) {
+            event.timeStamp !== instantiatingEvent.timeStamp) {
             hideElement(element);
         }
     };
 
     if (!Object.prototype.hasOwnProperty.call(elementsWithListeners, element)) {
         elementsWithListeners[element] = outsideClickListener;
-        document.addEventListener(
-            "click",
-            elementsWithListeners[element],
-            false
-        );
+        document.addEventListener("click", elementsWithListeners[element], false);
     }
 }
 
@@ -555,19 +551,12 @@ const arrowNav = (event) => {
  */
 function hideElement(element) {
     element.classList.remove("show");
-    document.removeEventListener(
-        "click",
-        elementsWithListeners[element],
-        false
-    );
-    document.removeEventListener(
-        "keydown",
-        elementsWithKeyDownListeners[element],
-        false
-    );
+    document.removeEventListener("click", elementsWithListeners[element], false);
+    document.removeEventListener("keydown", elementsWithKeyDownListeners[element], false);
     delete elementsWithListeners[element];
     delete elementsWithKeyDownListeners[element];
 }
+
 
 /**
  * A panel constructor factory building a panel that re-counts the stats every time the document changes.
@@ -586,7 +575,7 @@ function makePanel(opts) {
         sbPanel.monitorHTMLOutput();
 
         return {
-            dom: sbPanel.dom,
+            "dom": sbPanel.dom,
             update(update) {
                 sbPanel.updateEOL(update.state);
                 sbPanel.updateCharEnc();
@@ -599,7 +588,7 @@ function makePanel(opts) {
                 if (update.docChanged) {
                     sbPanel.updateStats(update.state);
                 }
-            },
+            }
         };
     };
 }
