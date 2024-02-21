@@ -152,9 +152,7 @@ class ControlsWaiter {
 
         const params = [
             includeRecipe ? ["recipe", recipeStr] : undefined,
-            includeInput && input.length
-                ? ["input", Utils.escapeHtml(input)]
-                : undefined,
+            includeInput && input.length ? ["input", Utils.escapeHtml(input)] : undefined,
             inputChrEnc !== 0 ? ["ienc", inputChrEnc] : undefined,
             outputChrEnc !== 0 ? ["oenc", outputChrEnc] : undefined,
             inputEOLSeq !== "\n" ? ["ieol", inputEOLSeq] : undefined,
@@ -255,9 +253,7 @@ class ControlsWaiter {
             return;
         }
 
-        const savedRecipes = localStorage.savedRecipes
-            ? JSON.parse(localStorage.savedRecipes)
-            : [];
+        const savedRecipes = localStorage.savedRecipes ? JSON.parse(localStorage.savedRecipes) : [];
         let recipeId = localStorage.recipeId || 0;
 
         savedRecipes.push({
@@ -287,9 +283,7 @@ class ControlsWaiter {
         }
 
         // Add recipes to select
-        const savedRecipes = localStorage.savedRecipes
-            ? JSON.parse(localStorage.savedRecipes)
-            : [];
+        const savedRecipes = localStorage.savedRecipes ? JSON.parse(localStorage.savedRecipes) : [];
 
         for (i = 0; i < savedRecipes.length; i++) {
             const opt = document.createElement("option");
@@ -316,9 +310,7 @@ class ControlsWaiter {
         if (!this.app.isLocalStorageAvailable()) return false;
 
         const id = parseInt(document.getElementById("load-name").value, 10);
-        const rawSavedRecipes = localStorage.savedRecipes
-            ? JSON.parse(localStorage.savedRecipes)
-            : [];
+        const rawSavedRecipes = localStorage.savedRecipes ? JSON.parse(localStorage.savedRecipes) : [];
 
         const savedRecipes = rawSavedRecipes.filter((r) => r.id !== id);
 
@@ -333,9 +325,7 @@ class ControlsWaiter {
         if (!this.app.isLocalStorageAvailable()) return false;
 
         const el = e.target;
-        const savedRecipes = localStorage.savedRecipes
-            ? JSON.parse(localStorage.savedRecipes)
-            : [];
+        const savedRecipes = localStorage.savedRecipes ? JSON.parse(localStorage.savedRecipes) : [];
         const id = parseInt(el.value, 10);
 
         const recipe = savedRecipes.find((r) => r.id === id);
