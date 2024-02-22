@@ -46,7 +46,6 @@ class FernetDecrypt extends Operation {
      */
     run(input, args) {
         const [secretInput] = args;
-        // const fernet = require("fernet");
         try {
             const secret = new fernet.Secret(secretInput);
             const token = new fernet.Token({
