@@ -10,7 +10,7 @@ import {DATETIME_FORMATS, FORMAT_EXAMPLES} from "../lib/DateTime.mjs";
 
 /**
   * @param {string} timeString
-  * @returns {string}
+  * @returns {string} 
 */
 function parseTimeString(timeString) {
     // Split the string into its components
