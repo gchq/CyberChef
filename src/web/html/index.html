@@ -145,7 +145,7 @@
         <button type="button" class="btn btn-warning bmd-btn-icon" id="edit-favourites" data-toggle="tooltip" title="Edit favourites">
             <i class="material-icons">star</i>
         </button>
-        <div id="content-wrapper">
+        <div tabindex="0" id="content-wrapper">
             <div id="banner" class="row">
                 <div class="col" style="text-align: left; padding-left: 10px;">
                     <a href="#" data-toggle="modal" data-target="#download-modal" data-help-title="Downloading CyberChef" data-help="<p>CyberChef can be downloaded to run locally or hosted within your own network. It has no server-side component so all that is required is that the ZIP file is uncompressed and the files are accessible.</p><p>As a user, it is worth noting that unofficial versions of CyberChef could have been modified to introduce Input and/or Recipe exfiltration. We recommend always using the official, open source, up-to-date version of CyberChef hosted at <a href='https://gchq.github.io/CyberChef'>https://gchq.github.io/CyberChef</a> if accessible.</p><p>The Network tab in your browser's Developer console (F12) can be used to inspect the network requests made by a website. This can confirm that no data is uploaded when a CyberChef recipe is baked.</p>">Download CyberChef <i class="material-icons">file_download</i></a>
@@ -172,7 +172,7 @@
                     <div class="title no-select" data-help-title="Operations list" data-help="<p>The Operations list contains all the operations in CyberChef arranged into categories. Some operations may be present in multiple categories. You can search for operations using the search box.</p><p>To use an operation, either double click it, or drag it into the Recipe pane. You will then be able to configure its arguments (or 'Ingredients' in CyberChef terminology).</p>">
                         Operations
                     </div>
-                    <input id="search" type="search" class="form-control" placeholder="Search..." autocomplete="off" tabindex="2" data-help-title="Searching for operations" data-help="<p>Use the search box to find useful operations.</p><p>Both operation names and descriptions are queried using a fuzzy matching algorithm.</p>">
+                    <input id="search" type="search" class="form-control" placeholder="Search..." autocomplete="off" tabindex="0" data-help-title="Searching for operations" data-help="<p>Use the search box to find useful operations.</p><p>Both operation names and descriptions are queried using a fuzzy matching algorithm.</p>">
                     <ul id="search-results" class="op-list"></ul>
                     <div id="categories" class="panel-group no-select"></div>
                 </div>

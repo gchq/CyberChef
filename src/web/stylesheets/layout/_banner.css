@@ -26,6 +26,32 @@
     color: var(--banner-url-colour);
 }
 
+#options:focus {
+    background-color: #ccddc5;
+    border: solid black 2px;
+}
+
+#support:focus {
+    background-color: #e5e5e5;
+    border: solid black 2px;
+
+}
+
+#notice:focus {
+    background-color: #ccddc5;
+    border: solid black 2px;
+}
+
+#banner .col a:focus {
+    background-color: #ccddc5;
+    border: solid black 2px;
+}
+
+#notice-wrapper #notice:focus {
+    background-color: #ccddc5;
+    border: solid black 2px;
+}
+
 #notice-wrapper {
     text-align: center;
     overflow: hidden;
