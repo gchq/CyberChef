@@ -7,7 +7,7 @@
  * @license Apache-2.0
  */
 
-/*eslint no-console: ["off"] */
+/* eslint no-console: ["off"] */
 
 import path from "path";
 import fs  from "fs";
@@ -39,7 +39,7 @@ let code = `/**
 `;
 
 opObjs.forEach(obj => {
-    code += `import ${obj} from "./${obj}";\n`;
+    code += `import ${obj} from "./${obj}.mjs";\n`;
 });
 
 code += `

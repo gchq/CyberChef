@@ -5,7 +5,7 @@
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
-import TestRegister from "../TestRegister";
+import TestRegister from "../../lib/TestRegister.mjs";
 
 const ALL_BYTES = [
     "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
@@ -73,7 +73,7 @@ TestRegister.addTests([
     },
     {
         name: "To Octal: Γειά σου",
-        input: "Γειά σου", //[206,147,206,181,206,185,206,172,32,207,131,206,191,207,133],
+        input: "Γειά σου", // [206,147,206,181,206,185,206,172,32,207,131,206,191,207,133],
         expectedOutput: "316 223 316 265 316 271 316 254 40 317 203 316 277 317 205",
         recipeConfig: [
             {

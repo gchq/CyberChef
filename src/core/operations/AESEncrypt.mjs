@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import forge from "node-forge/dist/forge.min.js";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import forge from "node-forge";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * AES Encrypt operation
@@ -41,8 +41,33 @@ class AESEncrypt extends Operation {
             },
             {
                 "name": "Mode",
-                "type": "option",
-                "value": ["CBC", "CFB", "OFB", "CTR", "GCM", "ECB"]
+                "type": "argSelector",
+                "value": [
+                    {
+                        name: "CBC",
+                        off: [5]
+                    },
+                    {
+                        name: "CFB",
+                        off: [5]
+                    },
+                    {
+                        name: "OFB",
+                        off: [5]
+                    },
+                    {
+                        name: "CTR",
+                        off: [5]
+                    },
+                    {
+                        name: "GCM",
+                        on: [5]
+                    },
+                    {
+                        name: "ECB",
+                        off: [5]
+                    }
+                ]
             },
             {
                 "name": "Input",
@@ -53,6 +78,12 @@ class AESEncrypt extends Operation {
                 "name": "Output",
                 "type": "option",
                 "value": ["Hex", "Raw"]
+            },
+            {
+                "name": "Additional Authenticated Data",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
             }
         ];
     }
@@ -65,11 +96,12 @@ class AESEncrypt extends Operation {
      * @throws {OperationError} if invalid key length
      */
     run(input, args) {
-        const key = Utils.convertToByteArray(args[0].string, args[0].option),
-            iv = Utils.convertToByteArray(args[1].string, args[1].option),
+        const key = Utils.convertToByteString(args[0].string, args[0].option),
+            iv = Utils.convertToByteString(args[1].string, args[1].option),
             mode = args[2],
             inputType = args[3],
-            outputType = args[4];
+            outputType = args[4],
+            aad = Utils.convertToByteString(args[5].string, args[5].option);
 
         if ([16, 24, 32].indexOf(key.length) < 0) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -83,7 +115,10 @@ The following algorithms will be used based on the size of the key:
         input = Utils.convertToByteString(input, inputType);
 
         const cipher = forge.cipher.createCipher("AES-" + mode, key);
-        cipher.start({iv: iv});
+        cipher.start({
+            iv: iv,
+            additionalData: mode === "GCM" ? aad : undefined
+        });
         cipher.update(forge.util.createBuffer(input));
         cipher.finish();
 

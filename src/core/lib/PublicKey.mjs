@@ -6,38 +6,28 @@
  * @license Apache-2.0
  */
 
-import { toHex, fromHex } from "./Hex";
+import { toHex, fromHex } from "./Hex.mjs";
 
 /**
- * Formats Distinguished Name (DN) strings.
+ * Formats Distinguished Name (DN) objects to strings.
  *
- * @param {string} dnStr
+ * @param {Object} dnObj
  * @param {number} indent
  * @returns {string}
  */
-export function formatDnStr (dnStr, indent) {
-    const fields = dnStr.substr(1).replace(/([^\\])\//g, "$1$1/").split(/[^\\]\//);
-    let output = "",
-        maxKeyLen = 0,
-        key,
-        value,
-        i,
-        str;
+export function formatDnObj(dnObj, indent) {
+    let output = "";
 
-    for (i = 0; i < fields.length; i++) {
-        if (!fields[i].length) continue;
+    const maxKeyLen = dnObj.array.reduce((max, item) => {
+        return item[0].type.length > max ? item[0].type.length : max;
+    }, 0);
 
-        key = fields[i].split("=")[0];
+    for (let i = 0; i < dnObj.array.length; i++) {
+        if (!dnObj.array[i].length) continue;
 
-        maxKeyLen = key.length > maxKeyLen ? key.length : maxKeyLen;
-    }
-
-    for (i = 0; i < fields.length; i++) {
-        if (!fields[i].length) continue;
-
-        key = fields[i].split("=")[0];
-        value = fields[i].split("=")[1];
-        str = key.padEnd(maxKeyLen, " ") + " = " + value + "\n";
+        const key = dnObj.array[i][0].type;
+        const value = dnObj.array[i][0].value;
+        const str = `${key.padEnd(maxKeyLen, " ")} = ${value}\n`;
 
         output += str.padStart(indent + str.length, " ");
     }
@@ -54,7 +44,7 @@ export function formatDnStr (dnStr, indent) {
  * @param {number} indent
  * @returns {string}
  */
-export function formatByteStr (byteStr, length, indent) {
+export function formatByteStr(byteStr, length, indent) {
     byteStr = toHex(fromHex(byteStr), ":");
     length = length * 3;
     let output = "";

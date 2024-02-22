@@ -4,8 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import { search } from "../lib/Extract";
+import Operation from "../Operation.mjs";
+import { search } from "../lib/Extract.mjs";
+import { hexadecimalSort } from "../lib/Sort.mjs";
 
 /**
  * Extract MAC addresses operation
@@ -25,9 +26,19 @@ class ExtractMACAddresses extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Display total",
-                "type": "boolean",
-                "value": false
+                name: "Display total",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Sort",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Unique",
+                type: "boolean",
+                value: false
             }
         ];
     }
@@ -38,10 +49,21 @@ class ExtractMACAddresses extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const displayTotal = args[0],
-            regex = /[A-F\d]{2}(?:[:-][A-F\d]{2}){5}/ig;
+        const [displayTotal, sort, unique] = args,
+            regex = /[A-F\d]{2}(?:[:-][A-F\d]{2}){5}/ig,
+            results = search(
+                input,
+                regex,
+                null,
+                sort ? hexadecimalSort : null,
+                unique
+            );
 
-        return search(input, regex, null, displayTotal);
+        if (displayTotal) {
+            return `Total found: ${results.length}\n\n${results.join("\n")}`;
+        } else {
+            return results.join("\n");
+        }
     }
 
 }

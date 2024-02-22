@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import { genPolybiusSquare } from "../lib/Ciphers";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import { genPolybiusSquare } from "../lib/Ciphers.mjs";
 
 /**
  * Bifid Cipher Encode operation

@@ -4,10 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import { bitOp, xor } from "../lib/BitwiseOp";
-import { toHex } from "../lib/Hex";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import { bitOp, xor } from "../lib/BitwiseOp.mjs";
+import { toHex } from "../lib/Hex.mjs";
+import { isWorkerEnvironment } from "../Utils.mjs";
 
 /**
  * XOR Brute Force operation
@@ -24,7 +25,7 @@ class XORBruteForce extends Operation {
         this.module = "Default";
         this.description = "Enumerate all possible XOR solutions. Current maximum key length is 2 due to browser performance.<br><br>Optionally enter a string that you expect to find in the plaintext to filter results (crib).";
         this.infoURL = "https://wikipedia.org/wiki/Exclusive_or";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
@@ -71,11 +72,12 @@ class XORBruteForce extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
+        input = new Uint8Array(input);
         const [
                 keyLength,
                 sampleLength,
@@ -94,7 +96,7 @@ class XORBruteForce extends Operation {
 
         input = input.slice(sampleOffset, sampleOffset + sampleLength);
 
-        if (ENVIRONMENT_IS_WORKER())
+        if (isWorkerEnvironment())
             self.sendStatusMessage("Calculating " + Math.pow(256, keyLength) + " values...");
 
         /**
@@ -114,7 +116,7 @@ class XORBruteForce extends Operation {
         };
 
         for (let key = 1, l = Math.pow(256, keyLength); key < l; key++) {
-            if (key % 10000 === 0 && ENVIRONMENT_IS_WORKER()) {
+            if (key % 10000 === 0 && isWorkerEnvironment()) {
                 self.sendStatusMessage("Calculating " + l + " values... " + Math.floor(key / l * 100) + "%");
             }
 
@@ -124,11 +126,7 @@ class XORBruteForce extends Operation {
 
             if (crib && resultUtf8.toLowerCase().indexOf(crib) < 0) continue;
             if (printKey) record += "Key = " + Utils.hex(key, (2*keyLength)) + ": ";
-            if (outputHex) {
-                record += toHex(result);
-            } else {
-                record += Utils.printable(resultUtf8, false);
-            }
+            record += outputHex ? toHex(result) : Utils.escapeWhitespace(resultUtf8);
 
             output.push(record);
         }

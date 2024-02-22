@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import cptable from "../vendor/js-codepage/cptable.js";
+import Operation from "../Operation.mjs";
+import cptable from "codepage";
 
 /**
  * Citrix CTX1 Encode operation

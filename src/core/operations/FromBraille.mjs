@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {BRAILLE_LOOKUP} from "../lib/Braille";
+import Operation from "../Operation.mjs";
+import {BRAILLE_LOOKUP} from "../lib/Braille.mjs";
 
 /**
  * From Braille operation

@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * Merge operation
@@ -20,10 +20,16 @@ class Merge extends Operation {
         this.name = "Merge";
         this.flowControl = true;
         this.module = "Default";
-        this.description = "Consolidate all branches back into a single trunk. The opposite of Fork.";
+        this.description = "Consolidate all branches back into a single trunk. The opposite of Fork. Unticking the Merge All checkbox will only consolidate all branches up to the nearest Fork/Subsection.";
         this.inputType = "string";
         this.outputType = "string";
-        this.args = [];
+        this.args = [
+            {
+                name: "Merge All",
+                type: "boolean",
+                value: true,
+            }
+        ];
     }
 
     /**

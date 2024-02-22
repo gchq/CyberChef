@@ -6,19 +6,20 @@
  * @license Apache-2.0
  */
 
-:root {
-    --controls-height: 75px;
-}
-
 #controls {
     position: absolute;
     width: 100%;
-    height: var(--controls-height);
     bottom: 0;
-    padding: 0;
-    padding-top: 12px;
+    padding: 10px 0;
     border-top: 1px solid var(--primary-border-colour);
     background-color: var(--secondary-background-colour);
+}
+
+#controls-content {
+    position: relative;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
 }
 
 #auto-bake-label {
@@ -32,6 +33,12 @@
     cursor: pointer;
 }
 
+#auto-bake-label .check,
+#auto-bake-label .check::before {
+    border-color: var(--input-highlight-colour);
+    color: var(--input-highlight-colour);
+}
+
 #auto-bake-label .checkbox-decorator {
     position: relative;
 }
@@ -42,4 +49,21 @@
 
 #controls .btn {
     border-radius: 30px;
+    margin: 0;
+}
+
+.output-maximised .hide-on-maximised-output {
+    display: none !important;
+}
+
+.spin {
+    animation-name: spin;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes spin {
+    0%      {transform: rotate(0deg);}
+    100%    {transform: rotate(360deg);}
 }

@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Dish from "../Dish";
-import { getLabelIndex } from "../lib/FlowControl";
+import Operation from "../Operation.mjs";
+import Dish from "../Dish.mjs";
+import { getLabelIndex } from "../lib/FlowControl.mjs";
 
 /**
  * Conditional Jump operation
@@ -64,6 +64,7 @@ class ConditionalJump extends Operation {
             jmpIndex = getLabelIndex(label, state);
 
         if (state.numJumps >= maxJumps || jmpIndex === -1) {
+            state.numJumps = 0;
             return state;
         }
 
@@ -73,6 +74,8 @@ class ConditionalJump extends Operation {
             if (!invert && strMatch || invert && !strMatch) {
                 state.progress = jmpIndex;
                 state.numJumps++;
+            } else {
+                state.numJumps = 0;
             }
         }
 

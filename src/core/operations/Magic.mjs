@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import Dish from "../Dish";
-import MagicLib from "../lib/Magic";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import Dish from "../Dish.mjs";
+import MagicLib from "../lib/Magic.mjs";
 
 /**
  * Magic operation
@@ -149,7 +149,7 @@ class Magic extends Operation {
 
             output += `<tr>
                 <td><a href="#${recipeURL}">${Utils.generatePrettyRecipe(option.recipe, true)}</a></td>
-                <td>${Utils.escapeHtml(Utils.printable(Utils.truncate(option.data, 99)))}</td>
+                <td>${Utils.escapeHtml(Utils.escapeWhitespace(Utils.truncate(option.data, 99)))}</td>
                 <td>${language}${fileType}${matchingOps}${useful}${validUTF8}${entropy}</td>
             </tr>`;
         });

@@ -4,10 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {DELIM_OPTIONS} from "../lib/Delim";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import { DELIM_OPTIONS } from "../lib/Delim.mjs";
+import { isWorkerEnvironment } from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * From Charcode operation
@@ -25,7 +26,7 @@ class FromCharcode extends Operation {
         this.description = "Converts unicode character codes back into text.<br><br>e.g. <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code> becomes <code>Γειά σου</code>";
         this.infoURL = "https://wikipedia.org/wiki/Plane_(Unicode)";
         this.inputType = "string";
-        this.outputType = "byteArray";
+        this.outputType = "ArrayBuffer";
         this.args = [
             {
                 "name": "Delimiter",
@@ -43,7 +44,7 @@ class FromCharcode extends Operation {
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {byteArray}
+     * @returns {ArrayBuffer}
      *
      * @throws {OperationError} if base out of range
      */
@@ -58,10 +59,10 @@ class FromCharcode extends Operation {
         }
 
         if (input.length === 0) {
-            return [];
+            return new ArrayBuffer;
         }
 
-        if (base !== 16 && ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
+        if (base !== 16 && isWorkerEnvironment()) self.setOption("attemptHighlight", false);
 
         // Split into groups of 2 if the whole string is concatenated and
         // too long to be a single character
@@ -76,7 +77,7 @@ class FromCharcode extends Operation {
         for (i = 0; i < bites.length; i++) {
             latin1 += Utils.chr(parseInt(bites[i], base));
         }
-        return Utils.strToByteArray(latin1);
+        return Utils.strToArrayBuffer(latin1);
     }
 
 }

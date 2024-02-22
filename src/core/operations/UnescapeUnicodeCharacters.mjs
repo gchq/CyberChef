@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Unescape Unicode Characters operation
@@ -47,7 +47,6 @@ class UnescapeUnicodeCharacters extends Operation {
         while ((m = regex.exec(input))) {
             // Add up to match
             output += input.slice(i, m.index);
-            i = m.index;
 
             // Add match
             output += Utils.chr(parseInt(m[1], 16));

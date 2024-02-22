@@ -3,10 +3,11 @@
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
-
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import jwt from "jsonwebtoken";
-import OperationError from "../errors/OperationError";
+import OperationError from "../errors/OperationError.mjs";
+import {JWT_ALGORITHMS} from "../lib/JWT.mjs";
+
 
 /**
  * JWT Sign operation
@@ -34,18 +35,7 @@ class JWTSign extends Operation {
             {
                 name: "Signing algorithm",
                 type: "option",
-                value: [
-                    "HS256",
-                    "HS384",
-                    "HS512",
-                    "RS256",
-                    "RS384",
-                    "RS512",
-                    "ES256",
-                    "ES384",
-                    "ES512",
-                    "None"
-                ]
+                value: JWT_ALGORITHMS
             }
         ];
     }

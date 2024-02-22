@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * Escape Unicode Characters operation
@@ -44,22 +44,22 @@ class EscapeUnicodeCharacters extends Operation {
                 "value": true
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                match: "\\\\u(?:[\\da-f]{4,6})",
+                pattern: "\\\\u(?:[\\da-f]{4,6})",
                 flags: "i",
                 args: ["\\u"]
             },
             {
-                match: "%u(?:[\\da-f]{4,6})",
+                pattern: "%u(?:[\\da-f]{4,6})",
                 flags: "i",
                 args: ["%u"]
             },
             {
-                match: "U\\+(?:[\\da-f]{4,6})",
+                pattern: "U\\+(?:[\\da-f]{4,6})",
                 flags: "i",
                 args: ["U+"]
-            },
+            }
         ];
     }
 

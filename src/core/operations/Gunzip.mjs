@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min";
+import Operation from "../Operation.mjs";
+import gunzip from "zlibjs/bin/gunzip.min.js";
 
-const Zlib = zlibAndGzip.Zlib;
+const Zlib = gunzip.Zlib;
 
 /**
  * Gunzip operation
@@ -27,12 +27,12 @@ class Gunzip extends Operation {
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.args = [];
-        this.patterns = [
+        this.checks = [
             {
-                match: "^\\x1f\\x8b\\x08",
+                pattern: "^\\x1f\\x8b\\x08",
                 flags: "",
                 args: []
-            },
+            }
         ];
     }
 
@@ -42,8 +42,8 @@ class Gunzip extends Operation {
      * @returns {File}
      */
     run(input, args) {
-        const gunzip = new Zlib.Gunzip(new Uint8Array(input));
-        return new Uint8Array(gunzip.decompress()).buffer;
+        const gzipObj = new Zlib.Gunzip(new Uint8Array(input));
+        return new Uint8Array(gzipObj.decompress()).buffer;
     }
 
 }

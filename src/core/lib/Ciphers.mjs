@@ -9,7 +9,7 @@
  *
  */
 
-import OperationError from "../errors/OperationError";
+import OperationError from "../errors/OperationError.mjs";
 import CryptoJS from "crypto-js";
 
 /**

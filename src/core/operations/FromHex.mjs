@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {fromHex, FROM_HEX_DELIM_OPTIONS} from "../lib/Hex";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import {fromHex, FROM_HEX_DELIM_OPTIONS} from "../lib/Hex.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * From Hex operation
@@ -32,49 +32,54 @@ class FromHex extends Operation {
                 value: FROM_HEX_DELIM_OPTIONS
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                match: "^(?:[\\dA-F]{2})+$",
+                pattern: "^(?:[\\dA-F]{2})+$",
                 flags: "i",
                 args: ["None"]
             },
             {
-                match: "^[\\dA-F]{2}(?: [\\dA-F]{2})*$",
+                pattern: "^[\\dA-F]{2}(?: [\\dA-F]{2})*$",
                 flags: "i",
                 args: ["Space"]
             },
             {
-                match: "^[\\dA-F]{2}(?:,[\\dA-F]{2})*$",
+                pattern: "^[\\dA-F]{2}(?:,[\\dA-F]{2})*$",
                 flags: "i",
                 args: ["Comma"]
             },
             {
-                match: "^[\\dA-F]{2}(?:;[\\dA-F]{2})*$",
+                pattern: "^[\\dA-F]{2}(?:;[\\dA-F]{2})*$",
                 flags: "i",
                 args: ["Semi-colon"]
             },
             {
-                match: "^[\\dA-F]{2}(?::[\\dA-F]{2})*$",
+                pattern: "^[\\dA-F]{2}(?::[\\dA-F]{2})*$",
                 flags: "i",
                 args: ["Colon"]
             },
             {
-                match: "^[\\dA-F]{2}(?:\\n[\\dA-F]{2})*$",
+                pattern: "^[\\dA-F]{2}(?:\\n[\\dA-F]{2})*$",
                 flags: "i",
                 args: ["Line feed"]
             },
             {
-                match: "^[\\dA-F]{2}(?:\\r\\n[\\dA-F]{2})*$",
+                pattern: "^[\\dA-F]{2}(?:\\r\\n[\\dA-F]{2})*$",
                 flags: "i",
                 args: ["CRLF"]
             },
             {
-                match: "^[\\dA-F]{2}(?:0x[\\dA-F]{2})*$",
+                pattern: "^(?:0x[\\dA-F]{2})+$",
                 flags: "i",
                 args: ["0x"]
             },
             {
-                match: "^[\\dA-F]{2}(?:\\\\x[\\dA-F]{2})*$",
+                pattern: "^0x[\\dA-F]{2}(?:,0x[\\dA-F]{2})*$",
+                flags: "i",
+                args: ["0x with comma"]
+            },
+            {
+                pattern: "^(?:\\\\x[\\dA-F]{2})+$",
                 flags: "i",
                 args: ["\\x"]
             }

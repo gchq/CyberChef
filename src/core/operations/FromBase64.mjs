@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {fromBase64, ALPHABET_OPTIONS} from "../lib/Base64";
+import Operation from "../Operation.mjs";
+import {fromBase64, ALPHABET_OPTIONS} from "../lib/Base64.mjs";
 
 /**
  * From Base64 operation
@@ -34,86 +34,111 @@ class FromBase64 extends Operation {
                 name: "Remove non-alphabet chars",
                 type: "boolean",
                 value: true
+            },
+            {
+                name: "Strict mode",
+                type: "boolean",
+                value: false
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                match: "^\\s*(?:[A-Z\\d+/]{4})+(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?\\s*$",
+                pattern: "^\\s*(?:[A-Z\\d+/]{4})+(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?\\s*$",
                 flags: "i",
-                args: ["A-Za-z0-9+/=", true]
+                args: ["A-Za-z0-9+/=", true, false]
             },
             {
-                match: "^\\s*[A-Z\\d\\-_]{20,}\\s*$",
+                pattern: "^\\s*[A-Z\\d\\-_]{20,}\\s*$",
                 flags: "i",
-                args: ["A-Za-z0-9-_", true]
+                args: ["A-Za-z0-9-_", true, false]
             },
             {
-                match: "^\\s*(?:[A-Z\\d+\\-]{4}){5,}(?:[A-Z\\d+\\-]{2}==|[A-Z\\d+\\-]{3}=)?\\s*$",
+                pattern: "^\\s*(?:[A-Z\\d+\\-]{4}){5,}(?:[A-Z\\d+\\-]{2}==|[A-Z\\d+\\-]{3}=)?\\s*$",
                 flags: "i",
-                args: ["A-Za-z0-9+\\-=", true]
+                args: ["A-Za-z0-9+\\-=", true, false]
             },
             {
-                match: "^\\s*(?:[A-Z\\d./]{4}){5,}(?:[A-Z\\d./]{2}==|[A-Z\\d./]{3}=)?\\s*$",
+                pattern: "^\\s*(?:[A-Z\\d./]{4}){5,}(?:[A-Z\\d./]{2}==|[A-Z\\d./]{3}=)?\\s*$",
                 flags: "i",
-                args: ["./0-9A-Za-z=", true]
+                args: ["./0-9A-Za-z=", true, false]
             },
             {
-                match: "^\\s*[A-Z\\d_.]{20,}\\s*$",
+                pattern: "^\\s*[A-Z\\d_.]{20,}\\s*$",
                 flags: "i",
-                args: ["A-Za-z0-9_.", true]
+                args: ["A-Za-z0-9_.", true, false]
             },
             {
-                match: "^\\s*(?:[A-Z\\d._]{4}){5,}(?:[A-Z\\d._]{2}--|[A-Z\\d._]{3}-)?\\s*$",
+                pattern: "^\\s*(?:[A-Z\\d._]{4}){5,}(?:[A-Z\\d._]{2}--|[A-Z\\d._]{3}-)?\\s*$",
                 flags: "i",
-                args: ["A-Za-z0-9._-", true]
+                args: ["A-Za-z0-9._-", true, false]
             },
             {
-                match: "^\\s*(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?\\s*$",
+                pattern: "^\\s*(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?\\s*$",
                 flags: "i",
-                args: ["0-9a-zA-Z+/=", true]
+                args: ["0-9a-zA-Z+/=", true, false]
             },
             {
-                match: "^\\s*(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?\\s*$",
+                pattern: "^\\s*(?:[A-Z\\d+/]{4}){5,}(?:[A-Z\\d+/]{2}==|[A-Z\\d+/]{3}=)?\\s*$",
                 flags: "i",
-                args: ["0-9A-Za-z+/=", true]
+                args: ["0-9A-Za-z+/=", true, false]
             },
             {
-                match: "^[ !\"#$%&'()*+,\\-./\\d:;<=>?@A-Z[\\\\\\]^_]{20,}$",
+                pattern: "^[ !\"#$%&'()*+,\\-./\\d:;<=>?@A-Z[\\\\\\]^_]{20,}$",
                 flags: "",
-                args: [" -_", false]
+                args: [" -_", false, false]
             },
             {
-                match: "^\\s*[A-Z\\d+\\-]{20,}\\s*$",
+                pattern: "^\\s*[A-Z\\d+\\-]{20,}\\s*$",
                 flags: "i",
-                args: ["+\\-0-9A-Za-z", true]
+                args: ["+\\-0-9A-Za-z", true, false]
             },
             {
-                match: "^\\s*[!\"#$%&'()*+,\\-0-689@A-NP-VX-Z[`a-fh-mp-r]{20,}\\s*$",
+                pattern: "^\\s*[!\"#$%&'()*+,\\-0-689@A-NP-VX-Z[`a-fh-mp-r]{20,}\\s*$",
                 flags: "",
-                args: ["!-,-0-689@A-NP-VX-Z[`a-fh-mp-r", true]
+                args: ["!-,-0-689@A-NP-VX-Z[`a-fh-mp-r", true, false]
             },
             {
-                match: "^\\s*(?:[N-ZA-M\\d+/]{4}){5,}(?:[N-ZA-M\\d+/]{2}==|[N-ZA-M\\d+/]{3}=)?\\s*$",
+                pattern: "^\\s*(?:[N-ZA-M\\d+/]{4}){5,}(?:[N-ZA-M\\d+/]{2}==|[N-ZA-M\\d+/]{3}=)?\\s*$",
                 flags: "i",
-                args: ["N-ZA-Mn-za-m0-9+/=", true]
+                args: ["N-ZA-Mn-za-m0-9+/=", true, false]
             },
             {
-                match: "^\\s*[A-Z\\d./]{20,}\\s*$",
+                pattern: "^\\s*[A-Z\\d./]{20,}\\s*$",
                 flags: "i",
-                args: ["./0-9A-Za-z", true]
+                args: ["./0-9A-Za-z", true, false]
             },
+            {
+                pattern: "^\\s*(?:[A-Z=\\d\\+/]{4}){5,}(?:[A-Z=\\d\\+/]{2}CC|[A-Z=\\d\\+/]{3}C)?\\s*$",
+                flags: "i",
+                args: ["/128GhIoPQROSTeUbADfgHijKLM+n0pFWXY456xyzB7=39VaqrstJklmNuZvwcdEC", true, false]
+            },
+            {
+                pattern: "^\\s*(?:[A-Z=\\d\\+/]{4}){5,}(?:[A-Z=\\d\\+/]{2}55|[A-Z=\\d\\+/]{3}5)?\\s*$",
+                flags: "i",
+                args: ["3GHIJKLMNOPQRSTUb=cdefghijklmnopWXYZ/12+406789VaqrstuvwxyzABCDEF5", true, false]
+            },
+            {
+                pattern: "^\\s*(?:[A-Z=\\d\\+/]{4}){5,}(?:[A-Z=\\d\\+/]{2}22|[A-Z=\\d\\+/]{3}2)?\\s*$",
+                flags: "i",
+                args: ["ZKj9n+yf0wDVX1s/5YbdxSo=ILaUpPBCHg8uvNO4klm6iJGhQ7eFrWczAMEq3RTt2", true, false]
+            },
+            {
+                pattern: "^\\s*(?:[A-Z=\\d\\+/]{4}){5,}(?:[A-Z=\\d\\+/]{2}55|[A-Z=\\d\\+/]{3}5)?\\s*$",
+                flags: "i",
+                args: ["HNO4klm6ij9n+J2hyf0gzA8uvwDEq3X1Q7ZKeFrWcVTts/MRGYbdxSo=ILaUpPBC5", true, false]
+            }
         ];
     }
 
     /**
-     * @param {ArrayBuffer} input
+     * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      */
     run(input, args) {
-        const [alphabet, removeNonAlphChars] = args;
+        const [alphabet, removeNonAlphChars, strictMode] = args;
 
-        return fromBase64(input, alphabet, "byteArray", removeNonAlphChars);
+        return fromBase64(input, alphabet, "byteArray", removeNonAlphChars, strictMode);
     }
 
     /**

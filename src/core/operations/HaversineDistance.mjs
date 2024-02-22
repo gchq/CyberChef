@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * HaversineDistance operation
@@ -41,8 +41,8 @@ class HaversineDistance extends Operation {
 
         const lat1 = parseFloat(values[1]);
         const lng1 = parseFloat(values[3]);
-        const lat2 = parseFloat(values[6]);
-        const lng2 = parseFloat(values[8]);
+        const lat2 = parseFloat(values[5]);
+        const lng2 = parseFloat(values[7]);
 
         const TO_RAD = Math.PI / 180;
         const dLat = (lat2-lat1) * TO_RAD;

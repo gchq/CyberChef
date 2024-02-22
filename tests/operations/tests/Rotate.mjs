@@ -6,7 +6,7 @@
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
-import TestRegister from "../TestRegister";
+import TestRegister from "../../lib/TestRegister.mjs";
 
 
 TestRegister.addTests([
@@ -131,7 +131,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [true, true, 13]
+                args: [true, true, true, 13]
             },
         ],
     },
@@ -142,7 +142,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [true, true, 13]
+                args: [true, true, true, 13]
             },
         ],
     },
@@ -153,7 +153,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [true, true, 26]
+                args: [true, true, true, 26]
             },
         ],
     },
@@ -164,7 +164,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [true, false, 13]
+                args: [true, false, false, 13]
             },
         ],
     },
@@ -175,7 +175,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [false, true, 13]
+                args: [false, true, false, 13]
             },
         ],
     },
@@ -209,6 +209,39 @@ TestRegister.addTests([
             {
                 op: "ROT47",
                 args: [94]
+            },
+        ],
+    },
+    {
+        name: "ROT8000: nothing",
+        input: "",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                op: "ROT8000",
+                args: []
+            },
+        ],
+    },
+    {
+        name: "ROT8000: normal",
+        input: "The Quick Brown Fox Jumped Over The Lazy Dog.",
+        expectedOutput: "籝籱籮 籚籾籲籬籴 籋类籸粀籷 籏籸粁 籓籾籶籹籮籭 籘籿籮类 籝籱籮 籕籪粃粂 籍籸籰簷",
+        recipeConfig: [
+            {
+                op: "ROT8000",
+                args: []
+            },
+        ],
+    },
+    {
+        name: "ROT8000: backward",
+        input: "籝籱籮 籚籾籲籬籴 籋类籸粀籷 籏籸粁 籓籾籶籹籮籭 籘籿籮类 籝籱籮 籕籪粃粂 籍籸籰簷",
+        expectedOutput: "The Quick Brown Fox Jumped Over The Lazy Dog.",
+        recipeConfig: [
+            {
+                op: "ROT8000",
+                args: []
             },
         ],
     },

@@ -3,6 +3,5 @@ npm-debug.log
 travis.log
 build/*
 !build/node
-docs
 .vscode
 .github

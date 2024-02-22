@@ -8,18 +8,17 @@
 import "./stylesheets/index.js";
 
 // Libs
-import "babel-polyfill";
 import "arrive";
 import "snackbarjs";
-import "bootstrap-material-design";
+import "bootstrap-material-design/js/index";
 import "bootstrap-colorpicker";
 import moment from "moment-timezone";
-import * as CanvasComponents from "../core/lib/CanvasComponents";
+import * as CanvasComponents from "../core/lib/CanvasComponents.mjs";
 
 // CyberChef
-import App from "./App";
-import Categories from "../core/config/Categories.json";
-import OperationConfig from "../core/config/OperationConfig.json";
+import App from "./App.mjs";
+import Categories from "../core/config/Categories.json" assert {type: "json"};
+import OperationConfig from "../core/config/OperationConfig.json" assert {type: "json"};
 
 
 /**
@@ -43,16 +42,16 @@ function main() {
     const defaultOptions = {
         updateUrl:           true,
         showHighlighter:     true,
-        treatAsUtf8:         true,
         wordWrap:            true,
         showErrors:          true,
         errorTimeout:        4000,
         attemptHighlight:    true,
         theme:               "classic",
         useMetaKey:          false,
-        ioDisplayThreshold:  512,
         logLevel:            "info",
         autoMagic:           true,
+        imagePreview:        true,
+        syncTabs:            true
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);

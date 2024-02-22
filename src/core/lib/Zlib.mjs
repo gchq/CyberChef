@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 
-import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min";
+import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
 
 const Zlib = zlibAndGzip.Zlib;
 

@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {INFLATE_BUFFER_TYPE} from "../lib/Zlib";
-import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min";
+import Operation from "../Operation.mjs";
+import {INFLATE_BUFFER_TYPE} from "../lib/Zlib.mjs";
+import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
 
 const Zlib = zlibAndGzip.Zlib;
 
@@ -59,9 +59,9 @@ class ZlibInflate extends Operation {
                 value: false
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                match: "^\\x78(\\x01|\\x9c|\\xda|\\x5e)",
+                pattern: "^\\x78(\\x01|\\x9c|\\xda|\\x5e)",
                 flags: "",
                 args: [0, 0, "Adaptive", false, false]
             },

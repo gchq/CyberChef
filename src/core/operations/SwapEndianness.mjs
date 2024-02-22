@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {toHex, fromHex} from "../lib/Hex";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import {toHex, fromHex} from "../lib/Hex.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Swap endianness operation
@@ -79,7 +79,7 @@ class SwapEndianness extends Operation {
             const word = data.slice(i, i + wordLength);
 
             // Pad word if too short
-            if (padIncompleteWords && word.length < wordLength){
+            if (padIncompleteWords && word.length < wordLength) {
                 for (j = word.length; j < wordLength; j++) {
                     word.push(0);
                 }

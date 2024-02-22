@@ -6,7 +6,7 @@
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
-import TestRegister from "../TestRegister";
+import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
@@ -60,6 +60,10 @@ TestRegister.addTests([
                         "string": "$R0"
                     },
                     "CTR", "Hex", "Raw",
+                    {
+                        "option": "Hex",
+                        "string": ""
+                    },
                     {
                         "option": "Hex",
                         "string": ""

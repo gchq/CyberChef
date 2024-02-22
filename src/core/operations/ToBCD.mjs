@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
-import {ENCODING_SCHEME, ENCODING_LOOKUP, FORMAT} from "../lib/BCD";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import {ENCODING_SCHEME, ENCODING_LOOKUP, FORMAT} from "../lib/BCD.mjs";
 import BigNumber from "bignumber.js";
 
 /**

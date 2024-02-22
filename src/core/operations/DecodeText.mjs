@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import cptable from "../vendor/js-codepage/cptable.js";
-import {IO_FORMAT} from "../lib/ChrEnc";
+import Operation from "../Operation.mjs";
+import cptable from "codepage";
+import {CHR_ENC_CODE_PAGES} from "../lib/ChrEnc.mjs";
 
 /**
  * Decode text operation
@@ -26,29 +26,29 @@ class DecodeText extends Operation {
             "<br><br>",
             "Supported charsets are:",
             "<ul>",
-            Object.keys(IO_FORMAT).map(e => `<li>${e}</li>`).join("\n"),
+            Object.keys(CHR_ENC_CODE_PAGES).map(e => `<li>${e}</li>`).join("\n"),
             "</ul>",
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Character_encoding";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
                 "name": "Encoding",
                 "type": "option",
-                "value": Object.keys(IO_FORMAT)
+                "value": Object.keys(CHR_ENC_CODE_PAGES)
             }
         ];
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
-        const format = IO_FORMAT[args[0]];
-        return cptable.utils.decode(format, input);
+        const format = CHR_ENC_CODE_PAGES[args[0]];
+        return cptable.utils.decode(format, new Uint8Array(input));
     }
 
 }

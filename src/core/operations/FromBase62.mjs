@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import BigNumber from "bignumber.js";
-import Utils from "../Utils";
+import Utils from "../Utils.mjs";
 
 
 /**
@@ -42,15 +42,22 @@ class FromBase62 extends Operation {
      */
     run(input, args) {
         if (input.length < 1) return [];
-        const ALPHABET = Utils.expandAlphRange(args[0]).join("");
-        const BN = BigNumber.clone({ ALPHABET });
+        const alphabet = Utils.expandAlphRange(args[0]).join("");
+        const BN62 = BigNumber.clone({ ALPHABET: alphabet });
 
-        const re = new RegExp("[^" + ALPHABET.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
+        const re = new RegExp("[^" + alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
         input = input.replace(re, "");
 
-        const number = new BN(input, 62);
+        // Read number in using Base62 alphabet
+        const number = new BN62(input, 62);
+        // Copy to new BigNumber object that uses the default alphabet
+        const normalized = new BigNumber(number);
 
-        return Utils.convertToByteArray(number.toString(16), "Hex");
+        // Convert to hex and add leading 0 if required
+        let hex = normalized.toString(16);
+        if (hex.length % 2 !== 0) hex = "0" + hex;
+
+        return Utils.convertToByteArray(hex, "Hex");
     }
 
 }

@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {COMPRESSION_TYPE} from "../lib/Zlib";
-import rawdeflate from "zlibjs/bin/rawdeflate.min";
+import Operation from "../Operation.mjs";
+import {COMPRESSION_TYPE} from "../lib/Zlib.mjs";
+import rawdeflate from "zlibjs/bin/rawdeflate.min.js";
 
 const Zlib = rawdeflate.Zlib;
 

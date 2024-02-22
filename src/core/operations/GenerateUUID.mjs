@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import crypto from "crypto";
 
 /**

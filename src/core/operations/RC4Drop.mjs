@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import { format } from "../lib/Ciphers";
+import Operation from "../Operation.mjs";
+import { format } from "../lib/Ciphers.mjs";
 import CryptoJS from "crypto-js";
 
 /**
@@ -43,9 +43,9 @@ class RC4Drop extends Operation {
                 "value": ["Latin1", "UTF8", "UTF16", "UTF16LE", "UTF16BE", "Hex", "Base64"]
             },
             {
-                "name": "Number of bytes to drop",
+                "name": "Number of dwords to drop",
                 "type": "number",
-                "value": 768
+                "value": 192
             }
         ];
     }

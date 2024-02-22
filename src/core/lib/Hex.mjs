@@ -6,13 +6,14 @@
  * @license Apache-2.0
  */
 
-import Utils from "../Utils";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 
 /**
  * Convert a byte array into a hex string.
  *
- * @param {Uint8Array|byteArray} data
+ * @param {byteArray|Uint8Array|ArrayBuffer} data
  * @param {string} [delim=" "]
  * @param {number} [padding=2]
  * @returns {string}
@@ -23,31 +24,46 @@ import Utils from "../Utils";
  *
  * // returns "0a:14:1e"
  * toHex([10,20,30], ":");
+ *
+ * // returns "0x0a,0x14,0x1e"
+ * toHex([10,20,30], "0x", 2, ",")
  */
-export function toHex(data, delim=" ", padding=2) {
+export function toHex(data, delim=" ", padding=2, extraDelim="", lineSize=0) {
     if (!data) return "";
+    if (data instanceof ArrayBuffer) data = new Uint8Array(data);
 
     let output = "";
+    const prepend = (delim === "0x" || delim === "\\x");
 
     for (let i = 0; i < data.length; i++) {
-        output += data[i].toString(16).padStart(padding, "0") + delim;
+        const hex = data[i].toString(16).padStart(padding, "0");
+        output += prepend ? delim + hex : hex + delim;
+
+        if (extraDelim) {
+            output += extraDelim;
+        }
+        // Add LF after each lineSize amount of bytes but not at the end
+        if ((i !== data.length - 1) && ((i + 1) % lineSize === 0)) {
+            output += "\n";
+        }
     }
 
-    // Add \x or 0x to beginning
-    if (delim === "0x") output = "0x" + output;
-    if (delim === "\\x") output = "\\x" + output;
-
-    if (delim.length)
-        return output.slice(0, -delim.length);
-    else
+    // Remove the extraDelim at the end (if there is one)
+    // and remove the delim at the end, but if it's prepended there's nothing to remove
+    const rTruncLen = extraDelim.length + (prepend ? 0 : delim.length);
+    if (rTruncLen) {
+        // If rTruncLen === 0 then output.slice(0,0) will be returned, which is nothing
+        return output.slice(0, -rTruncLen);
+    } else {
         return output;
+    }
 }
 
 
 /**
  * Convert a byte array into a hex string as efficiently as possible with no options.
  *
- * @param {byteArray} data
+ * @param {byteArray|Uint8Array|ArrayBuffer} data
  * @returns {string}
  *
  * @example
@@ -56,6 +72,7 @@ export function toHex(data, delim=" ", padding=2) {
  */
 export function toHexFast(data) {
     if (!data) return "";
+    if (data instanceof ArrayBuffer) data = new Uint8Array(data);
 
     const output = [];
 
@@ -84,14 +101,21 @@ export function toHexFast(data) {
  * fromHex("0a:14:1e", "Colon");
  */
 export function fromHex(data, delim="Auto", byteLen=2) {
+    if (byteLen < 1 || Math.round(byteLen) !== byteLen)
+        throw new OperationError("Byte length must be a positive integer");
+
     if (delim !== "None") {
-        const delimRegex = delim === "Auto" ? /[^a-f\d]/gi : Utils.regexRep(delim);
-        data = data.replace(delimRegex, "");
+        const delimRegex = delim === "Auto" ? /[^a-f\d]|0x/gi : Utils.regexRep(delim);
+        data = data.split(delimRegex);
+    } else {
+        data = [data];
     }
 
     const output = [];
-    for (let i = 0; i < data.length; i += byteLen) {
-        output.push(parseInt(data.substr(i, byteLen), 16));
+    for (let i = 0; i < data.length; i++) {
+        for (let j = 0; j < data[i].length; j += byteLen) {
+            output.push(parseInt(data[i].substr(j, byteLen), 16));
+        }
     }
     return output;
 }
@@ -100,7 +124,7 @@ export function fromHex(data, delim="Auto", byteLen=2) {
 /**
  * To Hexadecimal delimiters.
  */
-export const TO_HEX_DELIM_OPTIONS = ["Space", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "\\x", "None"];
+export const TO_HEX_DELIM_OPTIONS = ["Space", "Percent", "Comma", "Semi-colon", "Colon", "Line feed", "CRLF", "0x", "0x with comma", "\\x", "None"];
 
 
 /**

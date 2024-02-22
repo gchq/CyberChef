@@ -27,17 +27,31 @@
 }
 
 .ingredients {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    grid-column-gap: 14px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    column-gap: 14px;
+    row-gap: 0;
 }
 
-.ingredients > div {
-    grid-column: 1 / span 3;
+.ing-very-wide {
+    flex: 4 400px;
 }
 
-.ingredients > div.inline {
-    grid-column: unset;
+.ing-wide {
+    flex: 3 200px;
+}
+
+.ing-medium {
+    flex: 2 120px;
+}
+
+.ing-short {
+    flex: 1 80px;
+}
+
+.ing-flexible {
+    flex-grow: 1;
 }
 
 .ingredients .form-group {
@@ -64,6 +78,11 @@ div.toggle-string {
     flex: 1;
 }
 
+input.toggle-string {
+    border-top-right-radius: 0 !important;
+    height: 42px !important;
+}
+
 .operation [class^='bmd-label'],
 .operation [class*=' bmd-label'] {
     top: 13px !important;
@@ -82,11 +101,47 @@ div.toggle-string {
 .operation .is-focused [class*=' bmd-label'],
 .operation .is-focused label,
 .operation .checkbox label:hover {
-    color: #1976d2;
+    color: var(--input-highlight-colour);
+}
+
+.ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
+.ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before {
+    border-color: var(--input-border-colour);
+    color: var(--input-highlight-colour);
+}
+
+.ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
+.ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
+    border-color: var(--input-highlight-colour);
+    color: var(--input-highlight-colour);
+}
+
+.disabled .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
+.disabled .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before,
+.disabled .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
+.disabled .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
+    border-color: var(--disabled-font-colour);
+    color: var(--disabled-font-colour);
+}
+
+.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
+.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before,
+.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
+.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
+    border-color: var(--breakpoint-font-colour);
+    color: var(--breakpoint-font-colour);
+}
+
+.flow-control-op.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
+.flow-control-op.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before,
+.flow-control-op.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
+.flow-control-op.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
+    border-color: var(--fc-breakpoint-operation-font-colour);
+    color: var(--fc-breakpoint-operation-font-colour);
 }
 
 .operation .form-control {
-    padding: 20px 12px 6px 12px;
+    padding: 20px 12px 6px 12px !important;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     background-image: none;
@@ -97,7 +152,7 @@ div.toggle-string {
 
 .operation .form-control:hover {
     background-image:
-        linear-gradient(to top, #1976d2 2px, rgba(25, 118, 210, 0) 2px),
+        linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(25, 118, 210, 0) 2px),
         linear-gradient(to top, rgba(0, 0, 0, 0.26) 1px, rgba(0, 0, 0, 0) 1px);
     filter: brightness(97%);
 }
@@ -105,7 +160,7 @@ div.toggle-string {
 .operation .form-control:focus {
     background-color: var(--arg-background);
     background-image:
-        linear-gradient(to top, #1976d2 2px, rgba(25, 118, 210, 0) 2px),
+        linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(25, 118, 210, 0) 2px),
         linear-gradient(to top, rgba(0, 0, 0, 0.26) 1px, rgba(0, 0, 0, 0) 1px);
     filter: brightness(100%);
 }
@@ -123,12 +178,8 @@ div.toggle-string {
     width: calc(100% - 13px);
 }
 
-.operation .bmd-form-group .bmd-help {
-    margin-top: -17px;
-}
-
 .input-group .form-control {
-    border-top-left-radius: 4px !important;
+    border-top-left-radius: 4px;
 }
 
 .input-group-append button {
@@ -154,7 +205,7 @@ div.toggle-string {
 }
 
 .ingredients .dropdown-toggle-split {
-    height: 41px !important;
+    height: 40px !important;
 }
 
 .boolean-arg {
@@ -205,19 +256,19 @@ div.toggle-string {
 }
 
 .disable-icon {
-    color: #9e9e9e;
+    color: var(--disable-icon-colour);
 }
 
 .disable-icon-selected {
-    color: #f44336;
+    color: var(--disable-icon-selected-colour);
 }
 
 .breakpoint {
-    color: #9e9e9e;
+    color: var(--breakpoint-icon-colour);
 }
 
 .breakpoint-selected {
-    color: #f44336;
+    color: var(--breakpoint-icon-selected-colour);
 }
 
 .break {

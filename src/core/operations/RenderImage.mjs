@@ -4,12 +4,12 @@
  * @license Apache-2.0
  */
 
-import { fromBase64, toBase64 } from "../lib/Base64";
-import { fromHex } from "../lib/Hex";
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import Utils from "../Utils";
-import Magic from "../lib/Magic";
+import { fromBase64, toBase64 } from "../lib/Base64.mjs";
+import { fromHex } from "../lib/Hex.mjs";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
+import {isImage} from "../lib/FileType.mjs";
 
 /**
  * Render Image operation
@@ -35,12 +35,15 @@ class RenderImage extends Operation {
                 "value": ["Raw", "Base64", "Hex"]
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                "match": "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
-                "flags": "",
-                "args": ["Raw"],
-                "useful": true
+                pattern: "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
+                flags: "",
+                args: ["Raw"],
+                useful: true,
+                output: {
+                    mime: "image"
+                }
             }
         ];
     }
@@ -72,8 +75,7 @@ class RenderImage extends Operation {
         }
 
         // Determine file type
-        const type = Magic.magicFileType(input);
-        if (!(type && type.mime.indexOf("image") === 0)) {
+        if (!isImage(input)) {
             throw new OperationError("Invalid file type");
         }
 
@@ -92,9 +94,9 @@ class RenderImage extends Operation {
         let dataURI = "data:";
 
         // Determine file type
-        const type = Magic.magicFileType(data);
-        if (type && type.mime.indexOf("image") === 0) {
-            dataURI += type.mime + ";";
+        const mime = isImage(data);
+        if (mime) {
+            dataURI += mime + ";";
         } else {
             throw new OperationError("Invalid file type");
         }

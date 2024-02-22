@@ -4,10 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import forge from "node-forge/dist/forge.min.js";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import forge from "node-forge";
 import BigNumber from "bignumber.js";
+import { isWorkerEnvironment } from "../Utils.mjs";
 
 /**
  * Pseudo-Random Number Generator operation
@@ -50,9 +51,13 @@ class PseudoRandomNumberGenerator extends Operation {
 
         let bytes;
 
-        if (ENVIRONMENT_IS_WORKER() && self.crypto) {
-            bytes = self.crypto.getRandomValues(new Uint8Array(numBytes));
-            bytes = Utils.arrayBufferToStr(bytes.buffer);
+        if (isWorkerEnvironment() && self.crypto) {
+            bytes = new ArrayBuffer(numBytes);
+            const CHUNK_SIZE = 65536;
+            for (let i = 0; i < numBytes; i += CHUNK_SIZE) {
+                self.crypto.getRandomValues(new Uint8Array(bytes, i, Math.min(numBytes - i, CHUNK_SIZE)));
+            }
+            bytes = Utils.arrayBufferToStr(bytes);
         } else {
             bytes = forge.random.getBytesSync(numBytes);
         }

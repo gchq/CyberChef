@@ -4,9 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import XRegExp from "xregexp";
-import { search } from "../lib/Extract";
+import { search } from "../lib/Extract.mjs";
+import { caseInsensitiveSort } from "../lib/Sort.mjs";
 
 /**
  * Strings operation
@@ -27,27 +28,37 @@ class Strings extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Encoding",
-                "type": "option",
-                "value": ["Single byte", "16-bit littleendian", "16-bit bigendian", "All"]
+                name: "Encoding",
+                type: "option",
+                value: ["Single byte", "16-bit littleendian", "16-bit bigendian", "All"]
             },
             {
-                "name": "Minimum length",
-                "type": "number",
-                "value": 4
+                name: "Minimum length",
+                type: "number",
+                value: 4
             },
             {
-                "name": "Match",
-                "type": "option",
-                "value": [
+                name: "Match",
+                type: "option",
+                value: [
                     "[ASCII]", "Alphanumeric + punctuation (A)", "All printable chars (A)", "Null-terminated strings (A)",
                     "[Unicode]", "Alphanumeric + punctuation (U)", "All printable chars (U)", "Null-terminated strings (U)"
                 ]
             },
             {
-                "name": "Display total",
-                "type": "boolean",
-                "value": false
+                name: "Display total",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Sort",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Unique",
+                type: "boolean",
+                value: false
             }
         ];
     }
@@ -58,7 +69,7 @@ class Strings extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [encoding, minLen, matchType, displayTotal] = args,
+        const [encoding, minLen, matchType, displayTotal, sort, unique] = args,
             alphanumeric = "A-Z\\d",
             punctuation = "/\\-:.,_$%'\"()<>= !\\[\\]{}@",
             printable = "\x20-\x7e",
@@ -108,8 +119,19 @@ class Strings extends Operation {
         }
 
         const regex = new XRegExp(strings, "ig");
+        const results = search(
+            input,
+            regex,
+            null,
+            sort ? caseInsensitiveSort : null,
+            unique
+        );
 
-        return search(input, regex, null, displayTotal);
+        if (displayTotal) {
+            return `Total found: ${results.length}\n\n${results.join("\n")}`;
+        } else {
+            return results.join("\n");
+        }
     }
 
 }

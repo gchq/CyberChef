@@ -4,8 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import bcrypt from "bcryptjs";
+import { isWorkerEnvironment } from "../Utils.mjs";
 
 /**
  * Bcrypt operation
@@ -44,7 +45,7 @@ class Bcrypt extends Operation {
 
         return await bcrypt.hash(input, salt, null, p => {
             // Progress callback
-            if (ENVIRONMENT_IS_WORKER())
+            if (isWorkerEnvironment())
                 self.sendStatusMessage(`Progress: ${(p * 100).toFixed(0)}%`);
         });
 

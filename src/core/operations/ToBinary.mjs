@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {BIN_DELIM_OPTIONS} from "../lib/Delim";
-import {toBinary} from "../lib/Binary";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import {BIN_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import {toBinary} from "../lib/Binary.mjs";
 
 /**
  * To Binary operation
@@ -24,24 +24,31 @@ class ToBinary extends Operation {
         this.module = "Default";
         this.description = "Displays the input data as a binary string.<br><br>e.g. <code>Hi</code> becomes <code>01001000 01101001</code>";
         this.infoURL = "https://wikipedia.org/wiki/Binary_code";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
                 "name": "Delimiter",
                 "type": "option",
                 "value": BIN_DELIM_OPTIONS
+            },
+            {
+                "name": "Byte Length",
+                "type": "number",
+                "value": 8
             }
         ];
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
-        return toBinary(input, args[0]);
+        input = new Uint8Array(input);
+        const padding = args[1] ? args[1] : 8;
+        return toBinary(input, args[0], padding);
     }
 
     /**

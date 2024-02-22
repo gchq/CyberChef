@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * Remove whitespace operation
@@ -64,7 +64,7 @@ class RemoveWhitespace extends Operation {
     run(input, args) {
         const [
             removeSpaces,
-            removeCariageReturns,
+            removeCarriageReturns,
             removeLineFeeds,
             removeTabs,
             removeFormFeeds,
@@ -73,7 +73,7 @@ class RemoveWhitespace extends Operation {
         let data = input;
 
         if (removeSpaces) data = data.replace(/ /g, "");
-        if (removeCariageReturns) data = data.replace(/\r/g, "");
+        if (removeCarriageReturns) data = data.replace(/\r/g, "");
         if (removeLineFeeds) data = data.replace(/\n/g, "");
         if (removeTabs) data = data.replace(/\t/g, "");
         if (removeFormFeeds) data = data.replace(/\f/g, "");

@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Utils from "../Utils";
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Utils from "../Utils.mjs";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Set Symmetric Difference operation

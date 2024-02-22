@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Strip HTML tags operation
@@ -33,6 +33,13 @@ class StripHTMLTags extends Operation {
                 "name": "Remove excess line breaks",
                 "type": "boolean",
                 "value": true
+            }
+        ];
+        this.checks = [
+            {
+                pattern:  "(</html>|</div>|</body>)",
+                flags:  "i",
+                args:   [true, true]
             }
         ];
     }

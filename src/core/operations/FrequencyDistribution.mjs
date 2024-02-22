@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Frequency distribution operation
@@ -30,7 +30,12 @@ class FrequencyDistribution extends Operation {
             {
                 "name": "Show 0%s",
                 "type": "boolean",
-                "value": "Entropy.FREQ_ZEROS"
+                "value": true
+            },
+            {
+                "name": "Show ASCII",
+                "type": "boolean",
+                "value": true
             }
         ];
     }
@@ -76,33 +81,49 @@ class FrequencyDistribution extends Operation {
      * @returns {html}
      */
     present(freq, args) {
-        const showZeroes = args[0];
+        const [showZeroes, showAscii] = args;
+
         // Print
         let output = `<canvas id='chart-area'></canvas><br>
 Total data length: ${freq.dataLength}
 Number of bytes represented: ${freq.bytesRepresented}
 Number of bytes not represented: ${256 - freq.bytesRepresented}
 
-Byte   Percentage
 <script>
     var canvas = document.getElementById("chart-area"),
-        parentRect = canvas.parentNode.getBoundingClientRect(),
+        parentRect = canvas.closest(".cm-scroller").getBoundingClientRect(),
         scores = ${JSON.stringify(freq.percentages)};
 
     canvas.width = parentRect.width * 0.95;
     canvas.height = parentRect.height * 0.9;
 
     CanvasComponents.drawBarChart(canvas, scores, "Byte", "Frequency %", 16, 6);
-</script>`;
+</script>
+<table class="table table-hover table-sm">
+    <tr><th>Byte</th>${showAscii ? "<th>ASCII</th>" : ""}<th>Percentage</th><th></th></tr>`;
 
         for (let i = 0; i < 256; i++) {
             if (freq.distribution[i] || showZeroes) {
-                output += " " + Utils.hex(i, 2) + "    (" +
-                    (freq.percentages[i].toFixed(2).replace(".00", "") + "%)").padEnd(8, " ") +
-                    Array(Math.ceil(freq.percentages[i])+1).join("|") + "\n";
+                let c = "";
+                if (showAscii) {
+                    if (i <= 32) {
+                        c = String.fromCharCode(0x2400 + i);
+                    } else  if (i === 127) {
+                        c = String.fromCharCode(0x2421);
+                    } else {
+                        c = String.fromCharCode(i);
+                    }
+                }
+                const bite = `<td>${Utils.hex(i, 2)}</td>`,
+                    ascii = showAscii ? `<td>${c}</td>` : "",
+                    percentage = `<td>${(freq.percentages[i].toFixed(2).replace(".00", "") + "%").padEnd(8, " ")}</td>`,
+                    bars = `<td>${Array(Math.ceil(freq.percentages[i])+1).join("|")}</td>`;
+
+                output += `<tr>${bite}${ascii}${percentage}${bars}</tr>`;
             }
         }
 
+        output += "</table>";
         return output;
     }
 

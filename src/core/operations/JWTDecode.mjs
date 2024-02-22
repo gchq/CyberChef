@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import jwt from "jsonwebtoken";
-import OperationError from "../errors/OperationError";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * JWT Decode operation
@@ -26,6 +26,13 @@ class JWTDecode extends Operation {
         this.inputType = "string";
         this.outputType = "JSON";
         this.args = [];
+        this.checks = [
+            {
+                pattern: "^ey([A-Za-z0-9_-]+)\\.ey([A-Za-z0-9_-]+)\\.([A-Za-z0-9_-]+)$",
+                flags: "",
+                args: []
+            },
+        ];
     }
 
     /**

@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * URL Encode operation
@@ -49,7 +49,7 @@ class URLEncode extends Operation {
      * @returns {string}
      */
     encodeAllChars (str) {
-        // TODO Do this programatically
+        // TODO Do this programmatically
         return encodeURIComponent(str)
             .replace(/!/g, "%21")
             .replace(/#/g, "%23")

@@ -4,9 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import notepack from "notepack.io";
+import { isWorkerEnvironment } from "../Utils.mjs";
 
 /**
  * To MessagePack operation
@@ -35,7 +36,7 @@ class ToMessagePack extends Operation {
      */
     run(input, args) {
         try {
-            if (ENVIRONMENT_IS_WORKER()) {
+            if (isWorkerEnvironment()) {
                 return notepack.encode(input);
             } else {
                 const res = notepack.encode(input);

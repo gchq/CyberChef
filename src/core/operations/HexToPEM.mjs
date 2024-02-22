@@ -5,7 +5,7 @@
  */
 
 import r from "jsrsasign";
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * Hex to PEM operation

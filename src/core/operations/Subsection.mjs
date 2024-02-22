@@ -4,10 +4,9 @@
  * @license Apache-2.0
  */
 
-import XRegExp from "xregexp";
-import Operation from "../Operation";
-import Recipe from "../Recipe";
-import Dish from "../Dish";
+import Operation from "../Operation.mjs";
+import Recipe from "../Recipe.mjs";
+import Dish from "../Dish.mjs";
 
 /**
  * Subsection operation
@@ -22,8 +21,8 @@ class Subsection extends Operation {
 
         this.name = "Subsection";
         this.flowControl = true;
-        this.module = "Regex";
-        this.description = "Select a part of the input data using a regular expression (regex), and run all subsequent operations on each match separately.<br><br>You can use up to one capture group, where the recipe will only be run on the data in the capture group. If there's more than one capture group, only the first one will be operated on.";
+        this.module = "Default";
+        this.description = "Select a part of the input data using a regular expression (regex), and run all subsequent operations on each match separately.<br><br>You can use up to one capture group, where the recipe will only be run on the data in the capture group. If there's more than one capture group, only the first one will be operated on.<br><br>Use the Merge operation to reset the effects of subsection.";
         this.infoURL = "";
         this.inputType = "string";
         this.outputType = "string";
@@ -68,12 +67,21 @@ class Subsection extends Operation {
             subOpList   = [];
 
         if (input && section !== "") {
+            // Set to 1 as if we are here, then there is one, the current one.
+            let numOp = 1;
             // Create subOpList for each tranche to operate on
             // all remaining operations unless we encounter a Merge
             for (let i = state.progress + 1; i < opList.length; i++) {
                 if (opList[i].name === "Merge" && !opList[i].disabled) {
-                    break;
+                    numOp--;
+                    if (numOp === 0 || opList[i].ingValues[0])
+                        break;
+                    else
+                        // Not this subsection's Merge.
+                        subOpList.push(opList[i]);
                 } else {
+                    if (opList[i].name === "Fork" || opList[i].name === "Subsection")
+                        numOp++;
                     subOpList.push(opList[i]);
                 }
             }
@@ -87,7 +95,7 @@ class Subsection extends Operation {
             if (!caseSensitive) flags += "i";
             if (global) flags += "g";
 
-            const regex = new XRegExp(section, flags),
+            const regex = new RegExp(section, flags),
                 recipe = new Recipe();
 
             recipe.addOperations(subOpList);
@@ -116,7 +124,7 @@ class Subsection extends Operation {
                 }
 
                 // Baseline ing values for each tranche so that registers are reset
-                subOpList.forEach((op, i) => {
+                recipe.opList.forEach((op, i) => {
                     op.ingValues = JSON.parse(JSON.stringify(ingValues[i]));
                 });
 

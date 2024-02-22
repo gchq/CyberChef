@@ -4,8 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import { search } from "../lib/Extract";
+import Operation from "../Operation.mjs";
+import { search } from "../lib/Extract.mjs";
+import { ipSort } from "../lib/Sort.mjs";
 
 /**
  * Extract IP addresses operation
@@ -25,24 +26,34 @@ class ExtractIPAddresses extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "IPv4",
-                "type": "boolean",
-                "value": true
+                name: "IPv4",
+                type: "boolean",
+                value: true
             },
             {
-                "name": "IPv6",
-                "type": "boolean",
-                "value": false
+                name: "IPv6",
+                type: "boolean",
+                value: false
             },
             {
-                "name": "Remove local IPv4 addresses",
-                "type": "boolean",
-                "value": false
+                name: "Remove local IPv4 addresses",
+                type: "boolean",
+                value: false
             },
             {
-                "name": "Display total",
-                "type": "boolean",
-                "value": false
+                name: "Display total",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Sort",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Unique",
+                type: "boolean",
+                value: false
             }
         ];
     }
@@ -53,9 +64,9 @@ class ExtractIPAddresses extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [includeIpv4, includeIpv6, removeLocal, displayTotal] = args,
+        const [includeIpv4, includeIpv6, removeLocal, displayTotal, sort, unique] = args,
             ipv4 = "(?:(?:\\d|[01]?\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d|\\d)(?:\\/\\d{1,2})?",
-            ipv6 = "((?=.*::)(?!.*::.+::)(::)?([\\dA-F]{1,4}:(:|\\b)|){5}|([\\dA-F]{1,4}:){6})((([\\dA-F]{1,4}((?!\\3)::|:\\b|(?![\\dA-F])))|(?!\\2\\3)){2}|(((2[0-4]|1\\d|[1-9])?\\d|25[0-5])\\.?\\b){4})";
+            ipv6 = "((?=.*::)(?!.*::.+::)(::)?([\\dA-F]{1,4}:(:|\\b)|){5}|([\\dA-F]{1,4}:){6})(([\\dA-F]{1,4}((?!\\3)::|:\\b|(?![\\dA-F])))|(?!\\2\\3)){2}";
         let ips  = "";
 
         if (includeIpv4 && includeIpv6) {
@@ -66,23 +77,29 @@ class ExtractIPAddresses extends Operation {
             ips = ipv6;
         }
 
-        if (ips) {
-            const regex = new RegExp(ips, "ig");
+        if (!ips) return "";
 
-            if (removeLocal) {
-                const ten = "10\\..+",
-                    oneninetwo = "192\\.168\\..+",
-                    oneseventwo = "172\\.(?:1[6-9]|2\\d|3[01])\\..+",
-                    onetwoseven = "127\\..+",
-                    removeRegex = new RegExp("^(?:" + ten + "|" + oneninetwo +
-                        "|" + oneseventwo + "|" + onetwoseven + ")");
+        const regex = new RegExp(ips, "ig");
 
-                return search(input, regex, removeRegex, displayTotal);
-            } else {
-                return search(input, regex, null, displayTotal);
-            }
+        const ten = "10\\..+",
+            oneninetwo = "192\\.168\\..+",
+            oneseventwo = "172\\.(?:1[6-9]|2\\d|3[01])\\..+",
+            onetwoseven = "127\\..+",
+            removeRegex = new RegExp("^(?:" + ten + "|" + oneninetwo +
+                "|" + oneseventwo + "|" + onetwoseven + ")");
+
+        const results = search(
+            input,
+            regex,
+            removeLocal ? removeRegex : null,
+            sort ? ipSort : null,
+            unique
+        );
+
+        if (displayTotal) {
+            return `Total found: ${results.length}\n\n${results.join("\n")}`;
         } else {
-            return "";
+            return results.join("\n");
         }
     }
 

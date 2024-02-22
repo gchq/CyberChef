@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * Decode NetBIOS Name operation
@@ -28,6 +28,13 @@ class DecodeNetBIOSName extends Operation {
                 "name": "Offset",
                 "type": "number",
                 "value": 65
+            }
+        ];
+        this.checks = [
+            {
+                pattern:  "^\\s*\\S{32}$",
+                flags:  "",
+                args:   [65]
             }
         ];
     }

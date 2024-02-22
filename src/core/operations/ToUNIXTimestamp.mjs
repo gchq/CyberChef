@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import moment from "moment-timezone";
-import {UNITS} from "../lib/DateTime";
-import OperationError from "../errors/OperationError";
+import {UNITS} from "../lib/DateTime.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * To UNIX Timestamp operation

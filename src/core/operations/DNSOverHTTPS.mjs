@@ -3,8 +3,8 @@
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * DNS over HTTPS operation
@@ -51,10 +51,27 @@ class DNSOverHTTPS extends Operation {
                 value: [
                     "A",
                     "AAAA",
-                    "TXT",
-                    "MX",
+                    "ANAME",
+                    "CERT",
+                    "CNAME",
                     "DNSKEY",
-                    "NS"
+                    "HTTPS",
+                    "IPSECKEY",
+                    "LOC",
+                    "MX",
+                    "NS",
+                    "OPENPGPKEY",
+                    "PTR",
+                    "RRSIG",
+                    "SIG",
+                    "SOA",
+                    "SPF",
+                    "SRV",
+                    "SSHFP",
+                    "TA",
+                    "TXT",
+                    "URI",
+                    "ANY"
                 ]
             },
             {
@@ -63,9 +80,9 @@ class DNSOverHTTPS extends Operation {
                 value: false
             },
             {
-                name: "Validate DNSSEC",
+                name: "Disable DNSSEC validation",
                 type: "boolean",
-                value: true
+                value: false
             }
         ];
     }
@@ -111,7 +128,7 @@ class DNSOverHTTPS extends Operation {
  * @returns {JSON}
  */
 function extractData(data) {
-    if (typeof(data) == "undefined"){
+    if (typeof(data) == "undefined") {
         return [];
     } else {
         const dataValues = [];

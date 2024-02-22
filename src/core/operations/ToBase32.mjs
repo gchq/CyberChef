@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * To Base32 operation
@@ -22,7 +22,7 @@ class ToBase32 extends Operation {
         this.module = "Default";
         this.description = "Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.";
         this.infoURL = "https://wikipedia.org/wiki/Base32";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
@@ -34,19 +34,19 @@ class ToBase32 extends Operation {
     }
 
     /**
-     * @param {byteArray} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
         if (!input) return "";
+        input = new Uint8Array(input);
 
         const alphabet = args[0] ? Utils.expandAlphRange(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=";
         let output = "",
             chr1, chr2, chr3, chr4, chr5,
             enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
             i = 0;
-
         while (i < input.length) {
             chr1 = input[i++];
             chr2 = input[i++];
@@ -77,7 +77,6 @@ class ToBase32 extends Operation {
                 alphabet.charAt(enc4) + alphabet.charAt(enc5) + alphabet.charAt(enc6) +
                 alphabet.charAt(enc7) + alphabet.charAt(enc8);
         }
-
         return output;
     }
 

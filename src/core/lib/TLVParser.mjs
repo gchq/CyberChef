@@ -21,7 +21,7 @@ export default class TLVParser {
     /**
      * TLVParser constructor
      *
-     * @param {byteArray} input
+     * @param {byteArray|Uint8Array} input
      * @param {Object} options
      */
     constructor(input, options) {

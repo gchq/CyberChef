@@ -6,7 +6,7 @@
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
-import TestRegister from "../TestRegister";
+import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
@@ -16,7 +16,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false],
+                args: [" ", false, false],
             },
         ],
     },
@@ -27,7 +27,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false],
+                args: [" ", false, false],
             },
         ],
     },
@@ -38,8 +38,12 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false],
+                args: [" ", false, false],
             },
+            {
+                op: "HTML To Text",
+                args: []
+            }
         ],
     },
     {
@@ -49,7 +53,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false],
+                args: [" ", false, false],
             },
         ],
     },
@@ -60,7 +64,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false],
+                args: [" ", false, false],
             },
         ],
     },
@@ -71,7 +75,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false],
+                args: [" ", false, false],
             },
         ],
     },
@@ -82,7 +86,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: ["\t", false],
+                args: ["\t", false, false],
             },
         ],
     },
@@ -93,8 +97,12 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false],
+                args: [" ", false, false],
             },
+            {
+                op: "HTML To Text",
+                args: []
+            }
         ],
     },
     {
@@ -104,8 +112,12 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: ["\t", false],
+                args: ["\t", false, false],
             },
+            {
+                op: "HTML To Text",
+                args: []
+            }
         ],
     },
     {
@@ -115,8 +127,12 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: ["\t", true],
+                args: ["\t", true, false],
             },
+            {
+                op: "HTML To Text",
+                args: []
+            }
         ],
     },
 ]);

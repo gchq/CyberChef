@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {COMPRESSION_TYPE, ZLIB_COMPRESSION_TYPE_LOOKUP} from "../lib/Zlib";
-import zip from "zlibjs/bin/zip.min";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import {COMPRESSION_TYPE, ZLIB_COMPRESSION_TYPE_LOOKUP} from "../lib/Zlib.mjs";
+import zip from "zlibjs/bin/zip.min.js";
 
 const Zlib = zip.Zlib;
 

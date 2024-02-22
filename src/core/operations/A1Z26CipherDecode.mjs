@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {DELIM_OPTIONS} from "../lib/Delim";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import {DELIM_OPTIONS} from "../lib/Delim.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * A1Z26 Cipher Decode operation
@@ -31,6 +31,38 @@ class A1Z26CipherDecode extends Operation {
                 name: "Delimiter",
                 type: "option",
                 value: DELIM_OPTIONS
+            }
+        ];
+        this.checks = [
+            {
+                pattern:  "^\\s*([12]?[0-9] )+[12]?[0-9]\\s*$",
+                flags:  "",
+                args:   ["Space"]
+            },
+            {
+                pattern:  "^\\s*([12]?[0-9],)+[12]?[0-9]\\s*$",
+                flags:  "",
+                args:   ["Comma"]
+            },
+            {
+                pattern:  "^\\s*([12]?[0-9];)+[12]?[0-9]\\s*$",
+                flags:  "",
+                args:   ["Semi-colon"]
+            },
+            {
+                pattern:  "^\\s*([12]?[0-9]:)+[12]?[0-9]\\s*$",
+                flags:  "",
+                args:   ["Colon"]
+            },
+            {
+                pattern:  "^\\s*([12]?[0-9]\\n)+[12]?[0-9]\\s*$",
+                flags:  "",
+                args:   ["Line feed"]
+            },
+            {
+                pattern:  "^\\s*([12]?[0-9]\\r\\n)+[12]?[0-9]\\s*$",
+                flags:  "",
+                args:   ["CRLF"]
             }
         ];
     }

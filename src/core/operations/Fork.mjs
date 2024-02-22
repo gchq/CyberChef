@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Recipe from "../Recipe";
-import Dish from "../Dish";
+import Operation from "../Operation.mjs";
+import Recipe from "../Recipe.mjs";
+import Dish from "../Dish.mjs";
 
 /**
  * Fork operation
@@ -65,19 +65,28 @@ class Fork extends Operation {
         if (input)
             inputs = input.split(splitDelim);
 
+        // Set to 1 as if we are here, then there is one, the current one.
+        let numOp = 1;
         // Create subOpList for each tranche to operate on
-        // (all remaining operations unless we encounter a Merge)
+        // all remaining operations unless we encounter a Merge
         for (i = state.progress + 1; i < opList.length; i++) {
             if (opList[i].name === "Merge" && !opList[i].disabled) {
-                break;
+                numOp--;
+                if (numOp === 0 || opList[i].ingValues[0])
+                    break;
+                else
+                    // Not this Fork's Merge.
+                    subOpList.push(opList[i]);
             } else {
+                if (opList[i].name === "Fork" || opList[i].name === "Subsection")
+                    numOp++;
                 subOpList.push(opList[i]);
             }
         }
 
         const recipe = new Recipe();
-        let output = "",
-            progress = 0;
+        const outputs = [];
+        let progress = 0;
 
         state.forkOffset += state.progress + 1;
 
@@ -89,7 +98,7 @@ class Fork extends Operation {
         // Run recipe over each tranche
         for (i = 0; i < inputs.length; i++) {
             // Baseline ing values for each tranche so that registers are reset
-            subOpList.forEach((op, i) => {
+            recipe.opList.forEach((op, i) => {
                 op.ingValues = JSON.parse(JSON.stringify(ingValues[i]));
             });
 
@@ -104,10 +113,10 @@ class Fork extends Operation {
                 }
                 progress = err.progress + 1;
             }
-            output += await dish.get(outputType) + mergeDelim;
+            outputs.push(await dish.get(outputType));
         }
 
-        state.dish.set(output, outputType);
+        state.dish.set(outputs.join(mergeDelim), outputType);
         state.progress += progress;
         return state;
     }

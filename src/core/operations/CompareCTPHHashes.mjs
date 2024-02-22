@@ -4,11 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {HASH_DELIM_OPTIONS} from "../lib/Delim";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import {HASH_DELIM_OPTIONS} from "../lib/Delim.mjs";
 import ctphjs from "ctph.js";
-import OperationError from "../errors/OperationError";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Compare CTPH hashes operation
@@ -24,7 +24,7 @@ class CompareCTPHHashes extends Operation {
         this.name = "Compare CTPH hashes";
         this.module = "Crypto";
         this.description = "Compares two Context Triggered Piecewise Hashing (CTPH) fuzzy hashes to determine the similarity between them on a scale of 0 to 100.";
-        this.infoURL = "https://forensicswiki.org/wiki/Context_Triggered_Piecewise_Hashing";
+        this.infoURL = "https://forensics.wiki/context_triggered_piecewise_hashing/";
         this.inputType = "string";
         this.outputType = "Number";
         this.args = [

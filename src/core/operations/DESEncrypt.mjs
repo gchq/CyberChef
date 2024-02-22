@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
-import forge from "node-forge/dist/forge.min.js";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import forge from "node-forge";
 
 /**
  * DES Encrypt operation
@@ -72,6 +72,12 @@ class DESEncrypt extends Operation {
 
 DES uses a key length of 8 bytes (64 bits).
 Triple DES uses a key length of 24 bytes (192 bits).`);
+        }
+        if (iv.length !== 8 && mode !== "ECB") {
+            throw new OperationError(`Invalid IV length: ${iv.length} bytes
+
+DES uses an IV length of 8 bytes (64 bits).
+Make sure you have specified the type correctly (e.g. Hex vs UTF8).`);
         }
 
         input = Utils.convertToByteString(input, inputType);

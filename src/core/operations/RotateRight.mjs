@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {rot, rotr, rotrCarry} from "../lib/Rotate";
+import Operation from "../Operation.mjs";
+import {rot, rotr, rotrCarry} from "../lib/Rotate.mjs";
 
 
 /**

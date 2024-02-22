@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
-import {ALPHABET_OPTIONS} from "../lib/Base58";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import {ALPHABET_OPTIONS} from "../lib/Base58.mjs";
 
 /**
  * From Base58 operation
@@ -38,14 +38,14 @@ class FromBase58 extends Operation {
                 "value": true
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                match: "^[1-9A-HJ-NP-Za-km-z]{20,}$",
+                pattern: "^[1-9A-HJ-NP-Za-km-z]{20,}$",
                 flags: "",
                 args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz", false]
             },
             {
-                match: "^[1-9A-HJ-NP-Za-km-z]{20,}$",
+                pattern: "^[1-9A-HJ-NP-Za-km-z]{20,}$",
                 flags: "",
                 args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz", false]
             },

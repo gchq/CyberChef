@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import xmldom from "xmldom";
 import xpath from "xpath";
 
@@ -50,14 +50,26 @@ class XPathExpression extends Operation {
 
         let doc;
         try {
-            doc = new xmldom.DOMParser().parseFromString(input, "application/xml");
+            doc = new xmldom.DOMParser({
+                errorHandler: {
+                    warning(w) {
+                        throw w;
+                    },
+                    error(e) {
+                        throw e;
+                    },
+                    fatalError(e) {
+                        throw e;
+                    }
+                }
+            }).parseFromString(input, "application/xml");
         } catch (err) {
             throw new OperationError("Invalid input XML.");
         }
 
         let nodes;
         try {
-            nodes = xpath.select(query, doc);
+            nodes = xpath.parse(query).select({ node: doc, allowAnyNamespaceForNoPrefix: true });
         } catch (err) {
             throw new OperationError(`Invalid XPath. Details:\n${err.message}.`);
         }

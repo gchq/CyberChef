@@ -1,7 +1,7 @@
 {
-    "parser": "babel-eslint",
+    "parser": "@babel/eslint-parser",
     "parserOptions": {
-        "ecmaVersion": 9,
+        "ecmaVersion": 2022,
         "ecmaFeatures": {
             "impliedStrict": true
         },
@@ -38,12 +38,16 @@
 
         // disable rules from base configurations
         "no-control-regex": "off",
+        "require-atomic-updates": "off",
+        "no-async-promise-executor": "off",
 
         // stylistic conventions
         "brace-style": ["error", "1tbs"],
+        "space-before-blocks": ["error", "always"],
         "block-spacing": "error",
         "array-bracket-spacing": "error",
         "comma-spacing": "error",
+        "spaced-comment": ["error", "always", { "exceptions": ["/"] } ],
         "comma-style": "error",
         "computed-property-spacing": "error",
         "no-trailing-spaces": "warn",
@@ -59,7 +63,8 @@
         }],
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "double", {
-            "avoidEscape": true
+            "avoidEscape": true,
+            "allowTemplateLiterals": true
         }],
         "camelcase": ["error", {
             "properties": "always"
@@ -102,12 +107,10 @@
         "$": false,
         "jQuery": false,
         "log": false,
+        "app": false,
 
         "COMPILE_TIME": false,
         "COMPILE_MSG": false,
-        "PKG_VERSION": false,
-        "ENVIRONMENT_IS_WORKER": false,
-        "ENVIRONMENT_IS_NODE": false,
-        "ENVIRONMENT_IS_WEB": false
+        "PKG_VERSION": false
     }
 }

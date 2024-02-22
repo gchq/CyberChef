@@ -4,13 +4,14 @@
  * @license Apache-2.0
  */
 
-import Utils from "../core/Utils";
-import {fromBase64} from "../core/lib/Base64";
-import Manager from "./Manager";
-import HTMLCategory from "./HTMLCategory";
-import HTMLOperation from "./HTMLOperation";
+import Utils, { debounce } from "../core/Utils.mjs";
+import {fromBase64} from "../core/lib/Base64.mjs";
+import Manager from "./Manager.mjs";
+import HTMLCategory from "./HTMLCategory.mjs";
+import HTMLOperation from "./HTMLOperation.mjs";
 import Split from "split.js";
 import moment from "moment-timezone";
+import cptable from "codepage";
 
 
 /**
@@ -41,6 +42,10 @@ class App {
         this.autoBakePause = false;
         this.progress      = 0;
         this.ingId         = 0;
+
+        this.appLoaded     = false;
+        this.workerLoaded  = false;
+        this.waitersLoaded = false;
     }
 
 
@@ -51,17 +56,18 @@ class App {
      */
     setup() {
         document.dispatchEvent(this.manager.appstart);
+
         this.initialiseSplitter();
         this.loadLocalStorage();
         this.populateOperationsList();
         this.manager.setup();
-        this.resetLayout();
+        this.manager.output.saveBombe();
+        this.adjustComponentSizes();
         this.setCompileMessage();
+        this.uriParams = this.getURIParams();
 
         log.debug("App loaded");
         this.appLoaded = true;
-
-        this.loadURIParams();
         this.loaded();
     }
 
@@ -74,8 +80,11 @@ class App {
     loaded() {
         // Check that both the app and the worker have loaded successfully, and that
         // we haven't already loaded before attempting to remove the loading screen.
-        if (!this.workerLoaded || !this.appLoaded ||
+        if (!this.workerLoaded || !this.appLoaded || !this.waitersLoaded ||
             !document.getElementById("loader-wrapper")) return;
+
+        // Load state from URI
+        this.loadURIParams(this.uriParams);
 
         // Trigger CSS animations to remove preloader
         document.body.classList.add("loaded");
@@ -85,7 +94,10 @@ class App {
         setTimeout(function() {
             document.getElementById("loader-wrapper").remove();
             document.body.classList.remove("loaded");
-        }, 1000);
+
+            // Bake initial input
+            this.manager.input.bakeAll();
+        }.bind(this), 1000);
 
         // Clear the loading message interval
         clearInterval(window.loadingMsgsInt);
@@ -94,6 +106,9 @@ class App {
         window.removeEventListener("error", window.loadingErrorHandler);
 
         document.dispatchEvent(this.manager.apploaded);
+
+        this.manager.input.calcMaxTabs();
+        this.manager.output.calcMaxTabs();
     }
 
 
@@ -106,7 +121,7 @@ class App {
     handleError(err, logToConsole) {
         if (logToConsole) log.error(err);
         const msg = err.displayStr || err.toString();
-        this.alert(msg, this.options.errorTimeout, !this.options.showErrors);
+        this.alert(Utils.escapeHtml(msg), this.options.errorTimeout, !this.options.showErrors);
     }
 
 
@@ -122,8 +137,10 @@ class App {
         // Reset attemptHighlight flag
         this.options.attemptHighlight = true;
 
+        // Remove all current indicators
+        this.manager.recipe.updateBreakpointIndicator(false);
+
         this.manager.worker.bake(
-            this.getInput(),        // The user's input
             this.getRecipeConfig(), // The configuration of the recipe
             this.options,           // Options set by the user
             this.progress,          // The current position in the recipe
@@ -143,10 +160,41 @@ class App {
 
         if (this.autoBake_ && !this.baking) {
             log.debug("Auto-baking");
-            this.bake();
+            this.manager.worker.bakeInputs({
+                nums: [this.manager.tabs.getActiveTab("input")],
+                step: false
+            });
         } else {
             this.manager.controls.showStaleIndicator();
         }
+    }
+
+
+    /**
+     * Executes the next step of the recipe.
+     */
+    step() {
+        if (this.baking) return;
+
+        // Reset status using cancelBake
+        this.manager.worker.cancelBake(true, false);
+
+        const activeTab = this.manager.tabs.getActiveTab("input");
+        if (activeTab === -1) return;
+
+        let progress = 0;
+        if (this.manager.output.outputs[activeTab].progress !== false) {
+            log.error(this.manager.output.outputs[activeTab]);
+            progress = this.manager.output.outputs[activeTab].progress;
+        }
+
+        this.manager.input.inputWorker.postMessage({
+            action: "step",
+            data: {
+                activeTab: activeTab,
+                progress: progress + 1
+            }
+        });
     }
 
 
@@ -171,23 +219,24 @@ class App {
 
 
     /**
-     * Gets the user's input data.
-     *
-     * @returns {string}
-     */
-    getInput() {
-        return this.manager.input.get();
-    }
-
-
-    /**
      * Sets the user's input data.
      *
      * @param {string} input - The string to set the input to
-     * @param {boolean} [silent=false] - Suppress statechange event
      */
-    setInput(input, silent=false) {
-        this.manager.input.set(input, silent);
+    setInput(input) {
+        // Get the currently active tab.
+        // If there isn't one, assume there are no inputs so use inputNum of 1
+        let inputNum = this.manager.tabs.getActiveTab("input");
+        if (inputNum === -1) inputNum = 1;
+        this.manager.input.updateInputValue(inputNum, input);
+
+        this.manager.input.inputWorker.postMessage({
+            action: "setInput",
+            data: {
+                inputNum: inputNum,
+                silent: true
+            }
+        });
     }
 
 
@@ -211,7 +260,7 @@ class App {
 
             for (let j = 0; j < catConf.ops.length; j++) {
                 const opName = catConf.ops[j];
-                if (!this.operations.hasOwnProperty(opName)) {
+                if (!(opName in this.operations)) {
                     log.warn(`${opName} could not be found.`);
                     continue;
                 }
@@ -232,14 +281,22 @@ class App {
         }
 
         // Add edit button to first category (Favourites)
-        document.querySelector("#categories a").appendChild(document.getElementById("edit-favourites"));
+        const favCat = document.querySelector("#categories a");
+        favCat.appendChild(document.getElementById("edit-favourites"));
+        favCat.setAttribute("data-help-title", "Favourite operations");
+        favCat.setAttribute("data-help", `<p>This category displays your favourite operations.</p>
+        <ul>
+            <li><b>To add:</b> drag an operation over the Favourites category</li>
+            <li><b>To reorder:</b> Click on the 'Edit favourites' button and drag operations up and down in the list provided</li>
+            <li><b>To remove:</b> Click on the 'Edit favourites' button and hit the delete button next to the operation you want to remove</li>
+        </ul>`);
     }
 
 
     /**
      * Sets up the adjustable splitter to allow the user to resize areas of the page.
      *
-     * @param {boolean} [minimise=false] - Set this flag if attempting to minimuse frames to 0 width
+     * @param {boolean} [minimise=false] - Set this flag if attempting to minimise frames to 0 width
      */
     initialiseSplitter(minimise=false) {
         if (this.columnSplitter) this.columnSplitter.destroy();
@@ -247,12 +304,12 @@ class App {
 
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [20, 30, 50],
-            minSize: minimise ? [0, 0, 0] : [240, 370, 450],
+            minSize: minimise ? [0, 0, 0] : [240, 310, 450],
             gutterSize: 4,
-            expandToMin: false,
-            onDrag: function() {
-                this.manager.recipe.adjustWidth();
-            }.bind(this)
+            expandToMin: true,
+            onDrag: debounce(function() {
+                this.adjustComponentSizes();
+            }, 50, "dragSplitter", this, [])
         });
 
         this.ioSplitter = Split(["#input", "#output"], {
@@ -261,7 +318,7 @@ class App {
             minSize: minimise ? [0, 0] : [100, 100]
         });
 
-        this.resetLayout();
+        this.adjustComponentSizes();
     }
 
 
@@ -291,7 +348,7 @@ class App {
         let favourites;
 
         if (this.isLocalStorageAvailable()) {
-            favourites = localStorage.favourites && localStorage.favourites.length > 2 ?
+            favourites = localStorage?.favourites?.length > 2 ?
                 JSON.parse(localStorage.favourites) :
                 this.dfavourites;
             favourites = this.validFavourites(favourites);
@@ -325,7 +382,7 @@ class App {
     validFavourites(favourites) {
         const validFavs = [];
         for (let i = 0; i < favourites.length; i++) {
-            if (this.operations.hasOwnProperty(favourites[i])) {
+            if (favourites[i] in this.operations) {
                 validFavs.push(favourites[i]);
             } else {
                 this.alert(`The operation "${Utils.escapeHtml(favourites[i])}" is no longer available. ` +
@@ -386,11 +443,12 @@ class App {
         this.manager.recipe.initialiseOperationDragNDrop();
     }
 
-
     /**
-     * Checks for input and recipe in the URI parameters and loads them if present.
+     * Gets the URI params from the window and parses them to extract the actual values.
+     *
+     * @returns {object}
      */
-    loadURIParams() {
+    getURIParams() {
         // Load query string or hash from URI (depending on which is populated)
         // We prefer getting the hash by splitting the href rather than referencing
         // location.hash as some browsers (Firefox) automatically URL decode it,
@@ -398,8 +456,23 @@ class App {
         const params = window.location.search ||
             window.location.href.split("#")[1] ||
             window.location.hash;
-        this.uriParams = Utils.parseURIParams(params);
+        const parsedParams = Utils.parseURIParams(params);
+        return parsedParams;
+    }
+
+    /**
+     * Searches the URI parameters for recipe and input parameters.
+     * If recipe is present, replaces the current recipe with the recipe provided in the URI.
+     * If input is present, decodes and sets the input to the one provided in the URI.
+     * If character encodings are present, sets them appropriately.
+     * If theme is present, uses the theme.
+     *
+     * @param {Object} params
+     * @fires Manager#statechange
+     */
+    loadURIParams(params=this.getURIParams()) {
         this.autoBakePause = true;
+        this.uriParams = params;
 
         // Read in recipe from URI params
         if (this.uriParams.recipe) {
@@ -424,12 +497,45 @@ class App {
             search.dispatchEvent(new Event("search"));
         }
 
+        // Input Character Encoding
+        // Must be set before the input is loaded
+        if (this.uriParams.ienc) {
+            this.manager.input.chrEncChange(parseInt(this.uriParams.ienc, 10));
+        }
+
+        // Output Character Encoding
+        if (this.uriParams.oenc) {
+            this.manager.output.chrEncChange(parseInt(this.uriParams.oenc, 10));
+        }
+
+        // Input EOL sequence
+        if (this.uriParams.ieol) {
+            this.manager.input.eolChange(this.uriParams.ieol);
+        }
+
+        // Output EOL sequence
+        if (this.uriParams.oeol) {
+            this.manager.output.eolChange(this.uriParams.oeol);
+        }
+
         // Read in input data from URI params
         if (this.uriParams.input) {
             try {
-                const inputData = fromBase64(this.uriParams.input);
-                this.setInput(inputData, true);
+                let inputVal;
+                const inputChrEnc = this.manager.input.getChrEnc();
+                const inputData = fromBase64(this.uriParams.input, null, "byteArray");
+                if (inputChrEnc > 0) {
+                    inputVal = cptable.utils.decode(inputChrEnc, inputData);
+                } else {
+                    inputVal = Utils.byteArrayToChars(inputData);
+                }
+                this.setInput(inputVal);
             } catch (err) {}
+        }
+
+        // Read in theme from URI params
+        if (this.uriParams.theme) {
+            this.manager.options.changeTheme(Utils.escapeHtml(this.uriParams.theme));
         }
 
         this.autoBakePause = false;
@@ -474,6 +580,7 @@ class App {
             const item = this.manager.recipe.addOperation(recipeConfig[i].op);
 
             // Populate arguments
+            log.debug(`Populating arguments for ${recipeConfig[i].op}`);
             const args = item.querySelectorAll(".arg");
             for (let j = 0; j < args.length; j++) {
                 if (recipeConfig[i].args[j] === undefined) continue;
@@ -499,6 +606,8 @@ class App {
                 item.querySelector(".breakpoint").click();
             }
 
+            this.manager.recipe.triggerArgEvents(item);
+
             this.progress = 0;
         }
 
@@ -513,7 +622,17 @@ class App {
     resetLayout() {
         this.columnSplitter.setSizes([20, 30, 50]);
         this.ioSplitter.setSizes([50, 50]);
+        this.adjustComponentSizes();
+    }
+
+    /**
+     * Adjust components to fit their containers.
+     */
+    adjustComponentSizes() {
         this.manager.recipe.adjustWidth();
+        this.manager.input.calcMaxTabs();
+        this.manager.output.calcMaxTabs();
+        this.manager.controls.calcControlsHeight();
     }
 
 
@@ -534,7 +653,7 @@ class App {
         else if (prev[1] > 0) prev[1]--;
         else prev[0]--;
 
-        //const compareURL = `https://github.com/gchq/CyberChef/compare/v${prev.join(".")}...v${PKG_VERSION}`;
+        // const compareURL = `https://github.com/gchq/CyberChef/compare/v${prev.join(".")}...v${PKG_VERSION}`;
 
         let compileInfo = `<a href='https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md'>Last build: ${timeSinceCompile.substr(0, 1).toUpperCase() + timeSinceCompile.substr(1)} ago</a>`;
 
@@ -545,6 +664,8 @@ class App {
         const notice = document.getElementById("notice");
         notice.innerHTML = compileInfo;
         notice.setAttribute("title", Utils.stripHtmlTags(window.compileMessage));
+        notice.setAttribute("data-help-title", "Last build");
+        notice.setAttribute("data-help", "This live version of CyberChef is updated whenever new commits are added to the master branch of the CyberChef repository. It represents the latest, most up-to-date build of CyberChef.");
     }
 
 
@@ -568,7 +689,7 @@ class App {
      * Pops up a message to the user and writes it to the console log.
      *
      * @param {string} str - The message to display (HTML supported)
-     * @param {number} timeout - The number of milliseconds before the alert closes automatically
+     * @param {number} [timeout=0] - The number of milliseconds before the alert closes automatically
      *     0 for never (until the user closes it)
      * @param {boolean} [silent=false] - Don't show the message in the popup, only print it to the
      *     console
@@ -581,13 +702,11 @@ class App {
      * // Pops up a box with the message "Happy Christmas!" that will disappear after 5 seconds.
      * this.alert("Happy Christmas!", 5000);
      */
-    alert(str, timeout, silent) {
+    alert(str, timeout=0, silent=false) {
         const time = new Date();
 
         log.info("[" + time.toLocaleString() + "] " + str);
         if (silent) return;
-
-        timeout = timeout || 0;
 
         this.currentSnackbar = $.snackbar({
             content: str,
@@ -605,18 +724,22 @@ class App {
      *
      * @param {string} title - The title of the box
      * @param {string} body - The question (HTML supported)
+     * @param {string} accept - The text of the accept button
+     * @param {string} reject - The text of the reject button
      * @param {function} callback - A function accepting one boolean argument which handles the
      *   response e.g. function(answer) {...}
      * @param {Object} [scope=this] - The object to bind to the callback function
      *
      * @example
      * // Pops up a box asking if the user would like a cookie. Prints the answer to the console.
-     * this.confirm("Question", "Would you like a cookie?", function(answer) {console.log(answer);});
+     * this.confirm("Question", "Would you like a cookie?", "Yes", "No", function(answer) {console.log(answer);});
      */
-    confirm(title, body, callback, scope) {
+    confirm(title, body, accept, reject, callback, scope) {
         scope = scope || this;
         document.getElementById("confirm-title").innerHTML = title;
         document.getElementById("confirm-body").innerHTML = body;
+        document.getElementById("confirm-yes").innerText = accept;
+        document.getElementById("confirm-no").innerText = reject;
         document.getElementById("confirm-modal").style.display = "block";
 
         this.confirmClosed = false;
@@ -629,9 +752,14 @@ class App {
                 callback.bind(scope)(true);
                 $("#confirm-modal").modal("hide");
             }.bind(this))
+            .one("click", "#confirm-no", function() {
+                this.confirmClosed = true;
+                callback.bind(scope)(false);
+            }.bind(this))
             .one("hide.bs.modal", function(e) {
-                if (!this.confirmClosed)
-                    callback.bind(scope)(false);
+                if (!this.confirmClosed) {
+                    callback.bind(scope)(undefined);
+                }
                 this.confirmClosed = true;
             }.bind(this));
     }
@@ -645,9 +773,22 @@ class App {
      * @param {event} e
      */
     stateChange(e) {
-        this.progress = 0;
-        this.autoBake();
+        debounce(function() {
+            this.progress = 0;
+            this.autoBake();
+            this.updateURL(true, null, true);
+        }, 20, "stateChange", this, [])();
+    }
 
+
+    /**
+     * Update the page title and URL to contain the new recipe
+     *
+     * @param {boolean} includeInput
+     * @param {string} [input=null]
+     * @param {boolean} [changeUrl=true]
+     */
+    updateURL(includeInput, input=null, changeUrl=true) {
         // Set title
         const recipeConfig = this.getRecipeConfig();
         let title = "CyberChef";
@@ -666,8 +807,8 @@ class App {
         document.title = title;
 
         // Update the current history state (not creating a new one)
-        if (this.options.updateUrl) {
-            this.lastStateUrl = this.manager.controls.generateStateUrl(true, true, recipeConfig);
+        if (this.options.updateUrl && changeUrl) {
+            this.lastStateUrl = this.manager.controls.generateStateUrl(true, includeInput, input, recipeConfig);
             window.history.replaceState({}, title, this.lastStateUrl);
         }
     }

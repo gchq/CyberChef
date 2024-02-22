@@ -31,6 +31,14 @@
 
     --banner-font-colour: #c5c5c5;
     --banner-bg-colour: #252525;
+    --banner-url-colour: #1976d2;
+
+    --category-list-font-colour: #1976d2;
+
+    --loader-background-colour: var(--secondary-border-colour);
+    --loader-outer-colour: #3498db;
+    --loader-middle-colour: #e74c3c;
+    --loader-inner-colour: #f9c922;
 
 
     /* Operation colours */
@@ -72,6 +80,13 @@
     --arg-label-colour: rgb(25, 118, 210);
 
 
+    /* Operation buttons */
+    --disable-icon-colour: #9e9e9e;
+    --disable-icon-selected-colour: #f44336;
+    --breakpoint-icon-colour: #9e9e9e;
+    --breakpoint-icon-selected-colour: #f44336;
+
+
     /* Buttons */
     --btn-default-font-colour: #c5c5c5;
     --btn-default-bg-colour: #2d2d2d;
@@ -93,9 +108,9 @@
     /* Highlighter colours */
     --hl1: #264f78;
     --hl2: #675351;
-    --hl3: #ffb6b6;
+    --hl3: #c40000;
     --hl4: #fcf8e3;
-    --hl5: #8de768;
+    --hl5: #38811b;
 
 
     /* Scrollbar */
@@ -106,8 +121,11 @@
 
     /* Misc. */
     --drop-file-border-colour: #0e639c;
+    --table-border-colour: #555;
     --popover-background: #444;
     --popover-border-colour: #555;
     --code-background: #0e639c;
     --code-font-colour: #fff;
+    --input-highlight-colour: #1976d2;
+    --input-border-colour: #424242;
 }

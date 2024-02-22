@@ -4,8 +4,16 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Magic from "../lib/Magic";
+import Operation from "../Operation.mjs";
+import {detectFileType} from "../lib/FileType.mjs";
+import {FILE_SIGNATURES} from "../lib/FileSignatures.mjs";
+
+// Concat all supported extensions into a single flat list
+const exts = [].concat.apply([], Object.keys(FILE_SIGNATURES).map(cat =>
+    [].concat.apply([], FILE_SIGNATURES[cat].map(sig =>
+        sig.extension.split(",")
+    ))
+)).unique().sort().join(", ");
 
 /**
  * Detect File Type operation
@@ -20,11 +28,18 @@ class DetectFileType extends Operation {
 
         this.name = "Detect File Type";
         this.module = "Default";
-        this.description = "Attempts to guess the MIME (Multipurpose Internet Mail Extensions) type of the data based on 'magic bytes'.<br><br>Currently supports the following file types: 7z, amr, avi, bmp, bz2, class, cr2, crx, dex, dmg, doc, elf, eot, epub, exe, flac, flv, gif, gz, ico, iso, jpg, jxr, m4a, m4v, mid, mkv, mov, mp3, mp4, mpg, ogg, otf, pdf, png, ppt, ps, psd, rar, rtf, sqlite, swf, tar, tar.z, tif, ttf, utf8, vmdk, wav, webm, webp, wmv, woff, woff2, xls, xz, zip.";
+        this.description = "Attempts to guess the MIME (Multipurpose Internet Mail Extensions) type of the data based on 'magic bytes'.<br><br>Currently supports the following file types: " +
+            exts + ".";
         this.infoURL = "https://wikipedia.org/wiki/List_of_file_signatures";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
-        this.args = [];
+        this.args = Object.keys(FILE_SIGNATURES).map(cat => {
+            return {
+                name: cat,
+                type: "boolean",
+                value: true
+            };
+        });
     }
 
     /**
@@ -34,19 +49,30 @@ class DetectFileType extends Operation {
      */
     run(input, args) {
         const data = new Uint8Array(input),
-            type = Magic.magicFileType(data);
+            categories = [];
 
-        if (!type) {
+        args.forEach((cat, i) => {
+            if (cat) categories.push(Object.keys(FILE_SIGNATURES)[i]);
+        });
+
+        const types = detectFileType(data, categories);
+
+        if (!types.length) {
             return "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?";
         } else {
-            let output = "File extension: " + type.ext + "\n" +
-                "MIME type:      " + type.mime;
+            const results = types.map(type => {
+                let output = `File type:   ${type.name}
+Extension:   ${type.extension}
+MIME type:   ${type.mime}\n`;
 
-            if (type.desc && type.desc.length) {
-                output += "\nDescription:    " + type.desc;
-            }
+                if (type?.description?.length) {
+                    output += `Description: ${type.description}\n`;
+                }
 
-            return output;
+                return output;
+            });
+
+            return results.join("\n");
         }
     }
 

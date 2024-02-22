@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import BigNumber from "bignumber.js";
-import OperationError from "../errors/OperationError";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * From Base operation
@@ -46,7 +46,7 @@ class FromBase extends Operation {
         }
 
         const number = input.replace(/\s/g, "").split(".");
-        let result = new BigNumber(number[0], radix) || 0;
+        let result = new BigNumber(number[0], radix);
 
         if (number.length === 1) return result;
 

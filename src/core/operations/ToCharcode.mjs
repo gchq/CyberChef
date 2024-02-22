@@ -4,10 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {DELIM_OPTIONS} from "../lib/Delim";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import { DELIM_OPTIONS } from "../lib/Delim.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import { isWorkerEnvironment } from "../Utils.mjs";
 
 /**
  * To Charcode operation
@@ -51,7 +52,7 @@ class ToCharcode extends Operation {
         const delim = Utils.charRep(args[0] || "Space"),
             base = args[1];
         let output = "",
-            padding = 2,
+            padding,
             ordinal;
 
         if (base < 2 || base > 36) {
@@ -69,11 +70,11 @@ class ToCharcode extends Operation {
                 else if (ordinal < 4294967296) padding = 8;
                 else padding = 2;
 
-                if (padding > 2 && ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
+                if (padding > 2 && isWorkerEnvironment()) self.setOption("attemptHighlight", false);
 
                 output += Utils.hex(ordinal, padding) + delim;
             } else {
-                if (ENVIRONMENT_IS_WORKER()) self.setOption("attemptHighlight", false);
+                if (isWorkerEnvironment()) self.setOption("attemptHighlight", false);
                 output += ordinal.toString(base) + delim;
             }
         }

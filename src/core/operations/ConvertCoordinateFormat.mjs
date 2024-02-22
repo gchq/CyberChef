@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import {FORMATS, convertCoordinates} from "../lib/ConvertCoordinates";
+import Operation from "../Operation.mjs";
+import {FORMATS, convertCoordinates} from "../lib/ConvertCoordinates.mjs";
 
 /**
  * Convert co-ordinate format operation

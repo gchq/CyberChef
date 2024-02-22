@@ -16,7 +16,7 @@
     padding-left: 10px;
     padding-right: 10px;
     background-image:
-        linear-gradient(to top, #1976d2 2px, rgba(25, 118, 210, 0) 2px),
+        linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(0, 0, 0, 0) 2px),
         linear-gradient(to top, var(--primary-border-colour) 1px, rgba(0, 0, 0, 0) 1px);
 }
 
@@ -33,7 +33,7 @@
 }
 
 #categories a {
-    color: #1976d2;
+    color: var(--category-list-font-colour);
     cursor: pointer;
 }
 

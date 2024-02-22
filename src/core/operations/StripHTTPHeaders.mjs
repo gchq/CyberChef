@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * Strip HTTP headers operation
@@ -24,6 +24,13 @@ class StripHTTPHeaders extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.checks = [
+            {
+                pattern:  "^HTTP(.|\\s)+?(\\r?\\n){2}",
+                flags:  "",
+                args:   []
+            }
+        ];
     }
 
     /**

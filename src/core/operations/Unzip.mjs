@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import unzip from "zlibjs/bin/unzip.min";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import unzip from "zlibjs/bin/unzip.min.js";
 
 const Zlib = unzip.Zlib;
 
@@ -40,12 +40,12 @@ class Unzip extends Operation {
                 value: false
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                match: "^\\x50\\x4b(?:\\x03|\\x05|\\x07)(?:\\x04|\\x06|\\x08)",
+                pattern: "^\\x50\\x4b(?:\\x03|\\x05|\\x07)(?:\\x04|\\x06|\\x08)",
                 flags: "",
                 args: ["", false]
-            },
+            }
         ];
     }
 

@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import jpath from "jsonpath";
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import {JSONPath} from "jsonpath-plus";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * JPath expression operation
@@ -27,14 +27,20 @@ class JPathExpression extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Query",
-                "type": "string",
-                "value": ""
+                name: "Query",
+                type: "string",
+                value: ""
             },
             {
-                "name": "Result delimiter",
-                "type": "binaryShortString",
-                "value": "\\n"
+                name: "Result delimiter",
+                type: "binaryShortString",
+                value: "\\n"
+            },
+            {
+                name: "Prevent eval",
+                type: "boolean",
+                value: true,
+                description: "Evaluated expressions are disabled by default for security reasons"
             }
         ];
     }
@@ -45,18 +51,21 @@ class JPathExpression extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [query, delimiter] = args;
-        let results,
-            obj;
+        const [query, delimiter, preventEval] = args;
+        let results, jsonObj;
 
         try {
-            obj = JSON.parse(input);
+            jsonObj = JSON.parse(input);
         } catch (err) {
             throw new OperationError(`Invalid input JSON: ${err.message}`);
         }
 
         try {
-            results = jpath.query(obj, query);
+            results = JSONPath({
+                path: query,
+                json: jsonObj,
+                preventEval: preventEval
+            });
         } catch (err) {
             throw new OperationError(`Invalid JPath expression: ${err.message}`);
         }

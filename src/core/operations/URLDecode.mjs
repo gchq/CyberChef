@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * URL Decode operation
@@ -24,9 +24,9 @@ class URLDecode extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
-        this.patterns = [
+        this.checks = [
             {
-                match: ".*(?:%[\\da-f]{2}.*){4}",
+                pattern: ".*(?:%[\\da-f]{2}.*){4}",
                 flags: "i",
                 args: []
             },

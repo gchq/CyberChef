@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import moment from "moment-timezone";
-import {DATETIME_FORMATS, FORMAT_EXAMPLES} from "../lib/DateTime";
+import {DATETIME_FORMATS, FORMAT_EXAMPLES} from "../lib/DateTime.mjs";
 
 /**
  * Parse DateTime operation
@@ -72,7 +72,7 @@ class ParseDateTime extends Operation {
             "\nLeap year: " + date.isLeapYear() +
             "\nDays in this month: " + date.daysInMonth() +
             "\n\nDay of year: " + date.dayOfYear() +
-            "\nWeek number: " + date.weekYear() +
+            "\nWeek number: " + date.week() +
             "\nQuarter: " + date.quarter();
 
         return output;

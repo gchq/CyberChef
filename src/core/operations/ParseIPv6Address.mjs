@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import OperationError from "../errors/OperationError";
-import {strToIpv6, ipv6ToStr, ipv4ToStr, IPV6_REGEX} from "../lib/IP";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import {strToIpv6, ipv6ToStr, ipv4ToStr, IPV6_REGEX} from "../lib/IP.mjs";
 import BigNumber from "bignumber.js";
 
 /**
@@ -165,11 +165,94 @@ class ParseIPv6Address extends Operation {
                 // Multicast
                 output += "\nThis is a reserved multicast address.";
                 output += "\nMulticast addresses range: ff00::/8";
+
+                switch (ipv6[0]) {
+                    case 0xff01:
+                        output += "\n\nReserved Multicast Block for Interface Local Scope";
+                        break;
+                    case 0xff02:
+                        output += "\n\nReserved Multicast Block for Link Local Scope";
+                        break;
+                    case 0xff03:
+                        output += "\n\nReserved Multicast Block for Realm Local Scope";
+                        break;
+                    case 0xff04:
+                        output += "\n\nReserved Multicast Block for Admin Local Scope";
+                        break;
+                    case 0xff05:
+                        output += "\n\nReserved Multicast Block for Site Local Scope";
+                        break;
+                    case 0xff08:
+                        output += "\n\nReserved Multicast Block for Organisation Local Scope";
+                        break;
+                    case 0xff0e:
+                        output += "\n\nReserved Multicast Block for Global Scope";
+                        break;
+                }
+
+                if (ipv6[6] === 1) {
+                    if (ipv6[7] === 2) {
+                        output += "\nReserved Multicast Address for 'All DHCP Servers and Relay Agents (defined in RFC3315)'";
+                    } else if (ipv6[7] === 3) {
+                        output += "\nReserved Multicast Address for 'All LLMNR Hosts (defined in RFC4795)'";
+                    }
+                } else {
+                    switch (ipv6[7]) {
+                        case 1:
+                            output += "\nReserved Multicast Address for 'All nodes'";
+                            break;
+                        case 2:
+                            output += "\nReserved Multicast Address for 'All routers'";
+                            break;
+                        case 5:
+                            output += "\nReserved Multicast Address for 'OSPFv3 - All OSPF routers'";
+                            break;
+                        case 6:
+                            output += "\nReserved Multicast Address for 'OSPFv3 - All Designated Routers'";
+                            break;
+                        case 8:
+                            output += "\nReserved Multicast Address for 'IS-IS for IPv6 Routers'";
+                            break;
+                        case 9:
+                            output += "\nReserved Multicast Address for 'RIP Routers'";
+                            break;
+                        case 0xa:
+                            output += "\nReserved Multicast Address for 'EIGRP Routers'";
+                            break;
+                        case 0xc:
+                            output += "\nReserved Multicast Address for 'Simple Service Discovery Protocol'";
+                            break;
+                        case 0xd:
+                            output += "\nReserved Multicast Address for 'PIM Routers'";
+                            break;
+                        case 0x16:
+                            output += "\nReserved Multicast Address for 'MLDv2 Reports (defined in RFC3810)'";
+                            break;
+                        case 0x6b:
+                            output += "\nReserved Multicast Address for 'Precision Time Protocol v2 Peer Delay Measurement Messages'";
+                            break;
+                        case 0xfb:
+                            output += "\nReserved Multicast Address for 'Multicast DNS'";
+                            break;
+                        case 0x101:
+                            output += "\nReserved Multicast Address for 'Network Time Protocol'";
+                            break;
+                        case 0x108:
+                            output += "\nReserved Multicast Address for 'Network Information Service'";
+                            break;
+                        case 0x114:
+                            output += "\nReserved Multicast Address for 'Experiments'";
+                            break;
+                        case 0x181:
+                            output += "\nReserved Multicast Address for 'Precision Time Protocol v2 Messages (exc. Peer Delay)'";
+                            break;
+                    }
+                }
             }
 
 
             // Detect possible EUI-64 addresses
-            if ((ipv6[5] & 0xff === 0xff) && (ipv6[6] >>> 8 === 0xfe)) {
+            if (((ipv6[5] & 0xff) === 0xff) && (ipv6[6] >>> 8 === 0xfe)) {
                 output += "\n\nThis IPv6 address contains a modified EUI-64 address, identified by the presence of FF:FE in the 12th and 13th octets.";
 
                 const intIdent = Utils.hex(ipv6[4] >>> 8) + ":" + Utils.hex(ipv6[4] & 0xff) + ":" +

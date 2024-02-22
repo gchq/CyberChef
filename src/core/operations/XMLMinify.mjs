@@ -5,7 +5,7 @@
  */
 
 import vkbeautify from "vkbeautify";
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * XML Minify operation

@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import BigNumber from "bignumber.js";
-import Utils from "../Utils";
-import {toHexFast} from "../lib/Hex";
+import Utils from "../Utils.mjs";
+import {toHexFast} from "../lib/Hex.mjs";
 
 /**
  * To Base62 operation
@@ -24,7 +24,7 @@ class ToBase62 extends Operation {
         this.module = "Default";
         this.description = "Base62 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system.";
         this.infoURL = "https://wikipedia.org/wiki/List_of_numeral_systems";
-        this.inputType = "byteArray";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
@@ -36,19 +36,23 @@ class ToBase62 extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
+        input = new Uint8Array(input);
         if (input.length < 1) return "";
 
-        const ALPHABET = Utils.expandAlphRange(args[0]).join("");
-        const BN = BigNumber.clone({ ALPHABET });
+        const alphabet = Utils.expandAlphRange(args[0]).join("");
+        const BN62 = BigNumber.clone({ ALPHABET: alphabet });
 
         input = toHexFast(input).toUpperCase();
 
-        const number = new BN(input, 16);
+        // Read number in as hex using normal alphabet
+        const normalized = new BigNumber(input, 16);
+        // Copy to BigNumber clone that uses the specified Base62 alphabet
+        const number = new BN62(normalized);
 
         return number.toString(62);
     }

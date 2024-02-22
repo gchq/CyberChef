@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 /**
  * Convert data units operation
@@ -54,7 +54,7 @@ class ConvertDataUnits extends Operation {
 const DATA_UNITS = [
     "Bits (b)", "Nibbles", "Octets", "Bytes (B)",
     "[Binary bits (2^n)]", "Kibibits (Kib)", "Mebibits (Mib)", "Gibibits (Gib)", "Tebibits (Tib)", "Pebibits (Pib)", "Exbibits (Eib)", "Zebibits (Zib)", "Yobibits (Yib)", "[/Binary bits (2^n)]",
-    "[Decimal bits (10^n)]", "Decabits", "Hectobits", "Kilobits (kb)", "Megabits (Mb)", "Gigabits (Gb)", "Terabits (Tb)", "Petabits (Pb)", "Exabits (Eb)", "Zettabits (Zb)", "Yottabits (Yb)", "[/Decimal bits (10^n)]",
+    "[Decimal bits (10^n)]", "Decabits", "Hectobits", "Kilobits (Kb)", "Megabits (Mb)", "Gigabits (Gb)", "Terabits (Tb)", "Petabits (Pb)", "Exabits (Eb)", "Zettabits (Zb)", "Yottabits (Yb)", "[/Decimal bits (10^n)]",
     "[Binary bytes (8 x 2^n)]", "Kibibytes (KiB)", "Mebibytes (MiB)", "Gibibytes (GiB)", "Tebibytes (TiB)", "Pebibytes (PiB)", "Exbibytes (EiB)", "Zebibytes (ZiB)", "Yobibytes (YiB)", "[/Binary bytes (8 x 2^n)]",
     "[Decimal bytes (8 x 10^n)]", "Kilobytes (KB)", "Megabytes (MB)", "Gigabytes (GB)", "Terabytes (TB)", "Petabytes (PB)", "Exabytes (EB)", "Zettabytes (ZB)", "Yottabytes (YB)", "[/Decimal bytes (8 x 10^n)]"
 ];

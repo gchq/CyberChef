@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 import UAParser from "ua-parser-js";
 
 /**
@@ -25,6 +25,13 @@ class ParseUserAgent extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.checks = [
+            {
+                pattern:  "^(User-Agent:|Mozilla\\/)[^\\n\\r]+\\s*$",
+                flags:  "i",
+                args:   []
+            }
+        ];
     }
 
     /**

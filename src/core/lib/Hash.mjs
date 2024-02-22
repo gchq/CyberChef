@@ -7,8 +7,8 @@
  * @license Apache-2.0
  */
 
-import Utils from "../Utils";
-import CryptoApi from "crypto-api/src/crypto-api";
+import Utils from "../Utils.mjs";
+import CryptoApi from "crypto-api/src/crypto-api.mjs";
 
 
 /**

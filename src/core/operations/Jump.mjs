@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import { getLabelIndex } from "../lib/FlowControl";
+import Operation from "../Operation.mjs";
+import { getLabelIndex } from "../lib/FlowControl.mjs";
 
 /**
  * Jump operation
@@ -52,6 +52,7 @@ class Jump extends Operation {
         const jmpIndex = getLabelIndex(label, state);
 
         if (state.numJumps >= maxJumps || jmpIndex === -1) {
+            state.numJumps = 0;
             return state;
         }
 

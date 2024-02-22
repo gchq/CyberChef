@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import camelCase from "lodash/camelCase";
-import Operation from "../Operation";
-import { replaceVariableNames } from "../lib/Code";
+import camelCase from "lodash/camelCase.js";
+import Operation from "../Operation.mjs";
+import { replaceVariableNames } from "../lib/Code.mjs";
 
 /**
  * To Camel case operation

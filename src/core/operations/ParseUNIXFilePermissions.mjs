@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Parse UNIX file permissions operation
@@ -25,6 +25,13 @@ class ParseUNIXFilePermissions extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.checks = [
+            {
+                pattern:  "^\\s*d[rxw-]{9}\\s*$",
+                flags:  "",
+                args:   []
+            }
+        ];
     }
 
     /**

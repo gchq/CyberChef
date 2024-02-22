@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {LETTER_DELIM_OPTIONS, WORD_DELIM_OPTIONS} from "../lib/Delim";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import {LETTER_DELIM_OPTIONS, WORD_DELIM_OPTIONS} from "../lib/Delim.mjs";
 
 /**
  * From Morse Code operation
@@ -37,12 +37,12 @@ class FromMorseCode extends Operation {
                 "value": WORD_DELIM_OPTIONS
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                match: "(?:^[-. \\n]{5,}$|^[_. \\n]{5,}$|^(?:dash|dot| |\\n){5,}$)",
+                pattern: "(?:^[-. \\n]{5,}$|^[_. \\n]{5,}$|^(?:dash|dot| |\\n){5,}$)",
                 flags: "i",
                 args: ["Space", "Line feed"]
-            },
+            }
         ];
     }
 
@@ -59,7 +59,7 @@ class FromMorseCode extends Operation {
         const letterDelim = Utils.charRep(args[0]);
         const wordDelim = Utils.charRep(args[1]);
 
-        input = input.replace(/-|‐|−|_|–|—|dash/ig, "<dash>"); //hyphen-minus|hyphen|minus-sign|undersore|en-dash|em-dash
+        input = input.replace(/-|‐|−|_|–|—|dash/ig, "<dash>"); // hyphen-minus|hyphen|minus-sign|undersore|en-dash|em-dash
         input = input.replace(/\.|·|dot/ig, "<dot>");
 
         let words = input.split(wordDelim);
@@ -147,7 +147,8 @@ const MORSE_TABLE = {
     "=": "<dash><dot><dot><dot><dash>",
     "&": "<dot><dash><dot><dot><dot>",
     "_": "<dot><dot><dash><dash><dot><dash>",
-    "$": "<dot><dot><dot><dash><dot><dot><dash>"
+    "$": "<dot><dot><dot><dash><dot><dot><dash>",
+    " ": "<dot><dot><dot><dot><dot><dot><dot>"
 };
 
 export default FromMorseCode;

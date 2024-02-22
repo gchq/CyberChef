@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import Utils from "../Utils";
-import {fromHex} from "../lib/Hex";
+import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
+import {fromHex} from "../lib/Hex.mjs";
 
 /**
  * From Hex Content operation
@@ -26,6 +26,13 @@ class FromHexContent extends Operation {
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];
+        this.checks = [
+            {
+                pattern:  "\\|([\\da-f]{2} ?)+\\|",
+                flags:  "i",
+                args:   []
+            }
+        ];
     }
 
     /**
