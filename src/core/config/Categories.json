@@ -86,6 +86,8 @@
             "DES Decrypt",
             "Triple DES Encrypt",
             "Triple DES Decrypt",
+            "Fernet Encrypt",
+            "Fernet Decrypt",
             "LS47 Encrypt",
             "LS47 Decrypt",
             "RC2 Encrypt",
