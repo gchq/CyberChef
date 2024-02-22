@@ -27,29 +27,33 @@
 }
 
 #options:focus {
-    background-color: #ccddc5;
+    background-color: #eef3ec;
     border: solid black 2px;
+    border-radius: 4px;
 }
 
 #support:focus {
-    background-color: #e5e5e5;
+    background-color: #eef3ec;
     border: solid black 2px;
-
+    border-radius: 4px;
 }
 
 #notice:focus {
-    background-color: #ccddc5;
+    background-color: #eef3ec;
     border: solid black 2px;
+    border-radius: 4px;
 }
 
 #banner .col a:focus {
-    background-color: #ccddc5;
+    background-color: #eef3ec;
     border: solid black 2px;
+    border-radius: 4px;
 }
 
 #notice-wrapper #notice:focus {
-    background-color: #ccddc5;
+    background-color: #eef3ec;
     border: solid black 2px;
+    border-radius: 4px;
 }
 
 #notice-wrapper {
