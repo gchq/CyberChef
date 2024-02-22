@@ -22,7 +22,7 @@ class ParseEthernetFrame extends Operation {
 
         this.name = "Parse Ethernet frame";
         this.module = "Default";
-        this.description = "Parses an Ethernet frame and either shows the deduced values (Source and destination MAC, VLANs) or returns the packet data.\\n\\nGood for use in conjunction with the Parse IPv4, and Parse TCP/UDP recipes.";
+        this.description = "Parses an Ethernet frame and either shows the deduced values (Source and destination MAC, VLANs) or returns the packet data.<br /><br />Good for use in conjunction with the Parse IPv4, and Parse TCP/UDP recipes.";
         this.infoURL = "https://en.wikipedia.org/wiki/Ethernet_frame#Frame_%E2%80%93_data_link_layer";
         this.inputType = "string";
         this.outputType = "html";
