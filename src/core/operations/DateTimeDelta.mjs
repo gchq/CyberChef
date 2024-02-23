@@ -32,7 +32,7 @@ function parseTimeString(timeString) {
 }
 
 /**
- * DateTime Delta operation
+ * DateTime Delta operation 
  */
 class DateTimeDelta extends Operation {
 
