@@ -20,7 +20,7 @@ class DNSOverHTTPS extends Operation {
         this.name = "DNS over HTTPS";
         this.module = "Default";
         this.description = [
-            "Takes a single domain name and performs a DNS lookup using DNS over HTTPS.",
+            "Takes one or more FQDN(s) that are seperated by newlines, and performs a DNS lookup using DNS over HTTPS.",
             "<br><br>",
             "By default, <a href='https://developers.cloudflare.com/1.1.1.1/dns-over-https/'>Cloudflare</a> and <a href='https://developers.google.com/speed/public-dns/docs/dns-over-https'>Google</a> DNS over HTTPS services are supported.",
             "<br><br>",
@@ -99,24 +99,45 @@ class DNSOverHTTPS extends Operation {
             url = new URL(resolver);
         } catch (error) {
             throw new OperationError(error.toString() +
-            "\n\nThis error could be caused by one of the following:\n" +
-            " - An invalid Resolver URL\n");
+                "\n\nThis error could be caused by one of the following:\n" +
+                " - An invalid Resolver URL\n");
         }
-        const params = {name: input, type: requestType, cd: DNSSEC};
 
-        url.search = new URLSearchParams(params);
+        let fqdns = processInput(input);
 
-        return fetch(url, {headers: {"accept": "application/dns-json"}}).then(response => {
-            return response.json();
-        }).then(data => {
-            if (justAnswer) {
-                return extractData(data.Answer);
-            }
-            return data;
-        }).catch(e => {
-            throw new OperationError(`Error making request to ${url}\n${e.toString()}`);
-        });
+        let fqdnPromises = [];
 
+        for (let index = 0; index < fqdns.length; index++) {
+
+            const params = { name: fqdns[index], type: requestType, cd: DNSSEC };
+            url.search = new URLSearchParams(params);
+
+            let fqdnPromise = fetch(url, { headers: { "accept": "application/dns-json" } }).then(response => {
+                return response.json();
+            }).then(data => {
+                if (justAnswer) {
+                    if (data.Answer) {
+                        return extractData(data.Answer);
+                    } else {
+                        if(data.Question.length > 0){
+                            let r = {};
+                            r[data.Question[0].name] = null;
+                            return r;
+                        } else {
+                            return null;
+                        }
+                    }
+                } else {
+                    return data;
+                }
+            }).catch(e => {
+                return `Error making request to ${url}\n${e.toString()}`;
+            });
+
+            fqdnPromises.push(fqdnPromise);
+        }
+
+        return Promise.all(fqdnPromises);
     }
 }
 
@@ -128,15 +149,43 @@ class DNSOverHTTPS extends Operation {
  * @returns {JSON}
  */
 function extractData(data) {
-    if (typeof(data) == "undefined") {
+    if (typeof (data) == "undefined") {
         return [];
     } else {
-        const dataValues = [];
+        let dataValues = {};
         data.forEach(element => {
-            dataValues.push(element.data);
+            if (!(element.name in dataValues)) {
+                dataValues[element.name] = [];
+            }
+
+            if (!(element.data in dataValues[element.name])) {
+                dataValues[element.name].push(element.data);
+            }
         });
         return dataValues;
     }
+}
+
+/**
+ * Process and clean input data
+ *
+ * @private
+ * @param {string} input
+ * @returns {Array[string]} list of fqdns
+ */
+function processInput(input) {
+    let fqdns = [];
+    let fqdnRegex = /[A-Za-z0-9\.]*/;
+
+    input.split('\n').forEach((fqdn, index) => {
+        let m = fqdn.match(fqdnRegex);
+        if (m.length > 0) {
+            if (m[0] !== '') {
+                fqdns.push(m[0]);
+            }
+        }
+    });
+    return fqdns;
 }
 
 export default DNSOverHTTPS;
