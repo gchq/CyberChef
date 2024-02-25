@@ -88,11 +88,13 @@ module.exports = function (grunt) {
     );
 
     grunt.registerTask("default", "Lints the code base", [
+        "prettier",
         "eslint",
         "exec:repoSize",
     ]);
 
     grunt.registerTask("lint", "eslint");
+    grunt.registerTask("format", ["prettier"]);
 
     grunt.registerTask(
         "findModules",
@@ -127,6 +129,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-concurrent");
     grunt.loadNpmTasks("grunt-contrib-connect");
     grunt.loadNpmTasks("grunt-zip");
+    grunt.loadNpmTasks("grunt-prettier");
 
     // Project configuration
     const compileTime =
@@ -259,6 +262,14 @@ module.exports = function (grunt) {
             web: ["src/web/**/*.{js,mjs}", "!src/web/static/**/*"],
             node: ["src/node/**/*.{js,mjs}"],
             tests: ["tests/**/*.{js,mjs}"],
+        },
+        prettier: {
+            options: {
+                progress: false,
+            },
+            files: {
+                src: ["*.{js,mjs}", "src/**/*.{js,mjs}", "tests/**/*.{js,mjs}"],
+            },
         },
         webpack: {
             options: webpackConfig,
