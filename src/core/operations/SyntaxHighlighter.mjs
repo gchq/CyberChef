@@ -11,7 +11,6 @@ import hljs from "highlight.js";
  * Syntax highlighter operation
  */
 class SyntaxHighlighter extends Operation {
-
     /**
      * SyntaxHighlighter constructor
      */
@@ -20,16 +19,17 @@ class SyntaxHighlighter extends Operation {
 
         this.name = "Syntax highlighter";
         this.module = "Code";
-        this.description = "Adds syntax highlighting to a range of source code languages. Note that this will not indent the code. Use one of the 'Beautify' operations for that.";
+        this.description =
+            "Adds syntax highlighting to a range of source code languages. Note that this will not indent the code. Use one of the 'Beautify' operations for that.";
         this.infoURL = "https://wikipedia.org/wiki/Syntax_highlighting";
         this.inputType = "string";
         this.outputType = "html";
         this.args = [
             {
-                "name": "Language",
-                "type": "option",
-                "value": ["auto detect"].concat(hljs.listLanguages())
-            }
+                name: "Language",
+                type: "option",
+                value: ["auto detect"].concat(hljs.listLanguages()),
+            },
         ];
     }
 
@@ -73,7 +73,6 @@ class SyntaxHighlighter extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default SyntaxHighlighter;

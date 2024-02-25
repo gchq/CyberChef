@@ -7,14 +7,13 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
-import {isImage} from "../lib/FileType.mjs";
+import { isImage } from "../lib/FileType.mjs";
 import jimp from "jimp";
 
 /**
  * Split Colour Channels operation
  */
 class SplitColourChannels extends Operation {
-
     /**
      * SplitColourChannels constructor
      */
@@ -23,7 +22,8 @@ class SplitColourChannels extends Operation {
 
         this.name = "Split Colour Channels";
         this.module = "Image";
-        this.description = "Splits the given image into its red, green and blue colour channels.";
+        this.description =
+            "Splits the given image into its red, green and blue colour channels.";
         this.infoURL = "https://wikipedia.org/wiki/Channel_(digital_image)";
         this.inputType = "ArrayBuffer";
         this.outputType = "List<File>";
@@ -48,26 +48,44 @@ class SplitColourChannels extends Operation {
                 const split = parsedImage
                     .clone()
                     .color([
-                        {apply: "blue", params: [-255]},
-                        {apply: "green", params: [-255]}
+                        { apply: "blue", params: [-255] },
+                        { apply: "green", params: [-255] },
                     ])
                     .getBufferAsync(jimp.MIME_PNG);
-                resolve(new File([new Uint8Array((await split).values())], "red.png", {type: "image/png"}));
+                resolve(
+                    new File(
+                        [new Uint8Array((await split).values())],
+                        "red.png",
+                        { type: "image/png" },
+                    ),
+                );
             } catch (err) {
-                reject(new OperationError(`Could not split red channel: ${err}`));
+                reject(
+                    new OperationError(`Could not split red channel: ${err}`),
+                );
             }
         });
 
         const green = new Promise(async (resolve, reject) => {
             try {
-                const split = parsedImage.clone()
+                const split = parsedImage
+                    .clone()
                     .color([
-                        {apply: "red", params: [-255]},
-                        {apply: "blue", params: [-255]},
-                    ]).getBufferAsync(jimp.MIME_PNG);
-                resolve(new File([new Uint8Array((await split).values())], "green.png", {type: "image/png"}));
+                        { apply: "red", params: [-255] },
+                        { apply: "blue", params: [-255] },
+                    ])
+                    .getBufferAsync(jimp.MIME_PNG);
+                resolve(
+                    new File(
+                        [new Uint8Array((await split).values())],
+                        "green.png",
+                        { type: "image/png" },
+                    ),
+                );
             } catch (err) {
-                reject(new OperationError(`Could not split green channel: ${err}`));
+                reject(
+                    new OperationError(`Could not split green channel: ${err}`),
+                );
             }
         });
 
@@ -75,12 +93,21 @@ class SplitColourChannels extends Operation {
             try {
                 const split = parsedImage
                     .color([
-                        {apply: "red", params: [-255]},
-                        {apply: "green", params: [-255]},
-                    ]).getBufferAsync(jimp.MIME_PNG);
-                resolve(new File([new Uint8Array((await split).values())], "blue.png", {type: "image/png"}));
+                        { apply: "red", params: [-255] },
+                        { apply: "green", params: [-255] },
+                    ])
+                    .getBufferAsync(jimp.MIME_PNG);
+                resolve(
+                    new File(
+                        [new Uint8Array((await split).values())],
+                        "blue.png",
+                        { type: "image/png" },
+                    ),
+                );
             } catch (err) {
-                reject(new OperationError(`Could not split blue channel: ${err}`));
+                reject(
+                    new OperationError(`Could not split blue channel: ${err}`),
+                );
             }
         });
 
@@ -96,7 +123,6 @@ class SplitColourChannels extends Operation {
     async present(files) {
         return await Utils.displayFilesAsHTML(files);
     }
-
 }
 
 export default SplitColourChannels;

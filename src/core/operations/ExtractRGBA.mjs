@@ -9,13 +9,12 @@ import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import jimp from "jimp";
 
-import {RGBA_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import { RGBA_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 /**
  * Extract RGBA operation
  */
 class ExtractRGBA extends Operation {
-
     /**
      * ExtractRGBA constructor
      */
@@ -24,7 +23,8 @@ class ExtractRGBA extends Operation {
 
         this.name = "Extract RGBA";
         this.module = "Image";
-        this.description = "Extracts each pixel's RGBA value in an image. These are sometimes used in Steganography to hide text or data.";
+        this.description =
+            "Extracts each pixel's RGBA value in an image. These are sometimes used in Steganography to hide text or data.";
         this.infoURL = "https://wikipedia.org/wiki/RGBA_color_space";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -32,13 +32,13 @@ class ExtractRGBA extends Operation {
             {
                 name: "Delimiter",
                 type: "editableOption",
-                value: RGBA_DELIM_OPTIONS
+                value: RGBA_DELIM_OPTIONS,
             },
             {
                 name: "Include Alpha",
                 type: "boolean",
-                value: true
-            }
+                value: true,
+            },
         ];
     }
 
@@ -48,18 +48,20 @@ class ExtractRGBA extends Operation {
      * @returns {string}
      */
     async run(input, args) {
-        if (!isImage(input)) throw new OperationError("Please enter a valid image file.");
+        if (!isImage(input))
+            throw new OperationError("Please enter a valid image file.");
 
         const delimiter = args[0],
             includeAlpha = args[1],
             parsedImage = await jimp.read(input);
 
         let bitmap = parsedImage.bitmap.data;
-        bitmap = includeAlpha ? bitmap : bitmap.filter((val, idx) => idx % 4 !== 3);
+        bitmap = includeAlpha
+            ? bitmap
+            : bitmap.filter((val, idx) => idx % 4 !== 3);
 
         return bitmap.join(delimiter);
     }
-
 }
 
 export default ExtractRGBA;

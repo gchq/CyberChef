@@ -5,7 +5,10 @@
  */
 
 import Operation from "../Operation.mjs";
-import {COMPRESSION_TYPE, ZLIB_COMPRESSION_TYPE_LOOKUP} from "../lib/Zlib.mjs";
+import {
+    COMPRESSION_TYPE,
+    ZLIB_COMPRESSION_TYPE_LOOKUP,
+} from "../lib/Zlib.mjs";
 import gzip from "zlibjs/bin/gzip.min.js";
 
 const Zlib = gzip.Zlib;
@@ -14,7 +17,6 @@ const Zlib = gzip.Zlib;
  * Gzip operation
  */
 class Gzip extends Operation {
-
     /**
      * Gzip constructor
      */
@@ -23,7 +25,8 @@ class Gzip extends Operation {
 
         this.name = "Gzip";
         this.module = "Compression";
-        this.description = "Compresses data using the deflate algorithm with gzip headers.";
+        this.description =
+            "Compresses data using the deflate algorithm with gzip headers.";
         this.infoURL = "https://wikipedia.org/wiki/Gzip";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -31,23 +34,23 @@ class Gzip extends Operation {
             {
                 name: "Compression type",
                 type: "option",
-                value: COMPRESSION_TYPE
+                value: COMPRESSION_TYPE,
             },
             {
                 name: "Filename (optional)",
                 type: "string",
-                value: ""
+                value: "",
             },
             {
                 name: "Comment (optional)",
                 type: "string",
-                value: ""
+                value: "",
             },
             {
                 name: "Include file checksum",
                 type: "boolean",
-                value: false
-            }
+                value: false,
+            },
         ];
     }
 
@@ -61,11 +64,11 @@ class Gzip extends Operation {
             comment = args[2],
             options = {
                 deflateOptions: {
-                    compressionType: ZLIB_COMPRESSION_TYPE_LOOKUP[args[0]]
+                    compressionType: ZLIB_COMPRESSION_TYPE_LOOKUP[args[0]],
                 },
                 flags: {
-                    fhcrc: args[3]
-                }
+                    fhcrc: args[3],
+                },
             };
 
         if (filename.length) {
@@ -83,7 +86,6 @@ class Gzip extends Operation {
         }
         return compressed.buffer;
     }
-
 }
 
 export default Gzip;

@@ -14,7 +14,6 @@ import jimp from "jimp";
  * Convert Image Format operation
  */
 class ConvertImageFormat extends Operation {
-
     /**
      * ConvertImageFormat constructor
      */
@@ -23,7 +22,8 @@ class ConvertImageFormat extends Operation {
 
         this.name = "Convert Image Format";
         this.module = "Image";
-        this.description = "Converts an image between different formats. Supported formats:<br><ul><li>Joint Photographic Experts Group (JPEG)</li><li>Portable Network Graphics (PNG)</li><li>Bitmap (BMP)</li><li>Tagged Image File Format (TIFF)</li></ul><br>Note: GIF files are supported for input, but cannot be outputted.";
+        this.description =
+            "Converts an image between different formats. Supported formats:<br><ul><li>Joint Photographic Experts Group (JPEG)</li><li>Portable Network Graphics (PNG)</li><li>Bitmap (BMP)</li><li>Tagged Image File Format (TIFF)</li></ul><br>Note: GIF files are supported for input, but cannot be outputted.";
         this.infoURL = "https://wikipedia.org/wiki/Image_file_formats";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -32,39 +32,27 @@ class ConvertImageFormat extends Operation {
             {
                 name: "Output Format",
                 type: "option",
-                value: [
-                    "JPEG",
-                    "PNG",
-                    "BMP",
-                    "TIFF"
-                ]
+                value: ["JPEG", "PNG", "BMP", "TIFF"],
             },
             {
                 name: "JPEG Quality",
                 type: "number",
                 value: 80,
                 min: 1,
-                max: 100
+                max: 100,
             },
             {
                 name: "PNG Filter Type",
                 type: "option",
-                value: [
-                    "Auto",
-                    "None",
-                    "Sub",
-                    "Up",
-                    "Average",
-                    "Paeth"
-                ]
+                value: ["Auto", "None", "Sub", "Up", "Average", "Paeth"],
             },
             {
                 name: "PNG Deflate Level",
                 type: "number",
                 value: 9,
                 min: 0,
-                max: 9
-            }
+                max: 9,
+            },
         ];
     }
 
@@ -76,19 +64,19 @@ class ConvertImageFormat extends Operation {
     async run(input, args) {
         const [format, jpegQuality, pngFilterType, pngDeflateLevel] = args;
         const formatMap = {
-            "JPEG": jimp.MIME_JPEG,
-            "PNG": jimp.MIME_PNG,
-            "BMP": jimp.MIME_BMP,
-            "TIFF": jimp.MIME_TIFF
+            JPEG: jimp.MIME_JPEG,
+            PNG: jimp.MIME_PNG,
+            BMP: jimp.MIME_BMP,
+            TIFF: jimp.MIME_TIFF,
         };
 
         const pngFilterMap = {
-            "Auto": jimp.PNG_FILTER_AUTO,
-            "None": jimp.PNG_FILTER_NONE,
-            "Sub": jimp.PNG_FILTER_SUB,
-            "Up": jimp.PNG_FILTER_UP,
-            "Average": jimp.PNG_FILTER_AVERAGE,
-            "Paeth": jimp.PNG_FILTER_PATH
+            Auto: jimp.PNG_FILTER_AUTO,
+            None: jimp.PNG_FILTER_NONE,
+            Sub: jimp.PNG_FILTER_SUB,
+            Up: jimp.PNG_FILTER_UP,
+            Average: jimp.PNG_FILTER_AVERAGE,
+            Paeth: jimp.PNG_FILTER_PATH,
         };
 
         const mime = formatMap[format];
@@ -137,7 +125,6 @@ class ConvertImageFormat extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default ConvertImageFormat;

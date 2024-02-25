@@ -14,9 +14,9 @@ TestRegister.addTests([
         expectedOutput: "21b457a327ce7a2d4fce5ef2c42400bd",
         recipeConfig: [
             {
-                "op": "HASSH Client Fingerprint",
-                "args": ["Hex", "Hash digest"]
-            }
+                op: "HASSH Client Fingerprint",
+                args: ["Hex", "Hash digest"],
+            },
         ],
     },
     {
@@ -25,9 +25,9 @@ TestRegister.addTests([
         expectedOutput: "f430cd6761697a6a658ee1d45ed22e49",
         recipeConfig: [
             {
-                "op": "HASSH Server Fingerprint",
-                "args": ["Hex", "Hash digest"]
-            }
+                op: "HASSH Server Fingerprint",
+                args: ["Hex", "Hash digest"],
+            },
         ],
-    }
+    },
 ]);

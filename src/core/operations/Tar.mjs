@@ -11,7 +11,6 @@ import Utils from "../Utils.mjs";
  * Tar operation
  */
 class Tar extends Operation {
-
     /**
      * Tar constructor
      */
@@ -20,16 +19,17 @@ class Tar extends Operation {
 
         this.name = "Tar";
         this.module = "Compression";
-        this.description = "Packs the input into a tarball.<br><br>No support for multiple files at this time.";
+        this.description =
+            "Packs the input into a tarball.<br><br>No support for multiple files at this time.";
         this.infoURL = "https://wikipedia.org/wiki/Tar_(computing)";
         this.inputType = "ArrayBuffer";
         this.outputType = "File";
         this.args = [
             {
-                "name": "Filename",
-                "type": "string",
-                "value": "file.txt"
-            }
+                name: "Filename",
+                type: "string",
+                value: "file.txt",
+            },
         ];
     }
 
@@ -41,25 +41,25 @@ class Tar extends Operation {
     run(input, args) {
         input = new Uint8Array(input);
 
-        const Tarball = function() {
+        const Tarball = function () {
             this.bytes = new Array(512);
             this.position = 0;
         };
 
-        Tarball.prototype.addEmptyBlock = function() {
+        Tarball.prototype.addEmptyBlock = function () {
             const filler = new Array(512);
             filler.fill(0);
             this.bytes = this.bytes.concat(filler);
         };
 
-        Tarball.prototype.writeBytes = function(bytes) {
+        Tarball.prototype.writeBytes = function (bytes) {
             const self = this;
 
             if (this.position + bytes.length > this.bytes.length) {
                 this.addEmptyBlock();
             }
 
-            Array.prototype.forEach.call(bytes, function(b, i) {
+            Array.prototype.forEach.call(bytes, function (b, i) {
                 if (typeof b.charCodeAt !== "undefined") {
                     b = b.charCodeAt();
                 }
@@ -69,7 +69,7 @@ class Tar extends Operation {
             });
         };
 
-        Tarball.prototype.writeEndBlocks = function() {
+        Tarball.prototype.writeEndBlocks = function () {
             const numEmptyBlocks = 2;
             for (let i = 0; i < numEmptyBlocks; i++) {
                 this.addEmptyBlock();
@@ -102,7 +102,7 @@ class Tar extends Operation {
         let checksum = 0;
         for (const key in file) {
             const bytes = file[key];
-            Array.prototype.forEach.call(bytes, function(b) {
+            Array.prototype.forEach.call(bytes, function (b) {
                 if (typeof b.charCodeAt !== "undefined") {
                     checksum += b.charCodeAt();
                 } else {
@@ -110,7 +110,10 @@ class Tar extends Operation {
                 }
             });
         }
-        checksum = Utils.padBytesRight(checksum.toString(8).padStart(7, "0"), 8);
+        checksum = Utils.padBytesRight(
+            checksum.toString(8).padStart(7, "0"),
+            8,
+        );
         file.checksum = checksum;
 
         const tarball = new Tarball();
@@ -136,7 +139,6 @@ class Tar extends Operation {
 
         return new File([new Uint8Array(tarball.bytes)], args[0]);
     }
-
 }
 
 export default Tar;

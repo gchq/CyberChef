@@ -23,7 +23,8 @@ TestRegister.addTests([
     {
         name: "Symmetric Difference: wrong sample count",
         input: "1 2\n\n3 4 5\n\n3 4 5 6 7",
-        expectedOutput: "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?",
+        expectedOutput:
+            "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?",
         recipeConfig: [
             {
                 op: "Symmetric Difference",

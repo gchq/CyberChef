@@ -8,21 +8,24 @@
 import * as d3temp from "d3";
 import * as d3hexbintemp from "d3-hexbin";
 import * as nodomtemp from "nodom";
-import { getScatterValues, RECORD_DELIMITER_OPTIONS, COLOURS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts.mjs";
+import {
+    getScatterValues,
+    RECORD_DELIMITER_OPTIONS,
+    COLOURS,
+    FIELD_DELIMITER_OPTIONS,
+} from "../lib/Charts.mjs";
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 
 const d3 = d3temp.default ? d3temp.default : d3temp;
 const d3hexbin = d3hexbintemp.default ? d3hexbintemp.default : d3hexbintemp;
-const nodom = nodomtemp.default ? nodomtemp.default: nodomtemp;
-
+const nodom = nodomtemp.default ? nodomtemp.default : nodomtemp;
 
 /**
  * Hex Density chart operation
  */
 class HexDensityChart extends Operation {
-
     /**
      * HexDensityChart constructor
      */
@@ -31,7 +34,8 @@ class HexDensityChart extends Operation {
 
         this.name = "Hex Density chart";
         this.module = "Charts";
-        this.description = "Hex density charts are used in a similar way to scatter charts, however rather than rendering tens of thousands of points, it groups the points into a few hundred hexagons to show the distribution.";
+        this.description =
+            "Hex density charts are used in a similar way to scatter charts, however rather than rendering tens of thousands of points, it groups the points into a few hundred hexagons to show the distribution.";
         this.inputType = "string";
         this.outputType = "html";
         this.args = [
@@ -89,10 +93,9 @@ class HexDensityChart extends Operation {
                 name: "Draw empty hexagons within data boundaries",
                 type: "boolean",
                 value: false,
-            }
+            },
         ];
     }
-
 
     /**
      * Hex Bin chart operation.
@@ -119,7 +122,7 @@ class HexDensityChart extends Operation {
             input,
             recordDelimiter,
             fieldDelimiter,
-            columnHeadingsAreIncluded
+            columnHeadingsAreIncluded,
         );
 
         if (headings) {
@@ -129,7 +132,8 @@ class HexDensityChart extends Operation {
 
         const document = new nodom.Document();
         let svg = document.createElement("svg");
-        svg = d3.select(svg)
+        svg = d3
+            .select(svg)
             .attr("width", "100%")
             .attr("height", "100%")
             .attr("viewBox", `0 0 ${dimension} ${dimension}`);
@@ -142,54 +146,60 @@ class HexDensityChart extends Operation {
             },
             width = dimension - margin.left - margin.right,
             height = dimension - margin.top - margin.bottom,
-            marginedSpace = svg.append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            marginedSpace = svg
+                .append("g")
+                .attr(
+                    "transform",
+                    "translate(" + margin.left + "," + margin.top + ")",
+                );
 
-        const hexbin = d3hexbin.hexbin()
+        const hexbin = d3hexbin
+            .hexbin()
             .radius(packRadius)
             .extent([0, 0], [width, height]);
 
         const hexPoints = hexbin(values),
-            maxCount = Math.max(...hexPoints.map(b => b.length));
+            maxCount = Math.max(...hexPoints.map((b) => b.length));
 
-        const xExtent = d3.extent(hexPoints, d => d.x),
-            yExtent = d3.extent(hexPoints, d => d.y);
+        const xExtent = d3.extent(hexPoints, (d) => d.x),
+            yExtent = d3.extent(hexPoints, (d) => d.y);
         xExtent[0] -= 2 * packRadius;
         xExtent[1] += 3 * packRadius;
         yExtent[0] -= 2 * packRadius;
         yExtent[1] += 2 * packRadius;
 
-        const xAxis = d3.scaleLinear()
-            .domain(xExtent)
-            .range([0, width]);
-        const yAxis = d3.scaleLinear()
-            .domain(yExtent)
-            .range([height, 0]);
+        const xAxis = d3.scaleLinear().domain(xExtent).range([0, width]);
+        const yAxis = d3.scaleLinear().domain(yExtent).range([height, 0]);
 
-        const colour = d3.scaleSequential(d3.interpolateLab(minColour, maxColour))
+        const colour = d3
+            .scaleSequential(d3.interpolateLab(minColour, maxColour))
             .domain([0, maxCount]);
 
-        marginedSpace.append("clipPath")
+        marginedSpace
+            .append("clipPath")
             .attr("id", "clip")
             .append("rect")
             .attr("width", width)
             .attr("height", height);
 
         if (drawEmptyHexagons) {
-            marginedSpace.append("g")
+            marginedSpace
+                .append("g")
                 .attr("class", "empty-hexagon")
                 .selectAll("path")
                 .data(this.getEmptyHexagons(hexPoints, packRadius))
                 .enter()
                 .append("path")
-                .attr("d", d => {
-                    return `M${xAxis(d.x)},${yAxis(d.y)} ${hexbin.hexagon(drawRadius)}`;
+                .attr("d", (d) => {
+                    return `M${xAxis(d.x)},${yAxis(d.y)} ${hexbin.hexagon(
+                        drawRadius,
+                    )}`;
                 })
                 .attr("fill", (d) => colour(0))
                 .attr("stroke", drawEdges ? "black" : "none")
                 .attr("stroke-width", drawEdges ? "0.5" : "none")
                 .append("title")
-                .text(d => {
+                .text((d) => {
                     const count = 0,
                         perc = 0,
                         tooltip = `Count: ${count}\n
@@ -200,29 +210,32 @@ class HexDensityChart extends Operation {
                 });
         }
 
-        marginedSpace.append("g")
+        marginedSpace
+            .append("g")
             .attr("class", "hexagon")
             .attr("clip-path", "url(#clip)")
             .selectAll("path")
             .data(hexPoints)
             .enter()
             .append("path")
-            .attr("d", d => {
-                return `M${xAxis(d.x)},${yAxis(d.y)} ${hexbin.hexagon(drawRadius)}`;
+            .attr("d", (d) => {
+                return `M${xAxis(d.x)},${yAxis(d.y)} ${hexbin.hexagon(
+                    drawRadius,
+                )}`;
             })
             .attr("fill", (d) => colour(d.length))
             .attr("stroke", drawEdges ? "black" : "none")
             .attr("stroke-width", drawEdges ? "0.5" : "none")
             .append("title")
-            .text(d => {
+            .text((d) => {
                 const count = d.length,
-                    perc = 100.0 * d.length / values.length,
+                    perc = (100.0 * d.length) / values.length,
                     CX = d.x,
                     CY = d.y,
-                    xMin = Math.min(...d.map(d => d[0])),
-                    xMax = Math.max(...d.map(d => d[0])),
-                    yMin = Math.min(...d.map(d => d[1])),
-                    yMax = Math.max(...d.map(d => d[1])),
+                    xMin = Math.min(...d.map((d) => d[0])),
+                    xMax = Math.max(...d.map((d) => d[0])),
+                    yMin = Math.min(...d.map((d) => d[1])),
+                    yMax = Math.max(...d.map((d) => d[1])),
                     tooltip = `Count: ${count}\n
                                Percentage: ${perc.toFixed(2)}%\n
                                Center: ${CX.toFixed(2)}, ${CY.toFixed(2)}\n
@@ -234,7 +247,8 @@ class HexDensityChart extends Operation {
                 return tooltip;
             });
 
-        marginedSpace.append("g")
+        marginedSpace
+            .append("g")
             .attr("class", "axis axis--y")
             .call(d3.axisLeft(yAxis).tickSizeOuter(-width));
 
@@ -246,7 +260,8 @@ class HexDensityChart extends Operation {
             .style("text-anchor", "middle")
             .text(yLabel);
 
-        marginedSpace.append("g")
+        marginedSpace
+            .append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(xAxis).tickSizeOuter(-height));
@@ -260,7 +275,6 @@ class HexDensityChart extends Operation {
         return svg._groups[0][0].outerHTML;
     }
 
-
     /**
      * Hex Bin chart operation.
      *
@@ -270,27 +284,37 @@ class HexDensityChart extends Operation {
      */
     getEmptyHexagons(centres, radius) {
         const emptyCentres = [],
-            boundingRect = [d3.extent(centres, d => d.x), d3.extent(centres, d => d.y)],
-            hexagonCenterToEdge = Math.cos(2 * Math.PI / 12) * radius,
-            hexagonEdgeLength = Math.sin(2 * Math.PI / 12) * radius;
+            boundingRect = [
+                d3.extent(centres, (d) => d.x),
+                d3.extent(centres, (d) => d.y),
+            ],
+            hexagonCenterToEdge = Math.cos((2 * Math.PI) / 12) * radius,
+            hexagonEdgeLength = Math.sin((2 * Math.PI) / 12) * radius;
         let indent = false;
 
-        for (let y = boundingRect[1][0]; y <= boundingRect[1][1] + radius; y += hexagonEdgeLength + radius) {
-            for (let x = boundingRect[0][0]; x <= boundingRect[0][1] + radius; x += 2 * hexagonCenterToEdge) {
+        for (
+            let y = boundingRect[1][0];
+            y <= boundingRect[1][1] + radius;
+            y += hexagonEdgeLength + radius
+        ) {
+            for (
+                let x = boundingRect[0][0];
+                x <= boundingRect[0][1] + radius;
+                x += 2 * hexagonCenterToEdge
+            ) {
                 let cx = x;
                 const cy = y;
 
                 if (indent && x >= boundingRect[0][1]) break;
                 if (indent) cx += hexagonCenterToEdge;
 
-                emptyCentres.push({x: cx, y: cy});
+                emptyCentres.push({ x: cx, y: cy });
             }
             indent = !indent;
         }
 
         return emptyCentres;
     }
-
 }
 
 export default HexDensityChart;

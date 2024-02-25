@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * URL Encode operation
  */
 class URLEncode extends Operation {
-
     /**
      * URLEncode constructor
      */
@@ -19,16 +18,17 @@ class URLEncode extends Operation {
 
         this.name = "URL Encode";
         this.module = "URL";
-        this.description = "Encodes problematic characters into percent-encoding, a format supported by URIs/URLs.<br><br>e.g. <code>=</code> becomes <code>%3d</code>";
+        this.description =
+            "Encodes problematic characters into percent-encoding, a format supported by URIs/URLs.<br><br>e.g. <code>=</code> becomes <code>%3d</code>";
         this.infoURL = "https://wikipedia.org/wiki/Percent-encoding";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Encode all special chars",
-                "type": "boolean",
-                "value": false
-            }
+                name: "Encode all special chars",
+                type: "boolean",
+                value: false,
+            },
         ];
     }
 
@@ -48,7 +48,7 @@ class URLEncode extends Operation {
      * @param {string} str
      * @returns {string}
      */
-    encodeAllChars (str) {
+    encodeAllChars(str) {
         // TODO Do this programmatically
         return encodeURIComponent(str)
             .replace(/!/g, "%21")
@@ -62,8 +62,6 @@ class URLEncode extends Operation {
             .replace(/_/g, "%5F")
             .replace(/~/g, "%7E");
     }
-
 }
-
 
 export default URLEncode;

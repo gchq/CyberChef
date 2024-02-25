@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Swap case operation
  */
 class SwapCase extends Operation {
-
     /**
      * SwapCase constructor
      */
@@ -19,7 +18,8 @@ class SwapCase extends Operation {
 
         this.name = "Swap case";
         this.module = "Default";
-        this.description = "Converts uppercase letters to lowercase ones, and lowercase ones to uppercase ones.";
+        this.description =
+            "Converts uppercase letters to lowercase ones, and lowercase ones to uppercase ones.";
         this.infoURL = "";
         this.inputType = "string";
         this.outputType = "string";
@@ -70,7 +70,6 @@ class SwapCase extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default SwapCase;

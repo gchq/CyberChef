@@ -15,6 +15,6 @@
  */
 export function getLabelIndex(name, state) {
     return state.opList.findIndex((operation) => {
-        return (operation.name === "Label") && (name === operation.ingValues[0]);
+        return operation.name === "Label" && name === operation.ingValues[0];
     });
 }

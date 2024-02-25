@@ -9,7 +9,6 @@
  */
 import TestRegister from "../../lib/TestRegister.mjs";
 
-
 TestRegister.addTests([
     {
         name: "Affine Encode: no input",
@@ -18,8 +17,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Encode",
-                args: [1, 0]
-            }
+                args: [1, 0],
+            },
         ],
     },
     {
@@ -29,8 +28,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Encode",
-                args: [0.1, 0.00001]
-            }
+                args: [0.1, 0.00001],
+            },
         ],
     },
     {
@@ -40,8 +39,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Encode",
-                args: [1, 0]
-            }
+                args: [1, 0],
+            },
         ],
     },
     {
@@ -51,8 +50,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Encode",
-                args: [23, 23]
-            }
+                args: [23, 23],
+            },
         ],
     },
     {
@@ -62,8 +61,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Decode",
-                args: [1, 0]
-            }
+                args: [1, 0],
+            },
         ],
     },
     {
@@ -73,8 +72,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Decode",
-                args: [0.1, 0.00001]
-            }
+                args: [0.1, 0.00001],
+            },
         ],
     },
     {
@@ -84,8 +83,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Decode",
-                args: [8, 23]
-            }
+                args: [8, 23],
+            },
         ],
     },
     {
@@ -95,8 +94,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Decode",
-                args: [1, 0]
-            }
+                args: [1, 0],
+            },
         ],
     },
     {
@@ -106,8 +105,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Decode",
-                args: [23, 23]
-            }
+                args: [23, 23],
+            },
         ],
     },
     {
@@ -117,8 +116,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "A1Z26 Cipher Encode",
-                args: ["Space"]
-            }
+                args: ["Space"],
+            },
         ],
     },
     {
@@ -128,8 +127,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "A1Z26 Cipher Decode",
-                args: ["Space"]
-            }
+                args: ["Space"],
+            },
         ],
     },
     {
@@ -139,8 +138,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "A1Z26 Cipher Decode",
-                args: ["Space"]
-            }
+                args: ["Space"],
+            },
         ],
     },
     {
@@ -150,8 +149,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Atbash Cipher",
-                args: []
-            }
+                args: [],
+            },
         ],
     },
     {
@@ -161,8 +160,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Atbash Cipher",
-                args: []
-            }
+                args: [],
+            },
         ],
     },
     {
@@ -171,42 +170,45 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                "op": "Bifid Cipher Encode",
-                "args": ["nothing"]
-            }
+                op: "Bifid Cipher Encode",
+                args: ["nothing"],
+            },
         ],
     },
     {
         name: "Bifid Cipher Encode: no key",
         input: "We recreate conditions similar to the Van-Allen radiation belt in our secure facilities.",
-        expectedOutput: "Vq daqcliho rmltofvlnc qbdhlcr nt qdq Fbm-Rdkkm vuoottnoi aitp al axf tdtmvt owppkaodtx.",
+        expectedOutput:
+            "Vq daqcliho rmltofvlnc qbdhlcr nt qdq Fbm-Rdkkm vuoottnoi aitp al axf tdtmvt owppkaodtx.",
         recipeConfig: [
             {
-                "op": "Bifid Cipher Encode",
-                "args": [""]
-            }
+                op: "Bifid Cipher Encode",
+                args: [""],
+            },
         ],
     },
     {
         name: "Bifid Cipher Encode: invalid key (non-alphabetic)",
         input: "We recreate conditions similar to the Van-Allen radiation belt in our secure facilities.",
-        expectedOutput: "The key must consist only of letters in the English alphabet",
+        expectedOutput:
+            "The key must consist only of letters in the English alphabet",
         recipeConfig: [
             {
-                "op": "Bifid Cipher Encode",
-                "args": ["abc123"]
-            }
+                op: "Bifid Cipher Encode",
+                args: ["abc123"],
+            },
         ],
     },
     {
         name: "Bifid Cipher Encode: normal",
         input: "We recreate conditions similar to the Van-Allen radiation belt in our secure facilities.",
-        expectedOutput: "Wc snpsigdd cpfrrcxnfi hikdnnp dm crc Fcb-Pdeug vueageacc vtyl sa zxm crebzp lyoeuaiwpv.",
+        expectedOutput:
+            "Wc snpsigdd cpfrrcxnfi hikdnnp dm crc Fcb-Pdeug vueageacc vtyl sa zxm crebzp lyoeuaiwpv.",
         recipeConfig: [
             {
-                "op": "Bifid Cipher Encode",
-                "args": ["Schrodinger"]
-            }
+                op: "Bifid Cipher Encode",
+                args: ["Schrodinger"],
+            },
         ],
     },
     {
@@ -215,42 +217,45 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                "op": "Bifid Cipher Decode",
-                "args": ["nothing"]
-            }
+                op: "Bifid Cipher Decode",
+                args: ["nothing"],
+            },
         ],
     },
     {
         name: "Bifid Cipher Decode: no key",
         input: "Vq daqcliho rmltofvlnc qbdhlcr nt qdq Fbm-Rdkkm vuoottnoi aitp al axf tdtmvt owppkaodtx.",
-        expectedOutput: "We recreate conditions similar to the Van-Allen radiation belt in our secure facilities.",
+        expectedOutput:
+            "We recreate conditions similar to the Van-Allen radiation belt in our secure facilities.",
         recipeConfig: [
             {
-                "op": "Bifid Cipher Decode",
-                "args": [""]
-            }
+                op: "Bifid Cipher Decode",
+                args: [""],
+            },
         ],
     },
     {
         name: "Bifid Cipher Decode: invalid key (non-alphabetic)",
         input: "Vq daqcliho rmltofvlnc qbdhlcr nt qdq Fbm-Rdkkm vuoottnoi aitp al axf tdtmvt owppkaodtx.",
-        expectedOutput: "The key must consist only of letters in the English alphabet",
+        expectedOutput:
+            "The key must consist only of letters in the English alphabet",
         recipeConfig: [
             {
-                "op": "Bifid Cipher Decode",
-                "args": ["abc123"]
-            }
+                op: "Bifid Cipher Decode",
+                args: ["abc123"],
+            },
         ],
     },
     {
         name: "Bifid Cipher Decode: normal",
         input: "Wc snpsigdd cpfrrcxnfi hikdnnp dm crc Fcb-Pdeug vueageacc vtyl sa zxm crebzp lyoeuaiwpv.",
-        expectedOutput: "We recreate conditions similar to the Van-Allen radiation belt in our secure facilities.",
+        expectedOutput:
+            "We recreate conditions similar to the Van-Allen radiation belt in our secure facilities.",
         recipeConfig: [
             {
-                "op": "Bifid Cipher Decode",
-                "args": ["Schrodinger"]
-            }
+                op: "Bifid Cipher Decode",
+                args: ["Schrodinger"],
+            },
         ],
     },
     {
@@ -259,9 +264,9 @@ TestRegister.addTests([
         expectedOutput: "PFFAJEDBOHECJEDBODEGIMCJPOFLJKDPKLAO",
         recipeConfig: [
             {
-                "op": "Citrix CTX1 Encode",
-                "args": []
-            }
+                op: "Citrix CTX1 Encode",
+                args: [],
+            },
         ],
     },
     {
@@ -270,9 +275,9 @@ TestRegister.addTests([
         expectedOutput: "Password1",
         recipeConfig: [
             {
-                "op": "Citrix CTX1 Decode",
-                "args": []
-            }
+                op: "Citrix CTX1 Decode",
+                args: [],
+            },
         ],
     },
     {
@@ -281,9 +286,9 @@ TestRegister.addTests([
         expectedOutput: "Incorrect hash length",
         recipeConfig: [
             {
-                "op": "Citrix CTX1 Decode",
-                "args": []
-            }
+                op: "Citrix CTX1 Decode",
+                args: [],
+            },
         ],
     },
     {
@@ -292,9 +297,9 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                "op": "Vigenère Encode",
-                "args": ["nothing"]
-            }
+                op: "Vigenère Encode",
+                args: ["nothing"],
+            },
         ],
     },
     {
@@ -303,9 +308,9 @@ TestRegister.addTests([
         expectedOutput: "No key entered",
         recipeConfig: [
             {
-                "op": "Vigenère Encode",
-                "args": [""]
-            }
+                op: "Vigenère Encode",
+                args: [""],
+            },
         ],
     },
     {
@@ -314,20 +319,21 @@ TestRegister.addTests([
         expectedOutput: "The key must consist only of letters",
         recipeConfig: [
             {
-                "op": "Vigenère Encode",
-                "args": ["abc123"]
-            }
+                op: "Vigenère Encode",
+                args: ["abc123"],
+            },
         ],
     },
     {
         name: "Vigenère Encode: normal",
         input: "LUGGAGEBASEMENTVARENNESALLIESCANBECLOTHEDASENEMIESENEMIESCANBECLOTHEDASALLIESALWAYSUSEID",
-        expectedOutput: "PXCGRJIEWSVPIQPVRUIQJEJDPOEEJFEQXETOSWDEUDWHJEDLIVANVPMHOCRQFHYLFWLHZAJDPOEEJDPZWYJXWHED",
+        expectedOutput:
+            "PXCGRJIEWSVPIQPVRUIQJEJDPOEEJFEQXETOSWDEUDWHJEDLIVANVPMHOCRQFHYLFWLHZAJDPOEEJDPZWYJXWHED",
         recipeConfig: [
             {
-                "op": "Vigenère Encode",
-                "args": ["Edward"]
-            }
+                op: "Vigenère Encode",
+                args: ["Edward"],
+            },
         ],
     },
     {
@@ -336,9 +342,9 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                "op": "Vigenère Decode",
-                "args": ["nothing"]
-            }
+                op: "Vigenère Decode",
+                args: ["nothing"],
+            },
         ],
     },
     {
@@ -347,9 +353,9 @@ TestRegister.addTests([
         expectedOutput: "No key entered",
         recipeConfig: [
             {
-                "op": "Vigenère Decode",
-                "args": [""]
-            }
+                op: "Vigenère Decode",
+                args: [""],
+            },
         ],
     },
     {
@@ -358,20 +364,21 @@ TestRegister.addTests([
         expectedOutput: "The key must consist only of letters",
         recipeConfig: [
             {
-                "op": "Vigenère Decode",
-                "args": ["abc123"]
-            }
+                op: "Vigenère Decode",
+                args: ["abc123"],
+            },
         ],
     },
     {
         name: "Vigenère Decode: normal",
         input: "PXCGRJIEWSVPIQPVRUIQJEJDPOEEJFEQXETOSWDEUDWHJEDLIVANVPMHOCRQFHYLFWLHZAJDPOEEJDPZWYJXWHED",
-        expectedOutput: "LUGGAGEBASEMENTVARENNESALLIESCANBECLOTHEDASENEMIESENEMIESCANBECLOTHEDASALLIESALWAYSUSEID",
+        expectedOutput:
+            "LUGGAGEBASEMENTVARENNESALLIESCANBECLOTHEDASENEMIESENEMIESCANBECLOTHEDASALLIESALWAYSUSEID",
         recipeConfig: [
             {
-                "op": "Vigenère Decode",
-                "args": ["Edward"]
-            }
+                op: "Vigenère Decode",
+                args: ["Edward"],
+            },
         ],
     },
     {
@@ -380,9 +387,9 @@ TestRegister.addTests([
         expectedOutput: "flee at once. we are discovered!",
         recipeConfig: [
             {
-                "op": "Substitute",
-                "args": ["", ""]
-            }
+                op: "Substitute",
+                args: ["", ""],
+            },
         ],
     },
     {
@@ -391,20 +398,27 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                "op": "Substitute",
-                "args": ["abcdefghijklmnopqrstuvwxyz", "zebrascdfghijklmnopqtuvwxy"]
-            }
+                op: "Substitute",
+                args: [
+                    "abcdefghijklmnopqrstuvwxyz",
+                    "zebrascdfghijklmnopqtuvwxy",
+                ],
+            },
         ],
     },
     {
         name: "Substitute: uneven pt/ct",
         input: "flee at once. we are discovered!",
-        expectedOutput: "Warning: Plaintext and Ciphertext lengths differ\n\nsiaa zq lkba. va zoa rfpbluaoar!",
+        expectedOutput:
+            "Warning: Plaintext and Ciphertext lengths differ\n\nsiaa zq lkba. va zoa rfpbluaoar!",
         recipeConfig: [
             {
-                "op": "Substitute",
-                "args": ["abcdefghijklmnopqrstuvwxyz", "zebrascdfghijklmnopqtuvwx"]
-            }
+                op: "Substitute",
+                args: [
+                    "abcdefghijklmnopqrstuvwxyz",
+                    "zebrascdfghijklmnopqtuvwx",
+                ],
+            },
         ],
     },
     {
@@ -413,9 +427,12 @@ TestRegister.addTests([
         expectedOutput: "siaa zq lkba. va zoa rfpbluaoar!",
         recipeConfig: [
             {
-                "op": "Substitute",
-                "args": ["abcdefghijklmnopqrstuvwxyz", "zebrascdfghijklmnopqtuvwxy"]
-            }
+                op: "Substitute",
+                args: [
+                    "abcdefghijklmnopqrstuvwxyz",
+                    "zebrascdfghijklmnopqtuvwxy",
+                ],
+            },
         ],
     },
     {
@@ -424,9 +441,9 @@ TestRegister.addTests([
         expectedOutput: "Cryptography is THE Art of Writing or solving codes",
         recipeConfig: [
             {
-                "op": "Rail Fence Cipher Decode",
-                "args": [2, 0]
-            }
+                op: "Rail Fence Cipher Decode",
+                args: [2, 0],
+            },
         ],
     },
     {
@@ -435,9 +452,9 @@ TestRegister.addTests([
         expectedOutput: "Key has to be bigger than 2",
         recipeConfig: [
             {
-                "op": "Rail Fence Cipher Decode",
-                "args": [1, 0]
-            }
+                op: "Rail Fence Cipher Decode",
+                args: [1, 0],
+            },
         ],
     },
     {
@@ -446,9 +463,9 @@ TestRegister.addTests([
         expectedOutput: "Key should be smaller than the cipher's length",
         recipeConfig: [
             {
-                "op": "Rail Fence Cipher Decode",
-                "args": [22, 0]
-            }
+                op: "Rail Fence Cipher Decode",
+                args: [22, 0],
+            },
         ],
     },
     {
@@ -457,9 +474,9 @@ TestRegister.addTests([
         expectedOutput: "Offset has to be a positive integer",
         recipeConfig: [
             {
-                "op": "Rail Fence Cipher Decode",
-                "args": [2, -1]
-            }
+                op: "Rail Fence Cipher Decode",
+                args: [2, -1],
+            },
         ],
     },
     {
@@ -468,9 +485,9 @@ TestRegister.addTests([
         expectedOutput: "12345678901234567890",
         recipeConfig: [
             {
-                "op": "Rail Fence Cipher Decode",
-                "args": [4, 2]
-            }
+                op: "Rail Fence Cipher Decode",
+                args: [4, 2],
+            },
         ],
     },
     {
@@ -479,9 +496,9 @@ TestRegister.addTests([
         expectedOutput: "Cytgah sTEAto rtn rsligcdsrporpyi H r fWiigo ovn oe",
         recipeConfig: [
             {
-                "op": "Rail Fence Cipher Encode",
-                "args": [2, 0]
-            }
+                op: "Rail Fence Cipher Encode",
+                args: [2, 0],
+            },
         ],
     },
     {
@@ -490,9 +507,9 @@ TestRegister.addTests([
         expectedOutput: "Key has to be bigger than 2",
         recipeConfig: [
             {
-                "op": "Rail Fence Cipher Encode",
-                "args": [1, 0]
-            }
+                op: "Rail Fence Cipher Encode",
+                args: [1, 0],
+            },
         ],
     },
     {
@@ -501,9 +518,9 @@ TestRegister.addTests([
         expectedOutput: "Key should be smaller than the plain text's length",
         recipeConfig: [
             {
-                "op": "Rail Fence Cipher Encode",
-                "args": [22, 0]
-            }
+                op: "Rail Fence Cipher Encode",
+                args: [22, 0],
+            },
         ],
     },
     {
@@ -512,9 +529,9 @@ TestRegister.addTests([
         expectedOutput: "Offset has to be a positive integer",
         recipeConfig: [
             {
-                "op": "Rail Fence Cipher Encode",
-                "args": [2, -1]
-            }
+                op: "Rail Fence Cipher Encode",
+                args: [2, -1],
+            },
         ],
     },
     {
@@ -523,9 +540,9 @@ TestRegister.addTests([
         expectedOutput: "51746026813793592840",
         recipeConfig: [
             {
-                "op": "Rail Fence Cipher Encode",
-                "args": [4, 2]
-            }
+                op: "Rail Fence Cipher Encode",
+                args: [4, 2],
+            },
         ],
     },
 ]);

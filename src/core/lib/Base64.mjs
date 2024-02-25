@@ -23,7 +23,7 @@ import OperationError from "../errors/OperationError.mjs";
  * // returns "SGVsbG8="
  * toBase64("Hello");
  */
-export function toBase64(data, alphabet="A-Za-z0-9+/=") {
+export function toBase64(data, alphabet = "A-Za-z0-9+/=") {
     if (!data) return "";
     if (typeof data == "string") {
         data = Utils.strToArrayBuffer(data);
@@ -33,13 +33,21 @@ export function toBase64(data, alphabet="A-Za-z0-9+/=") {
     }
 
     alphabet = Utils.expandAlphRange(alphabet).join("");
-    if (alphabet.length !== 64 && alphabet.length !== 65) { // Allow for padding
-        throw new OperationError(`Invalid Base64 alphabet length (${alphabet.length}): ${alphabet}`);
+    if (alphabet.length !== 64 && alphabet.length !== 65) {
+        // Allow for padding
+        throw new OperationError(
+            `Invalid Base64 alphabet length (${alphabet.length}): ${alphabet}`,
+        );
     }
 
     let output = "",
-        chr1, chr2, chr3,
-        enc1, enc2, enc3, enc4,
+        chr1,
+        chr2,
+        chr3,
+        enc1,
+        enc2,
+        enc3,
+        enc4,
         i = 0;
 
     while (i < data.length) {
@@ -58,13 +66,15 @@ export function toBase64(data, alphabet="A-Za-z0-9+/=") {
             enc4 = 64;
         }
 
-        output += alphabet.charAt(enc1) + alphabet.charAt(enc2) +
-            alphabet.charAt(enc3) + alphabet.charAt(enc4);
+        output +=
+            alphabet.charAt(enc1) +
+            alphabet.charAt(enc2) +
+            alphabet.charAt(enc3) +
+            alphabet.charAt(enc4);
     }
 
     return output;
 }
-
 
 /**
  * UnBase64's the input string using the given alphabet, returning a byte array.
@@ -82,7 +92,13 @@ export function toBase64(data, alphabet="A-Za-z0-9+/=") {
  * // returns [72, 101, 108, 108, 111]
  * fromBase64("SGVsbG8=", null, "byteArray");
  */
-export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", removeNonAlphChars=true, strictMode=false) {
+export function fromBase64(
+    data,
+    alphabet = "A-Za-z0-9+/=",
+    returnType = "string",
+    removeNonAlphChars = true,
+    strictMode = false,
+) {
     if (!data) {
         return returnType === "string" ? "" : [];
     }
@@ -91,42 +107,63 @@ export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", r
     alphabet = Utils.expandAlphRange(alphabet).join("");
 
     // Confirm alphabet is a valid length
-    if (alphabet.length !== 64 && alphabet.length !== 65) { // Allow for padding
-        throw new OperationError(`Error: Base64 alphabet should be 64 characters long, or 65 with a padding character. Found ${alphabet.length}: ${alphabet}`);
+    if (alphabet.length !== 64 && alphabet.length !== 65) {
+        // Allow for padding
+        throw new OperationError(
+            `Error: Base64 alphabet should be 64 characters long, or 65 with a padding character. Found ${alphabet.length}: ${alphabet}`,
+        );
     }
 
     // Remove non-alphabet characters
     if (removeNonAlphChars) {
-        const re = new RegExp("[^" + alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
+        const re = new RegExp(
+            "[^" + alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]",
+            "g",
+        );
         data = data.replace(re, "");
     }
 
     if (strictMode) {
         // Check for incorrect lengths (even without padding)
         if (data.length % 4 === 1) {
-            throw new OperationError(`Error: Invalid Base64 input length (${data.length}). Cannot be 4n+1, even without padding chars.`);
+            throw new OperationError(
+                `Error: Invalid Base64 input length (${data.length}). Cannot be 4n+1, even without padding chars.`,
+            );
         }
 
-        if (alphabet.length === 65) { // Padding character included
+        if (alphabet.length === 65) {
+            // Padding character included
             const pad = alphabet.charAt(64);
             const padPos = data.indexOf(pad);
             if (padPos >= 0) {
                 // Check that the padding character is only used at the end and maximum of twice
-                if (padPos < data.length - 2 || data.charAt(data.length - 1) !== pad) {
-                    throw new OperationError(`Error: Base64 padding character (${pad}) not used in the correct place.`);
+                if (
+                    padPos < data.length - 2 ||
+                    data.charAt(data.length - 1) !== pad
+                ) {
+                    throw new OperationError(
+                        `Error: Base64 padding character (${pad}) not used in the correct place.`,
+                    );
                 }
 
                 // Check that input is padded to the correct length
                 if (data.length % 4 !== 0) {
-                    throw new OperationError("Error: Base64 not padded to a multiple of 4.");
+                    throw new OperationError(
+                        "Error: Base64 not padded to a multiple of 4.",
+                    );
                 }
             }
         }
     }
 
     const output = [];
-    let chr1, chr2, chr3,
-        enc1, enc2, enc3, enc4,
+    let chr1,
+        chr2,
+        chr3,
+        enc1,
+        enc2,
+        enc3,
+        enc4,
         i = 0;
 
     while (i < data.length) {
@@ -137,7 +174,9 @@ export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", r
         enc4 = alphabet.indexOf(data.charAt(i++) || null);
 
         if (strictMode && (enc1 < 0 || enc2 < 0 || enc3 < 0 || enc4 < 0)) {
-            throw new OperationError("Error: Base64 input contains non-alphabet char(s)");
+            throw new OperationError(
+                "Error: Base64 input contains non-alphabet char(s)",
+            );
         }
 
         chr1 = (enc1 << 2) | (enc2 >> 4);
@@ -158,26 +197,40 @@ export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", r
     return returnType === "string" ? Utils.byteArrayToUtf8(output) : output;
 }
 
-
 /**
  * Base64 alphabets.
  */
 export const ALPHABET_OPTIONS = [
-    {name: "Standard (RFC 4648): A-Za-z0-9+/=", value: "A-Za-z0-9+/="},
-    {name: "URL safe (RFC 4648 \u00A75): A-Za-z0-9-_", value: "A-Za-z0-9-_"},
-    {name: "Filename safe: A-Za-z0-9+-=", value: "A-Za-z0-9+\\-="},
-    {name: "itoa64: ./0-9A-Za-z=", value: "./0-9A-Za-z="},
-    {name: "XML: A-Za-z0-9_.", value: "A-Za-z0-9_."},
-    {name: "y64: A-Za-z0-9._-", value: "A-Za-z0-9._-"},
-    {name: "z64: 0-9a-zA-Z+/=", value: "0-9a-zA-Z+/="},
-    {name: "Radix-64 (RFC 4880): 0-9A-Za-z+/=", value: "0-9A-Za-z+/="},
-    {name: "Uuencoding: [space]-_", value: " -_"},
-    {name: "Xxencoding: +-0-9A-Za-z", value: "+\\-0-9A-Za-z"},
-    {name: "BinHex: !-,-0-689@A-NP-VX-Z[`a-fh-mp-r", value: "!-,-0-689@A-NP-VX-Z[`a-fh-mp-r"},
-    {name: "ROT13: N-ZA-Mn-za-m0-9+/=", value: "N-ZA-Mn-za-m0-9+/="},
-    {name: "UNIX crypt: ./0-9A-Za-z", value: "./0-9A-Za-z"},
-    {name: "Atom128: /128GhIoPQROSTeUbADfgHijKLM+n0pFWXY456xyzB7=39VaqrstJklmNuZvwcdEC", value: "/128GhIoPQROSTeUbADfgHijKLM+n0pFWXY456xyzB7=39VaqrstJklmNuZvwcdEC"},
-    {name: "Megan35: 3GHIJKLMNOPQRSTUb=cdefghijklmnopWXYZ/12+406789VaqrstuvwxyzABCDEF5", value: "3GHIJKLMNOPQRSTUb=cdefghijklmnopWXYZ/12+406789VaqrstuvwxyzABCDEF5"},
-    {name: "Zong22: ZKj9n+yf0wDVX1s/5YbdxSo=ILaUpPBCHg8uvNO4klm6iJGhQ7eFrWczAMEq3RTt2", value: "ZKj9n+yf0wDVX1s/5YbdxSo=ILaUpPBCHg8uvNO4klm6iJGhQ7eFrWczAMEq3RTt2"},
-    {name: "Hazz15: HNO4klm6ij9n+J2hyf0gzA8uvwDEq3X1Q7ZKeFrWcVTts/MRGYbdxSo=ILaUpPBC5", value: "HNO4klm6ij9n+J2hyf0gzA8uvwDEq3X1Q7ZKeFrWcVTts/MRGYbdxSo=ILaUpPBC5"}
+    { name: "Standard (RFC 4648): A-Za-z0-9+/=", value: "A-Za-z0-9+/=" },
+    { name: "URL safe (RFC 4648 \u00A75): A-Za-z0-9-_", value: "A-Za-z0-9-_" },
+    { name: "Filename safe: A-Za-z0-9+-=", value: "A-Za-z0-9+\\-=" },
+    { name: "itoa64: ./0-9A-Za-z=", value: "./0-9A-Za-z=" },
+    { name: "XML: A-Za-z0-9_.", value: "A-Za-z0-9_." },
+    { name: "y64: A-Za-z0-9._-", value: "A-Za-z0-9._-" },
+    { name: "z64: 0-9a-zA-Z+/=", value: "0-9a-zA-Z+/=" },
+    { name: "Radix-64 (RFC 4880): 0-9A-Za-z+/=", value: "0-9A-Za-z+/=" },
+    { name: "Uuencoding: [space]-_", value: " -_" },
+    { name: "Xxencoding: +-0-9A-Za-z", value: "+\\-0-9A-Za-z" },
+    {
+        name: "BinHex: !-,-0-689@A-NP-VX-Z[`a-fh-mp-r",
+        value: "!-,-0-689@A-NP-VX-Z[`a-fh-mp-r",
+    },
+    { name: "ROT13: N-ZA-Mn-za-m0-9+/=", value: "N-ZA-Mn-za-m0-9+/=" },
+    { name: "UNIX crypt: ./0-9A-Za-z", value: "./0-9A-Za-z" },
+    {
+        name: "Atom128: /128GhIoPQROSTeUbADfgHijKLM+n0pFWXY456xyzB7=39VaqrstJklmNuZvwcdEC",
+        value: "/128GhIoPQROSTeUbADfgHijKLM+n0pFWXY456xyzB7=39VaqrstJklmNuZvwcdEC",
+    },
+    {
+        name: "Megan35: 3GHIJKLMNOPQRSTUb=cdefghijklmnopWXYZ/12+406789VaqrstuvwxyzABCDEF5",
+        value: "3GHIJKLMNOPQRSTUb=cdefghijklmnopWXYZ/12+406789VaqrstuvwxyzABCDEF5",
+    },
+    {
+        name: "Zong22: ZKj9n+yf0wDVX1s/5YbdxSo=ILaUpPBCHg8uvNO4klm6iJGhQ7eFrWczAMEq3RTt2",
+        value: "ZKj9n+yf0wDVX1s/5YbdxSo=ILaUpPBCHg8uvNO4klm6iJGhQ7eFrWczAMEq3RTt2",
+    },
+    {
+        name: "Hazz15: HNO4klm6ij9n+J2hyf0gzA8uvwDEq3X1Q7ZKeFrWcVTts/MRGYbdxSo=ILaUpPBC5",
+        value: "HNO4klm6ij9n+J2hyf0gzA8uvwDEq3X1Q7ZKeFrWcVTts/MRGYbdxSo=ILaUpPBC5",
+    },
 ];

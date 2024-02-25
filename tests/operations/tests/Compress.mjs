@@ -14,13 +14,13 @@ TestRegister.addTests([
         expectedOutput: "The cat sat on the mat.",
         recipeConfig: [
             {
-                "op": "From Hex",
-                "args": ["Space"]
+                op: "From Hex",
+                args: ["Space"],
             },
             {
-                "op": "Bzip2 Decompress",
-                "args": []
-            }
+                op: "Bzip2 Decompress",
+                args: [],
+            },
         ],
     },
     {
@@ -30,12 +30,12 @@ TestRegister.addTests([
         expectedOutput: "The cat sat on the mat.",
         recipeConfig: [
             {
-                "op": "LZMA Compress",
-                "args": ["6"]
+                op: "LZMA Compress",
+                args: ["6"],
             },
             {
-                "op": "LZMA Decompress",
-                "args": []
+                op: "LZMA Decompress",
+                args: [],
             },
         ],
     },
@@ -46,17 +46,17 @@ TestRegister.addTests([
         expectedOutput: "00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f 10",
         recipeConfig: [
             {
-                "op": "From Hex",
-                "args": ["Space"]
+                op: "From Hex",
+                args: ["Space"],
             },
             {
-                "op": "LZMA Decompress",
-                "args": []
+                op: "LZMA Decompress",
+                args: [],
             },
             {
-                "op": "To Hex",
-                "args": ["Space", 0]
-            }
+                op: "To Hex",
+                args: ["Space", 0],
+            },
         ],
     },
     {
@@ -66,28 +66,29 @@ TestRegister.addTests([
         expectedOutput: "The cat sat on the mat.",
         recipeConfig: [
             {
-                "op": "From Hex",
-                "args": ["Space"]
+                op: "From Hex",
+                args: ["Space"],
             },
             {
-                "op": "LZMA Decompress",
-                "args": []
-            }
+                op: "LZMA Decompress",
+                args: [],
+            },
         ],
     },
     {
         name: "LZ4 Compress",
         input: "The cat sat on the mat.",
-        expectedOutput: "04224d184070df170000805468652063617420736174206f6e20746865206d61742e00000000",
+        expectedOutput:
+            "04224d184070df170000805468652063617420736174206f6e20746865206d61742e00000000",
         recipeConfig: [
             {
-                "op": "LZ4 Compress",
-                "args": []
+                op: "LZ4 Compress",
+                args: [],
             },
             {
-                "op": "To Hex",
-                "args": ["None", 0]
-            }
+                op: "To Hex",
+                args: ["None", 0],
+            },
         ],
     },
     {
@@ -96,13 +97,13 @@ TestRegister.addTests([
         expectedOutput: "The cat sat on the mat.",
         recipeConfig: [
             {
-                "op": "From Hex",
-                "args": ["None"]
+                op: "From Hex",
+                args: ["None"],
             },
             {
-                "op": "LZ4 Decompress",
-                "args": []
-            }
+                op: "LZ4 Decompress",
+                args: [],
+            },
         ],
     },
 ]);

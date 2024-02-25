@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Parse UNIX file permissions operation
  */
 class ParseUNIXFilePermissions extends Operation {
-
     /**
      * ParseUNIXFilePermissions constructor
      */
@@ -20,17 +19,19 @@ class ParseUNIXFilePermissions extends Operation {
 
         this.name = "Parse UNIX file permissions";
         this.module = "Default";
-        this.description = "Given a UNIX/Linux file permission string in octal or textual format, this operation explains which permissions are granted to which user groups.<br><br>Input should be in either octal (e.g. <code>755</code>) or textual (e.g. <code>drwxr-xr-x</code>) format.";
-        this.infoURL = "https://wikipedia.org/wiki/File_system_permissions#Traditional_Unix_permissions";
+        this.description =
+            "Given a UNIX/Linux file permission string in octal or textual format, this operation explains which permissions are granted to which user groups.<br><br>Input should be in either octal (e.g. <code>755</code>) or textual (e.g. <code>drwxr-xr-x</code>) format.";
+        this.infoURL =
+            "https://wikipedia.org/wiki/File_system_permissions#Traditional_Unix_permissions";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
         this.checks = [
             {
-                pattern:  "^\\s*d[rxw-]{9}\\s*$",
-                flags:  "",
-                args:   []
-            }
+                pattern: "^\\s*d[rxw-]{9}\\s*$",
+                flags: "",
+                args: [],
+            },
         ];
     }
 
@@ -41,10 +42,10 @@ class ParseUNIXFilePermissions extends Operation {
      */
     run(input, args) {
         const perms = {
-            d:  false, // directory
+            d: false, // directory
             sl: false, // symbolic link
             np: false, // named pipe
-            s:  false, // socket
+            s: false, // socket
             cd: false, // character device
             bd: false, // block device
             dr: false, // door
@@ -59,7 +60,7 @@ class ParseUNIXFilePermissions extends Operation {
             eg: false, // execute group
             ro: false, // read other
             wo: false, // write other
-            eo: false  // execute other
+            eo: false, // execute other
         };
         let d = 0,
             u = 0,
@@ -84,20 +85,20 @@ class ParseUNIXFilePermissions extends Operation {
                 if (octal.length > 2) o = parseInt(octal[2], 8);
             }
 
-            perms.su = d >> 2 & 0x1;
-            perms.sg = d >> 1 & 0x1;
+            perms.su = (d >> 2) & 0x1;
+            perms.sg = (d >> 1) & 0x1;
             perms.sb = d & 0x1;
 
-            perms.ru = u >> 2 & 0x1;
-            perms.wu = u >> 1 & 0x1;
+            perms.ru = (u >> 2) & 0x1;
+            perms.wu = (u >> 1) & 0x1;
             perms.eu = u & 0x1;
 
-            perms.rg = g >> 2 & 0x1;
-            perms.wg = g >> 1 & 0x1;
+            perms.rg = (g >> 2) & 0x1;
+            perms.wg = (g >> 1) & 0x1;
             perms.eg = g & 0x1;
 
-            perms.ro = o >> 2 & 0x1;
-            perms.wo = o >> 1 & 0x1;
+            perms.ro = (o >> 2) & 0x1;
+            perms.wo = (o >> 1) & 0x1;
             perms.eo = o & 0x1;
         } else if (input.search(/\s*[dlpcbDrwxsStT-]{1,10}\s*/) === 0) {
             // Input is textual
@@ -178,7 +179,9 @@ class ParseUNIXFilePermissions extends Operation {
                 }
             }
         } else {
-            throw new OperationError("Invalid input format.\nPlease enter the permissions in either octal (e.g. 755) or textual (e.g. drwxr-xr-x) format.");
+            throw new OperationError(
+                "Invalid input format.\nPlease enter the permissions in either octal (e.g. 755) or textual (e.g. drwxr-xr-x) format.",
+            );
         }
 
         output += "Textual representation: " + permsToStr(perms);
@@ -208,18 +211,22 @@ class ParseUNIXFilePermissions extends Operation {
  +---------+-------+-------+-------+
  |         | User  | Group | Other |
  +---------+-------+-------+-------+
- |    Read |   ${perms.ru ? "X" : " "}   |   ${perms.rg ? "X" : " "}   |   ${perms.ro ? "X" : " "}   |
+ |    Read |   ${perms.ru ? "X" : " "}   |   ${perms.rg ? "X" : " "}   |   ${
+     perms.ro ? "X" : " "
+ }   |
  +---------+-------+-------+-------+
- |   Write |   ${perms.wu ? "X" : " "}   |   ${perms.wg ? "X" : " "}   |   ${perms.wo ? "X" : " "}   |
+ |   Write |   ${perms.wu ? "X" : " "}   |   ${perms.wg ? "X" : " "}   |   ${
+     perms.wo ? "X" : " "
+ }   |
  +---------+-------+-------+-------+
- | Execute |   ${perms.eu ? "X" : " "}   |   ${perms.eg ? "X" : " "}   |   ${perms.eo ? "X" : " "}   |
+ | Execute |   ${perms.eu ? "X" : " "}   |   ${perms.eg ? "X" : " "}   |   ${
+     perms.eo ? "X" : " "
+ }   |
  +---------+-------+-------+-------+`;
 
         return output;
     }
-
 }
-
 
 /**
  * Given a permissions object dictionary, generates a textual permissions string.
@@ -310,7 +317,6 @@ function permsToOctal(perms) {
 
     return d.toString() + u.toString() + g.toString() + o.toString();
 }
-
 
 /**
  * Given a permissions object dictionary, returns the file type.

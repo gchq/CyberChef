@@ -12,7 +12,6 @@ import OperationError from "../errors/OperationError.mjs";
  * UNIX Timestamp to Windows Filetime operation
  */
 class UNIXTimestampToWindowsFiletime extends Operation {
-
     /**
      * UNIXTimestampToWindowsFiletime constructor
      */
@@ -21,21 +20,28 @@ class UNIXTimestampToWindowsFiletime extends Operation {
 
         this.name = "UNIX Timestamp to Windows Filetime";
         this.module = "Default";
-        this.description = "Converts a UNIX timestamp to a Windows Filetime value.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.";
-        this.infoURL = "https://msdn.microsoft.com/en-us/library/windows/desktop/ms724284(v=vs.85).aspx";
+        this.description =
+            "Converts a UNIX timestamp to a Windows Filetime value.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.";
+        this.infoURL =
+            "https://msdn.microsoft.com/en-us/library/windows/desktop/ms724284(v=vs.85).aspx";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Input units",
-                "type": "option",
-                "value": ["Seconds (s)", "Milliseconds (ms)", "Microseconds (μs)", "Nanoseconds (ns)"]
+                name: "Input units",
+                type: "option",
+                value: [
+                    "Seconds (s)",
+                    "Milliseconds (ms)",
+                    "Microseconds (μs)",
+                    "Nanoseconds (ns)",
+                ],
             },
             {
-                "name": "Output format",
-                "type": "option",
-                "value": ["Decimal", "Hex (big endian)", "Hex (little endian)"]
-            }
+                name: "Output format",
+                type: "option",
+                value: ["Decimal", "Hex (big endian)", "Hex (little endian)"],
+            },
         ];
     }
 
@@ -87,7 +93,6 @@ class UNIXTimestampToWindowsFiletime extends Operation {
 
         return result;
     }
-
 }
 
 export default UNIXTimestampToWindowsFiletime;

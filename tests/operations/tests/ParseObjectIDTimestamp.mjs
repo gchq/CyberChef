@@ -8,7 +8,6 @@
  */
 import TestRegister from "../../lib/TestRegister.mjs";
 
-
 TestRegister.addTests([
     {
         name: "Parse ISO timestamp from ObjectId",
@@ -18,7 +17,7 @@ TestRegister.addTests([
             {
                 op: "Parse ObjectID timestamp",
                 args: [],
-            }
+            },
         ],
-    }
+    },
 ]);

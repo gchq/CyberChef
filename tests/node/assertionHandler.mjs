@@ -11,7 +11,6 @@
 
 /* eslint no-console: 0 */
 
-
 /**
  * Print useful stack on error
  */
@@ -23,7 +22,6 @@ const wrapRun = (run) => async () => {
         throw e;
     }
 };
-
 
 /**
  * it - wrapper for assertions to provide a helpful description

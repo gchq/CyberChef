@@ -10,7 +10,6 @@ import OperationError from "../errors/OperationError.mjs";
  * DNS over HTTPS operation
  */
 class DNSOverHTTPS extends Operation {
-
     /**
      * DNSOverHTTPS constructor
      */
@@ -24,7 +23,7 @@ class DNSOverHTTPS extends Operation {
             "<br><br>",
             "By default, <a href='https://developers.cloudflare.com/1.1.1.1/dns-over-https/'>Cloudflare</a> and <a href='https://developers.google.com/speed/public-dns/docs/dns-over-https'>Google</a> DNS over HTTPS services are supported.",
             "<br><br>",
-            "Can be used with any service that supports the GET parameters <code>name</code> and <code>type</code>."
+            "Can be used with any service that supports the GET parameters <code>name</code> and <code>type</code>.",
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/DNS_over_HTTPS";
         this.inputType = "string";
@@ -37,13 +36,13 @@ class DNSOverHTTPS extends Operation {
                 value: [
                     {
                         name: "Google",
-                        value: "https://dns.google.com/resolve"
+                        value: "https://dns.google.com/resolve",
                     },
                     {
                         name: "Cloudflare",
-                        value: "https://cloudflare-dns.com/dns-query"
-                    }
-                ]
+                        value: "https://cloudflare-dns.com/dns-query",
+                    },
+                ],
             },
             {
                 name: "Request Type",
@@ -71,19 +70,19 @@ class DNSOverHTTPS extends Operation {
                     "TA",
                     "TXT",
                     "URI",
-                    "ANY"
-                ]
+                    "ANY",
+                ],
             },
             {
                 name: "Answer Data Only",
                 type: "boolean",
-                value: false
+                value: false,
             },
             {
                 name: "Disable DNSSEC validation",
                 type: "boolean",
-                value: false
-            }
+                value: false,
+            },
         ];
     }
 
@@ -98,25 +97,31 @@ class DNSOverHTTPS extends Operation {
         try {
             url = new URL(resolver);
         } catch (error) {
-            throw new OperationError(error.toString() +
-            "\n\nThis error could be caused by one of the following:\n" +
-            " - An invalid Resolver URL\n");
+            throw new OperationError(
+                error.toString() +
+                    "\n\nThis error could be caused by one of the following:\n" +
+                    " - An invalid Resolver URL\n",
+            );
         }
-        const params = {name: input, type: requestType, cd: DNSSEC};
+        const params = { name: input, type: requestType, cd: DNSSEC };
 
         url.search = new URLSearchParams(params);
 
-        return fetch(url, {headers: {"accept": "application/dns-json"}}).then(response => {
-            return response.json();
-        }).then(data => {
-            if (justAnswer) {
-                return extractData(data.Answer);
-            }
-            return data;
-        }).catch(e => {
-            throw new OperationError(`Error making request to ${url}\n${e.toString()}`);
-        });
-
+        return fetch(url, { headers: { accept: "application/dns-json" } })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (justAnswer) {
+                    return extractData(data.Answer);
+                }
+                return data;
+            })
+            .catch((e) => {
+                throw new OperationError(
+                    `Error making request to ${url}\n${e.toString()}`,
+                );
+            });
     }
 }
 
@@ -128,11 +133,11 @@ class DNSOverHTTPS extends Operation {
  * @returns {JSON}
  */
 function extractData(data) {
-    if (typeof(data) == "undefined") {
+    if (typeof data == "undefined") {
         return [];
     } else {
         const dataValues = [];
-        data.forEach(element => {
+        data.forEach((element) => {
             dataValues.push(element.data);
         });
         return dataValues;

@@ -14,7 +14,6 @@ import OperationError from "../errors/OperationError.mjs";
  * AES Key Unwrap operation
  */
 class AESKeyUnwrap extends Operation {
-
     /**
      * AESKeyUnwrap constructor
      */
@@ -23,32 +22,33 @@ class AESKeyUnwrap extends Operation {
 
         this.name = "AES Key Unwrap";
         this.module = "Ciphers";
-        this.description = "Decryptor for a key wrapping algorithm defined in RFC3394, which is used to protect keys in untrusted storage or communications, using AES.<br><br>This algorithm uses an AES key (KEK: key-encryption key) and a 64-bit IV to decrypt 64-bit blocks.";
+        this.description =
+            "Decryptor for a key wrapping algorithm defined in RFC3394, which is used to protect keys in untrusted storage or communications, using AES.<br><br>This algorithm uses an AES key (KEK: key-encryption key) and a 64-bit IV to decrypt 64-bit blocks.";
         this.infoURL = "https://wikipedia.org/wiki/Key_wrap";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Key (KEK)",
-                "type": "toggleString",
-                "value": "",
-                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
+                name: "Key (KEK)",
+                type: "toggleString",
+                value: "",
+                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"],
             },
             {
-                "name": "IV",
-                "type": "toggleString",
-                "value": "a6a6a6a6a6a6a6a6",
-                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
+                name: "IV",
+                type: "toggleString",
+                value: "a6a6a6a6a6a6a6a6",
+                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"],
             },
             {
-                "name": "Input",
-                "type": "option",
-                "value": ["Hex", "Raw"]
+                name: "Input",
+                type: "option",
+                value: ["Hex", "Raw"],
             },
             {
-                "name": "Output",
-                "type": "option",
-                "value": ["Hex", "Raw"]
+                name: "Output",
+                type: "option",
+                value: ["Hex", "Raw"],
             },
         ];
     }
@@ -65,14 +65,24 @@ class AESKeyUnwrap extends Operation {
             outputType = args[3];
 
         if (kek.length !== 16 && kek.length !== 24 && kek.length !== 32) {
-            throw new OperationError("KEK must be either 16, 24, or 32 bytes (currently " + kek.length + " bytes)");
+            throw new OperationError(
+                "KEK must be either 16, 24, or 32 bytes (currently " +
+                    kek.length +
+                    " bytes)",
+            );
         }
         if (iv.length !== 8) {
-            throw new OperationError("IV must be 8 bytes (currently " + iv.length + " bytes)");
+            throw new OperationError(
+                "IV must be 8 bytes (currently " + iv.length + " bytes)",
+            );
         }
         const inputData = Utils.convertToByteString(input, inputType);
         if (inputData.length % 8 !== 0 || inputData.length < 24) {
-            throw new OperationError("input must be 8n (n>=3) bytes (currently " + inputData.length + " bytes)");
+            throw new OperationError(
+                "input must be 8n (n>=3) bytes (currently " +
+                    inputData.length +
+                    " bytes)",
+            );
         }
 
         const cipher = forge.cipher.createCipher("AES-ECB", kek);
@@ -90,8 +100,8 @@ class AESKeyUnwrap extends Operation {
         }
         let cntLower = R.length >>> 0;
         let cntUpper = (R.length / ((1 << 30) * 4)) >>> 0;
-        cntUpper = cntUpper * 6 + ((cntLower * 6 / ((1 << 30) * 4)) >>> 0);
-        cntLower = cntLower * 6 >>> 0;
+        cntUpper = cntUpper * 6 + (((cntLower * 6) / ((1 << 30) * 4)) >>> 0);
+        cntLower = (cntLower * 6) >>> 0;
         for (let j = 5; j >= 0; j--) {
             for (let i = R.length - 1; i >= 0; i--) {
                 const aBuffer = Utils.strToArrayBuffer(A);
@@ -100,7 +110,9 @@ class AESKeyUnwrap extends Operation {
                 aView.setUint32(4, aView.getUint32(4) ^ cntLower);
                 A = Utils.arrayBufferToStr(aBuffer, false);
                 decipher.start();
-                decipher.update(forge.util.createBuffer(A + R[i] + paddingBlock));
+                decipher.update(
+                    forge.util.createBuffer(A + R[i] + paddingBlock),
+                );
                 decipher.finish();
                 const B = decipher.output.getBytes();
                 A = B.substring(0, 8);
@@ -122,7 +134,6 @@ class AESKeyUnwrap extends Operation {
         }
         return P;
     }
-
 }
 
 export default AESKeyUnwrap;

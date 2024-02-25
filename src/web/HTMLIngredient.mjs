@@ -10,7 +10,6 @@ import Utils from "../core/Utils.mjs";
  * Object to handle the creation of operation ingredients.
  */
 class HTMLIngredient {
-
     /**
      * HTMLIngredient constructor.
      *
@@ -35,11 +34,10 @@ class HTMLIngredient {
         this.ingId = this.app.nextIngId();
         this.id = "ing-" + this.ingId;
         this.tabIndex = this.ingId + 2; // Input = 1, Search = 2
-        this.min = (typeof config.min === "number") ? config.min : "";
-        this.max = (typeof config.max === "number") ? config.max : "";
+        this.min = typeof config.min === "number" ? config.min : "";
+        this.max = typeof config.max === "number" ? config.max : "";
         this.step = config.step || 1;
     }
-
 
     /**
      * Renders the ingredient in HTML.
@@ -48,7 +46,9 @@ class HTMLIngredient {
      */
     toHtml() {
         let html = "",
-            i, m, eventFn;
+            i,
+            m,
+            eventFn;
 
         switch (this.type) {
             case "string":
@@ -56,7 +56,11 @@ class HTMLIngredient {
             case "byteArray":
                 html += `<div class="form-group ing-wide">
                     <label for="${this.id}"
-                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        ${
+                            this.hint
+                                ? `data-toggle="tooltip" title="${this.hint}"`
+                                : ""
+                        }
                         class="bmd-label-floating">${this.name}</label>
                     <input type="text"
                         class="form-control arg"
@@ -72,7 +76,11 @@ class HTMLIngredient {
             case "binaryShortString":
                 html += `<div class="form-group ing-short">
                     <label for="${this.id}"
-                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        ${
+                            this.hint
+                                ? `data-toggle="tooltip" title="${this.hint}"`
+                                : ""
+                        }
                         class="bmd-label-floating inline">${this.name}</label>
                     <input type="text"
                         class="form-control arg inline"
@@ -88,8 +96,14 @@ class HTMLIngredient {
                 html += `<div class="form-group input-group ing-wide" data-help-title="Multi-type ingredients" data-help="Selecting a data type from the dropdown will change how the ingredient is interpreted by the operation.">
                     <div class="toggle-string">
                         <label for="${this.id}"
-                            ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
-                            class="bmd-label-floating toggle-string">${this.name}</label>
+                            ${
+                                this.hint
+                                    ? `data-toggle="tooltip" title="${this.hint}"`
+                                    : ""
+                            }
+                            class="bmd-label-floating toggle-string">${
+                                this.name
+                            }</label>
                         <input type="text"
                             class="form-control arg toggle-string"
                             id="${this.id}"
@@ -97,10 +111,16 @@ class HTMLIngredient {
                             arg-name="${this.name}"
                             value="${this.value}"
                             ${this.disabled ? "disabled" : ""}
-                            ${this.maxLength ? `maxlength="${this.maxLength}"` : ""}>
+                            ${
+                                this.maxLength
+                                    ? `maxlength="${this.maxLength}"`
+                                    : ""
+                            }>
                     </div>
                     <div class="input-group-append">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${this.toggleValues[0]}</button>
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${
+                            this.toggleValues[0]
+                        }</button>
                         <div class="dropdown-menu toggle-dropdown">`;
                 for (i = 0; i < this.toggleValues.length; i++) {
                     html += `<a class="dropdown-item" href="#">${this.toggleValues[i]}</a>`;
@@ -113,7 +133,11 @@ class HTMLIngredient {
             case "number":
                 html += `<div class="form-group inline ing-medium">
                     <label for="${this.id}"
-                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        ${
+                            this.hint
+                                ? `data-toggle="tooltip" title="${this.hint}"`
+                                : ""
+                        }
                         class="bmd-label-floating inline">${this.name}</label>
                     <input type="number"
                         class="form-control arg inline"
@@ -130,7 +154,11 @@ class HTMLIngredient {
             case "boolean":
                 html += `<div class="form-group inline boolean-arg ing-flexible">
                     <div class="checkbox">
-                        <label ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}>
+                        <label ${
+                            this.hint
+                                ? `data-toggle="tooltip" title="${this.hint}"`
+                                : ""
+                        }>
                             <input type="checkbox"
                                 class="arg"
                                 id="${this.id}"
@@ -146,7 +174,11 @@ class HTMLIngredient {
             case "option":
                 html += `<div class="form-group ing-medium">
                     <label for="${this.id}"
-                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        ${
+                            this.hint
+                                ? `data-toggle="tooltip" title="${this.hint}"`
+                                : ""
+                        }
                         class="bmd-label-floating inline">${this.name}</label>
                     <select
                         class="form-control arg inline"
@@ -160,7 +192,9 @@ class HTMLIngredient {
                     } else if (this.value[i].match(/\[\/([a-z0-9 -()^]+)\]/i)) {
                         html += "</optgroup>";
                     } else {
-                        html += `<option ${this.defaultIndex === i ? "selected" : ""}>${this.value[i]}</option>`;
+                        html += `<option ${
+                            this.defaultIndex === i ? "selected" : ""
+                        }>${this.value[i]}</option>`;
                     }
                 }
                 html += `</select>
@@ -170,7 +204,11 @@ class HTMLIngredient {
             case "populateMultiOption":
                 html += `<div class="form-group ing-medium" data-help-title="Population dropdowns" data-help="Selecting a value from this dropdown will populate some of the other ingredients for this operation with pre-canned values.">
                     <label for="${this.id}"
-                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        ${
+                            this.hint
+                                ? `data-toggle="tooltip" title="${this.hint}"`
+                                : ""
+                        }
                         class="bmd-label-floating">${this.name}</label>
                     <select
                         class="form-control arg no-state-change populate-option"
@@ -179,29 +217,46 @@ class HTMLIngredient {
                         arg-name="${this.name}"
                         ${this.disabled ? "disabled" : ""}>`;
                 for (i = 0; i < this.value.length; i++) {
-                    if ((m = this.value[i].name.match(/\[([a-z0-9 -()^]+)\]/i))) {
+                    if (
+                        (m = this.value[i].name.match(/\[([a-z0-9 -()^]+)\]/i))
+                    ) {
                         html += `<optgroup label="${m[1]}">`;
-                    } else if (this.value[i].name.match(/\[\/([a-z0-9 -()^]+)\]/i)) {
+                    } else if (
+                        this.value[i].name.match(/\[\/([a-z0-9 -()^]+)\]/i)
+                    ) {
                         html += "</optgroup>";
                     } else {
-                        const val = this.type === "populateMultiOption" ?
-                            JSON.stringify(this.value[i].value) :
-                            this.value[i].value;
-                        html += `<option populate-value='${Utils.escapeHtml(val)}'>${this.value[i].name}</option>`;
+                        const val =
+                            this.type === "populateMultiOption"
+                                ? JSON.stringify(this.value[i].value)
+                                : this.value[i].value;
+                        html += `<option populate-value='${Utils.escapeHtml(
+                            val,
+                        )}'>${this.value[i].name}</option>`;
                     }
                 }
                 html += `</select>
                 </div>`;
 
-                eventFn = this.type === "populateMultiOption" ?
-                    this.populateMultiOptionChange :
-                    this.populateOptionChange;
-                this.manager.addDynamicListener("#" + this.id, "change", eventFn, this);
+                eventFn =
+                    this.type === "populateMultiOption"
+                        ? this.populateMultiOptionChange
+                        : this.populateOptionChange;
+                this.manager.addDynamicListener(
+                    "#" + this.id,
+                    "change",
+                    eventFn,
+                    this,
+                );
                 break;
             case "editableOption":
                 html += `<div class="form-group input-group ing-wide">
                     <label for="${this.id}"
-                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        ${
+                            this.hint
+                                ? `data-toggle="tooltip" title="${this.hint}"`
+                                : ""
+                        }
                         class="bmd-label-floating">${this.name}</label>
                     <input type="text"
                         class="form-control arg"
@@ -227,12 +282,21 @@ class HTMLIngredient {
                     </div>
                 </div>`;
 
-                this.manager.addDynamicListener(".editable-option-menu a", "click", this.editableOptionClick, this);
+                this.manager.addDynamicListener(
+                    ".editable-option-menu a",
+                    "click",
+                    this.editableOptionClick,
+                    this,
+                );
                 break;
             case "editableOptionShort":
                 html += `<div class="form-group input-group ing-short">
                     <label for="${this.id}"
-                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        ${
+                            this.hint
+                                ? `data-toggle="tooltip" title="${this.hint}"`
+                                : ""
+                        }
                         class="bmd-label-floating inline">${this.name}</label>
                     <input type="text"
                         class="form-control arg inline"
@@ -258,12 +322,21 @@ class HTMLIngredient {
                     </div>
                 </div>`;
 
-                this.manager.addDynamicListener(".editable-option-menu a", "click", this.editableOptionClick, this);
+                this.manager.addDynamicListener(
+                    ".editable-option-menu a",
+                    "click",
+                    this.editableOptionClick,
+                    this,
+                );
                 break;
             case "text":
                 html += `<div class="form-group ing-very-wide">
                     <label for="${this.id}"
-                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        ${
+                            this.hint
+                                ? `data-toggle="tooltip" title="${this.hint}"`
+                                : ""
+                        }
                         class="bmd-label-floating">${this.name}</label>
                     <textarea
                         class="form-control arg"
@@ -277,7 +350,11 @@ class HTMLIngredient {
             case "argSelector":
                 html += `<div class="form-group inline ing-medium" data-help-title="Ingredient selector" data-help="Selecting options in this dropdown will configure which operation ingredients are visible.">
                     <label for="${this.id}"
-                        ${this.hint ? `data-toggle="tooltip" title="${this.hint}"` : ""}
+                        ${
+                            this.hint
+                                ? `data-toggle="tooltip" title="${this.hint}"`
+                                : ""
+                        }
                         class="bmd-label-floating inline">${this.name}</label>
                     <select
                         class="form-control arg inline arg-selector"
@@ -286,7 +363,9 @@ class HTMLIngredient {
                         arg-name="${this.name}"
                         ${this.disabled ? "disabled" : ""}>`;
                 for (i = 0; i < this.value.length; i++) {
-                    html += `<option ${this.defaultIndex === i ? "selected" : ""}
+                    html += `<option ${
+                        this.defaultIndex === i ? "selected" : ""
+                    }
                         turnon="${JSON.stringify(this.value[i].on || [])}"
                         turnoff="${JSON.stringify(this.value[i].off || [])}">
                             ${this.value[i].name}
@@ -295,7 +374,12 @@ class HTMLIngredient {
                 html += `</select>
                 </div>`;
 
-                this.manager.addDynamicListener(".arg-selector", "change", this.argSelectorChange, this);
+                this.manager.addDynamicListener(
+                    ".arg-selector",
+                    "change",
+                    this.argSelectorChange,
+                    this,
+                );
                 break;
             case "label":
                 html += `<div class="form-group ing-flexible">
@@ -314,7 +398,6 @@ class HTMLIngredient {
         return html;
     }
 
-
     /**
      * Handler for populate option changes.
      * Populates the relevant argument with the specified value.
@@ -329,7 +412,8 @@ class HTMLIngredient {
         const op = el.parentNode.parentNode;
         const target = op.querySelectorAll(".arg")[this.target];
 
-        const popVal = el.childNodes[el.selectedIndex].getAttribute("populate-value");
+        const popVal =
+            el.childNodes[el.selectedIndex].getAttribute("populate-value");
         if (popVal !== "") target.value = popVal;
 
         const evt = new Event("change");
@@ -337,7 +421,6 @@ class HTMLIngredient {
 
         this.manager.recipe.ingChange();
     }
-
 
     /**
      * Handler for populate multi option changes.
@@ -352,8 +435,10 @@ class HTMLIngredient {
         const el = e.target;
         const op = el.parentNode.parentNode;
         const args = op.querySelectorAll(".arg");
-        const targets = this.target.map(i => args[i]);
-        const vals = JSON.parse(el.childNodes[el.selectedIndex].getAttribute("populate-value"));
+        const targets = this.target.map((i) => args[i]);
+        const vals = JSON.parse(
+            el.childNodes[el.selectedIndex].getAttribute("populate-value"),
+        );
         const evt = new Event("change");
 
         for (let i = 0; i < targets.length; i++) {
@@ -369,7 +454,6 @@ class HTMLIngredient {
         }
     }
 
-
     /**
      * Handler for editable option clicks.
      * Populates the input box with the selected value.
@@ -381,7 +465,8 @@ class HTMLIngredient {
         e.stopPropagation();
 
         const link = e.target,
-            input = link.parentNode.parentNode.parentNode.querySelector("input");
+            input =
+                link.parentNode.parentNode.parentNode.querySelector("input");
 
         input.value = link.getAttribute("value");
         const evt = new Event("change");
@@ -389,7 +474,6 @@ class HTMLIngredient {
 
         this.manager.recipe.ingChange();
     }
-
 
     /**
      * Handler for argument selector changes.
@@ -416,7 +500,6 @@ class HTMLIngredient {
             }
         });
     }
-
 }
 
 export default HTMLIngredient;

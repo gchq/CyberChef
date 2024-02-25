@@ -11,7 +11,6 @@ import Operation from "../Operation.mjs";
  * SQL Minify operation
  */
 class SQLMinify extends Operation {
-
     /**
      * SQLMinify constructor
      */
@@ -34,7 +33,6 @@ class SQLMinify extends Operation {
     run(input, args) {
         return vkbeautify.sqlmin(input);
     }
-
 }
 
 export default SQLMinify;

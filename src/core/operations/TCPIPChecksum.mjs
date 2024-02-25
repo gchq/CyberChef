@@ -11,7 +11,6 @@ import Utils from "../Utils.mjs";
  * TCP/IP Checksum operation
  */
 class TCPIPChecksum extends Operation {
-
     /**
      * TCPIPChecksum constructor
      */
@@ -20,7 +19,8 @@ class TCPIPChecksum extends Operation {
 
         this.name = "TCP/IP Checksum";
         this.module = "Crypto";
-        this.description = "Calculates the checksum for a TCP (Transport Control Protocol) or IP (Internet Protocol) header from an input of raw bytes.";
+        this.description =
+            "Calculates the checksum for a TCP (Transport Control Protocol) or IP (Internet Protocol) header from an input of raw bytes.";
         this.infoURL = "https://wikipedia.org/wiki/IPv4_header_checksum";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -38,7 +38,7 @@ class TCPIPChecksum extends Operation {
 
         for (let i = 0; i < input.length; i++) {
             if (i % 2 === 0) {
-                csum += (input[i] << 8);
+                csum += input[i] << 8;
             } else {
                 csum += input[i];
             }
@@ -48,7 +48,6 @@ class TCPIPChecksum extends Operation {
 
         return Utils.hex(0xffff - csum);
     }
-
 }
 
 export default TCPIPChecksum;

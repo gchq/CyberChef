@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Label operation. For use with Jump and Conditional Jump.
  */
 class Label extends Operation {
-
     /**
      * Label constructor
      */
@@ -20,15 +19,16 @@ class Label extends Operation {
         this.name = "Label";
         this.flowControl = true;
         this.module = "Default";
-        this.description = "Provides a location for conditional and fixed jumps to redirect execution to.";
+        this.description =
+            "Provides a location for conditional and fixed jumps to redirect execution to.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Name",
-                "type": "shortString",
-                "value": ""
-            }
+                name: "Name",
+                type: "shortString",
+                value: "",
+            },
         ];
     }
 
@@ -42,7 +42,6 @@ class Label extends Operation {
     run(state) {
         return state;
     }
-
 }
 
 export default Label;

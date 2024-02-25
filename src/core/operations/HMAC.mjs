@@ -12,7 +12,6 @@ import CryptoApi from "crypto-api/src/crypto-api.mjs";
  * HMAC operation
  */
 class HMAC extends Operation {
-
     /**
      * HMAC constructor
      */
@@ -21,21 +20,22 @@ class HMAC extends Operation {
 
         this.name = "HMAC";
         this.module = "Crypto";
-        this.description = "Keyed-Hash Message Authentication Codes (HMAC) are a mechanism for message authentication using cryptographic hash functions.";
+        this.description =
+            "Keyed-Hash Message Authentication Codes (HMAC) are a mechanism for message authentication using cryptographic hash functions.";
         this.infoURL = "https://wikipedia.org/wiki/HMAC";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Key",
-                "type": "toggleString",
-                "value": "",
-                "toggleValues": ["Hex", "Decimal", "Base64", "UTF8", "Latin1"]
+                name: "Key",
+                type: "toggleString",
+                value: "",
+                toggleValues: ["Hex", "Decimal", "Base64", "UTF8", "Latin1"],
             },
             {
-                "name": "Hashing function",
-                "type": "option",
-                "value": [
+                name: "Hashing function",
+                type: "option",
+                value: [
                     "MD2",
                     "MD4",
                     "MD5",
@@ -55,9 +55,9 @@ class HMAC extends Operation {
                     "Whirlpool",
                     "Whirlpool-0",
                     "Whirlpool-T",
-                    "Snefru"
-                ]
-            }
+                    "Snefru",
+                ],
+            },
         ];
     }
 
@@ -67,7 +67,10 @@ class HMAC extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const key = Utils.convertToByteString(args[0].string || "", args[0].option),
+        const key = Utils.convertToByteString(
+                args[0].string || "",
+                args[0].option,
+            ),
             hashFunc = args[1].toLowerCase(),
             msg = Utils.arrayBufferToStr(input, false),
             hasher = CryptoApi.getHasher(hashFunc);
@@ -76,7 +79,6 @@ class HMAC extends Operation {
         mac.update(msg);
         return CryptoApi.encoder.toHex(mac.finalize());
     }
-
 }
 
 export default HMAC;

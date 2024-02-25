@@ -16,7 +16,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Translate DateTime Format",
-                args: ["Standard date and time", "DD/MM/YYYY HH:mm:ss", "UTC", "dddd Do MMMM YYYY HH:mm:ss Z z", "UTC"],
+                args: [
+                    "Standard date and time",
+                    "DD/MM/YYYY HH:mm:ss",
+                    "UTC",
+                    "dddd Do MMMM YYYY HH:mm:ss Z z",
+                    "UTC",
+                ],
             },
         ],
     },
@@ -27,7 +33,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Translate DateTime Format",
-                args: ["Standard date and time", "DD/MM/YYYY HH:mm:ss", "UTC", "dddd Do MMMM YYYY HH:mm:ss Z z", "UTC"],
+                args: [
+                    "Standard date and time",
+                    "DD/MM/YYYY HH:mm:ss",
+                    "UTC",
+                    "dddd Do MMMM YYYY HH:mm:ss Z z",
+                    "UTC",
+                ],
             },
         ],
     },
@@ -38,7 +50,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Translate DateTime Format",
-                args: ["Standard date and time", "DD/MM/YYYY HH:mm:ss", "UTC", "dddd Do MMMM YYYY HH:mm:ss Z z", "US/Eastern"],
+                args: [
+                    "Standard date and time",
+                    "DD/MM/YYYY HH:mm:ss",
+                    "UTC",
+                    "dddd Do MMMM YYYY HH:mm:ss Z z",
+                    "US/Eastern",
+                ],
             },
         ],
     },
@@ -49,9 +67,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Translate DateTime Format",
-                args: ["Automatic", "", "UTC", "dddd Do MMMM YYYY HH:mm:ss Z z", "UTC"],
+                args: [
+                    "Automatic",
+                    "",
+                    "UTC",
+                    "dddd Do MMMM YYYY HH:mm:ss Z z",
+                    "UTC",
+                ],
             },
         ],
-    }
+    },
 ]);
-

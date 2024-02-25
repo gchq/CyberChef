@@ -13,7 +13,6 @@ import CryptoApi from "crypto-api/src/crypto-api.mjs";
  * Derive HKDF Key operation
  */
 class DeriveHKDFKey extends Operation {
-
     /**
      * DeriveHKDFKey constructor
      */
@@ -22,27 +21,28 @@ class DeriveHKDFKey extends Operation {
 
         this.name = "Derive HKDF key";
         this.module = "Crypto";
-        this.description = "A simple Hashed Message Authenticaton Code (HMAC)-based key derivation function (HKDF), defined in RFC5869.";
+        this.description =
+            "A simple Hashed Message Authenticaton Code (HMAC)-based key derivation function (HKDF), defined in RFC5869.";
         this.infoURL = "https://wikipedia.org/wiki/HKDF";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Salt",
-                "type": "toggleString",
-                "value": "",
-                "toggleValues": ["Hex", "Decimal", "Base64", "UTF8", "Latin1"]
+                name: "Salt",
+                type: "toggleString",
+                value: "",
+                toggleValues: ["Hex", "Decimal", "Base64", "UTF8", "Latin1"],
             },
             {
-                "name": "Info",
-                "type": "toggleString",
-                "value": "",
-                "toggleValues": ["Hex", "Decimal", "Base64", "UTF8", "Latin1"]
+                name: "Info",
+                type: "toggleString",
+                value: "",
+                toggleValues: ["Hex", "Decimal", "Base64", "UTF8", "Latin1"],
             },
             {
-                "name": "Hashing function",
-                "type": "option",
-                "value": [
+                name: "Hashing function",
+                type: "option",
+                value: [
                     "MD2",
                     "MD4",
                     "MD5",
@@ -62,33 +62,33 @@ class DeriveHKDFKey extends Operation {
                     "Whirlpool",
                     "Whirlpool-0",
                     "Whirlpool-T",
-                    "Snefru"
+                    "Snefru",
                 ],
-                "defaultIndex": 6
+                defaultIndex: 6,
             },
             {
-                "name": "Extract mode",
-                "type": "argSelector",
-                "value": [
+                name: "Extract mode",
+                type: "argSelector",
+                value: [
                     {
-                        "name": "with salt",
-                        "on": [0]
+                        name: "with salt",
+                        on: [0],
                     },
                     {
-                        "name": "no salt",
-                        "off": [0]
+                        name: "no salt",
+                        off: [0],
                     },
                     {
-                        "name": "skip",
-                        "off": [0]
-                    }
-                ]
+                        name: "skip",
+                        off: [0],
+                    },
+                ],
             },
             {
-                "name": "L (number of output octets)",
-                "type": "number",
-                "value": 16,
-                "min": 0
+                name: "L (number of output octets)",
+                type: "number",
+                value: 16,
+                min: 0,
             },
         ];
     }
@@ -99,8 +99,14 @@ class DeriveHKDFKey extends Operation {
      * @returns {ArrayBuffer}
      */
     run(input, args) {
-        const argSalt = Utils.convertToByteString(args[0].string || "", args[0].option),
-            info = Utils.convertToByteString(args[1].string || "", args[1].option),
+        const argSalt = Utils.convertToByteString(
+                args[0].string || "",
+                args[0].option,
+            ),
+            info = Utils.convertToByteString(
+                args[1].string || "",
+                args[1].option,
+            ),
             hashFunc = args[2].toLowerCase(),
             extractMode = args[3],
             L = args[4],
@@ -112,16 +118,23 @@ class DeriveHKDFKey extends Operation {
             throw new OperationError("L must be non-negative");
         }
         if (L > 255 * HashLen) {
-            throw new OperationError("L too large (maximum length for " + args[2] + " is " + (255 * HashLen) + ")");
+            throw new OperationError(
+                "L too large (maximum length for " +
+                    args[2] +
+                    " is " +
+                    255 * HashLen +
+                    ")",
+            );
         }
 
-        const hmacHash = function(key, data) {
+        const hmacHash = function (key, data) {
             hasher.reset();
             const mac = CryptoApi.getHmac(key, hasher);
             mac.update(data);
             return mac.finalize();
         };
-        const salt = extractMode === "with salt" ? argSalt : "\0".repeat(HashLen);
+        const salt =
+            extractMode === "with salt" ? argSalt : "\0".repeat(HashLen);
         const PRK = extractMode === "skip" ? IKM : hmacHash(salt, IKM);
         let T = "";
         let result = "";
@@ -132,7 +145,6 @@ class DeriveHKDFKey extends Operation {
         }
         return CryptoApi.encoder.toHex(result.substring(0, L));
     }
-
 }
 
 export default DeriveHKDFKey;

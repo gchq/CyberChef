@@ -19,7 +19,6 @@ import { createWorker } from "tesseract.js";
  * Optical Character Recognition operation
  */
 class OpticalCharacterRecognition extends Operation {
-
     /**
      * OpticalCharacterRecognition constructor
      */
@@ -28,16 +27,18 @@ class OpticalCharacterRecognition extends Operation {
 
         this.name = "Optical Character Recognition";
         this.module = "OCR";
-        this.description = "Optical character recognition or optical character reader (OCR) is the mechanical or electronic conversion of images of typed, handwritten or printed text into machine-encoded text.<br><br>Supported image formats: png, jpg, bmp, pbm.";
-        this.infoURL = "https://wikipedia.org/wiki/Optical_character_recognition";
+        this.description =
+            "Optical character recognition or optical character reader (OCR) is the mechanical or electronic conversion of images of typed, handwritten or printed text into machine-encoded text.<br><br>Supported image formats: png, jpg, bmp, pbm.";
+        this.infoURL =
+            "https://wikipedia.org/wiki/Optical_character_recognition";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
                 name: "Show confidence",
                 type: "boolean",
-                value: true
-            }
+                value: true,
+            },
         ];
     }
 
@@ -49,14 +50,19 @@ class OpticalCharacterRecognition extends Operation {
     async run(input, args) {
         const [showConfidence] = args;
 
-        if (!isWorkerEnvironment()) throw new OperationError("This operation only works in a browser");
+        if (!isWorkerEnvironment())
+            throw new OperationError("This operation only works in a browser");
 
         const type = isImage(input);
         if (!type) {
-            throw new OperationError("Unsupported file type (supported: jpg,png,pbm,bmp) or no file provided");
+            throw new OperationError(
+                "Unsupported file type (supported: jpg,png,pbm,bmp) or no file provided",
+            );
         }
 
-        const assetDir = isWorkerEnvironment() ? `${self.docURL}/assets/` : `${process.cwd()}/src/core/vendor/`;
+        const assetDir = isWorkerEnvironment()
+            ? `${self.docURL}/assets/`
+            : `${process.cwd()}/src/core/vendor/`;
 
         try {
             self.sendStatusMessage("Spinning up Tesseract worker...");
@@ -65,11 +71,19 @@ class OpticalCharacterRecognition extends Operation {
                 workerPath: `${assetDir}tesseract/worker.min.js`,
                 langPath: `${assetDir}tesseract/lang-data`,
                 corePath: `${assetDir}tesseract/tesseract-core.wasm.js`,
-                logger: progress => {
+                logger: (progress) => {
                     if (isWorkerEnvironment()) {
-                        self.sendStatusMessage(`Status: ${progress.status}${progress.status === "recognizing text" ? ` - ${(parseFloat(progress.progress)*100).toFixed(2)}%`: "" }`);
+                        self.sendStatusMessage(
+                            `Status: ${progress.status}${
+                                progress.status === "recognizing text"
+                                    ? ` - ${(
+                                          parseFloat(progress.progress) * 100
+                                      ).toFixed(2)}%`
+                                    : ""
+                            }`,
+                        );
                     }
-                }
+                },
             });
             await worker.load();
             self.sendStatusMessage(`Loading English language pack...`);

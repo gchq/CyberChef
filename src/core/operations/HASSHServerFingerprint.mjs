@@ -12,19 +12,18 @@
  *     Josh Atkins
  *
  * Algorithm released under the BSD-3-clause licence
-*/
+ */
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import Stream from "../lib/Stream.mjs";
-import {runHash} from "../lib/Hash.mjs";
+import { runHash } from "../lib/Hash.mjs";
 
 /**
  * HASSH Server Fingerprint operation
  */
 class HASSHServerFingerprint extends Operation {
-
     /**
      * HASSHServerFingerprint constructor
      */
@@ -33,21 +32,27 @@ class HASSHServerFingerprint extends Operation {
 
         this.name = "HASSH Server Fingerprint";
         this.module = "Crypto";
-        this.description = "Generates a HASSH fingerprint to help identify SSH servers based on hashing together values from the Server Key Exchange Init message.<br><br>Input: A hex stream of the SSH_MSG_KEXINIT packet application layer from Server to Client.";
-        this.infoURL = "https://engineering.salesforce.com/open-sourcing-hassh-abed3ae5044c";
+        this.description =
+            "Generates a HASSH fingerprint to help identify SSH servers based on hashing together values from the Server Key Exchange Init message.<br><br>Input: A hex stream of the SSH_MSG_KEXINIT packet application layer from Server to Client.";
+        this.infoURL =
+            "https://engineering.salesforce.com/open-sourcing-hassh-abed3ae5044c";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "Input format",
                 type: "option",
-                value: ["Hex", "Base64", "Raw"]
+                value: ["Hex", "Base64", "Raw"],
             },
             {
                 name: "Output format",
                 type: "option",
-                value: ["Hash digest", "HASSH algorithms string", "Full details"]
-            }
+                value: [
+                    "Hash digest",
+                    "HASSH algorithms string",
+                    "Full details",
+                ],
+            },
         ];
     }
 
@@ -128,12 +133,7 @@ class HASSHServerFingerprint extends Operation {
         s.moveForwardsBy(paddingLength);
 
         // Output
-        const hassh = [
-            kexAlgos,
-            encAlgosS2C,
-            macAlgosS2C,
-            compAlgosS2C
-        ];
+        const hassh = [kexAlgos, encAlgosS2C, macAlgosS2C, compAlgosS2C];
         const hasshStr = hassh.join(";");
         const hasshHash = runHash("md5", Utils.strToArrayBuffer(hasshStr));
 
@@ -160,7 +160,6 @@ ${compAlgosS2C}`;
                 return hasshHash;
         }
     }
-
 }
 
 export default HASSHServerFingerprint;

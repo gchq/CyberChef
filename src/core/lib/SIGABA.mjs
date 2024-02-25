@@ -10,27 +10,27 @@
  * A set of randomised example SIGABA cipher/control rotors (these rotors are interchangeable). Cipher and control rotors can be referred to as C and R rotors respectively.
  */
 export const CR_ROTORS = [
-    {name: "Example 1", value: "SRGWANHPJZFXVIDQCEUKBYOLMT"},
-    {name: "Example 2", value: "THQEFSAZVKJYULBODCPXNIMWRG"},
-    {name: "Example 3", value: "XDTUYLEVFNQZBPOGIRCSMHWKAJ"},
-    {name: "Example 4", value: "LOHDMCWUPSTNGVXYFJREQIKBZA"},
-    {name: "Example 5", value: "ERXWNZQIJYLVOFUMSGHTCKPBDA"},
-    {name: "Example 6", value: "FQECYHJIOUMDZVPSLKRTGWXBAN"},
-    {name: "Example 7", value: "TBYIUMKZDJSOPEWXVANHLCFQGR"},
-    {name: "Example 8", value: "QZUPDTFNYIAOMLEBWJXCGHKRSV"},
-    {name: "Example 9", value: "CZWNHEMPOVXLKRSIDGJFYBTQAU"},
-    {name: "Example 10", value: "ENPXJVKYQBFZTICAGMOHWRLDUS"}
+    { name: "Example 1", value: "SRGWANHPJZFXVIDQCEUKBYOLMT" },
+    { name: "Example 2", value: "THQEFSAZVKJYULBODCPXNIMWRG" },
+    { name: "Example 3", value: "XDTUYLEVFNQZBPOGIRCSMHWKAJ" },
+    { name: "Example 4", value: "LOHDMCWUPSTNGVXYFJREQIKBZA" },
+    { name: "Example 5", value: "ERXWNZQIJYLVOFUMSGHTCKPBDA" },
+    { name: "Example 6", value: "FQECYHJIOUMDZVPSLKRTGWXBAN" },
+    { name: "Example 7", value: "TBYIUMKZDJSOPEWXVANHLCFQGR" },
+    { name: "Example 8", value: "QZUPDTFNYIAOMLEBWJXCGHKRSV" },
+    { name: "Example 9", value: "CZWNHEMPOVXLKRSIDGJFYBTQAU" },
+    { name: "Example 10", value: "ENPXJVKYQBFZTICAGMOHWRLDUS" },
 ];
 
 /**
  * A set of randomised example SIGABA index rotors (may be referred to as I rotors).
  */
 export const I_ROTORS = [
-    {name: "Example 1", value: "6201348957"},
-    {name: "Example 2", value: "6147253089"},
-    {name: "Example 3", value: "8239647510"},
-    {name: "Example 4", value: "7194835260"},
-    {name: "Example 5", value: "4873205916"}
+    { name: "Example 1", value: "6201348957" },
+    { name: "Example 2", value: "6147253089" },
+    { name: "Example 3", value: "8239647510" },
+    { name: "Example 4", value: "7194835260" },
+    { name: "Example 5", value: "4873205916" },
 ];
 
 export const NUMBERS = "0123456789".split("");
@@ -43,8 +43,8 @@ export const NUMBERS = "0123456789".split("");
  */
 export function convToUpperCase(letter) {
     const charCode = letter.charCodeAt();
-    if (97<=charCode && charCode<=122) {
-        return String.fromCharCode(charCode-32);
+    if (97 <= charCode && charCode <= 122) {
+        return String.fromCharCode(charCode - 32);
     }
     return letter;
 }
@@ -53,7 +53,6 @@ export function convToUpperCase(letter) {
  * The SIGABA machine consisting of the 3 rotor banks: cipher, control and index banks.
  */
 export class SigabaMachine {
-
     /**
      * SigabaMachine constructor
      *
@@ -137,14 +136,12 @@ export class SigabaMachine {
         }
         return plaintext;
     }
-
 }
 
 /**
  * The cipher rotor bank consists of 5 cipher rotors in either a forward or reversed orientation.
  */
 export class CipherBank {
-
     /**
      * CipherBank constructor
      *
@@ -187,7 +184,13 @@ export class CipherBank {
      * @param {number[]} indexInputs - the inputs from the index rotors
      */
     step(indexInputs) {
-        const logicDict = {0: [0, 9], 1: [7, 8], 2: [5, 6], 3: [3, 4], 4: [1, 2]};
+        const logicDict = {
+            0: [0, 9],
+            1: [7, 8],
+            2: [5, 6],
+            3: [3, 4],
+            4: [1, 2],
+        };
         const rotorsToMove = [];
         for (const key in logicDict) {
             const item = logicDict[key];
@@ -202,14 +205,12 @@ export class CipherBank {
             rotor.step();
         }
     }
-
 }
 
 /**
  * The control rotor bank consists of 5 control rotors in either a forward or reversed orientation. Signals to the control rotor bank always go from right-to-left.
  */
 export class ControlBank {
-
     /**
      * ControlBank constructor. The rotors have been reversed as signals go from right-to-left through the control rotors.
      *
@@ -238,8 +239,23 @@ export class ControlBank {
      * @returns {number[]}
      */
     getOutputs() {
-        const outputs = [this.crypt("F"), this.crypt("G"), this.crypt("H"), this.crypt("I")];
-        const logicDict = {1: "B", 2: "C", 3: "DE", 4: "FGH", 5: "IJK", 6: "LMNO", 7: "PQRST", 8: "UVWXYZ", 9: "A"};
+        const outputs = [
+            this.crypt("F"),
+            this.crypt("G"),
+            this.crypt("H"),
+            this.crypt("I"),
+        ];
+        const logicDict = {
+            1: "B",
+            2: "C",
+            3: "DE",
+            4: "FGH",
+            5: "IJK",
+            6: "LMNO",
+            7: "PQRST",
+            8: "UVWXYZ",
+            9: "A",
+        };
         const numberOutputs = [];
         for (const key in logicDict) {
             const item = logicDict[key];
@@ -257,7 +273,9 @@ export class ControlBank {
      * Steps the control rotors. Only 3 of the control rotors step: one after every encryption, one after every 26, and one after every 26 squared.
      */
     step() {
-        const MRotor = this.rotors[1], FRotor = this.rotors[2], SRotor = this.rotors[3];
+        const MRotor = this.rotors[1],
+            FRotor = this.rotors[2],
+            SRotor = this.rotors[3];
         // 14 is the offset of "O" from "A" - the next rotor steps once the previous rotor reaches "O"
         if (FRotor.state === 14) {
             if (MRotor.state === 14) {
@@ -278,14 +296,12 @@ export class ControlBank {
         this.step();
         return outputs;
     }
-
 }
 
 /**
  * The index rotor bank consists of 5 index rotors all placed in the forwards orientation.
  */
 export class IndexBank {
-
     /**
      * IndexBank constructor
      *
@@ -321,14 +337,12 @@ export class IndexBank {
         }
         return outputs;
     }
-
 }
 
 /**
  * Rotor class
  */
 export class Rotor {
-
     /**
      * Rotor constructor
      *
@@ -350,12 +364,12 @@ export class Rotor {
      * @returns {number[]}
      */
     getNumMapping(wireSetting, rev) {
-        if (rev===false) {
+        if (rev === false) {
             return wireSetting;
         } else {
             const length = wireSetting.length;
             const tempMapping = new Array(length);
-            for (let i=0; i<length; i++) {
+            for (let i = 0; i < length; i++) {
                 tempMapping[wireSetting[i]] = i;
             }
             return tempMapping;
@@ -371,18 +385,18 @@ export class Rotor {
     getPosMapping(rev) {
         const length = this.numMapping.length;
         const posMapping = [];
-        if (rev===false) {
-            for (let i = this.state; i < this.state+length; i++) {
-                let res = i%length;
-                if (res<0) {
+        if (rev === false) {
+            for (let i = this.state; i < this.state + length; i++) {
+                let res = i % length;
+                if (res < 0) {
                     res += length;
                 }
                 posMapping.push(res);
             }
         } else {
-            for (let i = this.state; i > this.state-length; i--) {
-                let res = i%length;
-                if (res<0) {
+            for (let i = this.state; i > this.state - length; i--) {
+                let res = i % length;
+                if (res < 0) {
                     res += length;
                 }
                 posMapping.push(res);
@@ -418,14 +432,12 @@ export class Rotor {
         this.posMapping.splice(0, 0, lastNum);
         this.state = this.posMapping[0];
     }
-
 }
 
 /**
  * A CRRotor is a cipher (C) or control (R) rotor. These rotors are identical and interchangeable. A C or R rotor consists of 26 contacts, one for each letter, and may be put into either a forwards of reversed orientation.
  */
 export class CRRotor extends Rotor {
-
     /**
      * CRRotor constructor
      *
@@ -433,7 +445,7 @@ export class CRRotor extends Rotor {
      * @param {char} key - initial state of rotor
      * @param {bool} rev - true if reversed, false if not
      */
-    constructor(wireSetting, key, rev=false) {
+    constructor(wireSetting, key, rev = false) {
         wireSetting = wireSetting.split("").map(CRRotor.letterToNum);
         super(wireSetting, CRRotor.letterToNum(key), rev);
     }
@@ -445,7 +457,7 @@ export class CRRotor extends Rotor {
      * @returns {number}
      */
     static letterToNum(letter) {
-        return letter.charCodeAt()-65;
+        return letter.charCodeAt() - 65;
     }
 
     /**
@@ -455,7 +467,7 @@ export class CRRotor extends Rotor {
      * @returns {char}
      */
     static numToLetter(num) {
-        return String.fromCharCode(num+65);
+        return String.fromCharCode(num + 65);
     }
 
     /**
@@ -470,14 +482,12 @@ export class CRRotor extends Rotor {
         const outPos = this.cryptNum(inputPos, direction);
         return CRRotor.numToLetter(outPos);
     }
-
 }
 
 /**
  * An IRotor is an index rotor, which consists of 10 contacts each numbered from 0 to 9. Unlike C and R rotors, they cannot be put in the reversed orientation. The index rotors do not step at any point during encryption or decryption.
  */
 export class IRotor extends Rotor {
-
     /**
      * IRotor constructor
      *
@@ -498,5 +508,4 @@ export class IRotor extends Rotor {
     crypt(inputPos) {
         return this.cryptNum(inputPos, "leftToRight");
     }
-
 }

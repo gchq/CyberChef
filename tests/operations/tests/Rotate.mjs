@@ -8,7 +8,6 @@
  */
 import TestRegister from "../../lib/TestRegister.mjs";
 
-
 TestRegister.addTests([
     {
         name: "Rotate left: nothing",
@@ -17,7 +16,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hex",
-                args: ["Space"]
+                args: ["Space"],
             },
             {
                 op: "Rotate left",
@@ -25,8 +24,8 @@ TestRegister.addTests([
             },
             {
                 op: "To Hex",
-                args: ["Space"]
-            }
+                args: ["Space"],
+            },
         ],
     },
     {
@@ -36,7 +35,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hex",
-                args: ["Space"]
+                args: ["Space"],
             },
             {
                 op: "Rotate left",
@@ -44,8 +43,8 @@ TestRegister.addTests([
             },
             {
                 op: "To Hex",
-                args: ["Space"]
-            }
+                args: ["Space"],
+            },
         ],
     },
     {
@@ -55,7 +54,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hex",
-                args: ["Space"]
+                args: ["Space"],
             },
             {
                 op: "Rotate left",
@@ -63,8 +62,8 @@ TestRegister.addTests([
             },
             {
                 op: "To Hex",
-                args: ["Space"]
-            }
+                args: ["Space"],
+            },
         ],
     },
     {
@@ -74,7 +73,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hex",
-                args: ["Space"]
+                args: ["Space"],
             },
             {
                 op: "Rotate right",
@@ -82,8 +81,8 @@ TestRegister.addTests([
             },
             {
                 op: "To Hex",
-                args: ["Space"]
-            }
+                args: ["Space"],
+            },
         ],
     },
     {
@@ -93,7 +92,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hex",
-                args: ["Space"]
+                args: ["Space"],
             },
             {
                 op: "Rotate right",
@@ -101,8 +100,8 @@ TestRegister.addTests([
             },
             {
                 op: "To Hex",
-                args: ["Space"]
-            }
+                args: ["Space"],
+            },
         ],
     },
     {
@@ -112,7 +111,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hex",
-                args: ["Space"]
+                args: ["Space"],
             },
             {
                 op: "Rotate right",
@@ -120,8 +119,8 @@ TestRegister.addTests([
             },
             {
                 op: "To Hex",
-                args: ["Space"]
-            }
+                args: ["Space"],
+            },
         ],
     },
     {
@@ -131,7 +130,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [true, true, true, 13]
+                args: [true, true, true, 13],
             },
         ],
     },
@@ -142,7 +141,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [true, true, true, 13]
+                args: [true, true, true, 13],
             },
         ],
     },
@@ -153,7 +152,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [true, true, true, 26]
+                args: [true, true, true, 26],
             },
         ],
     },
@@ -164,7 +163,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [true, false, false, 13]
+                args: [true, false, false, 13],
             },
         ],
     },
@@ -175,7 +174,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT13",
-                args: [false, true, false, 13]
+                args: [false, true, false, 13],
             },
         ],
     },
@@ -186,18 +185,18 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT47",
-                args: [47]
+                args: [47],
             },
         ],
     },
     {
         name: "ROT47: normal",
         input: "The Quick Brown Fox Jumped Over The Lazy Dog.",
-        expectedOutput: "%96 \"F:4< qC@H? u@I yF>A65 ~G6C %96 {2KJ s@8]",
+        expectedOutput: '%96 "F:4< qC@H? u@I yF>A65 ~G6C %96 {2KJ s@8]',
         recipeConfig: [
             {
                 op: "ROT47",
-                args: [47]
+                args: [47],
             },
         ],
     },
@@ -208,7 +207,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT47",
-                args: [94]
+                args: [94],
             },
         ],
     },
@@ -219,18 +218,19 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT8000",
-                args: []
+                args: [],
             },
         ],
     },
     {
         name: "ROT8000: normal",
         input: "The Quick Brown Fox Jumped Over The Lazy Dog.",
-        expectedOutput: "籝籱籮 籚籾籲籬籴 籋类籸粀籷 籏籸粁 籓籾籶籹籮籭 籘籿籮类 籝籱籮 籕籪粃粂 籍籸籰簷",
+        expectedOutput:
+            "籝籱籮 籚籾籲籬籴 籋类籸粀籷 籏籸粁 籓籾籶籹籮籭 籘籿籮类 籝籱籮 籕籪粃粂 籍籸籰簷",
         recipeConfig: [
             {
                 op: "ROT8000",
-                args: []
+                args: [],
             },
         ],
     },
@@ -241,7 +241,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROT8000",
-                args: []
+                args: [],
             },
         ],
     },

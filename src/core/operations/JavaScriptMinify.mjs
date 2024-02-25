@@ -12,7 +12,6 @@ import * as terser from "terser";
  * JavaScript Minify operation
  */
 class JavaScriptMinify extends Operation {
-
     /**
      * JavaScriptMinify constructor
      */
@@ -35,11 +34,12 @@ class JavaScriptMinify extends Operation {
     async run(input, args) {
         const result = await terser.minify(input);
         if (result.error) {
-            throw new OperationError(`Error minifying JavaScript. (${result.error})`);
+            throw new OperationError(
+                `Error minifying JavaScript. (${result.error})`,
+            );
         }
         return result.code;
     }
-
 }
 
 export default JavaScriptMinify;

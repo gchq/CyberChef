@@ -15,8 +15,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Cetacean Cipher Decode",
-                args: []
+                args: [],
             },
         ],
-    }
+    },
 ]);

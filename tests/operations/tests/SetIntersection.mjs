@@ -23,7 +23,8 @@ TestRegister.addTests([
     {
         name: "Set Intersection: only one set",
         input: "1 2 3 4 5 6 7 8",
-        expectedOutput: "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?",
+        expectedOutput:
+            "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?",
         recipeConfig: [
             {
                 op: "Set Intersection",
@@ -52,5 +53,5 @@ TestRegister.addTests([
                 args: ["z", "-"],
             },
         ],
-    }
+    },
 ]);

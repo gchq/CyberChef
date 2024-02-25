@@ -10,20 +10,23 @@ TestRegister.addTests([
     {
         name: "Multi-Bombe: 3 rotor",
         input: "BBYFLTHHYIJQAYBBYS",
-        expectedMatch: /<td>LGA<\/td> {2}<td>SS<\/td> {2}<td>VFISUSGTKSTMPSUNAK<\/td>/,
+        expectedMatch:
+            /<td>LGA<\/td> {2}<td>SS<\/td> {2}<td>VFISUSGTKSTMPSUNAK<\/td>/,
         recipeConfig: [
             {
-                "op": "Multiple Bombe",
-                "args": [
+                op: "Multiple Bombe",
+                args: [
                     // I, II and III
                     "User defined",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R\nAJDKSIRUXBLHWTMCQGZNPYFVOE<F\nBDFHJLCPRTXVZNYEIWGAKMUSQO<W",
                     "",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTMESSAGE", 0, false
-                ]
-            }
-        ]
+                    "THISISATESTMESSAGE",
+                    0,
+                    false,
+                ],
+            },
+        ],
     },
     /*
      * This is too slow to run regularly

@@ -12,7 +12,6 @@ import { AMF0, AMF3 } from "@astronautlabs/amf";
  * AMF Encode operation
  */
 class AMFEncode extends Operation {
-
     /**
      * AMFEncode constructor
      */
@@ -21,7 +20,8 @@ class AMFEncode extends Operation {
 
         this.name = "AMF Encode";
         this.module = "Encodings";
-        this.description = "Action Message Format (AMF) is a binary format used to serialize object graphs such as ActionScript objects and XML, or send messages between an Adobe Flash client and a remote service, usually a Flash Media Server or third party alternatives.";
+        this.description =
+            "Action Message Format (AMF) is a binary format used to serialize object graphs such as ActionScript objects and XML, or send messages between an Adobe Flash client and a remote service, usually a Flash Media Server or third party alternatives.";
         this.infoURL = "https://wikipedia.org/wiki/Action_Message_Format";
         this.inputType = "JSON";
         this.outputType = "ArrayBuffer";
@@ -30,8 +30,8 @@ class AMFEncode extends Operation {
                 name: "Format",
                 type: "option",
                 value: ["AMF0", "AMF3"],
-                defaultIndex: 1
-            }
+                defaultIndex: 1,
+            },
         ];
     }
 
@@ -46,7 +46,6 @@ class AMFEncode extends Operation {
         const output = handler.Value.any(input).serialize();
         return output.buffer;
     }
-
 }
 
 export default AMFEncode;

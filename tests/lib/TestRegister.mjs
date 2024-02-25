@@ -21,7 +21,6 @@ import log from "loglevel";
  * @constructor
  */
 class TestRegister {
-
     /**
      * initialise with no tests
      */
@@ -50,38 +49,39 @@ class TestRegister {
     /**
      * Runs all the tests in the register.
      */
-    async runTests () {
+    async runTests() {
         // Turn off logging to avoid messy errors
         log.setLevel("silent", false);
 
-        const progBar = new cliProgress.SingleBar({
-            format: formatter,
-            stopOnComplete: true
-        }, cliProgress.Presets.shades_classic);
+        const progBar = new cliProgress.SingleBar(
+            {
+                format: formatter,
+                stopOnComplete: true,
+            },
+            cliProgress.Presets.shades_classic,
+        );
         const testResults = [];
 
         console.log("Running operation tests...");
         progBar.start(this.tests.length, 0, {
-            msg: "Setting up"
+            msg: "Setting up",
         });
 
         for (const test of this.tests) {
             progBar.update(testResults.length, {
-                msg: test.name
+                msg: test.name,
             });
 
             const chef = new Chef();
-            const result = await chef.bake(
-                test.input,
-                test.recipeConfig,
-                { returnType: "string" }
-            );
+            const result = await chef.bake(test.input, test.recipeConfig, {
+                returnType: "string",
+            });
 
             const ret = {
                 test: test,
                 status: null,
                 output: null,
-                duration: result.duration
+                duration: result.duration,
             };
 
             if (result.error) {
@@ -94,7 +94,8 @@ class TestRegister {
                             "Expected",
                             "\t" + test.expectedOutput.replace(/\n/g, "\n\t"),
                             "Received",
-                            "\t" + result.error.displayStr.replace(/\n/g, "\n\t"),
+                            "\t" +
+                                result.error.displayStr.replace(/\n/g, "\n\t"),
                         ].join("\n");
                     }
                 } else {
@@ -107,16 +108,25 @@ class TestRegister {
                     ret.output = "Expected an error but did not receive one.";
                 } else if (result.result === test.expectedOutput) {
                     ret.status = "passing";
-                } else if ("expectedMatch" in test && test.expectedMatch.test(result.result)) {
+                } else if (
+                    "expectedMatch" in test &&
+                    test.expectedMatch.test(result.result)
+                ) {
                     ret.status = "passing";
-                } else if ("unexpectedMatch" in test && !test.unexpectedMatch.test(result.result)) {
+                } else if (
+                    "unexpectedMatch" in test &&
+                    !test.unexpectedMatch.test(result.result)
+                ) {
                     ret.status = "passing";
                 } else {
                     ret.status = "failing";
-                    const expected = test.expectedOutput ? test.expectedOutput :
-                        test.expectedMatch ? test.expectedMatch.toString() :
-                            test.unexpectedMatch ? "to not find " + test.unexpectedMatch.toString() :
-                                "unknown";
+                    const expected = test.expectedOutput
+                        ? test.expectedOutput
+                        : test.expectedMatch
+                          ? test.expectedMatch.toString()
+                          : test.unexpectedMatch
+                              ? "to not find " + test.unexpectedMatch.toString()
+                              : "unknown";
                     ret.output = [
                         "Expected",
                         "\t" + expected.replace(/\n/g, "\n\t"),
@@ -140,27 +150,30 @@ class TestRegister {
      * Run all api related tests and wrap results in report format
      */
     async runApiTests() {
-        const progBar = new cliProgress.SingleBar({
-            format: formatter,
-            stopOnComplete: true
-        }, cliProgress.Presets.shades_classic);
+        const progBar = new cliProgress.SingleBar(
+            {
+                format: formatter,
+                stopOnComplete: true,
+            },
+            cliProgress.Presets.shades_classic,
+        );
         const testResults = [];
 
         console.log("Running Node API tests...");
         progBar.start(this.apiTests.length, 0, {
-            msg: "Setting up"
+            msg: "Setting up",
         });
 
         global.TESTING = true;
         for (const test of this.apiTests) {
             progBar.update(testResults.length, {
-                msg: test.name
+                msg: test.name,
             });
 
             const result = {
                 test: test,
                 status: null,
-                output: null
+                output: null,
             };
             try {
                 await test.run();
@@ -178,7 +191,6 @@ class TestRegister {
     }
 }
 
-
 /**
  * Formatter for the progress bar
  *
@@ -188,8 +200,15 @@ class TestRegister {
  * @returns {string}
  */
 function formatter(options, params, payload) {
-    const bar = options.barCompleteString.substr(0, Math.round(params.progress * options.barsize)) +
-        options.barIncompleteString.substr(0, Math.round((1-params.progress) * options.barsize));
+    const bar =
+        options.barCompleteString.substr(
+            0,
+            Math.round(params.progress * options.barsize),
+        ) +
+        options.barIncompleteString.substr(
+            0,
+            Math.round((1 - params.progress) * options.barsize),
+        );
 
     const percentage = Math.floor(params.progress * 100),
         duration = Math.floor((Date.now() - params.startTime) / 1000);

@@ -73,5 +73,5 @@ TestRegister.addTests([
                 args: [0, true],
             },
         ],
-    }
+    },
 ]);

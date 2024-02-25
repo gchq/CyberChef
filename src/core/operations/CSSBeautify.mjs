@@ -11,7 +11,6 @@ import Operation from "../Operation.mjs";
  * CSS Beautify operation
  */
 class CSSBeautify extends Operation {
-
     /**
      * CSSBeautify constructor
      */
@@ -20,15 +19,16 @@ class CSSBeautify extends Operation {
 
         this.name = "CSS Beautify";
         this.module = "Code";
-        this.description = "Indents and prettifies Cascading Style Sheets (CSS) code.";
+        this.description =
+            "Indents and prettifies Cascading Style Sheets (CSS) code.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Indent string",
-                "type": "binaryShortString",
-                "value": "\\t"
-            }
+                name: "Indent string",
+                type: "binaryShortString",
+                value: "\\t",
+            },
         ];
     }
 
@@ -41,7 +41,6 @@ class CSSBeautify extends Operation {
         const indentStr = args[0];
         return vkbeautify.css(input, indentStr);
     }
-
 }
 
 export default CSSBeautify;

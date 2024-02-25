@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Image Brightness / Contrast operation
  */
 class ImageBrightnessContrast extends Operation {
-
     /**
      * ImageBrightnessContrast constructor
      */
@@ -35,15 +34,15 @@ class ImageBrightnessContrast extends Operation {
                 type: "number",
                 value: 0,
                 min: -100,
-                max: 100
+                max: 100,
             },
             {
                 name: "Contrast",
                 type: "number",
                 value: 0,
                 min: -100,
-                max: 100
-            }
+                max: 100,
+            },
         ];
     }
 
@@ -84,7 +83,9 @@ class ImageBrightnessContrast extends Operation {
             }
             return imageBuffer.buffer;
         } catch (err) {
-            throw new OperationError(`Error adjusting image brightness or contrast. (${err})`);
+            throw new OperationError(
+                `Error adjusting image brightness or contrast. (${err})`,
+            );
         }
     }
 
@@ -104,7 +105,6 @@ class ImageBrightnessContrast extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default ImageBrightnessContrast;

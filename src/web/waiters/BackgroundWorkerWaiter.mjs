@@ -10,7 +10,6 @@ import ChefWorker from "worker-loader?inline=no-fallback!../../core/ChefWorker.j
  * Waiter to handle conversations with a ChefWorker in the background.
  */
 class BackgroundWorkerWaiter {
-
     /**
      * BackgroundWorkerWaiter constructor.
      *
@@ -27,21 +26,23 @@ class BackgroundWorkerWaiter {
         this.timeout = null;
     }
 
-
     /**
      * Sets up the ChefWorker and associated listeners.
      */
     registerChefWorker() {
         log.debug("Registering new background ChefWorker");
         this.chefWorker = new ChefWorker();
-        this.chefWorker.addEventListener("message", this.handleChefMessage.bind(this));
+        this.chefWorker.addEventListener(
+            "message",
+            this.handleChefMessage.bind(this),
+        );
         this.chefWorker.postMessage({
             action: "setLogPrefix",
-            data: "BGChefWorker"
+            data: "BGChefWorker",
         });
         this.chefWorker.postMessage({
             action: "setLogLevel",
-            data: log.getLevel()
+            data: log.getLevel(),
         });
 
         let docURL = document.location.href.split(/[#?]/)[0];
@@ -49,9 +50,8 @@ class BackgroundWorkerWaiter {
         if (index > 0) {
             docURL = docURL.substring(0, index);
         }
-        this.chefWorker.postMessage({"action": "docURL", "data": docURL});
+        this.chefWorker.postMessage({ action: "docURL", data: docURL });
     }
-
 
     /**
      * Handler for messages sent back by the ChefWorker.
@@ -85,16 +85,13 @@ class BackgroundWorkerWaiter {
         }
     }
 
-
     /**
      * Cancels the current bake by terminating the ChefWorker and creating a new one.
      */
     cancelBake() {
-        if (this.chefWorker)
-            this.chefWorker.terminate();
+        if (this.chefWorker) this.chefWorker.terminate();
         this.registerChefWorker();
     }
-
 
     /**
      * Asks the ChefWorker to bake the input using the specified recipe.
@@ -118,11 +115,10 @@ class BackgroundWorkerWaiter {
                 options: options,
                 progress: progress,
                 step: step,
-                id: id
-            }
+                id: id,
+            },
         });
     }
-
 
     /**
      * Asks the Magic operation what it can do with the input data.
@@ -136,17 +132,23 @@ class BackgroundWorkerWaiter {
             this.cancelBake();
         }
 
-        this.bake(input, [
-            {
-                "op": "Magic",
-                "args": [3, false, false]
-            }
-        ], {}, 0, false, this.magicComplete);
+        this.bake(
+            input,
+            [
+                {
+                    op: "Magic",
+                    args: [3, false, false],
+                },
+            ],
+            {},
+            0,
+            false,
+            this.magicComplete,
+        );
 
         // Cancel this bake if it takes too long.
         this.timeout = setTimeout(this.cancelBake.bind(this), 3000);
     }
-
 
     /**
      * Handler for completed Magic bakes.
@@ -160,7 +162,6 @@ class BackgroundWorkerWaiter {
         this.manager.output.backgroundMagicResult(response.dish.value);
     }
 
-
     /**
      * Sets the console log level in the workers.
      */
@@ -168,11 +169,9 @@ class BackgroundWorkerWaiter {
         if (!this.chefWorker) return;
         this.chefWorker.postMessage({
             action: "setLogLevel",
-            data: log.getLevel()
+            data: log.getLevel(),
         });
     }
-
 }
-
 
 export default BackgroundWorkerWaiter;

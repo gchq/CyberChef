@@ -11,7 +11,6 @@ import Operation from "../Operation.mjs";
  * CSS Minify operation
  */
 class CSSMinify extends Operation {
-
     /**
      * CSSMinify constructor
      */
@@ -25,10 +24,10 @@ class CSSMinify extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Preserve comments",
-                "type": "boolean",
-                "value": false
-            }
+                name: "Preserve comments",
+                type: "boolean",
+                value: false,
+            },
         ];
     }
 
@@ -41,7 +40,6 @@ class CSSMinify extends Operation {
         const preserveComments = args[0];
         return vkbeautify.cssmin(input, preserveComments);
     }
-
 }
 
 export default CSSMinify;

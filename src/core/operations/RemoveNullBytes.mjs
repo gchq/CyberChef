@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Remove null bytes operation
  */
 class RemoveNullBytes extends Operation {
-
     /**
      * RemoveNullBytes constructor
      */
@@ -19,7 +18,8 @@ class RemoveNullBytes extends Operation {
 
         this.name = "Remove null bytes";
         this.module = "Default";
-        this.description = "Removes all null bytes (<code>0x00</code>) from the input.";
+        this.description =
+            "Removes all null bytes (<code>0x00</code>) from the input.";
         this.inputType = "ArrayBuffer";
         this.outputType = "byteArray";
         this.args = [];
@@ -38,7 +38,6 @@ class RemoveNullBytes extends Operation {
         }
         return output;
     }
-
 }
 
 export default RemoveNullBytes;

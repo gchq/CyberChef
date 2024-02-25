@@ -12,7 +12,6 @@ import { replaceVariableNames } from "../lib/Code.mjs";
  * To Snake case operation
  */
 class ToSnakeCase extends Operation {
-
     /**
      * ToSnakeCase constructor
      */
@@ -21,16 +20,17 @@ class ToSnakeCase extends Operation {
 
         this.name = "To Snake case";
         this.module = "Code";
-        this.description = "Converts the input string to snake case.\n<br><br>\nSnake case is all lower case with underscores as word boundaries.\n<br><br>\ne.g. this_is_snake_case\n<br><br>\n'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.";
+        this.description =
+            "Converts the input string to snake case.\n<br><br>\nSnake case is all lower case with underscores as word boundaries.\n<br><br>\ne.g. this_is_snake_case\n<br><br>\n'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.";
         this.infoURL = "https://wikipedia.org/wiki/Snake_case";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Attempt to be context aware",
-                "type": "boolean",
-                "value": false
-            }
+                name: "Attempt to be context aware",
+                type: "boolean",
+                value: false,
+            },
         ];
     }
 

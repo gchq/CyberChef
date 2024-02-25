@@ -10,8 +10,17 @@ TestRegister.addTests([
     {
         name: "UnescapeString: escape sequences",
         input: "\\a\\b\\f\\n\\r\\t\\v\\'\\\"",
-        expectedOutput: String.fromCharCode(0x07, 0x08, 0x0c, 0x0a, 0x0d, 0x09,
-            0x0b, 0x27, 0x22),
+        expectedOutput: String.fromCharCode(
+            0x07,
+            0x08,
+            0x0c,
+            0x0a,
+            0x0d,
+            0x09,
+            0x0b,
+            0x27,
+            0x22,
+        ),
         recipeConfig: [
             {
                 op: "Unescape string",

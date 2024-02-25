@@ -17,7 +17,8 @@ function clear(browser) {
         .click("#clr-recipe")
         .click("#clr-io")
         .waitForElementNotPresent("#rec-list li.operation")
-        .expect.element("#input-text .cm-content").text.that.equals("");
+        .expect.element("#input-text .cm-content")
+        .text.that.equals("");
 }
 
 /** @function
@@ -28,17 +29,17 @@ function clear(browser) {
  * @param {boolean} [type=true] - Whether to type the characters in by using sendKeys,
  *      or to set the value of the editor directly (useful for special characters)
  */
-function setInput(browser, input, type=true) {
+function setInput(browser, input, type = true) {
     clear(browser);
     if (type) {
-        browser
-            .useCss()
-            .sendKeys("#input-text .cm-content", input)
-            .pause(100);
+        browser.useCss().sendKeys("#input-text .cm-content", input).pause(100);
     } else {
-        browser.execute(text => {
-            window.app.setInput(text);
-        }, [input]);
+        browser.execute(
+            (text) => {
+                window.app.setInput(text);
+            },
+            [input],
+        );
     }
 }
 
@@ -66,10 +67,15 @@ function setChrEnc(browser, io, enc) {
     browser
         .useCss()
         .click(io + " .chr-enc-value")
-        .waitForElementVisible(io + " .chr-enc-select .cm-status-bar-select-scroll")
+        .waitForElementVisible(
+            io + " .chr-enc-select .cm-status-bar-select-scroll",
+        )
         .click("link text", enc)
-        .waitForElementNotVisible(io + " .chr-enc-select .cm-status-bar-select-scroll")
-        .expect.element(io + " .chr-enc-value").text.that.equals(enc);
+        .waitForElementNotVisible(
+            io + " .chr-enc-select .cm-status-bar-select-scroll",
+        )
+        .expect.element(io + " .chr-enc-value")
+        .text.that.equals(enc);
 }
 
 /** @function
@@ -84,10 +90,15 @@ function setEOLSeq(browser, io, eol) {
     browser
         .useCss()
         .click(io + " .eol-value")
-        .waitForElementVisible(io + " .eol-select .cm-status-bar-select-content")
+        .waitForElementVisible(
+            io + " .eol-select .cm-status-bar-select-content",
+        )
         .click(`${io} .cm-status-bar-select-content a[data-val=${eol}]`)
-        .waitForElementNotVisible(io + " .eol-select .cm-status-bar-select-content")
-        .expect.element(io + " .eol-value").text.that.equals(eol);
+        .waitForElementNotVisible(
+            io + " .eol-select .cm-status-bar-select-content",
+        )
+        .expect.element(io + " .eol-value")
+        .text.that.equals(eol);
 }
 
 /** @function
@@ -96,8 +107,8 @@ function setEOLSeq(browser, io, eol) {
  * @param {Browser} browser - Nightwatch client
  */
 function copy(browser) {
-    browser.perform(function() {
-        const actions = this.actions({async: true});
+    browser.perform(function () {
+        const actions = this.actions({ async: true });
 
         // Ctrl + Ins used as this works on Windows, Linux and Mac
         return actions
@@ -117,8 +128,8 @@ function copy(browser) {
 function paste(browser, el) {
     browser
         .click(el)
-        .perform(function() {
-            const actions = this.actions({async: true});
+        .perform(function () {
+            const actions = this.actions({ async: true });
 
             // Shift + Ins used as this works on Windows, Linux and Mac
             return actions
@@ -141,22 +152,27 @@ function paste(browser, el) {
 function loadRecipe(browser, opName, input, args) {
     let recipeConfig;
 
-    if (typeof(opName) === "string") {
-        recipeConfig = JSON.stringify([{
-            "op": opName,
-            "args": args
-        }]);
+    if (typeof opName === "string") {
+        recipeConfig = JSON.stringify([
+            {
+                op: opName,
+                args: args,
+            },
+        ]);
     } else if (opName instanceof Array) {
         recipeConfig = JSON.stringify(
             opName.map((op, i) => {
                 return {
                     op: op,
-                    args: args.length ? args[i] : []
+                    args: args.length ? args[i] : [],
                 };
-            })
+            }),
         );
     } else {
-        throw new Error("Invalid operation type. Must be string or array of strings. Received: " + typeof(opName));
+        throw new Error(
+            "Invalid operation type. Must be string or array of strings. Received: " +
+                typeof opName,
+        );
     }
 
     clear(browser);
@@ -173,14 +189,18 @@ function loadRecipe(browser, opName, input, args) {
  * @param {string|RegExp} expected - The expected output value
  */
 function expectOutput(browser, expected) {
-    browser.execute(expected => {
-        const output = window.app.manager.output.outputEditorView.state.doc.toString();
-        if (expected instanceof RegExp) {
-            return expected.test(output);
-        } else {
-            return expected === output;
-        }
-    }, [expected]);
+    browser.execute(
+        (expected) => {
+            const output =
+                window.app.manager.output.outputEditorView.state.doc.toString();
+            if (expected instanceof RegExp) {
+                return expected.test(output);
+            } else {
+                return expected === output;
+            }
+        },
+        [expected],
+    );
 }
 
 /** @function
@@ -190,17 +210,16 @@ function expectOutput(browser, expected) {
  * @param {string} filename - A path to a file in the samples directory
  */
 function uploadFile(browser, filename) {
-    const filepath = require("path").resolve(__dirname + "/../samples/" + filename);
+    const filepath = require("path").resolve(
+        __dirname + "/../samples/" + filename,
+    );
 
     // The file input cannot be interacted with by nightwatch while it is hidden,
     // so we temporarily expose it for the purposes of this test.
     browser.execute(() => {
         document.getElementById("open-file").style.display = "block";
     });
-    browser
-        .pause(100)
-        .setValue("#open-file", filepath)
-        .pause(100);
+    browser.pause(100).setValue("#open-file", filepath).pause(100);
     browser.execute(() => {
         document.getElementById("open-file").style.display = "none";
     });
@@ -214,23 +233,21 @@ function uploadFile(browser, filename) {
  * @param {string} foldername - A path to a folder in the samples directory
  */
 function uploadFolder(browser, foldername) {
-    const folderpath = require("path").resolve(__dirname + "/../samples/" + foldername);
+    const folderpath = require("path").resolve(
+        __dirname + "/../samples/" + foldername,
+    );
 
     // The folder input cannot be interacted with by nightwatch while it is hidden,
     // so we temporarily expose it for the purposes of this test.
     browser.execute(() => {
         document.getElementById("open-folder").style.display = "block";
     });
-    browser
-        .pause(100)
-        .setValue("#open-folder", folderpath)
-        .pause(500);
+    browser.pause(100).setValue("#open-folder", folderpath).pause(500);
     browser.execute(() => {
         document.getElementById("open-folder").style.display = "none";
     });
     browser.waitForElementVisible("#input-text .cm-file-details");
 }
-
 
 module.exports = {
     clear: clear,
@@ -243,5 +260,5 @@ module.exports = {
     loadRecipe: loadRecipe,
     expectOutput: expectOutput,
     uploadFile: uploadFile,
-    uploadFolder: uploadFolder
+    uploadFolder: uploadFolder,
 };

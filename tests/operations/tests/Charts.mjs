@@ -14,9 +14,18 @@ TestRegister.addTests([
         expectedMatch: /^<svg width/,
         recipeConfig: [
             {
-                "op": "Scatter chart",
-                "args": ["Line feed", "Space", false, "time", "stress", "black", 5, false]
-            }
+                op: "Scatter chart",
+                args: [
+                    "Line feed",
+                    "Space",
+                    false,
+                    "time",
+                    "stress",
+                    "black",
+                    5,
+                    false,
+                ],
+            },
         ],
     },
     {
@@ -25,9 +34,21 @@ TestRegister.addTests([
         expectedMatch: /^<svg width/,
         recipeConfig: [
             {
-                "op": "Hex Density chart",
-                "args": ["Line feed", "Space", 25, 15, true, "", "", true, "white", "black", true]
-            }
+                op: "Hex Density chart",
+                args: [
+                    "Line feed",
+                    "Space",
+                    25,
+                    15,
+                    true,
+                    "",
+                    "",
+                    true,
+                    "white",
+                    "black",
+                    true,
+                ],
+            },
         ],
     },
     {
@@ -36,9 +57,15 @@ TestRegister.addTests([
         expectedMatch: /^<svg width/,
         recipeConfig: [
             {
-                "op": "Series chart",
-                "args": ["Line feed", "Space", "", 1, "mediumseagreen, dodgerblue, tomato"]
-            }
+                op: "Series chart",
+                args: [
+                    "Line feed",
+                    "Space",
+                    "",
+                    1,
+                    "mediumseagreen, dodgerblue, tomato",
+                ],
+            },
         ],
     },
     {
@@ -47,9 +74,20 @@ TestRegister.addTests([
         expectedMatch: /^<svg width/,
         recipeConfig: [
             {
-                "op": "Heatmap chart",
-                "args": ["Line feed", "Space", 25, 25, true, "", "", false, "white", "black"]
-            }
+                op: "Heatmap chart",
+                args: [
+                    "Line feed",
+                    "Space",
+                    25,
+                    25,
+                    true,
+                    "",
+                    "",
+                    false,
+                    "white",
+                    "black",
+                ],
+            },
         ],
     },
 ]);

@@ -7,8 +7,8 @@
 
 import LoaderWorker from "worker-loader?inline=no-fallback!../workers/LoaderWorker.js";
 import InputWorker from "worker-loader?inline=no-fallback!../workers/InputWorker.mjs";
-import Utils, {debounce} from "../../core/Utils.mjs";
-import {toBase64} from "../../core/lib/Base64.mjs";
+import Utils, { debounce } from "../../core/Utils.mjs";
+import { toBase64 } from "../../core/lib/Base64.mjs";
 import cptable from "codepage";
 
 import {
@@ -18,38 +18,31 @@ import {
     drawSelection,
     rectangularSelection,
     crosshairCursor,
-    dropCursor
+    dropCursor,
 } from "@codemirror/view";
-import {
-    EditorState,
-    Compartment
-} from "@codemirror/state";
+import { EditorState, Compartment } from "@codemirror/state";
 import {
     defaultKeymap,
     insertTab,
     insertNewline,
     history,
-    historyKeymap
+    historyKeymap,
 } from "@codemirror/commands";
-import {
-    bracketMatching
-} from "@codemirror/language";
+import { bracketMatching } from "@codemirror/language";
 import {
     search,
     searchKeymap,
-    highlightSelectionMatches
+    highlightSelectionMatches,
 } from "@codemirror/search";
 
-import {statusBar} from "../utils/statusBar.mjs";
-import {fileDetailsPanel} from "../utils/fileDetails.mjs";
-import {renderSpecialChar} from "../utils/editorUtils.mjs";
-
+import { statusBar } from "../utils/statusBar.mjs";
+import { fileDetailsPanel } from "../utils/fileDetails.mjs";
+import { renderSpecialChar } from "../utils/editorUtils.mjs";
 
 /**
  * Waiter to handle events related to the input.
  */
 class InputWaiter {
-
     /**
      * InputWaiter constructor.
      *
@@ -73,8 +66,10 @@ class InputWaiter {
         this.fileDetails = {};
 
         this.maxWorkers = 1;
-        if (navigator.hardwareConcurrency !== undefined &&
-            navigator.hardwareConcurrency > 1) {
+        if (
+            navigator.hardwareConcurrency !== undefined &&
+            navigator.hardwareConcurrency > 1
+        ) {
             // Subtract 1 from hardwareConcurrency value to avoid using
             // the entire available resources
             this.maxWorkers = navigator.hardwareConcurrency - 1;
@@ -87,9 +82,9 @@ class InputWaiter {
     initEditor() {
         // Mutable extensions
         this.inputEditorConf = {
-            eol: new Compartment,
-            lineWrapping: new Compartment,
-            fileDetailsPanel: new Compartment
+            eol: new Compartment(),
+            lineWrapping: new Compartment(),
+            fileDetailsPanel: new Compartment(),
         };
 
         const initialState = EditorState.create({
@@ -98,7 +93,7 @@ class InputWaiter {
                 // Editor extensions
                 history(),
                 highlightSpecialChars({
-                    render: renderSpecialChar // Custom character renderer to handle special cases
+                    render: renderSpecialChar, // Custom character renderer to handle special cases
                 }),
                 drawSelection(),
                 rectangularSelection(),
@@ -106,7 +101,7 @@ class InputWaiter {
                 dropCursor(),
                 bracketMatching(),
                 highlightSelectionMatches(),
-                search({top: true}),
+                search({ top: true }),
                 EditorState.allowMultipleSelections.of(true),
 
                 // Custom extensions
@@ -114,7 +109,7 @@ class InputWaiter {
                     label: "Input",
                     eolHandler: this.eolChange.bind(this),
                     chrEncHandler: this.chrEncChange.bind(this),
-                    chrEncGetter: this.getChrEnc.bind(this)
+                    chrEncGetter: this.getChrEnc.bind(this),
                 }),
 
                 // Mutable state
@@ -131,23 +126,23 @@ class InputWaiter {
                     { key: "Enter", run: insertNewline },
                     ...historyKeymap,
                     ...defaultKeymap,
-                    ...searchKeymap
+                    ...searchKeymap,
                 ]),
 
                 // Event listeners
-                EditorView.updateListener.of(e => {
+                EditorView.updateListener.of((e) => {
                     if (e.selectionSet)
                         this.manager.highlighter.selectionChange("input", e);
                     if (e.docChanged && !this.silentInputChange)
                         this.inputChange(e);
                     this.silentInputChange = false;
-                })
-            ]
+                }),
+            ],
         });
 
         this.inputEditorView = new EditorView({
             state: initialState,
-            parent: this.inputTextEl
+            parent: this.inputTextEl,
         });
     }
 
@@ -161,7 +156,9 @@ class InputWaiter {
 
         // Update the EOL value
         this.inputEditorView.dispatch({
-            effects: this.inputEditorConf.eol.reconfigure(EditorState.lineSeparator.of(eolVal))
+            effects: this.inputEditorConf.eol.reconfigure(
+                EditorState.lineSeparator.of(eolVal),
+            ),
         });
 
         // Reset the input so that lines are recalculated, preserving the old EOL values
@@ -202,8 +199,8 @@ class InputWaiter {
     setWordWrap(wrap) {
         this.inputEditorView.dispatch({
             effects: this.inputEditorConf.lineWrapping.reconfigure(
-                wrap ? EditorView.lineWrapping : []
-            )
+                wrap ? EditorView.lineWrapping : [],
+            ),
         });
     }
 
@@ -222,18 +219,22 @@ class InputWaiter {
      * @param {string} data
      * @param {boolean} [silent=false]
      */
-    setInput(data, silent=false) {
+    setInput(data, silent = false) {
         const lineLengthThreshold = 131072; // 128KB
         let wrap = this.app.options.wordWrap;
         if (data.length > lineLengthThreshold) {
             const lines = data.split(this.getEOLSeq());
-            const longest = lines.reduce((a, b) =>
-                a > b.length ? a : b.length, 0
+            const longest = lines.reduce(
+                (a, b) => (a > b.length ? a : b.length),
+                0,
             );
             if (longest > lineLengthThreshold) {
                 // If we are exceeding the max line length, turn off word wrap
                 wrap = false;
-                this.app.alert("Maximum line length exceeded. Word wrap will be temporarily disabled to improve performance.", 20000);
+                this.app.alert(
+                    "Maximum line length exceeded. Word wrap will be temporarily disabled to improve performance.",
+                    20000,
+                );
             }
         }
 
@@ -250,8 +251,8 @@ class InputWaiter {
                 changes: {
                     from: 0,
                     to: this.inputEditorView.state.doc.length,
-                    insert: data
-                }
+                    insert: data,
+                },
             });
 
             // If turning word wrap on, do it after we populate the editor
@@ -273,8 +274,8 @@ class InputWaiter {
                 action: "updateMaxTabs",
                 data: {
                     maxTabs: numTabs,
-                    activeTab: this.manager.tabs.getActiveTab("input")
-                }
+                    activeTab: this.manager.tabs.getActiveTab("input"),
+                },
             });
         }
     }
@@ -296,21 +297,24 @@ class InputWaiter {
         this.inputWorker = new InputWorker();
         this.inputWorker.postMessage({
             action: "setLogLevel",
-            data: log.getLevel()
+            data: log.getLevel(),
         });
         this.inputWorker.postMessage({
             action: "updateMaxWorkers",
-            data: this.maxWorkers
+            data: this.maxWorkers,
         });
         this.inputWorker.postMessage({
             action: "updateMaxTabs",
             data: {
                 maxTabs: this.maxTabs,
-                activeTab: this.manager.tabs.getActiveTab("input")
-            }
+                activeTab: this.manager.tabs.getActiveTab("input"),
+            },
         });
 
-        this.inputWorker.addEventListener("message", this.handleInputWorkerMessage.bind(this));
+        this.inputWorker.addEventListener(
+            "message",
+            this.handleInputWorkerMessage.bind(this),
+        );
     }
 
     /**
@@ -324,8 +328,8 @@ class InputWaiter {
         this.inputWorker.postMessage({
             action: "loaderWorkerReady",
             data: {
-                id: workerObj.id
-            }
+                id: workerObj.id,
+            },
         });
     }
 
@@ -338,23 +342,30 @@ class InputWaiter {
         if (this.loaderWorkers.length === this.maxWorkers) {
             return -1;
         }
-        log.debug(`Adding new LoaderWorker (${this.loaderWorkers.length + 1}/${this.maxWorkers}).`);
+        log.debug(
+            `Adding new LoaderWorker (${this.loaderWorkers.length + 1}/${
+                this.maxWorkers
+            }).`,
+        );
         const newWorker = new LoaderWorker();
         const workerId = this.workerId++;
-        newWorker.addEventListener("message", this.handleLoaderMessage.bind(this));
+        newWorker.addEventListener(
+            "message",
+            this.handleLoaderMessage.bind(this),
+        );
         newWorker.postMessage({
             action: "setLogLevel",
-            data: log.getLevel()
+            data: log.getLevel(),
         });
         newWorker.postMessage({
             action: "setID",
             data: {
-                id: workerId
-            }
+                id: workerId,
+            },
         });
         const newWorkerObj = {
             worker: newWorker,
-            id: workerId
+            id: workerId,
         };
         this.loaderWorkers.push(newWorkerObj);
         return this.loaderWorkers.indexOf(newWorkerObj);
@@ -419,8 +430,8 @@ class InputWaiter {
             action: "loadFile",
             data: {
                 file: inputData.file,
-                inputNum: inputData.inputNum
-            }
+                inputNum: inputData.inputNum,
+            },
         });
     }
 
@@ -433,18 +444,32 @@ class InputWaiter {
     handleLoaderMessage(e) {
         const r = e.data;
 
-        if (Object.prototype.hasOwnProperty.call(r, "progress") &&
-            Object.prototype.hasOwnProperty.call(r, "inputNum")) {
-            this.manager.tabs.updateTabProgress(r.inputNum, r.progress, 100, "input");
+        if (
+            Object.prototype.hasOwnProperty.call(r, "progress") &&
+            Object.prototype.hasOwnProperty.call(r, "inputNum")
+        ) {
+            this.manager.tabs.updateTabProgress(
+                r.inputNum,
+                r.progress,
+                100,
+                "input",
+            );
         }
 
-        const transferable = Object.prototype.hasOwnProperty.call(r, "fileBuffer") ? [r.fileBuffer] : undefined;
-        this.inputWorker.postMessage({
-            action: "loaderWorkerMessage",
-            data: r
-        }, transferable);
+        const transferable = Object.prototype.hasOwnProperty.call(
+            r,
+            "fileBuffer",
+        )
+            ? [r.fileBuffer]
+            : undefined;
+        this.inputWorker.postMessage(
+            {
+                action: "loaderWorkerMessage",
+                data: r,
+            },
+            transferable,
+        );
     }
-
 
     /**
      * Handler for messages sent back by the InputWorker
@@ -455,7 +480,9 @@ class InputWaiter {
         const r = e.data;
 
         if (!("action" in r)) {
-            log.error("A message was received from the InputWorker with no action property. Ignoring message.");
+            log.error(
+                "A message was received from the InputWorker with no action property. Ignoring message.",
+            );
             return;
         }
 
@@ -472,13 +499,22 @@ class InputWaiter {
                 this.removeLoaderWorker(this.getLoaderWorker(r.data));
                 break;
             case "refreshTabs":
-                this.refreshTabs(r.data.nums, r.data.activeTab, r.data.tabsLeft, r.data.tabsRight);
+                this.refreshTabs(
+                    r.data.nums,
+                    r.data.activeTab,
+                    r.data.tabsLeft,
+                    r.data.tabsRight,
+                );
                 break;
             case "changeTab":
                 this.changeTab(r.data, this.app.options.syncTabs);
                 break;
             case "updateTabHeader":
-                this.manager.tabs.updateTabHeader(r.data.inputNum, r.data.input, "input");
+                this.manager.tabs.updateTabHeader(
+                    r.data.inputNum,
+                    r.data.input,
+                    "input",
+                );
                 break;
             case "loadingInfo":
                 this.showLoadingInfo(r.data, true);
@@ -527,9 +563,15 @@ class InputWaiter {
      */
     bakeAll() {
         this.app.progress = 0;
-        debounce(this.manager.controls.toggleBakeButtonFunction, 20, "toggleBakeButton", this, ["loading"]);
+        debounce(
+            this.manager.controls.toggleBakeButtonFunction,
+            20,
+            "toggleBakeButton",
+            this,
+            ["loading"],
+        );
         this.inputWorker.postMessage({
-            action: "bakeAll"
+            action: "bakeAll",
         });
     }
 
@@ -551,54 +593,58 @@ class InputWaiter {
      *     @param {string} eolSequence
      * @param {boolean} [silent=false] - If false, fires the manager statechange event
      */
-    async set(inputNum, inputData, silent=false) {
-        return new Promise(function(resolve, reject) {
-            const activeTab = this.manager.tabs.getActiveTab("input");
-            if (inputNum !== activeTab) {
-                this.changeTab(inputNum, this.app.options.syncTabs);
-                return;
-            }
+    async set(inputNum, inputData, silent = false) {
+        return new Promise(
+            function (resolve, reject) {
+                const activeTab = this.manager.tabs.getActiveTab("input");
+                if (inputNum !== activeTab) {
+                    this.changeTab(inputNum, this.app.options.syncTabs);
+                    return;
+                }
 
-            // Update current character encoding
-            this.inputChrEnc = inputData.encoding;
+                // Update current character encoding
+                this.inputChrEnc = inputData.encoding;
 
-            // Update current eol sequence
-            this.inputEditorView.dispatch({
-                effects: this.inputEditorConf.eol.reconfigure(
-                    EditorState.lineSeparator.of(inputData.eolSequence)
-                )
-            });
+                // Update current eol sequence
+                this.inputEditorView.dispatch({
+                    effects: this.inputEditorConf.eol.reconfigure(
+                        EditorState.lineSeparator.of(inputData.eolSequence),
+                    ),
+                });
 
-            // Handle file previews
-            if (inputData.file) {
-                this.setFile(inputNum, inputData);
-            } else {
-                this.clearFile(inputNum);
-            }
+                // Handle file previews
+                if (inputData.file) {
+                    this.setFile(inputNum, inputData);
+                } else {
+                    this.clearFile(inputNum);
+                }
 
-            // Decode the data to a string
-            this.manager.timing.recordTime("inputEncodingStart", inputNum);
-            let inputVal;
-            if (this.getChrEnc() > 0) {
-                inputVal = cptable.utils.decode(this.inputChrEnc, new Uint8Array(inputData.buffer));
-            } else {
-                inputVal = Utils.arrayBufferToStr(inputData.buffer);
-            }
-            this.manager.timing.recordTime("inputEncodingEnd", inputNum);
+                // Decode the data to a string
+                this.manager.timing.recordTime("inputEncodingStart", inputNum);
+                let inputVal;
+                if (this.getChrEnc() > 0) {
+                    inputVal = cptable.utils.decode(
+                        this.inputChrEnc,
+                        new Uint8Array(inputData.buffer),
+                    );
+                } else {
+                    inputVal = Utils.arrayBufferToStr(inputData.buffer);
+                }
+                this.manager.timing.recordTime("inputEncodingEnd", inputNum);
 
-            // Populate the input editor
-            this.setInput(inputVal, silent);
+                // Populate the input editor
+                this.setInput(inputVal, silent);
 
-            // Set URL to current input
-            if (inputVal.length >= 0 && inputVal.length <= 51200) {
-                const inputStr = toBase64(inputVal, "A-Za-z0-9+/");
-                this.app.updateURL(true, inputStr);
-            }
+                // Set URL to current input
+                if (inputVal.length >= 0 && inputVal.length <= 51200) {
+                    const inputStr = toBase64(inputVal, "A-Za-z0-9+/");
+                    this.app.updateURL(true, inputStr);
+                }
 
-            // Trigger a state change
-            if (!silent) window.dispatchEvent(this.manager.statechange);
-
-        }.bind(this));
+                // Trigger a state change
+                if (!silent) window.dispatchEvent(this.manager.statechange);
+            }.bind(this),
+        );
     }
 
     /**
@@ -628,12 +674,12 @@ class InputWaiter {
             buffer: inputData.buffer,
             renderPreview: this.app.options.imagePreview,
             toggleHandler: this.toggleFileDetails.bind(this),
-            hidden: false
+            hidden: false,
         };
         this.inputEditorView.dispatch({
             effects: this.inputEditorConf.fileDetailsPanel.reconfigure(
-                fileDetailsPanel(this.fileDetails)
-            )
+                fileDetailsPanel(this.fileDetails),
+            ),
         });
     }
 
@@ -648,7 +694,7 @@ class InputWaiter {
 
         // Clear file details panel
         this.inputEditorView.dispatch({
-            effects: this.inputEditorConf.fileDetailsPanel.reconfigure([])
+            effects: this.inputEditorConf.fileDetailsPanel.reconfigure([]),
         });
     }
 
@@ -661,8 +707,8 @@ class InputWaiter {
         this.fileDetails.hidden = !this.fileDetails.hidden;
         this.inputEditorView.dispatch({
             effects: this.inputEditorConf.fileDetailsPanel.reconfigure(
-                fileDetailsPanel(this.fileDetails)
-            )
+                fileDetailsPanel(this.fileDetails),
+            ),
         });
     }
 
@@ -681,8 +727,8 @@ class InputWaiter {
             action: "setInput",
             data: {
                 inputNum: inputNum,
-                silent: false
-            }
+                silent: false,
+            },
         });
 
         this.updateFileProgress(inputNum, 100);
@@ -702,8 +748,8 @@ class InputWaiter {
         if (progress === "error") this.fileDetails.status = "error";
         this.inputEditorView.dispatch({
             effects: this.inputEditorConf.fileDetailsPanel.reconfigure(
-                fileDetailsPanel(this.fileDetails)
-            )
+                fileDetailsPanel(this.fileDetails),
+            ),
         });
     }
 
@@ -713,7 +759,7 @@ class InputWaiter {
      * @param {number} inputNum
      * @param {string | ArrayBuffer} value
      */
-    updateInputValue(inputNum, value, force=false) {
+    updateInputValue(inputNum, value, force = false) {
         // Prepare the value as a buffer (full value) and a string sample (up to 4096 bytes)
         let buffer;
         let stringSample = "";
@@ -736,22 +782,26 @@ class InputWaiter {
         this.manager.timing.recordTime("inputEncodingEnd", tabNum);
 
         // Update the deep link
-        const recipeStr = buffer.byteLength < 51200 ? toBase64(buffer, "A-Za-z0-9+/") : ""; // B64 alphabet with no padding
+        const recipeStr =
+            buffer.byteLength < 51200 ? toBase64(buffer, "A-Za-z0-9+/") : ""; // B64 alphabet with no padding
         const includeInput = recipeStr.length > 0 && buffer.byteLength < 51200;
         this.app.updateURL(includeInput, recipeStr);
 
         // Post new value to the InputWorker
         const transferable = [buffer];
-        this.inputWorker.postMessage({
-            action: "updateInputValue",
-            data: {
-                inputNum: inputNum,
-                buffer: buffer,
-                stringSample: stringSample,
-                encoding: this.getChrEnc(),
-                eolSequence: this.getEOLSeq()
-            }
-        }, transferable);
+        this.inputWorker.postMessage(
+            {
+                action: "updateInputValue",
+                data: {
+                    inputNum: inputNum,
+                    buffer: buffer,
+                    stringSample: stringSample,
+                    encoding: this.getChrEnc(),
+                    eolSequence: this.getEOLSeq(),
+                },
+            },
+            transferable,
+        );
     }
 
     /**
@@ -761,8 +811,8 @@ class InputWaiter {
      * @returns {ArrayBuffer | string}
      */
     async getInputValue(inputNum) {
-        return await new Promise(resolve => {
-            this.getInputFromWorker(inputNum, false, r => {
+        return await new Promise((resolve) => {
+            this.getInputFromWorker(inputNum, false, (r) => {
                 resolve(r.data);
             });
         });
@@ -775,8 +825,8 @@ class InputWaiter {
      * @returns {object}
      */
     async getInputObj(inputNum) {
-        return await new Promise(resolve => {
-            this.getInputFromWorker(inputNum, true, r => {
+        return await new Promise((resolve) => {
+            this.getInputFromWorker(inputNum, true, (r) => {
                 resolve(r.data);
             });
         });
@@ -800,8 +850,8 @@ class InputWaiter {
             data: {
                 inputNum: inputNum,
                 getObj: getObj,
-                id: id
-            }
+                id: id,
+            },
         });
     }
 
@@ -811,8 +861,8 @@ class InputWaiter {
      * @returns {object}
      */
     async getInputNums() {
-        return await new Promise(resolve => {
-            this.getNums(r => {
+        return await new Promise((resolve) => {
+            this.getNums((r) => {
                 resolve(r);
             });
         });
@@ -829,7 +879,7 @@ class InputWaiter {
 
         this.inputWorker.postMessage({
             action: "getInputNums",
-            data: id
+            data: id,
         });
     }
 
@@ -851,19 +901,25 @@ class InputWaiter {
         else if (inputLength < 1000000) delay = 200;
         else delay = 500;
 
-        debounce(function(e) {
-            const value = this.getInput();
-            const activeTab = this.manager.tabs.getActiveTab("input");
+        debounce(
+            function (e) {
+                const value = this.getInput();
+                const activeTab = this.manager.tabs.getActiveTab("input");
 
-            this.updateInputValue(activeTab, value);
-            this.inputWorker.postMessage({
-                action: "updateTabHeader",
-                data: activeTab
-            });
+                this.updateInputValue(activeTab, value);
+                this.inputWorker.postMessage({
+                    action: "updateTabHeader",
+                    data: activeTab,
+                });
 
-            // Fire the statechange event as the input has been modified
-            window.dispatchEvent(this.manager.statechange);
-        }, delay, "inputChange", this, [e])();
+                // Fire the statechange event as the input has been modified
+                window.dispatchEvent(this.manager.statechange);
+            },
+            delay,
+            "inputChange",
+            this,
+            [e],
+        )();
     }
 
     /**
@@ -874,8 +930,7 @@ class InputWaiter {
      */
     inputDragover(e) {
         // This will be set if we're dragging an operation
-        if (e.dataTransfer.effectAllowed === "move")
-            return false;
+        if (e.dataTransfer.effectAllowed === "move") return false;
 
         e.stopPropagation();
         e.preventDefault();
@@ -907,8 +962,7 @@ class InputWaiter {
      */
     async inputDrop(e) {
         // This will be set if we're dragging an operation
-        if (e.dataTransfer.effectAllowed === "move")
-            return false;
+        if (e.dataTransfer.effectAllowed === "move") return false;
 
         e.stopPropagation();
         e.preventDefault();
@@ -923,10 +977,19 @@ class InputWaiter {
 
             // Handling the files as FileSystemEntry objects allows us to open directories,
             // but relies on a function that may be deprecated in future.
-            if (Object.prototype.hasOwnProperty.call(DataTransferItem.prototype, "webkitGetAsEntry")) {
-                const fileEntries = await this.getAllFileEntries(e.dataTransfer.items);
+            if (
+                Object.prototype.hasOwnProperty.call(
+                    DataTransferItem.prototype,
+                    "webkitGetAsEntry",
+                )
+            ) {
+                const fileEntries = await this.getAllFileEntries(
+                    e.dataTransfer.items,
+                );
                 // Read all FileEntry objects into File objects
-                files = await Promise.all(fileEntries.map(async fe => await this.getFile(fe)));
+                files = await Promise.all(
+                    fileEntries.map(async (fe) => await this.getFile(fe)),
+                );
             } else {
                 files = e.dataTransfer.files;
             }
@@ -955,7 +1018,11 @@ class InputWaiter {
             if (entry.isFile) {
                 fileEntries.push(entry);
             } else if (entry.isDirectory) {
-                queue.push(...await this.readAllDirectoryEntries(entry.createReader()));
+                queue.push(
+                    ...(await this.readAllDirectoryEntries(
+                        entry.createReader(),
+                    )),
+                );
             }
         }
         return fileEntries;
@@ -1003,7 +1070,9 @@ class InputWaiter {
      */
     async getFile(fileEntry) {
         try {
-            return new Promise((resolve, reject) => fileEntry.file(resolve, reject));
+            return new Promise((resolve, reject) =>
+                fileEntry.file(resolve, reject),
+            );
         } catch (err) {
             log.error(err);
         }
@@ -1052,23 +1121,26 @@ class InputWaiter {
 
         // Display the number of files as pending so the user
         // knows that we've received the files.
-        this.showLoadingInfo({
-            pending: numFiles,
-            loading: 0,
-            loaded: 0,
-            total: numFiles,
-            activeProgress: {
-                inputNum: activeTab,
-                progress: 0
-            }
-        }, false);
+        this.showLoadingInfo(
+            {
+                pending: numFiles,
+                loading: 0,
+                loaded: 0,
+                total: numFiles,
+                activeProgress: {
+                    inputNum: activeTab,
+                    progress: 0,
+                },
+            },
+            false,
+        );
 
         this.inputWorker.postMessage({
             action: "loadUIFiles",
             data: {
                 files: files,
-                activeTab: activeTab
-            }
+                activeTab: activeTab,
+            },
         });
     }
 
@@ -1094,17 +1166,29 @@ class InputWaiter {
         let width = total.toLocaleString().length;
         width = width < 2 ? 2 : width;
 
-        const totalStr = total.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        const totalStr = total
+            .toLocaleString()
+            .padStart(width, " ")
+            .replace(/ /g, "&nbsp;");
         let msg = "total: " + totalStr;
 
-        const loadedStr = loaded.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
+        const loadedStr = loaded
+            .toLocaleString()
+            .padStart(width, " ")
+            .replace(/ /g, "&nbsp;");
         msg += "<br>loaded: " + loadedStr;
 
         if (pending > 0) {
-            const pendingStr = pending.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
+            const pendingStr = pending
+                .toLocaleString()
+                .padStart(width, " ")
+                .replace(/ /g, "&nbsp;");
             msg += "<br>pending: " + pendingStr;
         } else if (loading > 0) {
-            const loadingStr = loading.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
+            const loadingStr = loading
+                .toLocaleString()
+                .padStart(width, " ")
+                .replace(/ /g, "&nbsp;");
             msg += "<br>loading: " + loadingStr;
         }
 
@@ -1116,23 +1200,29 @@ class InputWaiter {
             inFiles.style.display = "none";
         }
 
-        this.updateFileProgress(loadedData.activeProgress.inputNum, loadedData.activeProgress.progress);
+        this.updateFileProgress(
+            loadedData.activeProgress.inputNum,
+            loadedData.activeProgress.progress,
+        );
 
         const inputTitle = document.getElementById("input").firstElementChild;
         if (loaded < total) {
-            const percentComplete = loaded / total * 100;
+            const percentComplete = (loaded / total) * 100;
             inputTitle.style.background = `linear-gradient(to right, var(--title-background-colour) ${percentComplete}%, var(--primary-background-colour) ${percentComplete}%)`;
         } else {
             inputTitle.style.background = "";
         }
 
         if (loaded < total && autoRefresh) {
-            setTimeout(function() {
-                this.inputWorker.postMessage({
-                    action: "getLoadProgress",
-                    data: this.manager.tabs.getActiveTab("input")
-                });
-            }.bind(this), 100);
+            setTimeout(
+                function () {
+                    this.inputWorker.postMessage({
+                        action: "getLoadProgress",
+                        data: this.manager.tabs.getActiveTab("input"),
+                    });
+                }.bind(this),
+                100,
+            );
         }
     }
 
@@ -1142,15 +1232,15 @@ class InputWaiter {
      * @param {number} inputNum - The inputNum of the tab to change to
      * @param {boolean} [changeOutput=false] - If true, also changes the output
      */
-    changeTab(inputNum, changeOutput=false) {
+    changeTab(inputNum, changeOutput = false) {
         if (this.manager.tabs.getTabItem(inputNum, "input") !== null) {
             this.manager.tabs.changeTab(inputNum, "input");
             this.inputWorker.postMessage({
                 action: "setInput",
                 data: {
                     inputNum: inputNum,
-                    silent: true
-                }
+                    silent: true,
+                },
             });
         } else {
             const minNum = Math.min(...this.manager.tabs.getTabList("input"));
@@ -1162,8 +1252,8 @@ class InputWaiter {
                 action: "refreshTabs",
                 data: {
                     inputNum: inputNum,
-                    direction: direction
-                }
+                    direction: direction,
+                },
             });
         }
 
@@ -1215,8 +1305,8 @@ class InputWaiter {
             total: 1,
             activeProgress: {
                 inputNum: 1,
-                progress: 100
-            }
+                progress: 100,
+            },
         });
 
         this.setupInputWorker();
@@ -1228,17 +1318,17 @@ class InputWaiter {
      * Sets the console log level in the workers.
      */
     setLogLevel() {
-        this.loaderWorkers.forEach(w => {
+        this.loaderWorkers.forEach((w) => {
             w.postMessage({
                 action: "setLogLevel",
-                data: log.getLevel()
+                data: log.getLevel(),
             });
         });
 
         if (!this.inputWorker) return;
         this.inputWorker.postMessage({
             action: "setLogLevel",
-            data: log.getLevel()
+            data: log.getLevel(),
         });
     }
 
@@ -1246,11 +1336,11 @@ class InputWaiter {
      * Sends a message to the inputWorker to add a new input.
      * @param {boolean} [changeTab=false] - If true, changes the tab to the new input
      */
-    addInput(changeTab=false) {
+    addInput(changeTab = false) {
         if (!this.inputWorker) return;
         this.inputWorker.postMessage({
             action: "addInput",
-            data: changeTab
+            data: changeTab,
         });
     }
 
@@ -1289,12 +1379,19 @@ class InputWaiter {
      * @param {number} inputNum - The inputNum of the new tab
      * @param {boolean} [changeTab=true] - If true, changes to the new tab once it's been added
      */
-    addTab(inputNum, changeTab=true) {
+    addTab(inputNum, changeTab = true) {
         const tabsWrapper = document.getElementById("input-tabs"),
             numTabs = tabsWrapper.children.length;
 
-        if (!this.manager.tabs.getTabItem(inputNum, "input") && numTabs < this.maxTabs) {
-            const newTab = this.manager.tabs.createTabElement(inputNum, changeTab, "input");
+        if (
+            !this.manager.tabs.getTabItem(inputNum, "input") &&
+            numTabs < this.maxTabs
+        ) {
+            const newTab = this.manager.tabs.createTabElement(
+                inputNum,
+                changeTab,
+                "input",
+            );
             tabsWrapper.appendChild(newTab);
 
             if (numTabs > 0) {
@@ -1305,11 +1402,13 @@ class InputWaiter {
 
             this.inputWorker.postMessage({
                 action: "updateTabHeader",
-                data: inputNum
+                data: inputNum,
             });
         } else if (numTabs === this.maxTabs) {
             // Can't create a new tab
-            document.getElementById("input-tabs").lastElementChild.classList.add("tabs-right");
+            document
+                .getElementById("input-tabs")
+                .lastElementChild.classList.add("tabs-right");
         }
 
         if (changeTab) this.changeTab(inputNum, false);
@@ -1324,14 +1423,20 @@ class InputWaiter {
      * @param {boolean} tabsRight - True if there are input tabs to the right of the displayed tabs
      */
     refreshTabs(nums, activeTab, tabsLeft, tabsRight) {
-        this.manager.tabs.refreshTabs(nums, activeTab, tabsLeft, tabsRight, "input");
+        this.manager.tabs.refreshTabs(
+            nums,
+            activeTab,
+            tabsLeft,
+            tabsRight,
+            "input",
+        );
 
         this.inputWorker.postMessage({
             action: "setInput",
             data: {
                 inputNum: activeTab,
-                silent: true
-            }
+                silent: true,
+            },
         });
     }
 
@@ -1351,8 +1456,8 @@ class InputWaiter {
             data: {
                 inputNum: inputNum,
                 refreshTabs: refresh,
-                removeChefWorker: true
-            }
+                removeChefWorker: true,
+            },
         });
 
         this.manager.output.removeTab(inputNum);
@@ -1367,7 +1472,9 @@ class InputWaiter {
         if (!mouseEvent.target) {
             return;
         }
-        const tabNum = mouseEvent.target.closest("button").parentElement.getAttribute("inputNum");
+        const tabNum = mouseEvent.target
+            .closest("button")
+            .parentElement.getAttribute("inputNum");
         if (tabNum) {
             this.removeInput(parseInt(tabNum, 10));
         }
@@ -1395,10 +1502,10 @@ class InputWaiter {
         this.mousedown = true;
         this.changeTabRight();
         const time = 200;
-        const func = function(time) {
+        const func = function (time) {
             if (this.mousedown) {
                 this.changeTabRight();
-                const newTime = (time > 50) ? time - 10 : 50;
+                const newTime = time > 50 ? time - 10 : 50;
                 setTimeout(func.bind(this, [newTime]), newTime);
             }
         };
@@ -1412,10 +1519,10 @@ class InputWaiter {
         this.mousedown = true;
         this.changeTabLeft();
         const time = 200;
-        const func = function(time) {
+        const func = function (time) {
             if (this.mousedown) {
                 this.changeTabLeft();
-                const newTime = (time > 50) ? time - 10 : 50;
+                const newTime = time > 50 ? time - 10 : 50;
                 setTimeout(func.bind(this, [newTime]), newTime);
             }
         };
@@ -1441,8 +1548,8 @@ class InputWaiter {
         this.inputWorker.postMessage({
             action: "changeTabRight",
             data: {
-                activeTab: activeTab
-            }
+                activeTab: activeTab,
+            },
         });
     }
 
@@ -1455,8 +1562,8 @@ class InputWaiter {
         this.inputWorker.postMessage({
             action: "changeTabLeft",
             data: {
-                activeTab: activeTab
-            }
+                activeTab: activeTab,
+            },
         });
     }
 
@@ -1465,7 +1572,10 @@ class InputWaiter {
      */
     async goToTab() {
         const inputNums = await this.getInputNums();
-        let tabNum = window.prompt(`Enter tab number (${inputNums.min} - ${inputNums.max}):`, this.manager.tabs.getActiveTab("input").toString());
+        let tabNum = window.prompt(
+            `Enter tab number (${inputNums.min} - ${inputNums.max}):`,
+            this.manager.tabs.getActiveTab("input").toString(),
+        );
 
         if (tabNum === null) return;
         tabNum = parseInt(tabNum, 10);
@@ -1485,13 +1595,20 @@ class InputWaiter {
      * Sends a message to the inputWorker to search the inputs
      */
     filterTabSearch() {
-        const showPending = document.getElementById("input-show-pending").checked;
-        const showLoading = document.getElementById("input-show-loading").checked;
+        const showPending =
+            document.getElementById("input-show-pending").checked;
+        const showLoading =
+            document.getElementById("input-show-loading").checked;
         const showLoaded = document.getElementById("input-show-loaded").checked;
 
         const filter = document.getElementById("input-filter").value;
-        const filterType = document.getElementById("input-filter-button").innerText;
-        const numResults = parseInt(document.getElementById("input-num-results").value, 10);
+        const filterType = document.getElementById(
+            "input-filter-button",
+        ).innerText;
+        const numResults = parseInt(
+            document.getElementById("input-num-results").value,
+            10,
+        );
 
         this.inputWorker.postMessage({
             action: "filterTabs",
@@ -1501,8 +1618,8 @@ class InputWaiter {
                 showLoaded: showLoaded,
                 filter: filter,
                 filterType: filterType,
-                numResults: numResults
-            }
+                numResults: numResults,
+            },
         });
     }
 
@@ -1512,7 +1629,8 @@ class InputWaiter {
      * @param {event} mouseEvent
      */
     filterOptionClick(mouseEvent) {
-        document.getElementById("input-filter-button").innerText = mouseEvent.target.innerText;
+        document.getElementById("input-filter-button").innerText =
+            mouseEvent.target.innerText;
         this.filterTabSearch();
     }
 
@@ -1552,7 +1670,6 @@ class InputWaiter {
         $("#input-tab-modal").modal("hide");
         this.changeTab(inputNum, this.app.options.syncTabs);
     }
-
 }
 
 export default InputWaiter;

@@ -12,7 +12,6 @@ import bcrypt from "bcryptjs";
  * Bcrypt parse operation
  */
 class BcryptParse extends Operation {
-
     /**
      * BcryptParse constructor
      */
@@ -21,7 +20,8 @@ class BcryptParse extends Operation {
 
         this.name = "Bcrypt parse";
         this.module = "Crypto";
-        this.description = "Parses a bcrypt hash to determine the number of rounds used, the salt, and the password hash.";
+        this.description =
+            "Parses a bcrypt hash to determine the number of rounds used, the salt, and the password hash.";
         this.infoURL = "https://wikipedia.org/wiki/Bcrypt";
         this.inputType = "string";
         this.outputType = "string";
@@ -43,7 +43,6 @@ Full hash: ${input}`;
             throw new OperationError("Error: " + err.toString());
         }
     }
-
 }
 
 export default BcryptParse;

@@ -13,7 +13,6 @@ import { debounce } from "../../core/Utils.mjs";
  * Waiter to handle conversations with the ChefWorker
  */
 class WorkerWaiter {
-
     /**
      * WorkerWaiter constructor
      *
@@ -35,15 +34,17 @@ class WorkerWaiter {
         this.callbackID = 0;
 
         this.maxWorkers = 1;
-        if (navigator.hardwareConcurrency !== undefined &&
-            navigator.hardwareConcurrency > 1) {
+        if (
+            navigator.hardwareConcurrency !== undefined &&
+            navigator.hardwareConcurrency > 1
+        ) {
             this.maxWorkers = navigator.hardwareConcurrency - 1;
         }
 
         // Store dishWorker action (getDishAs or getDishTitle)
         this.dishWorker = {
             worker: null,
-            currentAction: ""
+            currentAction: "",
         };
         this.dishWorkerQueue = [];
     }
@@ -71,10 +72,13 @@ class WorkerWaiter {
         log.debug("Adding new DishWorker");
 
         this.dishWorker.worker = new DishWorker();
-        this.dishWorker.worker.addEventListener("message", this.handleDishMessage.bind(this));
+        this.dishWorker.worker.addEventListener(
+            "message",
+            this.handleDishMessage.bind(this),
+        );
         this.dishWorker.worker.postMessage({
             action: "setLogLevel",
-            data: log.getLevel()
+            data: log.getLevel(),
         });
 
         if (this.dishWorkerQueue.length > 0) {
@@ -93,18 +97,25 @@ class WorkerWaiter {
             return -1;
         }
 
-        log.debug(`Adding new ChefWorker (${this.chefWorkers.length + 1}/${this.maxWorkers})`);
+        log.debug(
+            `Adding new ChefWorker (${this.chefWorkers.length + 1}/${
+                this.maxWorkers
+            })`,
+        );
 
         // Create a new ChefWorker and send it the docURL
         const newWorker = new ChefWorker();
-        newWorker.addEventListener("message", this.handleChefMessage.bind(this));
+        newWorker.addEventListener(
+            "message",
+            this.handleChefMessage.bind(this),
+        );
         newWorker.postMessage({
             action: "setLogPrefix",
-            data: "ChefWorker"
+            data: "ChefWorker",
         });
         newWorker.postMessage({
             action: "setLogLevel",
-            data: log.getLevel()
+            data: log.getLevel(),
         });
 
         let docURL = document.location.href.split(/[#?]/)[0];
@@ -112,14 +123,13 @@ class WorkerWaiter {
         if (index > 0) {
             docURL = docURL.substring(0, index);
         }
-        newWorker.postMessage({"action": "docURL", "data": docURL});
-
+        newWorker.postMessage({ action: "docURL", data: docURL });
 
         // Store the worker, whether or not it's active, and the inputNum as an object
         const newWorkerObj = {
             worker: newWorker,
             active: false,
-            inputNum: -1
+            inputNum: -1,
         };
 
         this.chefWorkers.push(newWorkerObj);
@@ -132,7 +142,7 @@ class WorkerWaiter {
      * @param {boolean} [setActive=true] - If true, set the worker status to active
      * @returns {number} - The index of the ChefWorker
      */
-    getInactiveChefWorker(setActive=true) {
+    getInactiveChefWorker(setActive = true) {
         for (let i = 0; i < this.chefWorkers.length; i++) {
             if (!this.chefWorkers[i].active) {
                 this.chefWorkers[i].active = setActive;
@@ -198,13 +208,26 @@ class WorkerWaiter {
             case "bakeComplete":
                 log.debug(`Bake ${inputNum} complete.`);
                 this.manager.timing.recordTime("bakeComplete", inputNum);
-                this.manager.timing.recordTime("bakeDuration", inputNum, r.data.duration);
+                this.manager.timing.recordTime(
+                    "bakeDuration",
+                    inputNum,
+                    r.data.duration,
+                );
 
                 if (r.data.error) {
                     this.app.handleError(r.data.error);
-                    this.manager.output.updateOutputError(r.data.error, inputNum, r.data.progress);
+                    this.manager.output.updateOutputError(
+                        r.data.error,
+                        inputNum,
+                        r.data.progress,
+                    );
                 } else {
-                    this.updateOutput(r.data, r.data.inputNum, r.data.bakeId, r.data.progress);
+                    this.updateOutput(
+                        r.data,
+                        r.data.inputNum,
+                        r.data.bakeId,
+                        r.data.progress,
+                    );
                 }
 
                 this.app.progress = r.data.progress;
@@ -217,7 +240,11 @@ class WorkerWaiter {
                 break;
             case "bakeError":
                 this.app.handleError(r.data.error);
-                this.manager.output.updateOutputError(r.data.error, inputNum, r.data.progress);
+                this.manager.output.updateOutputError(
+                    r.data.error,
+                    inputNum,
+                    r.data.progress,
+                );
                 this.app.progress = r.data.progress;
                 this.workerFinished(currentWorker);
                 break;
@@ -237,20 +264,35 @@ class WorkerWaiter {
                 }
                 break;
             case "statusMessage":
-                this.manager.output.updateOutputMessage(r.data.message, r.data.inputNum, true);
+                this.manager.output.updateOutputMessage(
+                    r.data.message,
+                    r.data.inputNum,
+                    true,
+                );
                 break;
             case "progressMessage":
-                this.manager.output.updateOutputProgress(r.data.progress, r.data.total, r.data.inputNum);
+                this.manager.output.updateOutputProgress(
+                    r.data.progress,
+                    r.data.total,
+                    r.data.inputNum,
+                );
                 break;
             case "optionUpdate":
                 log.debug(`Setting ${r.data.option} to ${r.data.value}`);
                 this.app.options[r.data.option] = r.data.value;
                 break;
             case "setRegisters":
-                this.manager.recipe.setRegisters(r.data.opIndex, r.data.numPrevRegisters, r.data.registers);
+                this.manager.recipe.setRegisters(
+                    r.data.opIndex,
+                    r.data.numPrevRegisters,
+                    r.data.registers,
+                );
                 break;
             case "highlightsCalculated":
-                this.manager.highlighter.displayHighlights(r.data.pos, r.data.direction);
+                this.manager.highlighter.displayHighlights(
+                    r.data.pos,
+                    r.data.direction,
+                );
                 break;
             default:
                 log.error("Unrecognised message from ChefWorker", e);
@@ -271,7 +313,11 @@ class WorkerWaiter {
         if (progress === this.recipeConfig.length) {
             progress = false;
         }
-        this.manager.output.updateOutputProgress(progress, this.recipeConfig.length, inputNum);
+        this.manager.output.updateOutputProgress(
+            progress,
+            this.recipeConfig.length,
+            inputNum,
+        );
         this.manager.output.updateOutputValue(data, inputNum, false);
 
         if (progress !== false) {
@@ -280,7 +326,6 @@ class WorkerWaiter {
             if (inputNum === this.manager.tabs.getActiveTab("input")) {
                 this.manager.recipe.updateBreakpointIndicator(progress);
             }
-
         } else {
             this.manager.output.updateOutputStatus("baked", inputNum);
         }
@@ -293,7 +338,13 @@ class WorkerWaiter {
      */
     setBakingStatus(bakingStatus) {
         this.app.baking = bakingStatus;
-        debounce(this.manager.controls.toggleBakeButtonFunction, 20, "toggleBakeButton", this, [bakingStatus ? "cancel" : "bake"])();
+        debounce(
+            this.manager.controls.toggleBakeButtonFunction,
+            20,
+            "toggleBakeButton",
+            this,
+            [bakingStatus ? "cancel" : "bake"],
+        )();
 
         if (bakingStatus) this.manager.output.hideMagicButton();
     }
@@ -302,7 +353,8 @@ class WorkerWaiter {
      * Get the progress of the ChefWorkers
      */
     getBakeProgress() {
-        const pendingInputs = this.inputNums.length + this.loadingOutputs + this.inputs.length;
+        const pendingInputs =
+            this.inputNums.length + this.loadingOutputs + this.inputs.length;
         let bakingInputs = 0;
 
         for (let i = 0; i < this.chefWorkers.length; i++) {
@@ -318,7 +370,7 @@ class WorkerWaiter {
             total: total,
             pending: pendingInputs,
             baking: bakingInputs,
-            baked: bakedInputs
+            baked: bakedInputs,
         };
     }
 
@@ -328,7 +380,7 @@ class WorkerWaiter {
      * @param {boolean} [silent=false] - If true, don't set the output
      * @param {boolean} [killAll=false] - If true, kills all chefWorkers regardless of status
      */
-    cancelBake(silent=false, killAll=false) {
+    cancelBake(silent = false, killAll = false) {
         const deactiveOutputs = new Set();
 
         for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
@@ -340,20 +392,20 @@ class WorkerWaiter {
         }
         this.setBakingStatus(false);
 
-        this.inputs.forEach(input => {
+        this.inputs.forEach((input) => {
             deactiveOutputs.add(input.inputNum);
         });
 
-        this.inputNums.forEach(inputNum => {
+        this.inputNums.forEach((inputNum) => {
             deactiveOutputs.add(inputNum);
         });
 
-        deactiveOutputs.forEach(num => {
+        deactiveOutputs.forEach((num) => {
             this.manager.output.updateOutputStatus("inactive", num);
         });
 
         const tabList = this.manager.tabs.getTabList("output");
-        tabList.forEach(tab => {
+        tabList.forEach((tab) => {
             this.manager.tabs.getTabItem(tab, "output").style.background = "";
         });
 
@@ -361,7 +413,8 @@ class WorkerWaiter {
         this.inputNums = [];
         this.totalOutputs = 0;
         this.loadingOutputs = 0;
-        if (!silent) this.manager.output.set(this.manager.tabs.getActiveTab("output"));
+        if (!silent)
+            this.manager.output.set(this.manager.tabs.getActiveTab("output"));
     }
 
     /**
@@ -403,8 +456,13 @@ class WorkerWaiter {
             }
             width = width < 2 ? 2 : width;
 
-            const totalStr = progress.total.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
-            const durationStr = duration.padStart(width, " ").replace(/ /g, "&nbsp;");
+            const totalStr = progress.total
+                .toLocaleString()
+                .padStart(width, " ")
+                .replace(/ /g, "&nbsp;");
+            const durationStr = duration
+                .padStart(width, " ")
+                .replace(/ /g, "&nbsp;");
 
             const inputNums = Object.keys(this.manager.output.outputs);
             let avgTime = 0,
@@ -444,10 +502,15 @@ class WorkerWaiter {
         if (!this.chefWorkers[workerIdx]) return;
         this.chefWorkers[workerIdx].active = true;
         const nextInput = this.inputs.splice(0, 1)[0];
-        if (typeof nextInput.inputNum === "string") nextInput.inputNum = parseInt(nextInput.inputNum, 10);
+        if (typeof nextInput.inputNum === "string")
+            nextInput.inputNum = parseInt(nextInput.inputNum, 10);
 
         log.debug(`Baking input ${nextInput.inputNum}.`);
-        this.manager.output.updateOutputMessage(`Baking input ${nextInput.inputNum}...`, nextInput.inputNum, false);
+        this.manager.output.updateOutputMessage(
+            `Baking input ${nextInput.inputNum}...`,
+            nextInput.inputNum,
+            false,
+        );
         this.manager.output.updateOutputStatus("baking", nextInput.inputNum);
 
         this.chefWorkers[workerIdx].inputNum = nextInput.inputNum;
@@ -465,7 +528,8 @@ class WorkerWaiter {
             }
 
             // Set a breakpoint at the next operation so we stop baking there
-            if (recipeConfig[this.app.progress]) recipeConfig[this.app.progress].breakpoint = true;
+            if (recipeConfig[this.app.progress])
+                recipeConfig[this.app.progress].breakpoint = true;
         }
 
         let transferable;
@@ -473,24 +537,27 @@ class WorkerWaiter {
             transferable = [input];
         }
         this.manager.timing.recordTime("chefWorkerTasked", nextInput.inputNum);
-        this.chefWorkers[workerIdx].worker.postMessage({
-            action: "bake",
-            data: {
-                input: input,
-                recipeConfig: recipeConfig,
-                options: this.options,
-                inputNum: nextInput.inputNum,
-                bakeId: this.bakeId
-            }
-        }, transferable);
+        this.chefWorkers[workerIdx].worker.postMessage(
+            {
+                action: "bake",
+                data: {
+                    input: input,
+                    recipeConfig: recipeConfig,
+                    options: this.options,
+                    inputNum: nextInput.inputNum,
+                    bakeId: this.bakeId,
+                },
+            },
+            transferable,
+        );
 
         if (this.inputNums.length > 0) {
             this.manager.input.inputWorker.postMessage({
                 action: "bakeNext",
                 data: {
                     inputNum: this.inputNums.splice(0, 1)[0],
-                    bakeId: this.bakeId
-                }
+                    bakeId: this.bakeId,
+                },
             });
             this.loadingOutputs++;
         }
@@ -543,7 +610,11 @@ class WorkerWaiter {
     queueInputError(inputData) {
         this.loadingOutputs--;
         if (this.app.baking && inputData.bakeId === this.bakeId) {
-            this.manager.output.updateOutputError("Error queueing the input for a bake.", inputData.inputNum, 0);
+            this.manager.output.updateOutputError(
+                "Error queueing the input for a bake.",
+                inputData.inputNum,
+                0,
+            );
 
             if (this.inputNums.length === 0) return;
 
@@ -552,11 +623,10 @@ class WorkerWaiter {
                 action: "bakeNext",
                 data: {
                     inputNum: this.inputNums.splice(0, 1)[0],
-                    bakeId: this.bakeId
-                }
+                    bakeId: this.bakeId,
+                },
             });
             this.loadingOutputs++;
-
         }
     }
 
@@ -571,9 +641,9 @@ class WorkerWaiter {
     async bakeInputs(inputData) {
         log.debug(`Baking input list [${inputData.nums.join(",")}]`);
 
-        return await new Promise(resolve => {
+        return await new Promise((resolve) => {
             if (this.app.baking) return;
-            const inputNums = inputData.nums.filter(n => n > 0);
+            const inputNums = inputData.nums.filter((n) => n > 0);
             const step = inputData.step;
 
             // Use cancelBake to clear out the inputs
@@ -597,7 +667,11 @@ class WorkerWaiter {
             this.app.bake(step);
 
             for (let i = 0; i < this.inputNums.length; i++) {
-                this.manager.output.updateOutputMessage(`Input ${inputNums[i]} has not been baked yet.`, inputNums[i], false);
+                this.manager.output.updateOutputMessage(
+                    `Input ${inputNums[i]} has not been baked yet.`,
+                    inputNums[i],
+                    false,
+                );
                 this.manager.output.updateOutputStatus("pending", inputNums[i]);
             }
 
@@ -611,8 +685,8 @@ class WorkerWaiter {
                     action: "bakeNext",
                     data: {
                         inputNum: this.inputNums.splice(0, 1)[0],
-                        bakeId: this.bakeId
-                    }
+                        bakeId: this.bakeId,
+                    },
                 });
                 this.loadingOutputs++;
             }
@@ -636,8 +710,8 @@ class WorkerWaiter {
         this.chefWorkers[workerId].worker.postMessage({
             action: "silentBake",
             data: {
-                recipeConfig: recipeConfig
-            }
+                recipeConfig: recipeConfig,
+            },
         });
     }
 
@@ -683,8 +757,8 @@ class WorkerWaiter {
             data: {
                 dish: dish,
                 type: type,
-                id: id
-            }
+                id: id,
+            },
         });
     }
 
@@ -706,8 +780,8 @@ class WorkerWaiter {
             data: {
                 dish: dish,
                 maxLength: maxLength,
-                id: id
-            }
+                id: id,
+            },
         });
     }
 
@@ -729,8 +803,8 @@ class WorkerWaiter {
             data: {
                 buffer: buffer,
                 encoding: encoding,
-                id: id
-            }
+                id: id,
+            },
         });
     }
 
@@ -771,17 +845,17 @@ class WorkerWaiter {
      * Sets the console log level in the workers.
      */
     setLogLevel() {
-        this.chefWorkers.forEach(cw => {
+        this.chefWorkers.forEach((cw) => {
             cw.worker.postMessage({
                 action: "setLogLevel",
-                data: log.getLevel()
+                data: log.getLevel(),
             });
         });
 
         if (!this.dishWorker.worker) return;
         this.dishWorker.worker.postMessage({
             action: "setLogLevel",
-            data: log.getLevel()
+            data: log.getLevel(),
         });
     }
 
@@ -792,7 +866,8 @@ class WorkerWaiter {
         const progress = this.getBakeProgress();
         if (progress.total === progress.baked) return;
 
-        const percentComplete = ((progress.pending + progress.baking) / progress.total) * 100;
+        const percentComplete =
+            ((progress.pending + progress.baking) / progress.total) * 100;
         const bakeButton = document.getElementById("bake");
         if (this.app.baking) {
             if (percentComplete < 100) {
@@ -810,10 +885,22 @@ class WorkerWaiter {
             let width = progress.total.toLocaleString().length;
             width = width < 2 ? 2 : width;
 
-            const totalStr = progress.total.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
-            const bakedStr = progress.baked.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
-            const pendingStr = progress.pending.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
-            const bakingStr = progress.baking.toLocaleString().padStart(width, " ").replace(/ /g, "&nbsp;");
+            const totalStr = progress.total
+                .toLocaleString()
+                .padStart(width, " ")
+                .replace(/ /g, "&nbsp;");
+            const bakedStr = progress.baked
+                .toLocaleString()
+                .padStart(width, " ")
+                .replace(/ /g, "&nbsp;");
+            const pendingStr = progress.pending
+                .toLocaleString()
+                .padStart(width, " ")
+                .replace(/ /g, "&nbsp;");
+            const bakingStr = progress.baking
+                .toLocaleString()
+                .padStart(width, " ")
+                .replace(/ /g, "&nbsp;");
 
             let msg = "total: " + totalStr;
             msg += "<br>baked: " + bakedStr;
@@ -830,11 +917,13 @@ class WorkerWaiter {
         }
 
         if (progress.total !== progress.baked) {
-            setTimeout(function() {
-                this.displayProgress();
-            }.bind(this), 100);
+            setTimeout(
+                function () {
+                    this.displayProgress();
+                }.bind(this),
+                100,
+            );
         }
-
     }
 
     /**
@@ -857,8 +946,8 @@ class WorkerWaiter {
             data: {
                 recipeConfig: recipeConfig,
                 direction: direction,
-                pos: pos
-            }
+                pos: pos,
+            },
         });
     }
 }

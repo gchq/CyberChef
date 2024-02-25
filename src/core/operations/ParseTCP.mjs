@@ -6,9 +6,9 @@
 
 import Operation from "../Operation.mjs";
 import Stream from "../lib/Stream.mjs";
-import {toHexFast, fromHex} from "../lib/Hex.mjs";
-import {toBinary} from "../lib/Binary.mjs";
-import {objToTable, bytesToLargeNumber} from "../lib/Protocol.mjs";
+import { toHexFast, fromHex } from "../lib/Hex.mjs";
+import { toBinary } from "../lib/Binary.mjs";
+import { objToTable, bytesToLargeNumber } from "../lib/Protocol.mjs";
 import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import BigNumber from "bignumber.js";
@@ -17,7 +17,6 @@ import BigNumber from "bignumber.js";
  * Parse TCP operation
  */
 class ParseTCP extends Operation {
-
     /**
      * ParseTCP constructor
      */
@@ -27,7 +26,8 @@ class ParseTCP extends Operation {
         this.name = "Parse TCP";
         this.module = "Default";
         this.description = "Parses a TCP header and payload (if present).";
-        this.infoURL = "https://wikipedia.org/wiki/Transmission_Control_Protocol";
+        this.infoURL =
+            "https://wikipedia.org/wiki/Transmission_Control_Protocol";
         this.inputType = "string";
         this.outputType = "json";
         this.presentType = "html";
@@ -35,8 +35,8 @@ class ParseTCP extends Operation {
             {
                 name: "Input format",
                 type: "option",
-                value: ["Hex", "Raw"]
-            }
+                value: ["Hex", "Raw"],
+            },
         ];
     }
 
@@ -68,21 +68,21 @@ class ParseTCP extends Operation {
             "Sequence number": bytesToLargeNumber(s.getBytes(4)),
             "Acknowledgement number": s.readInt(4),
             "Data offset": s.readBits(4),
-            "Flags": {
-                "Reserved": toBinary(s.readBits(3), "", 3),
-                "NS": s.readBits(1),
-                "CWR": s.readBits(1),
-                "ECE": s.readBits(1),
-                "URG": s.readBits(1),
-                "ACK": s.readBits(1),
-                "PSH": s.readBits(1),
-                "RST": s.readBits(1),
-                "SYN": s.readBits(1),
-                "FIN": s.readBits(1),
+            Flags: {
+                Reserved: toBinary(s.readBits(3), "", 3),
+                NS: s.readBits(1),
+                CWR: s.readBits(1),
+                ECE: s.readBits(1),
+                URG: s.readBits(1),
+                ACK: s.readBits(1),
+                PSH: s.readBits(1),
+                RST: s.readBits(1),
+                SYN: s.readBits(1),
+                FIN: s.readBits(1),
             },
             "Window size": s.readInt(2),
-            "Checksum": "0x" + toHexFast(s.getBytes(2)),
-            "Urgent pointer": "0x" + toHexFast(s.getBytes(2))
+            Checksum: "0x" + toHexFast(s.getBytes(2)),
+            "Urgent pointer": "0x" + toHexFast(s.getBytes(2)),
         };
 
         // Parse options if present
@@ -93,11 +93,16 @@ class ParseTCP extends Operation {
             const options = {};
             while (remainingLength > 0) {
                 const option = {
-                    "Kind": s.readInt(1)
+                    Kind: s.readInt(1),
                 };
 
                 let opt = { name: "Reserved", length: true };
-                if (Object.prototype.hasOwnProperty.call(TCP_OPTION_KIND_LOOKUP, option.Kind)) {
+                if (
+                    Object.prototype.hasOwnProperty.call(
+                        TCP_OPTION_KIND_LOOKUP,
+                        option.Kind,
+                    )
+                ) {
                     opt = TCP_OPTION_KIND_LOOKUP[option.Kind];
                 }
 
@@ -106,12 +111,18 @@ class ParseTCP extends Operation {
                     option.Length = s.readInt(1);
 
                     if (option.Length > 2) {
-                        if (Object.prototype.hasOwnProperty.call(opt, "parser")) {
-                            option.Value = opt.parser(s.getBytes(option.Length - 2));
+                        if (
+                            Object.prototype.hasOwnProperty.call(opt, "parser")
+                        ) {
+                            option.Value = opt.parser(
+                                s.getBytes(option.Length - 2),
+                            );
                         } else {
-                            option.Value = option.Length <= 6 ?
-                                s.readInt(option.Length - 2):
-                                "0x" + toHexFast(s.getBytes(option.Length - 2));
+                            option.Value =
+                                option.Length <= 6
+                                    ? s.readInt(option.Length - 2)
+                                    : "0x" +
+                                      toHexFast(s.getBytes(option.Length - 2));
                         }
 
                         // Store Window Scale shift for later
@@ -133,9 +144,14 @@ class ParseTCP extends Operation {
         }
 
         // Improve values
-        TCPPacket["Data offset"] = `${TCPPacket["Data offset"]} (${TCPPacket["Data offset"] * 4} bytes)`;
-        const trueWndSize = BigNumber(TCPPacket["Window size"]).multipliedBy(BigNumber(2).pow(BigNumber(windowScaleShift)));
-        TCPPacket["Window size"] = `${TCPPacket["Window size"]} (Scaled: ${trueWndSize})`;
+        TCPPacket["Data offset"] = `${TCPPacket["Data offset"]} (${
+            TCPPacket["Data offset"] * 4
+        } bytes)`;
+        const trueWndSize = BigNumber(TCPPacket["Window size"]).multipliedBy(
+            BigNumber(2).pow(BigNumber(windowScaleShift)),
+        );
+        TCPPacket["Window size"] =
+            `${TCPPacket["Window size"]} (Scaled: ${trueWndSize})`;
 
         return TCPPacket;
     }
@@ -148,7 +164,6 @@ class ParseTCP extends Operation {
     present(data) {
         return objToTable(data);
     }
-
 }
 
 // Taken from https://www.iana.org/assignments/tcp-parameters/tcp-parameters.xhtml
@@ -168,7 +183,11 @@ const TCP_OPTION_KIND_LOOKUP = {
     11: { name: "CC (obsolete)", length: true },
     12: { name: "CC.NEW (obsolete)", length: true },
     13: { name: "CC.ECHO (obsolete)", length: true },
-    14: { name: "TCP Alternate Checksum Request (obsolete)", length: true, parser: tcpAlternateChecksumParser },
+    14: {
+        name: "TCP Alternate Checksum Request (obsolete)",
+        length: true,
+        parser: tcpAlternateChecksumParser,
+    },
     15: { name: "TCP Alternate Checksum Data (obsolete)", length: true },
     16: { name: "Skeeter", length: true },
     17: { name: "Bubba", length: true },
@@ -182,16 +201,37 @@ const TCP_OPTION_KIND_LOOKUP = {
     25: { name: "Unassigned (released 2000-12-18)", length: true },
     26: { name: "TCP Compression Filter", length: true },
     27: { name: "Quick-Start Response", length: true },
-    28: { name: "User Timeout Option (also, other known unauthorized use)", length: true },
+    28: {
+        name: "User Timeout Option (also, other known unauthorized use)",
+        length: true,
+    },
     29: { name: "TCP Authentication Option (TCP-AO)", length: true },
     30: { name: "Multipath TCP (MPTCP)", length: true },
     69: { name: "Encryption Negotiation (TCP-ENO)", length: true },
-    70: { name: "Reserved (known unauthorized use without proper IANA assignment)", length: true },
-    76: { name: "Reserved (known unauthorized use without proper IANA assignment)", length: true },
-    77: { name: "Reserved (known unauthorized use without proper IANA assignment)", length: true },
-    78: { name: "Reserved (known unauthorized use without proper IANA assignment)", length: true },
-    253: { name: "RFC3692-style Experiment 1 (also improperly used for shipping products) ", length: true },
-    254: { name: "RFC3692-style Experiment 2 (also improperly used for shipping products) ", length: true }
+    70: {
+        name: "Reserved (known unauthorized use without proper IANA assignment)",
+        length: true,
+    },
+    76: {
+        name: "Reserved (known unauthorized use without proper IANA assignment)",
+        length: true,
+    },
+    77: {
+        name: "Reserved (known unauthorized use without proper IANA assignment)",
+        length: true,
+    },
+    78: {
+        name: "Reserved (known unauthorized use without proper IANA assignment)",
+        length: true,
+    },
+    253: {
+        name: "RFC3692-style Experiment 1 (also improperly used for shipping products) ",
+        length: true,
+    },
+    254: {
+        name: "RFC3692-style Experiment 2 (also improperly used for shipping products) ",
+        length: true,
+    },
 };
 
 /**
@@ -203,7 +243,7 @@ function tcpAlternateChecksumParser(data) {
         0: "TCP Checksum",
         1: "8-bit Fletchers's algorithm",
         2: "16-bit Fletchers's algorithm",
-        3: "Redundant Checksum Avoidance"
+        3: "Redundant Checksum Avoidance",
     }[data[0]];
 
     return `${lookup} (0x${toHexFast(data)})`;
@@ -217,14 +257,16 @@ function tcpTimestampParser(data) {
     const s = new Stream(data);
 
     if (s.length !== 8)
-        return `Error: Timestamp field should be 8 bytes long (received 0x${toHexFast(data)})`;
+        return `Error: Timestamp field should be 8 bytes long (received 0x${toHexFast(
+            data,
+        )})`;
 
     const tsval = bytesToLargeNumber(s.getBytes(4)),
         tsecr = bytesToLargeNumber(s.getBytes(4));
 
     return {
         "Current Timestamp": tsval,
-        "Echo Reply": tsecr
+        "Echo Reply": tsecr,
     };
 }
 
@@ -234,11 +276,13 @@ function tcpTimestampParser(data) {
  */
 function windowScaleParser(data) {
     if (data.length !== 1)
-        return `Error: Window Scale should be one byte long (received 0x${toHexFast(data)})`;
+        return `Error: Window Scale should be one byte long (received 0x${toHexFast(
+            data,
+        )})`;
 
     return {
         "Shift count": data[0],
-        "Multiplier": 1 << data[0]
+        Multiplier: 1 << data[0],
     };
 }
 

@@ -75,5 +75,5 @@ TestRegister.addTests([
                 args: ["0-9A-Za-z"],
             },
         ],
-    }
+    },
 ]);

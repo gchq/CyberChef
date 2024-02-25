@@ -8,11 +8,15 @@
  */
 import TestRegister from "../../lib/TestRegister.mjs";
 
-const outputObject = JSON.stringify({
-    String: "SomeString",
-    Number: 42,
-    iat: 1
-}, null, 4);
+const outputObject = JSON.stringify(
+    {
+        String: "SomeString",
+        Number: 42,
+        iat: 1,
+    },
+    null,
+    4,
+);
 
 TestRegister.addTests([
     {
@@ -23,7 +27,7 @@ TestRegister.addTests([
             {
                 op: "JWT Decode",
                 args: [],
-            }
+            },
         ],
     },
     {
@@ -34,7 +38,7 @@ TestRegister.addTests([
             {
                 op: "JWT Decode",
                 args: [],
-            }
+            },
         ],
     },
     {
@@ -45,7 +49,7 @@ TestRegister.addTests([
             {
                 op: "JWT Decode",
                 args: [],
-            }
+            },
         ],
-    }
+    },
 ]);

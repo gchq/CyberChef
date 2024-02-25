@@ -12,7 +12,6 @@ import { format } from "../lib/Ciphers.mjs";
  * RC4 operation
  */
 class RC4 extends Operation {
-
     /**
      * RC4 constructor
      */
@@ -21,27 +20,52 @@ class RC4 extends Operation {
 
         this.name = "RC4";
         this.module = "Ciphers";
-        this.description = "RC4 (also known as ARC4) is a widely-used stream cipher designed by Ron Rivest. It is used in popular protocols such as SSL and WEP. Although remarkable for its simplicity and speed, the algorithm's history doesn't inspire confidence in its security.";
+        this.description =
+            "RC4 (also known as ARC4) is a widely-used stream cipher designed by Ron Rivest. It is used in popular protocols such as SSL and WEP. Although remarkable for its simplicity and speed, the algorithm's history doesn't inspire confidence in its security.";
         this.infoURL = "https://wikipedia.org/wiki/RC4";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Passphrase",
-                "type": "toggleString",
-                "value": "",
-                "toggleValues": ["UTF8", "UTF16", "UTF16LE", "UTF16BE", "Latin1", "Hex", "Base64"]
+                name: "Passphrase",
+                type: "toggleString",
+                value: "",
+                toggleValues: [
+                    "UTF8",
+                    "UTF16",
+                    "UTF16LE",
+                    "UTF16BE",
+                    "Latin1",
+                    "Hex",
+                    "Base64",
+                ],
             },
             {
-                "name": "Input format",
-                "type": "option",
-                "value": ["Latin1", "UTF8", "UTF16", "UTF16LE", "UTF16BE", "Hex", "Base64"]
+                name: "Input format",
+                type: "option",
+                value: [
+                    "Latin1",
+                    "UTF8",
+                    "UTF16",
+                    "UTF16LE",
+                    "UTF16BE",
+                    "Hex",
+                    "Base64",
+                ],
             },
             {
-                "name": "Output format",
-                "type": "option",
-                "value": ["Latin1", "UTF8", "UTF16", "UTF16LE", "UTF16BE", "Hex", "Base64"]
-            }
+                name: "Output format",
+                type: "option",
+                value: [
+                    "Latin1",
+                    "UTF8",
+                    "UTF16",
+                    "UTF16LE",
+                    "UTF16BE",
+                    "Hex",
+                    "Base64",
+                ],
+            },
         ];
     }
 
@@ -83,7 +107,6 @@ class RC4 extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default RC4;

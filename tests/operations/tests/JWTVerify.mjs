@@ -8,11 +8,15 @@
  */
 import TestRegister from "../../lib/TestRegister.mjs";
 
-const outputObject = JSON.stringify({
-    String: "SomeString",
-    Number: 42,
-    iat: 1
-}, null, 4);
+const outputObject = JSON.stringify(
+    {
+        String: "SomeString",
+        Number: 42,
+        iat: 1,
+    },
+    null,
+    4,
+);
 
 const hsKey = "secret_cat";
 /* Retaining private key as a comment
@@ -59,7 +63,7 @@ TestRegister.addTests([
             {
                 op: "JWT Verify",
                 args: [hsKey],
-            }
+            },
         ],
     },
     {
@@ -70,7 +74,7 @@ TestRegister.addTests([
             {
                 op: "JWT Verify",
                 args: [rsPub],
-            }
+            },
         ],
     },
     {
@@ -81,7 +85,7 @@ TestRegister.addTests([
             {
                 op: "JWT Verify",
                 args: [esPub],
-            }
+            },
         ],
-    }
+    },
 ]);

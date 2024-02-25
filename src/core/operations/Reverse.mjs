@@ -11,7 +11,6 @@ import Utils from "../Utils.mjs";
  * Reverse operation
  */
 class Reverse extends Operation {
-
     /**
      * Reverse constructor
      */
@@ -25,11 +24,11 @@ class Reverse extends Operation {
         this.outputType = "byteArray";
         this.args = [
             {
-                "name": "By",
-                "type": "option",
-                "value": ["Byte", "Character", "Line"],
-                "defaultIndex": 1
-            }
+                name: "By",
+                type: "option",
+                value: ["Byte", "Character", "Line"],
+                defaultIndex: 1,
+            },
         ];
     }
 
@@ -81,7 +80,6 @@ class Reverse extends Operation {
             return input.reverse();
         }
     }
-
 }
 
 export default Reverse;

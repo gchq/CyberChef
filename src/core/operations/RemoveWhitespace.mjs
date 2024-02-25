@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Remove whitespace operation
  */
 class RemoveWhitespace extends Operation {
-
     /**
      * RemoveWhitespace constructor
      */
@@ -19,40 +18,41 @@ class RemoveWhitespace extends Operation {
 
         this.name = "Remove whitespace";
         this.module = "Default";
-        this.description = "Optionally removes all spaces, carriage returns, line feeds, tabs and form feeds from the input data.<br><br>This operation also supports the removal of full stops which are sometimes used to represent non-printable bytes in ASCII output.";
+        this.description =
+            "Optionally removes all spaces, carriage returns, line feeds, tabs and form feeds from the input data.<br><br>This operation also supports the removal of full stops which are sometimes used to represent non-printable bytes in ASCII output.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Spaces",
-                "type": "boolean",
-                "value": true
+                name: "Spaces",
+                type: "boolean",
+                value: true,
             },
             {
-                "name": "Carriage returns (\\r)",
-                "type": "boolean",
-                "value": true
+                name: "Carriage returns (\\r)",
+                type: "boolean",
+                value: true,
             },
             {
-                "name": "Line feeds (\\n)",
-                "type": "boolean",
-                "value": true
+                name: "Line feeds (\\n)",
+                type: "boolean",
+                value: true,
             },
             {
-                "name": "Tabs",
-                "type": "boolean",
-                "value": true
+                name: "Tabs",
+                type: "boolean",
+                value: true,
             },
             {
-                "name": "Form feeds (\\f)",
-                "type": "boolean",
-                "value": true
+                name: "Form feeds (\\f)",
+                type: "boolean",
+                value: true,
             },
             {
-                "name": "Full stops",
-                "type": "boolean",
-                "value": false
-            }
+                name: "Full stops",
+                type: "boolean",
+                value: false,
+            },
         ];
     }
 
@@ -68,7 +68,7 @@ class RemoveWhitespace extends Operation {
             removeLineFeeds,
             removeTabs,
             removeFormFeeds,
-            removeFullStops
+            removeFullStops,
         ] = args;
         let data = input;
 
@@ -80,7 +80,6 @@ class RemoveWhitespace extends Operation {
         if (removeFullStops) data = data.replace(/\./g, "");
         return data;
     }
-
 }
 
 export default RemoveWhitespace;

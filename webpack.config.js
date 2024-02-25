@@ -33,12 +33,11 @@ const banner = `/**
  * limitations under the License.
  */`;
 
-
 module.exports = {
     output: {
         publicPath: "",
         globalObject: "this",
-        assetModuleFilename: "assets/[hash][ext][query]"
+        assetModuleFilename: "assets/[hash][ext][query]",
     },
     plugins: [
         new webpack.ProvidePlugin({
@@ -49,40 +48,43 @@ module.exports = {
             // many of our dependencies expect them, so it is easiest to just
             // provide them everywhere as was the case in webpack 4-
             process: "process",
-            Buffer: ["buffer", "Buffer"]
+            Buffer: ["buffer", "Buffer"],
         }),
         new webpack.BannerPlugin({
             banner: banner,
             raw: true,
-            entryOnly: true
+            entryOnly: true,
         }),
         new webpack.DefinePlugin({
             // Required by Jimp to improve loading speed in browsers
-            "process.browser": "true"
+            "process.browser": "true",
         }),
         new MiniCssExtractPlugin({
-            filename: "assets/[name].css"
+            filename: "assets/[name].css",
         }),
         new CopyWebpackPlugin({
             patterns: [
                 {
                     context: "src/core/vendor/",
                     from: "tesseract/**/*",
-                    to: "assets/"
-                }, {
+                    to: "assets/",
+                },
+                {
                     context: "node_modules/tesseract.js/",
                     from: "dist/worker.min.js",
-                    to: "assets/tesseract"
-                }, {
+                    to: "assets/tesseract",
+                },
+                {
                     context: "node_modules/tesseract.js-core/",
                     from: "tesseract-core.wasm.js",
-                    to: "assets/tesseract"
-                }, {
+                    to: "assets/tesseract",
+                },
+                {
                     context: "node_modules/node-forge/dist",
                     from: "prime.worker.min.js",
-                    to: "assets/forge/"
-                }
-            ]
+                    to: "assets/forge/",
+                },
+            ],
         }),
         new ModifySourcePlugin({
             rules: [
@@ -90,10 +92,13 @@ module.exports = {
                     // Fix toSpare(0) bug in Split.js by avoiding gutter accomodation
                     test: /split\.es\.js$/,
                     modify: (src, path) =>
-                        src.replace("if (pixelSize < elementMinSize)", "if (false)")
-                }
-            ]
-        })
+                        src.replace(
+                            "if (pixelSize < elementMinSize)",
+                            "if (false)",
+                        ),
+                },
+            ],
+        }),
     ],
     resolve: {
         extensions: [".mjs", ".js", ".json"], // Allows importing files without extensions
@@ -101,17 +106,17 @@ module.exports = {
             jquery: "jquery/src/jquery",
         },
         fallback: {
-            "fs": false,
-            "child_process": false,
-            "net": false,
-            "tls": false,
-            "path": require.resolve("path/"),
-            "buffer": require.resolve("buffer/"),
-            "crypto": require.resolve("crypto-browserify"),
-            "stream": require.resolve("stream-browserify"),
-            "zlib": require.resolve("browserify-zlib"),
-            "process": false
-        }
+            fs: false,
+            child_process: false,
+            net: false,
+            tls: false,
+            path: require.resolve("path/"),
+            buffer: require.resolve("buffer/"),
+            crypto: require.resolve("crypto-browserify"),
+            stream: require.resolve("stream-browserify"),
+            zlib: require.resolve("browserify-zlib"),
+            process: false,
+        },
     },
     module: {
         // argon2-browser loads argon2.wasm by itself, so Webpack should not load it
@@ -123,42 +128,42 @@ module.exports = {
                 options: {
                     configFile: path.resolve(__dirname, "babel.config.js"),
                     cacheDirectory: true,
-                    compact: false
+                    compact: false,
                 },
                 type: "javascript/auto",
-                loader: "babel-loader"
+                loader: "babel-loader",
             },
             {
                 test: /node-forge/,
                 loader: "imports-loader",
                 options: {
-                    additionalCode: "var jQuery = false;"
-                }
+                    additionalCode: "var jQuery = false;",
+                },
             },
             {
                 // Load argon2.wasm as base64-encoded binary file expected by argon2-browser
                 test: /argon2\.wasm$/,
                 loader: "base64-loader",
-                type: "javascript/auto"
+                type: "javascript/auto",
             },
             {
                 test: /prime.worker.min.js$/,
-                type: "asset/source"
+                type: "asset/source",
             },
             {
                 test: /bootstrap-material-design/,
                 loader: "imports-loader",
                 options: {
-                    imports: "default popper.js/dist/umd/popper.js Popper"
-                }
+                    imports: "default popper.js/dist/umd/popper.js Popper",
+                },
             },
             {
                 test: /blueimp-load-image/,
                 loader: "imports-loader",
                 options: {
                     type: "commonjs",
-                    imports: "single min-document document"
-                }
+                    imports: "single min-document document",
+                },
             },
             {
                 test: /\.css$/,
@@ -166,12 +171,12 @@ module.exports = {
                     {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
-                            publicPath: "../"
-                        }
+                            publicPath: "../",
+                        },
                     },
                     "css-loader",
                     "postcss-loader",
-                ]
+                ],
             },
             {
                 test: /\.(ico|eot|ttf|woff|woff2)$/,
@@ -181,42 +186,45 @@ module.exports = {
                 test: /\.svg$/,
                 type: "asset/inline",
             },
-            { // Store font .fnt and .png files in a separate fonts folder
+            {
+                // Store font .fnt and .png files in a separate fonts folder
                 test: /(\.fnt$|bmfonts\/.+\.png$)/,
                 type: "asset/resource",
                 generator: {
-                    filename: "assets/fonts/[name][ext]"
-                }
+                    filename: "assets/fonts/[name][ext]",
+                },
             },
-            { // First party images are saved as files to be cached
+            {
+                // First party images are saved as files to be cached
                 test: /\.(png|jpg|gif)$/,
                 exclude: /(node_modules|bmfonts)/,
                 type: "asset/resource",
                 generator: {
-                    filename: "images/[name][ext]"
-                }
+                    filename: "images/[name][ext]",
+                },
             },
-            { // Third party images are inlined
+            {
+                // Third party images are inlined
                 test: /\.(png|jpg|gif)$/,
                 exclude: /web\/static/,
                 type: "asset/inline",
             },
-        ]
+        ],
     },
     stats: {
         children: false,
         chunks: false,
         modules: false,
-        entrypoints: false
+        entrypoints: false,
     },
     ignoreWarnings: [
         /source-map/,
         /source map/,
         /dependency is an expression/,
         /export 'default'/,
-        /Can't resolve 'sodium'/
+        /Can't resolve 'sodium'/,
     ],
     performance: {
-        hints: false
-    }
+        hints: false,
+    },
 };

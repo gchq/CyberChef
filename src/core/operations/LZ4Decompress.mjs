@@ -11,7 +11,6 @@ import lz4 from "lz4js";
  * LZ4 Decompress operation
  */
 class LZ4Decompress extends Operation {
-
     /**
      * LZ4Decompress constructor
      */
@@ -20,7 +19,8 @@ class LZ4Decompress extends Operation {
 
         this.name = "LZ4 Decompress";
         this.module = "Compression";
-        this.description = "LZ4 is a lossless data compression algorithm that is focused on compression and decompression speed. It belongs to the LZ77 family of byte-oriented compression schemes.";
+        this.description =
+            "LZ4 is a lossless data compression algorithm that is focused on compression and decompression speed. It belongs to the LZ77 family of byte-oriented compression schemes.";
         this.infoURL = "https://wikipedia.org/wiki/LZ4_(compression_algorithm)";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -37,7 +37,6 @@ class LZ4Decompress extends Operation {
         const decompressed = lz4.decompress(inBuf);
         return decompressed.buffer;
     }
-
 }
 
 export default LZ4Decompress;

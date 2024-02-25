@@ -19,7 +19,8 @@ TestRegister.addTests([
                 args: ["NFD"],
             },
         ],
-    }, {
+    },
+    {
         name: "Normalise Unicode - NFC",
         input: "\u00c7\u0043\u0327\u2160",
         expectedMatch: /\u00C7\u00C7\u2160/,
@@ -29,7 +30,8 @@ TestRegister.addTests([
                 args: ["NFC"],
             },
         ],
-    }, {
+    },
+    {
         name: "Normalise Unicode - NFKD",
         input: "\u00c7\u0043\u0327\u2160",
         expectedMatch: /C\u0327C\u0327I/,
@@ -39,7 +41,8 @@ TestRegister.addTests([
                 args: ["NFKD"],
             },
         ],
-    }, {
+    },
+    {
         name: "Normalise Unicode - NFKC",
         input: "\u00c7\u0043\u0327\u2160",
         expectedMatch: /\u00C7\u00C7I/,
@@ -51,4 +54,3 @@ TestRegister.addTests([
         ],
     },
 ]);
-

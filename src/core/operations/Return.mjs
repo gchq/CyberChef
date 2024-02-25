@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Return operation
  */
 class Return extends Operation {
-
     /**
      * Return constructor
      */
@@ -20,7 +19,8 @@ class Return extends Operation {
         this.name = "Return";
         this.flowControl = true;
         this.module = "Default";
-        this.description = "End execution of operations at this point in the recipe.";
+        this.description =
+            "End execution of operations at this point in the recipe.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
@@ -37,7 +37,6 @@ class Return extends Operation {
         state.progress = state.opList.length;
         return state;
     }
-
 }
 
 export default Return;

@@ -8,7 +8,6 @@
  * Waiter to handle events related to the CyberChef options.
  */
 class OptionsWaiter {
-
     /**
      * OptionsWaiter constructor.
      *
@@ -29,20 +28,28 @@ class OptionsWaiter {
         Object.assign(this.app.options, options);
 
         // Set options to match object
-        document.querySelectorAll("#options-body input[type=checkbox]").forEach(cbox => {
-            cbox.checked = this.app.options[cbox.getAttribute("option")];
-        });
+        document
+            .querySelectorAll("#options-body input[type=checkbox]")
+            .forEach((cbox) => {
+                cbox.checked = this.app.options[cbox.getAttribute("option")];
+            });
 
-        document.querySelectorAll("#options-body input[type=number]").forEach(nbox => {
-            nbox.value = this.app.options[nbox.getAttribute("option")];
-            nbox.dispatchEvent(new CustomEvent("change", {bubbles: true}));
-        });
+        document
+            .querySelectorAll("#options-body input[type=number]")
+            .forEach((nbox) => {
+                nbox.value = this.app.options[nbox.getAttribute("option")];
+                nbox.dispatchEvent(
+                    new CustomEvent("change", { bubbles: true }),
+                );
+            });
 
-        document.querySelectorAll("#options-body select").forEach(select => {
+        document.querySelectorAll("#options-body select").forEach((select) => {
             const val = this.app.options[select.getAttribute("option")];
             if (val) {
                 select.value = val;
-                select.dispatchEvent(new CustomEvent("change", {bubbles: true}));
+                select.dispatchEvent(
+                    new CustomEvent("change", { bubbles: true }),
+                );
             } else {
                 select.selectedIndex = 0;
             }
@@ -51,7 +58,6 @@ class OptionsWaiter {
         // Initialise options
         this.setWordWrap();
     }
-
 
     /**
      * Handler for options click events.
@@ -64,7 +70,6 @@ class OptionsWaiter {
         $("#options-modal").modal();
     }
 
-
     /**
      * Handler for reset options click events.
      * Resets options back to their default values.
@@ -72,7 +77,6 @@ class OptionsWaiter {
     resetOptionsClick() {
         this.load(this.app.doptions);
     }
-
 
     /**
      * Handler for switch change events.
@@ -87,7 +91,6 @@ class OptionsWaiter {
         this.updateOption(option, state);
     }
 
-
     /**
      * Handler for number change events.
      *
@@ -100,7 +103,6 @@ class OptionsWaiter {
 
         this.updateOption(option, val);
     }
-
 
     /**
      * Handler for select change events.
@@ -128,7 +130,6 @@ class OptionsWaiter {
             localStorage.setItem("options", JSON.stringify(this.app.options));
     }
 
-
     /**
      * Sets or unsets word wrap on the input and output depending on the wordWrap option value.
      */
@@ -136,7 +137,6 @@ class OptionsWaiter {
         this.manager.input.setWordWrap(this.app.options.wordWrap);
         this.manager.output.setWordWrap(this.app.options.wordWrap);
     }
-
 
     /**
      * Theme change event listener
@@ -148,7 +148,6 @@ class OptionsWaiter {
         this.changeTheme(themeClass);
     }
 
-
     /**
      * Changes the theme by setting the class of the <html> element.
      *
@@ -159,9 +158,10 @@ class OptionsWaiter {
 
         // Update theme selection
         const themeSelect = document.getElementById("theme");
-        themeSelect.selectedIndex = themeSelect.querySelector(`option[value="${theme}"`).index;
+        themeSelect.selectedIndex = themeSelect.querySelector(
+            `option[value="${theme}"`,
+        ).index;
     }
-
 
     /**
      * Changes the console logging level.

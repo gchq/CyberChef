@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Pad lines operation
  */
 class PadLines extends Operation {
-
     /**
      * PadLines constructor
      */
@@ -19,25 +18,26 @@ class PadLines extends Operation {
 
         this.name = "Pad lines";
         this.module = "Default";
-        this.description = "Add the specified number of the specified character to the beginning or end of each line";
+        this.description =
+            "Add the specified number of the specified character to the beginning or end of each line";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Position",
-                "type": "option",
-                "value": ["Start", "End"]
+                name: "Position",
+                type: "option",
+                value: ["Start", "End"],
             },
             {
-                "name": "Length",
-                "type": "number",
-                "value": 5
+                name: "Length",
+                type: "number",
+                value: 5,
             },
             {
-                "name": "Character",
-                "type": "binaryShortString",
-                "value": " "
-            }
+                name: "Character",
+                type: "binaryShortString",
+                value: " ",
+            },
         ];
     }
 
@@ -54,17 +54,16 @@ class PadLines extends Operation {
 
         if (position === "Start") {
             for (i = 0; i < lines.length; i++) {
-                output += lines[i].padStart(lines[i].length+len, chr) + "\n";
+                output += lines[i].padStart(lines[i].length + len, chr) + "\n";
             }
         } else if (position === "End") {
             for (i = 0; i < lines.length; i++) {
-                output += lines[i].padEnd(lines[i].length+len, chr) + "\n";
+                output += lines[i].padEnd(lines[i].length + len, chr) + "\n";
             }
         }
 
-        return output.slice(0, output.length-1);
+        return output.slice(0, output.length - 1);
     }
-
 }
 
 export default PadLines;

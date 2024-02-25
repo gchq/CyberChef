@@ -12,7 +12,6 @@ import { replaceVariableNames } from "../lib/Code.mjs";
  * To Kebab case operation
  */
 class ToKebabCase extends Operation {
-
     /**
      * ToKebabCase constructor
      */
@@ -21,16 +20,17 @@ class ToKebabCase extends Operation {
 
         this.name = "To Kebab case";
         this.module = "Code";
-        this.description = "Converts the input string to kebab case.\n<br><br>\nKebab case is all lower case with dashes as word boundaries.\n<br><br>\ne.g. this-is-kebab-case\n<br><br>\n'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.";
+        this.description =
+            "Converts the input string to kebab case.\n<br><br>\nKebab case is all lower case with dashes as word boundaries.\n<br><br>\ne.g. this-is-kebab-case\n<br><br>\n'Attempt to be context aware' will make the operation attempt to nicely transform variable and function names.";
         this.infoURL = "https://wikipedia.org/wiki/Kebab_case";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Attempt to be context aware",
-                "type": "boolean",
-                "value": false
-            }
+                name: "Attempt to be context aware",
+                type: "boolean",
+                value: false,
+            },
         ];
     }
 
@@ -48,7 +48,6 @@ class ToKebabCase extends Operation {
             return kebabCase(input);
         }
     }
-
 }
 
 export default ToKebabCase;

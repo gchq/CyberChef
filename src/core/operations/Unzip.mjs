@@ -14,7 +14,6 @@ const Zlib = unzip.Zlib;
  * Unzip operation
  */
 class Unzip extends Operation {
-
     /**
      * Unzip constructor
      */
@@ -23,7 +22,8 @@ class Unzip extends Operation {
 
         this.name = "Unzip";
         this.module = "Compression";
-        this.description = "Decompresses data using the PKZIP algorithm and displays it per file, with support for passwords.";
+        this.description =
+            "Decompresses data using the PKZIP algorithm and displays it per file, with support for passwords.";
         this.infoURL = "https://wikipedia.org/wiki/Zip_(file_format)";
         this.inputType = "ArrayBuffer";
         this.outputType = "List<File>";
@@ -32,20 +32,21 @@ class Unzip extends Operation {
             {
                 name: "Password",
                 type: "binaryString",
-                value: ""
+                value: "",
             },
             {
                 name: "Verify result",
                 type: "boolean",
-                value: false
-            }
+                value: false,
+            },
         ];
         this.checks = [
             {
-                pattern: "^\\x50\\x4b(?:\\x03|\\x05|\\x07)(?:\\x04|\\x06|\\x08)",
+                pattern:
+                    "^\\x50\\x4b(?:\\x03|\\x05|\\x07)(?:\\x04|\\x06|\\x08)",
                 flags: "",
-                args: ["", false]
-            }
+                args: ["", false],
+            },
         ];
     }
 
@@ -57,12 +58,12 @@ class Unzip extends Operation {
     run(input, args) {
         const options = {
                 password: Utils.strToByteArray(args[0]),
-                verify: args[1]
+                verify: args[1],
             },
             unzip = new Zlib.Unzip(new Uint8Array(input), options),
             filenames = unzip.getFilenames();
 
-        return filenames.map(fileName => {
+        return filenames.map((fileName) => {
             const bytes = unzip.decompress(fileName);
             return new File([bytes], fileName);
         });
@@ -77,7 +78,6 @@ class Unzip extends Operation {
     async present(files) {
         return await Utils.displayFilesAsHTML(files);
     }
-
 }
 
 export default Unzip;

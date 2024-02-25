@@ -12,7 +12,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Frequency distribution operation
  */
 class FrequencyDistribution extends Operation {
-
     /**
      * FrequencyDistribution constructor
      */
@@ -21,22 +20,23 @@ class FrequencyDistribution extends Operation {
 
         this.name = "Frequency distribution";
         this.module = "Default";
-        this.description = "Displays the distribution of bytes in the data as a graph.";
+        this.description =
+            "Displays the distribution of bytes in the data as a graph.";
         this.infoURL = "https://wikipedia.org/wiki/Frequency_distribution";
         this.inputType = "ArrayBuffer";
         this.outputType = "json";
         this.presentType = "html";
         this.args = [
             {
-                "name": "Show 0%s",
-                "type": "boolean",
-                "value": true
+                name: "Show 0%s",
+                type: "boolean",
+                value: true,
             },
             {
-                "name": "Show ASCII",
-                "type": "boolean",
-                "value": true
-            }
+                name: "Show ASCII",
+                type: "boolean",
+                value: true,
+            },
         ];
     }
 
@@ -63,14 +63,14 @@ class FrequencyDistribution extends Operation {
         let repr = 0;
         for (i = 0; i < 256; i++) {
             if (distrib[i] > 0) repr++;
-            percentages[i] = distrib[i] / len * 100;
+            percentages[i] = (distrib[i] / len) * 100;
         }
 
         return {
-            "dataLength": len,
-            "percentages": percentages,
-            "distribution": distrib,
-            "bytesRepresented": repr
+            dataLength: len,
+            percentages: percentages,
+            distribution: distrib,
+            bytesRepresented: repr,
         };
     }
 
@@ -100,7 +100,9 @@ Number of bytes not represented: ${256 - freq.bytesRepresented}
     CanvasComponents.drawBarChart(canvas, scores, "Byte", "Frequency %", 16, 6);
 </script>
 <table class="table table-hover table-sm">
-    <tr><th>Byte</th>${showAscii ? "<th>ASCII</th>" : ""}<th>Percentage</th><th></th></tr>`;
+    <tr><th>Byte</th>${
+        showAscii ? "<th>ASCII</th>" : ""
+    }<th>Percentage</th><th></th></tr>`;
 
         for (let i = 0; i < 256; i++) {
             if (freq.distribution[i] || showZeroes) {
@@ -108,7 +110,7 @@ Number of bytes not represented: ${256 - freq.bytesRepresented}
                 if (showAscii) {
                     if (i <= 32) {
                         c = String.fromCharCode(0x2400 + i);
-                    } else  if (i === 127) {
+                    } else if (i === 127) {
                         c = String.fromCharCode(0x2421);
                     } else {
                         c = String.fromCharCode(i);
@@ -116,8 +118,12 @@ Number of bytes not represented: ${256 - freq.bytesRepresented}
                 }
                 const bite = `<td>${Utils.hex(i, 2)}</td>`,
                     ascii = showAscii ? `<td>${c}</td>` : "",
-                    percentage = `<td>${(freq.percentages[i].toFixed(2).replace(".00", "") + "%").padEnd(8, " ")}</td>`,
-                    bars = `<td>${Array(Math.ceil(freq.percentages[i])+1).join("|")}</td>`;
+                    percentage = `<td>${(
+                        freq.percentages[i].toFixed(2).replace(".00", "") + "%"
+                    ).padEnd(8, " ")}</td>`,
+                    bars = `<td>${Array(
+                        Math.ceil(freq.percentages[i]) + 1,
+                    ).join("|")}</td>`;
 
                 output += `<tr>${bite}${ascii}${percentage}${bars}</tr>`;
             }
@@ -126,7 +132,6 @@ Number of bytes not represented: ${256 - freq.bytesRepresented}
         output += "</table>";
         return output;
     }
-
 }
 
 export default FrequencyDistribution;

@@ -7,9 +7,11 @@
  * @license Apache-2.0
  */
 
-export const ASCII_TEXT = "A common mistake that people make when trying to design something completely foolproof is to underestimate the ingenuity of complete fools.";
+export const ASCII_TEXT =
+    "A common mistake that people make when trying to design something completely foolproof is to underestimate the ingenuity of complete fools.";
 
-export const UTF8_TEXT = "Шанцы на высвятленне таго, што адбываецца на самай справе ў сусвеце настолькі выдаленыя, адзінае, што трэба зрабіць, гэта павесіць пачуццё яго і трымаць сябе занятымі.";
+export const UTF8_TEXT =
+    "Шанцы на высвятленне таго, што адбываецца на самай справе ў сусвеце настолькі выдаленыя, адзінае, што трэба зрабіць, гэта павесіць пачуццё яго і трымаць сябе занятымі.";
 
 export const ALL_BYTES = [
     "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",

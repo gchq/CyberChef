@@ -67,10 +67,10 @@ CRC-32:       d87f7e0c
 `,
         recipeConfig: [
             {
-                "op": "Generate all hashes",
-                "args": ["All", true]
-            }
-        ]
+                op: "Generate all hashes",
+                args: ["All", true],
+            },
+        ],
     },
     {
         name: "Hashes with length 32",
@@ -86,10 +86,10 @@ NT Hash:      0CB6948805F797BF2A82807973B89537
 `,
         recipeConfig: [
             {
-                "op": "Generate all hashes",
-                "args": ["128", true]
-            }
-        ]
+                op: "Generate all hashes",
+                args: ["128", true],
+            },
+        ],
     },
     {
         name: "Hashes without names",
@@ -107,9 +107,9 @@ ee67303696d205ddd2b2363e8e01b4b7199a80957d94d7678eaad3fc834c5a27
 `,
         recipeConfig: [
             {
-                "op": "Generate all hashes",
-                "args": ["256", false]
-            }
-        ]
-    }
+                op: "Generate all hashes",
+                args: ["256", false],
+            },
+        ],
+    },
 ]);

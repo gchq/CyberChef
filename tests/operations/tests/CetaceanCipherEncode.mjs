@@ -11,12 +11,13 @@ TestRegister.addTests([
     {
         name: "Cetacean Cipher Encode",
         input: "a b c で",
-        expectedOutput: "EEEEEEEEEeeEEEEe EEEEEEEEEeeEEEeE EEEEEEEEEeeEEEee EEeeEEEEEeeEEeee",
+        expectedOutput:
+            "EEEEEEEEEeeEEEEe EEEEEEEEEeeEEEeE EEEEEEEEEeeEEEee EEeeEEEEEeeEEeee",
         recipeConfig: [
             {
                 op: "Cetacean Cipher Encode",
-                args: []
+                args: [],
             },
         ],
-    }
+    },
 ]);

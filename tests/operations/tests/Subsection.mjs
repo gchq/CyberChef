@@ -14,8 +14,8 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                "op": "Subsection",
-                "args": ["", true, true, false],
+                op: "Subsection",
+                args: ["", true, true, false],
             },
         ],
     },
@@ -25,12 +25,12 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                "op": "Subsection",
-                "args": ["", true, true, false],
+                op: "Subsection",
+                args: ["", true, true, false],
             },
             {
-                "op": "Merge",
-                "args": [true],
+                op: "Merge",
+                args: [true],
             },
         ],
     },
@@ -40,12 +40,12 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                "op": "Subsection",
-                "args": ["", true, true, false],
+                op: "Subsection",
+                args: ["", true, true, false],
             },
             {
-                "op": "Merge",
-                "args": [false],
+                op: "Merge",
+                args: [false],
             },
         ],
     },
@@ -55,20 +55,20 @@ TestRegister.addTests([
         expectedOutput: "Hello World",
         recipeConfig: [
             {
-                "op": "Subsection",
-                "args": ["386756", true, true, false],
+                op: "Subsection",
+                args: ["386756", true, true, false],
             },
             {
-                "op": "From Hex",
-                "args": ["Auto"],
+                op: "From Hex",
+                args: ["Auto"],
             },
             {
-                "op": "Merge",
-                "args": [true],
+                op: "Merge",
+                args: [true],
             },
             {
-                "op": "From Base64",
-                "args": ["A-Za-z0-9+/=", true, false],
+                op: "From Base64",
+                args: ["A-Za-z0-9+/=", true, false],
             },
         ],
     },
@@ -78,24 +78,24 @@ TestRegister.addTests([
         expectedOutput: "000000000Hello World0000000000",
         recipeConfig: [
             {
-                "op": "Subsection",
-                "args": ["SGVsbG38675629ybGQ=", true, true, false],
+                op: "Subsection",
+                args: ["SGVsbG38675629ybGQ=", true, true, false],
             },
             {
-                "op": "Subsection",
-                "args": ["386756", true, true, false],
+                op: "Subsection",
+                args: ["386756", true, true, false],
             },
             {
-                "op": "From Hex",
-                "args": ["Auto"],
+                op: "From Hex",
+                args: ["Auto"],
             },
             {
-                "op": "Merge",
-                "args": [false],
+                op: "Merge",
+                args: [false],
             },
             {
-                "op": "From Base64",
-                "args": ["A-Za-z0-9+/=", true, false],
+                op: "From Base64",
+                args: ["A-Za-z0-9+/=", true, false],
             },
         ],
     },

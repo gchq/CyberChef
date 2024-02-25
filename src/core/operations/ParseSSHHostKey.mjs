@@ -14,7 +14,6 @@ import { fromHex, toHexFast } from "../lib/Hex.mjs";
  * Parse SSH Host Key operation
  */
 class ParseSSHHostKey extends Operation {
-
     /**
      * ParseSSHHostKey constructor
      */
@@ -23,7 +22,8 @@ class ParseSSHHostKey extends Operation {
 
         this.name = "Parse SSH Host Key";
         this.module = "Default";
-        this.description = "Parses a SSH host key and extracts fields from it.<br>The key type can be:<ul><li>ssh-rsa</li><li>ssh-dss</li><li>ecdsa-sha2</li><li>ssh-ed25519</li></ul>The key format can be either Hex or Base64.";
+        this.description =
+            "Parses a SSH host key and extracts fields from it.<br>The key type can be:<ul><li>ssh-rsa</li><li>ssh-dss</li><li>ecdsa-sha2</li><li>ssh-ed25519</li></ul>The key format can be either Hex or Base64.";
         this.infoURL = "https://wikipedia.org/wiki/Secure_Shell";
         this.inputType = "string";
         this.outputType = "string";
@@ -31,19 +31,15 @@ class ParseSSHHostKey extends Operation {
             {
                 name: "Input Format",
                 type: "option",
-                value: [
-                    "Auto",
-                    "Base64",
-                    "Hex"
-                ]
-            }
+                value: ["Auto", "Base64", "Hex"],
+            },
         ];
         this.checks = [
             {
-                pattern:  "^\\s*([A-F\\d]{2}[,;:]){15,}[A-F\\d]{2}\\s*$",
-                flags:  "i",
-                args:   ["Hex"]
-            }
+                pattern: "^\\s*([A-F\\d]{2}[,;:]){15,}[A-F\\d]{2}\\s*$",
+                flags: "i",
+                args: ["Hex"],
+            },
         ];
     }
 
@@ -108,7 +104,6 @@ class ParseSSHHostKey extends Operation {
         }
     }
 
-
     /**
      * Detects if the key is base64 or hex encoded
      *
@@ -117,7 +112,9 @@ class ParseSSHHostKey extends Operation {
      */
     detectKeyFormat(inputKey) {
         const hexPattern = new RegExp(/^(?:[\dA-Fa-f]{2}[ ,;:]?)+$/);
-        const b64Pattern = new RegExp(/^\s*(?:[A-Za-z\d+/]{4})+(?:[A-Za-z\d+/]{2}==|[A-Za-z\d+/]{3}=)?\s*$/);
+        const b64Pattern = new RegExp(
+            /^\s*(?:[A-Za-z\d+/]{4})+(?:[A-Za-z\d+/]{2}==|[A-Za-z\d+/]{3}=)?\s*$/,
+        );
 
         if (hexPattern.test(inputKey)) {
             return "Hex";
@@ -127,7 +124,6 @@ class ParseSSHHostKey extends Operation {
             throw new OperationError("Unable to detect input key format.");
         }
     }
-
 
     /**
      * Parses fields from the key
@@ -153,7 +149,6 @@ class ParseSSHHostKey extends Operation {
 
         return fields;
     }
-
 }
 
 export default ParseSSHHostKey;

@@ -5,14 +5,12 @@
  */
 
 import Operation from "../Operation.mjs";
-import {rot, rotr, rotrCarry} from "../lib/Rotate.mjs";
-
+import { rot, rotr, rotrCarry } from "../lib/Rotate.mjs";
 
 /**
  * Rotate right operation.
  */
 class RotateRight extends Operation {
-
     /**
      * RotateRight constructor
      */
@@ -21,21 +19,23 @@ class RotateRight extends Operation {
 
         this.name = "Rotate right";
         this.module = "Default";
-        this.description = "Rotates each byte to the right by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.";
-        this.infoURL = "https://wikipedia.org/wiki/Bitwise_operation#Bit_shifts";
+        this.description =
+            "Rotates each byte to the right by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.";
+        this.infoURL =
+            "https://wikipedia.org/wiki/Bitwise_operation#Bit_shifts";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
         this.args = [
             {
                 name: "Amount",
                 type: "number",
-                value: 1
+                value: 1,
             },
             {
                 name: "Carry through",
                 type: "boolean",
-                value: false
-            }
+                value: false,
+            },
         ];
     }
 

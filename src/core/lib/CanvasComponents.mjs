@@ -34,7 +34,15 @@ export function drawLine(ctx, startX, startY, endX, endY) {
  * @param numYLabels
  * @param fontSize
  */
-export function drawBarChart(canvas, scores, xAxisLabel, yAxisLabel, numXLabels, numYLabels, fontSize) {
+export function drawBarChart(
+    canvas,
+    scores,
+    xAxisLabel,
+    yAxisLabel,
+    numXLabels,
+    numYLabels,
+    fontSize,
+) {
     fontSize = fontSize || 15;
     if (!numXLabels || numXLabels > Math.round(canvas.width / 50)) {
         numXLabels = Math.round(canvas.width / 50);
@@ -64,14 +72,14 @@ export function drawBarChart(canvas, scores, xAxisLabel, yAxisLabel, numXLabels,
 
     // Bar properties
     const barPadding = graphWidth * 0.003,
-        barWidth = (graphWidth - (barPadding * scores.length)) / scores.length,
+        barWidth = (graphWidth - barPadding * scores.length) / scores.length,
         max = Math.max.apply(Math, scores);
     let currX = leftPadding + barPadding;
 
     // Draw bars
     ctx.fillStyle = "green";
     for (let i = 0; i < scores.length; i++) {
-        const h = scores[i] / max * graphHeight;
+        const h = (scores[i] / max) * graphHeight;
         ctx.fillRect(currX, base - h, barWidth, h);
         currX += barWidth + barPadding;
     }
@@ -83,7 +91,7 @@ export function drawBarChart(canvas, scores, xAxisLabel, yAxisLabel, numXLabels,
     if (numXLabels >= scores.length) {
         // Mark every score
         for (let i = 0; i <= scores.length; i++) {
-            ctx.fillText(i, currX, base + (bottomPadding * 0.3));
+            ctx.fillText(i, currX, base + bottomPadding * 0.3);
             currX += barWidth + barPadding;
         }
     } else {
@@ -91,7 +99,7 @@ export function drawBarChart(canvas, scores, xAxisLabel, yAxisLabel, numXLabels,
         for (let i = 0; i <= numXLabels; i++) {
             const val = Math.ceil((scores.length / numXLabels) * i);
             currX = (graphWidth / numXLabels) * i + leftPadding;
-            ctx.fillText(val, currX, base + (bottomPadding * 0.3));
+            ctx.fillText(val, currX, base + bottomPadding * 0.3);
         }
     }
 
@@ -101,14 +109,14 @@ export function drawBarChart(canvas, scores, xAxisLabel, yAxisLabel, numXLabels,
     if (numYLabels >= max) {
         // Mark every increment
         for (let i = 0; i <= max; i++) {
-            currY = base - (i / max * graphHeight) + fontSize / 3;
+            currY = base - (i / max) * graphHeight + fontSize / 3;
             ctx.fillText(i, leftPadding * 0.8, currY);
         }
     } else {
         // Mark some increments
         for (let i = 0; i <= numYLabels; i++) {
             const val = Math.ceil((max / numYLabels) * i);
-            currY = base - (val / max * graphHeight) + fontSize / 3;
+            currY = base - (val / max) * graphHeight + fontSize / 3;
             ctx.fillText(val, leftPadding * 0.8, currY);
         }
     }
@@ -116,7 +124,11 @@ export function drawBarChart(canvas, scores, xAxisLabel, yAxisLabel, numXLabels,
     // Label x axis
     if (xAxisLabel) {
         ctx.textAlign = "center";
-        ctx.fillText(xAxisLabel, graphWidth / 2 + leftPadding, base + bottomPadding * 0.8);
+        ctx.fillText(
+            xAxisLabel,
+            graphWidth / 2 + leftPadding,
+            base + bottomPadding * 0.8,
+        );
     }
 
     // Label y axis
@@ -157,7 +169,12 @@ export function drawScaleBar(canvas, score, max, markings) {
     ctx.strokeRect(leftPadding, topPadding, barWidth, barHeight);
 
     // Shade in up to proportion
-    const grad = ctx.createLinearGradient(leftPadding, 0, barWidth + leftPadding, 0);
+    const grad = ctx.createLinearGradient(
+        leftPadding,
+        0,
+        barWidth + leftPadding,
+        0,
+    );
     grad.addColorStop(0, "green");
     grad.addColorStop(0.5, "gold");
     grad.addColorStop(1, "red");
@@ -171,21 +188,21 @@ export function drawScaleBar(canvas, score, max, markings) {
     ctx.font = "13px Arial";
     for (let i = 0; i < markings.length; i++) {
         // Draw min line down
-        x0 = barWidth / max * markings[i].min + leftPadding;
-        y0 = topPadding + barHeight + (bottomPadding * 0.1);
+        x0 = (barWidth / max) * markings[i].min + leftPadding;
+        y0 = topPadding + barHeight + bottomPadding * 0.1;
         x1 = x0;
-        y1 = topPadding + barHeight + (bottomPadding * 0.3);
+        y1 = topPadding + barHeight + bottomPadding * 0.3;
         drawLine(ctx, x0, y0, x1, y1);
 
         // Draw max line down
-        x0 = barWidth / max * markings[i].max + leftPadding;
+        x0 = (barWidth / max) * markings[i].max + leftPadding;
         x1 = x0;
         drawLine(ctx, x0, y0, x1, y1);
 
         // Join min and max lines
-        x0 = barWidth / max * markings[i].min + leftPadding;
-        y0 = topPadding + barHeight + (bottomPadding * 0.3);
-        x1 = barWidth / max * markings[i].max + leftPadding;
+        x0 = (barWidth / max) * markings[i].min + leftPadding;
+        y0 = topPadding + barHeight + bottomPadding * 0.3;
+        x1 = (barWidth / max) * markings[i].max + leftPadding;
         y1 = y0;
         drawLine(ctx, x0, y0, x1, y1);
 
@@ -198,7 +215,7 @@ export function drawScaleBar(canvas, score, max, markings) {
         } else {
             x0 = x0 + (x1 - x0) / 2;
         }
-        y0 = topPadding + barHeight + (bottomPadding * 0.8);
+        y0 = topPadding + barHeight + bottomPadding * 0.8;
         ctx.fillText(markings[i].label, x0, y0);
     }
 }

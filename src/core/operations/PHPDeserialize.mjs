@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * PHP Deserialize operation
  */
 class PHPDeserialize extends Operation {
-
     /**
      * PHPDeserialize constructor
      */
@@ -20,16 +19,18 @@ class PHPDeserialize extends Operation {
 
         this.name = "PHP Deserialize";
         this.module = "Default";
-        this.description = "Deserializes PHP serialized data, outputting keyed arrays as JSON.<br><br>This function does not support <code>object</code> tags.<br><br>Example:<br><code>a:2:{s:1:&quot;a&quot;;i:10;i:0;a:1:{s:2:&quot;ab&quot;;b:1;}}</code><br>becomes<br><code>{&quot;a&quot;: 10,0: {&quot;ab&quot;: true}}</code><br><br><u>Output valid JSON:</u> JSON doesn't support integers as keys, whereas PHP serialization does. Enabling this will cast these integers to strings. This will also escape backslashes.";
-        this.infoURL = "http://www.phpinternalsbook.com/classes_objects/serialization.html";
+        this.description =
+            "Deserializes PHP serialized data, outputting keyed arrays as JSON.<br><br>This function does not support <code>object</code> tags.<br><br>Example:<br><code>a:2:{s:1:&quot;a&quot;;i:10;i:0;a:1:{s:2:&quot;ab&quot;;b:1;}}</code><br>becomes<br><code>{&quot;a&quot;: 10,0: {&quot;ab&quot;: true}}</code><br><br><u>Output valid JSON:</u> JSON doesn't support integers as keys, whereas PHP serialization does. Enabling this will cast these integers to strings. This will also escape backslashes.";
+        this.infoURL =
+            "http://www.phpinternalsbook.com/classes_objects/serialization.html";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Output valid JSON",
-                "type": "boolean",
-                "value": true
-            }
+                name: "Output valid JSON",
+                type: "boolean",
+                value: true,
+            },
         ];
     }
 
@@ -54,7 +55,9 @@ class PHPDeserialize extends Operation {
                 for (let idx = 0; idx < length; idx++) {
                     const char = inputPart.shift();
                     if (char === undefined) {
-                        throw new OperationError("End of input reached before end of script");
+                        throw new OperationError(
+                            "End of input reached before end of script",
+                        );
                     }
                     result += char;
                 }
@@ -77,7 +80,6 @@ class PHPDeserialize extends Operation {
                     }
                 }
                 return result;
-
             }
 
             /**
@@ -110,7 +112,11 @@ class PHPDeserialize extends Operation {
                         isKey = false;
                     } else {
                         const numberCheck = lastItem.match(/[0-9]+/);
-                        if (args[0] && numberCheck && numberCheck[0].length === lastItem.length) {
+                        if (
+                            args[0] &&
+                            numberCheck &&
+                            numberCheck[0].length === lastItem.length
+                        ) {
                             result.push('"' + lastItem + '": ' + item);
                         } else {
                             result.push(lastItem + ": " + item);
@@ -121,7 +127,6 @@ class PHPDeserialize extends Operation {
                 expect("}");
                 return result;
             }
-
 
             const kind = read(1).toLowerCase();
 
@@ -135,7 +140,7 @@ class PHPDeserialize extends Operation {
                     expect(":");
                     const data = readUntil(";");
                     if (kind === "b") {
-                        return (parseInt(data, 10) !== 0);
+                        return parseInt(data, 10) !== 0;
                     }
                     return data;
                 }
@@ -147,7 +152,7 @@ class PHPDeserialize extends Operation {
                 case "s": {
                     expect(":");
                     const length = readUntil(":");
-                    expect("\"");
+                    expect('"');
                     const value = read(length);
                     expect('";');
                     if (args[0]) {
@@ -165,7 +170,6 @@ class PHPDeserialize extends Operation {
         const inputPart = input.split("");
         return handleInput();
     }
-
 }
 
 export default PHPDeserialize;

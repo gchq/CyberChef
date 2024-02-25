@@ -11,7 +11,6 @@ import Utils from "../Utils.mjs";
  * To HTML Entity operation
  */
 class ToHTMLEntity extends Operation {
-
     /**
      * ToHTMLEntity constructor
      */
@@ -20,21 +19,23 @@ class ToHTMLEntity extends Operation {
 
         this.name = "To HTML Entity";
         this.module = "Encodings";
-        this.description = "Converts characters to HTML entities<br><br>e.g. <code>&amp;</code> becomes <code>&amp;<span>amp;</span></code>";
-        this.infoURL = "https://wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references";
+        this.description =
+            "Converts characters to HTML entities<br><br>e.g. <code>&amp;</code> becomes <code>&amp;<span>amp;</span></code>";
+        this.infoURL =
+            "https://wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Convert all characters",
-                "type": "boolean",
-                "value": false
+                name: "Convert all characters",
+                type: "boolean",
+                value: false,
             },
             {
-                "name": "Convert to",
-                "type": "option",
-                "value": ["Named entities", "Numeric entities", "Hex entities"]
-            }
+                name: "Convert to",
+                type: "option",
+                value: ["Named entities", "Numeric entities", "Hex entities"],
+            },
         ];
     }
 
@@ -57,7 +58,8 @@ class ToHTMLEntity extends Operation {
             } else if (convertAll && hexa) {
                 output += "&#x" + Utils.hex(charcodes[i]) + ";";
             } else if (convertAll) {
-                output += byteToEntity[charcodes[i]] || "&#" + charcodes[i] + ";";
+                output +=
+                    byteToEntity[charcodes[i]] || "&#" + charcodes[i] + ";";
             } else if (numeric) {
                 if (charcodes[i] > 255 || charcodes[i] in byteToEntity) {
                     output += "&#" + charcodes[i] + ";";
@@ -71,16 +73,15 @@ class ToHTMLEntity extends Operation {
                     output += Utils.chr(charcodes[i]);
                 }
             } else {
-                output += byteToEntity[charcodes[i]] || (
-                    charcodes[i] > 255 ?
-                        "&#" + charcodes[i] + ";" :
-                        Utils.chr(charcodes[i])
-                );
+                output +=
+                    byteToEntity[charcodes[i]] ||
+                    (charcodes[i] > 255
+                        ? "&#" + charcodes[i] + ";"
+                        : Utils.chr(charcodes[i]));
             }
         }
         return output;
     }
-
 }
 
 /**
@@ -1506,7 +1507,7 @@ const byteToEntity = {
     120168: "&wopf;",
     120169: "&xopf;",
     120170: "&yopf;",
-    120171: "&zopf;"
+    120171: "&zopf;",
 };
 
 export default ToHTMLEntity;

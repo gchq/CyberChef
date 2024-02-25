@@ -13,7 +13,6 @@ import { caseInsensitiveSort } from "../lib/Sort.mjs";
  * Strings operation
  */
 class Strings extends Operation {
-
     /**
      * Strings constructor
      */
@@ -30,36 +29,47 @@ class Strings extends Operation {
             {
                 name: "Encoding",
                 type: "option",
-                value: ["Single byte", "16-bit littleendian", "16-bit bigendian", "All"]
+                value: [
+                    "Single byte",
+                    "16-bit littleendian",
+                    "16-bit bigendian",
+                    "All",
+                ],
             },
             {
                 name: "Minimum length",
                 type: "number",
-                value: 4
+                value: 4,
             },
             {
                 name: "Match",
                 type: "option",
                 value: [
-                    "[ASCII]", "Alphanumeric + punctuation (A)", "All printable chars (A)", "Null-terminated strings (A)",
-                    "[Unicode]", "Alphanumeric + punctuation (U)", "All printable chars (U)", "Null-terminated strings (U)"
-                ]
+                    "[ASCII]",
+                    "Alphanumeric + punctuation (A)",
+                    "All printable chars (A)",
+                    "Null-terminated strings (A)",
+                    "[Unicode]",
+                    "Alphanumeric + punctuation (U)",
+                    "All printable chars (U)",
+                    "Null-terminated strings (U)",
+                ],
             },
             {
                 name: "Display total",
                 type: "boolean",
-                value: false
+                value: false,
             },
             {
                 name: "Sort",
                 type: "boolean",
-                value: false
+                value: false,
             },
             {
                 name: "Unique",
                 type: "boolean",
-                value: false
-            }
+                value: false,
+            },
         ];
     }
 
@@ -124,7 +134,7 @@ class Strings extends Operation {
             regex,
             null,
             sort ? caseInsensitiveSort : null,
-            unique
+            unique,
         );
 
         if (displayTotal) {
@@ -133,7 +143,6 @@ class Strings extends Operation {
             return results.join("\n");
         }
     }
-
 }
 
 export default Strings;

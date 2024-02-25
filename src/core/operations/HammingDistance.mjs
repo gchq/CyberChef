@@ -6,14 +6,13 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {fromHex} from "../lib/Hex.mjs";
+import { fromHex } from "../lib/Hex.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Hamming Distance operation
  */
 class HammingDistance extends Operation {
-
     /**
      * HammingDistance constructor
      */
@@ -22,26 +21,27 @@ class HammingDistance extends Operation {
 
         this.name = "Hamming Distance";
         this.module = "Default";
-        this.description = "In information theory, the Hamming distance between two strings of equal length is the number of positions at which the corresponding symbols are different. In other words, it measures the minimum number of substitutions required to change one string into the other, or the minimum number of errors that could have transformed one string into the other. In a more general context, the Hamming distance is one of several string metrics for measuring the edit distance between two sequences.";
+        this.description =
+            "In information theory, the Hamming distance between two strings of equal length is the number of positions at which the corresponding symbols are different. In other words, it measures the minimum number of substitutions required to change one string into the other, or the minimum number of errors that could have transformed one string into the other. In a more general context, the Hamming distance is one of several string metrics for measuring the edit distance between two sequences.";
         this.infoURL = "https://wikipedia.org/wiki/Hamming_distance";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Delimiter",
-                "type": "binaryShortString",
-                "value": "\\n\\n"
+                name: "Delimiter",
+                type: "binaryShortString",
+                value: "\\n\\n",
             },
             {
-                "name": "Unit",
-                "type": "option",
-                "value": ["Byte", "Bit"]
+                name: "Unit",
+                type: "option",
+                value: ["Byte", "Bit"],
             },
             {
-                "name": "Input type",
-                "type": "option",
-                "value": ["Raw string", "Hex"]
-            }
+                name: "Input type",
+                type: "option",
+                value: ["Raw string", "Hex"],
+            },
         ];
     }
 
@@ -57,11 +57,15 @@ class HammingDistance extends Operation {
             samples = input.split(delim);
 
         if (samples.length !== 2) {
-            throw new OperationError("Error: You can only calculate the edit distance between 2 strings. Please ensure exactly two inputs are provided, separated by the specified delimiter.");
+            throw new OperationError(
+                "Error: You can only calculate the edit distance between 2 strings. Please ensure exactly two inputs are provided, separated by the specified delimiter.",
+            );
         }
 
         if (samples[0].length !== samples[1].length) {
-            throw new OperationError("Error: Both inputs must be of the same length.");
+            throw new OperationError(
+                "Error: Both inputs must be of the same length.",
+            );
         }
 
         if (inputType === "Hex") {
@@ -92,7 +96,6 @@ class HammingDistance extends Operation {
 
         return dist.toString();
     }
-
 }
 
 export default HammingDistance;

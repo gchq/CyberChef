@@ -6,27 +6,29 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {COMPRESSION_TYPE, ZLIB_COMPRESSION_TYPE_LOOKUP} from "../lib/Zlib.mjs";
+import {
+    COMPRESSION_TYPE,
+    ZLIB_COMPRESSION_TYPE_LOOKUP,
+} from "../lib/Zlib.mjs";
 import zip from "zlibjs/bin/zip.min.js";
 
 const Zlib = zip.Zlib;
 
 const ZIP_COMPRESSION_METHOD_LOOKUP = {
-    "Deflate":      Zlib.Zip.CompressionMethod.DEFLATE,
-    "None (Store)": Zlib.Zip.CompressionMethod.STORE
+    Deflate: Zlib.Zip.CompressionMethod.DEFLATE,
+    "None (Store)": Zlib.Zip.CompressionMethod.STORE,
 };
 
 const ZIP_OS_LOOKUP = {
-    "MSDOS":     Zlib.Zip.OperatingSystem.MSDOS,
-    "Unix":      Zlib.Zip.OperatingSystem.UNIX,
-    "Macintosh": Zlib.Zip.OperatingSystem.MACINTOSH
+    MSDOS: Zlib.Zip.OperatingSystem.MSDOS,
+    Unix: Zlib.Zip.OperatingSystem.UNIX,
+    Macintosh: Zlib.Zip.OperatingSystem.MACINTOSH,
 };
 
 /**
  * Zip operation
  */
 class Zip extends Operation {
-
     /**
      * Zip constructor
      */
@@ -35,7 +37,8 @@ class Zip extends Operation {
 
         this.name = "Zip";
         this.module = "Compression";
-        this.description = "Compresses data using the PKZIP algorithm with the given filename.<br><br>No support for multiple files at this time.";
+        this.description =
+            "Compresses data using the PKZIP algorithm with the given filename.<br><br>No support for multiple files at this time.";
         this.infoURL = "https://wikipedia.org/wiki/Zip_(file_format)";
         this.inputType = "ArrayBuffer";
         this.outputType = "File";
@@ -43,33 +46,33 @@ class Zip extends Operation {
             {
                 name: "Filename",
                 type: "string",
-                value: "file.txt"
+                value: "file.txt",
             },
             {
                 name: "Comment",
                 type: "string",
-                value: ""
+                value: "",
             },
             {
                 name: "Password",
                 type: "binaryString",
-                value: ""
+                value: "",
             },
             {
                 name: "Compression method",
                 type: "option",
-                value: ["Deflate", "None (Store)"]
+                value: ["Deflate", "None (Store)"],
             },
             {
                 name: "Operating system",
                 type: "option",
-                value: ["MSDOS", "Unix", "Macintosh"]
+                value: ["MSDOS", "Unix", "Macintosh"],
             },
             {
                 name: "Compression type",
                 type: "option",
-                value: COMPRESSION_TYPE
-            }
+                value: COMPRESSION_TYPE,
+            },
         ];
     }
 
@@ -87,17 +90,15 @@ class Zip extends Operation {
                 compressionMethod: ZIP_COMPRESSION_METHOD_LOOKUP[args[3]],
                 os: ZIP_OS_LOOKUP[args[4]],
                 deflateOption: {
-                    compressionType: ZLIB_COMPRESSION_TYPE_LOOKUP[args[5]]
+                    compressionType: ZLIB_COMPRESSION_TYPE_LOOKUP[args[5]],
                 },
             },
             zip = new Zlib.Zip();
 
-        if (password.length)
-            zip.setPassword(password);
+        if (password.length) zip.setPassword(password);
         zip.addFile(new Uint8Array(input), options);
         return new File([zip.compress()], filename);
     }
-
 }
 
 export default Zip;

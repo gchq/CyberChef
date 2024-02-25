@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Remove Diacritics operation
  */
 class RemoveDiacritics extends Operation {
-
     /**
      * RemoveDiacritics constructor
      */
@@ -19,7 +18,8 @@ class RemoveDiacritics extends Operation {
 
         this.name = "Remove Diacritics";
         this.module = "Default";
-        this.description = "Replaces accented characters with their latin character equivalent. Accented characters are made up of Unicode combining characters, so unicode text formatting such as strikethroughs and underlines will also be removed.";
+        this.description =
+            "Replaces accented characters with their latin character equivalent. Accented characters are made up of Unicode combining characters, so unicode text formatting such as strikethroughs and underlines will also be removed.";
         this.infoURL = "https://wikipedia.org/wiki/Diacritic";
         this.inputType = "string";
         this.outputType = "string";
@@ -35,7 +35,6 @@ class RemoveDiacritics extends Operation {
         // reference: https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript/37511463
         return input.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
-
 }
 
 export default RemoveDiacritics;

@@ -11,7 +11,8 @@ TestRegister.addTests([
     {
         name: "Parse UDP: No Data - JSON",
         input: "04 89 00 35 00 2c 01 01",
-        expectedOutput: "{\"Source port\":1161,\"Destination port\":53,\"Length\":44,\"Checksum\":\"0x0101\"}",
+        expectedOutput:
+            '{"Source port":1161,"Destination port":53,"Length":44,"Checksum":"0x0101"}',
         recipeConfig: [
             {
                 op: "Parse UDP",
@@ -22,10 +23,12 @@ TestRegister.addTests([
                 args: [],
             },
         ],
-    }, {
+    },
+    {
         name: "Parse UDP: With Data - JSON",
         input: "04 89 00 35 00 2c 01 01 02 02",
-        expectedOutput: "{\"Source port\":1161,\"Destination port\":53,\"Length\":44,\"Checksum\":\"0x0101\",\"Data\":\"0x0202\"}",
+        expectedOutput:
+            '{"Source port":1161,"Destination port":53,"Length":44,"Checksum":"0x0101","Data":"0x0202"}',
         recipeConfig: [
             {
                 op: "Parse UDP",
@@ -51,5 +54,5 @@ TestRegister.addTests([
                 args: [],
             },
         ],
-    }
+    },
 ]);

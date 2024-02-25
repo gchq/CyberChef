@@ -14,14 +14,14 @@ TestRegister.addTests([
         expectedOutput: "http://en.m.wikipedia.org",
         recipeConfig: [
             {
-                "op": "From Hex",
-                "args": ["None"]
+                op: "From Hex",
+                args: ["None"],
             },
             {
-                "op": "Parse QR Code",
-                "args": [false]
-            }
-        ]
+                op: "Parse QR Code",
+                args: [false],
+            },
+        ],
     },
     {
         name: "Parse QR Code : PNG",
@@ -29,12 +29,12 @@ TestRegister.addTests([
         expectedOutput: "Hello world!",
         recipeConfig: [
             {
-                "op": "From Hex",
-                "args": ["Space"]
+                op: "From Hex",
+                args: ["Space"],
             },
             {
-                "op": "Parse QR Code",
-                "args": [false]
+                op: "Parse QR Code",
+                args: [false],
             },
         ],
     },
@@ -44,12 +44,12 @@ TestRegister.addTests([
         expectedOutput: "http://en.m.wikipedia.org",
         recipeConfig: [
             {
-                "op": "From Hex",
-                "args": ["None"]
+                op: "From Hex",
+                args: ["None"],
             },
             {
-                "op": "Parse QR Code",
-                "args": [true]
+                op: "Parse QR Code",
+                args: [true],
             },
         ],
     },
@@ -59,13 +59,13 @@ TestRegister.addTests([
         expectedOutput: "https://globeon.mobi/jyri",
         recipeConfig: [
             {
-                "op": "From Hex",
-                "args": ["None"]
+                op: "From Hex",
+                args: ["None"],
             },
             {
-                "op": "Parse QR Code",
-                "args": [true]
-            }
-        ]
-    }
+                op: "Parse QR Code",
+                args: [true],
+            },
+        ],
+    },
 ]);

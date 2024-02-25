@@ -6,14 +6,12 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {DELIM_OPTIONS} from "../lib/Delim.mjs";
-
+import { DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 /**
  * To Octal operation
  */
 class ToOctal extends Operation {
-
     /**
      * ToOctal constructor
      */
@@ -22,16 +20,17 @@ class ToOctal extends Operation {
 
         this.name = "To Octal";
         this.module = "Default";
-        this.description = "Converts the input string to octal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code>";
+        this.description =
+            "Converts the input string to octal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code>";
         this.infoURL = "https://wikipedia.org/wiki/Octal";
         this.inputType = "byteArray";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Delimiter",
-                "type": "option",
-                "value": DELIM_OPTIONS
-            }
+                name: "Delimiter",
+                type: "option",
+                value: DELIM_OPTIONS,
+            },
         ];
     }
 
@@ -42,9 +41,8 @@ class ToOctal extends Operation {
      */
     run(input, args) {
         const delim = Utils.charRep(args[0] || "Space");
-        return input.map(val => val.toString(8)).join(delim);
+        return input.map((val) => val.toString(8)).join(delim);
     }
-
 }
 
 export default ToOctal;

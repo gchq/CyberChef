@@ -28,7 +28,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Decimal Degrees", "Comma", "Degrees Minutes Seconds", "Comma", "None", 1]
+                args: [
+                    "Decimal Degrees",
+                    "Comma",
+                    "Degrees Minutes Seconds",
+                    "Comma",
+                    "None",
+                    1,
+                ],
             },
         ],
     },
@@ -39,7 +46,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Degrees Minutes Seconds", "Comma", "Decimal Degrees", "Comma", "None", 3]
+                args: [
+                    "Degrees Minutes Seconds",
+                    "Comma",
+                    "Decimal Degrees",
+                    "Comma",
+                    "None",
+                    3,
+                ],
             },
         ],
     },
@@ -50,9 +64,16 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Decimal Degrees", "Comma", "Degrees Decimal Minutes", "Comma", "None", 2]
-            }
-        ]
+                args: [
+                    "Decimal Degrees",
+                    "Comma",
+                    "Degrees Decimal Minutes",
+                    "Comma",
+                    "None",
+                    2,
+                ],
+            },
+        ],
     },
     {
         name: "Co-ordinates: From Degrees Decimal Minutes to Decimal Degrees",
@@ -61,9 +82,16 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Degrees Decimal Minutes", "Comma", "Decimal Degrees", "Comma", "None", 3]
-            }
-        ]
+                args: [
+                    "Degrees Decimal Minutes",
+                    "Comma",
+                    "Decimal Degrees",
+                    "Comma",
+                    "None",
+                    3,
+                ],
+            },
+        ],
     },
     {
         name: "Co-ordinates: From Decimal Degrees to Decimal Degrees",
@@ -72,9 +100,16 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Decimal Degrees", "Comma", "Decimal Degrees", "Comma", "None", 3]
-            }
-        ]
+                args: [
+                    "Decimal Degrees",
+                    "Comma",
+                    "Decimal Degrees",
+                    "Comma",
+                    "None",
+                    3,
+                ],
+            },
+        ],
     },
     {
         name: "Co-ordinates: From Decimal Degrees to Geohash",
@@ -83,7 +118,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Decimal Degrees", "Comma", "Geohash", "Comma", "None", 9]
+                args: [
+                    "Decimal Degrees",
+                    "Comma",
+                    "Geohash",
+                    "Comma",
+                    "None",
+                    9,
+                ],
             },
         ],
     },
@@ -94,7 +136,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Geohash", "Comma", "Decimal Degrees", "Comma", "None", 3]
+                args: [
+                    "Geohash",
+                    "Comma",
+                    "Decimal Degrees",
+                    "Comma",
+                    "None",
+                    3,
+                ],
             },
         ],
     },
@@ -105,7 +154,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Decimal Degrees", "Comma", "Military Grid Reference System", "Comma", "None", 10]
+                args: [
+                    "Decimal Degrees",
+                    "Comma",
+                    "Military Grid Reference System",
+                    "Comma",
+                    "None",
+                    10,
+                ],
             },
         ],
     },
@@ -116,9 +172,16 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Military Grid Reference System", "Comma", "Decimal Degrees", "Comma", "None", 3]
-            }
-        ]
+                args: [
+                    "Military Grid Reference System",
+                    "Comma",
+                    "Decimal Degrees",
+                    "Comma",
+                    "None",
+                    3,
+                ],
+            },
+        ],
     },
     {
         name: "Co-ordinates: From Decimal Degrees to OSNG",
@@ -127,7 +190,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Decimal Degrees", "Comma", "Ordnance Survey National Grid", "Comma", "None", 10]
+                args: [
+                    "Decimal Degrees",
+                    "Comma",
+                    "Ordnance Survey National Grid",
+                    "Comma",
+                    "None",
+                    10,
+                ],
             },
         ],
     },
@@ -138,7 +208,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Ordnance Survey National Grid", "Comma", "Decimal Degrees", "Comma", "None", 3]
+                args: [
+                    "Ordnance Survey National Grid",
+                    "Comma",
+                    "Decimal Degrees",
+                    "Comma",
+                    "None",
+                    3,
+                ],
             },
         ],
     },
@@ -149,7 +226,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Decimal Degrees", "Comma", "Universal Transverse Mercator", "Comma", "None", 0]
+                args: [
+                    "Decimal Degrees",
+                    "Comma",
+                    "Universal Transverse Mercator",
+                    "Comma",
+                    "None",
+                    0,
+                ],
             },
         ],
     },
@@ -160,7 +244,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Universal Transverse Mercator", "Comma", "Decimal Degrees", "Comma", "None", 3]
+                args: [
+                    "Universal Transverse Mercator",
+                    "Comma",
+                    "Decimal Degrees",
+                    "Comma",
+                    "None",
+                    3,
+                ],
             },
         ],
     },
@@ -171,7 +262,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Decimal Degrees", "Comma", "Decimal Degrees", "Comma", "None", 3]
+                args: [
+                    "Decimal Degrees",
+                    "Comma",
+                    "Decimal Degrees",
+                    "Comma",
+                    "None",
+                    3,
+                ],
             },
         ],
     },
@@ -182,7 +280,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Decimal Degrees", "Comma", "Decimal Degrees", "Comma", "Before", 3]
+                args: [
+                    "Decimal Degrees",
+                    "Comma",
+                    "Decimal Degrees",
+                    "Comma",
+                    "Before",
+                    3,
+                ],
             },
         ],
     },
@@ -193,7 +298,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Decimal Degrees", "Comma", "Decimal Degrees", "Comma", "Before", 3]
+                args: [
+                    "Decimal Degrees",
+                    "Comma",
+                    "Decimal Degrees",
+                    "Comma",
+                    "Before",
+                    3,
+                ],
             },
         ],
     },
@@ -204,8 +316,15 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Convert co-ordinate format",
-                args: ["Decimal Degrees", "Comma", "Degrees Minutes Seconds", "Comma", "Before", 3]
+                args: [
+                    "Decimal Degrees",
+                    "Comma",
+                    "Degrees Minutes Seconds",
+                    "Comma",
+                    "Before",
+                    3,
+                ],
             },
         ],
-    }
+    },
 ]);

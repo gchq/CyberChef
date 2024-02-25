@@ -6,13 +6,12 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {INPUT_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import { INPUT_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 /**
  * Unique operation
  */
 class Unique extends Operation {
-
     /**
      * Unique constructor
      */
@@ -28,13 +27,13 @@ class Unique extends Operation {
             {
                 name: "Delimiter",
                 type: "option",
-                value: INPUT_DELIM_OPTIONS
+                value: INPUT_DELIM_OPTIONS,
             },
             {
                 name: "Display count",
                 type: "boolean",
-                value: false
-            }
+                value: false,
+            },
         ];
     }
 
@@ -57,12 +56,13 @@ class Unique extends Operation {
                 return acc;
             }, {});
 
-            return Object.keys(valMap).map(val => `${valMap[val]} ${val}`).join(delim);
+            return Object.keys(valMap)
+                .map((val) => `${valMap[val]} ${val}`)
+                .join(delim);
         } else {
             return input.split(delim).unique().join(delim);
         }
     }
-
 }
 
 export default Unique;

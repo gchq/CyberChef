@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Set Union operation
  */
 class SetUnion extends Operation {
-
     /**
      * Set Union constructor
      */
@@ -28,12 +27,12 @@ class SetUnion extends Operation {
             {
                 name: "Sample delimiter",
                 type: "binaryString",
-                value: "\\n\\n"
+                value: "\\n\\n",
             },
             {
                 name: "Item delimiter",
                 type: "binaryString",
-                value: ","
+                value: ",",
             },
         ];
     }
@@ -45,8 +44,10 @@ class SetUnion extends Operation {
      * @throws {Error} if not two sets
      */
     validateSampleNumbers(sets) {
-        if (!sets || (sets.length !== 2)) {
-            throw new OperationError("Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?");
+        if (!sets || sets.length !== 2) {
+            throw new OperationError(
+                "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?",
+            );
         }
     }
 
@@ -64,7 +65,7 @@ class SetUnion extends Operation {
 
         this.validateSampleNumbers(sets);
 
-        return this.runUnion(...sets.map(s => s.split(this.itemDelimiter)));
+        return this.runUnion(...sets.map((s) => s.split(this.itemDelimiter)));
     }
 
     /**

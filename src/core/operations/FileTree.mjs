@@ -6,13 +6,12 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {INPUT_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import { INPUT_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 /**
  * Unique operation
  */
 class FileTree extends Operation {
-
     /**
      * Unique constructor
      */
@@ -21,20 +20,21 @@ class FileTree extends Operation {
 
         this.name = "File Tree";
         this.module = "Default";
-        this.description = "Creates file tree from list of file paths (similar to the tree command in Linux)";
+        this.description =
+            "Creates file tree from list of file paths (similar to the tree command in Linux)";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "File Path Delimiter",
                 type: "binaryString",
-                value: "/"
+                value: "/",
             },
             {
                 name: "Delimiter",
                 type: "option",
-                value: INPUT_DELIM_OPTIONS
-            }
+                value: INPUT_DELIM_OPTIONS,
+            },
         ];
     }
 
@@ -44,7 +44,6 @@ class FileTree extends Operation {
      * @returns {string}
      */
     run(input, args) {
-
         // Set up arrow and pipe for nice output display
         const ARROW = "|---";
         const PIPE = "|   ";
@@ -74,8 +73,8 @@ class FileTree extends Operation {
                     printLine = path[j];
                     key = path[j];
                 } else {
-                    printLine = PIPE.repeat(j-1) + ARROW + path[j];
-                    key = path.slice(0, j+1).join("/");
+                    printLine = PIPE.repeat(j - 1) + ARROW + path[j];
+                    key = path.slice(0, j + 1).join("/");
                 }
 
                 // Check to see we have already added that path
@@ -87,7 +86,6 @@ class FileTree extends Operation {
         }
         return printList.join("\n");
     }
-
 }
 
 export default FileTree;

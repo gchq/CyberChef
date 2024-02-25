@@ -11,7 +11,6 @@ import Utils from "../Utils.mjs";
  * To Base32 operation
  */
 class ToBase32 extends Operation {
-
     /**
      * ToBase32 constructor
      */
@@ -20,7 +19,8 @@ class ToBase32 extends Operation {
 
         this.name = "To Base32";
         this.module = "Default";
-        this.description = "Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.";
+        this.description =
+            "Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.";
         this.infoURL = "https://wikipedia.org/wiki/Base32";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -28,8 +28,8 @@ class ToBase32 extends Operation {
             {
                 name: "Alphabet",
                 type: "binaryString",
-                value: "A-Z2-7="
-            }
+                value: "A-Z2-7=",
+            },
         ];
     }
 
@@ -42,10 +42,23 @@ class ToBase32 extends Operation {
         if (!input) return "";
         input = new Uint8Array(input);
 
-        const alphabet = args[0] ? Utils.expandAlphRange(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=";
+        const alphabet = args[0]
+            ? Utils.expandAlphRange(args[0]).join("")
+            : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=";
         let output = "",
-            chr1, chr2, chr3, chr4, chr5,
-            enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
+            chr1,
+            chr2,
+            chr3,
+            chr4,
+            chr5,
+            enc1,
+            enc2,
+            enc3,
+            enc4,
+            enc5,
+            enc6,
+            enc7,
+            enc8,
             i = 0;
         while (i < input.length) {
             chr1 = input[i++];
@@ -73,13 +86,18 @@ class ToBase32 extends Operation {
                 enc8 = 32;
             }
 
-            output += alphabet.charAt(enc1) + alphabet.charAt(enc2) + alphabet.charAt(enc3) +
-                alphabet.charAt(enc4) + alphabet.charAt(enc5) + alphabet.charAt(enc6) +
-                alphabet.charAt(enc7) + alphabet.charAt(enc8);
+            output +=
+                alphabet.charAt(enc1) +
+                alphabet.charAt(enc2) +
+                alphabet.charAt(enc3) +
+                alphabet.charAt(enc4) +
+                alphabet.charAt(enc5) +
+                alphabet.charAt(enc6) +
+                alphabet.charAt(enc7) +
+                alphabet.charAt(enc8);
         }
         return output;
     }
-
 }
 
 export default ToBase32;

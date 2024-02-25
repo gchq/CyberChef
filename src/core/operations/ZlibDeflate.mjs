@@ -5,7 +5,10 @@
  */
 
 import Operation from "../Operation.mjs";
-import {COMPRESSION_TYPE, ZLIB_COMPRESSION_TYPE_LOOKUP} from "../lib/Zlib.mjs";
+import {
+    COMPRESSION_TYPE,
+    ZLIB_COMPRESSION_TYPE_LOOKUP,
+} from "../lib/Zlib.mjs";
 import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
 
 const Zlib = zlibAndGzip.Zlib;
@@ -14,7 +17,6 @@ const Zlib = zlibAndGzip.Zlib;
  * Zlib Deflate operation
  */
 class ZlibDeflate extends Operation {
-
     /**
      * ZlibDeflate constructor
      */
@@ -23,7 +25,8 @@ class ZlibDeflate extends Operation {
 
         this.name = "Zlib Deflate";
         this.module = "Compression";
-        this.description = "Compresses data using the deflate algorithm adding zlib headers.";
+        this.description =
+            "Compresses data using the deflate algorithm adding zlib headers.";
         this.infoURL = "https://wikipedia.org/wiki/Zlib";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -31,8 +34,8 @@ class ZlibDeflate extends Operation {
             {
                 name: "Compression type",
                 type: "option",
-                value: COMPRESSION_TYPE
-            }
+                value: COMPRESSION_TYPE,
+            },
         ];
     }
 
@@ -43,11 +46,10 @@ class ZlibDeflate extends Operation {
      */
     run(input, args) {
         const deflate = new Zlib.Deflate(new Uint8Array(input), {
-            compressionType: ZLIB_COMPRESSION_TYPE_LOOKUP[args[0]]
+            compressionType: ZLIB_COMPRESSION_TYPE_LOOKUP[args[0]],
         });
         return new Uint8Array(deflate.compress()).buffer;
     }
-
 }
 
 export default ZlibDeflate;

@@ -12,7 +12,6 @@ import OperationError from "../errors/OperationError.mjs";
  * HTTP request operation
  */
 class HTTPRequest extends Operation {
-
     /**
      * HTTPRequest constructor
      */
@@ -30,43 +29,50 @@ class HTTPRequest extends Operation {
             "<br><br>",
             "The status code of the response, along with a limited selection of exposed headers, can be viewed by checking the 'Show response metadata' option. Only a limited set of response headers are exposed by the browser for security reasons.",
         ].join("\n");
-        this.infoURL = "https://wikipedia.org/wiki/List_of_HTTP_header_fields#Request_fields";
+        this.infoURL =
+            "https://wikipedia.org/wiki/List_of_HTTP_header_fields#Request_fields";
         this.inputType = "string";
         this.outputType = "string";
         this.manualBake = true;
         this.args = [
             {
-                "name": "Method",
-                "type": "option",
-                "value": [
-                    "GET", "POST", "HEAD",
-                    "PUT", "PATCH", "DELETE",
-                    "CONNECT", "TRACE", "OPTIONS"
-                ]
+                name: "Method",
+                type: "option",
+                value: [
+                    "GET",
+                    "POST",
+                    "HEAD",
+                    "PUT",
+                    "PATCH",
+                    "DELETE",
+                    "CONNECT",
+                    "TRACE",
+                    "OPTIONS",
+                ],
             },
             {
-                "name": "URL",
-                "type": "string",
-                "value": ""
+                name: "URL",
+                type: "string",
+                value: "",
             },
             {
-                "name": "Headers",
-                "type": "text",
-                "value": ""
+                name: "Headers",
+                type: "text",
+                value: "",
             },
             {
-                "name": "Mode",
-                "type": "option",
-                "value": [
+                name: "Mode",
+                type: "option",
+                value: [
                     "Cross-Origin Resource Sharing",
                     "No CORS (limited to HEAD, GET or POST)",
-                ]
+                ],
             },
             {
-                "name": "Show response metadata",
-                "type": "boolean",
-                "value": false
-            }
+                name: "Show response metadata",
+                type: "boolean",
+                value: false,
+            },
         ];
     }
 
@@ -81,13 +87,14 @@ class HTTPRequest extends Operation {
         if (url.length === 0) return "";
 
         const headers = new Headers();
-        headersText.split(/\r?\n/).forEach(line => {
+        headersText.split(/\r?\n/).forEach((line) => {
             line = line.trim();
 
             if (line.length === 0) return;
 
             const split = line.split(":");
-            if (split.length !== 2) throw `Could not parse header in line: ${line}`;
+            if (split.length !== 2)
+                throw `Could not parse header in line: ${line}`;
 
             headers.set(split[0].trim(), split[1].trim());
         });
@@ -104,9 +111,11 @@ class HTTPRequest extends Operation {
         }
 
         return fetch(url, config)
-            .then(r => {
+            .then((r) => {
                 if (r.status === 0 && r.type === "opaque") {
-                    throw new OperationError("Error: Null response. Try setting the connection mode to CORS.");
+                    throw new OperationError(
+                        "Error: Null response. Try setting the connection mode to CORS.",
+                    );
                 }
 
                 if (showResponseMetadata) {
@@ -114,24 +123,32 @@ class HTTPRequest extends Operation {
                     for (const pair of r.headers.entries()) {
                         headers += "    " + pair[0] + ": " + pair[1] + "\n";
                     }
-                    return r.text().then(b => {
-                        return "####\n  Status: " + r.status + " " + r.statusText +
-                            "\n  Exposed headers:\n" + headers + "####\n\n" + b;
+                    return r.text().then((b) => {
+                        return (
+                            "####\n  Status: " +
+                            r.status +
+                            " " +
+                            r.statusText +
+                            "\n  Exposed headers:\n" +
+                            headers +
+                            "####\n\n" +
+                            b
+                        );
                     });
                 }
                 return r.text();
             })
-            .catch(e => {
-                throw new OperationError(e.toString() +
-                    "\n\nThis error could be caused by one of the following:\n" +
-                    " - An invalid URL\n" +
-                    " - Making a request to an insecure resource (HTTP) from a secure source (HTTPS)\n" +
-                    " - Making a cross-origin request to a server which does not support CORS\n");
+            .catch((e) => {
+                throw new OperationError(
+                    e.toString() +
+                        "\n\nThis error could be caused by one of the following:\n" +
+                        " - An invalid URL\n" +
+                        " - Making a request to an insecure resource (HTTP) from a secure source (HTTPS)\n" +
+                        " - Making a cross-origin request to a server which does not support CORS\n",
+                );
             });
     }
-
 }
-
 
 /**
  * Lookup table for HTTP modes
@@ -142,6 +159,5 @@ const modeLookup = {
     "Cross-Origin Resource Sharing": "cors",
     "No CORS (limited to HEAD, GET or POST)": "no-cors",
 };
-
 
 export default HTTPRequest;

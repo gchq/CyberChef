@@ -12,7 +12,6 @@ import OperationError from "../errors/OperationError.mjs";
  * To Hexdump operation
  */
 class ToHexdump extends Operation {
-
     /**
      * ToHexdump constructor
      */
@@ -21,32 +20,33 @@ class ToHexdump extends Operation {
 
         this.name = "To Hexdump";
         this.module = "Default";
-        this.description = "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.<br><br>The 'UNIX format' argument defines which subset of printable characters are displayed in the preview column.";
+        this.description =
+            "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.<br><br>The 'UNIX format' argument defines which subset of printable characters are displayed in the preview column.";
         this.infoURL = "https://wikipedia.org/wiki/Hex_dump";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Width",
-                "type": "number",
-                "value": 16,
-                "min": 1
+                name: "Width",
+                type: "number",
+                value: 16,
+                min: 1,
             },
             {
-                "name": "Upper case hex",
-                "type": "boolean",
-                "value": false
+                name: "Upper case hex",
+                type: "boolean",
+                value: false,
             },
             {
-                "name": "Include final length",
-                "type": "boolean",
-                "value": false
+                name: "Include final length",
+                type: "boolean",
+                value: false,
             },
             {
-                "name": "UNIX format",
-                "type": "boolean",
-                "value": false
-            }
+                name: "UNIX format",
+                type: "boolean",
+                value: false,
+            },
         ];
     }
 
@@ -67,12 +67,16 @@ class ToHexdump extends Operation {
         for (let i = 0; i < data.length; i += length) {
             let lineNo = Utils.hex(i, 8);
 
-            const buff = data.slice(i, i+length);
+            const buff = data.slice(i, i + length);
             const hex = [];
-            buff.forEach(b => hex.push(Utils.hex(b, padding)));
-            let hexStr = hex.join(" ").padEnd(length*(padding+1), " ");
+            buff.forEach((b) => hex.push(Utils.hex(b, padding)));
+            let hexStr = hex.join(" ").padEnd(length * (padding + 1), " ");
 
-            const ascii = Utils.printable(Utils.byteArrayToChars(buff), false, unixFormat);
+            const ascii = Utils.printable(
+                Utils.byteArrayToChars(buff),
+                false,
+                unixFormat,
+            );
             const asciiStr = ascii.padEnd(buff.length, " ");
 
             if (upperCase) {
@@ -82,9 +86,8 @@ class ToHexdump extends Operation {
 
             lines.push(`${lineNo}  ${hexStr} |${asciiStr}|`);
 
-
-            if (includeFinalLength && i+buff.length === data.length) {
-                lines.push(Utils.hex(i+buff.length, 8));
+            if (includeFinalLength && i + buff.length === data.length) {
+                lines.push(Utils.hex(i + buff.length, 8));
             }
         }
 
@@ -103,13 +106,13 @@ class ToHexdump extends Operation {
     highlight(pos, args) {
         // Calculate overall selection
         const w = args[0] || 16,
-            width = 14 + (w*4);
+            width = 14 + w * 4;
         let line = Math.floor(pos[0].start / w),
             offset = pos[0].start % w,
             start = 0,
             end = 0;
 
-        pos[0].start = line*width + 10 + offset*3;
+        pos[0].start = line * width + 10 + offset * 3;
 
         line = Math.floor(pos[0].end / w);
         offset = pos[0].end % w;
@@ -117,7 +120,7 @@ class ToHexdump extends Operation {
             line--;
             offset = w;
         }
-        pos[0].end = line*width + 10 + offset*3 - 1;
+        pos[0].end = line * width + 10 + offset * 3 - 1;
 
         // Set up multiple selections for bytes
         let startLineNum = Math.floor(pos[0].start / width);
@@ -127,12 +130,12 @@ class ToHexdump extends Operation {
             pos.push(pos[0]);
         } else {
             start = pos[0].start;
-            end = (startLineNum+1) * width - w - 5;
+            end = (startLineNum + 1) * width - w - 5;
             pos.push({ start: start, end: end });
             while (end < pos[0].end) {
                 startLineNum++;
                 start = startLineNum * width + 10;
-                end = (startLineNum+1) * width - w - 5;
+                end = (startLineNum + 1) * width - w - 5;
                 if (end > pos[0].end) end = pos[0].end;
                 pos.push({ start: start, end: end });
             }
@@ -145,8 +148,14 @@ class ToHexdump extends Operation {
         end = 0;
         for (let i = 1; i < len; i++) {
             lineNum = Math.floor(pos[i].start / width);
-            start = (((pos[i].start - (lineNum * width)) - 10) / 3) + (width - w -2) + (lineNum * width);
-            end = (((pos[i].end + 1 - (lineNum * width)) - 10) / 3) + (width - w -2) + (lineNum * width);
+            start =
+                (pos[i].start - lineNum * width - 10) / 3 +
+                (width - w - 2) +
+                lineNum * width;
+            end =
+                (pos[i].end + 1 - lineNum * width - 10) / 3 +
+                (width - w - 2) +
+                lineNum * width;
             pos.push({ start: start, end: end });
         }
         return pos;
@@ -163,33 +172,38 @@ class ToHexdump extends Operation {
      */
     highlightReverse(pos, args) {
         const w = args[0] || 16;
-        const width = 14 + (w*4);
+        const width = 14 + w * 4;
 
         let line = Math.floor(pos[0].start / width);
         let offset = pos[0].start % width;
 
-        if (offset < 10) { // In line number section
-            pos[0].start = line*w;
-        } else if (offset > 10+(w*3)) { // In ASCII section
-            pos[0].start = (line+1)*w;
-        } else { // In byte section
-            pos[0].start = line*w + Math.floor((offset-10)/3);
+        if (offset < 10) {
+            // In line number section
+            pos[0].start = line * w;
+        } else if (offset > 10 + w * 3) {
+            // In ASCII section
+            pos[0].start = (line + 1) * w;
+        } else {
+            // In byte section
+            pos[0].start = line * w + Math.floor((offset - 10) / 3);
         }
 
         line = Math.floor(pos[0].end / width);
         offset = pos[0].end % width;
 
-        if (offset < 10) { // In line number section
-            pos[0].end = line*w;
-        } else if (offset > 10+(w*3)) { // In ASCII section
-            pos[0].end = (line+1)*w;
-        } else { // In byte section
-            pos[0].end = line*w + Math.ceil((offset-10)/3);
+        if (offset < 10) {
+            // In line number section
+            pos[0].end = line * w;
+        } else if (offset > 10 + w * 3) {
+            // In ASCII section
+            pos[0].end = (line + 1) * w;
+        } else {
+            // In byte section
+            pos[0].end = line * w + Math.ceil((offset - 10) / 3);
         }
 
         return pos;
     }
-
 }
 
 export default ToHexdump;

@@ -9,13 +9,12 @@ import { fromHex } from "../lib/Hex.mjs";
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
-import {isImage} from "../lib/FileType.mjs";
+import { isImage } from "../lib/FileType.mjs";
 
 /**
  * Render Image operation
  */
 class RenderImage extends Operation {
-
     /**
      * RenderImage constructor
      */
@@ -24,27 +23,29 @@ class RenderImage extends Operation {
 
         this.name = "Render Image";
         this.module = "Image";
-        this.description = "Displays the input as an image. Supports the following formats:<br><br><ul><li>jpg/jpeg</li><li>png</li><li>gif</li><li>webp</li><li>bmp</li><li>ico</li></ul>";
+        this.description =
+            "Displays the input as an image. Supports the following formats:<br><br><ul><li>jpg/jpeg</li><li>png</li><li>gif</li><li>webp</li><li>bmp</li><li>ico</li></ul>";
         this.inputType = "string";
         this.outputType = "byteArray";
         this.presentType = "html";
         this.args = [
             {
-                "name": "Input format",
-                "type": "option",
-                "value": ["Raw", "Base64", "Hex"]
-            }
+                name: "Input format",
+                type: "option",
+                value: ["Raw", "Base64", "Hex"],
+            },
         ];
         this.checks = [
             {
-                pattern: "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
+                pattern:
+                    "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
                 flags: "",
                 args: ["Raw"],
                 useful: true,
                 output: {
-                    mime: "image"
-                }
-            }
+                    mime: "image",
+                },
+            },
         ];
     }
 
@@ -106,7 +107,6 @@ class RenderImage extends Operation {
 
         return "<img src='" + dataURI + "'>";
     }
-
 }
 
 export default RenderImage;

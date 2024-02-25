@@ -11,7 +11,6 @@ import { affineEncode } from "../lib/Ciphers.mjs";
  * Affine Cipher Encode operation
  */
 class AffineCipherEncode extends Operation {
-
     /**
      * AffineCipherEncode constructor
      */
@@ -20,21 +19,22 @@ class AffineCipherEncode extends Operation {
 
         this.name = "Affine Cipher Encode";
         this.module = "Ciphers";
-        this.description = "The Affine cipher is a type of monoalphabetic substitution cipher, wherein each letter in an alphabet is mapped to its numeric equivalent, encrypted using simple mathematical function, <code>(ax + b) % 26</code>, and converted back to a letter.";
+        this.description =
+            "The Affine cipher is a type of monoalphabetic substitution cipher, wherein each letter in an alphabet is mapped to its numeric equivalent, encrypted using simple mathematical function, <code>(ax + b) % 26</code>, and converted back to a letter.";
         this.infoURL = "https://wikipedia.org/wiki/Affine_cipher";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "a",
-                "type": "number",
-                "value": 1
+                name: "a",
+                type: "number",
+                value: 1,
             },
             {
-                "name": "b",
-                "type": "number",
-                "value": 0
-            }
+                name: "b",
+                type: "number",
+                value: 0,
+            },
         ];
     }
 
@@ -72,7 +72,6 @@ class AffineCipherEncode extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default AffineCipherEncode;

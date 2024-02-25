@@ -189,6 +189,7 @@
     "testui": "npx grunt testui",
     "testuidev": "npx nightwatch --env=dev",
     "lint": "npx grunt lint",
+    "format": "npx @biomejs/biome format . --write",
     "postinstall": "npx grunt exec:fixCryptoApiImports && npx grunt exec:fixSnackbarMarkup",
     "newop": "node --experimental-modules --experimental-json-modules src/core/config/scripts/newOperation.mjs",
     "minor": "node --experimental-modules --experimental-json-modules src/core/config/scripts/newMinorVersion.mjs",

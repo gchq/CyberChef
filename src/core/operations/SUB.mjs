@@ -12,7 +12,6 @@ import { bitOp, sub, BITWISE_OP_DELIMS } from "../lib/BitwiseOp.mjs";
  * SUB operation
  */
 class SUB extends Operation {
-
     /**
      * SUB constructor
      */
@@ -21,17 +20,19 @@ class SUB extends Operation {
 
         this.name = "SUB";
         this.module = "Default";
-        this.description = "SUB the input with the given key (e.g. <code>fe023da5</code>), MOD 255";
-        this.infoURL = "https://wikipedia.org/wiki/Bitwise_operation#Bitwise_operators";
+        this.description =
+            "SUB the input with the given key (e.g. <code>fe023da5</code>), MOD 255";
+        this.infoURL =
+            "https://wikipedia.org/wiki/Bitwise_operation#Bitwise_operators";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
         this.args = [
             {
-                "name": "Key",
-                "type": "toggleString",
-                "value": "",
-                "toggleValues": BITWISE_OP_DELIMS
-            }
+                name: "Key",
+                type: "toggleString",
+                value: "",
+                toggleValues: BITWISE_OP_DELIMS,
+            },
         ];
     }
 
@@ -41,7 +42,10 @@ class SUB extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        const key = Utils.convertToByteArray(args[0].string || "", args[0].option);
+        const key = Utils.convertToByteArray(
+            args[0].string || "",
+            args[0].option,
+        );
 
         return bitOp(input, key, sub);
     }
@@ -71,7 +75,6 @@ class SUB extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default SUB;

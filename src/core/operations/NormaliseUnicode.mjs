@@ -6,14 +6,13 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import {UNICODE_NORMALISATION_FORMS} from "../lib/ChrEnc.mjs";
+import { UNICODE_NORMALISATION_FORMS } from "../lib/ChrEnc.mjs";
 import unorm from "unorm";
 
 /**
  * Normalise Unicode operation
  */
 class NormaliseUnicode extends Operation {
-
     /**
      * NormaliseUnicode constructor
      */
@@ -22,16 +21,18 @@ class NormaliseUnicode extends Operation {
 
         this.name = "Normalise Unicode";
         this.module = "Encodings";
-        this.description = "Transform Unicode characters to one of the Normalisation Forms";
-        this.infoURL = "https://wikipedia.org/wiki/Unicode_equivalence#Normal_forms";
+        this.description =
+            "Transform Unicode characters to one of the Normalisation Forms";
+        this.infoURL =
+            "https://wikipedia.org/wiki/Unicode_equivalence#Normal_forms";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "Normal Form",
                 type: "option",
-                value: UNICODE_NORMALISATION_FORMS
-            }
+                value: UNICODE_NORMALISATION_FORMS,
+            },
         ];
     }
 
@@ -56,7 +57,6 @@ class NormaliseUnicode extends Operation {
                 throw new OperationError("Unknown Normalisation Form");
         }
     }
-
 }
 
 export default NormaliseUnicode;

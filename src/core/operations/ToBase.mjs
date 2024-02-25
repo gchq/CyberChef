@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * To Base operation
  */
 class ToBase extends Operation {
-
     /**
      * ToBase constructor
      */
@@ -20,16 +19,17 @@ class ToBase extends Operation {
 
         this.name = "To Base";
         this.module = "Default";
-        this.description = "Converts a decimal number to a given numerical base.";
+        this.description =
+            "Converts a decimal number to a given numerical base.";
         this.infoURL = "https://wikipedia.org/wiki/Radix";
         this.inputType = "BigNumber";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Radix",
-                "type": "number",
-                "value": 36
-            }
+                name: "Radix",
+                type: "number",
+                value: 36,
+            },
         ];
     }
 
@@ -44,11 +44,12 @@ class ToBase extends Operation {
         }
         const radix = args[0];
         if (radix < 2 || radix > 36) {
-            throw new OperationError("Error: Radix argument must be between 2 and 36");
+            throw new OperationError(
+                "Error: Radix argument must be between 2 and 36",
+            );
         }
         return input.toString(radix);
     }
-
 }
 
 export default ToBase;

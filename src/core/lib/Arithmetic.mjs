@@ -8,7 +8,6 @@
 import Utils from "../Utils.mjs";
 import BigNumber from "bignumber.js";
 
-
 /**
  * Converts a string array to a number array.
  *
@@ -35,7 +34,6 @@ export function createNumArray(input, delim) {
     return numbers;
 }
 
-
 /**
  * Adds an array of numbers and returns the value.
  *
@@ -47,7 +45,6 @@ export function sum(data) {
         return data.reduce((acc, curr) => acc.plus(curr));
     }
 }
-
 
 /**
  * Subtracts an array of numbers and returns the value.
@@ -61,7 +58,6 @@ export function sub(data) {
     }
 }
 
-
 /**
  * Multiplies an array of numbers and returns the value.
  *
@@ -73,7 +69,6 @@ export function multi(data) {
         return data.reduce((acc, curr) => acc.times(curr));
     }
 }
-
 
 /**
  * Divides an array of numbers and returns the value.
@@ -87,7 +82,6 @@ export function div(data) {
     }
 }
 
-
 /**
  * Computes mean of a number array and returns the value.
  *
@@ -100,7 +94,6 @@ export function mean(data) {
     }
 }
 
-
 /**
  * Computes median of a number array and returns the value.
  *
@@ -108,8 +101,8 @@ export function mean(data) {
  * @returns {BigNumber}
  */
 export function median(data) {
-    if ((data.length % 2) === 0 && data.length > 0) {
-        data.sort(function(a, b) {
+    if (data.length % 2 === 0 && data.length > 0) {
+        data.sort(function (a, b) {
             return a.minus(b);
         });
         const first = data[Math.floor(data.length / 2)];
@@ -119,7 +112,6 @@ export function median(data) {
         return data[Math.floor(data.length / 2)];
     }
 }
-
 
 /**
  * Computes standard deviation of a number array and returns the value.

@@ -6,8 +6,8 @@
 
 import Operation from "../Operation.mjs";
 import Stream from "../lib/Stream.mjs";
-import {toHexFast, fromHex} from "../lib/Hex.mjs";
-import {objToTable} from "../lib/Protocol.mjs";
+import { toHexFast, fromHex } from "../lib/Hex.mjs";
+import { objToTable } from "../lib/Protocol.mjs";
 import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
@@ -15,7 +15,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Parse UDP operation
  */
 class ParseUDP extends Operation {
-
     /**
      * ParseUDP constructor
      */
@@ -33,8 +32,8 @@ class ParseUDP extends Operation {
             {
                 name: "Input format",
                 type: "option",
-                value: ["Hex", "Raw"]
-            }
+                value: ["Hex", "Raw"],
+            },
         ];
     }
 
@@ -63,8 +62,8 @@ class ParseUDP extends Operation {
         const UDPPacket = {
             "Source port": s.readInt(2),
             "Destination port": s.readInt(2),
-            "Length": s.readInt(2),
-            "Checksum": "0x" + toHexFast(s.getBytes(2))
+            Length: s.readInt(2),
+            Checksum: "0x" + toHexFast(s.getBytes(2)),
         };
         // Parse data if present
         if (s.hasMore()) {
@@ -82,8 +81,6 @@ class ParseUDP extends Operation {
     present(data) {
         return objToTable(data);
     }
-
 }
-
 
 export default ParseUDP;

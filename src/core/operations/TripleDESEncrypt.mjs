@@ -13,7 +13,6 @@ import forge from "node-forge";
  * Triple DES Encrypt operation
  */
 class TripleDESEncrypt extends Operation {
-
     /**
      * TripleDESEncrypt constructor
      */
@@ -22,38 +21,39 @@ class TripleDESEncrypt extends Operation {
 
         this.name = "Triple DES Encrypt";
         this.module = "Ciphers";
-        this.description = "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.";
+        this.description =
+            "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.";
         this.infoURL = "https://wikipedia.org/wiki/Triple_DES";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Key",
-                "type": "toggleString",
-                "value": "",
-                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
+                name: "Key",
+                type: "toggleString",
+                value: "",
+                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"],
             },
             {
-                "name": "IV",
-                "type": "toggleString",
-                "value": "",
-                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
+                name: "IV",
+                type: "toggleString",
+                value: "",
+                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"],
             },
             {
-                "name": "Mode",
-                "type": "option",
-                "value": ["CBC", "CFB", "OFB", "CTR", "ECB"]
+                name: "Mode",
+                type: "option",
+                value: ["CBC", "CFB", "OFB", "CTR", "ECB"],
             },
             {
-                "name": "Input",
-                "type": "option",
-                "value": ["Raw", "Hex"]
+                name: "Input",
+                type: "option",
+                value: ["Raw", "Hex"],
             },
             {
-                "name": "Output",
-                "type": "option",
-                "value": ["Hex", "Raw"]
-            }
+                name: "Output",
+                type: "option",
+                value: ["Hex", "Raw"],
+            },
         ];
     }
 
@@ -84,15 +84,18 @@ Make sure you have specified the type correctly (e.g. Hex vs UTF8).`);
 
         input = Utils.convertToByteString(input, inputType);
 
-        const cipher = forge.cipher.createCipher("3DES-" + mode,
-            key.length === 16 ? key + key.substring(0, 8) : key);
-        cipher.start({iv: iv});
+        const cipher = forge.cipher.createCipher(
+            "3DES-" + mode,
+            key.length === 16 ? key + key.substring(0, 8) : key,
+        );
+        cipher.start({ iv: iv });
         cipher.update(forge.util.createBuffer(input));
         cipher.finish();
 
-        return outputType === "Hex" ? cipher.output.toHex() : cipher.output.getBytes();
+        return outputType === "Hex"
+            ? cipher.output.toHex()
+            : cipher.output.getBytes();
     }
-
 }
 
 export default TripleDESEncrypt;

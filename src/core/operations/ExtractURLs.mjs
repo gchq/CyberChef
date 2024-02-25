@@ -12,7 +12,6 @@ import { caseInsensitiveSort } from "../lib/Sort.mjs";
  * Extract URLs operation
  */
 class ExtractURLs extends Operation {
-
     /**
      * ExtractURLs constructor
      */
@@ -21,25 +20,26 @@ class ExtractURLs extends Operation {
 
         this.name = "Extract URLs";
         this.module = "Regex";
-        this.description = "Extracts Uniform Resource Locators (URLs) from the input. The protocol (http, ftp etc.) is required otherwise there will be far too many false positives.";
+        this.description =
+            "Extracts Uniform Resource Locators (URLs) from the input. The protocol (http, ftp etc.) is required otherwise there will be far too many false positives.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "Display total",
                 type: "boolean",
-                value: false
+                value: false,
             },
             {
                 name: "Sort",
                 type: "boolean",
-                value: false
+                value: false,
             },
             {
                 name: "Unique",
                 type: "boolean",
-                value: false
-            }
+                value: false,
+            },
         ];
     }
 
@@ -55,7 +55,7 @@ class ExtractURLs extends Operation {
             URL_REGEX,
             null,
             sort ? caseInsensitiveSort : null,
-            unique
+            unique,
         );
 
         if (displayTotal) {
@@ -64,7 +64,6 @@ class ExtractURLs extends Operation {
             return results.join("\n");
         }
     }
-
 }
 
 export default ExtractURLs;

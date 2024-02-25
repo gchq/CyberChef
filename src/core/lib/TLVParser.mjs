@@ -10,14 +10,13 @@
 const defaults = {
     location: 0,
     bytesInLength: 1,
-    basicEncodingRules: false
+    basicEncodingRules: false,
 };
 
 /**
  * TLVParser library
  */
 export default class TLVParser {
-
     /**
      * TLVParser constructor
      *

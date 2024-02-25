@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Image Filter operation
  */
 class ImageFilter extends Operation {
-
     /**
      * ImageFilter constructor
      */
@@ -33,11 +32,8 @@ class ImageFilter extends Operation {
             {
                 name: "Filter type",
                 type: "option",
-                value: [
-                    "Greyscale",
-                    "Sepia"
-                ]
-            }
+                value: ["Greyscale", "Sepia"],
+            },
         ];
     }
 
@@ -60,7 +56,11 @@ class ImageFilter extends Operation {
         }
         try {
             if (isWorkerEnvironment())
-                self.sendStatusMessage("Applying " + filterType.toLowerCase() + " filter to image...");
+                self.sendStatusMessage(
+                    "Applying " +
+                        filterType.toLowerCase() +
+                        " filter to image...",
+                );
             if (filterType === "Greyscale") {
                 image.greyscale();
             } else {
@@ -75,7 +75,9 @@ class ImageFilter extends Operation {
             }
             return imageBuffer.buffer;
         } catch (err) {
-            throw new OperationError(`Error applying filter to image. (${err})`);
+            throw new OperationError(
+                `Error applying filter to image. (${err})`,
+            );
         }
     }
 
@@ -95,7 +97,6 @@ class ImageFilter extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default ImageFilter;

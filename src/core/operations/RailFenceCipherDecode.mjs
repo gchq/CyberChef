@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Rail Fence Cipher Decode operation
  */
 class RailFenceCipherDecode extends Operation {
-
     /**
      * RailFenceCipherDecode constructor
      */
@@ -20,7 +19,8 @@ class RailFenceCipherDecode extends Operation {
 
         this.name = "Rail Fence Cipher Decode";
         this.module = "Ciphers";
-        this.description = "Decodes Strings that were created using the Rail fence Cipher provided a key and an offset";
+        this.description =
+            "Decodes Strings that were created using the Rail fence Cipher provided a key and an offset";
         this.infoURL = "https://wikipedia.org/wiki/Rail_fence_cipher";
         this.inputType = "string";
         this.outputType = "string";
@@ -28,13 +28,13 @@ class RailFenceCipherDecode extends Operation {
             {
                 name: "Key",
                 type: "number",
-                value: 2
+                value: 2,
             },
             {
                 name: "Offset",
                 type: "number",
-                value: 0
-            }
+                value: 0,
+            },
         ];
     }
 
@@ -51,7 +51,9 @@ class RailFenceCipherDecode extends Operation {
         if (key < 2) {
             throw new OperationError("Key has to be bigger than 2");
         } else if (key > cipher.length) {
-            throw new OperationError("Key should be smaller than the cipher's length");
+            throw new OperationError(
+                "Key should be smaller than the cipher's length",
+            );
         }
 
         if (offset < 0) {
@@ -66,7 +68,10 @@ class RailFenceCipherDecode extends Operation {
 
         for (y = 0; y < key; y++) {
             for (x = 0; x < cipher.length; x++) {
-                if ((y + x + offset) % cycle === 0 || (y - x - offset) % cycle === 0) {
+                if (
+                    (y + x + offset) % cycle === 0 ||
+                    (y - x - offset) % cycle === 0
+                ) {
                     plaintext[x] = cipher[j++];
                 }
             }
@@ -74,8 +79,6 @@ class RailFenceCipherDecode extends Operation {
 
         return plaintext.join("").trim();
     }
-
 }
-
 
 export default RailFenceCipherDecode;

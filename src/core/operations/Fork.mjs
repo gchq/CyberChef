@@ -12,7 +12,6 @@ import Dish from "../Dish.mjs";
  * Fork operation
  */
 class Fork extends Operation {
-
     /**
      * Fork constructor
      */
@@ -22,25 +21,26 @@ class Fork extends Operation {
         this.name = "Fork";
         this.flowControl = true;
         this.module = "Default";
-        this.description = "Split the input data up based on the specified delimiter and run all subsequent operations on each branch separately.<br><br>For example, to decode multiple Base64 strings, enter them all on separate lines then add the 'Fork' and 'From Base64' operations to the recipe. Each string will be decoded separately.";
+        this.description =
+            "Split the input data up based on the specified delimiter and run all subsequent operations on each branch separately.<br><br>For example, to decode multiple Base64 strings, enter them all on separate lines then add the 'Fork' and 'From Base64' operations to the recipe. Each string will be decoded separately.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Split delimiter",
-                "type": "binaryShortString",
-                "value": "\\n"
+                name: "Split delimiter",
+                type: "binaryShortString",
+                value: "\\n",
             },
             {
-                "name": "Merge delimiter",
-                "type": "binaryShortString",
-                "value": "\\n"
+                name: "Merge delimiter",
+                type: "binaryShortString",
+                value: "\\n",
             },
             {
-                "name": "Ignore errors",
-                "type": "boolean",
-                "value": false
-            }
+                name: "Ignore errors",
+                type: "boolean",
+                value: false,
+            },
         ];
     }
 
@@ -52,18 +52,17 @@ class Fork extends Operation {
      * @returns {Object} The updated state of the recipe.
      */
     async run(state) {
-        const opList     = state.opList,
-            inputType    = opList[state.progress].inputType,
-            outputType   = opList[state.progress].outputType,
-            input        = await state.dish.get(inputType),
-            ings         = opList[state.progress].ingValues,
+        const opList = state.opList,
+            inputType = opList[state.progress].inputType,
+            outputType = opList[state.progress].outputType,
+            input = await state.dish.get(inputType),
+            ings = opList[state.progress].ingValues,
             [splitDelim, mergeDelim, ignoreErrors] = ings,
-            subOpList    = [];
-        let inputs       = [],
+            subOpList = [];
+        let inputs = [],
             i;
 
-        if (input)
-            inputs = input.split(splitDelim);
+        if (input) inputs = input.split(splitDelim);
 
         // Set to 1 as if we are here, then there is one, the current one.
         let numOp = 1;
@@ -72,13 +71,14 @@ class Fork extends Operation {
         for (i = state.progress + 1; i < opList.length; i++) {
             if (opList[i].name === "Merge" && !opList[i].disabled) {
                 numOp--;
-                if (numOp === 0 || opList[i].ingValues[0])
-                    break;
-                else
-                    // Not this Fork's Merge.
-                    subOpList.push(opList[i]);
+                if (numOp === 0 || opList[i].ingValues[0]) break;
+                // Not this Fork's Merge.
+                else subOpList.push(opList[i]);
             } else {
-                if (opList[i].name === "Fork" || opList[i].name === "Subsection")
+                if (
+                    opList[i].name === "Fork" ||
+                    opList[i].name === "Subsection"
+                )
                     numOp++;
                 subOpList.push(opList[i]);
             }
@@ -93,7 +93,9 @@ class Fork extends Operation {
         recipe.addOperations(subOpList);
 
         // Take a deep(ish) copy of the ingredient values
-        const ingValues = subOpList.map(op => JSON.parse(JSON.stringify(op.ingValues)));
+        const ingValues = subOpList.map((op) =>
+            JSON.parse(JSON.stringify(op.ingValues)),
+        );
 
         // Run recipe over each tranche
         for (i = 0; i < inputs.length; i++) {
@@ -120,7 +122,6 @@ class Fork extends Operation {
         state.progress += progress;
         return state;
     }
-
 }
 
 export default Fork;

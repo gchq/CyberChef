@@ -6,13 +6,12 @@
  */
 
 import Operation from "../Operation.mjs";
-import {URL_REGEX, DOMAIN_REGEX} from "../lib/Extract.mjs";
+import { URL_REGEX, DOMAIN_REGEX } from "../lib/Extract.mjs";
 
 /**
  * DefangURL operation
  */
 class DefangURL extends Operation {
-
     /**
      * DefangURL constructor
      */
@@ -21,31 +20,37 @@ class DefangURL extends Operation {
 
         this.name = "Defang URL";
         this.module = "Default";
-        this.description = "Takes a Universal Resource Locator (URL) and 'Defangs' it; meaning the URL becomes invalid, neutralising the risk of accidentally clicking on a malicious link.<br><br>This is often used when dealing with malicious links or IOCs.<br><br>Works well when combined with the 'Extract URLs' operation.";
-        this.infoURL = "https://isc.sans.edu/forums/diary/Defang+all+the+things/22744/";
+        this.description =
+            "Takes a Universal Resource Locator (URL) and 'Defangs' it; meaning the URL becomes invalid, neutralising the risk of accidentally clicking on a malicious link.<br><br>This is often used when dealing with malicious links or IOCs.<br><br>Works well when combined with the 'Extract URLs' operation.";
+        this.infoURL =
+            "https://isc.sans.edu/forums/diary/Defang+all+the+things/22744/";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "Escape dots",
                 type: "boolean",
-                value: true
+                value: true,
             },
             {
                 name: "Escape http",
                 type: "boolean",
-                value: true
+                value: true,
             },
             {
                 name: "Escape ://",
                 type: "boolean",
-                value: true
+                value: true,
             },
             {
                 name: "Process",
                 type: "option",
-                value: ["Valid domains and full URLs", "Only full URLs", "Everything"]
-            }
+                value: [
+                    "Valid domains and full URLs",
+                    "Only full URLs",
+                    "Everything",
+                ],
+            },
         ];
     }
 
@@ -59,15 +64,15 @@ class DefangURL extends Operation {
 
         switch (process) {
             case "Valid domains and full URLs":
-                input = input.replace(URL_REGEX, x => {
+                input = input.replace(URL_REGEX, (x) => {
                     return defangURL(x, dots, http, slashes);
                 });
-                input = input.replace(DOMAIN_REGEX, x => {
+                input = input.replace(DOMAIN_REGEX, (x) => {
                     return defangURL(x, dots, http, slashes);
                 });
                 break;
             case "Only full URLs":
-                input = input.replace(URL_REGEX, x => {
+                input = input.replace(URL_REGEX, (x) => {
                     return defangURL(x, dots, http, slashes);
                 });
                 break;
@@ -78,9 +83,7 @@ class DefangURL extends Operation {
 
         return input;
     }
-
 }
-
 
 /**
  * Defangs a given URL

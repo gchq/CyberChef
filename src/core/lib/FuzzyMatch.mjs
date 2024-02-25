@@ -24,7 +24,7 @@ export const DEFAULT_WEIGHTS = {
 
     leadingLetterPenalty: -5, // penalty applied for every letter in str before the first match
     maxLeadingLetterPenalty: -15, // maximum penalty for leading letters
-    unmatchedLetterPenalty: -1
+    unmatchedLetterPenalty: -1,
 };
 
 /**
@@ -35,7 +35,12 @@ export const DEFAULT_WEIGHTS = {
  * @returns [boolean, number]       a boolean which tells if pattern was
  *                                  found or not and a search score
  */
-export function fuzzyMatch(pattern, str, global=false, weights=DEFAULT_WEIGHTS) {
+export function fuzzyMatch(
+    pattern,
+    str,
+    global = false,
+    weights = DEFAULT_WEIGHTS,
+) {
     const recursionCount = 0;
     const recursionLimit = 10;
     const matches = [];
@@ -53,7 +58,7 @@ export function fuzzyMatch(pattern, str, global=false, weights=DEFAULT_WEIGHTS) 
             0 /* nextMatch */,
             recursionCount,
             recursionLimit,
-            weights
+            weights,
         );
     }
 
@@ -76,7 +81,7 @@ export function fuzzyMatch(pattern, str, global=false, weights=DEFAULT_WEIGHTS) 
             0 /* nextMatch */,
             recursionCount,
             recursionLimit,
-            weights
+            weights,
         );
         if (foundMatch) results.push([foundMatch, score, [...idxs]]);
         strCurrIndex = idxs[idxs.length - 1] + 1;
@@ -98,7 +103,7 @@ function fuzzyMatchRecursive(
     nextMatch,
     recursionCount,
     recursionLimit,
-    weights
+    weights,
 ) {
     let outScore = 0;
 
@@ -122,7 +127,8 @@ function fuzzyMatchRecursive(
     while (patternCurIndex < pattern.length && strCurrIndex < str.length) {
         // Match found.
         if (
-            pattern[patternCurIndex].toLowerCase() === str[strCurrIndex].toLowerCase()
+            pattern[patternCurIndex].toLowerCase() ===
+            str[strCurrIndex].toLowerCase()
         ) {
             if (nextMatch >= maxMatches) {
                 return [false, outScore, []];
@@ -133,19 +139,20 @@ function fuzzyMatchRecursive(
                 firstMatch = false;
             }
 
-            const [matched, recursiveScore, recursiveMatches] = fuzzyMatchRecursive(
-                pattern,
-                str,
-                patternCurIndex,
-                strCurrIndex + 1,
-                matches,
-                recursiveMatches,
-                maxMatches,
-                nextMatch,
-                recursionCount,
-                recursionLimit,
-                weights
-            );
+            const [matched, recursiveScore, recursiveMatches] =
+                fuzzyMatchRecursive(
+                    pattern,
+                    str,
+                    patternCurIndex,
+                    strCurrIndex + 1,
+                    matches,
+                    recursiveMatches,
+                    maxMatches,
+                    nextMatch,
+                    recursionCount,
+                    recursionLimit,
+                    weights,
+                );
 
             if (matched) {
                 // Pick best recursive score.
@@ -170,9 +177,9 @@ function fuzzyMatchRecursive(
         // Apply leading letter penalty
         let penalty = weights.leadingLetterPenalty * matches[0];
         penalty =
-            penalty < weights.maxLeadingLetterPenalty ?
-                weights.maxLeadingLetterPenalty :
-                penalty;
+            penalty < weights.maxLeadingLetterPenalty
+                ? weights.maxLeadingLetterPenalty
+                : penalty;
         outScore += penalty;
 
         // Apply unmatched penalty
@@ -201,7 +208,8 @@ function fuzzyMatchRecursive(
                 ) {
                     outScore += weights.camelBonus;
                 }
-                const isNeighbourSeparator = neighbor === "_" || neighbor === " ";
+                const isNeighbourSeparator =
+                    neighbor === "_" || neighbor === " ";
                 if (isNeighbourSeparator) {
                     outScore += weights.separatorBonus;
                 }
@@ -239,7 +247,7 @@ export function calcMatchRanges(matches) {
     let start = matches[0],
         curr = start;
 
-    matches.forEach(m => {
+    matches.forEach((m) => {
         if (m === curr || m === curr + 1) curr = m;
         else {
             ranges.push([start, curr - start + 1]);

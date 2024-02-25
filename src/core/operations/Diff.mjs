@@ -13,7 +13,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Diff operation
  */
 class Diff extends Operation {
-
     /**
      * Diff constructor
      */
@@ -22,42 +21,43 @@ class Diff extends Operation {
 
         this.name = "Diff";
         this.module = "Diff";
-        this.description = "Compares two inputs (separated by the specified delimiter) and highlights the differences between them.";
+        this.description =
+            "Compares two inputs (separated by the specified delimiter) and highlights the differences between them.";
         this.infoURL = "https://wikipedia.org/wiki/File_comparison";
         this.inputType = "string";
         this.outputType = "html";
         this.args = [
             {
-                "name": "Sample delimiter",
-                "type": "binaryString",
-                "value": "\\n\\n"
+                name: "Sample delimiter",
+                type: "binaryString",
+                value: "\\n\\n",
             },
             {
-                "name": "Diff by",
-                "type": "option",
-                "value": ["Character", "Word", "Line", "Sentence", "CSS", "JSON"]
+                name: "Diff by",
+                type: "option",
+                value: ["Character", "Word", "Line", "Sentence", "CSS", "JSON"],
             },
             {
-                "name": "Show added",
-                "type": "boolean",
-                "value": true
+                name: "Show added",
+                type: "boolean",
+                value: true,
             },
             {
-                "name": "Show removed",
-                "type": "boolean",
-                "value": true
+                name: "Show removed",
+                type: "boolean",
+                value: true,
             },
             {
-                "name": "Show subtraction",
-                "type": "boolean",
-                "value": false
+                name: "Show subtraction",
+                type: "boolean",
+                value: false,
             },
             {
-                "name": "Ignore whitespace",
-                "type": "boolean",
-                "value": false,
-                "hint": "Relevant for word and line"
-            }
+                name: "Ignore whitespace",
+                type: "boolean",
+                value: false,
+                hint: "Relevant for word and line",
+            },
         ];
     }
 
@@ -73,7 +73,7 @@ class Diff extends Operation {
                 showAdded,
                 showRemoved,
                 showSubtraction,
-                ignoreWhitespace
+                ignoreWhitespace,
             ] = args,
             samples = input.split(sampleDelim);
         let output = "",
@@ -83,7 +83,9 @@ class Diff extends Operation {
         const jsdiff = JsDiff.default ? JsDiff.default : JsDiff;
 
         if (!samples || samples.length !== 2) {
-            throw new OperationError("Incorrect number of samples, perhaps you need to modify the sample delimiter or add more samples?");
+            throw new OperationError(
+                "Incorrect number of samples, perhaps you need to modify the sample delimiter or add more samples?",
+            );
         }
 
         switch (diffBy) {
@@ -119,9 +121,13 @@ class Diff extends Operation {
 
         for (let i = 0; i < diff.length; i++) {
             if (diff[i].added) {
-                if (showAdded) output += "<ins>" + Utils.escapeHtml(diff[i].value) + "</ins>";
+                if (showAdded)
+                    output +=
+                        "<ins>" + Utils.escapeHtml(diff[i].value) + "</ins>";
             } else if (diff[i].removed) {
-                if (showRemoved) output += "<del>" + Utils.escapeHtml(diff[i].value) + "</del>";
+                if (showRemoved)
+                    output +=
+                        "<del>" + Utils.escapeHtml(diff[i].value) + "</del>";
             } else if (!showSubtraction) {
                 output += Utils.escapeHtml(diff[i].value);
             }
@@ -129,7 +135,6 @@ class Diff extends Operation {
 
         return output;
     }
-
 }
 
 export default Diff;

@@ -5,7 +5,7 @@
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
-import {INIT_PATTERNS, ITA2_TABLE, ROTOR_SIZES} from "../lib/Lorenz.mjs";
+import { INIT_PATTERNS, ITA2_TABLE, ROTOR_SIZES } from "../lib/Lorenz.mjs";
 
 /**
  * Colossus simulator class.
@@ -21,7 +21,16 @@ export class ColossusComputer {
      * @param {Object} control - control switches which specify stepping modes
      * @param {Object} starts - rotor start positions
      */
-    constructor(ciphertext, pattern, qbusin, qbusswitches, control, starts, settotal, limit) {
+    constructor(
+        ciphertext,
+        pattern,
+        qbusin,
+        qbusswitches,
+        control,
+        starts,
+        settotal,
+        limit,
+    ) {
         this.ITAlookup = ITA2_TABLE;
         this.ReverseITAlookup = {};
         for (const letter in this.ITAlookup) {
@@ -38,7 +47,6 @@ export class ColossusComputer {
         this.starts = starts;
         this.settotal = settotal;
         this.limitations = limit;
-
 
         this.allCounters = [0, 0, 0, 0, 0];
 
@@ -69,11 +77,24 @@ export class ColossusComputer {
      */
     run() {
         const result = {
-            printout: ""
+            printout: "",
         };
 
         // loop until our start positions are back to the beginning
-        this.rotorPtrs = {X1: this.starts.X1, X2: this.starts.X2, X3: this.starts.X3, X4: this.starts.X4, X5: this.starts.X5, M61: this.starts.M61, M37: this.starts.M37, S1: this.starts.S1, S2: this.starts.S2, S3: this.starts.S3, S4: this.starts.S4, S5: this.starts.S5};
+        this.rotorPtrs = {
+            X1: this.starts.X1,
+            X2: this.starts.X2,
+            X3: this.starts.X3,
+            X4: this.starts.X4,
+            X5: this.starts.X5,
+            M61: this.starts.M61,
+            M37: this.starts.M37,
+            S1: this.starts.S1,
+            S2: this.starts.S2,
+            S3: this.starts.S3,
+            S4: this.starts.S4,
+            S5: this.starts.S5,
+        };
         // this.rotorPtrs = this.starts;
         let runcount = 1;
 
@@ -94,12 +115,15 @@ export class ColossusComputer {
             // Only print result if larger than set total
             let fastRef = "00";
             let slowRef = "00";
-            if (fast !== "") fastRef = this.rotorPtrs[fast].toString().padStart(2, "0");
-            if (slow !== "") slowRef = this.rotorPtrs[slow].toString().padStart(2, "0");
+            if (fast !== "")
+                fastRef = this.rotorPtrs[fast].toString().padStart(2, "0");
+            if (slow !== "")
+                slowRef = this.rotorPtrs[slow].toString().padStart(2, "0");
             let printline = "";
-            for (let c=0;c<5;c++) {
+            for (let c = 0; c < 5; c++) {
                 if (this.allCounters[c] > this.settotal) {
-                    printline += String.fromCharCode(c+97) + this.allCounters[c]+" ";
+                    printline +=
+                        String.fromCharCode(c + 97) + this.allCounters[c] + " ";
                 }
             }
             if (printline !== "") {
@@ -111,17 +135,21 @@ export class ColossusComputer {
             // Step fast rotor if required
             if (fast !== "") {
                 this.rotorPtrs[fast]++;
-                if (this.rotorPtrs[fast] > ROTOR_SIZES[fast]) this.rotorPtrs[fast] = 1;
+                if (this.rotorPtrs[fast] > ROTOR_SIZES[fast])
+                    this.rotorPtrs[fast] = 1;
             }
 
             // Step slow rotor if fast rotor has returned to initial start position
             if (slow !== "" && this.rotorPtrs[fast] === this.starts[fast]) {
                 this.rotorPtrs[slow]++;
-                if (this.rotorPtrs[slow] > ROTOR_SIZES[slow]) this.rotorPtrs[slow] = 1;
+                if (this.rotorPtrs[slow] > ROTOR_SIZES[slow])
+                    this.rotorPtrs[slow] = 1;
             }
 
             runcount++;
-        } while (JSON.stringify(this.rotorPtrs) !== JSON.stringify(this.starts));
+        } while (
+            JSON.stringify(this.rotorPtrs) !== JSON.stringify(this.starts)
+        );
 
         result.counters = this.allCounters;
         result.runcount = runcount;
@@ -135,12 +163,24 @@ export class ColossusComputer {
     runTape() {
         let charZin = "";
 
-        this.Xptr = [this.rotorPtrs.X1, this.rotorPtrs.X2, this.rotorPtrs.X3, this.rotorPtrs.X4, this.rotorPtrs.X5];
+        this.Xptr = [
+            this.rotorPtrs.X1,
+            this.rotorPtrs.X2,
+            this.rotorPtrs.X3,
+            this.rotorPtrs.X4,
+            this.rotorPtrs.X5,
+        ];
         this.Mptr = [this.rotorPtrs.M37, this.rotorPtrs.M61];
-        this.Sptr = [this.rotorPtrs.S1, this.rotorPtrs.S2, this.rotorPtrs.S3, this.rotorPtrs.S4, this.rotorPtrs.S5];
+        this.Sptr = [
+            this.rotorPtrs.S1,
+            this.rotorPtrs.S2,
+            this.rotorPtrs.S3,
+            this.rotorPtrs.S4,
+            this.rotorPtrs.S5,
+        ];
 
         // Run full loop of all character on the input tape (Z)
-        for (let i=0; i<this.ciphertext.length; i++) {
+        for (let i = 0; i < this.ciphertext.length; i++) {
             charZin = this.ciphertext.charAt(i);
 
             // Firstly, we check what inputs are specified on the Q-bus input switches
@@ -164,7 +204,6 @@ export class ColossusComputer {
 
             // Step rotors
             this.stepThyratrons();
-
         }
     }
 
@@ -175,44 +214,44 @@ export class ColossusComputer {
      * Psi rotors only step dependant on M37 setting + limitation
      */
     stepThyratrons() {
-        let X2bPtr = this.Xptr[1]-1;
-        if (X2bPtr===0) X2bPtr = ROTOR_SIZES.X2;
-        let S1bPtr = this.Sptr[0]-1;
-        if (S1bPtr===0) S1bPtr = ROTOR_SIZES.S1;
+        let X2bPtr = this.Xptr[1] - 1;
+        if (X2bPtr === 0) X2bPtr = ROTOR_SIZES.X2;
+        let S1bPtr = this.Sptr[0] - 1;
+        if (S1bPtr === 0) S1bPtr = ROTOR_SIZES.S1;
 
         // Get Chi rotor 5 two back to calculate plaintext (Z+Chi+Psi=Plain)
-        let X5bPtr=this.Xptr[4]-1;
-        if (X5bPtr===0) X5bPtr=ROTOR_SIZES.X5;
-        X5bPtr=X5bPtr-1;
-        if (X5bPtr===0) X5bPtr=ROTOR_SIZES.X5;
+        let X5bPtr = this.Xptr[4] - 1;
+        if (X5bPtr === 0) X5bPtr = ROTOR_SIZES.X5;
+        X5bPtr = X5bPtr - 1;
+        if (X5bPtr === 0) X5bPtr = ROTOR_SIZES.X5;
         // Get Psi rotor 5 two back to calculate plaintext (Z+Chi+Psi=Plain)
-        let S5bPtr=this.Sptr[4]-1;
-        if (S5bPtr===0) S5bPtr=ROTOR_SIZES.S5;
-        S5bPtr=S5bPtr-1;
-        if (S5bPtr===0) S5bPtr=ROTOR_SIZES.S5;
+        let S5bPtr = this.Sptr[4] - 1;
+        if (S5bPtr === 0) S5bPtr = ROTOR_SIZES.S5;
+        S5bPtr = S5bPtr - 1;
+        if (S5bPtr === 0) S5bPtr = ROTOR_SIZES.S5;
 
         const x2sw = this.limitations.X2;
         const s1sw = this.limitations.S1;
         const p5sw = this.limitations.P5;
 
         // Limitation calculations
-        let lim=1;
-        if (x2sw) lim = this.rings.X[2][X2bPtr-1];
-        if (s1sw) lim = lim ^ this.rings.S[1][S1bPtr-1];
+        let lim = 1;
+        if (x2sw) lim = this.rings.X[2][X2bPtr - 1];
+        if (s1sw) lim = lim ^ this.rings.S[1][S1bPtr - 1];
 
         // P5
         if (p5sw) {
             let p5lim = this.P5Zbit[1];
-            p5lim = p5lim ^ this.rings.X[5][X5bPtr-1];
-            p5lim = p5lim ^ this.rings.S[5][S5bPtr-1];
+            p5lim = p5lim ^ this.rings.X[5][X5bPtr - 1];
+            p5lim = p5lim ^ this.rings.S[5][S5bPtr - 1];
             lim = lim ^ p5lim;
         }
 
-        const basicmotor = this.rings.M[2][this.Mptr[0]-1];
+        const basicmotor = this.rings.M[2][this.Mptr[0] - 1];
         this.totalmotor = basicmotor;
 
         if (x2sw || s1sw) {
-            if (basicmotor===0 && lim===1) {
+            if (basicmotor === 0 && lim === 1) {
                 this.totalmotor = 0;
             } else {
                 this.totalmotor = 1;
@@ -220,26 +259,26 @@ export class ColossusComputer {
         }
 
         // Step Chi rotors
-        for (let r=0; r<5; r++) {
+        for (let r = 0; r < 5; r++) {
             this.Xptr[r]++;
-            if (this.Xptr[r] > ROTOR_SIZES["X"+(r+1)]) this.Xptr[r] = 1;
+            if (this.Xptr[r] > ROTOR_SIZES["X" + (r + 1)]) this.Xptr[r] = 1;
         }
 
         if (this.totalmotor) {
             // Step Psi rotors
-            for (let r=0; r<5; r++) {
+            for (let r = 0; r < 5; r++) {
                 this.Sptr[r]++;
-                if (this.Sptr[r] > ROTOR_SIZES["S"+(r+1)]) this.Sptr[r] = 1;
+                if (this.Sptr[r] > ROTOR_SIZES["S" + (r + 1)]) this.Sptr[r] = 1;
             }
         }
 
         // Move M37 rotor if M61 set
-        if (this.rings.M[1][this.Mptr[1]-1]===1) this.Mptr[0]++;
-        if (this.Mptr[0] > ROTOR_SIZES.M37) this.Mptr[0]=1;
+        if (this.rings.M[1][this.Mptr[1] - 1] === 1) this.Mptr[0]++;
+        if (this.Mptr[0] > ROTOR_SIZES.M37) this.Mptr[0] = 1;
 
         // Always move M61 rotor
         this.Mptr[1]++;
-        if (this.Mptr[1] > ROTOR_SIZES.M61) this.Mptr[1]=1;
+        if (this.Mptr[1] > ROTOR_SIZES.M61) this.Mptr[1] = 1;
     }
 
     /**
@@ -253,25 +292,25 @@ export class ColossusComputer {
             this.Qbits = this.Zbits;
         } else if (this.qbusin.Z === "ΔZ") {
             // delta Z, the Bitwise XOR of this character Zbits + last character Zbits
-            for (let b=0;b<5;b++) {
+            for (let b = 0; b < 5; b++) {
                 this.Qbits[b] = this.Zbits[b] ^ this.ZbitsOneBack[b];
             }
         }
         this.ZbitsOneBack = this.Zbits.slice(); // copy value of object, not reference
 
         // Xbits - the current Chi wheel bits
-        for (let b=0;b<5;b++) {
-            this.Xbits[b] = this.rings.X[b+1][this.Xptr[b]-1];
+        for (let b = 0; b < 5; b++) {
+            this.Xbits[b] = this.rings.X[b + 1][this.Xptr[b] - 1];
         }
         if (this.qbusin.Chi !== "") {
             if (this.qbusin.Chi === "Χ") {
                 // direct X added to Qbits
-                for (let b=0;b<5;b++) {
+                for (let b = 0; b < 5; b++) {
                     this.Qbits[b] = this.Qbits[b] ^ this.Xbits[b];
                 }
             } else if (this.qbusin.Chi === "ΔΧ") {
                 // delta X
-                for (let b=0;b<5;b++) {
+                for (let b = 0; b < 5; b++) {
                     this.Qbits[b] = this.Qbits[b] ^ this.Xbits[b];
                     this.Qbits[b] = this.Qbits[b] ^ this.XbitsOneBack[b];
                 }
@@ -280,18 +319,18 @@ export class ColossusComputer {
         this.XbitsOneBack = this.Xbits.slice();
 
         // Sbits - the current Psi wheel bits
-        for (let b=0;b<5;b++) {
-            this.Sbits[b] = this.rings.S[b+1][this.Sptr[b]-1];
+        for (let b = 0; b < 5; b++) {
+            this.Sbits[b] = this.rings.S[b + 1][this.Sptr[b] - 1];
         }
         if (this.qbusin.Psi !== "") {
             if (this.qbusin.Psi === "Ψ") {
                 // direct S added to Qbits
-                for (let b=0;b<5;b++) {
+                for (let b = 0; b < 5; b++) {
                     this.Qbits[b] = this.Qbits[b] ^ this.Sbits[b];
                 }
             } else if (this.qbusin.Psi === "ΔΨ") {
                 // delta S
-                for (let b=0;b<5;b++) {
+                for (let b = 0; b < 5; b++) {
                     this.Qbits[b] = this.Qbits[b] ^ this.Sbits[b];
                     this.Qbits[b] = this.Qbits[b] ^ this.SbitsOneBack[b];
                 }
@@ -307,15 +346,19 @@ export class ColossusComputer {
         const cnt = [-1, -1, -1, -1, -1];
         const numrows = this.qbusswitches.condition.length;
 
-        for (let r=0;r<numrows;r++) {
+        for (let r = 0; r < numrows; r++) {
             const row = this.qbusswitches.condition[r];
             if (row.Counter !== "") {
                 let result = true;
-                const cPnt = row.Counter-1;
+                const cPnt = row.Counter - 1;
                 const Qswitch = this.readBusSwitches(row.Qswitches);
                 // Match switches to bit pattern
-                for (let s=0;s<5;s++) {
-                    if (Qswitch[s] >= 0 && Qswitch[s] !== parseInt(this.Qbits[s], 10)) result = false;
+                for (let s = 0; s < 5; s++) {
+                    if (
+                        Qswitch[s] >= 0 &&
+                        Qswitch[s] !== parseInt(this.Qbits[s], 10)
+                    )
+                        result = false;
                 }
                 // Check for NOT switch
                 if (row.Negate) result = !result;
@@ -330,8 +373,9 @@ export class ColossusComputer {
         }
 
         // Negate the whole column, this allows A OR B by doing NOT(NOT A AND NOT B)
-        for (let c=0;c<5;c++) {
-            if (this.qbusswitches.condNegateAll && cnt[c] !== -1) cnt[c] = !cnt[c];
+        for (let c = 0; c < 5; c++) {
+            if (this.qbusswitches.condNegateAll && cnt[c] !== -1)
+                cnt[c] = !cnt[c];
         }
 
         return cnt;
@@ -348,13 +392,13 @@ export class ColossusComputer {
         // Colossus could actually add into any of the five counters.
         if (row.C1) {
             let addition = 0;
-            for (let s=0;s<5;s++) {
+            for (let s = 0; s < 5; s++) {
                 // XOR addition
                 if (Qswitch[s]) {
                     addition = addition ^ this.Qbits[s];
                 }
             }
-            const equals = (row.Equals===""?-1:(row.Equals==="."?0:1));
+            const equals = row.Equals === "" ? -1 : row.Equals === "." ? 0 : 1;
             if (addition === equals) {
                 // AND with conditional rows to get final result
                 if (cnt[0] === -1) cnt[0] = true;
@@ -365,13 +409,18 @@ export class ColossusComputer {
 
         // Final check, check for addition section negate
         // then, if any column set, from top to bottom of rack, add to counter.
-        for (let c=0;c<5;c++) {
-            if (this.qbusswitches.addNegateAll && cnt[c] !== -1) cnt[c] = !cnt[c];
+        for (let c = 0; c < 5; c++) {
+            if (this.qbusswitches.addNegateAll && cnt[c] !== -1)
+                cnt[c] = !cnt[c];
 
-            if (this.qbusswitches.totalMotor === "" || (this.qbusswitches.totalMotor === "x" && this.totalmotor === 0) || (this.qbusswitches.totalMotor === "." && this.totalmotor === 1)) {
+            if (
+                this.qbusswitches.totalMotor === "" ||
+                (this.qbusswitches.totalMotor === "x" &&
+                    this.totalmotor === 0) ||
+                (this.qbusswitches.totalMotor === "." && this.totalmotor === 1)
+            ) {
                 if (cnt[c] === true) this.allCounters[c]++;
             }
-
         }
     }
 
@@ -386,7 +435,7 @@ export class ColossusComputer {
                 2: INIT_PATTERNS[pattern].X[2].slice().reverse(),
                 3: INIT_PATTERNS[pattern].X[3].slice().reverse(),
                 4: INIT_PATTERNS[pattern].X[4].slice().reverse(),
-                5: INIT_PATTERNS[pattern].X[5].slice().reverse()
+                5: INIT_PATTERNS[pattern].X[5].slice().reverse(),
             },
             M: {
                 1: INIT_PATTERNS[pattern].M[1].slice().reverse(),
@@ -397,8 +446,8 @@ export class ColossusComputer {
                 2: INIT_PATTERNS[pattern].S[2].slice().reverse(),
                 3: INIT_PATTERNS[pattern].S[3].slice().reverse(),
                 4: INIT_PATTERNS[pattern].S[4].slice().reverse(),
-                5: INIT_PATTERNS[pattern].S[5].slice().reverse()
-            }
+                5: INIT_PATTERNS[pattern].S[5].slice().reverse(),
+            },
         };
     }
 
@@ -407,11 +456,10 @@ export class ColossusComputer {
      */
     readBusSwitches(row) {
         const output = [-1, -1, -1, -1, -1];
-        for (let c=0;c<5;c++) {
-            if (row[c]===".") output[c] = 0;
-            if (row[c]==="x") output[c] = 1;
+        for (let c = 0; c < 5; c++) {
+            if (row[c] === ".") output[c] = 0;
+            if (row[c] === "x") output[c] = 1;
         }
         return output;
     }
-
 }

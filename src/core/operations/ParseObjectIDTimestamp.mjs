@@ -12,7 +12,6 @@ import BSON from "bson";
  * Parse ObjectID timestamp operation
  */
 class ParseObjectIDTimestamp extends Operation {
-
     /**
      * ParseObjectIDTimestamp constructor
      */
@@ -21,8 +20,10 @@ class ParseObjectIDTimestamp extends Operation {
 
         this.name = "Parse ObjectID timestamp";
         this.module = "Serialise";
-        this.description = "Parse timestamp from MongoDB/BSON ObjectID hex string.";
-        this.infoURL = "https://docs.mongodb.com/manual/reference/method/ObjectId.getTimestamp/";
+        this.description =
+            "Parse timestamp from MongoDB/BSON ObjectID hex string.";
+        this.infoURL =
+            "https://docs.mongodb.com/manual/reference/method/ObjectId.getTimestamp/";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
@@ -41,7 +42,6 @@ class ParseObjectIDTimestamp extends Operation {
             throw new OperationError(err);
         }
     }
-
 }
 
 export default ParseObjectIDTimestamp;

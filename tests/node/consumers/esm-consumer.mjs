@@ -16,14 +16,14 @@ const a = bake("Testing, 1 2 3", [
         op: unique,
         args: {
             delimiter: "Space",
-        }
+        },
     },
     {
         op: multiply,
         args: {
             delimiter: "Space",
-        }
-    }
+        },
+    },
 ]);
 
 assert.equal(a.value, "630957449041920");
@@ -35,14 +35,14 @@ const b = chef.bake("Testing, 1 2 3", [
         op: chef.unique,
         args: {
             delimiter: "Space",
-        }
+        },
     },
     {
         op: chef.multiply,
         args: {
             delimiter: "Space",
-        }
-    }
+        },
+    },
 ]);
 
 assert.equal(b.value, "630957449041920");

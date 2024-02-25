@@ -7,19 +7,24 @@
 
 import * as d3temp from "d3";
 import * as nodomtemp from "nodom";
-import { getScatterValues, getScatterValuesWithColour, RECORD_DELIMITER_OPTIONS, COLOURS, FIELD_DELIMITER_OPTIONS } from "../lib/Charts.mjs";
+import {
+    getScatterValues,
+    getScatterValuesWithColour,
+    RECORD_DELIMITER_OPTIONS,
+    COLOURS,
+    FIELD_DELIMITER_OPTIONS,
+} from "../lib/Charts.mjs";
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 
 const d3 = d3temp.default ? d3temp.default : d3temp;
-const nodom = nodomtemp.default ? nodomtemp.default: nodomtemp;
+const nodom = nodomtemp.default ? nodomtemp.default : nodomtemp;
 
 /**
  * Scatter chart operation
  */
 class ScatterChart extends Operation {
-
     /**
      * ScatterChart constructor
      */
@@ -28,7 +33,8 @@ class ScatterChart extends Operation {
 
         this.name = "Scatter chart";
         this.module = "Charts";
-        this.description = "Plots two-variable data as single points on a graph.";
+        this.description =
+            "Plots two-variable data as single points on a graph.";
         this.infoURL = "https://wikipedia.org/wiki/Scatter_plot";
         this.inputType = "string";
         this.outputType = "html";
@@ -72,7 +78,7 @@ class ScatterChart extends Operation {
                 name: "Use colour from third column",
                 type: "boolean",
                 value: false,
-            }
+            },
         ];
     }
 
@@ -95,12 +101,14 @@ class ScatterChart extends Operation {
         let xLabel = args[3],
             yLabel = args[4];
 
-        const dataFunction = colourInInput ? getScatterValuesWithColour : getScatterValues;
+        const dataFunction = colourInInput
+            ? getScatterValuesWithColour
+            : getScatterValues;
         const { headings, values } = dataFunction(
             input,
             recordDelimiter,
             fieldDelimiter,
-            columnHeadingsAreIncluded
+            columnHeadingsAreIncluded,
         );
 
         if (headings) {
@@ -110,7 +118,8 @@ class ScatterChart extends Operation {
 
         const document = new nodom.Document();
         let svg = document.createElement("svg");
-        svg = d3.select(svg)
+        svg = d3
+            .select(svg)
             .attr("width", "100%")
             .attr("height", "100%")
             .attr("viewBox", `0 0 ${dimension} ${dimension}`);
@@ -123,27 +132,35 @@ class ScatterChart extends Operation {
             },
             width = dimension - margin.left - margin.right,
             height = dimension - margin.top - margin.bottom,
-            marginedSpace = svg.append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            marginedSpace = svg
+                .append("g")
+                .attr(
+                    "transform",
+                    "translate(" + margin.left + "," + margin.top + ")",
+                );
 
-        const xExtent = d3.extent(values, d => d[0]),
+        const xExtent = d3.extent(values, (d) => d[0]),
             xDelta = xExtent[1] - xExtent[0],
-            yExtent = d3.extent(values, d => d[1]),
+            yExtent = d3.extent(values, (d) => d[1]),
             yDelta = yExtent[1] - yExtent[0],
-            xAxis = d3.scaleLinear()
-                .domain([xExtent[0] - (0.1 * xDelta), xExtent[1] + (0.1 * xDelta)])
+            xAxis = d3
+                .scaleLinear()
+                .domain([xExtent[0] - 0.1 * xDelta, xExtent[1] + 0.1 * xDelta])
                 .range([0, width]),
-            yAxis = d3.scaleLinear()
-                .domain([yExtent[0] - (0.1 * yDelta), yExtent[1] + (0.1 * yDelta)])
+            yAxis = d3
+                .scaleLinear()
+                .domain([yExtent[0] - 0.1 * yDelta, yExtent[1] + 0.1 * yDelta])
                 .range([height, 0]);
 
-        marginedSpace.append("clipPath")
+        marginedSpace
+            .append("clipPath")
             .attr("id", "clip")
             .append("rect")
             .attr("width", width)
             .attr("height", height);
 
-        marginedSpace.append("g")
+        marginedSpace
+            .append("g")
             .attr("class", "points")
             .attr("clip-path", "url(#clip)")
             .selectAll("circle")
@@ -152,14 +169,14 @@ class ScatterChart extends Operation {
             .append("circle")
             .attr("cx", (d) => xAxis(d[0]))
             .attr("cy", (d) => yAxis(d[1]))
-            .attr("r", d => radius)
-            .attr("fill", d => {
+            .attr("r", (d) => radius)
+            .attr("fill", (d) => {
                 return colourInInput ? d[2] : fillColour;
             })
             .attr("stroke", "rgba(0, 0, 0, 0.5)")
             .attr("stroke-width", "0.5")
             .append("title")
-            .text(d => {
+            .text((d) => {
                 const x = d[0],
                     y = d[1],
                     tooltip = `X: ${x}\n
@@ -168,7 +185,8 @@ class ScatterChart extends Operation {
                 return tooltip;
             });
 
-        marginedSpace.append("g")
+        marginedSpace
+            .append("g")
             .attr("class", "axis axis--y")
             .call(d3.axisLeft(yAxis).tickSizeOuter(-width));
 
@@ -180,7 +198,8 @@ class ScatterChart extends Operation {
             .style("text-anchor", "middle")
             .text(yLabel);
 
-        marginedSpace.append("g")
+        marginedSpace
+            .append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(xAxis).tickSizeOuter(-height));
@@ -193,7 +212,6 @@ class ScatterChart extends Operation {
 
         return svg._groups[0][0].outerHTML;
     }
-
 }
 
 export default ScatterChart;

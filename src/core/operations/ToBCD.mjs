@@ -7,14 +7,13 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import {ENCODING_SCHEME, ENCODING_LOOKUP, FORMAT} from "../lib/BCD.mjs";
+import { ENCODING_SCHEME, ENCODING_LOOKUP, FORMAT } from "../lib/BCD.mjs";
 import BigNumber from "bignumber.js";
 
 /**
  * To BCD operation
  */
 class ToBCD extends Operation {
-
     /**
      * ToBCD constructor
      */
@@ -23,31 +22,32 @@ class ToBCD extends Operation {
 
         this.name = "To BCD";
         this.module = "Default";
-        this.description = "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign";
+        this.description =
+            "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign";
         this.infoURL = "https://wikipedia.org/wiki/Binary-coded_decimal";
         this.inputType = "BigNumber";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Scheme",
-                "type": "option",
-                "value": ENCODING_SCHEME
+                name: "Scheme",
+                type: "option",
+                value: ENCODING_SCHEME,
             },
             {
-                "name": "Packed",
-                "type": "boolean",
-                "value": true
+                name: "Packed",
+                type: "boolean",
+                value: true,
             },
             {
-                "name": "Signed",
-                "type": "boolean",
-                "value": false
+                name: "Signed",
+                type: "boolean",
+                value: false,
             },
             {
-                "name": "Output format",
-                "type": "option",
-                "value": FORMAT
-            }
+                name: "Output format",
+                type: "option",
+                value: FORMAT,
+            },
         ];
     }
 
@@ -57,10 +57,11 @@ class ToBCD extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        if (input.isNaN())
-            throw new OperationError("Invalid input");
+        if (input.isNaN()) throw new OperationError("Invalid input");
         if (!input.integerValue(BigNumber.ROUND_DOWN).isEqualTo(input))
-            throw new OperationError("Fractional values are not supported by BCD");
+            throw new OperationError(
+                "Fractional values are not supported by BCD",
+            );
 
         const encoding = ENCODING_LOOKUP[args[0]],
             packed = args[1],
@@ -76,7 +77,7 @@ class ToBCD extends Operation {
 
         let nibbles = [];
 
-        digits.forEach(d => {
+        digits.forEach((d) => {
             const n = parseInt(d, 10);
             nibbles.push(encoding[n]);
         });
@@ -100,8 +101,8 @@ class ToBCD extends Operation {
             let encoded = 0,
                 little = false;
 
-            nibbles.forEach(n => {
-                encoded ^= little ? n : (n << 4);
+            nibbles.forEach((n) => {
+                encoded ^= little ? n : n << 4;
                 if (little) {
                     bytes.push(encoded);
                     encoded = 0;
@@ -114,29 +115,34 @@ class ToBCD extends Operation {
             bytes = nibbles;
 
             // Add null high nibbles
-            nibbles = nibbles.map(n => {
-                return [0, n];
-            }).reduce((a, b) => {
-                return a.concat(b);
-            });
+            nibbles = nibbles
+                .map((n) => {
+                    return [0, n];
+                })
+                .reduce((a, b) => {
+                    return a.concat(b);
+                });
         }
 
         // Output
         switch (outputFormat) {
             case "Nibbles":
-                return nibbles.map(n => {
-                    return n.toString(2).padStart(4, "0");
-                }).join(" ");
+                return nibbles
+                    .map((n) => {
+                        return n.toString(2).padStart(4, "0");
+                    })
+                    .join(" ");
             case "Bytes":
-                return bytes.map(b => {
-                    return b.toString(2).padStart(8, "0");
-                }).join(" ");
+                return bytes
+                    .map((b) => {
+                        return b.toString(2).padStart(8, "0");
+                    })
+                    .join(" ");
             case "Raw":
             default:
                 return Utils.byteArrayToChars(bytes);
         }
     }
-
 }
 
 export default ToBCD;

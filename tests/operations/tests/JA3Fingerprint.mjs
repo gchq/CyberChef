@@ -14,9 +14,9 @@ TestRegister.addTests([
         expectedOutput: "503053a0c5b2bd9b9334bf7f3d3b8852",
         recipeConfig: [
             {
-                "op": "JA3 Fingerprint",
-                "args": ["Hex", "Hash digest"]
-            }
+                op: "JA3 Fingerprint",
+                args: ["Hex", "Hash digest"],
+            },
         ],
     },
     {
@@ -25,9 +25,9 @@ TestRegister.addTests([
         expectedOutput: "a314eb64cee6cb832aaaa372c8295bab",
         recipeConfig: [
             {
-                "op": "JA3 Fingerprint",
-                "args": ["Hex", "Hash digest"]
-            }
+                op: "JA3 Fingerprint",
+                args: ["Hex", "Hash digest"],
+            },
         ],
     },
     {
@@ -36,9 +36,9 @@ TestRegister.addTests([
         expectedOutput: "c1a36e1a870786cc75edddc0009eaf3a",
         recipeConfig: [
             {
-                "op": "JA3 Fingerprint",
-                "args": ["Hex", "Hash digest"]
-            }
+                op: "JA3 Fingerprint",
+                args: ["Hex", "Hash digest"],
+            },
         ],
     },
     {
@@ -47,9 +47,9 @@ TestRegister.addTests([
         expectedOutput: "4826a90ec2daf4f7b4b64cc1c8bd343b",
         recipeConfig: [
             {
-                "op": "JA3 Fingerprint",
-                "args": ["Hex", "Hash digest"]
-            }
+                op: "JA3 Fingerprint",
+                args: ["Hex", "Hash digest"],
+            },
         ],
     },
 ]);

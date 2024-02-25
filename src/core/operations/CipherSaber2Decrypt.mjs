@@ -12,7 +12,6 @@ import Utils from "../Utils.mjs";
  * CipherSaber2 Decrypt operation
  */
 class CipherSaber2Decrypt extends Operation {
-
     /**
      * CipherSaber2Decrypt constructor
      */
@@ -21,7 +20,8 @@ class CipherSaber2Decrypt extends Operation {
 
         this.name = "CipherSaber2 Decrypt";
         this.module = "Crypto";
-        this.description = "CipherSaber is a simple symmetric encryption protocol based on the RC4 stream cipher. It gives reasonably strong protection of message confidentiality, yet it's designed to be simple enough that even novice programmers can memorize the algorithm and implement it from scratch.";
+        this.description =
+            "CipherSaber is a simple symmetric encryption protocol based on the RC4 stream cipher. It gives reasonably strong protection of message confidentiality, yet it's designed to be simple enough that even novice programmers can memorize the algorithm and implement it from scratch.";
         this.infoURL = "https://wikipedia.org/wiki/CipherSaber";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -30,13 +30,13 @@ class CipherSaber2Decrypt extends Operation {
                 name: "Key",
                 type: "toggleString",
                 value: "",
-                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"]
+                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"],
             },
             {
                 name: "Rounds",
                 type: "number",
-                value: 20
-            }
+                value: 20,
+            },
         ];
     }
 
@@ -53,9 +53,10 @@ class CipherSaber2Decrypt extends Operation {
 
         const tempIVP = input.slice(0, 10);
         input = input.slice(10);
-        return new Uint8Array(result.concat(encode(tempIVP, key, rounds, input))).buffer;
+        return new Uint8Array(
+            result.concat(encode(tempIVP, key, rounds, input)),
+        ).buffer;
     }
-
 }
 
 export default CipherSaber2Decrypt;

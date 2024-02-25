@@ -14,7 +14,6 @@ import { MD_ALGORITHMS } from "../lib/RSA.mjs";
  * RSA Sign operation
  */
 class RSASign extends Operation {
-
     /**
      * RSASign constructor
      */
@@ -23,7 +22,8 @@ class RSASign extends Operation {
 
         this.name = "RSA Sign";
         this.module = "Ciphers";
-        this.description = "Sign a plaintext message with a PEM encoded RSA key.";
+        this.description =
+            "Sign a plaintext message with a PEM encoded RSA key.";
         this.infoURL = "https://wikipedia.org/wiki/RSA_(cryptosystem)";
         this.inputType = "string";
         this.outputType = "string";
@@ -31,18 +31,18 @@ class RSASign extends Operation {
             {
                 name: "RSA Private Key (PEM)",
                 type: "text",
-                value: "-----BEGIN RSA PRIVATE KEY-----"
+                value: "-----BEGIN RSA PRIVATE KEY-----",
             },
             {
                 name: "Key Password",
                 type: "text",
-                value: ""
+                value: "",
             },
             {
                 name: "Message Digest Algorithm",
                 type: "option",
-                value: Object.keys(MD_ALGORITHMS)
-            }
+                value: Object.keys(MD_ALGORITHMS),
+            },
         ];
     }
 
@@ -68,7 +68,6 @@ class RSASign extends Operation {
             throw new OperationError(err);
         }
     }
-
 }
 
 export default RSASign;

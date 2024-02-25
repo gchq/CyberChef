@@ -12,7 +12,6 @@ import Protobuf from "../lib/Protobuf.mjs";
  * VarInt Encode operation
  */
 class VarIntEncode extends Operation {
-
     /**
      * VarIntEncode constructor
      */
@@ -21,8 +20,10 @@ class VarIntEncode extends Operation {
 
         this.name = "VarInt Encode";
         this.module = "Default";
-        this.description = "Encodes a Vn integer as a VarInt. VarInt is an efficient way of encoding variable length integers and is commonly used with Protobuf.";
-        this.infoURL = "https://developers.google.com/protocol-buffers/docs/encoding#varints";
+        this.description =
+            "Encodes a Vn integer as a VarInt. VarInt is an efficient way of encoding variable length integers and is commonly used with Protobuf.";
+        this.infoURL =
+            "https://developers.google.com/protocol-buffers/docs/encoding#varints";
         this.inputType = "number";
         this.outputType = "byteArray";
         this.args = [];
@@ -40,7 +41,6 @@ class VarIntEncode extends Operation {
             throw new OperationError(err);
         }
     }
-
 }
 
 export default VarIntEncode;

@@ -4,7 +4,6 @@
  * @license Apache-2.0
  */
 
-
 import DishType from "./DishType.mjs";
 import Utils from "../Utils.mjs";
 
@@ -12,13 +11,14 @@ import Utils from "../Utils.mjs";
  * Translation methods for string dishes
  */
 class DishString extends DishType {
-
     /**
      * convert the given value to a ArrayBuffer
      */
     static toArrayBuffer() {
         DishString.checkForValue(this.value);
-        this.value = this.value ? Utils.strToArrayBuffer(this.value) : new ArrayBuffer;
+        this.value = this.value
+            ? Utils.strToArrayBuffer(this.value)
+            : new ArrayBuffer();
     }
 
     /**

@@ -11,7 +11,6 @@ import Operation from "../Operation.mjs";
  * XML Minify operation
  */
 class XMLMinify extends Operation {
-
     /**
      * XMLMinify constructor
      */
@@ -25,10 +24,10 @@ class XMLMinify extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Preserve comments",
-                "type": "boolean",
-                "value": false
-            }
+                name: "Preserve comments",
+                type: "boolean",
+                value: false,
+            },
         ];
     }
 
@@ -41,7 +40,6 @@ class XMLMinify extends Operation {
         const preserveComments = args[0];
         return vkbeautify.xmlmin(input, preserveComments);
     }
-
 }
 
 export default XMLMinify;

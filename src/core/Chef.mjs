@@ -13,14 +13,12 @@ import { isWorkerEnvironment } from "./Utils.mjs";
  * The main controller for CyberChef.
  */
 class Chef {
-
     /**
      * Chef constructor
      */
     constructor() {
         this.dish = new Dish();
     }
-
 
     /**
      * Runs the recipe over the input.
@@ -36,19 +34,21 @@ class Chef {
      * @returns {number} response.progress - The position that we have got to in the recipe
      * @returns {number} response.duration - The number of ms it took to execute the recipe
      * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
-    */
-    async bake(input, recipeConfig, options={}) {
+     */
+    async bake(input, recipeConfig, options = {}) {
         log.debug("Chef baking");
         const startTime = Date.now(),
-            recipe      = new Recipe(recipeConfig),
-            containsFc  = recipe.containsFlowControl();
+            recipe = new Recipe(recipeConfig),
+            containsFc = recipe.containsFlowControl();
         let error = false,
             progress = 0;
 
-        if (containsFc && isWorkerEnvironment()) self.setOption("attemptHighlight", false);
+        if (containsFc && isWorkerEnvironment())
+            self.setOption("attemptHighlight", false);
 
         // Load data
-        const type = input instanceof ArrayBuffer ? Dish.ARRAY_BUFFER : Dish.STRING;
+        const type =
+            input instanceof ArrayBuffer ? Dish.ARRAY_BUFFER : Dish.STRING;
         this.dish.set(input, type);
 
         try {
@@ -68,8 +68,11 @@ class Chef {
         await recipe.present(this.dish);
 
         const returnType =
-            this.dish.type === Dish.HTML ? Dish.HTML :
-                options?.returnType ? options.returnType : Dish.ARRAY_BUFFER;
+            this.dish.type === Dish.HTML
+                ? Dish.HTML
+                : options?.returnType
+                  ? options.returnType
+                  : Dish.ARRAY_BUFFER;
 
         return {
             dish: rawDish,
@@ -77,10 +80,9 @@ class Chef {
             type: Dish.enumLookup(this.dish.type),
             progress: progress,
             duration: Date.now() - startTime,
-            error: error
+            error: error,
         };
     }
-
 
     /**
      * When a browser tab is unfocused and the browser has to run lots of dynamic content in other tabs,
@@ -98,7 +100,7 @@ class Chef {
      *
      * @param {Object[]} recipeConfig - The recipe configuration object
      * @returns {number} The time it took to run the silent bake in milliseconds.
-    */
+     */
     silentBake(recipeConfig) {
         log.debug("Running silent bake");
 
@@ -113,7 +115,6 @@ class Chef {
         }
         return Date.now() - startTime;
     }
-
 
     /**
      * Calculates highlight offsets if possible.
@@ -135,7 +136,8 @@ class Chef {
             // Remove multiple highlights before processing again
             pos = [pos[0]];
 
-            const func = direction === "forward" ? highlights[i].f : highlights[i].b;
+            const func =
+                direction === "forward" ? highlights[i].f : highlights[i].b;
 
             if (typeof func == "function") {
                 try {
@@ -149,10 +151,9 @@ class Chef {
 
         return {
             pos: pos,
-            direction: direction
+            direction: direction,
         };
     }
-
 
     /**
      * Translates the dish to a specified type and returns it.
@@ -173,11 +174,10 @@ class Chef {
      * @param {number} [maxLength=100]
      * @returns {string}
      */
-    async getDishTitle(dish, maxLength=100) {
+    async getDishTitle(dish, maxLength = 100) {
         const newDish = new Dish(dish);
         return await newDish.getTitle(maxLength);
     }
-
 }
 
 export default Chef;

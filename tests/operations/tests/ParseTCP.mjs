@@ -16,7 +16,7 @@ TestRegister.addTests([
             {
                 op: "Parse TCP",
                 args: ["Hex"],
-            }
+            },
         ],
     },
     {
@@ -27,7 +27,7 @@ TestRegister.addTests([
             {
                 op: "Parse TCP",
                 args: ["Hex"],
-            }
+            },
         ],
     },
     {
@@ -38,7 +38,7 @@ TestRegister.addTests([
             {
                 op: "Parse TCP",
                 args: ["Hex"],
-            }
+            },
         ],
-    }
+    },
 ]);

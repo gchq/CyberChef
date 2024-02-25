@@ -5,13 +5,12 @@
  */
 
 import Operation from "../Operation.mjs";
-import {toBase64, ALPHABET_OPTIONS} from "../lib/Base64.mjs";
+import { toBase64, ALPHABET_OPTIONS } from "../lib/Base64.mjs";
 
 /**
  * To Base64 operation
  */
 class ToBase64 extends Operation {
-
     /**
      * ToBase64 constructor
      */
@@ -20,7 +19,8 @@ class ToBase64 extends Operation {
 
         this.name = "To Base64";
         this.module = "Default";
-        this.description = "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation encodes raw data into an ASCII Base64 string.<br><br>e.g. <code>hello</code> becomes <code>aGVsbG8=</code>";
+        this.description =
+            "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation encodes raw data into an ASCII Base64 string.<br><br>e.g. <code>hello</code> becomes <code>aGVsbG8=</code>";
         this.infoURL = "https://wikipedia.org/wiki/Base64";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -28,8 +28,8 @@ class ToBase64 extends Operation {
             {
                 name: "Alphabet",
                 type: "editableOption",
-                value: ALPHABET_OPTIONS
-            }
+                value: ALPHABET_OPTIONS,
+            },
         ];
     }
 
@@ -53,8 +53,8 @@ class ToBase64 extends Operation {
      * @returns {Object[]} pos
      */
     highlight(pos, args) {
-        pos[0].start = Math.floor(pos[0].start / 3 * 4);
-        pos[0].end = Math.ceil(pos[0].end / 3 * 4);
+        pos[0].start = Math.floor((pos[0].start / 3) * 4);
+        pos[0].end = Math.ceil((pos[0].end / 3) * 4);
         return pos;
     }
 
@@ -68,8 +68,8 @@ class ToBase64 extends Operation {
      * @returns {Object[]} pos
      */
     highlightReverse(pos, args) {
-        pos[0].start = Math.ceil(pos[0].start / 4 * 3);
-        pos[0].end = Math.floor(pos[0].end / 4 * 3);
+        pos[0].start = Math.ceil((pos[0].start / 4) * 3);
+        pos[0].end = Math.floor((pos[0].end / 4) * 3);
         return pos;
     }
 }

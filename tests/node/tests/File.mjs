@@ -2,7 +2,7 @@ import assert from "assert";
 import it from "../assertionHandler.mjs";
 import TestRegister from "../../lib/TestRegister.mjs";
 import File from "../../../src/node/File.mjs";
-import {zip, Dish} from "../../../src/node/index.mjs";
+import { zip, Dish } from "../../../src/node/index.mjs";
 
 TestRegister.addApiTests([
     it("File: should exist", () => {
@@ -28,13 +28,13 @@ TestRegister.addApiTests([
 
     it("File: unknown type should have a type of application/unknown", () => {
         const uint8Array = new Uint8Array(Buffer.from("hello"));
-        const file =  new File([uint8Array], "sample.txt");
+        const file = new File([uint8Array], "sample.txt");
         assert.strictEqual(file.type, "application/unknown");
     }),
 
     it("File: should be able to make a dish from it", () => {
         const uint8Array = new Uint8Array(Buffer.from("hello"));
-        const file =  new File([uint8Array], "sample.txt");
+        const file = new File([uint8Array], "sample.txt");
         try {
             const dish = new Dish(file, 7);
             assert.ok(dish.valid());
@@ -45,7 +45,7 @@ TestRegister.addApiTests([
 
     it("File: should allow dish to translate to ArrayBuffer", () => {
         const uint8Array = new Uint8Array(Buffer.from("hello"));
-        const file =  new File([uint8Array], "sample.txt");
+        const file = new File([uint8Array], "sample.txt");
         try {
             const dish = new Dish(file, 7);
             assert.ok(dish.value);
@@ -53,7 +53,6 @@ TestRegister.addApiTests([
             dish.get(4);
             assert.strictEqual(dish.type, 4);
             assert.ok(dish.valid());
-
         } catch (e) {
             assert.fail(e.message);
         }
@@ -61,7 +60,7 @@ TestRegister.addApiTests([
 
     it("File: should allow dish to translate from ArrayBuffer to File", () => {
         const uint8Array = new Uint8Array(Buffer.from("hello"));
-        const file =  new File([uint8Array], "sample.txt");
+        const file = new File([uint8Array], "sample.txt");
         try {
             const dish = new Dish(file, 7);
             assert.ok(dish.value);
@@ -73,10 +72,8 @@ TestRegister.addApiTests([
             // translate back to File
             dish.get(7);
             assert.ok(dish.valid());
-
         } catch (e) {
             assert.fail(e.message);
         }
-    })
-
+    }),
 ]);

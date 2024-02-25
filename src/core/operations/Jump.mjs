@@ -11,7 +11,6 @@ import { getLabelIndex } from "../lib/FlowControl.mjs";
  * Jump operation
  */
 class Jump extends Operation {
-
     /**
      * Jump constructor
      */
@@ -26,15 +25,15 @@ class Jump extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Label name",
-                "type": "string",
-                "value": ""
+                name: "Label name",
+                type: "string",
+                value: "",
             },
             {
-                "name": "Maximum jumps (if jumping backwards)",
-                "type": "number",
-                "value": 10
-            }
+                name: "Maximum jumps (if jumping backwards)",
+                type: "number",
+                value: 10,
+            },
         ];
     }
 
@@ -60,7 +59,6 @@ class Jump extends Operation {
         state.numJumps++;
         return state;
     }
-
 }
 
 export default Jump;

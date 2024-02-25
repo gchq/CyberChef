@@ -14,13 +14,23 @@ TestRegister.addTests([
         expectedOutput: "/<>",
         recipeConfig: [
             {
-                "op": "Regular expression",
-                "args": ["User defined", "", true, true, false, false, false, false, "Highlight matches"]
+                op: "Regular expression",
+                args: [
+                    "User defined",
+                    "",
+                    true,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    "Highlight matches",
+                ],
             },
             {
-                "op": "Remove whitespace",
-                "args": [true, true, true, true, true, false]
-            }
+                op: "Remove whitespace",
+                args: [true, true, true, true, true, false],
+            },
         ],
     },
     {
@@ -29,9 +39,19 @@ TestRegister.addTests([
         expectedOutput: "Hello\nWorld",
         recipeConfig: [
             {
-                "op": "Regular expression",
-                "args": ["User defined", ".+", true, true, true, false, false, false, "List matches"]
-            }
+                op: "Regular expression",
+                args: [
+                    "User defined",
+                    ".+",
+                    true,
+                    true,
+                    true,
+                    false,
+                    false,
+                    false,
+                    "List matches",
+                ],
+            },
         ],
     },
     {
@@ -40,9 +60,19 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                "op": "Regular expression",
-                "args": ["User defined", "\\pS", true, true, false, false, false, false, "List matches"]
-            }
+                op: "Regular expression",
+                args: [
+                    "User defined",
+                    "\\pS",
+                    true,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    "List matches",
+                ],
+            },
         ],
     },
     {
@@ -51,9 +81,19 @@ TestRegister.addTests([
         expectedOutput: "𝌆\n😆",
         recipeConfig: [
             {
-                "op": "Regular expression",
-                "args": ["User defined", "\\pS", true, true, false, false, true, false, "List matches"]
-            }
+                op: "Regular expression",
+                args: [
+                    "User defined",
+                    "\\pS",
+                    true,
+                    true,
+                    false,
+                    false,
+                    true,
+                    false,
+                    "List matches",
+                ],
+            },
         ],
-    }
+    },
 ]);

@@ -5,14 +5,17 @@
  */
 
 import Operation from "../Operation.mjs";
-import {fuzzyMatch, calcMatchRanges, DEFAULT_WEIGHTS} from "../lib/FuzzyMatch.mjs";
+import {
+    fuzzyMatch,
+    calcMatchRanges,
+    DEFAULT_WEIGHTS,
+} from "../lib/FuzzyMatch.mjs";
 import Utils from "../Utils.mjs";
 
 /**
  * Fuzzy Match operation
  */
 class FuzzyMatch extends Operation {
-
     /**
      * FuzzyMatch constructor
      */
@@ -21,56 +24,58 @@ class FuzzyMatch extends Operation {
 
         this.name = "Fuzzy Match";
         this.module = "Default";
-        this.description = "Conducts a fuzzy search to find a pattern within the input based on weighted criteria.<br><br>e.g. A search for <code>dpan</code> will match on <code><b>D</b>on't <b>Pan</b>ic</code>";
-        this.infoURL = "https://wikipedia.org/wiki/Fuzzy_matching_(computer-assisted_translation)";
+        this.description =
+            "Conducts a fuzzy search to find a pattern within the input based on weighted criteria.<br><br>e.g. A search for <code>dpan</code> will match on <code><b>D</b>on't <b>Pan</b>ic</code>";
+        this.infoURL =
+            "https://wikipedia.org/wiki/Fuzzy_matching_(computer-assisted_translation)";
         this.inputType = "string";
         this.outputType = "html";
         this.args = [
             {
                 name: "Search",
                 type: "binaryString",
-                value: ""
+                value: "",
             },
             {
                 name: "Sequential bonus",
                 type: "number",
                 value: DEFAULT_WEIGHTS.sequentialBonus,
-                hint: "Bonus for adjacent matches"
+                hint: "Bonus for adjacent matches",
             },
             {
                 name: "Separator bonus",
                 type: "number",
                 value: DEFAULT_WEIGHTS.separatorBonus,
-                hint: "Bonus if match occurs after a separator"
+                hint: "Bonus if match occurs after a separator",
             },
             {
                 name: "Camel bonus",
                 type: "number",
                 value: DEFAULT_WEIGHTS.camelBonus,
-                hint: "Bonus if match is uppercase and previous is lower"
+                hint: "Bonus if match is uppercase and previous is lower",
             },
             {
                 name: "First letter bonus",
                 type: "number",
                 value: DEFAULT_WEIGHTS.firstLetterBonus,
-                hint: "Bonus if the first letter is matched"
+                hint: "Bonus if the first letter is matched",
             },
             {
                 name: "Leading letter penalty",
                 type: "number",
                 value: DEFAULT_WEIGHTS.leadingLetterPenalty,
-                hint: "Penalty applied for every letter in the input before the first match"
+                hint: "Penalty applied for every letter in the input before the first match",
             },
             {
                 name: "Max leading letter penalty",
                 type: "number",
                 value: DEFAULT_WEIGHTS.maxLeadingLetterPenalty,
-                hint: "Maxiumum penalty for leading letters"
+                hint: "Maxiumum penalty for leading letters",
             },
             {
                 name: "Unmatched letter penalty",
                 type: "number",
-                value: DEFAULT_WEIGHTS.unmatchedLetterPenalty
+                value: DEFAULT_WEIGHTS.unmatchedLetterPenalty,
             },
         ];
     }
@@ -89,7 +94,7 @@ class FuzzyMatch extends Operation {
             firstLetterBonus: args[4],
             leadingLetterPenalty: args[5],
             maxLeadingLetterPenalty: args[6],
-            unmatchedLetterPenalty: args[7]
+            unmatchedLetterPenalty: args[7],
         };
         const matches = fuzzyMatch(searchStr, input, true, weights);
 
@@ -97,7 +102,9 @@ class FuzzyMatch extends Operation {
             return "No matches.";
         }
 
-        let result = "", pos = 0, hlClass = "hl1";
+        let result = "",
+            pos = 0,
+            hlClass = "hl1";
         matches.forEach(([matches, score, idxs]) => {
             const matchRanges = calcMatchRanges(idxs);
 
@@ -115,7 +122,6 @@ class FuzzyMatch extends Operation {
 
         return result;
     }
-
 }
 
 export default FuzzyMatch;

@@ -12,7 +12,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Disassemble x86 operation
  */
 class DisassembleX86 extends Operation {
-
     /**
      * DisassembleX86 constructor
      */
@@ -21,49 +20,50 @@ class DisassembleX86 extends Operation {
 
         this.name = "Disassemble x86";
         this.module = "Shellcode";
-        this.description = "Disassembly is the process of translating machine language into assembly language.<br><br>This operation supports 64-bit, 32-bit and 16-bit code written for Intel or AMD x86 processors. It is particularly useful for reverse engineering shellcode.<br><br>Input should be in hexadecimal.";
+        this.description =
+            "Disassembly is the process of translating machine language into assembly language.<br><br>This operation supports 64-bit, 32-bit and 16-bit code written for Intel or AMD x86 processors. It is particularly useful for reverse engineering shellcode.<br><br>Input should be in hexadecimal.";
         this.infoURL = "https://wikipedia.org/wiki/X86";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Bit mode",
-                "type": "option",
-                "value": ["64", "32", "16"]
+                name: "Bit mode",
+                type: "option",
+                value: ["64", "32", "16"],
             },
             {
-                "name": "Compatibility",
-                "type": "option",
-                "value": [
+                name: "Compatibility",
+                type: "option",
+                value: [
                     "Full x86 architecture",
                     "Knights Corner",
                     "Larrabee",
                     "Cyrix",
                     "Geode",
                     "Centaur",
-                    "X86/486"
-                ]
+                    "X86/486",
+                ],
             },
             {
-                "name": "Code Segment (CS)",
-                "type": "number",
-                "value": 16
+                name: "Code Segment (CS)",
+                type: "number",
+                value: 16,
             },
             {
-                "name": "Offset (IP)",
-                "type": "number",
-                "value": 0
+                name: "Offset (IP)",
+                type: "number",
+                value: 0,
             },
             {
-                "name": "Show instruction hex",
-                "type": "boolean",
-                "value": true
+                name: "Show instruction hex",
+                type: "boolean",
+                value: true,
             },
             {
-                "name": "Show instruction position",
-                "type": "boolean",
-                "value": true
-            }
+                name: "Show instruction position",
+                type: "boolean",
+                value: true,
+            },
         ];
     }
 
@@ -81,7 +81,7 @@ class DisassembleX86 extends Operation {
             codeSegment,
             offset,
             showInstructionHex,
-            showInstructionPos
+            showInstructionPos,
         ] = args;
 
         switch (mode) {
@@ -128,7 +128,6 @@ class DisassembleX86 extends Operation {
         disassemble.LoadBinCode(input.replace(/\s/g, ""));
         return disassemble.LDisassemble();
     }
-
 }
 
 export default DisassembleX86;

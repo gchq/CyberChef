@@ -14,7 +14,6 @@ import { toBase64 } from "../lib/Base64.mjs";
  * BLAKE2s Operation
  */
 class BLAKE2s extends Operation {
-
     /**
      * BLAKE2s constructor
      */
@@ -26,25 +25,27 @@ class BLAKE2s extends Operation {
         this.description = `Performs BLAKE2s hashing on the input.  
         <br><br>BLAKE2s is a flavour of the BLAKE cryptographic hash function that is optimized for 8- to 32-bit platforms and produces digests of any size between 1 and 32 bytes.
         <br><br>Supports the use of an optional key.`;
-        this.infoURL = "https://wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE2";
+        this.infoURL =
+            "https://wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE2";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Size",
-                "type": "option",
-                "value": ["256", "160", "128"]
-            }, {
-                "name": "Output Encoding",
-                "type": "option",
-                "value": ["Hex", "Base64", "Raw"]
+                name: "Size",
+                type: "option",
+                value: ["256", "160", "128"],
             },
             {
-                "name": "Key",
-                "type": "toggleString",
-                "value": "",
-                "toggleValues": ["UTF8", "Decimal", "Base64", "Hex", "Latin1"]
-            }
+                name: "Output Encoding",
+                type: "option",
+                value: ["Hex", "Base64", "Raw"],
+            },
+            {
+                name: "Key",
+                type: "toggleString",
+                value: "",
+                toggleValues: ["UTF8", "Decimal", "Base64", "Hex", "Latin1"],
+            },
         ];
     }
 
@@ -55,11 +56,19 @@ class BLAKE2s extends Operation {
      */
     run(input, args) {
         const [outSize, outFormat] = args;
-        let key = Utils.convertToByteArray(args[2].string || "", args[2].option);
+        let key = Utils.convertToByteArray(
+            args[2].string || "",
+            args[2].option,
+        );
         if (key.length === 0) {
             key = null;
         } else if (key.length > 32) {
-            throw new OperationError(["Key cannot be greater than 32 bytes", "It is currently " + key.length + " bytes."].join("\n"));
+            throw new OperationError(
+                [
+                    "Key cannot be greater than 32 bytes",
+                    "It is currently " + key.length + " bytes.",
+                ].join("\n"),
+            );
         }
 
         input = new Uint8Array(input);
@@ -69,12 +78,13 @@ class BLAKE2s extends Operation {
             case "Base64":
                 return toBase64(blakejs.blake2s(input, key, outSize / 8));
             case "Raw":
-                return Utils.arrayBufferToStr(blakejs.blake2s(input, key, outSize / 8).buffer);
+                return Utils.arrayBufferToStr(
+                    blakejs.blake2s(input, key, outSize / 8).buffer,
+                );
             default:
                 return new OperationError("Unsupported Output Type");
         }
     }
-
 }
 
 export default BLAKE2s;

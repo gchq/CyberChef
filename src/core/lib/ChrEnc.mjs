@@ -166,7 +166,6 @@ export const CHR_ENC_CODE_PAGES = {
     "Simplified Chinese GB18030 (54936)": 54936,
 };
 
-
 export const CHR_ENC_SIMPLE_LOOKUP = {};
 export const CHR_ENC_SIMPLE_REVERSE_LOOKUP = {};
 
@@ -176,7 +175,6 @@ for (const name in CHR_ENC_CODE_PAGES) {
     CHR_ENC_SIMPLE_LOOKUP[simpleName] = CHR_ENC_CODE_PAGES[name];
     CHR_ENC_SIMPLE_REVERSE_LOOKUP[CHR_ENC_CODE_PAGES[name]] = simpleName;
 }
-
 
 /**
  * Returns the width of the character set for the given codepage.
@@ -194,7 +192,12 @@ export function chrEncWidth(page) {
 
     const pageStr = page.toString();
     // Confirm this page is legitimate
-    if (!Object.prototype.hasOwnProperty.call(CHR_ENC_SIMPLE_REVERSE_LOOKUP, pageStr))
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            CHR_ENC_SIMPLE_REVERSE_LOOKUP,
+            pageStr,
+        )
+    )
         return 0;
 
     // Statically defined code pages
@@ -202,10 +205,8 @@ export function chrEncWidth(page) {
         return cptable[pageStr].dec.length > 256 ? 2 : 1;
 
     // Cached code pages
-    if (cptable.utils.cache.sbcs.includes(pageStr))
-        return 1;
-    if (cptable.utils.cache.dbcs.includes(pageStr))
-        return 2;
+    if (cptable.utils.cache.sbcs.includes(pageStr)) return 1;
+    if (cptable.utils.cache.dbcs.includes(pageStr)) return 2;
 
     // Dynamically generated code pages
     if (Object.prototype.hasOwnProperty.call(cptable.utils.magic, pageStr)) {

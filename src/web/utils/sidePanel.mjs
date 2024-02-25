@@ -8,8 +8,8 @@
  * @license Apache-2.0
  */
 
-import {EditorView, ViewPlugin} from "@codemirror/view";
-import {Facet} from "@codemirror/state";
+import { EditorView, ViewPlugin } from "@codemirror/view";
+import { Facet } from "@codemirror/state";
 
 const panelConfig = Facet.define({
     combine(configs) {
@@ -18,8 +18,8 @@ const panelConfig = Facet.define({
             leftContainer = leftContainer || c.leftContainer;
             rightContainer = rightContainer || c.rightContainer;
         }
-        return {leftContainer, rightContainer};
-    }
+        return { leftContainer, rightContainer };
+    },
 });
 
 /**
@@ -45,87 +45,99 @@ export function getPanel(view, panel) {
     return index > -1 ? plugin.panels[index] : null;
 }
 
-const panelPlugin = ViewPlugin.fromClass(class {
-
-    /**
-     * @param {EditorView} view
-     */
-    constructor(view) {
-        this.input = view.state.facet(showSidePanel);
-        this.specs = this.input.filter(s => s);
-        this.panels = this.specs.map(spec => spec(view));
-        const conf = view.state.facet(panelConfig);
-        this.left = new PanelGroup(view, true, conf.leftContainer);
-        this.right = new PanelGroup(view, false, conf.rightContainer);
-        this.left.sync(this.panels.filter(p => p.left));
-        this.right.sync(this.panels.filter(p => !p.left));
-        for (const p of this.panels) {
-            p.dom.classList.add("cm-panel");
-            if (p.mount) p.mount();
-        }
-    }
-
-    /**
-     * @param {ViewUpdate} update
-     */
-    update(update) {
-        const conf = update.state.facet(panelConfig);
-        if (this.left.container !== conf.leftContainer) {
-            this.left.sync([]);
-            this.left = new PanelGroup(update.view, true, conf.leftContainer);
-        }
-        if (this.right.container !== conf.rightContainer) {
-            this.right.sync([]);
-            this.right = new PanelGroup(update.view, false, conf.rightContainer);
-        }
-        this.left.syncClasses();
-        this.right.syncClasses();
-        const input = update.state.facet(showSidePanel);
-        if (input !== this.input) {
-            const specs = input.filter(x => x);
-            const panels = [], left = [], right = [], mount = [];
-            for (const spec of specs) {
-                const known = this.specs.indexOf(spec);
-                let panel;
-                if (known < 0) {
-                    panel = spec(update.view);
-                    mount.push(panel);
-                } else {
-                    panel = this.panels[known];
-                    if (panel.update) panel.update(update);
-                }
-                panels.push(panel)
-                ;(panel.left ? left : right).push(panel);
-            }
-            this.specs = specs;
-            this.panels = panels;
-            this.left.sync(left);
-            this.right.sync(right);
-            for (const p of mount) {
+const panelPlugin = ViewPlugin.fromClass(
+    class {
+        /**
+         * @param {EditorView} view
+         */
+        constructor(view) {
+            this.input = view.state.facet(showSidePanel);
+            this.specs = this.input.filter((s) => s);
+            this.panels = this.specs.map((spec) => spec(view));
+            const conf = view.state.facet(panelConfig);
+            this.left = new PanelGroup(view, true, conf.leftContainer);
+            this.right = new PanelGroup(view, false, conf.rightContainer);
+            this.left.sync(this.panels.filter((p) => p.left));
+            this.right.sync(this.panels.filter((p) => !p.left));
+            for (const p of this.panels) {
                 p.dom.classList.add("cm-panel");
                 if (p.mount) p.mount();
             }
-        } else {
-            for (const p of this.panels) if (p.update) p.update(update);
         }
-    }
 
-    /**
-     * Destroy panel
-     */
-    destroy() {
-        this.left.sync([]);
-        this.right.sync([]);
-    }
-}, {
-    // provide: PluginField.scrollMargins.from(value => ({left: value.left.scrollMargin(), right: value.right.scrollMargin()}))
-});
+        /**
+         * @param {ViewUpdate} update
+         */
+        update(update) {
+            const conf = update.state.facet(panelConfig);
+            if (this.left.container !== conf.leftContainer) {
+                this.left.sync([]);
+                this.left = new PanelGroup(
+                    update.view,
+                    true,
+                    conf.leftContainer,
+                );
+            }
+            if (this.right.container !== conf.rightContainer) {
+                this.right.sync([]);
+                this.right = new PanelGroup(
+                    update.view,
+                    false,
+                    conf.rightContainer,
+                );
+            }
+            this.left.syncClasses();
+            this.right.syncClasses();
+            const input = update.state.facet(showSidePanel);
+            if (input !== this.input) {
+                const specs = input.filter((x) => x);
+                const panels = [],
+                    left = [],
+                    right = [],
+                    mount = [];
+                for (const spec of specs) {
+                    const known = this.specs.indexOf(spec);
+                    let panel;
+                    if (known < 0) {
+                        panel = spec(update.view);
+                        mount.push(panel);
+                    } else {
+                        panel = this.panels[known];
+                        if (panel.update) panel.update(update);
+                    }
+                    panels.push(panel);
+                    (panel.left ? left : right).push(panel);
+                }
+                this.specs = specs;
+                this.panels = panels;
+                this.left.sync(left);
+                this.right.sync(right);
+                for (const p of mount) {
+                    p.dom.classList.add("cm-panel");
+                    if (p.mount) p.mount();
+                }
+            } else {
+                for (const p of this.panels) if (p.update) p.update(update);
+            }
+        }
+
+        /**
+         * Destroy panel
+         */
+        destroy() {
+            this.left.sync([]);
+            this.right.sync([]);
+        }
+    },
+    {
+        // provide: PluginField.scrollMargins.from(value => ({left: value.left.scrollMargin(), right: value.right.scrollMargin()}))
+    },
+);
 
 /**
  * PanelGroup
  */
 class PanelGroup {
-
     /**
      * @param {EditorView} view
      * @param {boolean} left
@@ -145,7 +157,8 @@ class PanelGroup {
      * @param {Panel[]} panels
      */
     sync(panels) {
-        for (const p of this.panels) if (p.destroy && panels.indexOf(p) < 0) p.destroy();
+        for (const p of this.panels)
+            if (p.destroy && panels.indexOf(p) < 0) p.destroy();
         this.panels = panels;
         this.syncDOM();
     }
@@ -166,7 +179,9 @@ class PanelGroup {
         const parent = this.container || this.view.dom;
         if (!this.dom) {
             this.dom = document.createElement("div");
-            this.dom.className = this.left ? "cm-side-panels cm-panels-left" : "cm-side-panels cm-panels-right";
+            this.dom.className = this.left
+                ? "cm-side-panels cm-panels-left"
+                : "cm-side-panels cm-panels-right";
             parent.insertBefore(this.dom, parent.firstChild);
         }
 
@@ -201,10 +216,22 @@ class PanelGroup {
      *
      */
     scrollMargin() {
-        return !this.dom || this.container ? 0 :
-            Math.max(0, this.left ?
-                this.dom.getBoundingClientRect().right - Math.max(0, this.view.scrollDOM.getBoundingClientRect().left) :
-                Math.min(innerHeight, this.view.scrollDOM.getBoundingClientRect().right) - this.dom.getBoundingClientRect().left);
+        return !this.dom || this.container
+            ? 0
+            : Math.max(
+                  0,
+                  this.left
+                      ? this.dom.getBoundingClientRect().right -
+                              Math.max(
+                                  0,
+                                  this.view.scrollDOM.getBoundingClientRect()
+                                      .left,
+                              )
+                      : Math.min(
+                              innerHeight,
+                              this.view.scrollDOM.getBoundingClientRect().right,
+                          ) - this.dom.getBoundingClientRect().left,
+              );
     }
 
     /**
@@ -212,8 +239,10 @@ class PanelGroup {
      */
     syncClasses() {
         if (!this.container || this.classes === this.view.themeClasses) return;
-        for (const cls of this.classes.split(" ")) if (cls) this.container.classList.remove(cls);
-        for (const cls of (this.classes = this.view.themeClasses).split(" ")) if (cls) this.container.classList.add(cls);
+        for (const cls of this.classes.split(" "))
+            if (cls) this.container.classList.remove(cls);
+        for (const cls of (this.classes = this.view.themeClasses).split(" "))
+            if (cls) this.container.classList.add(cls);
     }
 }
 
@@ -233,24 +262,24 @@ const baseTheme = EditorView.baseTheme({
         position: "absolute",
         height: "100%",
         top: 0,
-        bottom: 0
+        bottom: 0,
     },
     "&light .cm-side-panels": {
         backgroundColor: "#f5f5f5",
-        color: "black"
+        color: "black",
     },
     "&light .cm-panels-left": {
         borderRight: "1px solid #ddd",
-        left: 0
+        left: 0,
     },
     "&light .cm-panels-right": {
         borderLeft: "1px solid #ddd",
-        right: 0
+        right: 0,
     },
     "&dark .cm-side-panels": {
         backgroundColor: "#333338",
-        color: "white"
-    }
+        color: "white",
+    },
 });
 
 /**
@@ -259,5 +288,5 @@ const baseTheme = EditorView.baseTheme({
  * constructor is no longer provided.) Values of `null` are ignored.
  */
 export const showSidePanel = Facet.define({
-    enables: [panelPlugin, baseTheme]
+    enables: [panelPlugin, baseTheme],
 });

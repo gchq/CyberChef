@@ -11,7 +11,6 @@ import Operation from "../Operation.mjs";
  * Hex to Object Identifier operation
  */
 class HexToObjectIdentifier extends Operation {
-
     /**
      * HexToObjectIdentifier constructor
      */
@@ -20,7 +19,8 @@ class HexToObjectIdentifier extends Operation {
 
         this.name = "Hex to Object Identifier";
         this.module = "PublicKey";
-        this.description = "Converts a hexadecimal string into an object identifier (OID).";
+        this.description =
+            "Converts a hexadecimal string into an object identifier (OID).";
         this.infoURL = "https://wikipedia.org/wiki/Object_identifier";
         this.inputType = "string";
         this.outputType = "string";
@@ -35,7 +35,6 @@ class HexToObjectIdentifier extends Operation {
     run(input, args) {
         return r.KJUR.asn1.ASN1Util.oidHexToInt(input.replace(/\s/g, ""));
     }
-
 }
 
 export default HexToObjectIdentifier;

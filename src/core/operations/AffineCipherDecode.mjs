@@ -12,7 +12,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Affine Cipher Decode operation
  */
 class AffineCipherDecode extends Operation {
-
     /**
      * AffineCipherDecode constructor
      */
@@ -21,21 +20,22 @@ class AffineCipherDecode extends Operation {
 
         this.name = "Affine Cipher Decode";
         this.module = "Ciphers";
-        this.description = "The Affine cipher is a type of monoalphabetic substitution cipher. To decrypt, each letter in an alphabet is mapped to its numeric equivalent, decrypted by a mathematical function, and converted back to a letter.";
+        this.description =
+            "The Affine cipher is a type of monoalphabetic substitution cipher. To decrypt, each letter in an alphabet is mapped to its numeric equivalent, decrypted by a mathematical function, and converted back to a letter.";
         this.infoURL = "https://wikipedia.org/wiki/Affine_cipher";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                "name": "a",
-                "type": "number",
-                "value": 1
+                name: "a",
+                type: "number",
+                value: 1,
             },
             {
-                "name": "b",
-                "type": "number",
-                "value": 0
-            }
+                name: "b",
+                type: "number",
+                value: 0,
+            },
         ];
     }
 
@@ -53,7 +53,9 @@ class AffineCipherDecode extends Operation {
         let output = "";
 
         if (!/^\+?(0|[1-9]\d*)$/.test(a) || !/^\+?(0|[1-9]\d*)$/.test(b)) {
-            throw new OperationError("The values of a and b can only be integers.");
+            throw new OperationError(
+                "The values of a and b can only be integers.",
+            );
         }
 
         if (Utils.gcd(a, 26) !== 1) {
@@ -63,10 +65,23 @@ class AffineCipherDecode extends Operation {
         for (let i = 0; i < input.length; i++) {
             if (alphabet.indexOf(input[i]) >= 0) {
                 // Uses the affine decode function (y-b * A') % m = x (where m is length of the alphabet and A' is modular inverse)
-                output += alphabet[Utils.mod((alphabet.indexOf(input[i]) - b) * aModInv, 26)];
+                output +=
+                    alphabet[
+                        Utils.mod(
+                            (alphabet.indexOf(input[i]) - b) * aModInv,
+                            26,
+                        )
+                    ];
             } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
                 // Same as above, accounting for uppercase
-                output += alphabet[Utils.mod((alphabet.indexOf(input[i].toLowerCase()) - b) * aModInv, 26)].toUpperCase();
+                output +=
+                    alphabet[
+                        Utils.mod(
+                            (alphabet.indexOf(input[i].toLowerCase()) - b) *
+                                aModInv,
+                            26,
+                        )
+                    ].toUpperCase();
             } else {
                 // Non-alphabetic characters
                 output += input[i];
@@ -100,7 +115,6 @@ class AffineCipherDecode extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default AffineCipherDecode;

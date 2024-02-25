@@ -8,11 +8,15 @@
  */
 import TestRegister from "../../lib/TestRegister.mjs";
 
-const inputObject = JSON.stringify({
-    String: "SomeString",
-    Number: 42,
-    iat: 1
-}, null, 4);
+const inputObject = JSON.stringify(
+    {
+        String: "SomeString",
+        Number: 42,
+        iat: 1,
+    },
+    null,
+    4,
+);
 
 const hsKey = "secret_cat";
 const rsKey = `-----BEGIN RSA PRIVATE KEY-----
@@ -40,34 +44,37 @@ TestRegister.addTests([
     {
         name: "JWT Sign: HS256",
         input: inputObject,
-        expectedOutput: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.0ha6-j4FwvEIKPVZ-hf3S_R9Hy_UtXzq4dnedXcUrXk",
+        expectedOutput:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.0ha6-j4FwvEIKPVZ-hf3S_R9Hy_UtXzq4dnedXcUrXk",
         recipeConfig: [
             {
                 op: "JWT Sign",
                 args: [hsKey, "HS256"],
-            }
+            },
         ],
     },
     {
         name: "JWT Sign: HS384",
         input: inputObject,
-        expectedOutput: "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ._bPK-Y3mIACConbJqkGFMQ_L3vbxgKXy9gSxtL9hA5XTganozTSXxD0vX0N1yT5s",
+        expectedOutput:
+            "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ._bPK-Y3mIACConbJqkGFMQ_L3vbxgKXy9gSxtL9hA5XTganozTSXxD0vX0N1yT5s",
         recipeConfig: [
             {
                 op: "JWT Sign",
                 args: [hsKey, "HS384"],
-            }
+            },
         ],
     },
     {
         name: "JWT Sign: HS512",
         input: inputObject,
-        expectedOutput: "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.vZIJU4XYMFt3FLE1V_RZOxEetmV4RvxtPZQGzJthK_d47pjwlEb6pQE23YxHFmOj8H5RLEdqqLPw4jNsOyHRzA",
+        expectedOutput:
+            "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.vZIJU4XYMFt3FLE1V_RZOxEetmV4RvxtPZQGzJthK_d47pjwlEb6pQE23YxHFmOj8H5RLEdqqLPw4jNsOyHRzA",
         recipeConfig: [
             {
                 op: "JWT Sign",
                 args: [hsKey, "HS512"],
-            }
+            },
         ],
     },
     {
@@ -81,8 +88,8 @@ TestRegister.addTests([
             },
             {
                 op: "JWT Decode",
-                args: []
-            }
+                args: [],
+            },
         ],
     },
     {
@@ -96,8 +103,8 @@ TestRegister.addTests([
             },
             {
                 op: "JWT Decode",
-                args: []
-            }
+                args: [],
+            },
         ],
     },
     {
@@ -111,8 +118,8 @@ TestRegister.addTests([
             },
             {
                 op: "JWT Decode",
-                args: []
-            }
+                args: [],
+            },
         ],
     },
     {
@@ -126,8 +133,8 @@ TestRegister.addTests([
             },
             {
                 op: "JWT Decode",
-                args: []
-            }
+                args: [],
+            },
         ],
     },
     {
@@ -141,8 +148,8 @@ TestRegister.addTests([
             },
             {
                 op: "JWT Decode",
-                args: []
-            }
+                args: [],
+            },
         ],
     },
     {
@@ -156,8 +163,8 @@ TestRegister.addTests([
             },
             {
                 op: "JWT Decode",
-                args: []
-            }
+                args: [],
+            },
         ],
-    }
+    },
 ]);

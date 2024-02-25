@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Permutate String operation
  */
 class GetAllCasings extends Operation {
-
     /**
      * GetAllCasings constructor
      */
@@ -19,7 +18,8 @@ class GetAllCasings extends Operation {
 
         this.name = "Get All Casings";
         this.module = "Default";
-        this.description = "Outputs all possible casing variations of a string.";
+        this.description =
+            "Outputs all possible casing variations of a string.";
         this.infoURL = "";
         this.inputType = "string";
         this.outputType = "string";

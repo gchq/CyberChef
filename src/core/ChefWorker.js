@@ -7,10 +7,11 @@
  */
 
 import Chef from "./Chef.mjs";
-import OperationConfig from "./config/OperationConfig.json" assert {type: "json"};
+import OperationConfig from "./config/OperationConfig.json" assert {
+    type: "json",
+};
 import OpModules from "./config/modules/OpModules.mjs";
 import loglevelMessagePrefix from "loglevel-message-prefix";
-
 
 // Set up Chef instance
 self.chef = new Chef();
@@ -19,11 +20,10 @@ self.OpModules = OpModules;
 self.OperationConfig = OperationConfig;
 self.inputNum = -1;
 
-
 // Tell the app that the worker has loaded and is ready to operate
 self.postMessage({
     action: "workerLoaded",
-    data: {}
+    data: {},
 });
 
 /**
@@ -45,7 +45,7 @@ self.postMessage({
  *     }
  * }
  */
-self.addEventListener("message", function(e) {
+self.addEventListener("message", function (e) {
     // Handle message
     const r = e.data;
     log.debug(`Receiving command '${r.action}'`);
@@ -72,7 +72,7 @@ self.addEventListener("message", function(e) {
             calculateHighlights(
                 r.data.recipeConfig,
                 r.data.direction,
-                r.data.pos
+                r.data.pos,
             );
             break;
         case "setLogLevel":
@@ -81,14 +81,13 @@ self.addEventListener("message", function(e) {
         case "setLogPrefix":
             loglevelMessagePrefix(log, {
                 prefixes: [],
-                staticPrefixes: [r.data]
+                staticPrefixes: [r.data],
             });
             break;
         default:
             break;
     }
 });
-
 
 /**
  * Baking handler
@@ -101,37 +100,39 @@ async function bake(data) {
     try {
         self.inputNum = data.inputNum === undefined ? -1 : data.inputNum;
         const response = await self.chef.bake(
-            data.input,          // The user's input
-            data.recipeConfig,   // The configuration of the recipe
-            data.options         // Options set by the user
+            data.input, // The user's input
+            data.recipeConfig, // The configuration of the recipe
+            data.options, // Options set by the user
         );
 
-        const transferable = (response.dish.value instanceof ArrayBuffer) ?
-            [response.dish.value] :
-            undefined;
+        const transferable =
+            response.dish.value instanceof ArrayBuffer
+                ? [response.dish.value]
+                : undefined;
 
-        self.postMessage({
-            action: "bakeComplete",
-            data: Object.assign(response, {
-                id: data.id,
-                inputNum: data.inputNum,
-                bakeId: data.bakeId
-            })
-        }, transferable);
-
+        self.postMessage(
+            {
+                action: "bakeComplete",
+                data: Object.assign(response, {
+                    id: data.id,
+                    inputNum: data.inputNum,
+                    bakeId: data.bakeId,
+                }),
+            },
+            transferable,
+        );
     } catch (err) {
         self.postMessage({
             action: "bakeError",
             data: {
                 error: err.message || err,
                 id: data.id,
-                inputNum: data.inputNum
-            }
+                inputNum: data.inputNum,
+            },
         });
     }
     self.inputNum = -1;
 }
-
 
 /**
  * Silent baking handler
@@ -141,26 +142,27 @@ function silentBake(data) {
 
     self.postMessage({
         action: "silentBakeComplete",
-        data: duration
+        data: duration,
     });
 }
-
 
 /**
  * Translates the dish to a given type.
  */
 async function getDishAs(data) {
     const value = await self.chef.getDishAs(data.dish, data.type);
-    const transferable = (data.type === "ArrayBuffer") ? [value] : undefined;
-    self.postMessage({
-        action: "dishReturned",
-        data: {
-            value: value,
-            id: data.id
-        }
-    }, transferable);
+    const transferable = data.type === "ArrayBuffer" ? [value] : undefined;
+    self.postMessage(
+        {
+            action: "dishReturned",
+            data: {
+                value: value,
+                id: data.id,
+            },
+        },
+        transferable,
+    );
 }
-
 
 /**
  * Gets the dish title
@@ -176,11 +178,10 @@ async function getDishTitle(data) {
         action: "dishReturned",
         data: {
             value: title,
-            id: data.id
-        }
+            id: data.id,
+        },
     });
 }
-
 
 /**
  * Calculates highlight offsets if possible.
@@ -196,18 +197,17 @@ async function calculateHighlights(recipeConfig, direction, pos) {
 
     self.postMessage({
         action: "highlightsCalculated",
-        data: pos
+        data: pos,
     });
 }
-
 
 /**
  * Checks that all required modules are loaded and loads them if not.
  *
  * @param {Object} recipeConfig
  */
-self.loadRequiredModules = function(recipeConfig) {
-    recipeConfig.forEach(op => {
+self.loadRequiredModules = function (recipeConfig) {
+    recipeConfig.forEach((op) => {
         const module = self.OperationConfig[op.op].module;
 
         if (!(module in OpModules)) {
@@ -219,22 +219,20 @@ self.loadRequiredModules = function(recipeConfig) {
     });
 };
 
-
 /**
  * Send status update to the app.
  *
  * @param {string} msg
  */
-self.sendStatusMessage = function(msg) {
+self.sendStatusMessage = function (msg) {
     self.postMessage({
         action: "statusMessage",
         data: {
             message: msg,
-            inputNum: self.inputNum
-        }
+            inputNum: self.inputNum,
+        },
     });
 };
-
 
 /**
  * Send progress update to the app.
@@ -242,17 +240,16 @@ self.sendStatusMessage = function(msg) {
  * @param {number} progress
  * @param {number} total
  */
-self.sendProgressMessage = function(progress, total) {
+self.sendProgressMessage = function (progress, total) {
     self.postMessage({
         action: "progressMessage",
         data: {
             progress: progress,
             total: total,
-            inputNum: self.inputNum
-        }
+            inputNum: self.inputNum,
+        },
     });
 };
-
 
 /**
  * Send an option value update to the app.
@@ -260,16 +257,15 @@ self.sendProgressMessage = function(progress, total) {
  * @param {string} option
  * @param {*} value
  */
-self.setOption = function(option, value) {
+self.setOption = function (option, value) {
     self.postMessage({
         action: "optionUpdate",
         data: {
             option: option,
-            value: value
-        }
+            value: value,
+        },
     });
 };
-
 
 /**
  * Send register values back to the app.
@@ -278,13 +274,13 @@ self.setOption = function(option, value) {
  * @param {number} numPrevRegisters
  * @param {string[]} registers
  */
-self.setRegisters = function(opIndex, numPrevRegisters, registers) {
+self.setRegisters = function (opIndex, numPrevRegisters, registers) {
     self.postMessage({
         action: "setRegisters",
         data: {
             opIndex: opIndex,
             numPrevRegisters: numPrevRegisters,
-            registers: registers
-        }
+            registers: registers,
+        },
     });
 };

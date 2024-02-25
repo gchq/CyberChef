@@ -11,7 +11,6 @@ import { bitOp, not } from "../lib/BitwiseOp.mjs";
  * NOT operation
  */
 class NOT extends Operation {
-
     /**
      * NOT constructor
      */
@@ -62,7 +61,6 @@ class NOT extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default NOT;

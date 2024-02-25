@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Rail Fence Cipher Encode operation
  */
 class RailFenceCipherEncode extends Operation {
-
     /**
      * RailFenceCipherEncode constructor
      */
@@ -20,7 +19,8 @@ class RailFenceCipherEncode extends Operation {
 
         this.name = "Rail Fence Cipher Encode";
         this.module = "Ciphers";
-        this.description = "Encodes Strings using the Rail fence Cipher provided a key and an offset";
+        this.description =
+            "Encodes Strings using the Rail fence Cipher provided a key and an offset";
         this.infoURL = "https://wikipedia.org/wiki/Rail_fence_cipher";
         this.inputType = "string";
         this.outputType = "string";
@@ -28,13 +28,13 @@ class RailFenceCipherEncode extends Operation {
             {
                 name: "Key",
                 type: "number",
-                value: 2
+                value: 2,
             },
             {
                 name: "Offset",
                 type: "number",
-                value: 0
-            }
+                value: 0,
+            },
         ];
     }
 
@@ -50,7 +50,9 @@ class RailFenceCipherEncode extends Operation {
         if (key < 2) {
             throw new OperationError("Key has to be bigger than 2");
         } else if (key > plaintext.length) {
-            throw new OperationError("Key should be smaller than the plain text's length");
+            throw new OperationError(
+                "Key should be smaller than the plain text's length",
+            );
         }
 
         if (offset < 0) {
@@ -61,14 +63,14 @@ class RailFenceCipherEncode extends Operation {
         const rows = new Array(key).fill("");
 
         for (let pos = 0; pos < plaintext.length; pos++) {
-            const rowIdx = key - 1 - Math.abs(cycle / 2 - (pos + offset) % cycle);
+            const rowIdx =
+                key - 1 - Math.abs(cycle / 2 - ((pos + offset) % cycle));
 
             rows[rowIdx] += plaintext[pos];
         }
 
         return rows.join("").trim();
     }
-
 }
 
 export default RailFenceCipherEncode;

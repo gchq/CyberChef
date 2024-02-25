@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * XKCD Random Number operation
  */
 class XKCDRandomNumber extends Operation {
-
     /**
      * XKCDRandomNumber constructor
      */
@@ -19,7 +18,8 @@ class XKCDRandomNumber extends Operation {
 
         this.name = "XKCD Random Number";
         this.module = "Default";
-        this.description = "RFC 1149.5 specifies 4 as the standard IEEE-vetted random number.";
+        this.description =
+            "RFC 1149.5 specifies 4 as the standard IEEE-vetted random number.";
         this.infoURL = "https://xkcd.com/221/";
         this.inputType = "string";
         this.outputType = "number";
@@ -33,9 +33,8 @@ class XKCDRandomNumber extends Operation {
      */
     run(input, args) {
         return 4; // chosen by fair dice roll.
-                  // guaranteed to be random.
+        // guaranteed to be random.
     }
-
 }
 
 export default XKCDRandomNumber;

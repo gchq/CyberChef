@@ -7,7 +7,8 @@
  */
 import TestRegister from "../../lib/TestRegister.mjs";
 
-const BASIC_STRING = "The ships hung in the sky in much the same way that bricks don't.";
+const BASIC_STRING =
+    "The ships hung in the sky in much the same way that bricks don't.";
 const UTF8_STR = "ნუ პანიკას";
 const ALL_BYTES = [
     "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
@@ -35,10 +36,10 @@ TestRegister.addTests([
         expectedOutput: "00",
         recipeConfig: [
             {
-                "op": "CRC-8 Checksum",
-                "args": ["CRC-8"]
-            }
-        ]
+                op: "CRC-8 Checksum",
+                args: ["CRC-8"],
+            },
+        ],
     },
     {
         name: "CRC-8: default check",
@@ -46,10 +47,10 @@ TestRegister.addTests([
         expectedOutput: "f4",
         recipeConfig: [
             {
-                "op": "CRC-8 Checksum",
-                "args": ["CRC-8"]
-            }
-        ]
+                op: "CRC-8 Checksum",
+                args: ["CRC-8"],
+            },
+        ],
     },
     {
         name: "CRC-8: CDMA2000",
@@ -57,10 +58,10 @@ TestRegister.addTests([
         expectedOutput: "da",
         recipeConfig: [
             {
-                "op": "CRC-8 Checksum",
-                "args": ["CRC-8/CDMA2000"]
-            }
-        ]
+                op: "CRC-8 Checksum",
+                args: ["CRC-8/CDMA2000"],
+            },
+        ],
     },
     {
         name: "CRC-8: DARC",
@@ -68,10 +69,10 @@ TestRegister.addTests([
         expectedOutput: "15",
         recipeConfig: [
             {
-                "op": "CRC-8 Checksum",
-                "args": ["CRC-8/DARC"]
-            }
-        ]
+                op: "CRC-8 Checksum",
+                args: ["CRC-8/DARC"],
+            },
+        ],
     },
     {
         name: "CRC-8: DVB-S2",
@@ -79,10 +80,10 @@ TestRegister.addTests([
         expectedOutput: "bc",
         recipeConfig: [
             {
-                "op": "CRC-8 Checksum",
-                "args": ["CRC-8/DVB-S2"]
-            }
-        ]
+                op: "CRC-8 Checksum",
+                args: ["CRC-8/DVB-S2"],
+            },
+        ],
     },
     {
         name: "CRC-8: EBU",
@@ -90,10 +91,10 @@ TestRegister.addTests([
         expectedOutput: "97",
         recipeConfig: [
             {
-                "op": "CRC-8 Checksum",
-                "args": ["CRC-8/EBU"]
-            }
-        ]
+                op: "CRC-8 Checksum",
+                args: ["CRC-8/EBU"],
+            },
+        ],
     },
     {
         name: "CRC-8: I-CODE",
@@ -101,10 +102,10 @@ TestRegister.addTests([
         expectedOutput: "7e",
         recipeConfig: [
             {
-                "op": "CRC-8 Checksum",
-                "args": ["CRC-8/I-CODE"]
-            }
-        ]
+                op: "CRC-8 Checksum",
+                args: ["CRC-8/I-CODE"],
+            },
+        ],
     },
     {
         name: "CRC-8: ITU",
@@ -112,10 +113,10 @@ TestRegister.addTests([
         expectedOutput: "a1",
         recipeConfig: [
             {
-                "op": "CRC-8 Checksum",
-                "args": ["CRC-8/ITU"]
-            }
-        ]
+                op: "CRC-8 Checksum",
+                args: ["CRC-8/ITU"],
+            },
+        ],
     },
     {
         name: "CRC-8: MAXIM",
@@ -123,10 +124,10 @@ TestRegister.addTests([
         expectedOutput: "a1",
         recipeConfig: [
             {
-                "op": "CRC-8 Checksum",
-                "args": ["CRC-8/MAXIM"]
-            }
-        ]
+                op: "CRC-8 Checksum",
+                args: ["CRC-8/MAXIM"],
+            },
+        ],
     },
     {
         name: "CRC-8: ROHC",
@@ -134,10 +135,10 @@ TestRegister.addTests([
         expectedOutput: "d0",
         recipeConfig: [
             {
-                "op": "CRC-8 Checksum",
-                "args": ["CRC-8/ROHC"]
-            }
-        ]
+                op: "CRC-8 Checksum",
+                args: ["CRC-8/ROHC"],
+            },
+        ],
     },
     {
         name: "CRC-8: WCDMA",
@@ -145,10 +146,10 @@ TestRegister.addTests([
         expectedOutput: "25",
         recipeConfig: [
             {
-                "op": "CRC-8 Checksum",
-                "args": ["CRC-8/WCDMA"]
-            }
-        ]
+                op: "CRC-8 Checksum",
+                args: ["CRC-8/WCDMA"],
+            },
+        ],
     },
     {
         name: "CRC-16: nothing",
@@ -156,10 +157,10 @@ TestRegister.addTests([
         expectedOutput: "0000",
         recipeConfig: [
             {
-                "op": "CRC-16 Checksum",
-                "args": []
-            }
-        ]
+                op: "CRC-16 Checksum",
+                args: [],
+            },
+        ],
     },
     {
         name: "CRC-16: basic string",
@@ -167,10 +168,10 @@ TestRegister.addTests([
         expectedOutput: "0c70",
         recipeConfig: [
             {
-                "op": "CRC-16 Checksum",
-                "args": []
-            }
-        ]
+                op: "CRC-16 Checksum",
+                args: [],
+            },
+        ],
     },
     {
         name: "CRC-16: UTF-8",
@@ -178,10 +179,10 @@ TestRegister.addTests([
         expectedOutput: "dcf6",
         recipeConfig: [
             {
-                "op": "CRC-16 Checksum",
-                "args": []
-            }
-        ]
+                op: "CRC-16 Checksum",
+                args: [],
+            },
+        ],
     },
     {
         name: "CRC-16: all bytes",
@@ -189,10 +190,10 @@ TestRegister.addTests([
         expectedOutput: "bad3",
         recipeConfig: [
             {
-                "op": "CRC-16 Checksum",
-                "args": []
-            }
-        ]
+                op: "CRC-16 Checksum",
+                args: [],
+            },
+        ],
     },
     {
         name: "CRC-32: nothing",
@@ -200,10 +201,10 @@ TestRegister.addTests([
         expectedOutput: "00000000",
         recipeConfig: [
             {
-                "op": "CRC-32 Checksum",
-                "args": []
-            }
-        ]
+                op: "CRC-32 Checksum",
+                args: [],
+            },
+        ],
     },
     {
         name: "CRC-32: basic string",
@@ -211,10 +212,10 @@ TestRegister.addTests([
         expectedOutput: "bf4b739c",
         recipeConfig: [
             {
-                "op": "CRC-32 Checksum",
-                "args": []
-            }
-        ]
+                op: "CRC-32 Checksum",
+                args: [],
+            },
+        ],
     },
     {
         name: "CRC-32: UTF-8",
@@ -222,10 +223,10 @@ TestRegister.addTests([
         expectedOutput: "87553290",
         recipeConfig: [
             {
-                "op": "CRC-32 Checksum",
-                "args": []
-            }
-        ]
+                op: "CRC-32 Checksum",
+                args: [],
+            },
+        ],
     },
     {
         name: "CRC-32: all bytes",
@@ -233,9 +234,9 @@ TestRegister.addTests([
         expectedOutput: "29058c73",
         recipeConfig: [
             {
-                "op": "CRC-32 Checksum",
-                "args": []
-            }
-        ]
-    }
+                op: "CRC-32 Checksum",
+                args: [],
+            },
+        ],
+    },
 ]);
