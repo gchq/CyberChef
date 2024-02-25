@@ -35,7 +35,7 @@ export const DEFAULT_WEIGHTS = {
  * @returns [boolean, number]       a boolean which tells if pattern was
  *                                  found or not and a search score
  */
-export function fuzzyMatch(pattern, str, global=false, weights=DEFAULT_WEIGHTS) {
+export function fuzzyMatch(pattern, str, global = false, weights = DEFAULT_WEIGHTS) {
     const recursionCount = 0;
     const recursionLimit = 10;
     const matches = [];
@@ -121,9 +121,7 @@ function fuzzyMatchRecursive(
     let firstMatch = true;
     while (patternCurIndex < pattern.length && strCurrIndex < str.length) {
         // Match found.
-        if (
-            pattern[patternCurIndex].toLowerCase() === str[strCurrIndex].toLowerCase()
-        ) {
+        if (pattern[patternCurIndex].toLowerCase() === str[strCurrIndex].toLowerCase()) {
             if (nextMatch >= maxMatches) {
                 return [false, outScore, []];
             }
@@ -169,10 +167,7 @@ function fuzzyMatchRecursive(
 
         // Apply leading letter penalty
         let penalty = weights.leadingLetterPenalty * matches[0];
-        penalty =
-            penalty < weights.maxLeadingLetterPenalty ?
-                weights.maxLeadingLetterPenalty :
-                penalty;
+        penalty = penalty < weights.maxLeadingLetterPenalty ? weights.maxLeadingLetterPenalty : penalty;
         outScore += penalty;
 
         // Apply unmatched penalty
@@ -195,10 +190,7 @@ function fuzzyMatchRecursive(
                 // Camel case
                 const neighbor = str[currIdx - 1];
                 const curr = str[currIdx];
-                if (
-                    neighbor !== neighbor.toUpperCase() &&
-                    curr !== curr.toLowerCase()
-                ) {
+                if (neighbor !== neighbor.toUpperCase() && curr !== curr.toLowerCase()) {
                     outScore += weights.camelBonus;
                 }
                 const isNeighbourSeparator = neighbor === "_" || neighbor === " ";
@@ -239,7 +231,7 @@ export function calcMatchRanges(matches) {
     let start = matches[0],
         curr = start;
 
-    matches.forEach(m => {
+    matches.forEach((m) => {
         if (m === curr || m === curr + 1) curr = m;
         else {
             ranges.push([start, curr - start + 1]);

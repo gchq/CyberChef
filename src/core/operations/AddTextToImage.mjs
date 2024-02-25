@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Add Text To Image operation
  */
 class AddTextToImage extends Operation {
-
     /**
      * AddTextToImage constructor
      */
@@ -24,7 +23,8 @@ class AddTextToImage extends Operation {
 
         this.name = "Add Text To Image";
         this.module = "Image";
-        this.description = "Adds text onto an image.<br><br>Text can be horizontally or vertically aligned, or the position can be manually specified.<br>Variants of the Roboto font face are available in any size or colour.";
+        this.description
+            = "Adds text onto an image.<br><br>Text can be horizontally or vertically aligned, or the position can be manually specified.<br>Variants of the Roboto font face are available in any size or colour.";
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -64,12 +64,7 @@ class AddTextToImage extends Operation {
             {
                 name: "Font face",
                 type: "option",
-                value: [
-                    "Roboto",
-                    "Roboto Black",
-                    "Roboto Mono",
-                    "Roboto Slab"
-                ]
+                value: ["Roboto", "Roboto Black", "Roboto Mono", "Roboto Slab"]
             },
             {
                 name: "Red",
@@ -132,8 +127,7 @@ class AddTextToImage extends Operation {
             throw new OperationError(`Error loading image. (${err})`);
         }
         try {
-            if (isWorkerEnvironment())
-                self.sendStatusMessage("Adding text to image...");
+            if (isWorkerEnvironment()) self.sendStatusMessage("Adding text to image...");
 
             const fontsMap = {};
             const fonts = [
@@ -143,14 +137,12 @@ class AddTextToImage extends Operation {
                 import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoSlab72White.fnt")
             ];
 
-            await Promise.all(fonts)
-                .then(fonts => {
-                    fontsMap.Roboto = fonts[0];
-                    fontsMap["Roboto Black"] = fonts[1];
-                    fontsMap["Roboto Mono"] = fonts[2];
-                    fontsMap["Roboto Slab"] = fonts[3];
-                });
-
+            await Promise.all(fonts).then((fonts) => {
+                fontsMap.Roboto = fonts[0];
+                fontsMap["Roboto Black"] = fonts[1];
+                fontsMap["Roboto Mono"] = fonts[2];
+                fontsMap["Roboto Slab"] = fonts[3];
+            });
 
             // Make Webpack load the png font images
             await Promise.all([
@@ -165,7 +157,7 @@ class AddTextToImage extends Operation {
             // LoadFont needs an absolute url, so append the font name to self.docURL
             const jimpFont = await jimp.loadFont(self.docURL + "/" + font.default);
 
-            jimpFont.pages.forEach(function(page) {
+            jimpFont.pages.forEach(function (page) {
                 if (page.bitmap) {
                     // Adjust the RGB values of the image pages to change the font colour.
                     const pageWidth = page.bitmap.width;
@@ -180,10 +172,10 @@ class AddTextToImage extends Operation {
                             const newAlpha = page.bitmap.data[idx + 3] - (255 - alpha);
 
                             // Make sure the bitmap values don't go below 0 as that makes jimp very unhappy
-                            page.bitmap.data[idx] = (newRed > 0) ? newRed : 0;
-                            page.bitmap.data[idx + 1] = (newGreen > 0) ? newGreen : 0;
-                            page.bitmap.data[idx + 2] = (newBlue > 0) ? newBlue : 0;
-                            page.bitmap.data[idx + 3] = (newAlpha > 0) ? newAlpha : 0;
+                            page.bitmap.data[idx] = newRed > 0 ? newRed : 0;
+                            page.bitmap.data[idx + 1] = newGreen > 0 ? newGreen : 0;
+                            page.bitmap.data[idx + 2] = newBlue > 0 ? newBlue : 0;
+                            page.bitmap.data[idx + 3] = newAlpha > 0 ? newAlpha : 0;
                         }
                     }
                 }
@@ -210,7 +202,7 @@ class AddTextToImage extends Operation {
                     xPos = 0;
                     break;
                 case "Center":
-                    xPos = (image.getWidth() / 2) - (textImage.getWidth() / 2);
+                    xPos = image.getWidth() / 2 - textImage.getWidth() / 2;
                     break;
                 case "Right":
                     xPos = image.getWidth() - textImage.getWidth();
@@ -222,7 +214,7 @@ class AddTextToImage extends Operation {
                     yPos = 0;
                     break;
                 case "Middle":
-                    yPos = (image.getHeight() / 2) - (textImage.getHeight() / 2);
+                    yPos = image.getHeight() / 2 - textImage.getHeight() / 2;
                     break;
                 case "Bottom":
                     yPos = image.getHeight() - textImage.getHeight();
@@ -261,7 +253,6 @@ class AddTextToImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default AddTextToImage;

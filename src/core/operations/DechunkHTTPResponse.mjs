@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Dechunk HTTP response operation
  */
 class DechunkHTTPResponse extends Operation {
-
     /**
      * DechunkHTTPResponse constructor
      */
@@ -26,9 +25,9 @@ class DechunkHTTPResponse extends Operation {
         this.args = [];
         this.checks = [
             {
-                pattern:  "^[0-9A-F]+\r\n",
-                flags:  "i",
-                args:   []
+                pattern: "^[0-9A-F]+\r\n",
+                flags: "i",
+                args: []
             }
         ];
     }
@@ -52,7 +51,6 @@ class DechunkHTTPResponse extends Operation {
         }
         return chunks.join("") + input;
     }
-
 }
 
 export default DechunkHTTPResponse;

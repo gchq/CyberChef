@@ -16,9 +16,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Caesar Box Cipher",
-                args: ["1"],
-            },
-        ],
+                args: ["1"]
+            }
+        ]
     },
     {
         name: "Caesar Box Cipher: Hello World!",
@@ -27,9 +27,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Caesar Box Cipher",
-                args: ["3"],
-            },
-        ],
+                args: ["3"]
+            }
+        ]
     },
     {
         name: "Caesar Box Cipher: Hello World!",
@@ -38,8 +38,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Caesar Box Cipher",
-                args: ["4"],
-            },
-        ],
+                args: ["4"]
+            }
+        ]
     }
 ]);

@@ -4,10 +4,7 @@
         "@type": "Organization",
         "url": "https://gchq.github.io/CyberChef/",
         "logo": "https://gchq.github.io/CyberChef/images/cyberchef-128x128.png",
-        "sameAs": [
-            "https://github.com/gchq/CyberChef",
-            "https://www.npmjs.com/package/cyberchef"
-        ]
+        "sameAs": ["https://github.com/gchq/CyberChef", "https://www.npmjs.com/package/cyberchef"]
     },
     {
         "@context": "http://schema.org",

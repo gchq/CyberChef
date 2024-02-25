@@ -16,9 +16,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "LS47 Encrypt",
-                args: ["helloworld", 0, "test"],
-            },
-        ],
+                args: ["helloworld", 0, "test"]
+            }
+        ]
     },
     {
         name: "LS47 Decrypt",
@@ -27,9 +27,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "LS47 Decrypt",
-                args: ["helloworld", 0],
-            },
-        ],
+                args: ["helloworld", 0]
+            }
+        ]
     },
     {
         name: "LS47 Encrypt",
@@ -38,8 +38,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "LS47 Encrypt",
-                args: ["Helloworld", 0, "test"],
-            },
-        ],
+                args: ["Helloworld", 0, "test"]
+            }
+        ]
     }
 ]);

@@ -13,7 +13,6 @@ import Utils from "../Utils.mjs";
  * Extract ID3 operation
  */
 class ExtractID3 extends Operation {
-
     /**
      * ExtractID3 constructor
      */
@@ -22,7 +21,8 @@ class ExtractID3 extends Operation {
 
         this.name = "Extract ID3";
         this.module = "Default";
-        this.description = "This operation extracts ID3 metadata from an MP3 file.<br><br>ID3 is a metadata container most often used in conjunction with the MP3 audio file format. It allows information such as the title, artist, album, track number, and other information about the file to be stored in the file itself.";
+        this.description
+            = "This operation extracts ID3 metadata from an MP3 file.<br><br>ID3 is a metadata container most often used in conjunction with the MP3 audio file format. It allows information such as the title, artist, album, track number, and other information about the file to be stored in the file itself.";
         this.infoURL = "https://wikipedia.org/wiki/ID3";
         this.inputType = "ArrayBuffer";
         this.outputType = "JSON";
@@ -67,7 +67,7 @@ class ExtractID3 extends Operation {
             let result = 0;
 
             // The sizes are 7 bit numbers stored in 8 bit locations
-            for (let i = (num) * 7; i; i -= 7) {
+            for (let i = num * 7; i; i -= 7) {
                 result = (result << i) | input[0];
                 input = input.slice(1);
             }
@@ -91,8 +91,7 @@ class ExtractID3 extends Operation {
 
             // Read data from frame
             let data = "";
-            for (let i = 1; i < size; i++)
-                data += String.fromCharCode(input[i]);
+            for (let i = 1; i < size; i++) data += String.fromCharCode(input[i]);
             frame.Data = data;
 
             // Move to next Frame
@@ -111,7 +110,6 @@ class ExtractID3 extends Operation {
 
         // While the current element is in the header
         while (pos < headerTagSize) {
-
             // Frame Identifier of frame
             let id = String.fromCharCode(input[0]) + String.fromCharCode(input[1]) + String.fromCharCode(input[2]);
             input = input.slice(3);
@@ -126,7 +124,8 @@ class ExtractID3 extends Operation {
                 const [frame, size] = readFrame(id);
                 tags[id] = frame;
                 pos += 10 + size;
-            } else if (id === "\x00\x00\x00") { // end of header
+            } else if (id === "\x00\x00\x00") {
+                // end of header
                 break;
             } else {
                 throw new OperationError("Unknown Frame Identifier: " + id);
@@ -144,8 +143,7 @@ class ExtractID3 extends Operation {
      * @returns {html}
      */
     present(data) {
-        if (!data || !Object.prototype.hasOwnProperty.call(data, "Tags"))
-            return JSON.stringify(data, null, 4);
+        if (!data || !Object.prototype.hasOwnProperty.call(data, "Tags")) return JSON.stringify(data, null, 4);
 
         let output = `<table class="table table-hover table-sm table-bordered table-nonfluid">
             <tr><th>Tag</th><th>Description</th><th>Data</th></tr>`;
@@ -158,7 +156,6 @@ class ExtractID3 extends Operation {
         output += "</table>";
         return output;
     }
-
 }
 
 // Borrowed from https://github.com/aadsm/jsmediatags

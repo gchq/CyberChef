@@ -12,7 +12,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Disassemble x86 operation
  */
 class DisassembleX86 extends Operation {
-
     /**
      * DisassembleX86 constructor
      */
@@ -21,7 +20,8 @@ class DisassembleX86 extends Operation {
 
         this.name = "Disassemble x86";
         this.module = "Shellcode";
-        this.description = "Disassembly is the process of translating machine language into assembly language.<br><br>This operation supports 64-bit, 32-bit and 16-bit code written for Intel or AMD x86 processors. It is particularly useful for reverse engineering shellcode.<br><br>Input should be in hexadecimal.";
+        this.description
+            = "Disassembly is the process of translating machine language into assembly language.<br><br>This operation supports 64-bit, 32-bit and 16-bit code written for Intel or AMD x86 processors. It is particularly useful for reverse engineering shellcode.<br><br>Input should be in hexadecimal.";
         this.infoURL = "https://wikipedia.org/wiki/X86";
         this.inputType = "string";
         this.outputType = "string";
@@ -34,15 +34,7 @@ class DisassembleX86 extends Operation {
             {
                 "name": "Compatibility",
                 "type": "option",
-                "value": [
-                    "Full x86 architecture",
-                    "Knights Corner",
-                    "Larrabee",
-                    "Cyrix",
-                    "Geode",
-                    "Centaur",
-                    "X86/486"
-                ]
+                "value": ["Full x86 architecture", "Knights Corner", "Larrabee", "Cyrix", "Geode", "Centaur", "X86/486"]
             },
             {
                 "name": "Code Segment (CS)",
@@ -75,14 +67,7 @@ class DisassembleX86 extends Operation {
      * @throws {OperationError} if invalid mode value
      */
     run(input, args) {
-        const [
-            mode,
-            compatibility,
-            codeSegment,
-            offset,
-            showInstructionHex,
-            showInstructionPos
-        ] = args;
+        const [mode, compatibility, codeSegment, offset, showInstructionHex, showInstructionPos] = args;
 
         switch (mode) {
             case "64":
@@ -128,7 +113,6 @@ class DisassembleX86 extends Operation {
         disassemble.LoadBinCode(input.replace(/\s/g, ""));
         return disassemble.LDisassemble();
     }
-
 }
 
 export default DisassembleX86;

@@ -42,7 +42,7 @@ TestRegister.addTests([
     {
         name: "From Hex: Can decode text",
         input: "64 54 65 78 74",
-        expectedOutput: "\"Text\"",
+        expectedOutput: '"Text"',
         recipeConfig: [
             {
                 op: "From Hex",
@@ -87,7 +87,7 @@ TestRegister.addTests([
     {
         name: "From Hex: Can decode map",
         input: "a3 61 61 01 61 62 02 61 63 03",
-        expectedOutput: JSON.stringify({a: 1, b: 2, c: 3}),
+        expectedOutput: JSON.stringify({ a: 1, b: 2, c: 3 }),
         recipeConfig: [
             {
                 op: "From Hex",
@@ -124,8 +124,8 @@ TestRegister.addTests([
     },
     {
         name: "From Hex: Can round trip with encode",
-        input: JSON.stringify({a: 1, b: false, c: [1, 2, 3]}),
-        expectedOutput: JSON.stringify({a: 1, b: false, c: [1, 2, 3]}),
+        input: JSON.stringify({ a: 1, b: false, c: [1, 2, 3] }),
+        expectedOutput: JSON.stringify({ a: 1, b: false, c: [1, 2, 3] }),
         recipeConfig: [
             {
                 op: "CBOR Encode",

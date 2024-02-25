@@ -8,12 +8,10 @@ import HTMLIngredient from "./HTMLIngredient.mjs";
 import Utils from "../core/Utils.mjs";
 import url from "url";
 
-
 /**
  * Object to handle the creation of operations.
  */
 class HTMLOperation {
-
     /**
      * HTMLOperation constructor.
      *
@@ -23,22 +21,21 @@ class HTMLOperation {
      * @param {Manager} manager - The CyberChef event manager.
      */
     constructor(name, config, app, manager) {
-        this.app         = app;
-        this.manager     = manager;
+        this.app = app;
+        this.manager = manager;
 
-        this.name        = name;
+        this.name = name;
         this.description = config.description;
-        this.infoURL     = config.infoURL;
-        this.manualBake  = config.manualBake || false;
-        this.config      = config;
-        this.ingList     = [];
+        this.infoURL = config.infoURL;
+        this.manualBake = config.manualBake || false;
+        this.config = config;
+        this.ingList = [];
 
         for (let i = 0; i < config.args.length; i++) {
             const ing = new HTMLIngredient(config.args[i], this.app, this.manager);
             this.ingList.push(ing);
         }
     }
-
 
     /**
      * Renders the operation in HTML as a stub operation with no ingredients.
@@ -67,7 +64,6 @@ class HTMLOperation {
         return html;
     }
 
-
     /**
      * Renders the operation in HTML as a full operation with ingredients.
      *
@@ -91,7 +87,6 @@ class HTMLOperation {
         return html;
     }
 
-
     /**
      * Highlights searched strings in the name and description of the operation.
      *
@@ -103,11 +98,10 @@ class HTMLOperation {
             let opName = "",
                 pos = 0;
 
-            nameIdxs.forEach(idxs => {
+            nameIdxs.forEach((idxs) => {
                 const [start, length] = idxs;
                 if (typeof start !== "number") return;
-                opName += this.name.slice(pos, start) + "<b>" +
-                    this.name.slice(start, start + length) + "</b>";
+                opName += this.name.slice(pos, start) + "<b>" + this.name.slice(start, start + length) + "</b>";
                 pos = start + length;
             });
             opName += this.name.slice(pos, this.name.length);
@@ -122,7 +116,7 @@ class HTMLOperation {
                 // If the search string occurs within an HTML tag, return without highlighting it.
                 const inHTMLTag = descIdxs.reduce((acc, idxs) => {
                     const start = idxs[0];
-                    return start >= match.index && start <= (match.index + match[0].length);
+                    return start >= match.index && start <= match.index + match[0].length;
                 }, false);
 
                 if (inHTMLTag) return;
@@ -131,19 +125,20 @@ class HTMLOperation {
             let desc = "",
                 pos = 0;
 
-            descIdxs.forEach(idxs => {
+            descIdxs.forEach((idxs) => {
                 const [start, length] = idxs;
-                desc += this.description.slice(pos, start) + "<b><u>" +
-                    this.description.slice(start, start + length) + "</u></b>";
+                desc
+                    += this.description.slice(pos, start)
+                    + "<b><u>"
+                    + this.description.slice(start, start + length)
+                    + "</u></b>";
                 pos = start + length;
             });
             desc += this.description.slice(pos, this.description.length);
             this.description = desc;
         }
     }
-
 }
-
 
 /**
  * Given a URL for a Wikipedia (or other wiki) page, this function returns a link to that page.

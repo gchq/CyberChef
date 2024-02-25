@@ -12,7 +12,6 @@ import Protobuf from "../lib/Protobuf.mjs";
  * Protobuf Encode operation
  */
 class ProtobufEncode extends Operation {
-
     /**
      * ProtobufEncode constructor
      */
@@ -48,7 +47,6 @@ class ProtobufEncode extends Operation {
             throw new OperationError(error);
         }
     }
-
 }
 
 export default ProtobufEncode;

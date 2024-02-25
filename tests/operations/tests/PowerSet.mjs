@@ -16,9 +16,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Power Set",
-                args: [","],
-            },
-        ],
+                args: [","]
+            }
+        ]
     },
     {
         name: "Power set",
@@ -27,8 +27,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Power Set",
-                args: [" "],
-            },
-        ],
-    },
+                args: [" "]
+            }
+        ]
+    }
 ]);

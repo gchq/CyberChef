@@ -14,7 +14,6 @@ import OperationError from "../errors/OperationError.mjs";
  * AES Key Wrap operation
  */
 class AESKeyWrap extends Operation {
-
     /**
      * AESKeyWrap constructor
      */
@@ -23,7 +22,8 @@ class AESKeyWrap extends Operation {
 
         this.name = "AES Key Wrap";
         this.module = "Ciphers";
-        this.description = "A key wrapping algorithm defined in RFC3394, which is used to protect keys in untrusted storage or communications, using AES.<br><br>This algorithm uses an AES key (KEK: key-encryption key) and a 64-bit IV to encrypt 64-bit blocks.";
+        this.description
+            = "A key wrapping algorithm defined in RFC3394, which is used to protect keys in untrusted storage or communications, using AES.<br><br>This algorithm uses an AES key (KEK: key-encryption key) and a 64-bit IV to encrypt 64-bit blocks.";
         this.infoURL = "https://wikipedia.org/wiki/Key_wrap";
         this.inputType = "string";
         this.outputType = "string";
@@ -49,7 +49,7 @@ class AESKeyWrap extends Operation {
                 "name": "Output",
                 "type": "option",
                 "value": ["Hex", "Raw"]
-            },
+            }
         ];
     }
 
@@ -82,7 +82,8 @@ class AESKeyWrap extends Operation {
         for (let i = 0; i < inputData.length; i += 8) {
             R.push(inputData.substring(i, i + 8));
         }
-        let cntLower = 1, cntUpper = 0;
+        let cntLower = 1,
+            cntUpper = 0;
         for (let j = 0; j < 6; j++) {
             for (let i = 0; i < R.length; i++) {
                 cipher.start();
@@ -109,7 +110,6 @@ class AESKeyWrap extends Operation {
         }
         return C;
     }
-
 }
 
 export default AESKeyWrap;

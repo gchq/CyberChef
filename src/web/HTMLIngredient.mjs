@@ -10,7 +10,6 @@ import Utils from "../core/Utils.mjs";
  * Object to handle the creation of operation ingredients.
  */
 class HTMLIngredient {
-
     /**
      * HTMLIngredient constructor.
      *
@@ -35,11 +34,10 @@ class HTMLIngredient {
         this.ingId = this.app.nextIngId();
         this.id = "ing-" + this.ingId;
         this.tabIndex = this.ingId + 2; // Input = 1, Search = 2
-        this.min = (typeof config.min === "number") ? config.min : "";
-        this.max = (typeof config.max === "number") ? config.max : "";
+        this.min = typeof config.min === "number" ? config.min : "";
+        this.max = typeof config.max === "number" ? config.max : "";
         this.step = config.step || 1;
     }
-
 
     /**
      * Renders the ingredient in HTML.
@@ -48,7 +46,9 @@ class HTMLIngredient {
      */
     toHtml() {
         let html = "",
-            i, m, eventFn;
+            i,
+            m,
+            eventFn;
 
         switch (this.type) {
             case "string":
@@ -184,18 +184,18 @@ class HTMLIngredient {
                     } else if (this.value[i].name.match(/\[\/([a-z0-9 -()^]+)\]/i)) {
                         html += "</optgroup>";
                     } else {
-                        const val = this.type === "populateMultiOption" ?
-                            JSON.stringify(this.value[i].value) :
-                            this.value[i].value;
+                        const val
+                            = this.type === "populateMultiOption"
+                                ? JSON.stringify(this.value[i].value)
+                                : this.value[i].value;
                         html += `<option populate-value='${Utils.escapeHtml(val)}'>${this.value[i].name}</option>`;
                     }
                 }
                 html += `</select>
                 </div>`;
 
-                eventFn = this.type === "populateMultiOption" ?
-                    this.populateMultiOptionChange :
-                    this.populateOptionChange;
+                eventFn
+                    = this.type === "populateMultiOption" ? this.populateMultiOptionChange : this.populateOptionChange;
                 this.manager.addDynamicListener("#" + this.id, "change", eventFn, this);
                 break;
             case "editableOption":
@@ -314,7 +314,6 @@ class HTMLIngredient {
         return html;
     }
 
-
     /**
      * Handler for populate option changes.
      * Populates the relevant argument with the specified value.
@@ -338,7 +337,6 @@ class HTMLIngredient {
         this.manager.recipe.ingChange();
     }
 
-
     /**
      * Handler for populate multi option changes.
      * Populates the relevant arguments with the specified values.
@@ -352,7 +350,7 @@ class HTMLIngredient {
         const el = e.target;
         const op = el.parentNode.parentNode;
         const args = op.querySelectorAll(".arg");
-        const targets = this.target.map(i => args[i]);
+        const targets = this.target.map((i) => args[i]);
         const vals = JSON.parse(el.childNodes[el.selectedIndex].getAttribute("populate-value"));
         const evt = new Event("change");
 
@@ -368,7 +366,6 @@ class HTMLIngredient {
             target.dispatchEvent(evt);
         }
     }
-
 
     /**
      * Handler for editable option clicks.
@@ -389,7 +386,6 @@ class HTMLIngredient {
 
         this.manager.recipe.ingChange();
     }
-
 
     /**
      * Handler for argument selector changes.
@@ -416,7 +412,6 @@ class HTMLIngredient {
             }
         });
     }
-
 }
 
 export default HTMLIngredient;

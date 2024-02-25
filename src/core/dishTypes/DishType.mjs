@@ -4,12 +4,10 @@
  * @license Apache-2.0
  */
 
-
 /**
  * Abstract class for dish translation methods
  */
 class DishType {
-
     /**
      * Warn translations dont work without value from bind
      */

@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Set Difference operation
  */
 class SetDifference extends Operation {
-
     /**
      * Set Difference constructor
      */
@@ -34,7 +33,7 @@ class SetDifference extends Operation {
                 name: "Item delimiter",
                 type: "binaryString",
                 value: ","
-            },
+            }
         ];
     }
 
@@ -45,8 +44,10 @@ class SetDifference extends Operation {
      * @throws {Error} if not two sets
      */
     validateSampleNumbers(sets) {
-        if (!sets || (sets.length !== 2)) {
-            throw new OperationError("Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?");
+        if (!sets || sets.length !== 2) {
+            throw new OperationError(
+                "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?"
+            );
         }
     }
 
@@ -64,7 +65,7 @@ class SetDifference extends Operation {
 
         this.validateSampleNumbers(sets);
 
-        return this.runSetDifference(...sets.map(s => s.split(this.itemDelimiter)));
+        return this.runSetDifference(...sets.map((s) => s.split(this.itemDelimiter)));
     }
 
     /**
@@ -81,7 +82,6 @@ class SetDifference extends Operation {
             })
             .join(this.itemDelimiter);
     }
-
 }
 
 export default SetDifference;

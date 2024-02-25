@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * To Lower case operation
  */
 class ToLowerCase extends Operation {
-
     /**
      * ToLowerCase constructor
      */
@@ -59,7 +58,6 @@ class ToLowerCase extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default ToLowerCase;

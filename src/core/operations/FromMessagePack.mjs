@@ -12,7 +12,6 @@ import notepack from "notepack.io";
  * From MessagePack operation
  */
 class FromMessagePack extends Operation {
-
     /**
      * FromMessagePack constructor
      */
@@ -21,7 +20,8 @@ class FromMessagePack extends Operation {
 
         this.name = "From MessagePack";
         this.module = "Code";
-        this.description = "Converts MessagePack encoded data to JSON. MessagePack is a computer data interchange format. It is a binary form for representing simple data structures like arrays and associative arrays.";
+        this.description
+            = "Converts MessagePack encoded data to JSON. MessagePack is a computer data interchange format. It is a binary form for representing simple data structures like arrays and associative arrays.";
         this.infoURL = "https://wikipedia.org/wiki/MessagePack";
         this.inputType = "ArrayBuffer";
         this.outputType = "JSON";
@@ -41,7 +41,6 @@ class FromMessagePack extends Operation {
             throw new OperationError(`Could not decode MessagePack to JSON: ${err}`);
         }
     }
-
 }
 
 export default FromMessagePack;

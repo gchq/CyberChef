@@ -33,10 +33,10 @@ export function affineEncode(input, args) {
     for (let i = 0; i < input.length; i++) {
         if (alphabet.indexOf(input[i]) >= 0) {
             // Uses the affine function ax+b % m = y (where m is length of the alphabet)
-            output += alphabet[((a * alphabet.indexOf(input[i])) + b) % 26];
+            output += alphabet[(a * alphabet.indexOf(input[i]) + b) % 26];
         } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
             // Same as above, accounting for uppercase
-            output += alphabet[((a * alphabet.indexOf(input[i].toLowerCase())) + b) % 26].toUpperCase();
+            output += alphabet[(a * alphabet.indexOf(input[i].toLowerCase()) + b) % 26].toUpperCase();
         } else {
             // Non-alphabetic characters
             output += input[i];
@@ -53,13 +53,13 @@ export function affineEncode(input, args) {
  * @param {string} keyword - Must be upper case
  * @returns {string}
  */
-export function genPolybiusSquare (keyword) {
+export function genPolybiusSquare(keyword) {
     const alpha = "ABCDEFGHIKLMNOPQRSTUVWXYZ",
         polArray = `${keyword}${alpha}`.split("").unique(),
         polybius = [];
 
     for (let i = 0; i < 5; i++) {
-        polybius[i] = polArray.slice(i*5, i*5 + 5);
+        polybius[i] = polArray.slice(i * 5, i * 5 + 5);
     }
 
     return polybius;
@@ -72,11 +72,11 @@ export function genPolybiusSquare (keyword) {
  * @constant
  */
 export const format = {
-    "Hex":     CryptoJS.enc.Hex,
-    "Base64":  CryptoJS.enc.Base64,
-    "UTF8":    CryptoJS.enc.Utf8,
-    "UTF16":   CryptoJS.enc.Utf16,
+    "Hex": CryptoJS.enc.Hex,
+    "Base64": CryptoJS.enc.Base64,
+    "UTF8": CryptoJS.enc.Utf8,
+    "UTF16": CryptoJS.enc.Utf16,
     "UTF16LE": CryptoJS.enc.Utf16LE,
     "UTF16BE": CryptoJS.enc.Utf16BE,
-    "Latin1":  CryptoJS.enc.Latin1,
+    "Latin1": CryptoJS.enc.Latin1
 };

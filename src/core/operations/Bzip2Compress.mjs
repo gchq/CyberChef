@@ -13,7 +13,6 @@ import { isWorkerEnvironment } from "../Utils.mjs";
  * Bzip2 Compress operation
  */
 class Bzip2Compress extends Operation {
-
     /**
      * Bzip2Compress constructor
      */
@@ -22,7 +21,8 @@ class Bzip2Compress extends Operation {
 
         this.name = "Bzip2 Compress";
         this.module = "Compression";
-        this.description = "Bzip2 is a compression library developed by Julian Seward (of GHC fame) that uses the Burrows-Wheeler algorithm. It only supports compressing single files and its compression is slow, however is more effective than Deflate (.gz & .zip).";
+        this.description
+            = "Bzip2 is a compression library developed by Julian Seward (of GHC fame) that uses the Burrows-Wheeler algorithm. It only supports compressing single files and its compression is slow, however is more effective than Deflate (.gz & .zip).";
         this.infoURL = "https://wikipedia.org/wiki/Bzip2";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -54,7 +54,7 @@ class Bzip2Compress extends Operation {
         }
         if (isWorkerEnvironment()) self.sendStatusMessage("Loading Bzip2...");
         return new Promise((resolve, reject) => {
-            Bzip2().then(bzip2 => {
+            Bzip2().then((bzip2) => {
                 if (isWorkerEnvironment()) self.sendStatusMessage("Compressing data...");
                 const inpArray = new Uint8Array(input);
                 const bzip2cc = bzip2.compressBZ2(inpArray, blockSize, workFactor);
@@ -67,7 +67,6 @@ class Bzip2Compress extends Operation {
             });
         });
     }
-
 }
 
 export default Bzip2Compress;

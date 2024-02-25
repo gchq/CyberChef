@@ -14,7 +14,6 @@ import Utils from "../Utils.mjs";
  * JSON Beautify operation
  */
 class JSONBeautify extends Operation {
-
     /**
      * JSONBeautify constructor
      */
@@ -23,7 +22,8 @@ class JSONBeautify extends Operation {
 
         this.name = "JSON Beautify";
         this.module = "Code";
-        this.description = "Indents and pretty prints JavaScript Object Notation (JSON) code.<br><br>Tags: json viewer, prettify, syntax highlighting";
+        this.description
+            = "Indents and pretty prints JavaScript Object Notation (JSON) code.<br><br>Tags: json viewer, prettify, syntax highlighting";
         this.inputType = "string";
         this.outputType = "string";
         this.presentType = "html";
@@ -88,10 +88,11 @@ class JSONBeautify extends Operation {
 
         if (isCollapsable(json)) {
             const isArr = json instanceof Array;
-            html += '<details open class="json-details">' +
-                `<summary class="json-summary ${isArr ? "json-arr" : "json-obj"}"></summary>` +
-                json2html(json, options) +
-                "</details>";
+            html
+                += '<details open class="json-details">'
+                + `<summary class="json-summary ${isArr ? "json-arr" : "json-obj"}"></summary>`
+                + json2html(json, options)
+                + "</details>";
         } else {
             html += json2html(json, options);
         }
@@ -112,14 +113,15 @@ function sortKeys(o) {
     if (Array.isArray(o)) {
         return o.map(sortKeys);
     } else if ("[object Object]" === Object.prototype.toString.call(o)) {
-        return Object.keys(o).sort().reduce(function(a, k) {
-            a[k] = sortKeys(o[k]);
-            return a;
-        }, {});
+        return Object.keys(o)
+            .sort()
+            .reduce(function (a, k) {
+                a[k] = sortKeys(o[k]);
+                return a;
+            }, {});
     }
     return o;
 }
-
 
 /**
  * Check if arg is either an array with at least 1 element, or a dict with at least 1 key
@@ -181,10 +183,11 @@ function json2html(json, options) {
                 // Add toggle button if item is collapsable
                 if (isCollapsable(json[i])) {
                     const isArr = json[i] instanceof Array;
-                    html += '<details open class="json-details">' +
-                        `<summary class="json-summary ${isArr ? "json-arr" : "json-obj"}"></summary>` +
-                        json2html(json[i], options) +
-                        "</details>";
+                    html
+                        += '<details open class="json-details">'
+                        + `<summary class="json-summary ${isArr ? "json-arr" : "json-obj"}"></summary>`
+                        + json2html(json[i], options)
+                        + "</details>";
                 } else {
                     html += json2html(json[i], options);
                 }
@@ -217,10 +220,11 @@ function json2html(json, options) {
                         // Add toggle button if item is collapsable
                         if (isCollapsable(json[key])) {
                             const isArr = json[key] instanceof Array;
-                            html += '<details open class="json-details">' +
-                                `<summary class="json-summary ${isArr ? "json-arr" : "json-obj"}">${safeKey}<span class="json-colon">:</span> </summary>` +
-                                json2html(json[key], options) +
-                                "</details>";
+                            html
+                                += '<details open class="json-details">'
+                                + `<summary class="json-summary ${isArr ? "json-arr" : "json-obj"}">${safeKey}<span class="json-colon">:</span> </summary>`
+                                + json2html(json[key], options)
+                                + "</details>";
                         } else {
                             html += safeKey + '<span class="json-colon">:</span> ' + json2html(json[key], options);
                         }

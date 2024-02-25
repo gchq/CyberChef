@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Swap case operation
  */
 class SwapCase extends Operation {
-
     /**
      * SwapCase constructor
      */
@@ -70,7 +69,6 @@ class SwapCase extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default SwapCase;

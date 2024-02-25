@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Crop Image operation
  */
 class CropImage extends Operation {
-
     /**
      * CropImage constructor
      */
@@ -24,7 +23,8 @@ class CropImage extends Operation {
 
         this.name = "Crop Image";
         this.module = "Image";
-        this.description = "Crops an image to the specified region, or automatically crops edges.<br><br><b><u>Autocrop</u></b><br>Automatically crops same-colour borders from the image.<br><br><u>Autocrop tolerance</u><br>A percentage value for the tolerance of colour difference between pixels.<br><br><u>Only autocrop frames</u><br>Only crop real frames (all sides must have the same border)<br><br><u>Symmetric autocrop</u><br>Force autocrop to be symmetric (top/bottom and left/right are cropped by the same amount)<br><br><u>Autocrop keep border</u><br>The number of pixels of border to leave around the image.";
+        this.description
+            = "Crops an image to the specified region, or automatically crops edges.<br><br><b><u>Autocrop</u></b><br>Automatically crops same-colour borders from the image.<br><br><u>Autocrop tolerance</u><br>A percentage value for the tolerance of colour difference between pixels.<br><br><u>Only autocrop frames</u><br>Only crop real frames (all sides must have the same border)<br><br><u>Symmetric autocrop</u><br>Force autocrop to be symmetric (top/bottom and left/right are cropped by the same amount)<br><br><u>Autocrop keep border</u><br>The number of pixels of border to leave around the image.";
         this.infoURL = "https://wikipedia.org/wiki/Cropping_(image)";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -104,11 +104,10 @@ class CropImage extends Operation {
             throw new OperationError(`Error loading image. (${err})`);
         }
         try {
-            if (isWorkerEnvironment())
-                self.sendStatusMessage("Cropping image...");
+            if (isWorkerEnvironment()) self.sendStatusMessage("Cropping image...");
             if (autocrop) {
                 image.autocrop({
-                    tolerance: (autoTolerance / 100),
+                    tolerance: autoTolerance / 100,
                     cropOnlyFrames: autoFrames,
                     cropSymmetric: autoSymmetric,
                     leaveBorder: autoBorder
@@ -145,7 +144,6 @@ class CropImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default CropImage;

@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Remove null bytes operation
  */
 class RemoveNullBytes extends Operation {
-
     /**
      * RemoveNullBytes constructor
      */
@@ -38,7 +37,6 @@ class RemoveNullBytes extends Operation {
         }
         return output;
     }
-
 }
 
 export default RemoveNullBytes;

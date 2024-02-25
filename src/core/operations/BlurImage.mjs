@@ -16,7 +16,6 @@ import jimp from "jimp";
  * Blur Image operation
  */
 class BlurImage extends Operation {
-
     /**
      * BlurImage constructor
      */
@@ -25,7 +24,8 @@ class BlurImage extends Operation {
 
         this.name = "Blur Image";
         this.module = "Image";
-        this.description = "Applies a blur effect to the image.<br><br>Gaussian blur is much slower than fast blur, but produces better results.";
+        this.description
+            = "Applies a blur effect to the image.<br><br>Gaussian blur is much slower than fast blur, but produces better results.";
         this.infoURL = "https://wikipedia.org/wiki/Gaussian_blur";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -66,13 +66,11 @@ class BlurImage extends Operation {
         try {
             switch (blurType) {
                 case "Fast":
-                    if (isWorkerEnvironment())
-                        self.sendStatusMessage("Fast blurring image...");
+                    if (isWorkerEnvironment()) self.sendStatusMessage("Fast blurring image...");
                     image.blur(blurAmount);
                     break;
                 case "Gaussian":
-                    if (isWorkerEnvironment())
-                        self.sendStatusMessage("Gaussian blurring image...");
+                    if (isWorkerEnvironment()) self.sendStatusMessage("Gaussian blurring image...");
                     image = gaussianBlur(image, blurAmount);
                     break;
             }
@@ -106,7 +104,6 @@ class BlurImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default BlurImage;

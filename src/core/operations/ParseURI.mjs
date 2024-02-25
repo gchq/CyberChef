@@ -11,7 +11,6 @@ import url from "url";
  * Parse URI operation
  */
 class ParseURI extends Operation {
-
     /**
      * ParseURI constructor
      */
@@ -20,7 +19,8 @@ class ParseURI extends Operation {
 
         this.name = "Parse URI";
         this.module = "URL";
-        this.description = "Pretty prints complicated Uniform Resource Identifier (URI) strings for ease of reading. Particularly useful for Uniform Resource Locators (URLs) with a lot of arguments.";
+        this.description
+            = "Pretty prints complicated Uniform Resource Identifier (URI) strings for ease of reading. Particularly useful for Uniform Resource Locators (URLs) with a lot of arguments.";
         this.infoURL = "https://wikipedia.org/wiki/Uniform_Resource_Identifier";
         this.inputType = "string";
         this.outputType = "string";
@@ -46,8 +46,8 @@ class ParseURI extends Operation {
             const keys = Object.keys(uri.query);
             let padding = 0;
 
-            keys.forEach(k => {
-                padding = (k.length > padding) ? k.length : padding;
+            keys.forEach((k) => {
+                padding = k.length > padding ? k.length : padding;
             });
 
             output += "Arguments:\n";
@@ -64,7 +64,6 @@ class ParseURI extends Operation {
 
         return output;
     }
-
 }
 
 export default ParseURI;

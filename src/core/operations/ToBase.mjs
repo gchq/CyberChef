@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * To Base operation
  */
 class ToBase extends Operation {
-
     /**
      * ToBase constructor
      */
@@ -48,7 +47,6 @@ class ToBase extends Operation {
         }
         return input.toString(radix);
     }
-
 }
 
 export default ToBase;

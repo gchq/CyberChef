@@ -13,7 +13,6 @@ import { BombeMachine } from "../lib/Bombe.mjs";
 import { ROTORS, ROTORS_FOURTH, REFLECTORS, Reflector } from "../lib/Enigma.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
 
-
 /**
  * Convenience method for flattening the preset ROTORS object into a newline-separated string.
  * @param {Object[]} - Preset rotors object
@@ -37,7 +36,7 @@ function rotorsFormat(rotors, s, n) {
  */
 function choose(n, k) {
     let res = 1;
-    for (let i=1; i<=k; i++) {
+    for (let i = 1; i <= k; i++) {
         res *= (n + 1 - i) / i;
     }
     return res;
@@ -55,7 +54,8 @@ class MultipleBombe extends Operation {
 
         this.name = "Multiple Bombe";
         this.module = "Bletchley";
-        this.description = "Emulation of the Bombe machine used to attack Enigma. This version carries out multiple Bombe runs to handle unknown rotor configurations.<br><br>You should test your menu on the single Bombe operation before running it here. See the description of the Bombe operation for instructions on choosing a crib.<br><br>More detailed descriptions of the Enigma, Typex and Bombe operations <a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>can be found here</a>.";
+        this.description
+            = "Emulation of the Bombe machine used to attack Enigma. This version carries out multiple Bombe runs to handle unknown rotor configurations.<br><br>You should test your menu on the single Bombe operation before running it here. See the description of the Bombe operation for instructions on choosing a crib.<br><br>More detailed descriptions of the Enigma, Typex and Bombe operations <a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>can be found here</a>.";
         this.infoURL = "https://wikipedia.org/wiki/Bombe";
         this.inputType = "string";
         this.outputType = "JSON";
@@ -67,19 +67,11 @@ class MultipleBombe extends Operation {
                 "value": [
                     {
                         name: "German Service Enigma (First - 3 rotor)",
-                        value: [
-                            rotorsFormat(ROTORS, 0, 5),
-                            "",
-                            rotorsFormat(REFLECTORS, 0, 1)
-                        ]
+                        value: [rotorsFormat(ROTORS, 0, 5), "", rotorsFormat(REFLECTORS, 0, 1)]
                     },
                     {
                         name: "German Service Enigma (Second - 3 rotor)",
-                        value: [
-                            rotorsFormat(ROTORS, 0, 8),
-                            "",
-                            rotorsFormat(REFLECTORS, 0, 2)
-                        ]
+                        value: [rotorsFormat(ROTORS, 0, 8), "", rotorsFormat(REFLECTORS, 0, 2)]
                     },
                     {
                         name: "German Service Enigma (Third - 4 rotor)",
@@ -100,7 +92,7 @@ class MultipleBombe extends Operation {
                     {
                         name: "User defined",
                         value: ["", "", ""]
-                    },
+                    }
                 ],
                 "target": [1, 2, 3]
             },
@@ -145,7 +137,7 @@ class MultipleBombe extends Operation {
      */
     updateStatus(nLoops, nStops, progress, start) {
         const elapsed = Date.now() - start;
-        const remaining = (elapsed / progress) * (1 - progress) / 1000;
+        const remaining = ((elapsed / progress) * (1 - progress)) / 1000;
         const hours = Math.floor(remaining / 3600);
         const minutes = `0${Math.floor((remaining % 3600) / 60)}`.slice(-2);
         const seconds = `0${Math.floor(remaining % 60)}`.slice(-2);
@@ -230,7 +222,7 @@ class MultipleBombe extends Operation {
             update = undefined;
         }
         let bombe = undefined;
-        const output = {bombeRuns: []};
+        const output = { bombeRuns: [] };
         // I could use a proper combinatorics algorithm here... but it would be more code to
         // write one, and we don't seem to have one in our existing libraries, so massively nested
         // for loop it is
@@ -280,7 +272,6 @@ class MultipleBombe extends Operation {
         return output;
     }
 
-
     /**
      * Displays the MultiBombe results in an HTML table
      *
@@ -294,7 +285,8 @@ class MultipleBombe extends Operation {
 
         for (const run of output.bombeRuns) {
             html += `\nRotors: ${run.rotors.slice().reverse().join(", ")}\nReflector: ${run.reflector}\n`;
-            html += "<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Rotor stops</th>  <th>Partial plugboard</th>  <th>Decryption preview</th></tr>\n";
+            html
+                += "<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Rotor stops</th>  <th>Partial plugboard</th>  <th>Decryption preview</th></tr>\n";
             for (const [setting, stecker, decrypt] of run.result) {
                 html += `<tr><td>${setting}</td>  <td>${stecker}</td>  <td>${decrypt}</td></tr>\n`;
             }

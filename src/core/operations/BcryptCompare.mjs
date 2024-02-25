@@ -8,12 +8,10 @@ import Operation from "../Operation.mjs";
 import bcrypt from "bcryptjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
 
-
 /**
  * Bcrypt compare operation
  */
 class BcryptCompare extends Operation {
-
     /**
      * BcryptCompare constructor
      */
@@ -22,7 +20,8 @@ class BcryptCompare extends Operation {
 
         this.name = "Bcrypt compare";
         this.module = "Crypto";
-        this.description = "Tests whether the input matches the given bcrypt hash. To test multiple possible passwords, use the 'Fork' operation.";
+        this.description
+            = "Tests whether the input matches the given bcrypt hash. To test multiple possible passwords, use the 'Fork' operation.";
         this.infoURL = "https://wikipedia.org/wiki/Bcrypt";
         this.inputType = "string";
         this.outputType = "string";
@@ -43,16 +42,13 @@ class BcryptCompare extends Operation {
     async run(input, args) {
         const hash = args[0];
 
-        const match = await bcrypt.compare(input, hash, null, p => {
+        const match = await bcrypt.compare(input, hash, null, (p) => {
             // Progress callback
-            if (isWorkerEnvironment())
-                self.sendStatusMessage(`Progress: ${(p * 100).toFixed(0)}%`);
+            if (isWorkerEnvironment()) self.sendStatusMessage(`Progress: ${(p * 100).toFixed(0)}%`);
         });
 
         return match ? "Match: " + input : "No match";
-
     }
-
 }
 
 export default BcryptCompare;

@@ -22,7 +22,9 @@ TestRegister.addTests([
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTMESSAGE", 0, false
+                    "THISISATESTMESSAGE",
+                    0,
+                    false
                 ]
             }
         ]
@@ -42,7 +44,9 @@ TestRegister.addTests([
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTMESSAGE", 0, false
+                    "THISISATESTMESSAGE",
+                    0,
+                    false
                 ]
             }
         ]
@@ -61,7 +65,9 @@ TestRegister.addTests([
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTMESSAGE", 3, false
+                    "THISISATESTMESSAGE",
+                    3,
+                    false
                 ]
             }
         ]
@@ -80,7 +86,9 @@ TestRegister.addTests([
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTM", 0, false
+                    "THISISATESTM",
+                    0,
+                    false
                 ]
             }
         ]
@@ -99,7 +107,9 @@ TestRegister.addTests([
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTM", 0, true
+                    "THISISATESTM",
+                    0,
+                    true
                 ]
             }
         ]
@@ -138,7 +148,9 @@ TestRegister.addTests([
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "", 0, false
+                    "",
+                    0,
+                    false
                 ]
             }
         ]
@@ -157,7 +169,9 @@ TestRegister.addTests([
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "A", 0, false
+                    "A",
+                    0,
+                    false
                 ]
             }
         ]
@@ -176,7 +190,9 @@ TestRegister.addTests([
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "AAAAAAAA", 0, false
+                    "AAAAAAAA",
+                    0,
+                    false
                 ]
             }
         ]
@@ -195,7 +211,9 @@ TestRegister.addTests([
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "CCCCCCCCCCCCCCCCCCCCCC", 0, false
+                    "CCCCCCCCCCCCCCCCCCCCCC",
+                    0,
+                    false
                 ]
             }
         ]
@@ -214,7 +232,9 @@ TestRegister.addTests([
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "AAAAAAAAAAAAAAAAAAAAAAAAAA", 0, false
+                    "AAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    0,
+                    false
                 ]
             }
         ]
@@ -233,10 +253,12 @@ TestRegister.addTests([
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "BBBBB", -1, false
+                    "BBBBB",
+                    -1,
+                    false
                 ]
             }
         ]
-    },
+    }
     // Enigma tests cover validation of rotors and reflector
 ]);

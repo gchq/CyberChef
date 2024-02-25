@@ -30,7 +30,7 @@ export async function parseQrCode(input, normalise) {
     try {
         if (normalise) {
             image.rgba(false);
-            image.background(0xFFFFFFFF);
+            image.background(0xffffffff);
             image.normalize();
             image.greyscale();
             image = await image.getBufferAsync(jimp.MIME_JPEG);

@@ -12,7 +12,6 @@ import BSON from "bson";
  * Parse ObjectID timestamp operation
  */
 class ParseObjectIDTimestamp extends Operation {
-
     /**
      * ParseObjectIDTimestamp constructor
      */
@@ -41,7 +40,6 @@ class ParseObjectIDTimestamp extends Operation {
             throw new OperationError(err);
         }
     }
-
 }
 
 export default ParseObjectIDTimestamp;

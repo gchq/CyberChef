@@ -14,7 +14,6 @@ import { CryptoGost, GostEngine } from "@wavesenterprise/crypto-gost-js/index.js
  * GOST Key Unwrap operation
  */
 class GOSTKeyUnwrap extends Operation {
-
     /**
      * GOSTKeyUnwrap constructor
      */
@@ -123,7 +122,6 @@ class GOSTKeyUnwrap extends Operation {
             throw new OperationError(err);
         }
     }
-
 }
 
 export default GOSTKeyUnwrap;

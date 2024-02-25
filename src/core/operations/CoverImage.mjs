@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Cover Image operation
  */
 class CoverImage extends Operation {
-
     /**
      * CoverImage constructor
      */
@@ -24,7 +23,8 @@ class CoverImage extends Operation {
 
         this.name = "Cover Image";
         this.module = "Image";
-        this.description = "Scales the image to the given width and height, keeping the aspect ratio. The image may be clipped.";
+        this.description
+            = "Scales the image to the given width and height, keeping the aspect ratio. The image may be clipped.";
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -45,33 +45,19 @@ class CoverImage extends Operation {
             {
                 name: "Horizontal align",
                 type: "option",
-                value: [
-                    "Left",
-                    "Center",
-                    "Right"
-                ],
+                value: ["Left", "Center", "Right"],
                 defaultIndex: 1
             },
             {
                 name: "Vertical align",
                 type: "option",
-                value: [
-                    "Top",
-                    "Middle",
-                    "Bottom"
-                ],
+                value: ["Top", "Middle", "Bottom"],
                 defaultIndex: 1
             },
             {
                 name: "Resizing algorithm",
                 type: "option",
-                value: [
-                    "Nearest Neighbour",
-                    "Bilinear",
-                    "Bicubic",
-                    "Hermite",
-                    "Bezier"
-                ],
+                value: ["Nearest Neighbour", "Bilinear", "Bicubic", "Hermite", "Bezier"],
                 defaultIndex: 1
             }
         ];
@@ -113,8 +99,7 @@ class CoverImage extends Operation {
             throw new OperationError(`Error loading image. (${err})`);
         }
         try {
-            if (isWorkerEnvironment())
-                self.sendStatusMessage("Covering image...");
+            if (isWorkerEnvironment()) self.sendStatusMessage("Covering image...");
             image.cover(width, height, alignMap[hAlign] | alignMap[vAlign], resizeMap[alg]);
             let imageBuffer;
             if (image.getMIME() === "image/gif") {
@@ -144,7 +129,6 @@ class CoverImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default CoverImage;

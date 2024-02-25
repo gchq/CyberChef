@@ -12,7 +12,6 @@ import { hexadecimalSort } from "../lib/Sort.mjs";
  * Extract MAC addresses operation
  */
 class ExtractMACAddresses extends Operation {
-
     /**
      * ExtractMACAddresses constructor
      */
@@ -50,14 +49,8 @@ class ExtractMACAddresses extends Operation {
      */
     run(input, args) {
         const [displayTotal, sort, unique] = args,
-            regex = /[A-F\d]{2}(?:[:-][A-F\d]{2}){5}/ig,
-            results = search(
-                input,
-                regex,
-                null,
-                sort ? hexadecimalSort : null,
-                unique
-            );
+            regex = /[A-F\d]{2}(?:[:-][A-F\d]{2}){5}/gi,
+            results = search(input, regex, null, sort ? hexadecimalSort : null, unique);
 
         if (displayTotal) {
             return `Total found: ${results.length}\n\n${results.join("\n")}`;
@@ -65,7 +58,6 @@ class ExtractMACAddresses extends Operation {
             return results.join("\n");
         }
     }
-
 }
 
 export default ExtractMACAddresses;

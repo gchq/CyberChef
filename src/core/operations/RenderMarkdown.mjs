@@ -12,7 +12,6 @@ import hljs from "highlight.js";
  * Render Markdown operation
  */
 class RenderMarkdown extends Operation {
-
     /**
      * RenderMarkdown constructor
      */
@@ -49,7 +48,7 @@ class RenderMarkdown extends Operation {
             md = new MarkdownIt({
                 linkify: convertLinks,
                 html: false, // Explicitly disable HTML rendering
-                highlight: function(str, lang) {
+                highlight: function (str, lang) {
                     if (lang && hljs.getLanguage(lang) && enableHighlighting) {
                         try {
                             return hljs.highlight(lang, str).value;
@@ -63,7 +62,6 @@ class RenderMarkdown extends Operation {
 
         return `<div style="font-family: var(--primary-font-family)">${rendered}</div>`;
     }
-
 }
 
 export default RenderMarkdown;

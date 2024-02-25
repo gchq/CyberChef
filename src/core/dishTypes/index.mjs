@@ -4,7 +4,6 @@
  * @license Apache-2.0
  */
 
-
 import DishByteArray from "./DishByteArray.mjs";
 import DishBigNumber from "./DishBigNumber.mjs";
 import DishFile from "./DishFile.mjs";
@@ -14,13 +13,4 @@ import DishListFile from "./DishListFile.mjs";
 import DishNumber from "./DishNumber.mjs";
 import DishString from "./DishString.mjs";
 
-export {
-    DishByteArray,
-    DishBigNumber,
-    DishFile,
-    DishHTML,
-    DishJSON,
-    DishListFile,
-    DishNumber,
-    DishString,
-};
+export { DishByteArray, DishBigNumber, DishFile, DishHTML, DishJSON, DishListFile, DishNumber, DishString };

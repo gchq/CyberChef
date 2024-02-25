@@ -1,32 +1,29 @@
 {
-  "src_folders": ["tests/browser"],
-  "exclude": ["tests/browser/browserUtils.js"],
-  "output_folder": "tests/browser/output",
+    "src_folders": ["tests/browser"],
+    "exclude": ["tests/browser/browserUtils.js"],
+    "output_folder": "tests/browser/output",
 
-  "test_settings": {
+    "test_settings": {
+        "default": {
+            "launch_url": "http://localhost:8080",
+            "webdriver": {
+                "start_process": true,
+                "server_path": "./node_modules/.bin/chromedriver",
+                "port": 9515,
+                "log_path": "tests/browser/output"
+            },
+            "desiredCapabilities": {
+                "browserName": "chrome"
+            },
+            "enable_fail_fast": true
+        },
 
-    "default": {
-      "launch_url": "http://localhost:8080",
-      "webdriver": {
-        "start_process": true,
-        "server_path": "./node_modules/.bin/chromedriver",
-        "port": 9515,
-        "log_path": "tests/browser/output"
-      },
-      "desiredCapabilities": {
-        "browserName": "chrome"
-      },
-      "enable_fail_fast": true
-    },
+        "dev": {
+            "launch_url": "http://localhost:8080"
+        },
 
-    "dev": {
-      "launch_url": "http://localhost:8080"
-    },
-
-    "prod": {
-      "launch_url": "http://localhost:8000/index.html"
+        "prod": {
+            "launch_url": "http://localhost:8000/index.html"
+        }
     }
-
-  }
 }
-

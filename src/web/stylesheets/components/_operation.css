@@ -83,8 +83,8 @@ input.toggle-string {
     height: 42px !important;
 }
 
-.operation [class^='bmd-label'],
-.operation [class*=' bmd-label'] {
+.operation [class^="bmd-label"],
+.operation [class*=" bmd-label"] {
     top: 13px !important;
     left: 12px;
     z-index: 10;
@@ -95,47 +95,53 @@ input.toggle-string {
     color: var(--arg-label-colour);
 }
 
-.operation .is-focused [class^='bmd-label'],
-.operation .is-focused [class*=' bmd-label'],
-.operation .is-focused [class^='bmd-label'],
-.operation .is-focused [class*=' bmd-label'],
+.operation .is-focused [class^="bmd-label"],
+.operation .is-focused [class*=" bmd-label"],
+.operation .is-focused [class^="bmd-label"],
+.operation .is-focused [class*=" bmd-label"],
 .operation .is-focused label,
 .operation .checkbox label:hover {
     color: var(--input-highlight-colour);
 }
 
-.ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
-.ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before {
+.ingredients .checkbox label input[type="checkbox"] + .checkbox-decorator .check,
+.ingredients .checkbox label input[type="checkbox"] + .checkbox-decorator .check::before {
     border-color: var(--input-border-colour);
     color: var(--input-highlight-colour);
 }
 
-.ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
-.ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
+.ingredients .checkbox label input[type="checkbox"]:checked + .checkbox-decorator .check,
+.ingredients .checkbox label input[type="checkbox"]:checked + .checkbox-decorator .check::before {
     border-color: var(--input-highlight-colour);
     color: var(--input-highlight-colour);
 }
 
-.disabled .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
-.disabled .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before,
-.disabled .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
-.disabled .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
+.disabled .ingredients .checkbox label input[type="checkbox"] + .checkbox-decorator .check,
+.disabled .ingredients .checkbox label input[type="checkbox"] + .checkbox-decorator .check::before,
+.disabled .ingredients .checkbox label input[type="checkbox"]:checked + .checkbox-decorator .check,
+.disabled .ingredients .checkbox label input[type="checkbox"]:checked + .checkbox-decorator .check::before {
     border-color: var(--disabled-font-colour);
     color: var(--disabled-font-colour);
 }
 
-.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
-.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before,
-.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
-.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
+.break .ingredients .checkbox label input[type="checkbox"] + .checkbox-decorator .check,
+.break .ingredients .checkbox label input[type="checkbox"] + .checkbox-decorator .check::before,
+.break .ingredients .checkbox label input[type="checkbox"]:checked + .checkbox-decorator .check,
+.break .ingredients .checkbox label input[type="checkbox"]:checked + .checkbox-decorator .check::before {
     border-color: var(--breakpoint-font-colour);
     color: var(--breakpoint-font-colour);
 }
 
-.flow-control-op.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check,
-.flow-control-op.break .ingredients .checkbox label input[type=checkbox]+.checkbox-decorator .check::before,
-.flow-control-op.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
-.flow-control-op.break .ingredients .checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
+.flow-control-op.break .ingredients .checkbox label input[type="checkbox"] + .checkbox-decorator .check,
+.flow-control-op.break .ingredients .checkbox label input[type="checkbox"] + .checkbox-decorator .check::before,
+.flow-control-op.break .ingredients .checkbox label input[type="checkbox"]:checked + .checkbox-decorator .check,
+.flow-control-op.break
+    .ingredients
+    .checkbox
+    label
+    input[type="checkbox"]:checked
+    + .checkbox-decorator
+    .check::before {
     border-color: var(--fc-breakpoint-operation-font-colour);
     color: var(--fc-breakpoint-operation-font-colour);
 }
@@ -151,16 +157,14 @@ input.toggle-string {
 }
 
 .operation .form-control:hover {
-    background-image:
-        linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(25, 118, 210, 0) 2px),
+    background-image: linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(25, 118, 210, 0) 2px),
         linear-gradient(to top, rgba(0, 0, 0, 0.26) 1px, rgba(0, 0, 0, 0) 1px);
     filter: brightness(97%);
 }
 
 .operation .form-control:focus {
     background-color: var(--arg-background);
-    background-image:
-        linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(25, 118, 210, 0) 2px),
+    background-image: linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(25, 118, 210, 0) 2px),
         linear-gradient(to top, rgba(0, 0, 0, 0.26) 1px, rgba(0, 0, 0, 0) 1px);
     filter: brightness(100%);
 }
@@ -277,7 +281,9 @@ input.toggle-string {
     border-color: var(--breakpoint-border-colour) !important;
 }
 
-.break .form-group * { color: var(--breakpoint-font-colour) !important; }
+.break .form-group * {
+    color: var(--breakpoint-font-colour) !important;
+}
 
 .selected-op {
     color: var(--selected-operation-font-color) !important;
@@ -285,7 +291,9 @@ input.toggle-string {
     border-color: var(--selected-operation-border-colour) !important;
 }
 
-.selected-op .form-group * { color: var(--selected-operation-font-color) !important; }
+.selected-op .form-group * {
+    color: var(--selected-operation-font-color) !important;
+}
 
 .flow-control-op {
     color: var(--fc-operation-font-colour) !important;
@@ -293,7 +301,9 @@ input.toggle-string {
     border-color: var(--fc-operation-border-colour) !important;
 }
 
-.flow-control-op .form-group *:not(.arg) { color: var(--fc-operation-font-colour) }
+.flow-control-op .form-group *:not(.arg) {
+    color: var(--fc-operation-font-colour);
+}
 
 .flow-control-op.break {
     color: var(--fc-breakpoint-operation-font-colour) !important;
@@ -301,7 +311,9 @@ input.toggle-string {
     border-color: var(--fc-breakpoint-operation-border-colour) !important;
 }
 
-.flow-control-op.break .form-group * { color: var(--fc-breakpoint-operation-font-colour) !important; }
+.flow-control-op.break .form-group * {
+    color: var(--fc-breakpoint-operation-font-colour) !important;
+}
 
 .disabled {
     color: var(--disabled-font-colour) !important;
@@ -309,7 +321,9 @@ input.toggle-string {
     border-color: var(--disabled-border-colour) !important;
 }
 
-.disabled .form-group * { color: var(--disabled-font-colour) !important; }
+.disabled .form-group * {
+    color: var(--disabled-font-colour) !important;
+}
 
 .break .register-list {
     color: var(--fc-breakpoint-operation-font-colour) !important;

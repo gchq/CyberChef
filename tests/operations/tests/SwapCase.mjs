@@ -13,10 +13,9 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Swap case",
-                "args": [
-                ],
-            },
-        ],
+                "args": []
+            }
+        ]
     },
     {
         "name": "Swap Case: empty input",
@@ -25,9 +24,8 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Swap case",
-                "args": [
-                ],
-            },
-        ],
-    },
+                "args": []
+            }
+        ]
+    }
 ]);

@@ -14,7 +14,6 @@ import OperationError from "../errors/OperationError.mjs";
  * From Charcode operation
  */
 class FromCharcode extends Operation {
-
     /**
      * FromCharcode constructor
      */
@@ -23,7 +22,8 @@ class FromCharcode extends Operation {
 
         this.name = "From Charcode";
         this.module = "Default";
-        this.description = "Converts unicode character codes back into text.<br><br>e.g. <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code> becomes <code>Γειά σου</code>";
+        this.description
+            = "Converts unicode character codes back into text.<br><br>e.g. <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code> becomes <code>Γειά σου</code>";
         this.infoURL = "https://wikipedia.org/wiki/Plane_(Unicode)";
         this.inputType = "string";
         this.outputType = "ArrayBuffer";
@@ -59,7 +59,7 @@ class FromCharcode extends Operation {
         }
 
         if (input.length === 0) {
-            return new ArrayBuffer;
+            return new ArrayBuffer();
         }
 
         if (base !== 16 && isWorkerEnvironment()) self.setOption("attemptHighlight", false);
@@ -69,7 +69,7 @@ class FromCharcode extends Operation {
         if (bites.length === 1 && input.length > 17) {
             bites = [];
             for (i = 0; i < input.length; i += 2) {
-                bites.push(input.slice(i, i+2));
+                bites.push(input.slice(i, i + 2));
             }
         }
 
@@ -79,7 +79,6 @@ class FromCharcode extends Operation {
         }
         return Utils.strToArrayBuffer(latin1);
     }
-
 }
 
 export default FromCharcode;

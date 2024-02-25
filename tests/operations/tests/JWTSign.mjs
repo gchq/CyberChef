@@ -8,11 +8,15 @@
  */
 import TestRegister from "../../lib/TestRegister.mjs";
 
-const inputObject = JSON.stringify({
-    String: "SomeString",
-    Number: 42,
-    iat: 1
-}, null, 4);
+const inputObject = JSON.stringify(
+    {
+        String: "SomeString",
+        Number: 42,
+        iat: 1
+    },
+    null,
+    4
+);
 
 const hsKey = "secret_cat";
 const rsKey = `-----BEGIN RSA PRIVATE KEY-----
@@ -40,35 +44,38 @@ TestRegister.addTests([
     {
         name: "JWT Sign: HS256",
         input: inputObject,
-        expectedOutput: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.0ha6-j4FwvEIKPVZ-hf3S_R9Hy_UtXzq4dnedXcUrXk",
+        expectedOutput:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.0ha6-j4FwvEIKPVZ-hf3S_R9Hy_UtXzq4dnedXcUrXk",
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [hsKey, "HS256"],
+                args: [hsKey, "HS256"]
             }
-        ],
+        ]
     },
     {
         name: "JWT Sign: HS384",
         input: inputObject,
-        expectedOutput: "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ._bPK-Y3mIACConbJqkGFMQ_L3vbxgKXy9gSxtL9hA5XTganozTSXxD0vX0N1yT5s",
+        expectedOutput:
+            "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ._bPK-Y3mIACConbJqkGFMQ_L3vbxgKXy9gSxtL9hA5XTganozTSXxD0vX0N1yT5s",
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [hsKey, "HS384"],
+                args: [hsKey, "HS384"]
             }
-        ],
+        ]
     },
     {
         name: "JWT Sign: HS512",
         input: inputObject,
-        expectedOutput: "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.vZIJU4XYMFt3FLE1V_RZOxEetmV4RvxtPZQGzJthK_d47pjwlEb6pQE23YxHFmOj8H5RLEdqqLPw4jNsOyHRzA",
+        expectedOutput:
+            "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.vZIJU4XYMFt3FLE1V_RZOxEetmV4RvxtPZQGzJthK_d47pjwlEb6pQE23YxHFmOj8H5RLEdqqLPw4jNsOyHRzA",
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [hsKey, "HS512"],
+                args: [hsKey, "HS512"]
             }
-        ],
+        ]
     },
     {
         name: "JWT Sign: ES256",
@@ -77,13 +84,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [esKey, "ES256"],
+                args: [esKey, "ES256"]
             },
             {
                 op: "JWT Decode",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "JWT Sign: ES384",
@@ -92,13 +99,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [esKey, "ES384"],
+                args: [esKey, "ES384"]
             },
             {
                 op: "JWT Decode",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "JWT Sign: ES512",
@@ -107,13 +114,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [esKey, "ES512"],
+                args: [esKey, "ES512"]
             },
             {
                 op: "JWT Decode",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "JWT Sign: RS256",
@@ -122,13 +129,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [rsKey, "RS256"],
+                args: [rsKey, "RS256"]
             },
             {
                 op: "JWT Decode",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "JWT Sign: RS384",
@@ -137,13 +144,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [rsKey, "RS384"],
+                args: [rsKey, "RS384"]
             },
             {
                 op: "JWT Decode",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "JWT Sign: RS512",
@@ -152,12 +159,12 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [esKey, "RS512"],
+                args: [esKey, "RS512"]
             },
             {
                 op: "JWT Decode",
                 args: []
             }
-        ],
+        ]
     }
 ]);

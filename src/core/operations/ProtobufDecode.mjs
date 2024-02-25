@@ -12,7 +12,6 @@ import Protobuf from "../lib/Protobuf.mjs";
  * Protobuf Decode operation
  */
 class ProtobufDecode extends Operation {
-
     /**
      * ProtobufDecode constructor
      */
@@ -21,7 +20,8 @@ class ProtobufDecode extends Operation {
 
         this.name = "Protobuf Decode";
         this.module = "Protobuf";
-        this.description = "Decodes any Protobuf encoded data to a JSON representation of the data using the field number as the field key.<br><br>If a .proto schema is defined, the encoded data will be decoded with reference to the schema. Only one message instance will be decoded. <br><br><u>Show Unknown Fields</u><br>When a schema is used, this option shows fields that are present in the input data but not defined in the schema.<br><br><u>Show Types</u><br>Show the type of a field next to its name. For undefined fields, the wiretype and example types are shown instead.";
+        this.description
+            = "Decodes any Protobuf encoded data to a JSON representation of the data using the field number as the field key.<br><br>If a .proto schema is defined, the encoded data will be decoded with reference to the schema. Only one message instance will be decoded. <br><br><u>Show Unknown Fields</u><br>When a schema is used, this option shows fields that are present in the input data but not defined in the schema.<br><br><u>Show Types</u><br>Show the type of a field next to its name. For undefined fields, the wiretype and example types are shown instead.";
         this.infoURL = "https://wikipedia.org/wiki/Protocol_Buffers";
         this.inputType = "ArrayBuffer";
         this.outputType = "JSON";
@@ -59,7 +59,6 @@ class ProtobufDecode extends Operation {
             throw new OperationError(err);
         }
     }
-
 }
 
 export default ProtobufDecode;

@@ -12,7 +12,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Offset checker operation
  */
 class OffsetChecker extends Operation {
-
     /**
      * OffsetChecker constructor
      */
@@ -21,7 +20,8 @@ class OffsetChecker extends Operation {
 
         this.name = "Offset checker";
         this.module = "Default";
-        this.description = "Compares multiple inputs (separated by the specified delimiter) and highlights matching characters which appear at the same position in all samples.";
+        this.description
+            = "Compares multiple inputs (separated by the specified delimiter) and highlights matching characters which appear at the same position in all samples.";
         this.inputType = "string";
         this.outputType = "html";
         this.args = [
@@ -49,7 +49,9 @@ class OffsetChecker extends Operation {
             chr;
 
         if (!samples || samples.length < 2) {
-            throw new OperationError("Not enough samples, perhaps you need to modify the sample delimiter or add more data?");
+            throw new OperationError(
+                "Not enough samples, perhaps you need to modify the sample delimiter or add more data?"
+            );
         }
 
         // Initialise output strings
@@ -101,7 +103,6 @@ class OffsetChecker extends Operation {
 
         return outputs.join(sampleDelim);
     }
-
 }
 
 export default OffsetChecker;

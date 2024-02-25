@@ -14,7 +14,6 @@ import BigNumber from "bignumber.js";
  * Mean operation
  */
 class Mean extends Operation {
-
     /**
      * Mean constructor
      */
@@ -23,7 +22,8 @@ class Mean extends Operation {
 
         this.name = "Mean";
         this.module = "Default";
-        this.description = "Computes the mean (average) of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5 .5</code> becomes <code>4.75</code>";
+        this.description
+            = "Computes the mean (average) of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5 .5</code> becomes <code>4.75</code>";
         this.infoURL = "https://wikipedia.org/wiki/Arithmetic_mean";
         this.inputType = "string";
         this.outputType = "BigNumber";
@@ -31,7 +31,7 @@ class Mean extends Operation {
             {
                 "name": "Delimiter",
                 "type": "option",
-                "value": ARITHMETIC_DELIM_OPTIONS,
+                "value": ARITHMETIC_DELIM_OPTIONS
             }
         ];
     }
@@ -45,7 +45,6 @@ class Mean extends Operation {
         const val = mean(createNumArray(input, args[0]));
         return BigNumber.isBigNumber(val) ? val : new BigNumber(NaN);
     }
-
 }
 
 export default Mean;

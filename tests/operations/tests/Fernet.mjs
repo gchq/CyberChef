@@ -17,7 +17,7 @@ TestRegister.addTests([
                 op: "Fernet Decrypt",
                 args: ["MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="]
             }
-        ],
+        ]
     },
     {
         name: "Fernet Decrypt: no secret",
@@ -28,7 +28,7 @@ TestRegister.addTests([
                 op: "Fernet Decrypt",
                 args: [""]
             }
-        ],
+        ]
     },
     {
         name: "Fernet Decrypt: valid arguments",
@@ -39,7 +39,7 @@ TestRegister.addTests([
                 op: "Fernet Decrypt",
                 args: ["VGhpc0lzVGhpcnR5VHdvQ2hhcmFjdGVyc0xvbmdLZXk="]
             }
-        ],
+        ]
     }
 ]);
 
@@ -53,7 +53,7 @@ TestRegister.addTests([
                 op: "Fernet Encrypt",
                 args: ["MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="]
             }
-        ],
+        ]
     },
     {
         name: "Fernet Encrypt: no secret",
@@ -64,7 +64,7 @@ TestRegister.addTests([
                 op: "Fernet Encrypt",
                 args: [""]
             }
-        ],
+        ]
     },
     {
         name: "Fernet Encrypt: valid arguments",
@@ -75,6 +75,6 @@ TestRegister.addTests([
                 op: "Fernet Encrypt",
                 args: ["MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="]
             }
-        ],
+        ]
     }
 ]);

@@ -14,7 +14,6 @@ import { CryptoGost, GostEngine } from "@wavesenterprise/crypto-gost-js/index.js
  * GOST Sign operation
  */
 class GOSTSign extends Operation {
-
     /**
      * GOSTSign constructor
      */
@@ -123,7 +122,6 @@ class GOSTSign extends Operation {
             throw new OperationError(err);
         }
     }
-
 }
 
 export default GOSTSign;

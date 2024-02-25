@@ -8,7 +8,6 @@
  * @license Apache-2.0
  */
 
-
 /**
  * Helper function to convert a status to an icon.
  *
@@ -16,11 +15,13 @@
  * @returns {string}
  */
 function statusToIcon(status) {
-    return {
-        erroring: "🔥",
-        failing: "❌",
-        passing: "✔️️",
-    }[status] || "?";
+    return (
+        {
+            erroring: "🔥",
+            failing: "❌",
+            passing: "✔️️"
+        }[status] || "?"
+    );
 }
 
 /**
@@ -46,7 +47,7 @@ function handleTestResult(testStatus, testResult) {
  * @param {Object[]} results - results from TestRegister
  */
 export function logTestReport(testStatus, results) {
-    results.forEach(r => handleTestResult(testStatus, r));
+    results.forEach((r) => handleTestResult(testStatus, r));
 
     console.log();
     for (const testStatusCount in testStatus.counts) {
@@ -58,21 +59,15 @@ export function logTestReport(testStatus, results) {
     console.log();
 
     // Print error messages for tests that didn't pass
-    results.filter(res => res.status !== "passing").forEach(testResult => {
-        console.log([
-            statusToIcon(testResult.status),
-            testResult.test.name
-        ].join("  "));
+    results
+        .filter((res) => res.status !== "passing")
+        .forEach((testResult) => {
+            console.log([statusToIcon(testResult.status), testResult.test.name].join("  "));
 
-        if (testResult.output) {
-            console.log(
-                testResult.output
-                    .trim()
-                    .replace(/^/, "\t")
-                    .replace(/\n/g, "\n\t")
-            );
-        }
-    });
+            if (testResult.output) {
+                console.log(testResult.output.trim().replace(/^/, "\t").replace(/\n/g, "\n\t"));
+            }
+        });
     console.log();
 
     process.exit(testStatus.allTestsPassing ? 0 : 1);
@@ -83,7 +78,7 @@ export function logTestReport(testStatus, results) {
  */
 export function setLongTestFailure() {
     const timeLimit = 120;
-    setTimeout(function() {
+    setTimeout(function () {
         console.log(`Tests took longer than ${timeLimit} seconds to run, returning.`);
         process.exit(1);
     }, timeLimit * 1000);

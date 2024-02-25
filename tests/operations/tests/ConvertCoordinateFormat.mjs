@@ -29,8 +29,8 @@ TestRegister.addTests([
             {
                 op: "Convert co-ordinate format",
                 args: ["Decimal Degrees", "Comma", "Degrees Minutes Seconds", "Comma", "None", 1]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Co-ordinates: From Degrees Minutes Seconds to Decimal Degrees",
@@ -40,8 +40,8 @@ TestRegister.addTests([
             {
                 op: "Convert co-ordinate format",
                 args: ["Degrees Minutes Seconds", "Comma", "Decimal Degrees", "Comma", "None", 3]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Co-ordinates: From Decimal Degrees to Degrees Decimal Minutes",
@@ -84,8 +84,8 @@ TestRegister.addTests([
             {
                 op: "Convert co-ordinate format",
                 args: ["Decimal Degrees", "Comma", "Geohash", "Comma", "None", 9]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Co-ordinates: From Geohash to Decimal Degrees",
@@ -95,8 +95,8 @@ TestRegister.addTests([
             {
                 op: "Convert co-ordinate format",
                 args: ["Geohash", "Comma", "Decimal Degrees", "Comma", "None", 3]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Co-ordinates: From Decimal Degrees to MGRS",
@@ -106,8 +106,8 @@ TestRegister.addTests([
             {
                 op: "Convert co-ordinate format",
                 args: ["Decimal Degrees", "Comma", "Military Grid Reference System", "Comma", "None", 10]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Co-ordinates: From MGRS to Decimal Degrees",
@@ -128,8 +128,8 @@ TestRegister.addTests([
             {
                 op: "Convert co-ordinate format",
                 args: ["Decimal Degrees", "Comma", "Ordnance Survey National Grid", "Comma", "None", 10]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Co-ordinates: From OSNG to Decimal Degrees",
@@ -139,8 +139,8 @@ TestRegister.addTests([
             {
                 op: "Convert co-ordinate format",
                 args: ["Ordnance Survey National Grid", "Comma", "Decimal Degrees", "Comma", "None", 3]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Co-ordinates: From Decimal Degrees to UTM",
@@ -150,8 +150,8 @@ TestRegister.addTests([
             {
                 op: "Convert co-ordinate format",
                 args: ["Decimal Degrees", "Comma", "Universal Transverse Mercator", "Comma", "None", 0]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Co-ordinates: From UTM to Decimal Degrees",
@@ -161,8 +161,8 @@ TestRegister.addTests([
             {
                 op: "Convert co-ordinate format",
                 args: ["Universal Transverse Mercator", "Comma", "Decimal Degrees", "Comma", "None", 3]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Co-ordinates: Directions in input, not output",
@@ -172,8 +172,8 @@ TestRegister.addTests([
             {
                 op: "Convert co-ordinate format",
                 args: ["Decimal Degrees", "Comma", "Decimal Degrees", "Comma", "None", 3]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Co-ordinates: Directions in input and output",
@@ -183,8 +183,8 @@ TestRegister.addTests([
             {
                 op: "Convert co-ordinate format",
                 args: ["Decimal Degrees", "Comma", "Decimal Degrees", "Comma", "Before", 3]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Co-ordinates: Directions not in input, in output",
@@ -194,8 +194,8 @@ TestRegister.addTests([
             {
                 op: "Convert co-ordinate format",
                 args: ["Decimal Degrees", "Comma", "Decimal Degrees", "Comma", "Before", 3]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Co-ordinates: Directions not in input, in converted output",
@@ -205,7 +205,7 @@ TestRegister.addTests([
             {
                 op: "Convert co-ordinate format",
                 args: ["Decimal Degrees", "Comma", "Degrees Minutes Seconds", "Comma", "Before", 3]
-            },
-        ],
+            }
+        ]
     }
 ]);

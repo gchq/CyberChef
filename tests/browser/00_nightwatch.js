@@ -9,20 +9,16 @@
 const utils = require("./browserUtils.js");
 
 module.exports = {
-    before: browser => {
-        browser
-            .resizeWindow(1280, 800)
-            .url(browser.launchUrl);
+    before: (browser) => {
+        browser.resizeWindow(1280, 800).url(browser.launchUrl);
     },
 
-    "Loading screen": browser => {
+    "Loading screen": (browser) => {
         // Check that the loading screen appears and then disappears within a reasonable time
-        browser
-            .waitForElementVisible("#preloader", 300)
-            .waitForElementNotPresent("#preloader", 10000);
+        browser.waitForElementVisible("#preloader", 300).waitForElementNotPresent("#preloader", 10000);
     },
 
-    "App loaded": browser => {
+    "App loaded": (browser) => {
         browser.useCss();
         // Check that various important elements are loaded
         browser.expect.element("#operations").to.be.visible;
@@ -36,7 +32,7 @@ module.exports = {
         browser.expect.element("#output-text").to.be.visible;
     },
 
-    "Operations loaded": browser => {
+    "Operations loaded": (browser) => {
         browser.useXpath();
         // Check that an operation in every category has been populated
         browser.expect.element("//li[contains(@class, 'operation') and text()='To Base64']").to.be.present;
@@ -58,14 +54,12 @@ module.exports = {
         browser.expect.element("//li[contains(@class, 'operation') and text()='Register']").to.be.present;
     },
 
-    "Recipe can be run": browser => {
+    "Recipe can be run": (browser) => {
         const toHex = "//li[contains(@class, 'operation') and text()='To Hex']";
         const op = "#rec-list .operation .op-title";
 
         // Check that operation is visible
-        browser
-            .useXpath()
-            .expect.element(toHex).to.be.visible;
+        browser.useXpath().expect.element(toHex).to.be.visible;
 
         // Add it to the recipe by double clicking
         browser
@@ -76,23 +70,17 @@ module.exports = {
             .doubleClick("xpath", toHex);
 
         // Confirm that it has been added to the recipe
-        browser
-            .useCss()
-            .waitForElementVisible(op, 100)
-            .expect.element(op).text.to.contain("To Hex");
+        browser.useCss().waitForElementVisible(op, 100).expect.element(op).text.to.contain("To Hex");
 
         // Enter input
-        browser
-            .useCss()
-            .sendKeys("#input-text .cm-content", "Don't Panic.")
-            .pause(1000)
-            .click("#bake");
+        browser.useCss().sendKeys("#input-text .cm-content", "Don't Panic.").pause(1000).click("#bake");
 
         // Check output
         browser
             .useCss()
             .waitForElementNotVisible("#stale-indicator", 1000)
-            .expect.element("#output-text .cm-content").text.that.equals("44 6f 6e 27 74 20 50 61 6e 69 63 2e");
+            .expect.element("#output-text .cm-content")
+            .text.that.equals("44 6f 6e 27 74 20 50 61 6e 69 63 2e");
 
         // Clear recipe
         browser
@@ -103,99 +91,77 @@ module.exports = {
             .waitForElementNotPresent(op);
     },
 
-    "Test every module": browser => {
+    "Test every module": (browser) => {
         browser.useCss();
 
         // BSON
-        loadOp("BSON deserialise", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("BSON deserialise", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // Charts
-        loadOp("Entropy", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("Entropy", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // Ciphers
-        loadOp("AES Encrypt", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("AES Encrypt", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // Code
-        loadOp("XPath expression", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("XPath expression", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // Compression
-        loadOp("Gzip", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("Gzip", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // Crypto
-        loadOp("MD5", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("MD5", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // Default
-        loadOp("Fork", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("Fork", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // Diff
-        loadOp("Diff", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("Diff", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // Encodings
-        loadOp("Encode text", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("Encode text", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // Hashing
-        loadOp("Streebog", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("Streebog", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // Image
-        loadOp("Extract EXIF", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("Extract EXIF", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // PGP
-        loadOp("PGP Encrypt", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("PGP Encrypt", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // PublicKey
-        loadOp("Hex to PEM", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("Hex to PEM", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // Regex
-        loadOp("Strings", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("Strings", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // Shellcode
-        loadOp("Disassemble x86", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("Disassemble x86", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // URL
-        loadOp("URL Encode", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("URL Encode", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // UserAgent
-        loadOp("Parse User Agent", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("Parse User Agent", browser).waitForElementNotVisible("#output-loader", 5000);
 
         // YARA
-        loadOp("YARA Rules", browser)
-            .waitForElementNotVisible("#output-loader", 5000);
+        loadOp("YARA Rules", browser).waitForElementNotVisible("#output-loader", 5000);
 
         browser.click("#clr-recipe");
     },
 
-    "Move around the UI": browser => {
+    "Move around the UI": (browser) => {
         const otherCat = "//a[contains(@class, 'category-title') and contains(@data-target, '#catOther')]",
             genUUID = "//li[contains(@class, 'operation') and text()='Generate UUID']";
 
         browser.useXpath();
 
         // Scroll to a lower category
-        browser
-            .getLocationInView(otherCat)
-            .expect.element(otherCat).to.be.visible;
+        browser.getLocationInView(otherCat).expect.element(otherCat).to.be.visible;
 
         // Open category
-        browser
-            .click(otherCat)
-            .expect.element(genUUID).to.be.visible;
+        browser.click(otherCat).expect.element(genUUID).to.be.visible;
 
         // Add op to recipe
         /* mouseButtonUp drops wherever the actual cursor is, not necessarily in the right place,
@@ -208,12 +174,13 @@ module.exports = {
             .useCss()
             .waitForElementVisible(".operation .op-title", 1000)
             .waitForElementNotVisible("#stale-indicator", 1000)
-            .expect.element("#output-text .cm-content").text.which.matches(/[\da-f-]{36}/);
+            .expect.element("#output-text .cm-content")
+            .text.which.matches(/[\da-f-]{36}/);
 
         browser.click("#clr-recipe");
     },
 
-    "Search": browser => {
+    "Search": (browser) => {
         // Search for an op
         browser
             .useCss()
@@ -223,7 +190,7 @@ module.exports = {
             .waitForElementVisible("//ul[@id='search-results']//b[text()='MD5']", 1000);
     },
 
-    "Alert bar": browser => {
+    "Alert bar": (browser) => {
         // Bake nothing to create an empty output which can be copied
         utils.clear(browser);
         utils.bake(browser);
@@ -233,7 +200,8 @@ module.exports = {
             .click("#copy-output")
             .waitForElementVisible("#snackbar-container")
             .waitForElementVisible("#snackbar-container .snackbar-content")
-            .expect.element("#snackbar-container .snackbar-content").text.to.equal("Copied raw output successfully.");
+            .expect.element("#snackbar-container .snackbar-content")
+            .text.to.equal("Copied raw output successfully.");
 
         // Alert bar disappears after the correct amount of time
         // Should disappear after 2000ms
@@ -242,7 +210,7 @@ module.exports = {
             .waitForElementNotVisible("#snackbar-container");
     },
 
-    after: browser => {
+    after: (browser) => {
         browser.end();
     }
 };

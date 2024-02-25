@@ -11,7 +11,16 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import {ROTORS, LETTERS, ROTORS_FOURTH, REFLECTORS, Rotor, Reflector, Plugboard, EnigmaMachine} from "../lib/Enigma.mjs";
+import {
+    ROTORS,
+    LETTERS,
+    ROTORS_FOURTH,
+    REFLECTORS,
+    Rotor,
+    Reflector,
+    Plugboard,
+    EnigmaMachine
+} from "../lib/Enigma.mjs";
 
 /**
  * Enigma operation
@@ -25,7 +34,8 @@ class Enigma extends Operation {
 
         this.name = "Enigma";
         this.module = "Bletchley";
-        this.description = "Encipher/decipher with the WW2 Enigma machine.<br><br>Enigma was used by the German military, among others, around the WW2 era as a portable cipher machine to protect sensitive military, diplomatic and commercial communications.<br><br>The standard set of German military rotors and reflectors are provided. To configure the plugboard, enter a string of connected pairs of letters, e.g. <code>AB CD EF</code> connects A to B, C to D, and E to F. This is also used to create your own reflectors. To create your own rotor, enter the letters that the rotor maps A to Z to, in order, optionally followed by <code>&lt;</code> then a list of stepping points.<br>This is deliberately fairly permissive with rotor placements etc compared to a real Enigma (on which, for example, a four-rotor Enigma uses only the thin reflectors and the beta or gamma rotor in the 4th slot).<br><br>More detailed descriptions of the Enigma, Typex and Bombe operations <a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>can be found here</a>.";
+        this.description
+            = "Encipher/decipher with the WW2 Enigma machine.<br><br>Enigma was used by the German military, among others, around the WW2 era as a portable cipher machine to protect sensitive military, diplomatic and commercial communications.<br><br>The standard set of German military rotors and reflectors are provided. To configure the plugboard, enter a string of connected pairs of letters, e.g. <code>AB CD EF</code> connects A to B, C to D, and E to F. This is also used to create your own reflectors. To create your own rotor, enter the letters that the rotor maps A to Z to, in order, optionally followed by <code>&lt;</code> then a list of stepping points.<br>This is deliberately fairly permissive with rotor placements etc compared to a real Enigma (on which, for example, a four-rotor Enigma uses only the thin reflectors and the beta or gamma rotor in the 4th slot).<br><br>More detailed descriptions of the Enigma, Typex and Bombe operations <a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>can be found here</a>.";
         this.infoURL = "https://wikipedia.org/wiki/Enigma_machine";
         this.inputType = "string";
         this.outputType = "string";
@@ -124,7 +134,7 @@ class Enigma extends Operation {
                 hint: "Remove non-alphabet letters and group output",
                 type: "boolean",
                 value: true
-            },
+            }
         ];
     }
 
@@ -157,13 +167,13 @@ class Enigma extends Operation {
         const plugboardstr = args[14];
         const removeOther = args[15];
         const rotors = [];
-        for (let i=0; i<4; i++) {
+        for (let i = 0; i < 4; i++) {
             if (i === 0 && model === "3-rotor") {
                 // Skip the 4th rotor settings
                 continue;
             }
-            const [rotorwiring, rotorsteps] = this.parseRotorStr(args[i*3 + 1], 1);
-            rotors.push(new Rotor(rotorwiring, rotorsteps, args[i*3 + 2], args[i*3 + 3]));
+            const [rotorwiring, rotorsteps] = this.parseRotorStr(args[i * 3 + 1], 1);
+            rotors.push(new Rotor(rotorwiring, rotorsteps, args[i * 3 + 2], args[i * 3 + 3]));
         }
         // Rotors are handled in reverse
         rotors.reverse();
@@ -211,7 +221,6 @@ class Enigma extends Operation {
             return pos;
         }
     }
-
 }
 
 export default Enigma;

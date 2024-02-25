@@ -11,7 +11,6 @@ import Utils from "../Utils.mjs";
  * Count occurrences operation
  */
 class CountOccurrences extends Operation {
-
     /**
      * CountOccurrences constructor
      */
@@ -59,7 +58,6 @@ class CountOccurrences extends Operation {
             return 0;
         }
     }
-
 }
 
 export default CountOccurrences;

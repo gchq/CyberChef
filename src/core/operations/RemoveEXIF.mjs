@@ -12,7 +12,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Remove EXIF operation
  */
 class RemoveEXIF extends Operation {
-
     /**
      * RemoveEXIF constructor
      */
@@ -24,7 +23,7 @@ class RemoveEXIF extends Operation {
         this.description = [
             "Removes EXIF data from a JPEG image.",
             "<br><br>",
-            "EXIF data embedded in photos usually contains information about the image file itself as well as the device used to create it.",
+            "EXIF data embedded in photos usually contains information about the image file itself as well as the device used to create it."
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Exif";
         this.inputType = "ArrayBuffer";
@@ -50,7 +49,6 @@ class RemoveEXIF extends Operation {
             throw new OperationError(`Could not remove EXIF data from image: ${err}`);
         }
     }
-
 }
 
 export default RemoveEXIF;

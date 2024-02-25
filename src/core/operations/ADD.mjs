@@ -12,7 +12,6 @@ import { bitOp, add, BITWISE_OP_DELIMS } from "../lib/BitwiseOp.mjs";
  * ADD operation
  */
 class ADD extends Operation {
-
     /**
      * ADD constructor
      */
@@ -71,7 +70,6 @@ class ADD extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default ADD;

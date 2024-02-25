@@ -6,13 +6,12 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {DELIM_OPTIONS} from "../lib/Delim.mjs";
+import { DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 /**
  * A1Z26 Cipher Encode operation
  */
 class A1Z26CipherEncode extends Operation {
-
     /**
      * A1Z26CipherEncode constructor
      */
@@ -21,7 +20,8 @@ class A1Z26CipherEncode extends Operation {
 
         this.name = "A1Z26 Cipher Encode";
         this.module = "Ciphers";
-        this.description = "Converts alphabet characters into their corresponding alphabet order number.<br><br>e.g. <code>a</code> becomes <code>1</code> and <code>b</code> becomes <code>2</code>.<br><br>Non-alphabet characters are dropped.";
+        this.description
+            = "Converts alphabet characters into their corresponding alphabet order number.<br><br>e.g. <code>a</code> becomes <code>1</code> and <code>b</code> becomes <code>2</code>.<br><br>Non-alphabet characters are dropped.";
         this.infoURL = "";
         this.inputType = "string";
         this.outputType = "string";
@@ -55,7 +55,6 @@ class A1Z26CipherEncode extends Operation {
         }
         return output.slice(0, -delim.length);
     }
-
 }
 
 export default A1Z26CipherEncode;

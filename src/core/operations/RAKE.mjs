@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * RAKE operation
  */
 class RAKE extends Operation {
-
     /**
      * RAKE constructor
      */
@@ -24,7 +23,7 @@ class RAKE extends Operation {
             "<br><br>",
             "RAKE is a domain-independent keyword extraction algorithm in Natural Language Processing.",
             "<br><br>",
-            "The list of stop words are from the NLTK python package",
+            "The list of stop words are from the NLTK python package"
         ].join("\n");
         this.inputType = "string";
         this.outputType = "string";
@@ -53,9 +52,8 @@ class RAKE extends Operation {
      * @returns {string}
      */
     run(input, args) {
-
         // Get delimiter regexs
-        const wordDelim =  new RegExp(args[0], "g");
+        const wordDelim = new RegExp(args[0], "g");
         const sentDelim = new RegExp(args[1], "g");
 
         // Deduplicate the stop words and add the empty string
@@ -73,7 +71,6 @@ class RAKE extends Operation {
         // Build up list of phrases and token counts
         const sentences = input.split(sentDelim);
         for (const sent of sentences) {
-
             // Split sentence into words
             const splitSent = sent.split(wordDelim);
             let startIndex = 0;
@@ -87,7 +84,7 @@ class RAKE extends Operation {
                 } else {
                     // If token is not a stop word add to the count of the list of words
                     if (tokens.includes(token)) {
-                        wordFrequencies[tokens.indexOf(token)]+=1;
+                        wordFrequencies[tokens.indexOf(token)] += 1;
                     } else {
                         tokens.push(token);
                         wordFrequencies.push(1);
@@ -98,18 +95,22 @@ class RAKE extends Operation {
         }
 
         // remove empty phrases
-        phrases = phrases.filter(subArray => subArray.length > 0);
+        phrases = phrases.filter((subArray) => subArray.length > 0);
 
         // Remove duplicate phrases
-        const uniquePhrases = [...new Set(phrases.map(function (phrase) {
-            return phrase.join(" ");
-        }))];
+        const uniquePhrases = [
+            ...new Set(
+                phrases.map(function (phrase) {
+                    return phrase.join(" ");
+                })
+            )
+        ];
         phrases = uniquePhrases.map(function (phrase) {
             return phrase.split(" ");
         });
 
         // Generate word_degree_matrix and populate
-        const wordDegreeMatrix = Array.from(Array(tokens.length), _ => Array(tokens.length).fill(0));
+        const wordDegreeMatrix = Array.from(Array(tokens.length), (_) => Array(tokens.length).fill(0));
         phrases.forEach(function (phrase) {
             phrase.forEach(function (word1) {
                 phrase.forEach(function (word2) {
@@ -120,9 +121,9 @@ class RAKE extends Operation {
 
         // Calculate degree score for each token
         const degreeScores = Array(tokens.length).fill(0);
-        for (let i=0; i<tokens.length; i++) {
+        for (let i = 0; i < tokens.length; i++) {
             let wordDegree = 0;
-            for (let j=0; j<wordDegreeMatrix.length; j++) {
+            for (let j = 0; j < wordDegreeMatrix.length; j++) {
                 wordDegree += wordDegreeMatrix[j][i];
             }
             degreeScores[i] = wordDegree / wordFrequencies[i];
@@ -140,9 +141,11 @@ class RAKE extends Operation {
         scores.unshift(new Array("Scores: ", "Keywords: "));
 
         // Output works with the 'To Table' functionality already built into CC
-        return scores.map(function (score) {
-            return score.join(", ");
-        }).join("\n");
+        return scores
+            .map(function (score) {
+                return score.join(", ");
+            })
+            .join("\n");
     }
 }
 

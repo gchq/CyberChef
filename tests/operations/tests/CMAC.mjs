@@ -16,8 +16,8 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c"}, "AES"]
-            },
+                "args": [{ "option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c" }, "AES"]
+            }
         ]
     },
     {
@@ -31,8 +31,8 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c"}, "AES"]
-            },
+                "args": [{ "option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c" }, "AES"]
+            }
         ]
     },
     {
@@ -46,13 +46,14 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c"}, "AES"]
-            },
+                "args": [{ "option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c" }, "AES"]
+            }
         ]
     },
     {
         "name": "CMAC-AES128 NIST's CSRC Example #4",
-        "input": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+        "input":
+            "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
         "expectedOutput": "51f0bebf7e3b9d92fc49741779363cfe",
         "recipeConfig": [
             {
@@ -61,8 +62,8 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c"}, "AES"]
-            },
+                "args": [{ "option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c" }, "AES"]
+            }
         ]
     },
     {
@@ -72,8 +73,8 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b"}, "AES"]
-            },
+                "args": [{ "option": "Hex", "string": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b" }, "AES"]
+            }
         ]
     },
     {
@@ -87,8 +88,8 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b"}, "AES"]
-            },
+                "args": [{ "option": "Hex", "string": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b" }, "AES"]
+            }
         ]
     },
     {
@@ -102,13 +103,14 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b"}, "AES"]
-            },
+                "args": [{ "option": "Hex", "string": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b" }, "AES"]
+            }
         ]
     },
     {
         "name": "CMAC-AES192 NIST's CSRC Example #4",
-        "input": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+        "input":
+            "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
         "expectedOutput": "a1d5df0eed790f794d77589659f39a11",
         "recipeConfig": [
             {
@@ -117,8 +119,8 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b"}, "AES"]
-            },
+                "args": [{ "option": "Hex", "string": "8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b" }, "AES"]
+            }
         ]
     },
     {
@@ -128,8 +130,11 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4"}, "AES"]
-            },
+                "args": [
+                    { "option": "Hex", "string": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4" },
+                    "AES"
+                ]
+            }
         ]
     },
     {
@@ -143,8 +148,11 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4"}, "AES"]
-            },
+                "args": [
+                    { "option": "Hex", "string": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4" },
+                    "AES"
+                ]
+            }
         ]
     },
     {
@@ -158,13 +166,17 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4"}, "AES"]
-            },
+                "args": [
+                    { "option": "Hex", "string": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4" },
+                    "AES"
+                ]
+            }
         ]
     },
     {
         "name": "CMAC-AES256 NIST's CSRC Example #4",
-        "input": "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
+        "input":
+            "6bc1bee22e409f96e93d7e117393172aae2d8a571e03ac9c9eb76fac45af8e5130c81c46a35ce411e5fbc1191a0a52eff69f2445df4f9b17ad2b417be66c3710",
         "expectedOutput": "e1992190549f6ed5696a2c056c315410",
         "recipeConfig": [
             {
@@ -173,8 +185,11 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4"}, "AES"]
-            },
+                "args": [
+                    { "option": "Hex", "string": "603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4" },
+                    "AES"
+                ]
+            }
         ]
     },
     {
@@ -184,8 +199,11 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "0123456789abcdef23456789abcdef01456789abcdef0123"}, "Triple DES"]
-            },
+                "args": [
+                    { "option": "Hex", "string": "0123456789abcdef23456789abcdef01456789abcdef0123" },
+                    "Triple DES"
+                ]
+            }
         ]
     },
     {
@@ -199,8 +217,11 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "0123456789abcdef23456789abcdef01456789abcdef0123"}, "Triple DES"]
-            },
+                "args": [
+                    { "option": "Hex", "string": "0123456789abcdef23456789abcdef01456789abcdef0123" },
+                    "Triple DES"
+                ]
+            }
         ]
     },
     {
@@ -214,8 +235,11 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "0123456789abcdef23456789abcdef01456789abcdef0123"}, "Triple DES"]
-            },
+                "args": [
+                    { "option": "Hex", "string": "0123456789abcdef23456789abcdef01456789abcdef0123" },
+                    "Triple DES"
+                ]
+            }
         ]
     },
     {
@@ -229,8 +253,11 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "0123456789abcdef23456789abcdef01456789abcdef0123"}, "Triple DES"]
-            },
+                "args": [
+                    { "option": "Hex", "string": "0123456789abcdef23456789abcdef01456789abcdef0123" },
+                    "Triple DES"
+                ]
+            }
         ]
     },
     {
@@ -240,8 +267,11 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "0123456789abcdef23456789abcdef010123456789abcdef"}, "Triple DES"]
-            },
+                "args": [
+                    { "option": "Hex", "string": "0123456789abcdef23456789abcdef010123456789abcdef" },
+                    "Triple DES"
+                ]
+            }
         ]
     },
     {
@@ -255,8 +285,11 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "0123456789abcdef23456789abcdef010123456789abcdef"}, "Triple DES"]
-            },
+                "args": [
+                    { "option": "Hex", "string": "0123456789abcdef23456789abcdef010123456789abcdef" },
+                    "Triple DES"
+                ]
+            }
         ]
     },
     {
@@ -270,8 +303,11 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "0123456789abcdef23456789abcdef010123456789abcdef"}, "Triple DES"]
-            },
+                "args": [
+                    { "option": "Hex", "string": "0123456789abcdef23456789abcdef010123456789abcdef" },
+                    "Triple DES"
+                ]
+            }
         ]
     },
     {
@@ -285,8 +321,11 @@ TestRegister.addTests([
             },
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "0123456789abcdef23456789abcdef010123456789abcdef"}, "Triple DES"]
-            },
+                "args": [
+                    { "option": "Hex", "string": "0123456789abcdef23456789abcdef010123456789abcdef" },
+                    "Triple DES"
+                ]
+            }
         ]
     },
     {
@@ -296,8 +335,8 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "00112233445566778899aabbccddeeff01234567"}, "AES"]
-            },
+                "args": [{ "option": "Hex", "string": "00112233445566778899aabbccddeeff01234567" }, "AES"]
+            }
         ]
     },
     {
@@ -307,8 +346,8 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "CMAC",
-                "args": [{"option": "Hex", "string": "00112233445566778899aabbccddeeff01234567"}, "Triple DES"]
-            },
+                "args": [{ "option": "Hex", "string": "00112233445566778899aabbccddeeff01234567" }, "Triple DES"]
+            }
         ]
-    },
+    }
 ]);

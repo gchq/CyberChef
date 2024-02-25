@@ -6,9 +6,9 @@
 
 import Operation from "../Operation.mjs";
 import Stream from "../lib/Stream.mjs";
-import {toHexFast, fromHex} from "../lib/Hex.mjs";
-import {toBinary} from "../lib/Binary.mjs";
-import {objToTable, bytesToLargeNumber} from "../lib/Protocol.mjs";
+import { toHexFast, fromHex } from "../lib/Hex.mjs";
+import { toBinary } from "../lib/Binary.mjs";
+import { objToTable, bytesToLargeNumber } from "../lib/Protocol.mjs";
 import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import BigNumber from "bignumber.js";
@@ -17,7 +17,6 @@ import BigNumber from "bignumber.js";
  * Parse TCP operation
  */
 class ParseTCP extends Operation {
-
     /**
      * ParseTCP constructor
      */
@@ -78,7 +77,7 @@ class ParseTCP extends Operation {
                 "PSH": s.readBits(1),
                 "RST": s.readBits(1),
                 "SYN": s.readBits(1),
-                "FIN": s.readBits(1),
+                "FIN": s.readBits(1)
             },
             "Window size": s.readInt(2),
             "Checksum": "0x" + toHexFast(s.getBytes(2)),
@@ -109,9 +108,10 @@ class ParseTCP extends Operation {
                         if (Object.prototype.hasOwnProperty.call(opt, "parser")) {
                             option.Value = opt.parser(s.getBytes(option.Length - 2));
                         } else {
-                            option.Value = option.Length <= 6 ?
-                                s.readInt(option.Length - 2):
-                                "0x" + toHexFast(s.getBytes(option.Length - 2));
+                            option.Value
+                                = option.Length <= 6
+                                    ? s.readInt(option.Length - 2)
+                                    : "0x" + toHexFast(s.getBytes(option.Length - 2));
                         }
 
                         // Store Window Scale shift for later
@@ -134,7 +134,9 @@ class ParseTCP extends Operation {
 
         // Improve values
         TCPPacket["Data offset"] = `${TCPPacket["Data offset"]} (${TCPPacket["Data offset"] * 4} bytes)`;
-        const trueWndSize = BigNumber(TCPPacket["Window size"]).multipliedBy(BigNumber(2).pow(BigNumber(windowScaleShift)));
+        const trueWndSize = BigNumber(TCPPacket["Window size"]).multipliedBy(
+            BigNumber(2).pow(BigNumber(windowScaleShift))
+        );
         TCPPacket["Window size"] = `${TCPPacket["Window size"]} (Scaled: ${trueWndSize})`;
 
         return TCPPacket;
@@ -148,7 +150,6 @@ class ParseTCP extends Operation {
     present(data) {
         return objToTable(data);
     }
-
 }
 
 // Taken from https://www.iana.org/assignments/tcp-parameters/tcp-parameters.xhtml
@@ -216,8 +217,7 @@ function tcpAlternateChecksumParser(data) {
 function tcpTimestampParser(data) {
     const s = new Stream(data);
 
-    if (s.length !== 8)
-        return `Error: Timestamp field should be 8 bytes long (received 0x${toHexFast(data)})`;
+    if (s.length !== 8) return `Error: Timestamp field should be 8 bytes long (received 0x${toHexFast(data)})`;
 
     const tsval = bytesToLargeNumber(s.getBytes(4)),
         tsecr = bytesToLargeNumber(s.getBytes(4));
@@ -233,8 +233,7 @@ function tcpTimestampParser(data) {
  * @param {Uint8Array} data
  */
 function windowScaleParser(data) {
-    if (data.length !== 1)
-        return `Error: Window Scale should be one byte long (received 0x${toHexFast(data)})`;
+    if (data.length !== 1) return `Error: Window Scale should be one byte long (received 0x${toHexFast(data)})`;
 
     return {
         "Shift count": data[0],

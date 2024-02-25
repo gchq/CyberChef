@@ -7,13 +7,12 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
-import {COMPRESSION_OUTPUT_FORMATS, DECOMPRESSION_FUNCTIONS} from "../lib/LZString.mjs";
+import { COMPRESSION_OUTPUT_FORMATS, DECOMPRESSION_FUNCTIONS } from "../lib/LZString.mjs";
 
 /**
  * LZString Decompress operation
  */
 class LZStringDecompress extends Operation {
-
     /**
      * LZStringDecompress constructor
      */
@@ -49,8 +48,6 @@ class LZStringDecompress extends Operation {
             throw new OperationError("Unable to find decompression function");
         }
     }
-
-
 }
 
 export default LZStringDecompress;

@@ -11,7 +11,6 @@ import Operation from "../Operation.mjs";
  * XML Beautify operation
  */
 class XMLBeautify extends Operation {
-
     /**
      * XMLBeautify constructor
      */
@@ -41,7 +40,6 @@ class XMLBeautify extends Operation {
         const indentStr = args[0];
         return vkbeautify.xml(input, indentStr);
     }
-
 }
 
 export default XMLBeautify;

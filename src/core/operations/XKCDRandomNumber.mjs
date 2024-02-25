@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * XKCD Random Number operation
  */
 class XKCDRandomNumber extends Operation {
-
     /**
      * XKCDRandomNumber constructor
      */
@@ -33,9 +32,8 @@ class XKCDRandomNumber extends Operation {
      */
     run(input, args) {
         return 4; // chosen by fair dice roll.
-                  // guaranteed to be random.
+        // guaranteed to be random.
     }
-
 }
 
 export default XKCDRandomNumber;

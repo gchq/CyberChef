@@ -13,7 +13,6 @@ import MagicLib from "../lib/Magic.mjs";
  * Magic operation
  */
 class Magic extends Operation {
-
     /**
      * Magic constructor
      */
@@ -23,8 +22,10 @@ class Magic extends Operation {
         this.name = "Magic";
         this.flowControl = true;
         this.module = "Default";
-        this.description = "The Magic operation attempts to detect various properties of the input data and suggests which operations could help to make more sense of it.<br><br><b>Options</b><br><u>Depth:</u> If an operation appears to match the data, it will be run and the result will be analysed further. This argument controls the maximum number of levels of recursion.<br><br><u>Intensive mode:</u> When this is turned on, various operations like XOR, bit rotates, and character encodings are brute-forced to attempt to detect valid data underneath. To improve performance, only the first 100 bytes of the data is brute-forced.<br><br><u>Extensive language support:</u> At each stage, the relative byte frequencies of the data will be compared to average frequencies for a number of languages. The default set consists of ~40 of the most commonly used languages on the Internet. The extensive list consists of 284 languages and can result in many languages matching the data if their byte frequencies are similar.<br><br>Optionally enter a regular expression to match a string you expect to find to filter results (crib).";
-        this.infoURL = "https://github.com/gchq/CyberChef/wiki/Automatic-detection-of-encoded-data-using-CyberChef-Magic";
+        this.description
+            = "The Magic operation attempts to detect various properties of the input data and suggests which operations could help to make more sense of it.<br><br><b>Options</b><br><u>Depth:</u> If an operation appears to match the data, it will be run and the result will be analysed further. This argument controls the maximum number of levels of recursion.<br><br><u>Intensive mode:</u> When this is turned on, various operations like XOR, bit rotates, and character encodings are brute-forced to attempt to detect valid data underneath. To improve performance, only the first 100 bytes of the data is brute-forced.<br><br><u>Extensive language support:</u> At each stage, the relative byte frequencies of the data will be compared to average frequencies for a number of languages. The default set consists of ~40 of the most commonly used languages on the Internet. The extensive list consists of 284 languages and can result in many languages matching the data if their byte frequencies are similar.<br><br>Optionally enter a regular expression to match a string you expect to find to filter results (crib).";
+        this.infoURL
+            = "https://github.com/gchq/CyberChef/wiki/Automatic-detection-of-encoded-data-using-CyberChef-Magic";
         this.inputType = "ArrayBuffer";
         this.outputType = "JSON";
         this.presentType = "html";
@@ -64,12 +65,12 @@ class Magic extends Operation {
             [depth, intensive, extLang, crib] = ings,
             dish = state.dish,
             magic = new MagicLib(await dish.get(Dish.ARRAY_BUFFER)),
-            cribRegex = (crib && crib.length) ? new RegExp(crib, "i") : null;
+            cribRegex = crib && crib.length ? new RegExp(crib, "i") : null;
         let options = await magic.speculativeExecution(depth, extLang, intensive, [], false, cribRegex);
 
         // Filter down to results which matched the crib
         if (cribRegex) {
-            options = options.filter(option => option.matchesCrib);
+            options = options.filter((option) => option.matchesCrib);
         }
 
         // Record the current state for use when presenting
@@ -86,7 +87,7 @@ class Magic extends Operation {
      * @returns {html}
      */
     present(options) {
-        const currentRecipeConfig = this.state.opList.map(op => op.config);
+        const currentRecipeConfig = this.state.opList.map((op) => op.config);
 
         let output = `<table
                 class='table table-hover table-sm table-bordered'
@@ -109,10 +110,11 @@ class Magic extends Operation {
             return "red";
         }
 
-        options.forEach(option => {
+        options.forEach((option) => {
             // Construct recipe URL
             // Replace this Magic op with the generated recipe
-            const recipeConfig = currentRecipeConfig.slice(0, this.state.progress)
+            const recipeConfig = currentRecipeConfig
+                    .slice(0, this.state.progress)
                     .concat(option.recipe)
                     .concat(currentRecipeConfig.slice(this.state.progress + 1)),
                 recipeURL = "recipe=" + Utils.encodeURIFragment(Utils.generatePrettyRecipe(recipeConfig));
@@ -122,17 +124,22 @@ class Magic extends Operation {
                 matchingOps = "",
                 useful = "";
             const entropy = `<span data-toggle="tooltip" data-container="body" title="Shannon Entropy is measured from 0 to 8. High entropy suggests encrypted or compressed data. Normal text is usually around 3.5 to 5.">Entropy: <span style="color: ${chooseColour(option.entropy)}">${option.entropy.toFixed(2)}</span></span>`,
-                validUTF8 = option.isUTF8 ? "<span data-toggle='tooltip' data-container='body' title='The data could be a valid UTF8 string based on its encoding.'>Valid UTF8</span>\n" : "";
+                validUTF8 = option.isUTF8
+                    ? "<span data-toggle='tooltip' data-container='body' title='The data could be a valid UTF8 string based on its encoding.'>Valid UTF8</span>\n"
+                    : "";
 
             if (option.languageScores[0].probability > 0) {
-                let likelyLangs = option.languageScores.filter(l => l.probability > 0);
+                let likelyLangs = option.languageScores.filter((l) => l.probability > 0);
                 if (likelyLangs.length < 1) likelyLangs = [option.languageScores[0]];
-                language = "<span data-toggle='tooltip' data-container='body' title='Based on a statistical comparison of the frequency of bytes in various languages. Ordered by likelihood.'>" +
-                    "Possible languages:\n    " +
-                    likelyLangs.map(lang => {
-                        return MagicLib.codeToLanguage(lang.lang);
-                    }).join("\n    ") +
-                    "</span>\n";
+                language
+                    = "<span data-toggle='tooltip' data-container='body' title='Based on a statistical comparison of the frequency of bytes in various languages. Ordered by likelihood.'>"
+                    + "Possible languages:\n    "
+                    + likelyLangs
+                        .map((lang) => {
+                            return MagicLib.codeToLanguage(lang.lang);
+                        })
+                        .join("\n    ")
+                    + "</span>\n";
             }
 
             if (option.fileType) {
@@ -140,11 +147,12 @@ class Magic extends Operation {
             }
 
             if (option.matchingOps.length) {
-                matchingOps = `Matching ops: ${[...new Set(option.matchingOps.map(op => op.op))].join(", ")}\n`;
+                matchingOps = `Matching ops: ${[...new Set(option.matchingOps.map((op) => op.op))].join(", ")}\n`;
             }
 
             if (option.useful) {
-                useful = "<span data-toggle='tooltip' data-container='body' title='This could be an operation that displays data in a useful way, such as rendering an image.'>Useful op detected</span>\n";
+                useful
+                    = "<span data-toggle='tooltip' data-container='body' title='This could be an operation that displays data in a useful way, such as rendering an image.'>Useful op detected</span>\n";
             }
 
             output += `<tr>
@@ -157,12 +165,12 @@ class Magic extends Operation {
         output += "</table><script type='application/javascript'>$('[data-toggle=\"tooltip\"]').tooltip()</script>";
 
         if (!options.length) {
-            output = "Nothing of interest could be detected about the input data.\nHave you tried modifying the operation arguments?";
+            output
+                = "Nothing of interest could be detected about the input data.\nHave you tried modifying the operation arguments?";
         }
 
         return output;
     }
-
 }
 
 export default Magic;

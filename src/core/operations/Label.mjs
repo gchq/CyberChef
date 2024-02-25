@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Label operation. For use with Jump and Conditional Jump.
  */
 class Label extends Operation {
-
     /**
      * Label constructor
      */
@@ -42,7 +41,6 @@ class Label extends Operation {
     run(state) {
         return state;
     }
-
 }
 
 export default Label;

@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Strip HTTP headers operation
  */
 class StripHTTPHeaders extends Operation {
-
     /**
      * StripHTTPHeaders constructor
      */
@@ -19,16 +18,17 @@ class StripHTTPHeaders extends Operation {
 
         this.name = "Strip HTTP headers";
         this.module = "Default";
-        this.description = "Removes HTTP headers from a request or response by looking for the first instance of a double newline.";
+        this.description
+            = "Removes HTTP headers from a request or response by looking for the first instance of a double newline.";
         this.infoURL = "https://wikipedia.org/wiki/Hypertext_Transfer_Protocol#Message_format";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
         this.checks = [
             {
-                pattern:  "^HTTP(.|\\s)+?(\\r?\\n){2}",
-                flags:  "",
-                args:   []
+                pattern: "^HTTP(.|\\s)+?(\\r?\\n){2}",
+                flags: "",
+                args: []
             }
         ];
     }
@@ -40,11 +40,10 @@ class StripHTTPHeaders extends Operation {
      */
     run(input, args) {
         let headerEnd = input.indexOf("\r\n\r\n");
-        headerEnd = (headerEnd < 0) ? input.indexOf("\n\n") + 2 : headerEnd + 4;
+        headerEnd = headerEnd < 0 ? input.indexOf("\n\n") + 2 : headerEnd + 4;
 
-        return (headerEnd < 2) ? input : input.slice(headerEnd, input.length);
+        return headerEnd < 2 ? input : input.slice(headerEnd, input.length);
     }
-
 }
 
 export default StripHTTPHeaders;

@@ -14,7 +14,6 @@ import OperationError from "../errors/OperationError.mjs";
  * AES Key Unwrap operation
  */
 class AESKeyUnwrap extends Operation {
-
     /**
      * AESKeyUnwrap constructor
      */
@@ -23,7 +22,8 @@ class AESKeyUnwrap extends Operation {
 
         this.name = "AES Key Unwrap";
         this.module = "Ciphers";
-        this.description = "Decryptor for a key wrapping algorithm defined in RFC3394, which is used to protect keys in untrusted storage or communications, using AES.<br><br>This algorithm uses an AES key (KEK: key-encryption key) and a 64-bit IV to decrypt 64-bit blocks.";
+        this.description
+            = "Decryptor for a key wrapping algorithm defined in RFC3394, which is used to protect keys in untrusted storage or communications, using AES.<br><br>This algorithm uses an AES key (KEK: key-encryption key) and a 64-bit IV to decrypt 64-bit blocks.";
         this.infoURL = "https://wikipedia.org/wiki/Key_wrap";
         this.inputType = "string";
         this.outputType = "string";
@@ -49,7 +49,7 @@ class AESKeyUnwrap extends Operation {
                 "name": "Output",
                 "type": "option",
                 "value": ["Hex", "Raw"]
-            },
+            }
         ];
     }
 
@@ -90,8 +90,8 @@ class AESKeyUnwrap extends Operation {
         }
         let cntLower = R.length >>> 0;
         let cntUpper = (R.length / ((1 << 30) * 4)) >>> 0;
-        cntUpper = cntUpper * 6 + ((cntLower * 6 / ((1 << 30) * 4)) >>> 0);
-        cntLower = cntLower * 6 >>> 0;
+        cntUpper = cntUpper * 6 + (((cntLower * 6) / ((1 << 30) * 4)) >>> 0);
+        cntLower = (cntLower * 6) >>> 0;
         for (let j = 5; j >= 0; j--) {
             for (let i = R.length - 1; i >= 0; i--) {
                 const aBuffer = Utils.strToArrayBuffer(A);
@@ -122,7 +122,6 @@ class AESKeyUnwrap extends Operation {
         }
         return P;
     }
-
 }
 
 export default AESKeyUnwrap;

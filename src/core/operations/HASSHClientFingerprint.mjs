@@ -18,13 +18,12 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import Stream from "../lib/Stream.mjs";
-import {runHash} from "../lib/Hash.mjs";
+import { runHash } from "../lib/Hash.mjs";
 
 /**
  * HASSH Client Fingerprint operation
  */
 class HASSHClientFingerprint extends Operation {
-
     /**
      * HASSHClientFingerprint constructor
      */
@@ -33,7 +32,8 @@ class HASSHClientFingerprint extends Operation {
 
         this.name = "HASSH Client Fingerprint";
         this.module = "Crypto";
-        this.description = "Generates a HASSH fingerprint to help identify SSH clients based on hashing together values from the Client Key Exchange Init message.<br><br>Input: A hex stream of the SSH_MSG_KEXINIT packet application layer from Client to Server.";
+        this.description
+            = "Generates a HASSH fingerprint to help identify SSH clients based on hashing together values from the Client Key Exchange Init message.<br><br>Input: A hex stream of the SSH_MSG_KEXINIT packet application layer from Client to Server.";
         this.infoURL = "https://engineering.salesforce.com/open-sourcing-hassh-abed3ae5044c";
         this.inputType = "string";
         this.outputType = "string";
@@ -64,16 +64,14 @@ class HASSHClientFingerprint extends Operation {
 
         // Length
         const length = s.readInt(4);
-        if (s.length !== length + 4)
-            throw new OperationError("Incorrect packet length.");
+        if (s.length !== length + 4) throw new OperationError("Incorrect packet length.");
 
         // Padding length
         const paddingLength = s.readInt(1);
 
         // Message code
         const messageCode = s.readInt(1);
-        if (messageCode !== 20)
-            throw new OperationError("Not a Key Exchange Init.");
+        if (messageCode !== 20) throw new OperationError("Not a Key Exchange Init.");
 
         // Cookie
         s.moveForwardsBy(16);
@@ -128,12 +126,7 @@ class HASSHClientFingerprint extends Operation {
         s.moveForwardsBy(paddingLength);
 
         // Output
-        const hassh = [
-            kexAlgos,
-            encAlgosC2S,
-            macAlgosC2S,
-            compAlgosC2S
-        ];
+        const hassh = [kexAlgos, encAlgosC2S, macAlgosC2S, compAlgosC2S];
         const hasshStr = hassh.join(";");
         const hasshHash = runHash("md5", Utils.strToArrayBuffer(hasshStr));
 
@@ -160,7 +153,6 @@ ${compAlgosC2S}`;
                 return hasshHash;
         }
     }
-
 }
 
 export default HASSHClientFingerprint;

@@ -11,7 +11,6 @@ import Utils from "../Utils.mjs";
  * From Base32 operation
  */
 class FromBase32 extends Operation {
-
     /**
      * FromBase32 constructor
      */
@@ -20,7 +19,8 @@ class FromBase32 extends Operation {
 
         this.name = "From Base32";
         this.module = "Default";
-        this.description = "Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.";
+        this.description
+            = "Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.";
         this.infoURL = "https://wikipedia.org/wiki/Base32";
         this.inputType = "string";
         this.outputType = "byteArray";
@@ -53,13 +53,23 @@ class FromBase32 extends Operation {
     run(input, args) {
         if (!input) return [];
 
-        const alphabet = args[0] ?
-                Utils.expandAlphRange(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
+        const alphabet = args[0] ? Utils.expandAlphRange(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
             removeNonAlphChars = args[1],
             output = [];
 
-        let chr1, chr2, chr3, chr4, chr5,
-            enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
+        let chr1,
+            chr2,
+            chr3,
+            chr4,
+            chr5,
+            enc1,
+            enc2,
+            enc3,
+            enc4,
+            enc5,
+            enc6,
+            enc7,
+            enc8,
             i = 0;
 
         if (removeNonAlphChars) {
@@ -92,7 +102,6 @@ class FromBase32 extends Operation {
 
         return output;
     }
-
 }
 
 export default FromBase32;

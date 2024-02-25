@@ -6,14 +6,12 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {DELIM_OPTIONS} from "../lib/Delim.mjs";
-
+import { DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 /**
  * To Decimal operation
  */
 class ToDecimal extends Operation {
-
     /**
      * ToDecimal constructor
      */
@@ -22,7 +20,8 @@ class ToDecimal extends Operation {
 
         this.name = "To Decimal";
         this.module = "Default";
-        this.description = "Converts the input data to an ordinal integer array.<br><br>e.g. <code>Hello</code> becomes <code>72 101 108 108 111</code>";
+        this.description
+            = "Converts the input data to an ordinal integer array.<br><br>e.g. <code>Hello</code> becomes <code>72 101 108 108 111</code>";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
@@ -49,11 +48,10 @@ class ToDecimal extends Operation {
         const delim = Utils.charRep(args[0]),
             signed = args[1];
         if (signed) {
-            input = input.map(v => v > 0x7F ? v - 0xFF - 1 : v);
+            input = input.map((v) => (v > 0x7f ? v - 0xff - 1 : v));
         }
         return input.join(delim);
     }
-
 }
 
 export default ToDecimal;

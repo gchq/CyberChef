@@ -12,7 +12,6 @@ import * as terser from "terser";
  * JavaScript Minify operation
  */
 class JavaScriptMinify extends Operation {
-
     /**
      * JavaScriptMinify constructor
      */
@@ -39,7 +38,6 @@ class JavaScriptMinify extends Operation {
         }
         return result.code;
     }
-
 }
 
 export default JavaScriptMinify;

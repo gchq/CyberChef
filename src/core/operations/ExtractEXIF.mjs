@@ -12,7 +12,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Extract EXIF operation
  */
 class ExtractEXIF extends Operation {
-
     /**
      * ExtractEXIF constructor
      */
@@ -26,7 +25,7 @@ class ExtractEXIF extends Operation {
             "<br><br>",
             "EXIF data is metadata embedded in images (JPEG, JPG, TIFF) and audio files.",
             "<br><br>",
-            "EXIF data from photos usually contains information about the image file itself as well as the device used to create it.",
+            "EXIF data from photos usually contains information about the image file itself as well as the device used to create it."
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Exif";
         this.inputType = "ArrayBuffer";
@@ -57,7 +56,6 @@ class ExtractEXIF extends Operation {
             throw new OperationError(`Could not extract EXIF data from image: ${err}`);
         }
     }
-
 }
 
 export default ExtractEXIF;

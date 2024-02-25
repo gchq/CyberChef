@@ -5,21 +5,20 @@
  */
 
 import Operation from "../Operation.mjs";
-import {INFLATE_BUFFER_TYPE} from "../lib/Zlib.mjs";
+import { INFLATE_BUFFER_TYPE } from "../lib/Zlib.mjs";
 import rawinflate from "zlibjs/bin/rawinflate.min.js";
 
 const Zlib = rawinflate.Zlib;
 
 const RAW_BUFFER_TYPE_LOOKUP = {
     "Adaptive": Zlib.RawInflate.BufferType.ADAPTIVE,
-    "Block":    Zlib.RawInflate.BufferType.BLOCK,
+    "Block": Zlib.RawInflate.BufferType.BLOCK
 };
 
 /**
  * Raw Inflate operation
  */
 class RawInflate extends Operation {
-
     /**
      * RawInflate constructor
      */
@@ -84,7 +83,6 @@ class RawInflate extends Operation {
 
         return result.buffer;
     }
-
 }
 
 export default RawInflate;

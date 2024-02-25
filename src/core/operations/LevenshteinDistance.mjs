@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Levenshtein Distance operation
  */
 class LevenshteinDistance extends Operation {
-
     /**
      * LevenshteinDistance constructor
      */
@@ -20,7 +19,8 @@ class LevenshteinDistance extends Operation {
 
         this.name = "Levenshtein Distance";
         this.module = "Default";
-        this.description = "Levenshtein Distance (also known as Edit Distance) is a string metric to measure a difference between two strings that counts operations (insertions, deletions, and substitutions) on single character that are required to change one string to another.";
+        this.description
+            = "Levenshtein Distance (also known as Edit Distance) is a string metric to measure a difference between two strings that counts operations (insertions, deletions, and substitutions) on single character that are required to change one string to another.";
         this.infoURL = "https://wikipedia.org/wiki/Levenshtein_distance";
         this.inputType = "string";
         this.outputType = "number";
@@ -44,7 +44,7 @@ class LevenshteinDistance extends Operation {
                 name: "Substitution cost",
                 type: "number",
                 value: 1
-            },
+            }
         ];
     }
 
@@ -62,7 +62,8 @@ class LevenshteinDistance extends Operation {
         if (insCost < 0 || delCost < 0 || subCost < 0) {
             throw new OperationError("Negative costs are not allowed.");
         }
-        const src = samples[0], dest = samples[1];
+        const src = samples[0],
+            dest = samples[1];
         let currentCost = new Array(src.length + 1);
         let nextCost = new Array(src.length + 1);
         for (let i = 0; i < currentCost.length; i++) {
@@ -92,7 +93,6 @@ class LevenshteinDistance extends Operation {
 
         return currentCost[currentCost.length - 1];
     }
-
 }
 
 export default LevenshteinDistance;

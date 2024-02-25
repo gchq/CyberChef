@@ -11,7 +11,6 @@ import * as esprima from "esprima";
  * JavaScript Parser operation
  */
 class JavaScriptParser extends Operation {
-
     /**
      * JavaScriptParser constructor
      */
@@ -61,10 +60,10 @@ class JavaScriptParser extends Operation {
     run(input, args) {
         const [parseLoc, parseRange, parseTokens, parseComment, parseTolerant] = args,
             options = {
-                loc:      parseLoc,
-                range:    parseRange,
-                tokens:   parseTokens,
-                comment:  parseComment,
+                loc: parseLoc,
+                range: parseRange,
+                tokens: parseTokens,
+                comment: parseComment,
                 tolerant: parseTolerant
             };
         let result = {};
@@ -72,7 +71,6 @@ class JavaScriptParser extends Operation {
         result = esprima.parseScript(input, options);
         return JSON.stringify(result, null, 2);
     }
-
 }
 
 export default JavaScriptParser;

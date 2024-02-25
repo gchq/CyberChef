@@ -16,9 +16,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base58",
-                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"],
-            },
-        ],
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"]
+            }
+        ]
     },
     {
         name: "To Base58 (Ripple): nothing",
@@ -27,9 +27,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base58",
-                args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz"],
-            },
-        ],
+                args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz"]
+            }
+        ]
     },
     {
         name: "To Base58 (Bitcoin): 'hello world'",
@@ -38,9 +38,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base58",
-                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"],
-            },
-        ],
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"]
+            }
+        ]
     },
     {
         name: "To Base58 (Ripple): 'hello world'",
@@ -49,9 +49,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base58",
-                args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz"],
-            },
-        ],
+                args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz"]
+            }
+        ]
     },
     {
         name: "To Base58 with null prefix and suffix",
@@ -60,9 +60,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base58",
-                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"],
-            },
-        ],
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"]
+            }
+        ]
     },
     {
         name: "From Base58 with null prefix and suffix",
@@ -71,9 +71,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base58",
-                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"],
-            },
-        ],
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"]
+            }
+        ]
     },
     {
         name: "From Base58 (Bitcoin): 'StV1DL6CwTryKyV'",
@@ -82,9 +82,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base58",
-                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"],
-            },
-        ],
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"]
+            }
+        ]
     },
     {
         name: "From Base58 (Ripple): 'StVrDLaUATiyKyV'",
@@ -93,8 +93,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base58",
-                args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz"],
-            },
-        ],
-    },
+                args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz"]
+            }
+        ]
+    }
 ]);

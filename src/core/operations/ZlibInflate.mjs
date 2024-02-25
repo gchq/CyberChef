@@ -5,21 +5,20 @@
  */
 
 import Operation from "../Operation.mjs";
-import {INFLATE_BUFFER_TYPE} from "../lib/Zlib.mjs";
+import { INFLATE_BUFFER_TYPE } from "../lib/Zlib.mjs";
 import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
 
 const Zlib = zlibAndGzip.Zlib;
 
 const ZLIB_BUFFER_TYPE_LOOKUP = {
     "Adaptive": Zlib.Inflate.BufferType.ADAPTIVE,
-    "Block":    Zlib.Inflate.BufferType.BLOCK,
+    "Block": Zlib.Inflate.BufferType.BLOCK
 };
 
 /**
  * Zlib Inflate operation
  */
 class ZlibInflate extends Operation {
-
     /**
      * ZlibInflate constructor
      */
@@ -64,7 +63,7 @@ class ZlibInflate extends Operation {
                 pattern: "^\\x78(\\x01|\\x9c|\\xda|\\x5e)",
                 flags: "",
                 args: [0, 0, "Adaptive", false, false]
-            },
+            }
         ];
     }
 
@@ -83,7 +82,6 @@ class ZlibInflate extends Operation {
         });
         return new Uint8Array(inflate.decompress()).buffer;
     }
-
 }
 
 export default ZlibInflate;

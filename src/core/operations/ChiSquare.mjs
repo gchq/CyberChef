@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Chi Square operation
  */
 class ChiSquare extends Operation {
-
     /**
      * ChiSquare constructor
      */
@@ -48,7 +47,6 @@ class ChiSquare extends Operation {
 
         return total;
     }
-
 }
 
 export default ChiSquare;

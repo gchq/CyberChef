@@ -11,7 +11,6 @@ import UAParser from "ua-parser-js";
  * Parse User Agent operation
  */
 class ParseUserAgent extends Operation {
-
     /**
      * ParseUserAgent constructor
      */
@@ -27,9 +26,9 @@ class ParseUserAgent extends Operation {
         this.args = [];
         this.checks = [
             {
-                pattern:  "^(User-Agent:|Mozilla\\/)[^\\n\\r]+\\s*$",
-                flags:  "i",
-                args:   []
+                pattern: "^(User-Agent:|Mozilla\\/)[^\\n\\r]+\\s*$",
+                flags: "i",
+                args: []
             }
         ];
     }
@@ -57,7 +56,6 @@ OS
 CPU
     Architecture: ${ua.cpu.architecture || "unknown"}`;
     }
-
 }
 
 export default ParseUserAgent;

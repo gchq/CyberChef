@@ -15,7 +15,6 @@ import fs from "fs";
 import path from "path";
 import EscapeString from "../../operations/EscapeString.mjs";
 
-
 const dir = path.join(process.cwd() + "/src/core/operations/");
 if (!fs.existsSync(dir)) {
     console.log("\nCWD: " + process.cwd());
@@ -48,16 +47,19 @@ If your operation does not rely on a library, just leave this blank and it will 
             default: "Default"
         },
         description: {
-            description: "The description should explain what the operation is and how it works. It can describe how the arguments should be entered and give examples of expected input and output. HTML markup is supported. Use <code> tags for examples. The description is scanned during searches, so include terms that are likely to be searched for when someone is looking for your operation.",
-            example: "Converts URI/URL percent-encoded characters back to their raw values.<br><br>e.g. <code>%3d</code> becomes <code>=</code>",
+            description:
+                "The description should explain what the operation is and how it works. It can describe how the arguments should be entered and give examples of expected input and output. HTML markup is supported. Use <code> tags for examples. The description is scanned during searches, so include terms that are likely to be searched for when someone is looking for your operation.",
+            example:
+                "Converts URI/URL percent-encoded characters back to their raw values.<br><br>e.g. <code>%3d</code> becomes <code>=</code>",
             prompt: "Description",
             type: "string"
         },
         infoURL: {
-            description: "An optional URL for an external site can be added to give more information about the operation. Wikipedia links are often suitable. If linking to Wikipedia, use an international link (e.g. https://wikipedia.org/...) rather than a localised link (e.g. https://en.wikipedia.org/...).",
+            description:
+                "An optional URL for an external site can be added to give more information about the operation. Wikipedia links are often suitable. If linking to Wikipedia, use an international link (e.g. https://wikipedia.org/...) rather than a localised link (e.g. https://en.wikipedia.org/...).",
             example: "https://wikipedia.org/wiki/Percent-encoding",
             prompt: "Information URL",
-            type: "string",
+            type: "string"
         },
         inputType: {
             description: `The input type defines how the input data will be presented to your operation. Check the project wiki for a full description of each type. The options are: ${ioTypes.join(", ")}.`,
@@ -78,7 +80,8 @@ If your operation does not rely on a library, just leave this blank and it will 
             message: `The output type should be one of: ${ioTypes.join(", ")}.`
         },
         highlight: {
-            description: "If your operation does not change the length of the input in any way, we can enable highlighting. If it does change the length in a predictable way, we may still be able to enable highlighting and calculate the correct offsets. If this is not possible, we will disable highlighting for this operation.",
+            description:
+                "If your operation does not change the length of the input in any way, we can enable highlighting. If it does change the length in a predictable way, we may still be able to enable highlighting and calculate the correct offsets. If this is not possible, we will disable highlighting for this operation.",
             example: "true/false",
             prompt: "Enable highlighting",
             type: "boolean",
@@ -103,10 +106,14 @@ If your operation does not rely on a library, just leave this blank and it will 
 // Build schema
 for (const prop in schema.properties) {
     const p = schema.properties[prop];
-    p.description = "\n" + colors.white(p.description) + colors.cyan("\nExample: " + p.example) + "\n" + colors.green(p.prompt);
+    p.description
+        = "\n" + colors.white(p.description) + colors.cyan("\nExample: " + p.example) + "\n" + colors.green(p.prompt);
 }
 
-console.log("\n\nThis script will generate a new operation template based on the information you provide. These values can be changed manually later.".yellow);
+console.log(
+    "\n\nThis script will generate a new operation template based on the information you provide. These values can be changed manually later."
+        .yellow
+);
 
 prompt.message = "";
 prompt.delimiter = ":".green;
@@ -119,14 +126,15 @@ prompt.get(schema, (err, result) => {
         process.exit(0);
     }
 
-    const moduleName = result.opName.replace(/\w\S*/g, txt => {
-        return txt.charAt(0).toUpperCase() + txt.substr(1);
-    }).replace(/[\s-()./]/g, "");
-
+    const moduleName = result.opName
+        .replace(/\w\S*/g, (txt) => {
+            return txt.charAt(0).toUpperCase() + txt.substr(1);
+        })
+        .replace(/[\s-()./]/g, "");
 
     const template = `/**
  * @author ${result.authorName} [${result.authorEmail}]
- * @copyright Crown Copyright ${(new Date()).getFullYear()}
+ * @copyright Crown Copyright ${new Date().getFullYear()}
  * @license Apache-2.0
  */
 
@@ -146,7 +154,7 @@ class ${moduleName} extends Operation {
 
         this.name = "${result.opName}";
         this.module = "${result.module}";
-        this.description = "${(new EscapeString).run(result.description, ["Special chars", "Double"])}";
+        this.description = "${new EscapeString().run(result.description, ["Special chars", "Double"])}";
         this.infoURL = "${result.infoURL}";
         this.inputType = "${result.inputType}";
         this.outputType = "${result.outputType}";
@@ -176,7 +184,9 @@ class ${moduleName} extends Operation {
 
         throw new OperationError("Test");
     }
-${result.highlight ? `
+${
+    result.highlight
+        ? `
     /**
      * Highlight ${result.opName}
      *
@@ -202,7 +212,9 @@ ${result.highlight ? `
     highlightReverse(pos, args) {
         return pos;
     }
-` : ""}
+`
+        : ""
+}
 }
 
 export default ${moduleName};
@@ -225,6 +237,4 @@ export default ${moduleName};
 3. Write tests in ${colors.green("tests/operations/tests/")}
 4. Run ${colors.cyan("npm run lint")} and ${colors.cyan("npm run test")}
 5. Submit a Pull Request to get your operation added to the official CyberChef repository.`);
-
 });
-

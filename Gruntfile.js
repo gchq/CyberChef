@@ -6,7 +6,8 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 const glob = require("glob");
 const path = require("path");
 
-const nodeFlags = "--experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings --no-deprecation";
+const nodeFlags
+    = "--experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings --no-deprecation";
 
 /**
  * Grunt configuration for building the app in various formats.
@@ -21,56 +22,80 @@ module.exports = function (grunt) {
     grunt.file.preserveBOM = false;
 
     // Tasks
-    grunt.registerTask("dev",
+    grunt.registerTask(
+        "dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "clean:config", "exec:generateConfig", "concurrent:dev"]);
+        ["clean:dev", "clean:config", "exec:generateConfig", "concurrent:dev"]
+    );
 
-    grunt.registerTask("prod",
-        "Creates a production-ready build. Use the --msg flag to add a compile message.",
-        [
-            "eslint", "clean:prod", "clean:config", "exec:generateConfig", "findModules", "webpack:web",
-            "copy:standalone", "zip:standalone", "clean:standalone", "exec:calcDownloadHash", "chmod"
-        ]);
+    grunt.registerTask("prod", "Creates a production-ready build. Use the --msg flag to add a compile message.", [
+        "eslint",
+        "clean:prod",
+        "clean:config",
+        "exec:generateConfig",
+        "findModules",
+        "webpack:web",
+        "copy:standalone",
+        "zip:standalone",
+        "clean:standalone",
+        "exec:calcDownloadHash",
+        "chmod"
+    ]);
 
-    grunt.registerTask("node",
-        "Compiles CyberChef into a single NodeJS module.",
-        [
-            "clean:node", "clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex"
-        ]);
+    grunt.registerTask("node", "Compiles CyberChef into a single NodeJS module.", [
+        "clean:node",
+        "clean:config",
+        "clean:nodeConfig",
+        "exec:generateConfig",
+        "exec:generateNodeIndex"
+    ]);
 
-    grunt.registerTask("configTests",
+    grunt.registerTask(
+        "configTests",
         "A task which configures config files in preparation for tests to be run. Use `npm test` to run tests.",
-        [
-            "clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex"
-        ]);
+        ["clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex"]
+    );
 
-    grunt.registerTask("testui",
+    grunt.registerTask(
+        "testui",
         "A task which runs all the UI tests in the tests directory. The prod task must already have been run.",
-        ["connect:prod", "exec:browserTests"]);
+        ["connect:prod", "exec:browserTests"]
+    );
 
-    grunt.registerTask("testnodeconsumer",
+    grunt.registerTask(
+        "testnodeconsumer",
         "A task which checks whether consuming CJS and ESM apps work with the CyberChef build",
-        ["exec:setupNodeConsumers", "exec:testCJSNodeConsumer", "exec:testESMNodeConsumer", "exec:teardownNodeConsumers"]);
+        [
+            "exec:setupNodeConsumers",
+            "exec:testCJSNodeConsumer",
+            "exec:testESMNodeConsumer",
+            "exec:teardownNodeConsumers"
+        ]
+    );
 
-    grunt.registerTask("default",
-        "Lints the code base",
-        ["eslint", "exec:repoSize"]);
+    grunt.registerTask("default", "Lints the code base", ["eslint", "exec:repoSize"]);
 
     grunt.registerTask("lint", "eslint");
 
-    grunt.registerTask("findModules",
+    grunt.registerTask(
+        "findModules",
         "Finds all generated modules and updates the entry point list for Webpack",
-        function(arg1, arg2) {
+        function (arg1, arg2) {
             const moduleEntryPoints = listEntryModules();
 
             grunt.log.writeln(`Found ${Object.keys(moduleEntryPoints).length} modules.`);
 
-            grunt.config.set("webpack.web.entry",
-                Object.assign({
-                    main: "./src/web/index.js"
-                }, moduleEntryPoints));
-        });
-
+            grunt.config.set(
+                "webpack.web.entry",
+                Object.assign(
+                    {
+                        main: "./src/web/index.js"
+                    },
+                    moduleEntryPoints
+                )
+            );
+        }
+    );
 
     // Load tasks provided by each plugin
     grunt.loadNpmTasks("grunt-eslint");
@@ -84,7 +109,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-connect");
     grunt.loadNpmTasks("grunt-zip");
 
-
     // Project configuration
     const compileTime = grunt.template.today("UTC:dd/mm/yyyy HH:MM:ss") + " UTC",
         pkg = grunt.file.readJSON("package.json"),
@@ -92,7 +116,7 @@ module.exports = function (grunt) {
         BUILD_CONSTANTS = {
             COMPILE_TIME: JSON.stringify(compileTime),
             COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || ""),
-            PKG_VERSION: JSON.stringify(pkg.version),
+            PKG_VERSION: JSON.stringify(pkg.version)
         },
         moduleEntryPoints = listEntryModules(),
         nodeConsumerTestPath = "~/tmp-cyberchef",
@@ -104,13 +128,16 @@ module.exports = function (grunt) {
             return {
                 mode: "production",
                 target: "web",
-                entry: Object.assign({
-                    main: "./src/web/index.js"
-                }, moduleEntryPoints),
+                entry: Object.assign(
+                    {
+                        main: "./src/web/index.js"
+                    },
+                    moduleEntryPoints
+                ),
                 output: {
                     path: __dirname + "/build/prod",
-                    filename: chunkData => {
-                        return chunkData.chunk.name === "main" ? "assets/[name].js": "[name].js";
+                    filename: (chunkData) => {
+                        return chunkData.chunk.name === "main" ? "assets/[name].js" : "[name].js";
                     },
                     globalObject: "this"
                 },
@@ -138,11 +165,10 @@ module.exports = function (grunt) {
                         analyzerMode: "static",
                         reportFilename: "BundleAnalyzerReport.html",
                         openAnalyzer: false
-                    }),
+                    })
                 ]
             };
         };
-
 
     /**
      * Generates an entry list for all the modules.
@@ -150,7 +176,7 @@ module.exports = function (grunt) {
     function listEntryModules() {
         const entryModules = {};
 
-        glob.sync("./src/core/config/modules/*.mjs").forEach(file => {
+        glob.sync("./src/core/config/modules/*.mjs").forEach((file) => {
             const basename = path.basename(file);
             if (basename !== "Default.mjs" && basename !== "OpModules.mjs")
                 entryModules["modules/" + basename.split(".mjs")[0]] = path.resolve(file);
@@ -171,12 +197,14 @@ module.exports = function (grunt) {
         if (!win) {
             return cmds.join(";");
         }
-        return cmds
-            // && means that subsequent commands will not be executed if the
-            // previous one fails. & would coninue on a fail
-            .join("&&")
-            // Windows does not support \n properly
-            .replace(/\n/g, "\\n");
+        return (
+            cmds
+                // && means that subsequent commands will not be executed if the
+                // previous one fails. & would coninue on a fail
+                .join("&&")
+                // Windows does not support \n properly
+                .replace(/\n/g, "\\n")
+        );
     }
 
     grunt.initConfig({
@@ -184,7 +212,11 @@ module.exports = function (grunt) {
             dev: ["build/dev/*"],
             prod: ["build/prod/*"],
             node: ["build/node/*"],
-            config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*", "src/code/operations/index.mjs"],
+            config: [
+                "src/core/config/OperationConfig.json",
+                "src/core/config/modules/*",
+                "src/code/operations/index.mjs"
+            ],
             nodeConfig: ["src/node/index.mjs", "src/node/config/OperationConfig.json"],
             standalone: ["build/prod/CyberChef*.html"]
         },
@@ -194,20 +226,26 @@ module.exports = function (grunt) {
             web: ["src/web/**/*.{js,mjs}", "!src/web/static/**/*"],
             node: ["src/node/**/*.{js,mjs}"],
             tests: ["tests/**/*.{js,mjs}"],
+            options: {
+                fix: true
+            }
         },
         webpack: {
             options: webpackConfig,
             myConfig: webpackConfig,
-            web: webpackProdConf(),
+            web: webpackProdConf()
         },
         "webpack-dev-server": {
             options: webpackConfig,
             start: {
                 mode: "development",
                 target: "web",
-                entry: Object.assign({
-                    main: "./src/web/index.js"
-                }, moduleEntryPoints),
+                entry: Object.assign(
+                    {
+                        main: "./src/web/index.js"
+                    },
+                    moduleEntryPoints
+                ),
                 resolve: {
                     alias: {
                         "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
@@ -228,7 +266,7 @@ module.exports = function (grunt) {
                         template: "./src/web/html/index.html",
                         chunks: ["main"],
                         compileTime: compileTime,
-                        version: pkg.version,
+                        version: pkg.version
                     })
                 ]
             }
@@ -236,11 +274,7 @@ module.exports = function (grunt) {
         zip: {
             standalone: {
                 cwd: "build/prod/",
-                src: [
-                    "build/prod/**/*",
-                    "!build/prod/index.html",
-                    "!build/prod/BundleAnalyzerReport.html",
-                ],
+                src: ["build/prod/**/*", "!build/prod/index.html", "!build/prod/BundleAnalyzerReport.html"],
                 dest: `build/prod/CyberChef_v${pkg.version}.zip`
             }
         },
@@ -258,14 +292,18 @@ module.exports = function (grunt) {
                     process: function (content, srcpath) {
                         if (srcpath.indexOf("index.html") >= 0) {
                             // Add Google Analytics code to index.html
-                            content = content.replace("</body></html>",
-                                grunt.file.read("src/web/static/ga.html") + "</body></html>");
+                            content = content.replace(
+                                "</body></html>",
+                                grunt.file.read("src/web/static/ga.html") + "</body></html>"
+                            );
 
                             // Add Structured Data for SEO
-                            content = content.replace("</head>",
-                                "<script type='application/ld+json'>" +
-                                JSON.stringify(JSON.parse(grunt.file.read("src/web/static/structuredData.json"))) +
-                                "</script></head>");
+                            content = content.replace(
+                                "</head>",
+                                "<script type='application/ld+json'>"
+                                    + JSON.stringify(JSON.parse(grunt.file.read("src/web/static/structuredData.json")))
+                                    + "</script></head>"
+                            );
                             return grunt.template.process(content, srcpath);
                         } else {
                             return content;
@@ -285,8 +323,10 @@ module.exports = function (grunt) {
                     process: function (content, srcpath) {
                         if (srcpath.indexOf("index.html") >= 0) {
                             // Replace download link with version number
-                            content = content.replace(/<a [^>]+>Download CyberChef.+?<\/a>/,
-                                `<span>Version ${pkg.version}</span>`);
+                            content = content.replace(
+                                /<a [^>]+>Download CyberChef.+?<\/a>/,
+                                `<span>Version ${pkg.version}</span>`
+                            );
 
                             return grunt.template.process(content, srcpath);
                         } else {
@@ -306,7 +346,7 @@ module.exports = function (grunt) {
         chmod: {
             build: {
                 options: {
-                    mode: "755",
+                    mode: "755"
                 },
                 src: ["build/**/*", "build/"]
             }
@@ -338,7 +378,7 @@ module.exports = function (grunt) {
                                 `sed -i -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`
                             ]);
                     }
-                },
+                }
             },
             repoSize: {
                 command: chainCommands([
@@ -390,21 +430,15 @@ module.exports = function (grunt) {
                 command: chainCommands([
                     `rm -rf ${nodeConsumerTestPath}`,
                     "echo '\n--- Node consumer tests complete ---'"
-                ]),
+                ])
             },
             testCJSNodeConsumer: {
-                command: chainCommands([
-                    `cd ${nodeConsumerTestPath}`,
-                    `node ${nodeFlags} cjs-consumer.js`,
-                ]),
-                stdout: false,
+                command: chainCommands([`cd ${nodeConsumerTestPath}`, `node ${nodeFlags} cjs-consumer.js`]),
+                stdout: false
             },
             testESMNodeConsumer: {
-                command: chainCommands([
-                    `cd ${nodeConsumerTestPath}`,
-                    `node ${nodeFlags} esm-consumer.mjs`,
-                ]),
-                stdout: false,
+                command: chainCommands([`cd ${nodeConsumerTestPath}`, `node ${nodeFlags} esm-consumer.mjs`]),
+                stdout: false
             },
             fixCryptoApiImports: {
                 command: function () {
@@ -428,6 +462,6 @@ module.exports = function (grunt) {
                 },
                 stdout: false
             }
-        },
+        }
     });
 };

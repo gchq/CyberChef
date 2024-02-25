@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {INPUT_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import { INPUT_DELIM_OPTIONS } from "../lib/Delim.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import XRegExp from "xregexp";
 
@@ -14,7 +14,6 @@ import XRegExp from "xregexp";
  * Filter operation
  */
 class Filter extends Operation {
-
     /**
      * Filter constructor
      */
@@ -23,7 +22,8 @@ class Filter extends Operation {
 
         this.name = "Filter";
         this.module = "Regex";
-        this.description = "Splits up the input using the specified delimiter and then filters each branch based on a regular expression.";
+        this.description
+            = "Splits up the input using the specified delimiter and then filters each branch based on a regular expression.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -61,13 +61,12 @@ class Filter extends Operation {
             throw new OperationError(`Invalid regex. Details: ${err.message}`);
         }
 
-        const regexFilter = function(value) {
+        const regexFilter = function (value) {
             return reverse ^ regex.test(value);
         };
 
         return input.split(delim).filter(regexFilter).join(delim);
     }
-
 }
 
 export default Filter;

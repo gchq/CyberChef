@@ -14,7 +14,6 @@ import OperationError from "../errors/OperationError.mjs";
  * PEM to Hex operation
  */
 class PEMToHex extends Operation {
-
     /**
      * PEMToHex constructor
      */
@@ -23,7 +22,8 @@ class PEMToHex extends Operation {
 
         this.name = "PEM to Hex";
         this.module = "Default";
-        this.description = "Converts PEM (Privacy Enhanced Mail) format to a hexadecimal DER (Distinguished Encoding Rules) string.";
+        this.description
+            = "Converts PEM (Privacy Enhanced Mail) format to a hexadecimal DER (Distinguished Encoding Rules) string.";
         this.infoURL = "https://wikipedia.org/wiki/Privacy-Enhanced_Mail#Format";
         this.inputType = "string";
         this.outputType = "string";
@@ -62,7 +62,6 @@ class PEMToHex extends Operation {
         }
         return output.join("\n");
     }
-
 }
 
 export default PEMToHex;

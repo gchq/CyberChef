@@ -5,9 +5,9 @@
  * @license Apache-2.0
  */
 
-import Utils, {debounce} from "../../core/Utils.mjs";
+import Utils, { debounce } from "../../core/Utils.mjs";
 import Dish from "../../core/Dish.mjs";
-import {detectFileType} from "../../core/lib/FileType.mjs";
+import { detectFileType } from "../../core/lib/FileType.mjs";
 import FileSaver from "file-saver";
 import ZipWorker from "worker-loader?inline=no-fallback!../workers/ZipWorker.mjs";
 
@@ -19,33 +19,20 @@ import {
     rectangularSelection,
     crosshairCursor
 } from "@codemirror/view";
-import {
-    EditorState,
-    Compartment
-} from "@codemirror/state";
-import {
-    defaultKeymap
-} from "@codemirror/commands";
-import {
-    bracketMatching
-} from "@codemirror/language";
-import {
-    search,
-    searchKeymap,
-    highlightSelectionMatches
-} from "@codemirror/search";
+import { EditorState, Compartment } from "@codemirror/state";
+import { defaultKeymap } from "@codemirror/commands";
+import { bracketMatching } from "@codemirror/language";
+import { search, searchKeymap, highlightSelectionMatches } from "@codemirror/search";
 
-import {statusBar} from "../utils/statusBar.mjs";
-import {htmlPlugin} from "../utils/htmlWidget.mjs";
-import {copyOverride} from "../utils/copyOverride.mjs";
-import {renderSpecialChar} from "../utils/editorUtils.mjs";
-
+import { statusBar } from "../utils/statusBar.mjs";
+import { htmlPlugin } from "../utils/htmlWidget.mjs";
+import { copyOverride } from "../utils/copyOverride.mjs";
+import { renderSpecialChar } from "../utils/editorUtils.mjs";
 
 /**
-  * Waiter to handle events related to the output
-  */
+ * Waiter to handle events related to the output
+ */
 class OutputWaiter {
-
     /**
      * OutputWaiter constructor.
      *
@@ -78,9 +65,9 @@ class OutputWaiter {
     initEditor() {
         // Mutable extensions
         this.outputEditorConf = {
-            eol: new Compartment,
-            lineWrapping: new Compartment,
-            drawSelection: new Compartment
+            eol: new Compartment(),
+            lineWrapping: new Compartment(),
+            drawSelection: new Compartment()
         };
 
         const initialState = EditorState.create({
@@ -96,14 +83,14 @@ class OutputWaiter {
                 crosshairCursor(),
                 bracketMatching(),
                 highlightSelectionMatches(),
-                search({top: true}),
+                search({ top: true }),
                 EditorState.allowMultipleSelections.of(true),
 
                 // Custom extensions
                 statusBar({
                     label: "Output",
                     timing: this.manager.timing,
-                    tabNumGetter: function() {
+                    tabNumGetter: function () {
                         return this.manager.tabs.getActiveTab("output");
                     }.bind(this),
                     eolHandler: this.eolChange.bind(this),
@@ -120,15 +107,11 @@ class OutputWaiter {
                 this.outputEditorConf.drawSelection.of(drawSelection()),
 
                 // Keymap
-                keymap.of([
-                    ...defaultKeymap,
-                    ...searchKeymap
-                ]),
+                keymap.of([...defaultKeymap, ...searchKeymap]),
 
                 // Event listeners
-                EditorView.updateListener.of(e => {
-                    if (e.selectionSet)
-                        this.manager.highlighter.selectionChange("output", e);
+                EditorView.updateListener.of((e) => {
+                    if (e.selectionSet) this.manager.highlighter.selectionChange("output", e);
                     if (e.docChanged || this.docChanging) {
                         this.docChanging = false;
                         this.toggleLoader(false);
@@ -219,9 +202,7 @@ class OutputWaiter {
      */
     setWordWrap(wrap) {
         this.outputEditorView.dispatch({
-            effects: this.outputEditorConf.lineWrapping.reconfigure(
-                wrap ? EditorView.lineWrapping : []
-            )
+            effects: this.outputEditorConf.lineWrapping.reconfigure(wrap ? EditorView.lineWrapping : [])
         });
     }
 
@@ -230,7 +211,7 @@ class OutputWaiter {
      * @param {string|ArrayBuffer} data
      * @param {boolean} [force=false]
      */
-    async setOutput(data, force=false) {
+    async setOutput(data, force = false) {
         // Don't do anything if the output hasn't changed
         if (!force && data === this.currentOutputCache) {
             this.manager.controls.hideStaleIndicator();
@@ -254,9 +235,7 @@ class OutputWaiter {
 
         // Turn drawSelection back on
         this.outputEditorView.dispatch({
-            effects: this.outputEditorConf.drawSelection.reconfigure(
-                drawSelection()
-            )
+            effects: this.outputEditorConf.drawSelection.reconfigure(drawSelection())
         });
 
         // Ensure we're not exceeding the maximum line length
@@ -264,9 +243,7 @@ class OutputWaiter {
         const lineLengthThreshold = 131072; // 128KB
         if (data.length > lineLengthThreshold) {
             const lines = data.split(this.getEOLSeq());
-            const longest = lines.reduce((a, b) =>
-                a > b.length ? a : b.length, 0
-            );
+            const longest = lines.reduce((a, b) => (a > b.length ? a : b.length), 0);
             if (longest > lineLengthThreshold) {
                 // If we are exceeding the max line length, turn off word wrap
                 wrap = false;
@@ -363,9 +340,7 @@ class OutputWaiter {
      * @returns {Dish}
      */
     getOutputDish(inputNum) {
-        if (this.outputExists(inputNum) &&
-            this.outputs[inputNum].data &&
-            this.outputs[inputNum].data.dish) {
+        if (this.outputExists(inputNum) && this.outputs[inputNum].data && this.outputs[inputNum].data.dish) {
             return this.outputs[inputNum].data.dish;
         }
         return null;
@@ -378,8 +353,7 @@ class OutputWaiter {
      * @returns {boolean}
      */
     outputExists(inputNum) {
-        if (this.outputs[inputNum] === undefined ||
-            this.outputs[inputNum] === null) {
+        if (this.outputs[inputNum] === undefined || this.outputs[inputNum] === null) {
             return false;
         }
         return true;
@@ -421,7 +395,7 @@ class OutputWaiter {
      * @param {number} inputNum
      * @param {boolean} set
      */
-    updateOutputValue(data, inputNum, set=true) {
+    updateOutputValue(data, inputNum, set = true) {
         if (!this.outputExists(inputNum)) {
             this.addOutput(inputNum);
         }
@@ -446,7 +420,7 @@ class OutputWaiter {
      * @param {number} inputNum
      * @param {boolean} [set=true]
      */
-    updateOutputMessage(statusMessage, inputNum, set=true) {
+    updateOutputMessage(statusMessage, inputNum, set = true) {
         if (!this.outputExists(inputNum)) return;
         this.outputs[inputNum].statusMessage = statusMessage;
         if (set) this.set(inputNum);
@@ -461,7 +435,7 @@ class OutputWaiter {
      * @param {number} inputNum
      * @param {number} [progress=0]
      */
-    updateOutputError(error, inputNum, progress=0) {
+    updateOutputError(error, inputNum, progress = 0) {
         if (!this.outputExists(inputNum)) return;
 
         const errorString = error.displayStr || error.toString();
@@ -514,7 +488,6 @@ class OutputWaiter {
         if (progress !== false) {
             this.manager.tabs.updateTabProgress(inputNum, progress, total, "output");
         }
-
     }
 
     /**
@@ -551,84 +524,85 @@ class OutputWaiter {
      */
     async set(inputNum) {
         inputNum = parseInt(inputNum, 10);
-        if (inputNum !== this.manager.tabs.getActiveTab("output") ||
-            !this.outputExists(inputNum)) return;
+        if (inputNum !== this.manager.tabs.getActiveTab("output") || !this.outputExists(inputNum)) return;
         this.toggleLoader(true);
 
-        return new Promise(async function(resolve, reject) {
-            const output = this.outputs[inputNum];
-            this.manager.timing.recordTime("settingOutput", inputNum);
+        return new Promise(
+            async function (resolve, reject) {
+                const output = this.outputs[inputNum];
+                this.manager.timing.recordTime("settingOutput", inputNum);
 
-            // Update the EOL value
-            this.outputEditorView.dispatch({
-                effects: this.outputEditorConf.eol.reconfigure(
-                    EditorState.lineSeparator.of(output.eolSequence)
-                )
-            });
-
-            // If pending or baking, show loader and status message
-            // If error, style the tab and handle the error
-            // If done, display the output if it's the active tab
-            // If inactive, show the last bake value (or blank)
-            if (output.status === "inactive" ||
-                output.status === "stale" ||
-                (output.status === "baked" && output.bakeId < this.manager.worker.bakeId)) {
-                this.manager.controls.showStaleIndicator();
-            } else {
-                this.manager.controls.hideStaleIndicator();
-            }
-
-            if (output.progress !== undefined && !this.app.baking) {
-                this.manager.recipe.updateBreakpointIndicator(output.progress);
-            } else {
-                this.manager.recipe.updateBreakpointIndicator(false);
-            }
-
-            if (output.status === "pending" || output.status === "baking") {
-                // show the loader and the status message if it's being shown
-                // otherwise don't do anything
-                document.querySelector("#output-loader .loading-msg").textContent = output.statusMessage;
-            } else if (output.status === "error") {
-                this.clearHTMLOutput();
-
-                if (output.error) {
-                    await this.setOutput(output.error);
-                } else {
-                    await this.setOutput(output.data.result);
-                }
-            } else if (output.status === "baked" || output.status === "inactive") {
-                document.querySelector("#output-loader .loading-msg").textContent = `Loading output ${inputNum}`;
-
-                if (output.data === null) {
-                    this.clearHTMLOutput();
-                    await this.setOutput("");
-                    return;
-                }
-
-                switch (output.data.type) {
-                    case "html":
-                        await this.setHTMLOutput(output.data.result);
-                        break;
-                    case "ArrayBuffer":
-                    case "string":
-                    default:
-                        this.clearHTMLOutput();
-                        await this.setOutput(output.data.result);
-                        break;
-                }
-                this.manager.timing.recordTime("complete", inputNum);
-
-                // Trigger an update so that the status bar recalculates timings
+                // Update the EOL value
                 this.outputEditorView.dispatch({
-                    changes: {
-                        from: 0,
-                        to: 0
-                    }
+                    effects: this.outputEditorConf.eol.reconfigure(EditorState.lineSeparator.of(output.eolSequence))
                 });
 
-                debounce(this.backgroundMagic, 50, "backgroundMagic", this, [])();
-            }
-        }.bind(this));
+                // If pending or baking, show loader and status message
+                // If error, style the tab and handle the error
+                // If done, display the output if it's the active tab
+                // If inactive, show the last bake value (or blank)
+                if (
+                    output.status === "inactive"
+                    || output.status === "stale"
+                    || (output.status === "baked" && output.bakeId < this.manager.worker.bakeId)
+                ) {
+                    this.manager.controls.showStaleIndicator();
+                } else {
+                    this.manager.controls.hideStaleIndicator();
+                }
+
+                if (output.progress !== undefined && !this.app.baking) {
+                    this.manager.recipe.updateBreakpointIndicator(output.progress);
+                } else {
+                    this.manager.recipe.updateBreakpointIndicator(false);
+                }
+
+                if (output.status === "pending" || output.status === "baking") {
+                    // show the loader and the status message if it's being shown
+                    // otherwise don't do anything
+                    document.querySelector("#output-loader .loading-msg").textContent = output.statusMessage;
+                } else if (output.status === "error") {
+                    this.clearHTMLOutput();
+
+                    if (output.error) {
+                        await this.setOutput(output.error);
+                    } else {
+                        await this.setOutput(output.data.result);
+                    }
+                } else if (output.status === "baked" || output.status === "inactive") {
+                    document.querySelector("#output-loader .loading-msg").textContent = `Loading output ${inputNum}`;
+
+                    if (output.data === null) {
+                        this.clearHTMLOutput();
+                        await this.setOutput("");
+                        return;
+                    }
+
+                    switch (output.data.type) {
+                        case "html":
+                            await this.setHTMLOutput(output.data.result);
+                            break;
+                        case "ArrayBuffer":
+                        case "string":
+                        default:
+                            this.clearHTMLOutput();
+                            await this.setOutput(output.data.result);
+                            break;
+                    }
+                    this.manager.timing.recordTime("complete", inputNum);
+
+                    // Trigger an update so that the status bar recalculates timings
+                    this.outputEditorView.dispatch({
+                        changes: {
+                            from: 0,
+                            to: 0
+                        }
+                    });
+
+                    debounce(this.backgroundMagic, 50, "backgroundMagic", this, [])();
+                }
+            }.bind(this)
+        );
     }
 
     /**
@@ -638,8 +612,8 @@ class OutputWaiter {
      * @returns {string}
      */
     async getDishStr(dish) {
-        return await new Promise(resolve => {
-            this.manager.worker.getDishAs(dish, "string", r => {
+        return await new Promise((resolve) => {
+            this.manager.worker.getDishAs(dish, "string", (r) => {
                 resolve(r.value);
             });
         });
@@ -652,8 +626,8 @@ class OutputWaiter {
      * @returns {ArrayBuffer}
      */
     async getDishBuffer(dish) {
-        return await new Promise(resolve => {
-            this.manager.worker.getDishAs(dish, "ArrayBuffer", r => {
+        return await new Promise((resolve) => {
+            this.manager.worker.getDishAs(dish, "ArrayBuffer", (r) => {
                 resolve(r.value);
             });
         });
@@ -667,8 +641,8 @@ class OutputWaiter {
      * @returns {string}
      */
     async getDishTitle(dish, maxLength) {
-        return await new Promise(resolve => {
-            this.manager.worker.getDishTitle(dish, maxLength, r => {
+        return await new Promise((resolve) => {
+            this.manager.worker.getDishTitle(dish, maxLength, (r) => {
                 resolve(r.value);
             });
         });
@@ -684,8 +658,8 @@ class OutputWaiter {
         const encoding = this.getChrEnc();
 
         if (buffer.byteLength === 0) return "";
-        return await new Promise(resolve => {
-            this.manager.worker.bufferToStr(buffer, encoding, r => {
+        return await new Promise((resolve) => {
+            this.manager.worker.bufferToStr(buffer, encoding, (r) => {
                 resolve(r.value);
             });
         });
@@ -718,15 +692,18 @@ class OutputWaiter {
             if (animation.children.length === 0 && !this.appendBombeTimeout) {
                 // Start a timer to add the Bombe to the DOM just before we make it
                 // visible so that there is no stuttering
-                this.appendBombeTimeout = setTimeout(function() {
-                    this.appendBombeTimeout = null;
-                    animation.appendChild(this.bombeEl);
-                }.bind(this), 150);
+                this.appendBombeTimeout = setTimeout(
+                    function () {
+                        this.appendBombeTimeout = null;
+                        animation.appendChild(this.bombeEl);
+                    }.bind(this),
+                    150
+                );
             }
 
             if (outputLoader.style.visibility !== "visible" && !this.outputLoaderTimeout) {
                 // Show the loading screen
-                this.outputLoaderTimeout = setTimeout(function() {
+                this.outputLoaderTimeout = setTimeout(function () {
                     this.outputLoaderTimeout = null;
                     outputLoader.style.visibility = "visible";
                     outputLoader.style.opacity = 1;
@@ -739,11 +716,13 @@ class OutputWaiter {
             this.outputLoaderTimeout = null;
 
             // Remove the Bombe from the DOM to save resources
-            this.outputLoaderTimeout = setTimeout(function () {
-                this.outputLoaderTimeout = null;
-                if (animation.children.length > 0)
-                    animation.removeChild(this.bombeEl);
-            }.bind(this), 500);
+            this.outputLoaderTimeout = setTimeout(
+                function () {
+                    this.outputLoaderTimeout = null;
+                    if (animation.children.length > 0) animation.removeChild(this.bombeEl);
+                }.bind(this),
+                500
+            );
             outputLoader.style.opacity = 0;
             outputLoader.style.visibility = "hidden";
         }
@@ -782,7 +761,7 @@ class OutputWaiter {
         if (fileName === null) return;
 
         const file = new File([data], fileName);
-        FileSaver.saveAs(file, fileName, {autoBom: false});
+        FileSaver.saveAs(file, fileName, { autoBom: false });
     }
 
     /**
@@ -794,14 +773,18 @@ class OutputWaiter {
         if (downloadButton.firstElementChild.innerHTML === "archive") {
             this.downloadAllFiles();
         } else {
-            const cancel = await new Promise(function(resolve, reject) {
-                this.app.confirm(
-                    "Cancel zipping?",
-                    "The outputs are currently being zipped for download.<br>Cancel zipping?",
-                    "Continue zipping",
-                    "Cancel zipping",
-                    resolve, this);
-            }.bind(this));
+            const cancel = await new Promise(
+                function (resolve, reject) {
+                    this.app.confirm(
+                        "Cancel zipping?",
+                        "The outputs are currently being zipped for download.<br>Cancel zipping?",
+                        "Continue zipping",
+                        "Cancel zipping",
+                        resolve,
+                        this
+                    );
+                }.bind(this)
+            );
             if (!cancel) {
                 this.terminateZipWorker();
             }
@@ -816,14 +799,19 @@ class OutputWaiter {
         const inputNums = Object.keys(this.outputs);
         for (let i = 0; i < inputNums.length; i++) {
             const iNum = inputNums[i];
-            if (this.outputs[iNum].status !== "baked" ||
-            this.outputs[iNum].bakeId !== this.manager.worker.bakeId) {
-                const continueDownloading = await new Promise(function(resolve, reject) {
-                    this.app.confirm(
-                        "Incomplete outputs",
-                        "Not all outputs have been baked yet. Continue downloading outputs?",
-                        "Download", "Cancel", resolve, this);
-                }.bind(this));
+            if (this.outputs[iNum].status !== "baked" || this.outputs[iNum].bakeId !== this.manager.worker.bakeId) {
+                const continueDownloading = await new Promise(
+                    function (resolve, reject) {
+                        this.app.confirm(
+                            "Incomplete outputs",
+                            "Not all outputs have been baked yet. Continue downloading outputs?",
+                            "Download",
+                            "Cancel",
+                            resolve,
+                            this
+                        );
+                    }.bind(this)
+                );
                 if (continueDownloading) {
                     break;
                 } else {
@@ -844,7 +832,10 @@ class OutputWaiter {
             fileName += ".zip";
         }
 
-        let fileExt = window.prompt("Please enter a file extension for the files, or leave blank to detect automatically.", "");
+        let fileExt = window.prompt(
+            "Please enter a file extension for the files, or leave blank to detect automatically.",
+            ""
+        );
 
         if (fileExt === null) fileExt = "";
 
@@ -912,7 +903,7 @@ class OutputWaiter {
         }
 
         const file = new File([r.zippedFile], r.filename);
-        FileSaver.saveAs(file, r.filename, {autoBom: false});
+        FileSaver.saveAs(file, r.filename, { autoBom: false });
 
         this.terminateZipWorker();
     }
@@ -962,8 +953,8 @@ class OutputWaiter {
             }
             const newOutputs = this.getNearbyNums(inputNum, direction);
 
-            const tabsLeft = (newOutputs[0] !== this.getSmallestInputNum());
-            const tabsRight = (newOutputs[newOutputs.length - 1] !== this.getLargestInputNum());
+            const tabsLeft = newOutputs[0] !== this.getSmallestInputNum();
+            const tabsRight = newOutputs[newOutputs.length - 1] !== this.getLargestInputNum();
 
             this.manager.tabs.refreshTabs(newOutputs, inputNum, tabsLeft, tabsRight, "output");
 
@@ -1015,10 +1006,10 @@ class OutputWaiter {
         this.mousedown = true;
         this.changeTabRight();
         const time = 200;
-        const func = function(time) {
+        const func = function (time) {
             if (this.mousedown) {
                 this.changeTabRight();
-                const newTime = (time > 50) ? time - 10 : 50;
+                const newTime = time > 50 ? time - 10 : 50;
                 setTimeout(func.bind(this, [newTime]), newTime);
             }
         };
@@ -1032,10 +1023,10 @@ class OutputWaiter {
         this.mousedown = true;
         this.changeTabLeft();
         const time = 200;
-        const func = function(time) {
+        const func = function (time) {
             if (this.mousedown) {
                 this.changeTabLeft();
-                const newTime = (time > 50) ? time - 10 : 50;
+                const newTime = time > 50 ? time - 10 : 50;
                 setTimeout(func.bind(this, [newTime]), newTime);
             }
         };
@@ -1075,7 +1066,10 @@ class OutputWaiter {
         const min = this.getSmallestInputNum(),
             max = this.getLargestInputNum();
 
-        let tabNum = window.prompt(`Enter tab number (${min} - ${max}):`, this.manager.tabs.getActiveTab("output").toString());
+        let tabNum = window.prompt(
+            `Enter tab number (${min} - ${max}):`,
+            this.manager.tabs.getActiveTab("output").toString()
+        );
         if (tabNum === null) return;
         tabNum = parseInt(tabNum, 10);
 
@@ -1112,7 +1106,7 @@ class OutputWaiter {
                         }
                 }
             }
-            if (!nums.includes(newNum) && (newNum > 0)) {
+            if (!nums.includes(newNum) && newNum > 0) {
                 nums.push(newNum);
             }
         }
@@ -1209,8 +1203,8 @@ class OutputWaiter {
      */
     refreshTabs(activeTab, direction) {
         const newNums = this.getNearbyNums(activeTab, direction),
-            tabsLeft = (newNums[0] !== this.getSmallestInputNum() && newNums.length > 0),
-            tabsRight = (newNums[newNums.length - 1] !== this.getLargestInputNum() && newNums.length > 0);
+            tabsLeft = newNums[0] !== this.getSmallestInputNum() && newNums.length > 0,
+            tabsRight = newNums[newNums.length - 1] !== this.getLargestInputNum() && newNums.length > 0;
 
         this.manager.tabs.refreshTabs(newNums, activeTab, tabsLeft, tabsRight, "output");
 
@@ -1237,7 +1231,12 @@ class OutputWaiter {
         }
         this.manager.tabs.updateTabHeader(inputNum, tabStr, "output");
         if (this.manager.worker.recipeConfig !== undefined) {
-            this.manager.tabs.updateTabProgress(inputNum, this.outputs[inputNum]?.progress, this.manager.worker.recipeConfig.length, "output");
+            this.manager.tabs.updateTabProgress(
+                inputNum,
+                this.outputs[inputNum]?.progress,
+                this.manager.worker.recipeConfig.length,
+                "output"
+            );
         }
 
         const tabItem = this.manager.tabs.getTabItem(inputNum, "output");
@@ -1278,12 +1277,12 @@ class OutputWaiter {
             newRecipeConfig;
 
         if (options[0].recipe.length) {
-            const opSequence = options[0].recipe.map(o => o.op).join(", ");
+            const opSequence = options[0].recipe.map((o) => o.op).join(", ");
             newRecipeConfig = currentRecipeConfig.concat(options[0].recipe);
             msg = `<i>${opSequence}</i> will produce <span class="data-text">"${Utils.escapeHtml(Utils.truncate(options[0].data), 30)}"</span>`;
         } else if (options[0].fileType && options[0].fileType.name) {
             const ft = options[0].fileType;
-            newRecipeConfig = currentRecipeConfig.concat([{op: "Detect File Type", args: []}]);
+            newRecipeConfig = currentRecipeConfig.concat([{ op: "Detect File Type", args: [] }]);
             msg = `<i>${ft.name}</i> file detected`;
         } else {
             return;
@@ -1320,7 +1319,6 @@ class OutputWaiter {
         magicButton.classList.add("pulse");
     }
 
-
     /**
      * Hides the Magic button and resets its values.
      */
@@ -1345,10 +1343,9 @@ class OutputWaiter {
         const blobURL = el.getAttribute("blob-url");
         const fileName = el.getAttribute("file-name");
 
-        const blob = await fetch(blobURL).then(r => r.blob());
-        this.manager.input.loadUIFiles([new File([blob], fileName, {type: blob.type})]);
+        const blob = await fetch(blobURL).then((r) => r.blob());
+        this.manager.input.loadUIFiles([new File([blob], fileName, { type: blob.type })]);
     }
-
 
     /**
      * Handler for copy click events.
@@ -1364,11 +1361,14 @@ class OutputWaiter {
         const output = await this.getDishStr(dish);
         const self = this;
 
-        navigator.clipboard.writeText(output).then(function() {
-            self.app.alert("Copied raw output successfully.", 2000);
-        }, function(err) {
-            self.app.alert("Sorry, the output could not be copied.", 3000);
-        });
+        navigator.clipboard.writeText(output).then(
+            function () {
+                self.app.alert("Copied raw output successfully.", 2000);
+            },
+            function (err) {
+                self.app.alert("Sorry, the output could not be copied.", 3000);
+            }
+        );
     }
 
     /**
@@ -1461,11 +1461,13 @@ class OutputWaiter {
             const iNum = inputNums[i],
                 output = this.outputs[iNum];
 
-            if (output.status === "pending" && showPending ||
-                output.status === "baking" && showBaking ||
-                output.status === "error" && showErrored ||
-                output.status === "stale" && showStale ||
-                output.status === "inactive" && showStale) {
+            if (
+                (output.status === "pending" && showPending)
+                || (output.status === "baking" && showBaking)
+                || (output.status === "error" && showErrored)
+                || (output.status === "stale" && showStale)
+                || (output.status === "inactive" && showStale)
+            ) {
                 const outDisplay = {
                     "pending": "Not baked yet",
                     "baking": "Baking",
@@ -1475,9 +1477,11 @@ class OutputWaiter {
                 };
 
                 // If the output has a dish object, check it against the filter
-                if (Object.prototype.hasOwnProperty.call(output, "data") &&
-                    output.data &&
-                    Object.prototype.hasOwnProperty.call(output.data, "dish")) {
+                if (
+                    Object.prototype.hasOwnProperty.call(output, "data")
+                    && output.data
+                    && Object.prototype.hasOwnProperty.call(output.data, "dish")
+                ) {
                     const data = await output.data.dish.get(Dish.STRING);
                     if (contentFilterExp.test(data)) {
                         results.push({
@@ -1544,7 +1548,6 @@ class OutputWaiter {
         $("#output-tab-modal").modal("hide");
         this.changeTab(inputNum, this.app.options.syncTabs);
     }
-
 
     /**
      * Sets the console log level in the workers.

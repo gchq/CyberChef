@@ -16,20 +16,20 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "BSON serialise",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "BSON serialise: basic",
-        input: "{\"hello\":\"world\"}",
+        input: '{"hello":"world"}',
         expectedOutput: "\x16\x00\x00\x00\x02hello\x00\x06\x00\x00\x00world\x00\x00",
         recipeConfig: [
             {
                 op: "BSON serialise",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "BSON deserialise: nothing",
@@ -38,19 +38,19 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "BSON deserialise",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "BSON deserialise: basic",
         input: "\x16\x00\x00\x00\x02hello\x00\x06\x00\x00\x00world\x00\x00",
-        expectedOutput: "{\n  \"hello\": \"world\"\n}",
+        expectedOutput: '{\n  "hello": "world"\n}',
         recipeConfig: [
             {
                 op: "BSON deserialise",
-                args: [],
-            },
-        ],
-    },
+                args: []
+            }
+        ]
+    }
 ]);

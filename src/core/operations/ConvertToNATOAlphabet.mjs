@@ -31,7 +31,7 @@ class ConvertToNATOAlphabet extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        return input.replace(/[a-z0-9,/.]/ig, letter => {
+        return input.replace(/[a-z0-9,/.]/gi, (letter) => {
             return lookup[letter.toUpperCase()];
         });
     }
@@ -76,7 +76,7 @@ const lookup = {
     "9": "Nine ",
     ",": "Comma ",
     "/": "Fraction bar ",
-    ".": "Full stop ",
+    ".": "Full stop "
 };
 
 export default ConvertToNATOAlphabet;

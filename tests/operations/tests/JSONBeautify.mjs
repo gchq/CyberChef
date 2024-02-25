@@ -16,9 +16,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false, false],
-            },
-        ],
+                args: [" ", false, false]
+            }
+        ]
     },
     {
         name: "JSON Beautify: space, number",
@@ -27,24 +27,24 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false, false],
-            },
-        ],
+                args: [" ", false, false]
+            }
+        ]
     },
     {
         name: "JSON Beautify: space, string",
-        input: "\"string\"",
-        expectedOutput: "\"string\"",
+        input: '"string"',
+        expectedOutput: '"string"',
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false, false],
+                args: [" ", false, false]
             },
             {
                 op: "HTML To Text",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "JSON Beautify: space, boolean",
@@ -53,9 +53,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false, false],
-            },
-        ],
+                args: [" ", false, false]
+            }
+        ]
     },
     {
         name: "JSON Beautify: space, emptyList",
@@ -64,9 +64,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false, false],
-            },
-        ],
+                args: [" ", false, false]
+            }
+        ]
     },
     {
         name: "JSON Beautify: space, list",
@@ -75,9 +75,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false, false],
-            },
-        ],
+                args: [" ", false, false]
+            }
+        ]
     },
     {
         name: "JSON Beautify: tab, list",
@@ -86,53 +86,55 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: ["\t", false, false],
-            },
-        ],
+                args: ["\t", false, false]
+            }
+        ]
     },
     {
         name: "JSON Beautify: space, object",
-        input: "{\"second\":2,\"first\":3}",
-        expectedOutput: "{\n \"second\": 2,\n \"first\": 3\n}",
+        input: '{"second":2,"first":3}',
+        expectedOutput: '{\n "second": 2,\n "first": 3\n}',
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: [" ", false, false],
+                args: [" ", false, false]
             },
             {
                 op: "HTML To Text",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "JSON Beautify: tab, nested",
-        input: "[2,{\"second\":2,\"first\":3,\"beginning\":{\"j\":\"3\",\"i\":[2,3,false]}},1,2,3]",
-        expectedOutput: "[\n\t2,\n\t{\n\t\t\"second\": 2,\n\t\t\"first\": 3,\n\t\t\"beginning\": {\n\t\t\t\"j\": \"3\",\n\t\t\t\"i\": [\n\t\t\t\t2,\n\t\t\t\t3,\n\t\t\t\tfalse\n\t\t\t]\n\t\t}\n\t},\n\t1,\n\t2,\n\t3\n]",
+        input: '[2,{"second":2,"first":3,"beginning":{"j":"3","i":[2,3,false]}},1,2,3]',
+        expectedOutput:
+            '[\n\t2,\n\t{\n\t\t"second": 2,\n\t\t"first": 3,\n\t\t"beginning": {\n\t\t\t"j": "3",\n\t\t\t"i": [\n\t\t\t\t2,\n\t\t\t\t3,\n\t\t\t\tfalse\n\t\t\t]\n\t\t}\n\t},\n\t1,\n\t2,\n\t3\n]',
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: ["\t", false, false],
+                args: ["\t", false, false]
             },
             {
                 op: "HTML To Text",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "JSON Beautify: tab, nested, sorted",
-        input: "[2,{\"second\":2,\"first\":3,\"beginning\":{\"j\":\"3\",\"i\":[2,3,false]}},1,2,3]",
-        expectedOutput: "[\n\t2,\n\t{\n\t\t\"beginning\": {\n\t\t\t\"i\": [\n\t\t\t\t2,\n\t\t\t\t3,\n\t\t\t\tfalse\n\t\t\t],\n\t\t\t\"j\": \"3\"\n\t\t},\n\t\t\"first\": 3,\n\t\t\"second\": 2\n\t},\n\t1,\n\t2,\n\t3\n]",
+        input: '[2,{"second":2,"first":3,"beginning":{"j":"3","i":[2,3,false]}},1,2,3]',
+        expectedOutput:
+            '[\n\t2,\n\t{\n\t\t"beginning": {\n\t\t\t"i": [\n\t\t\t\t2,\n\t\t\t\t3,\n\t\t\t\tfalse\n\t\t\t],\n\t\t\t"j": "3"\n\t\t},\n\t\t"first": 3,\n\t\t"second": 2\n\t},\n\t1,\n\t2,\n\t3\n]',
         recipeConfig: [
             {
                 op: "JSON Beautify",
-                args: ["\t", true, false],
+                args: ["\t", true, false]
             },
             {
                 op: "HTML To Text",
                 args: []
             }
-        ],
-    },
+        ]
+    }
 ]);

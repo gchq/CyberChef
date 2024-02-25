@@ -13,12 +13,10 @@ import { cryptNotice } from "../lib/Crypt.mjs";
 import * as es6promisify from "es6-promisify";
 const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
 
-
 /**
  * Generate PGP Key Pair operation
  */
 class GeneratePGPKeyPair extends Operation {
-
     /**
      * GeneratePGPKeyPair constructor
      */
@@ -87,15 +85,18 @@ class GeneratePGPKeyPair extends Operation {
                 "flags": flags,
                 "expire_in": 0
             },
-            subkeys: [{
-                "nbits": getSubkeySize(keySize),
-                "flags": kbpgp.const.openpgp.sign_data,
-                "expire_in": 86400 * 365 * 8
-            }, {
-                "nbits": getSubkeySize(keySize),
-                "flags": kbpgp.const.openpgp.encrypt_comm | kbpgp.const.openpgp.encrypt_storage,
-                "expire_in": 86400 * 365 * 2
-            }],
+            subkeys: [
+                {
+                    "nbits": getSubkeySize(keySize),
+                    "flags": kbpgp.const.openpgp.sign_data,
+                    "expire_in": 86400 * 365 * 8
+                },
+                {
+                    "nbits": getSubkeySize(keySize),
+                    "flags": kbpgp.const.openpgp.encrypt_comm | kbpgp.const.openpgp.encrypt_storage,
+                    "expire_in": 86400 * 365 * 2
+                }
+            ],
             asp: ASP
         };
 
@@ -108,7 +109,9 @@ class GeneratePGPKeyPair extends Operation {
                     privateKeyExportOptions = {};
 
                 if (password) privateKeyExportOptions.passphrase = password;
-                const privateKey = await promisify(signedKey.export_pgp_private.bind(signedKey))(privateKeyExportOptions);
+                const privateKey = await promisify(signedKey.export_pgp_private.bind(signedKey))(
+                    privateKeyExportOptions
+                );
                 const publicKey = await promisify(signedKey.export_pgp_public.bind(signedKey))({});
                 resolve(privateKey + "\n" + publicKey.trim());
             } catch (err) {
@@ -116,7 +119,6 @@ class GeneratePGPKeyPair extends Operation {
             }
         });
     }
-
 }
 
 export default GeneratePGPKeyPair;

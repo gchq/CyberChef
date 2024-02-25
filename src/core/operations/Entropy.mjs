@@ -10,13 +10,12 @@ import * as nodomtemp from "nodom";
 import Operation from "../Operation.mjs";
 
 const d3 = d3temp.default ? d3temp.default : d3temp;
-const nodom = nodomtemp.default ? nodomtemp.default: nodomtemp;
+const nodom = nodomtemp.default ? nodomtemp.default : nodomtemp;
 
 /**
  * Entropy operation
  */
 class Entropy extends Operation {
-
     /**
      * Entropy constructor
      */
@@ -25,7 +24,8 @@ class Entropy extends Operation {
 
         this.name = "Entropy";
         this.module = "Charts";
-        this.description = "Shannon Entropy, in the context of information theory, is a measure of the rate at which information is produced by a source of data. It can be used, in a broad sense, to detect whether data is likely to be structured or unstructured. 8 is the maximum, representing highly unstructured, 'random' data. English language text usually falls somewhere between 3.5 and 5. Properly encrypted or compressed data should have an entropy of over 7.5.";
+        this.description
+            = "Shannon Entropy, in the context of information theory, is a measure of the rate at which information is produced by a source of data. It can be used, in a broad sense, to detect whether data is likely to be structured or unstructured. 8 is the maximum, representing highly unstructured, 'random' data. English language text usually falls somewhere between 3.5 and 5. Properly encrypted or compressed data should have an entropy of over 7.5.";
         this.infoURL = "https://wikipedia.org/wiki/Entropy_(information_theory)";
         this.inputType = "ArrayBuffer";
         this.outputType = "json";
@@ -68,7 +68,7 @@ class Entropy extends Operation {
 
         for (i = 0; i < prob.length; i++) {
             p = prob[i];
-            entropy += p * Math.log(p) / Math.log(2);
+            entropy += (p * Math.log(p)) / Math.log(2);
         }
 
         return -entropy;
@@ -85,7 +85,7 @@ class Entropy extends Operation {
         const binWidth = inputBytes.length < 256 ? 8 : 256;
 
         for (let bytePos = 0; bytePos < inputBytes.length; bytePos += binWidth) {
-            const block = inputBytes.slice(bytePos, bytePos+binWidth);
+            const block = inputBytes.slice(bytePos, bytePos + binWidth);
             entropyData.push(this.calculateShannonEntropy(block));
         }
 
@@ -106,25 +106,21 @@ class Entropy extends Operation {
      */
     createAxes(svg, xScale, yScale, svgHeight, svgWidth, margins, title, xTitle, yTitle) {
         // Axes
-        const yAxis = d3.axisLeft()
-            .scale(yScale);
+        const yAxis = d3.axisLeft().scale(yScale);
 
-        const xAxis = d3.axisBottom()
-            .scale(xScale);
+        const xAxis = d3.axisBottom().scale(xScale);
 
         svg.append("g")
             .attr("transform", `translate(0, ${svgHeight - margins.bottom})`)
             .call(xAxis);
 
-        svg.append("g")
-            .attr("transform", `translate(${margins.left},0)`)
-            .call(yAxis);
+        svg.append("g").attr("transform", `translate(${margins.left},0)`).call(yAxis);
 
         // Axes labels
         svg.append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 0 - margins.left)
-            .attr("x", 0 - (svgHeight / 2))
+            .attr("x", 0 - svgHeight / 2)
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .text(yTitle);
@@ -179,29 +175,29 @@ class Entropy extends Operation {
         const document = new nodom.Document();
         let svg = document.createElement("svg");
 
-        svg = d3.select(svg)
+        svg = d3
+            .select(svg)
             .attr("width", "100%")
             .attr("height", "100%")
             .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
 
-        const yScale = d3.scaleLinear()
-            .domain([0, d3.max(byteFrequency, d => d)])
+        const yScale = d3
+            .scaleLinear()
+            .domain([0, d3.max(byteFrequency, (d) => d)])
             .range([svgHeight - margins.bottom, margins.top]);
 
-        const xScale = d3.scaleLinear()
+        const xScale = d3
+            .scaleLinear()
             .domain([0, byteFrequency.length - 1])
             .range([margins.left, svgWidth - margins.right]);
 
-        const line = d3.line()
+        const line = d3
+            .line()
             .x((_, i) => xScale(i))
-            .y(d => yScale(d))
+            .y((d) => yScale(d))
             .curve(d3.curveMonotoneX);
 
-        svg.append("path")
-            .datum(byteFrequency)
-            .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("d", line);
+        svg.append("path").datum(byteFrequency).attr("fill", "none").attr("stroke", "steelblue").attr("d", line);
 
         this.createAxes(svg, xScale, yScale, svgHeight, svgWidth, margins, "", "Byte", "Byte Frequency");
 
@@ -223,27 +219,31 @@ class Entropy extends Operation {
 
         const document = new nodom.Document();
         let svg = document.createElement("svg");
-        svg = d3.select(svg)
+        svg = d3
+            .select(svg)
             .attr("width", "100%")
             .attr("height", "100%")
             .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
 
-        const yExtent = d3.extent(byteFrequency, d => d);
-        const yScale = d3.scaleLinear()
+        const yExtent = d3.extent(byteFrequency, (d) => d);
+        const yScale = d3
+            .scaleLinear()
             .domain(yExtent)
             .range([svgHeight - margins.bottom, margins.top]);
 
-        const xScale = d3.scaleLinear()
+        const xScale = d3
+            .scaleLinear()
             .domain([0, byteFrequency.length - 1])
             .range([margins.left - binWidth, svgWidth - margins.right]);
 
         svg.selectAll("rect")
             .data(byteFrequency)
-            .enter().append("rect")
+            .enter()
+            .append("rect")
             .attr("x", (_, i) => xScale(i) + binWidth)
-            .attr("y", dataPoint => yScale(dataPoint))
+            .attr("y", (dataPoint) => yScale(dataPoint))
             .attr("width", binWidth)
-            .attr("height", dataPoint => yScale(yExtent[0]) - yScale(dataPoint))
+            .attr("height", (dataPoint) => yScale(yExtent[0]) - yScale(dataPoint))
             .attr("fill", "blue");
 
         this.createAxes(svg, xScale, yScale, svgHeight, svgWidth, margins, "", "Byte", "Byte Frequency");
@@ -265,28 +265,30 @@ class Entropy extends Operation {
 
         const document = new nodom.Document();
         let svg = document.createElement("svg");
-        svg = d3.select(svg)
+        svg = d3
+            .select(svg)
             .attr("width", "100%")
             .attr("height", "100%")
             .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
 
-        const yScale = d3.scaleLinear()
-            .domain([0, d3.max(entropyData, d => d)])
+        const yScale = d3
+            .scaleLinear()
+            .domain([0, d3.max(entropyData, (d) => d)])
             .range([svgHeight - margins.bottom, margins.top]);
 
-        const xScale = d3.scaleLinear()
+        const xScale = d3
+            .scaleLinear()
             .domain([0, entropyData.length])
             .range([margins.left, svgWidth - margins.right]);
 
-        const line = d3.line()
+        const line = d3
+            .line()
             .x((_, i) => xScale(i))
-            .y(d => yScale(d))
+            .y((d) => yScale(d))
             .curve(d3.curveMonotoneX);
 
         if (entropyData.length > 0) {
-            svg.append("path")
-                .datum(entropyData)
-                .attr("d", line);
+            svg.append("path").datum(entropyData).attr("d", line);
 
             svg.selectAll("path").attr("fill", "none").attr("stroke", "steelblue");
         }
@@ -318,25 +320,27 @@ class Entropy extends Operation {
 
         const document = new nodom.Document();
         let svg = document.createElement("svg");
-        svg = d3.select(svg)
+        svg = d3
+            .select(svg)
             .attr("width", "100%")
             .attr("height", "100%")
             .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
 
-        const greyScale = d3.scaleLinear()
-            .domain([0, d3.max(entropyData, d => d)])
+        const greyScale = d3
+            .scaleLinear()
+            .domain([0, d3.max(entropyData, (d) => d)])
             .range(["#000000", "#FFFFFF"])
             .interpolate(d3.interpolateRgb);
 
-        svg
-            .selectAll("rect")
+        svg.selectAll("rect")
             .data(nodes)
-            .enter().append("rect")
-            .attr("x", d => d.x * cellSize)
-            .attr("y", d => d.y * cellSize)
+            .enter()
+            .append("rect")
+            .attr("x", (d) => d.x * cellSize)
+            .attr("y", (d) => d.y * cellSize)
             .attr("width", cellSize)
             .attr("height", cellSize)
-            .style("fill", d => greyScale(d.entropy));
+            .style("fill", (d) => greyScale(d.entropy));
 
         return svg._groups[0][0].outerHTML;
     }

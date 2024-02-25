@@ -12,7 +12,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Frequency distribution operation
  */
 class FrequencyDistribution extends Operation {
-
     /**
      * FrequencyDistribution constructor
      */
@@ -63,7 +62,7 @@ class FrequencyDistribution extends Operation {
         let repr = 0;
         for (i = 0; i < 256; i++) {
             if (distrib[i] > 0) repr++;
-            percentages[i] = distrib[i] / len * 100;
+            percentages[i] = (distrib[i] / len) * 100;
         }
 
         return {
@@ -108,7 +107,7 @@ Number of bytes not represented: ${256 - freq.bytesRepresented}
                 if (showAscii) {
                     if (i <= 32) {
                         c = String.fromCharCode(0x2400 + i);
-                    } else  if (i === 127) {
+                    } else if (i === 127) {
                         c = String.fromCharCode(0x2421);
                     } else {
                         c = String.fromCharCode(i);
@@ -117,7 +116,7 @@ Number of bytes not represented: ${256 - freq.bytesRepresented}
                 const bite = `<td>${Utils.hex(i, 2)}</td>`,
                     ascii = showAscii ? `<td>${c}</td>` : "",
                     percentage = `<td>${(freq.percentages[i].toFixed(2).replace(".00", "") + "%").padEnd(8, " ")}</td>`,
-                    bars = `<td>${Array(Math.ceil(freq.percentages[i])+1).join("|")}</td>`;
+                    bars = `<td>${Array(Math.ceil(freq.percentages[i]) + 1).join("|")}</td>`;
 
                 output += `<tr>${bite}${ascii}${percentage}${bars}</tr>`;
             }
@@ -126,7 +125,6 @@ Number of bytes not represented: ${256 - freq.bytesRepresented}
         output += "</table>";
         return output;
     }
-
 }
 
 export default FrequencyDistribution;

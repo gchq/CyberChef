@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Flip Image operation
  */
 class FlipImage extends Operation {
-
     /**
      * FlipImage constructor
      */
@@ -56,8 +55,7 @@ class FlipImage extends Operation {
             throw new OperationError(`Error loading image. (${err})`);
         }
         try {
-            if (isWorkerEnvironment())
-                self.sendStatusMessage("Flipping image...");
+            if (isWorkerEnvironment()) self.sendStatusMessage("Flipping image...");
             switch (flipAxis) {
                 case "Horizontal":
                     image.flip(true, false);
@@ -95,7 +93,6 @@ class FlipImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default FlipImage;

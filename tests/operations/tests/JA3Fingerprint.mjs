@@ -17,7 +17,7 @@ TestRegister.addTests([
                 "op": "JA3 Fingerprint",
                 "args": ["Hex", "Hash digest"]
             }
-        ],
+        ]
     },
     {
         name: "JA3 Fingerprint: TLS 1.1",
@@ -28,7 +28,7 @@ TestRegister.addTests([
                 "op": "JA3 Fingerprint",
                 "args": ["Hex", "Hash digest"]
             }
-        ],
+        ]
     },
     {
         name: "JA3 Fingerprint: TLS 1.2",
@@ -39,7 +39,7 @@ TestRegister.addTests([
                 "op": "JA3 Fingerprint",
                 "args": ["Hex", "Hash digest"]
             }
-        ],
+        ]
     },
     {
         name: "JA3 Fingerprint: TLS 1.3",
@@ -50,6 +50,6 @@ TestRegister.addTests([
                 "op": "JA3 Fingerprint",
                 "args": ["Hex", "Hash digest"]
             }
-        ],
-    },
+        ]
+    }
 ]);

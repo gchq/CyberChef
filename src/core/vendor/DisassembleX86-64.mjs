@@ -25,7 +25,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-
 /*-------------------------------------------------------------------------------------------------------------------------
 Binary byte code array.
 ---------------------------------------------------------------------------------------------------------------------------
@@ -57,7 +56,8 @@ into the BinCode array using the Function ^LoadBinCode()^.
 The function ^SetBasePosition()^ sets the base location in Pos64, and Pos32, and Code Segment.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-var Pos64 = 0x00000000, Pos32 = 0x00000000;
+var Pos64 = 0x00000000,
+    Pos32 = 0x00000000;
 
 /*-------------------------------------------------------------------------------------------------------------------------
 Code Segment is used in 16 bit binaries in which the segment is times 16 (Left Shift 4) added to the 16 bit address position.
@@ -157,1157 +157,2676 @@ The function ^DecodeOpcode()^ Gives back the instructions name.
 --------------------------------------------------------------------------------------------------------------------------*/
 
 const Mnemonics = [
-  /*------------------------------------------------------------------------------------------------------------------------
+    /*------------------------------------------------------------------------------------------------------------------------
   First Byte operations 0 to 255.
   ------------------------------------------------------------------------------------------------------------------------*/
-  "ADD","ADD","ADD","ADD","ADD","ADD","PUSH ES","POP ES",
-  "OR","OR","OR","OR","OR","OR","PUSH CS"
-  ,
-  "" //*Two byte instructions prefix sets opcode 01,000000000 next byte read is added to the lower 8 bit's.
-  ,
-  "ADC","ADC","ADC","ADC","ADC","ADC","PUSH SS","POP SS",
-  "SBB","SBB","SBB","SBB","SBB","SBB","PUSH DS","POP DS",
-  "AND","AND","AND","AND","AND","AND",
-  "ES:[", //Extra segment override sets SegOveride "ES:[".
-  "DAA",
-  "SUB","SUB","SUB","SUB","SUB","SUB",
-  "CS:[", //Code segment override sets SegOveride "CS:[".
-  "DAS",
-  "XOR","XOR","XOR","XOR","XOR","XOR",
-  "SS:[", //Stack segment override sets SegOveride "SS:[".
-  "AAA",
-  "CMP","CMP","CMP","CMP","CMP","CMP",
-  "DS:[", //Data Segment override sets SegOveride "DS:[".
-  "AAS",
-  /*------------------------------------------------------------------------------------------------------------------------
+    "ADD",
+    "ADD",
+    "ADD",
+    "ADD",
+    "ADD",
+    "ADD",
+    "PUSH ES",
+    "POP ES",
+    "OR",
+    "OR",
+    "OR",
+    "OR",
+    "OR",
+    "OR",
+    "PUSH CS",
+    "", //*Two byte instructions prefix sets opcode 01,000000000 next byte read is added to the lower 8 bit's.
+    "ADC",
+    "ADC",
+    "ADC",
+    "ADC",
+    "ADC",
+    "ADC",
+    "PUSH SS",
+    "POP SS",
+    "SBB",
+    "SBB",
+    "SBB",
+    "SBB",
+    "SBB",
+    "SBB",
+    "PUSH DS",
+    "POP DS",
+    "AND",
+    "AND",
+    "AND",
+    "AND",
+    "AND",
+    "AND",
+    "ES:[", //Extra segment override sets SegOveride "ES:[".
+    "DAA",
+    "SUB",
+    "SUB",
+    "SUB",
+    "SUB",
+    "SUB",
+    "SUB",
+    "CS:[", //Code segment override sets SegOveride "CS:[".
+    "DAS",
+    "XOR",
+    "XOR",
+    "XOR",
+    "XOR",
+    "XOR",
+    "XOR",
+    "SS:[", //Stack segment override sets SegOveride "SS:[".
+    "AAA",
+    "CMP",
+    "CMP",
+    "CMP",
+    "CMP",
+    "CMP",
+    "CMP",
+    "DS:[", //Data Segment override sets SegOveride "DS:[".
+    "AAS",
+    /*------------------------------------------------------------------------------------------------------------------------
   Start of Rex Prefix adjustment setting uses opcodes 40 to 4F. These opcodes are only decoded as adjustment settings
   by the function ^DecodePrefixAdjustments()^ while in 64 bit mode. If not in 64 bit mode the codes are not read
   by the function ^DecodePrefixAdjustments()^ which allows the opcode to be set 40 to 4F hex in which the defined
   instructions bellow are used by ^DecodeOpcode()^.
   ------------------------------------------------------------------------------------------------------------------------*/
-  "INC","INC","INC","INC","INC","INC","INC","INC",
-  "DEC","DEC","DEC","DEC","DEC","DEC","DEC","DEC",
-  /*------------------------------------------------------------------------------------------------------------------------
+    "INC",
+    "INC",
+    "INC",
+    "INC",
+    "INC",
+    "INC",
+    "INC",
+    "INC",
+    "DEC",
+    "DEC",
+    "DEC",
+    "DEC",
+    "DEC",
+    "DEC",
+    "DEC",
+    "DEC",
+    /*------------------------------------------------------------------------------------------------------------------------
   End of the Rex Prefix adjustment setting opcodes.
   ------------------------------------------------------------------------------------------------------------------------*/
-  "PUSH","PUSH","PUSH","PUSH","PUSH","PUSH","PUSH","PUSH",
-  "POP","POP","POP","POP","POP","POP","POP","POP",
-  ["PUSHA","PUSHAD",""],["POPA","POPAD",""],
-  ["BOUND","BOUND",""], //EVEX prefix adjustment settings only if used in register to register, or in 64 bit mode, otherwise the defined BOUND instruction is used.
-  "MOVSXD",
-  "FS:[","GS:[", //Sets SegOveride "FS:[" next opcode sets "GS:[".
-  "","", //Operand Size, and Address size adjustment to ModR/M.
-  "PUSH","IMUL","PUSH","IMUL",
-  "INS","INS","OUTS","OUTS",
-  "JO","JNO","JB","JAE","JE","JNE","JBE","JA",
-  "JS","JNS","JP","JNP","JL","JGE","JLE","JG",
-  ["ADD","OR","ADC","SBB","AND","SUB","XOR","CMP"], //Group opcode uses the ModR/M register selection 0 though 7 giving 8 instruction in one opcode.
-  ["ADD","OR","ADC","SBB","AND","SUB","XOR","CMP"],
-  ["ADD","OR","ADC","SBB","AND","SUB","XOR","CMP"],
-  ["ADD","OR","ADC","SBB","AND","SUB","XOR","CMP"],
-  "TEST","TEST","XCHG","XCHG",
-  "MOV","MOV","MOV","MOV","MOV",
-  ["LEA","???"], //*ModR/M Register, and memory mode separation.
-  "MOV",
-  ["POP","???","???","???","???","???","???","???"],
-  [["NOP","","",""],["NOP","","",""],["PAUSE","","",""],["NOP","","",""]],
-  "XCHG","XCHG","XCHG","XCHG","XCHG","XCHG","XCHG",
-  ["CWDE","CBW","CDQE"], //*Opcode 0 to 3 for instructions that change name by size setting.
-  ["CDQ","CWD","CQO"],
-  "CALL","WAIT",
-  ["PUSHFQ","PUSHF","PUSHFQ"],
-  ["POPFQ","POPF","POPFQ"],
-  "SAHF","LAHF",
-  "MOV","MOV","MOV","MOV",
-  "MOVS","MOVS",
-  "CMPS","CMPS",
-  "TEST","TEST",
-  "STOS","STOS",
-  "LODS","LODS",
-  "SCAS","SCAS",
-  "MOV","MOV","MOV","MOV","MOV","MOV","MOV","MOV",
-  "MOV","MOV","MOV","MOV","MOV","MOV","MOV","MOV",
-  ["ROL","ROR","RCL","RCR","SHL","SHR","SAL","SAR"],
-  ["ROL","ROR","RCL","RCR","SHL","SHR","SAL","SAR"],
-  "RET","RET",
-  "LES", //VEX prefix adjustment settings only if used in register to register, or in 64 bit mode, otherwise the defined instruction is used.
-  "LDS", //VEX prefix adjustment settings only if used in register to register, or in 64 bit mode, otherwise the defined instruction is used.
-  [
-    "MOV","???","???","???","???","???","???",
-    ["XABORT","XABORT","XABORT","XABORT","XABORT","XABORT","XABORT","XABORT"]
-  ],
-  [
-    "MOV","???","???","???","???","???","???",
-    ["XBEGIN","XBEGIN","XBEGIN","XBEGIN","XBEGIN","XBEGIN","XBEGIN","XBEGIN"]
-  ],
-  "ENTER","LEAVE","RETF","RETF","INT","INT","INTO",
-  ["IRETD","IRET","IRETQ"],
-  ["ROL","ROR","RCL","RCR","SHL","SHR","SAL","SAR"],
-  ["ROL","ROR","RCL","RCR","SHL","SHR","SAL","SAR"],
-  ["ROL","ROR","RCL","RCR","SHL","SHR","SAL","SAR"],
-  ["ROL","ROR","RCL","RCR","SHL","SHR","SAL","SAR"],
-  "AAMB","AADB","???",
-  "XLAT",
-  /*------------------------------------------------------------------------------------------------------------------------
+    "PUSH",
+    "PUSH",
+    "PUSH",
+    "PUSH",
+    "PUSH",
+    "PUSH",
+    "PUSH",
+    "PUSH",
+    "POP",
+    "POP",
+    "POP",
+    "POP",
+    "POP",
+    "POP",
+    "POP",
+    "POP",
+    ["PUSHA", "PUSHAD", ""],
+    ["POPA", "POPAD", ""],
+    ["BOUND", "BOUND", ""], //EVEX prefix adjustment settings only if used in register to register, or in 64 bit mode, otherwise the defined BOUND instruction is used.
+    "MOVSXD",
+    "FS:[",
+    "GS:[", //Sets SegOveride "FS:[" next opcode sets "GS:[".
+    "",
+    "", //Operand Size, and Address size adjustment to ModR/M.
+    "PUSH",
+    "IMUL",
+    "PUSH",
+    "IMUL",
+    "INS",
+    "INS",
+    "OUTS",
+    "OUTS",
+    "JO",
+    "JNO",
+    "JB",
+    "JAE",
+    "JE",
+    "JNE",
+    "JBE",
+    "JA",
+    "JS",
+    "JNS",
+    "JP",
+    "JNP",
+    "JL",
+    "JGE",
+    "JLE",
+    "JG",
+    ["ADD", "OR", "ADC", "SBB", "AND", "SUB", "XOR", "CMP"], //Group opcode uses the ModR/M register selection 0 though 7 giving 8 instruction in one opcode.
+    ["ADD", "OR", "ADC", "SBB", "AND", "SUB", "XOR", "CMP"],
+    ["ADD", "OR", "ADC", "SBB", "AND", "SUB", "XOR", "CMP"],
+    ["ADD", "OR", "ADC", "SBB", "AND", "SUB", "XOR", "CMP"],
+    "TEST",
+    "TEST",
+    "XCHG",
+    "XCHG",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    ["LEA", "???"], //*ModR/M Register, and memory mode separation.
+    "MOV",
+    ["POP", "???", "???", "???", "???", "???", "???", "???"],
+    [
+        ["NOP", "", "", ""],
+        ["NOP", "", "", ""],
+        ["PAUSE", "", "", ""],
+        ["NOP", "", "", ""]
+    ],
+    "XCHG",
+    "XCHG",
+    "XCHG",
+    "XCHG",
+    "XCHG",
+    "XCHG",
+    "XCHG",
+    ["CWDE", "CBW", "CDQE"], //*Opcode 0 to 3 for instructions that change name by size setting.
+    ["CDQ", "CWD", "CQO"],
+    "CALL",
+    "WAIT",
+    ["PUSHFQ", "PUSHF", "PUSHFQ"],
+    ["POPFQ", "POPF", "POPFQ"],
+    "SAHF",
+    "LAHF",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOVS",
+    "MOVS",
+    "CMPS",
+    "CMPS",
+    "TEST",
+    "TEST",
+    "STOS",
+    "STOS",
+    "LODS",
+    "LODS",
+    "SCAS",
+    "SCAS",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    "MOV",
+    ["ROL", "ROR", "RCL", "RCR", "SHL", "SHR", "SAL", "SAR"],
+    ["ROL", "ROR", "RCL", "RCR", "SHL", "SHR", "SAL", "SAR"],
+    "RET",
+    "RET",
+    "LES", //VEX prefix adjustment settings only if used in register to register, or in 64 bit mode, otherwise the defined instruction is used.
+    "LDS", //VEX prefix adjustment settings only if used in register to register, or in 64 bit mode, otherwise the defined instruction is used.
+    [
+        "MOV",
+        "???",
+        "???",
+        "???",
+        "???",
+        "???",
+        "???",
+        ["XABORT", "XABORT", "XABORT", "XABORT", "XABORT", "XABORT", "XABORT", "XABORT"]
+    ],
+    [
+        "MOV",
+        "???",
+        "???",
+        "???",
+        "???",
+        "???",
+        "???",
+        ["XBEGIN", "XBEGIN", "XBEGIN", "XBEGIN", "XBEGIN", "XBEGIN", "XBEGIN", "XBEGIN"]
+    ],
+    "ENTER",
+    "LEAVE",
+    "RETF",
+    "RETF",
+    "INT",
+    "INT",
+    "INTO",
+    ["IRETD", "IRET", "IRETQ"],
+    ["ROL", "ROR", "RCL", "RCR", "SHL", "SHR", "SAL", "SAR"],
+    ["ROL", "ROR", "RCL", "RCR", "SHL", "SHR", "SAL", "SAR"],
+    ["ROL", "ROR", "RCL", "RCR", "SHL", "SHR", "SAL", "SAR"],
+    ["ROL", "ROR", "RCL", "RCR", "SHL", "SHR", "SAL", "SAR"],
+    "AAMB",
+    "AADB",
+    "???",
+    "XLAT",
+    /*------------------------------------------------------------------------------------------------------------------------
   X87 FPU.
   ------------------------------------------------------------------------------------------------------------------------*/
-  [
-    ["FADD","FMUL","FCOM","FCOMP","FSUB","FSUBR","FDIV","FDIVR"],
-    ["FADD","FMUL","FCOM","FCOMP","FSUB","FSUBR","FDIV","FDIVR"]
-  ],
-  [
-    ["FLD","???","FST","FSTP","FLDENV","FLDCW","FNSTENV","FNSTCW"],
     [
-      "FLD","FXCH",
-      ["FNOP","???","???","???","???","???","???","???"],
-      "FSTP1",
-      ["FCHS","FABS","???","???","FTST","FXAM","???","???"],
-      ["FLD1","FLDL2T","FLDL2E","FLDPI","FLDLG2","FLDLN2","FLDZ","???"],
-      ["F2XM1","FYL2X","FPTAN","FPATAN","FXTRACT","FPREM1","FDECSTP","FINCSTP"],
-      ["FPREM","FYL2XP1","FSQRT","FSINCOS","FRNDINT","FSCALE","FSIN","FCOS"]
-    ]
-  ],
-  [
-    ["FIADD","FIMUL","FICOM","FICOMP","FISUB","FISUBR","FIDIV","FIDIVR"],
+        ["FADD", "FMUL", "FCOM", "FCOMP", "FSUB", "FSUBR", "FDIV", "FDIVR"],
+        ["FADD", "FMUL", "FCOM", "FCOMP", "FSUB", "FSUBR", "FDIV", "FDIVR"]
+    ],
     [
-      "FCMOVB","FCMOVE","FCMOVBE","FCMOVU","???",
-      ["???","FUCOMPP","???","???","???","???","???","???"],
-      "???","???"
-    ]
-  ],
-  [
-    ["FILD","FISTTP","FIST","FISTP","???","FLD","???","FSTP"],
+        ["FLD", "???", "FST", "FSTP", "FLDENV", "FLDCW", "FNSTENV", "FNSTCW"],
+        [
+            "FLD",
+            "FXCH",
+            ["FNOP", "???", "???", "???", "???", "???", "???", "???"],
+            "FSTP1",
+            ["FCHS", "FABS", "???", "???", "FTST", "FXAM", "???", "???"],
+            ["FLD1", "FLDL2T", "FLDL2E", "FLDPI", "FLDLG2", "FLDLN2", "FLDZ", "???"],
+            ["F2XM1", "FYL2X", "FPTAN", "FPATAN", "FXTRACT", "FPREM1", "FDECSTP", "FINCSTP"],
+            ["FPREM", "FYL2XP1", "FSQRT", "FSINCOS", "FRNDINT", "FSCALE", "FSIN", "FCOS"]
+        ]
+    ],
     [
-      "CMOVNB","FCMOVNE","FCMOVNBE","FCMOVNU",
-      ["FENI","FDISI","FNCLEX","FNINIT","FSETPM","???","???","???"],
-      "FUCOMI","FCOMI","???"
-    ]
-  ],
-  [
-    ["FADD","FMUL","FCOM","DCOMP","FSUB","FSUBR","FDIV","FDIVR"],
-    ["FADD","FMUL","FCOM2","FCOMP3","FSUBR","FSUB","FDIVR","FDIV"]
-  ],
-  [
-    ["FLD","FISTTP","FST","FSTP","FRSTOR","???","FNSAVE","FNSTSW"],
-    ["FFREE","FXCH4","FST","FSTP","FUCOM","FUCOMP","???","???"]
-  ],
-  [
-    ["FIADD","FIMUL","FICOM","FICOMP","FISUB","FISUBR","FIDIV","FIDIVR"],
+        ["FIADD", "FIMUL", "FICOM", "FICOMP", "FISUB", "FISUBR", "FIDIV", "FIDIVR"],
+        [
+            "FCMOVB",
+            "FCMOVE",
+            "FCMOVBE",
+            "FCMOVU",
+            "???",
+            ["???", "FUCOMPP", "???", "???", "???", "???", "???", "???"],
+            "???",
+            "???"
+        ]
+    ],
     [
-      "FADDP","FMULP","FCOMP5",
-      ["???","FCOMPP","???","???","???","???","???","???"],
-      "FSUBRP","FSUBP","FDIVRP","FDIVP"
-    ]
-  ],
-  [
-    ["FILD","FISTTP","FIST","FISTP","FBLD","FILD","FBSTP","FISTP"],
+        ["FILD", "FISTTP", "FIST", "FISTP", "???", "FLD", "???", "FSTP"],
+        [
+            "CMOVNB",
+            "FCMOVNE",
+            "FCMOVNBE",
+            "FCMOVNU",
+            ["FENI", "FDISI", "FNCLEX", "FNINIT", "FSETPM", "???", "???", "???"],
+            "FUCOMI",
+            "FCOMI",
+            "???"
+        ]
+    ],
     [
-      "FFREEP","FXCH7","FSTP8","FSTP9",
-      ["FNSTSW","???","???","???","???","???","???","???"],
-      "FUCOMIP","FCOMIP","???"
-    ]
-  ],
-  /*------------------------------------------------------------------------------------------------------------------------
+        ["FADD", "FMUL", "FCOM", "DCOMP", "FSUB", "FSUBR", "FDIV", "FDIVR"],
+        ["FADD", "FMUL", "FCOM2", "FCOMP3", "FSUBR", "FSUB", "FDIVR", "FDIV"]
+    ],
+    [
+        ["FLD", "FISTTP", "FST", "FSTP", "FRSTOR", "???", "FNSAVE", "FNSTSW"],
+        ["FFREE", "FXCH4", "FST", "FSTP", "FUCOM", "FUCOMP", "???", "???"]
+    ],
+    [
+        ["FIADD", "FIMUL", "FICOM", "FICOMP", "FISUB", "FISUBR", "FIDIV", "FIDIVR"],
+        [
+            "FADDP",
+            "FMULP",
+            "FCOMP5",
+            ["???", "FCOMPP", "???", "???", "???", "???", "???", "???"],
+            "FSUBRP",
+            "FSUBP",
+            "FDIVRP",
+            "FDIVP"
+        ]
+    ],
+    [
+        ["FILD", "FISTTP", "FIST", "FISTP", "FBLD", "FILD", "FBSTP", "FISTP"],
+        [
+            "FFREEP",
+            "FXCH7",
+            "FSTP8",
+            "FSTP9",
+            ["FNSTSW", "???", "???", "???", "???", "???", "???", "???"],
+            "FUCOMIP",
+            "FCOMIP",
+            "???"
+        ]
+    ],
+    /*------------------------------------------------------------------------------------------------------------------------
   End of X87 FPU.
   ------------------------------------------------------------------------------------------------------------------------*/
-  "LOOPNE","LOOPE","LOOP","JRCXZ",
-  "IN","IN","OUT","OUT",
-  "CALL","JMP","JMP","JMP",
-  "IN","IN","OUT","OUT",
-  /*------------------------------------------------------------------------------------------------------------------------
+    "LOOPNE",
+    "LOOPE",
+    "LOOP",
+    "JRCXZ",
+    "IN",
+    "IN",
+    "OUT",
+    "OUT",
+    "CALL",
+    "JMP",
+    "JMP",
+    "JMP",
+    "IN",
+    "IN",
+    "OUT",
+    "OUT",
+    /*------------------------------------------------------------------------------------------------------------------------
   The Repeat, and lock prefix opcodes apply to the next opcode.
   ------------------------------------------------------------------------------------------------------------------------*/
-  "LOCK", //Adds LOCK to the start of instruction. When Opcode F0 hex is read by function ^DecodePrefixAdjustments()^ sets PrefixG2 to LOCK.
-  "ICEBP", //Instruction ICEBP.
-  "REPNE", //Adds REPNE (Opcode F2 hex) to the start of instruction. Read by function ^DecodePrefixAdjustments()^ sets PrefixG1 to REPNE.
-  "REP", //Adds REP (Opcode F3 hex) to the start of instruction. Read by function ^DecodePrefixAdjustments()^ sets PrefixG1 to REP.
-  /*------------------------------------------------------------------------------------------------------------------------
+    "LOCK", //Adds LOCK to the start of instruction. When Opcode F0 hex is read by function ^DecodePrefixAdjustments()^ sets PrefixG2 to LOCK.
+    "ICEBP", //Instruction ICEBP.
+    "REPNE", //Adds REPNE (Opcode F2 hex) to the start of instruction. Read by function ^DecodePrefixAdjustments()^ sets PrefixG1 to REPNE.
+    "REP", //Adds REP (Opcode F3 hex) to the start of instruction. Read by function ^DecodePrefixAdjustments()^ sets PrefixG1 to REP.
+    /*------------------------------------------------------------------------------------------------------------------------
   End of Repeat, and lock instruction adjustment codes.
   ------------------------------------------------------------------------------------------------------------------------*/
-  "HLT","CMC",
-  ["TEST","???","NOT","NEG","MUL","IMUL","DIV","IDIV"],
-  ["TEST","???","NOT","NEG","MUL","IMUL","DIV","IDIV"],
-  "CLC","STC","CLI","STI","CLD","STD",
-  ["INC","DEC","???","???","???","???","???","???"],
-  [
-    ["INC","DEC","CALL","CALL","JMP","JMP","PUSH","???"],
-    ["INC","DEC","CALL","???","JMP","???","PUSH","???"]
-  ],
-  /*------------------------------------------------------------------------------------------------------------------------
+    "HLT",
+    "CMC",
+    ["TEST", "???", "NOT", "NEG", "MUL", "IMUL", "DIV", "IDIV"],
+    ["TEST", "???", "NOT", "NEG", "MUL", "IMUL", "DIV", "IDIV"],
+    "CLC",
+    "STC",
+    "CLI",
+    "STI",
+    "CLD",
+    "STD",
+    ["INC", "DEC", "???", "???", "???", "???", "???", "???"],
+    [
+        ["INC", "DEC", "CALL", "CALL", "JMP", "JMP", "PUSH", "???"],
+        ["INC", "DEC", "CALL", "???", "JMP", "???", "PUSH", "???"]
+    ],
+    /*------------------------------------------------------------------------------------------------------------------------
   Two Byte Opcodes 256 to 511. Opcodes plus 256 goes to 511 used by escape code "0F", Or
   set directly by adding map bits "01" because "01 00000000" bin = 256 plus opcode.
   ------------------------------------------------------------------------------------------------------------------------*/
-  [
-    ["SLDT","STR","LLDT","LTR","VERR","VERW","JMPE","???"],
-    ["SLDT","STR","LLDT","LTR","VERR","VERW","JMPE","???"]
-  ],
-  [
-    ["SGDT","SIDT","LGDT","LIDT","SMSW","???","LMSW","INVLPG"],
     [
-      ["???","VMCALL","VMLAUNCH","VMRESUME","VMXOFF","???","???","???"],
-      ["MONITOR","MWAIT","CLAC","STAC","???","???","???","ENCLS"],
-      ["XGETBV","XSETBV","???","???","VMFUNC","XEND","XTEST","ENCLU"],
-      ["VMRUN","VMMCALL","VMLOAD","VMSAVE","STGI","CLGI","SKINIT","INVLPGA"],
-      "SMSW","???","LMSW",
-      ["SWAPGS","RDTSCP","MONITORX","MWAITX","???","???","???","???"]
-    ]
-  ],
-  ["LAR","LAR"],["LSL","LSL"],"???",
-  "SYSCALL","CLTS","SYSRET","INVD",
-  "WBINVD","???","UD2","???",
-  [["PREFETCH","PREFETCHW","???","???","???","???","???","???"],"???"],
-  "FEMMS",
-  "", //3DNow Instruction name is encoded by the IMM8 operand.
-  [
-    ["MOVUPS","MOVUPD","MOVSS","MOVSD"],
-    ["MOVUPS","MOVUPD","MOVSS","MOVSD"]
-  ],
-  [
-    ["MOVUPS","MOVUPD","MOVSS","MOVSD"],
-    ["MOVUPS","MOVUPD","MOVSS","MOVSD"]
-  ],
-  [
-    ["MOVLPS","MOVLPD","MOVSLDUP","MOVDDUP"],
-    ["MOVHLPS","???","MOVSLDUP","MOVDDUP"]
-  ],
-  [["MOVLPS","MOVLPD","???","???"],"???"],
-  ["UNPCKLPS","UNPCKLPD","???","???"], //An instruction with 4 operations uses the 4 SIMD modes as an Vector instruction.
-  ["UNPCKHPS","UNPCKHPD","???","???"],
-  [["MOVHPS","MOVHPD","MOVSHDUP","???"],["MOVLHPS","???","MOVSHDUP","???"]],
-  [["MOVHPS","MOVHPD","???","???"],"???"],
-  [["PREFETCHNTA","PREFETCHT0","PREFETCHT1","PREFETCHT2","???","???","???","???"],"???"],
-  "???",
-  [[["BNDLDX","","",""],["BNDMOV","","",""],["BNDCL","","",""],["BNDCU","","",""]],
-  ["???",["BNDMOV","","",""],["BNDCL","","",""],["BNDCU","","",""]]],
-  [[["BNDSTX","","",""],["BNDMOV","","",""],["BNDMK","","",""],["BNDCN","","",""]],
-  ["???",["BNDMOV","","",""],"???",["BNDCN","","",""]]],
-  "???","???","???",
-  "NOP",
-  ["???","MOV"],["???","MOV"], //CR and DR register Move
-  ["???","MOV"],["???","MOV"], //CR and DR register Move
-  ["???","MOV"],"???", //TR (TEST REGISTER) register Move
-  ["???","MOV"],"???", //TR (TEST REGISTER) register Move
-  [
-    ["MOVAPS","MOVAPS","MOVAPS","MOVAPS"],
-    ["MOVAPD","MOVAPD","MOVAPD","MOVAPD"],
-    "???","???"
-  ],
-  [
-    [
-      ["MOVAPS","MOVAPS","MOVAPS","MOVAPS"],
-      ["MOVAPD","MOVAPD","MOVAPD","MOVAPD"],
-      ["","","",["MOVNRAPS","MOVNRNGOAPS","MOVNRAPS"]],
-      ["","","",["MOVNRAPD","MOVNRNGOAPD","MOVNRAPD"]]
+        ["SLDT", "STR", "LLDT", "LTR", "VERR", "VERW", "JMPE", "???"],
+        ["SLDT", "STR", "LLDT", "LTR", "VERR", "VERW", "JMPE", "???"]
     ],
     [
-      ["MOVAPS","MOVAPS","MOVAPS","MOVAPS"],
-      ["MOVAPD","MOVAPD","MOVAPD","MOVAPD"],
-      "???","???"
-    ]
-  ],
-  [
-    ["CVTPI2PS","","",""],["CVTPI2PD","","",""], //Is not allowed to be Vector encoded.
-    "CVTSI2SS","CVTSI2SD"
-  ],
-  [
-    [
-      "MOVNTPS","MOVNTPD",
-      ["MOVNTSS","","",""],["MOVNTSD","","",""] //SSE4a can not be vector encoded.
-    ],"???"
-  ],
-  [
-    ["CVTTPS2PI","","",""],["CVTTPD2PI","","",""], //Is not allowed to be Vector encoded.
-    "CVTTSS2SI","CVTTSD2SI"
-  ],
-  [
-    ["CVTPS2PI","","",""],["CVTPD2PI","","",""], //Is not allowed to be Vector encoded.
-    "CVTSS2SI","CVTSD2SI"
-  ],
-  ["UCOMISS","UCOMISD","???","???"],
-  ["COMISS","COMISD","???","???"],
-  "WRMSR","RDTSC","RDMSR","RDPMC",
-  "SYSENTER","SYSEXIT","???",
-  "GETSEC",
-  "", //*Three byte instructions prefix combo 0F 38 (Opcode = 01,00111000) sets opcode 10,000000000 next byte read is added to the lower 8 bit's.
-  "???",
-  "", //*Three byte instructions prefix combo 0F 3A (Opcode = 01,00111010) sets opcode 11,000000000 next byte read is added to the lower 8 bit's.
-  "???","???","???","???","???",
-  "CMOVO",
-  [
-    ["CMOVNO",["KANDW","","KANDQ"],"",""],
-    ["CMOVNO",["KANDB","","KANDD"],"",""],"",""
-  ],
-  [
-    ["CMOVB",["KANDNW","","KANDNQ"],"",""],
-    ["CMOVB",["KANDNB","","KANDND"],"",""],"",""
-  ],
-  [["CMOVAE","KANDNR","",""],"","",""],
-  [
-    ["CMOVE",["KNOTW","","KNOTQ"],"",""],
-    ["CMOVE",["KNOTB","","KNOTD"],"",""],"",""
-  ],
-  [
-    ["CMOVNE",["KORW","","KORQ"],"",""],
-    ["CMOVNE",["KORB","","KORD"],"",""],"",""
-  ],
-  [
-    ["CMOVBE",["KXNORW","","KXNORQ"],"",""],
-    ["CMOVBE",["KXNORB","","KXNORD"],"",""],"",""
-  ],
-  [
-    ["CMOVA",["KXORW","","KXORQ"],"",""],
-    ["CMOVA",["KXORB","","KXORD"],"",""],"",""
-  ],
-  [["CMOVS","KMERGE2L1H","",""],"","",""],
-  [["CMOVNS","KMERGE2L1L","",""],"","",""],
-  [
-    ["CMOVP",["KADDW","","KADDQ"],"",""],
-    ["CMOVP",["KADDB","","KADDD"],"",""],"",""
-  ],
-  [
-    ["CMOVNP",["KUNPCKWD","","KUNPCKDQ"],"",""],
-    ["CMOVNP",["KUNPCKBW","","???"],"",""],"",""
-  ],
-  "CMOVL","CMOVGE","CMOVLE","CMOVG",
-  [
+        ["SGDT", "SIDT", "LGDT", "LIDT", "SMSW", "???", "LMSW", "INVLPG"],
+        [
+            ["???", "VMCALL", "VMLAUNCH", "VMRESUME", "VMXOFF", "???", "???", "???"],
+            ["MONITOR", "MWAIT", "CLAC", "STAC", "???", "???", "???", "ENCLS"],
+            ["XGETBV", "XSETBV", "???", "???", "VMFUNC", "XEND", "XTEST", "ENCLU"],
+            ["VMRUN", "VMMCALL", "VMLOAD", "VMSAVE", "STGI", "CLGI", "SKINIT", "INVLPGA"],
+            "SMSW",
+            "???",
+            "LMSW",
+            ["SWAPGS", "RDTSCP", "MONITORX", "MWAITX", "???", "???", "???", "???"]
+        ]
+    ],
+    ["LAR", "LAR"],
+    ["LSL", "LSL"],
     "???",
+    "SYSCALL",
+    "CLTS",
+    "SYSRET",
+    "INVD",
+    "WBINVD",
+    "???",
+    "UD2",
+    "???",
+    [["PREFETCH", "PREFETCHW", "???", "???", "???", "???", "???", "???"], "???"],
+    "FEMMS",
+    "", //3DNow Instruction name is encoded by the IMM8 operand.
     [
-      ["MOVMSKPS","MOVMSKPS","",""],["MOVMSKPD","MOVMSKPD","",""],
-      "???","???"
-    ]
-  ],
-  ["SQRTPS","SQRTPD","SQRTSS","SQRTSD"],
-  [
-    ["RSQRTPS","RSQRTPS","",""],"???",
-    ["RSQRTSS","RSQRTSS","",""],"???"
-  ],
-  [
-    ["RCPPS","RCPPS","",""],"???",
-    ["RCPSS","RCPSS","",""],"???"
-  ],
-  ["ANDPS","ANDPD","???","???"],
-  ["ANDNPS","ANDNPD","???","???"],
-  ["ORPS","ORPD","???","???"],
-  ["XORPS","XORPD","???","???"],
-  [
-    ["ADDPS","ADDPS","ADDPS","ADDPS"],
-    ["ADDPD","ADDPD","ADDPD","ADDPD"],
-    "ADDSS","ADDSD"
-  ],
-  [
-    ["MULPS","MULPS","MULPS","MULPS"],
-    ["MULPD","MULPD","MULPD","MULPD"],
-    "MULSS","MULSD"
-  ],
-  [
-    ["CVTPS2PD","CVTPS2PD","CVTPS2PD","CVTPS2PD"],
-    ["CVTPD2PS","CVTPD2PS","CVTPD2PS","CVTPD2PS"],
-    "CVTSS2SD","CVTSD2SS"
-  ],
-  [["CVTDQ2PS","","CVTQQ2PS"],["CVTPS2DQ","","???"],"CVTTPS2DQ","???"],
-  [
-    ["SUBPS","SUBPS","SUBPS","SUBPS"],
-    ["SUBPD","SUBPD","SUBPD","SUBPD"],
-    "SUBSS","SUBSD"
-  ],
-  ["MINPS","MINPD","MINSS","MINSD"],
-  ["DIVPS","DIVPD","DIVSS","DIVSD"],
-  ["MAXPS","MAXPD","MAXSS","MAXSD"],
-  [["PUNPCKLBW","","",""],"PUNPCKLBW","",""],
-  [["PUNPCKLWD","","",""],"PUNPCKLWD","",""],
-  [["PUNPCKLDQ","","",""],"PUNPCKLDQ","",""],
-  [["PACKSSWB","","",""],"PACKSSWB","",""],
-  [["PCMPGTB","","",""],["PCMPGTB","PCMPGTB","PCMPGTB",""],"",""],
-  [["PCMPGTW","","",""],["PCMPGTW","PCMPGTW","PCMPGTW",""],"",""],
-  [["PCMPGTD","","",""],["PCMPGTD","PCMPGTD",["PCMPGTD","","???"],["PCMPGTD","","???"]],"",""],
-  [["PACKUSWB","","",""],"PACKUSWB","",""],
-  [["PUNPCKHBW","","",""],"PUNPCKHBW","",""],
-  [["PUNPCKHWD","","",""],"PUNPCKHWD","",""],
-  [["PUNPCKHDQ","","",""],["PUNPCKHDQ","","???"],"",""],
-  [["PACKSSDW","","",""],["PACKSSDW","","???"],"",""],
-  ["???","PUNPCKLQDQ","???","???"],
-  ["???","PUNPCKHQDQ","???","???"],
-  [["MOVD","","",""],["MOVD","","MOVQ"],"",""],
-  [
-    [
-      ["MOVQ","","",""],
-      ["MOVDQA","MOVDQA",["MOVDQA32","","MOVDQA64"],["MOVDQA32","","MOVDQA64"]],
-      ["MOVDQU","MOVDQU",["MOVDQU32","","MOVDQU64"],""],
-      ["","",["MOVDQU8","","MOVDQU16"],""]
+        ["MOVUPS", "MOVUPD", "MOVSS", "MOVSD"],
+        ["MOVUPS", "MOVUPD", "MOVSS", "MOVSD"]
     ],
     [
-      ["MOVQ","","",""],
-      ["MOVDQA","MOVDQA",["MOVDQA32","","MOVDQA64"],["MOVDQA32","","MOVDQA64"]],
-      ["MOVDQU","MOVDQU",["MOVDQU32","","MOVDQU64"],""],
-      ["","",["MOVDQU8","","MOVDQU16"],""]
-    ]
-  ],
-  [
-    ["PSHUFW","","",""],
-    ["PSHUFD","PSHUFD",["PSHUFD","","???"],["PSHUFD","","???"]],
-    "PSHUFHW",
-    "PSHUFLW"
-  ],
-  [
-    "???",
-    [
-      "???","???",
-      [["PSRLW","","",""],"PSRLW","",""],"???",
-      [["PSRAW","","",""],"PSRAW","",""],"???",
-      [["PSLLW","","",""],"PSLLW","",""],"???"
-    ]
-  ],
-  [
-    ["???",["","",["PRORD","","PRORQ"],""],"???","???"],
-    ["???",["","",["PROLD","","PROLQ"],""],"???","???"],
-    [["PSRLD","","",""],["PSRLD","PSRLD",["PSRLD","","???"],["PSRLD","","???"]],"",""],
-    "???",
-    [["PSRAD","","",""],["PSRAD","PSRAD",["PSRAD","","PSRAQ"],["PSRAD","","???"]],"",""],
-    "???",
-    [["PSLLD","","",""],["PSLLD","PSLLD",["PSLLD","","???"],["PSLLD","","???"]],"",""],
-    "???"
-  ],
-  [
-    "???",
-    [
-      "???","???",
-      [["PSRLQ","PSRLQ","",""],"PSRLQ","",""],["???","PSRLDQ","???","???"],
-      "???","???",
-      [["PSLLQ","PSLLQ","",""],"PSLLQ","",""],["???","PSLLDQ","???","???"]
-    ]
-  ],
-  [["PCMPEQB","","",""],["PCMPEQB","PCMPEQB","PCMPEQB",""],"",""],
-  [["PCMPEQW","","",""],["PCMPEQW","PCMPEQW","PCMPEQW",""],"",""],
-  [["PCMPEQD","","",""],["PCMPEQD","PCMPEQD",["PCMPEQD","","???"],["PCMPEQD","","???"]],"",""],
-  [["EMMS",["ZEROUPPER","ZEROALL",""],"",""],"???","???","???"],
-  [
-    ["VMREAD","",["CVTTPS2UDQ","","CVTTPD2UDQ"],""],
-    ["EXTRQ","",["CVTTPS2UQQ","","CVTTPD2UQQ"],""],
-    ["???","","CVTTSS2USI",""],
-    ["INSERTQ","","CVTTSD2USI",""]
-  ],
-  [
-    ["VMWRITE","",["CVTPS2UDQ","","CVTPD2UDQ"], ""],
-    ["EXTRQ","",["CVTPS2UQQ","","CVTPD2UQQ"],""],
-    ["???","","CVTSS2USI",""],
-    ["INSERTQ","","CVTSD2USI",""]
-  ],
-  [
-    "???",
-    ["","",["CVTTPS2QQ","","CVTTPD2QQ"],""],
-    ["","",["CVTUDQ2PD","","CVTUQQ2PD"],"CVTUDQ2PD"],
-    ["","",["CVTUDQ2PS","","CVTUQQ2PS"],""]
-  ],
-  [
-    "???",
-    ["","",["CVTPS2QQ","","CVTPD2QQ"],""],
-    ["","","CVTUSI2SS",""],
-    ["","","CVTUSI2SD",""]
-  ],
-  [
-    "???",["HADDPD","HADDPD","",""],
-    "???",["HADDPS","HADDPS","",""]
-  ],
-  [
-    "???",["HSUBPD","HSUBPD","",""],
-    "???",["HSUBPS","HSUBPS","",""]
-  ],
-  [["MOVD","","",""],["MOVD","","MOVQ"],["MOVQ","MOVQ",["???","","MOVQ"],""],"???"],
-  [
-    ["MOVQ","","",""],
-    ["MOVDQA","MOVDQA",["MOVDQA32","","MOVDQA64"],["MOVDQA32","","MOVDQA64"]],
-    ["MOVDQU","MOVDQU",["MOVDQU32","","MOVDQU64"],""],
-    ["???","",["MOVDQU8","","MOVDQU16"],""]
-  ],
-  "JO","JNO","JB","JAE",
-  [["JE","JKZD","",""],"","",""],[["JNE","JKNZD","",""],"","",""], //K1OM.
-  "JBE","JA","JS","JNS","JP","JNP","JL","JGE","JLE","JG",
-  [
-    ["SETO",["KMOVW","","KMOVQ"],"",""],
-    ["SETO",["KMOVB","","KMOVD"],"",""],"",""
-  ],
-  [
-    ["SETNO",["KMOVW","","KMOVQ"],"",""],
-    ["SETNO",["KMOVB","","KMOVD"],"",""],"",""
-  ],
-  [
-    ["SETB",["KMOVW","","???"],"",""],
-    ["SETB",["KMOVB","","???"],"",""],"",
-    ["SETB",["KMOVD","","KMOVQ"],"",""]
-  ],
-  [
-    ["SETAE",["KMOVW","","???"],"",""],
-    ["SETAE",["KMOVB","","???"],"",""],"",
-    ["SETAE",["KMOVD","","KMOVQ"],"",""]
-  ],
-  "SETE",[["SETNE","KCONCATH","",""],"","",""],
-  "SETBE",[["SETA","KCONCATL","",""],"","",""],
-  [
-    ["SETS",["KORTESTW","","KORTESTQ"],"",""],
-    ["SETS",["KORTESTB","","KORTESTD"],"",""],"",""
-  ],
-  [
-    ["SETNS",["KTESTW","","KTESTQ"],"",""],
-    ["SETNS",["KTESTB","","KTESTD"],"",""],"",""
-  ],
-  "SETP","SETNP","SETL","SETGE","SETLE","SETG",
-  "PUSH","POP",
-  "CPUID", //Identifies the CPU and which Instructions the current CPU can use.
-  "BT",
-  "SHLD","SHLD",
-  "XBTS","IBTS",
-  "PUSH","POP",
-  "RSM",
-  "BTS",
-  "SHRD","SHRD",
-  [
-    [
-      ["FXSAVE","???","FXSAVE64"],["FXRSTOR","???","FXRSTOR64"],
-      "LDMXCSR","STMXCSR",
-      ["XSAVE","","XSAVE64"],["XRSTOR","","XRSTOR64"],
-      ["XSAVEOPT","CLWB","XSAVEOPT64"],
-      ["CLFLUSHOPT","CLFLUSH",""]
+        ["MOVUPS", "MOVUPD", "MOVSS", "MOVSD"],
+        ["MOVUPS", "MOVUPD", "MOVSS", "MOVSD"]
     ],
     [
-      ["???","???",["RDFSBASE","","",""],"???"],["???","???",["RDGSBASE","","",""],"???"],
-      ["???","???",["WRFSBASE","","",""],"???"],["???","???",["WRGSBASE","","",""],"???"],
-      "???",
-      ["LFENCE","???","???","???","???","???","???","???"],
-      ["MFENCE","???","???","???","???","???","???","???"],
-      ["SFENCE","???","???","???","???","???","???","???"]
-    ]
-  ],
-  "IMUL",
-  "CMPXCHG","CMPXCHG",
-  ["LSS","???"],
-  "BTR",
-  ["LFS","???"],
-  ["LGS","???"],
-  "MOVZX","MOVZX",
-  [
-    ["JMPE","","",""],"???",
-    ["POPCNT","POPCNT","",""],"???"
-  ],
-  "???",
-  ["???","???","???","???","BT","BTS","BTR","BTC"],
-  "BTC",
-  [
-    ["BSF","","",""],"???",
-    ["TZCNT","TZCNT","",""],["BSF","TZCNTI","",""]
-  ],
-  [
-    ["BSR","","",""],"???",
-    ["LZCNT","LZCNT","",""],["BSR","","",""]
-  ],
-  "MOVSX","MOVSX",
-  "XADD","XADD",
-  [
-    ["CMP,PS,","CMP,PS,","CMP,PS,","CMP,PS,"],
-    ["CMP,PD,","CMP,PD,","CMP,PD,","CMP,PD,"],
-    ["CMP,SS,","CMP,SS,","CMP,SS,",""],
-    ["CMP,SD,","CMP,SD,","CMP,SD,",""]
-  ],
-  ["MOVNTI","???"],
-  [["PINSRW","","",""],"PINSRW","",""],
-  ["???",[["PEXTRW","","",""],"PEXTRW","",""]],
-  ["SHUFPS","SHUFPD","???","???"],
-  [
+        ["MOVLPS", "MOVLPD", "MOVSLDUP", "MOVDDUP"],
+        ["MOVHLPS", "???", "MOVSLDUP", "MOVDDUP"]
+    ],
+    [["MOVLPS", "MOVLPD", "???", "???"], "???"],
+    ["UNPCKLPS", "UNPCKLPD", "???", "???"], //An instruction with 4 operations uses the 4 SIMD modes as an Vector instruction.
+    ["UNPCKHPS", "UNPCKHPD", "???", "???"],
     [
-      "???",
-      ["CMPXCHG8B","","CMPXCHG16B"],
-      "???",
-      ["XRSTORS","","XRSTORS64"],
-      ["XSAVEC","","XSAVEC64"],
-      ["XSAVES","","XSAVES64"],
-      ["VMPTRLD","VMCLEAR","VMXON","???"],["VMPTRST","???","???","???"]
+        ["MOVHPS", "MOVHPD", "MOVSHDUP", "???"],
+        ["MOVLHPS", "???", "MOVSHDUP", "???"]
+    ],
+    [["MOVHPS", "MOVHPD", "???", "???"], "???"],
+    [["PREFETCHNTA", "PREFETCHT0", "PREFETCHT1", "PREFETCHT2", "???", "???", "???", "???"], "???"],
+    "???",
+    [
+        [
+            ["BNDLDX", "", "", ""],
+            ["BNDMOV", "", "", ""],
+            ["BNDCL", "", "", ""],
+            ["BNDCU", "", "", ""]
+        ],
+        ["???", ["BNDMOV", "", "", ""], ["BNDCL", "", "", ""], ["BNDCU", "", "", ""]]
     ],
     [
-      "???",
-      ["SSS","???","???","???","???","???","???","???"], //Synthetic virtual machine operation codes.
-      "???","???","???","???",
-      "RDRAND","RDSEED"
-    ]
-  ],
-  "BSWAP","BSWAP","BSWAP","BSWAP","BSWAP","BSWAP","BSWAP","BSWAP",
-  ["???",["ADDSUBPD","ADDSUBPD","",""],"???",["ADDSUBPS","ADDSUBPS","",""]],
-  [["PSRLW","","",""],"PSRLW","",""],
-  [["PSRLD","","",""],["PSRLD","PSRLD",["PSRLD","","???"],""],"",""],
-  [["PSRLQ","","",""],"PSRLQ","",""],
-  [["PADDQ","","",""],"PADDQ","",""],
-  [["PMULLW","","",""],"PMULLW","",""],
-  [
-    ["???","MOVQ","???","???"],
-    ["???","MOVQ",["MOVQ2DQ","","",""],["MOVDQ2Q","","",""]]
-  ],
-  ["???",[["PMOVMSKB","","",""],["PMOVMSKB","PMOVMSKB","",""],"???","???"]],
-  [["PSUBUSB","","",""],"PSUBUSB","",""],
-  [["PSUBUSW","","",""],"PSUBUSW","",""],
-  [["PMINUB","","",""],"PMINUB","",""],
-  [["PAND","","",""],["PAND","PAND",["PANDD","","PANDQ"],["PANDD","","PANDQ"]],"",""],
-  [["PADDUSB","","",""],"PADDUSB","",""],
-  [["PADDUSW","","",""],"PADDUSW","",""],
-  [["PMAXUB","","",""],"PMAXUB","",""],
-  [["PANDN","","",""],["PANDN","PANDN",["PANDND","","PANDNQ"],["PANDND","","PANDNQ"]],"",""],
-  [["PAVGB","","",""],"PAVGB","",""],
-  [
-    [["PSRAW","","",""],["PSRAW","PSRAW","PSRAW",""],"",""],
-    [["PSRAW","","",""],["PSRAW","PSRAW","PSRAW",""],"",""]
-  ],
-  [["PSRAD","","",""],["PSRAD","PSRAD",["PSRAD","","PSRAQ"],""],"",""],
-  [["PAVGW","","",""],"PAVGW","",""],
-  [["PMULHUW","","",""],"PMULHUW","",""],
-  [["PMULHW","","",""],"PMULHW","",""],
-  [
+        [
+            ["BNDSTX", "", "", ""],
+            ["BNDMOV", "", "", ""],
+            ["BNDMK", "", "", ""],
+            ["BNDCN", "", "", ""]
+        ],
+        ["???", ["BNDMOV", "", "", ""], "???", ["BNDCN", "", "", ""]]
+    ],
     "???",
-    ["CVTTPD2DQ","CVTTPD2DQ","CVTTPD2DQ",""],
-    ["CVTDQ2PD","CVTDQ2PD",["CVTDQ2PD","CVTDQ2PD","CVTQQ2PD"],"CVTDQ2PD"],
-    "CVTPD2DQ"
-  ],
-  [[["MOVNTQ","","",""],["MOVNTDQ","","???"],"???","???"],"???"],
-  [["PSUBSB","","",""],"PSUBSB","",""],
-  [["PSUBSW","","",""],"PSUBSW","",""],
-  [["PMINSW","","",""],"PMINSW","",""],
-  [["POR","","",""],["POR","POR",["PORD","","PORQ"],["PORD","","PORQ"]],"",""],
-  [["PADDSB","","",""],"PADDSB","",""],
-  [["PADDSW","","",""],"PADDSW","",""],
-  [["PMAXSW","","",""],"PMAXSW","",""],
-  [["PXOR","","",""],["PXOR","PXOR",["PXORD","","PXORQ"],["PXORD","","PXORQ"]],"",""],
-  [["???","???","???",["LDDQU","LDDQU","",""]],"???"],
-  [["PSLLW","","",""],"PSLLW","",""],
-  [["PSLLD","","",""],["PSLLD","","???"],"",""],
-  [["PSLLQ","","",""],"PSLLQ","",""],
-  [["PMULUDQ","","",""],"PMULUDQ","",""],
-  [["PMADDWD","","",""],"PMADDWD","",""],
-  [["PSADBW","","",""],"PSADBW","",""],
-  ["???",[["MASKMOVQ","","",""],["MASKMOVDQU","MASKMOVDQU","",""],"???","???"]],
-  [["PSUBB","","",""],"PSUBB","",""],
-  [["PSUBW","","",""],"PSUBW","",""],
-  [["PSUBD","","",""],["PSUBD","PSUBD",["PSUBD","","???"],["PSUBD","","???"]],"",""],
-  [["PSUBQ","","",""],"PSUBQ","",""],
-  [["PADDB","","",""],"PADDB","",""],
-  [["PADDW","","",""],"PADDW","",""],
-  [["PADDD","","",""],["PADDD","PADDD",["PADDD","","???"],["PADDD","","???"]],"",""],
-  "???",
-  /*------------------------------------------------------------------------------------------------------------------------
+    "???",
+    "???",
+    "NOP",
+    ["???", "MOV"],
+    ["???", "MOV"], //CR and DR register Move
+    ["???", "MOV"],
+    ["???", "MOV"], //CR and DR register Move
+    ["???", "MOV"],
+    "???", //TR (TEST REGISTER) register Move
+    ["???", "MOV"],
+    "???", //TR (TEST REGISTER) register Move
+    [["MOVAPS", "MOVAPS", "MOVAPS", "MOVAPS"], ["MOVAPD", "MOVAPD", "MOVAPD", "MOVAPD"], "???", "???"],
+    [
+        [
+            ["MOVAPS", "MOVAPS", "MOVAPS", "MOVAPS"],
+            ["MOVAPD", "MOVAPD", "MOVAPD", "MOVAPD"],
+            ["", "", "", ["MOVNRAPS", "MOVNRNGOAPS", "MOVNRAPS"]],
+            ["", "", "", ["MOVNRAPD", "MOVNRNGOAPD", "MOVNRAPD"]]
+        ],
+        [["MOVAPS", "MOVAPS", "MOVAPS", "MOVAPS"], ["MOVAPD", "MOVAPD", "MOVAPD", "MOVAPD"], "???", "???"]
+    ],
+    [
+        ["CVTPI2PS", "", "", ""],
+        ["CVTPI2PD", "", "", ""], //Is not allowed to be Vector encoded.
+        "CVTSI2SS",
+        "CVTSI2SD"
+    ],
+    [
+        [
+            "MOVNTPS",
+            "MOVNTPD",
+            ["MOVNTSS", "", "", ""],
+            ["MOVNTSD", "", "", ""] //SSE4a can not be vector encoded.
+        ],
+        "???"
+    ],
+    [
+        ["CVTTPS2PI", "", "", ""],
+        ["CVTTPD2PI", "", "", ""], //Is not allowed to be Vector encoded.
+        "CVTTSS2SI",
+        "CVTTSD2SI"
+    ],
+    [
+        ["CVTPS2PI", "", "", ""],
+        ["CVTPD2PI", "", "", ""], //Is not allowed to be Vector encoded.
+        "CVTSS2SI",
+        "CVTSD2SI"
+    ],
+    ["UCOMISS", "UCOMISD", "???", "???"],
+    ["COMISS", "COMISD", "???", "???"],
+    "WRMSR",
+    "RDTSC",
+    "RDMSR",
+    "RDPMC",
+    "SYSENTER",
+    "SYSEXIT",
+    "???",
+    "GETSEC",
+    "", //*Three byte instructions prefix combo 0F 38 (Opcode = 01,00111000) sets opcode 10,000000000 next byte read is added to the lower 8 bit's.
+    "???",
+    "", //*Three byte instructions prefix combo 0F 3A (Opcode = 01,00111010) sets opcode 11,000000000 next byte read is added to the lower 8 bit's.
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "CMOVO",
+    [["CMOVNO", ["KANDW", "", "KANDQ"], "", ""], ["CMOVNO", ["KANDB", "", "KANDD"], "", ""], "", ""],
+    [["CMOVB", ["KANDNW", "", "KANDNQ"], "", ""], ["CMOVB", ["KANDNB", "", "KANDND"], "", ""], "", ""],
+    [["CMOVAE", "KANDNR", "", ""], "", "", ""],
+    [["CMOVE", ["KNOTW", "", "KNOTQ"], "", ""], ["CMOVE", ["KNOTB", "", "KNOTD"], "", ""], "", ""],
+    [["CMOVNE", ["KORW", "", "KORQ"], "", ""], ["CMOVNE", ["KORB", "", "KORD"], "", ""], "", ""],
+    [["CMOVBE", ["KXNORW", "", "KXNORQ"], "", ""], ["CMOVBE", ["KXNORB", "", "KXNORD"], "", ""], "", ""],
+    [["CMOVA", ["KXORW", "", "KXORQ"], "", ""], ["CMOVA", ["KXORB", "", "KXORD"], "", ""], "", ""],
+    [["CMOVS", "KMERGE2L1H", "", ""], "", "", ""],
+    [["CMOVNS", "KMERGE2L1L", "", ""], "", "", ""],
+    [["CMOVP", ["KADDW", "", "KADDQ"], "", ""], ["CMOVP", ["KADDB", "", "KADDD"], "", ""], "", ""],
+    [["CMOVNP", ["KUNPCKWD", "", "KUNPCKDQ"], "", ""], ["CMOVNP", ["KUNPCKBW", "", "???"], "", ""], "", ""],
+    "CMOVL",
+    "CMOVGE",
+    "CMOVLE",
+    "CMOVG",
+    ["???", [["MOVMSKPS", "MOVMSKPS", "", ""], ["MOVMSKPD", "MOVMSKPD", "", ""], "???", "???"]],
+    ["SQRTPS", "SQRTPD", "SQRTSS", "SQRTSD"],
+    [["RSQRTPS", "RSQRTPS", "", ""], "???", ["RSQRTSS", "RSQRTSS", "", ""], "???"],
+    [["RCPPS", "RCPPS", "", ""], "???", ["RCPSS", "RCPSS", "", ""], "???"],
+    ["ANDPS", "ANDPD", "???", "???"],
+    ["ANDNPS", "ANDNPD", "???", "???"],
+    ["ORPS", "ORPD", "???", "???"],
+    ["XORPS", "XORPD", "???", "???"],
+    [["ADDPS", "ADDPS", "ADDPS", "ADDPS"], ["ADDPD", "ADDPD", "ADDPD", "ADDPD"], "ADDSS", "ADDSD"],
+    [["MULPS", "MULPS", "MULPS", "MULPS"], ["MULPD", "MULPD", "MULPD", "MULPD"], "MULSS", "MULSD"],
+    [
+        ["CVTPS2PD", "CVTPS2PD", "CVTPS2PD", "CVTPS2PD"],
+        ["CVTPD2PS", "CVTPD2PS", "CVTPD2PS", "CVTPD2PS"],
+        "CVTSS2SD",
+        "CVTSD2SS"
+    ],
+    [["CVTDQ2PS", "", "CVTQQ2PS"], ["CVTPS2DQ", "", "???"], "CVTTPS2DQ", "???"],
+    [["SUBPS", "SUBPS", "SUBPS", "SUBPS"], ["SUBPD", "SUBPD", "SUBPD", "SUBPD"], "SUBSS", "SUBSD"],
+    ["MINPS", "MINPD", "MINSS", "MINSD"],
+    ["DIVPS", "DIVPD", "DIVSS", "DIVSD"],
+    ["MAXPS", "MAXPD", "MAXSS", "MAXSD"],
+    [["PUNPCKLBW", "", "", ""], "PUNPCKLBW", "", ""],
+    [["PUNPCKLWD", "", "", ""], "PUNPCKLWD", "", ""],
+    [["PUNPCKLDQ", "", "", ""], "PUNPCKLDQ", "", ""],
+    [["PACKSSWB", "", "", ""], "PACKSSWB", "", ""],
+    [["PCMPGTB", "", "", ""], ["PCMPGTB", "PCMPGTB", "PCMPGTB", ""], "", ""],
+    [["PCMPGTW", "", "", ""], ["PCMPGTW", "PCMPGTW", "PCMPGTW", ""], "", ""],
+    [["PCMPGTD", "", "", ""], ["PCMPGTD", "PCMPGTD", ["PCMPGTD", "", "???"], ["PCMPGTD", "", "???"]], "", ""],
+    [["PACKUSWB", "", "", ""], "PACKUSWB", "", ""],
+    [["PUNPCKHBW", "", "", ""], "PUNPCKHBW", "", ""],
+    [["PUNPCKHWD", "", "", ""], "PUNPCKHWD", "", ""],
+    [["PUNPCKHDQ", "", "", ""], ["PUNPCKHDQ", "", "???"], "", ""],
+    [["PACKSSDW", "", "", ""], ["PACKSSDW", "", "???"], "", ""],
+    ["???", "PUNPCKLQDQ", "???", "???"],
+    ["???", "PUNPCKHQDQ", "???", "???"],
+    [["MOVD", "", "", ""], ["MOVD", "", "MOVQ"], "", ""],
+    [
+        [
+            ["MOVQ", "", "", ""],
+            ["MOVDQA", "MOVDQA", ["MOVDQA32", "", "MOVDQA64"], ["MOVDQA32", "", "MOVDQA64"]],
+            ["MOVDQU", "MOVDQU", ["MOVDQU32", "", "MOVDQU64"], ""],
+            ["", "", ["MOVDQU8", "", "MOVDQU16"], ""]
+        ],
+        [
+            ["MOVQ", "", "", ""],
+            ["MOVDQA", "MOVDQA", ["MOVDQA32", "", "MOVDQA64"], ["MOVDQA32", "", "MOVDQA64"]],
+            ["MOVDQU", "MOVDQU", ["MOVDQU32", "", "MOVDQU64"], ""],
+            ["", "", ["MOVDQU8", "", "MOVDQU16"], ""]
+        ]
+    ],
+    [["PSHUFW", "", "", ""], ["PSHUFD", "PSHUFD", ["PSHUFD", "", "???"], ["PSHUFD", "", "???"]], "PSHUFHW", "PSHUFLW"],
+    [
+        "???",
+        [
+            "???",
+            "???",
+            [["PSRLW", "", "", ""], "PSRLW", "", ""],
+            "???",
+            [["PSRAW", "", "", ""], "PSRAW", "", ""],
+            "???",
+            [["PSLLW", "", "", ""], "PSLLW", "", ""],
+            "???"
+        ]
+    ],
+    [
+        ["???", ["", "", ["PRORD", "", "PRORQ"], ""], "???", "???"],
+        ["???", ["", "", ["PROLD", "", "PROLQ"], ""], "???", "???"],
+        [["PSRLD", "", "", ""], ["PSRLD", "PSRLD", ["PSRLD", "", "???"], ["PSRLD", "", "???"]], "", ""],
+        "???",
+        [["PSRAD", "", "", ""], ["PSRAD", "PSRAD", ["PSRAD", "", "PSRAQ"], ["PSRAD", "", "???"]], "", ""],
+        "???",
+        [["PSLLD", "", "", ""], ["PSLLD", "PSLLD", ["PSLLD", "", "???"], ["PSLLD", "", "???"]], "", ""],
+        "???"
+    ],
+    [
+        "???",
+        [
+            "???",
+            "???",
+            [["PSRLQ", "PSRLQ", "", ""], "PSRLQ", "", ""],
+            ["???", "PSRLDQ", "???", "???"],
+            "???",
+            "???",
+            [["PSLLQ", "PSLLQ", "", ""], "PSLLQ", "", ""],
+            ["???", "PSLLDQ", "???", "???"]
+        ]
+    ],
+    [["PCMPEQB", "", "", ""], ["PCMPEQB", "PCMPEQB", "PCMPEQB", ""], "", ""],
+    [["PCMPEQW", "", "", ""], ["PCMPEQW", "PCMPEQW", "PCMPEQW", ""], "", ""],
+    [["PCMPEQD", "", "", ""], ["PCMPEQD", "PCMPEQD", ["PCMPEQD", "", "???"], ["PCMPEQD", "", "???"]], "", ""],
+    [["EMMS", ["ZEROUPPER", "ZEROALL", ""], "", ""], "???", "???", "???"],
+    [
+        ["VMREAD", "", ["CVTTPS2UDQ", "", "CVTTPD2UDQ"], ""],
+        ["EXTRQ", "", ["CVTTPS2UQQ", "", "CVTTPD2UQQ"], ""],
+        ["???", "", "CVTTSS2USI", ""],
+        ["INSERTQ", "", "CVTTSD2USI", ""]
+    ],
+    [
+        ["VMWRITE", "", ["CVTPS2UDQ", "", "CVTPD2UDQ"], ""],
+        ["EXTRQ", "", ["CVTPS2UQQ", "", "CVTPD2UQQ"], ""],
+        ["???", "", "CVTSS2USI", ""],
+        ["INSERTQ", "", "CVTSD2USI", ""]
+    ],
+    [
+        "???",
+        ["", "", ["CVTTPS2QQ", "", "CVTTPD2QQ"], ""],
+        ["", "", ["CVTUDQ2PD", "", "CVTUQQ2PD"], "CVTUDQ2PD"],
+        ["", "", ["CVTUDQ2PS", "", "CVTUQQ2PS"], ""]
+    ],
+    ["???", ["", "", ["CVTPS2QQ", "", "CVTPD2QQ"], ""], ["", "", "CVTUSI2SS", ""], ["", "", "CVTUSI2SD", ""]],
+    ["???", ["HADDPD", "HADDPD", "", ""], "???", ["HADDPS", "HADDPS", "", ""]],
+    ["???", ["HSUBPD", "HSUBPD", "", ""], "???", ["HSUBPS", "HSUBPS", "", ""]],
+    [["MOVD", "", "", ""], ["MOVD", "", "MOVQ"], ["MOVQ", "MOVQ", ["???", "", "MOVQ"], ""], "???"],
+    [
+        ["MOVQ", "", "", ""],
+        ["MOVDQA", "MOVDQA", ["MOVDQA32", "", "MOVDQA64"], ["MOVDQA32", "", "MOVDQA64"]],
+        ["MOVDQU", "MOVDQU", ["MOVDQU32", "", "MOVDQU64"], ""],
+        ["???", "", ["MOVDQU8", "", "MOVDQU16"], ""]
+    ],
+    "JO",
+    "JNO",
+    "JB",
+    "JAE",
+    [["JE", "JKZD", "", ""], "", "", ""],
+    [["JNE", "JKNZD", "", ""], "", "", ""], //K1OM.
+    "JBE",
+    "JA",
+    "JS",
+    "JNS",
+    "JP",
+    "JNP",
+    "JL",
+    "JGE",
+    "JLE",
+    "JG",
+    [["SETO", ["KMOVW", "", "KMOVQ"], "", ""], ["SETO", ["KMOVB", "", "KMOVD"], "", ""], "", ""],
+    [["SETNO", ["KMOVW", "", "KMOVQ"], "", ""], ["SETNO", ["KMOVB", "", "KMOVD"], "", ""], "", ""],
+    [
+        ["SETB", ["KMOVW", "", "???"], "", ""],
+        ["SETB", ["KMOVB", "", "???"], "", ""],
+        "",
+        ["SETB", ["KMOVD", "", "KMOVQ"], "", ""]
+    ],
+    [
+        ["SETAE", ["KMOVW", "", "???"], "", ""],
+        ["SETAE", ["KMOVB", "", "???"], "", ""],
+        "",
+        ["SETAE", ["KMOVD", "", "KMOVQ"], "", ""]
+    ],
+    "SETE",
+    [["SETNE", "KCONCATH", "", ""], "", "", ""],
+    "SETBE",
+    [["SETA", "KCONCATL", "", ""], "", "", ""],
+    [["SETS", ["KORTESTW", "", "KORTESTQ"], "", ""], ["SETS", ["KORTESTB", "", "KORTESTD"], "", ""], "", ""],
+    [["SETNS", ["KTESTW", "", "KTESTQ"], "", ""], ["SETNS", ["KTESTB", "", "KTESTD"], "", ""], "", ""],
+    "SETP",
+    "SETNP",
+    "SETL",
+    "SETGE",
+    "SETLE",
+    "SETG",
+    "PUSH",
+    "POP",
+    "CPUID", //Identifies the CPU and which Instructions the current CPU can use.
+    "BT",
+    "SHLD",
+    "SHLD",
+    "XBTS",
+    "IBTS",
+    "PUSH",
+    "POP",
+    "RSM",
+    "BTS",
+    "SHRD",
+    "SHRD",
+    [
+        [
+            ["FXSAVE", "???", "FXSAVE64"],
+            ["FXRSTOR", "???", "FXRSTOR64"],
+            "LDMXCSR",
+            "STMXCSR",
+            ["XSAVE", "", "XSAVE64"],
+            ["XRSTOR", "", "XRSTOR64"],
+            ["XSAVEOPT", "CLWB", "XSAVEOPT64"],
+            ["CLFLUSHOPT", "CLFLUSH", ""]
+        ],
+        [
+            ["???", "???", ["RDFSBASE", "", "", ""], "???"],
+            ["???", "???", ["RDGSBASE", "", "", ""], "???"],
+            ["???", "???", ["WRFSBASE", "", "", ""], "???"],
+            ["???", "???", ["WRGSBASE", "", "", ""], "???"],
+            "???",
+            ["LFENCE", "???", "???", "???", "???", "???", "???", "???"],
+            ["MFENCE", "???", "???", "???", "???", "???", "???", "???"],
+            ["SFENCE", "???", "???", "???", "???", "???", "???", "???"]
+        ]
+    ],
+    "IMUL",
+    "CMPXCHG",
+    "CMPXCHG",
+    ["LSS", "???"],
+    "BTR",
+    ["LFS", "???"],
+    ["LGS", "???"],
+    "MOVZX",
+    "MOVZX",
+    [["JMPE", "", "", ""], "???", ["POPCNT", "POPCNT", "", ""], "???"],
+    "???",
+    ["???", "???", "???", "???", "BT", "BTS", "BTR", "BTC"],
+    "BTC",
+    [["BSF", "", "", ""], "???", ["TZCNT", "TZCNT", "", ""], ["BSF", "TZCNTI", "", ""]],
+    [["BSR", "", "", ""], "???", ["LZCNT", "LZCNT", "", ""], ["BSR", "", "", ""]],
+    "MOVSX",
+    "MOVSX",
+    "XADD",
+    "XADD",
+    [
+        ["CMP,PS,", "CMP,PS,", "CMP,PS,", "CMP,PS,"],
+        ["CMP,PD,", "CMP,PD,", "CMP,PD,", "CMP,PD,"],
+        ["CMP,SS,", "CMP,SS,", "CMP,SS,", ""],
+        ["CMP,SD,", "CMP,SD,", "CMP,SD,", ""]
+    ],
+    ["MOVNTI", "???"],
+    [["PINSRW", "", "", ""], "PINSRW", "", ""],
+    ["???", [["PEXTRW", "", "", ""], "PEXTRW", "", ""]],
+    ["SHUFPS", "SHUFPD", "???", "???"],
+    [
+        [
+            "???",
+            ["CMPXCHG8B", "", "CMPXCHG16B"],
+            "???",
+            ["XRSTORS", "", "XRSTORS64"],
+            ["XSAVEC", "", "XSAVEC64"],
+            ["XSAVES", "", "XSAVES64"],
+            ["VMPTRLD", "VMCLEAR", "VMXON", "???"],
+            ["VMPTRST", "???", "???", "???"]
+        ],
+        [
+            "???",
+            ["SSS", "???", "???", "???", "???", "???", "???", "???"], //Synthetic virtual machine operation codes.
+            "???",
+            "???",
+            "???",
+            "???",
+            "RDRAND",
+            "RDSEED"
+        ]
+    ],
+    "BSWAP",
+    "BSWAP",
+    "BSWAP",
+    "BSWAP",
+    "BSWAP",
+    "BSWAP",
+    "BSWAP",
+    "BSWAP",
+    ["???", ["ADDSUBPD", "ADDSUBPD", "", ""], "???", ["ADDSUBPS", "ADDSUBPS", "", ""]],
+    [["PSRLW", "", "", ""], "PSRLW", "", ""],
+    [["PSRLD", "", "", ""], ["PSRLD", "PSRLD", ["PSRLD", "", "???"], ""], "", ""],
+    [["PSRLQ", "", "", ""], "PSRLQ", "", ""],
+    [["PADDQ", "", "", ""], "PADDQ", "", ""],
+    [["PMULLW", "", "", ""], "PMULLW", "", ""],
+    [
+        ["???", "MOVQ", "???", "???"],
+        ["???", "MOVQ", ["MOVQ2DQ", "", "", ""], ["MOVDQ2Q", "", "", ""]]
+    ],
+    ["???", [["PMOVMSKB", "", "", ""], ["PMOVMSKB", "PMOVMSKB", "", ""], "???", "???"]],
+    [["PSUBUSB", "", "", ""], "PSUBUSB", "", ""],
+    [["PSUBUSW", "", "", ""], "PSUBUSW", "", ""],
+    [["PMINUB", "", "", ""], "PMINUB", "", ""],
+    [["PAND", "", "", ""], ["PAND", "PAND", ["PANDD", "", "PANDQ"], ["PANDD", "", "PANDQ"]], "", ""],
+    [["PADDUSB", "", "", ""], "PADDUSB", "", ""],
+    [["PADDUSW", "", "", ""], "PADDUSW", "", ""],
+    [["PMAXUB", "", "", ""], "PMAXUB", "", ""],
+    [["PANDN", "", "", ""], ["PANDN", "PANDN", ["PANDND", "", "PANDNQ"], ["PANDND", "", "PANDNQ"]], "", ""],
+    [["PAVGB", "", "", ""], "PAVGB", "", ""],
+    [
+        [["PSRAW", "", "", ""], ["PSRAW", "PSRAW", "PSRAW", ""], "", ""],
+        [["PSRAW", "", "", ""], ["PSRAW", "PSRAW", "PSRAW", ""], "", ""]
+    ],
+    [["PSRAD", "", "", ""], ["PSRAD", "PSRAD", ["PSRAD", "", "PSRAQ"], ""], "", ""],
+    [["PAVGW", "", "", ""], "PAVGW", "", ""],
+    [["PMULHUW", "", "", ""], "PMULHUW", "", ""],
+    [["PMULHW", "", "", ""], "PMULHW", "", ""],
+    [
+        "???",
+        ["CVTTPD2DQ", "CVTTPD2DQ", "CVTTPD2DQ", ""],
+        ["CVTDQ2PD", "CVTDQ2PD", ["CVTDQ2PD", "CVTDQ2PD", "CVTQQ2PD"], "CVTDQ2PD"],
+        "CVTPD2DQ"
+    ],
+    [[["MOVNTQ", "", "", ""], ["MOVNTDQ", "", "???"], "???", "???"], "???"],
+    [["PSUBSB", "", "", ""], "PSUBSB", "", ""],
+    [["PSUBSW", "", "", ""], "PSUBSW", "", ""],
+    [["PMINSW", "", "", ""], "PMINSW", "", ""],
+    [["POR", "", "", ""], ["POR", "POR", ["PORD", "", "PORQ"], ["PORD", "", "PORQ"]], "", ""],
+    [["PADDSB", "", "", ""], "PADDSB", "", ""],
+    [["PADDSW", "", "", ""], "PADDSW", "", ""],
+    [["PMAXSW", "", "", ""], "PMAXSW", "", ""],
+    [["PXOR", "", "", ""], ["PXOR", "PXOR", ["PXORD", "", "PXORQ"], ["PXORD", "", "PXORQ"]], "", ""],
+    [["???", "???", "???", ["LDDQU", "LDDQU", "", ""]], "???"],
+    [["PSLLW", "", "", ""], "PSLLW", "", ""],
+    [["PSLLD", "", "", ""], ["PSLLD", "", "???"], "", ""],
+    [["PSLLQ", "", "", ""], "PSLLQ", "", ""],
+    [["PMULUDQ", "", "", ""], "PMULUDQ", "", ""],
+    [["PMADDWD", "", "", ""], "PMADDWD", "", ""],
+    [["PSADBW", "", "", ""], "PSADBW", "", ""],
+    ["???", [["MASKMOVQ", "", "", ""], ["MASKMOVDQU", "MASKMOVDQU", "", ""], "???", "???"]],
+    [["PSUBB", "", "", ""], "PSUBB", "", ""],
+    [["PSUBW", "", "", ""], "PSUBW", "", ""],
+    [["PSUBD", "", "", ""], ["PSUBD", "PSUBD", ["PSUBD", "", "???"], ["PSUBD", "", "???"]], "", ""],
+    [["PSUBQ", "", "", ""], "PSUBQ", "", ""],
+    [["PADDB", "", "", ""], "PADDB", "", ""],
+    [["PADDW", "", "", ""], "PADDW", "", ""],
+    [["PADDD", "", "", ""], ["PADDD", "PADDD", ["PADDD", "", "???"], ["PADDD", "", "???"]], "", ""],
+    "???",
+    /*------------------------------------------------------------------------------------------------------------------------
   Three Byte operations 0F38. Opcodes plus 512 goes to 767 used by escape codes "0F,38", Or
   set directly by adding map bits "10" because "10 00000000" bin = 512 plus opcode.
   ------------------------------------------------------------------------------------------------------------------------*/
-  [["PSHUFB","","",""],"PSHUFB","???","???"],
-  [["PHADDW","","",""],["PHADDW","PHADDW","",""],"???","???"],
-  [["PHADDD","","",""],["PHADDD","PHADDD","",""],"???","???"],
-  [["PHADDSW","","",""],["PHADDSW","PHADDSW","",""],"???","???"],
-  [["PMADDUBSW","","",""],"PMADDUBSW","???","???"],
-  [["PHSUBW","","",""],["PHSUBW","PHSUBW","",""],"???","???"],
-  [["PHSUBD","","",""],["PHSUBD","PHSUBD","",""],"???","???"],
-  [["PHSUBSW","","",""],["PHSUBSW","PHSUBSW","",""],"???","???"],
-  [["PSIGNB","","",""],["PSIGNB","PSIGNB","",""],"???","???"],
-  [["PSIGNW","","",""],["PSIGNW","PSIGNW","",""],"???","???"],
-  [["PSIGND","","",""],["PSIGND","PSIGND","",""],"???","???"],
-  [["PMULHRSW","","",""],"PMULHRSW","???","???"],
-  ["???",["","PERMILPS",["PERMILPS","","???"],""],"???","???"],
-  ["???",["","PERMILPD","PERMILPD",""],"???","???"],
-  ["???",["","TESTPS","",""],"???","???"],
-  ["???",["","TESTPD","",""],"???","???"],
-  ["???",["PBLENDVB","PBLENDVB","PSRLVW",""],["","","PMOVUSWB",""],"???"],
-  ["???",["","","PSRAVW",""],["","","PMOVUSDB",""],"???"],
-  ["???",["","","PSLLVW",""],["","","PMOVUSQB",""],"???"],
-  ["???",["","CVTPH2PS",["CVTPH2PS","","???"],""],["","","PMOVUSDW",""],"???"],
-  ["???",["BLENDVPS","BLENDVPS",["PRORVD","","PRORVQ"],""],["","","PMOVUSQW",""],"???"],
-  ["???",["BLENDVPD","BLENDVPD",["PROLVD","","PROLVQ"],""],["","","PMOVUSQD",""],"???"],
-  ["???",["","PERMPS",["PERMPS","","PERMPD"],""],"???","???"],
-  ["???",["PTEST","PTEST","",""],"???","???"],
-  ["???",["","BROADCASTSS",["BROADCASTSS","","???"],["BROADCASTSS","","???"]],"???","???"],
-  ["???",["","BROADCASTSD",["BROADCASTF32X2","","BROADCASTSD"],["???","","BROADCASTSD"]],"???","???"],
-  ["???",["","BROADCASTF128",["BROADCASTF32X4","","BROADCASTF64X2"],["BROADCASTF32X4","","???"]],"???","???"],
-  ["???",["","",["BROADCASTF32X8","","BROADCASTF64X4"],["???","","BROADCASTF64X4"]],"???","???"],
-  [["PABSB","","",""],"PABSB","???","???"],
-  [["PABSW","","",""],"PABSW","???","???"],
-  [["PABSD","","",""],["PABSD","","???"],"???","???"],
-  ["???",["","","PABSQ",""],"???","???"],
-  ["???","PMOVSXBW",["","","PMOVSWB",""],"???"],
-  ["???","PMOVSXBD",["","","PMOVSDB",""],"???"],
-  ["???","PMOVSXBQ",["","","PMOVSQB",""],"???"],
-  ["???","PMOVSXWD",["","","PMOVSDW",""],"???"],
-  ["???","PMOVSXWQ",["","","PMOVSQW",""],"???"],
-  ["???","PMOVSXDQ",["","","PMOVSQD",""],"???"],
-  ["???",["","",["PTESTMB","","PTESTMW"],""],["","",["PTESTNMB","","PTESTNMW"],""],"???"],
-  ["???",["","",["PTESTMD","","PTESTMQ"],["PTESTMD","","???"]],["","",["PTESTNMD","","PTESTNMQ"],""],"???"],
-  ["???","PMULDQ",["","",["PMOVM2B","","PMOVM2W"],""],"???"],
-  ["???",["PCMPEQQ","PCMPEQQ","PCMPEQQ",""],["","",["PMOVB2M","","PMOVW2M"],""],"???"],
-  [["???",["MOVNTDQA","","???"],"???","???"],["???","???",["","",["???","","PBROADCASTMB2Q"],""],"???"]],
-  ["???",["PACKUSDW","","???"],"???","???"],
-  ["???",["","MASKMOVPS",["SCALEFPS","","SCALEFPD"],""],"???","???"],
-  ["???",["","MASKMOVPD",["SCALEFSS","","SCALEFSD"],""],"???","???"],
-  ["???",["","MASKMOVPS","",""],"???","???"],
-  ["???",["","MASKMOVPD","",""],"???","???"],
-  ["???","PMOVZXBW",["","","PMOVWB",""],"???"],
-  ["???","PMOVZXBD",["","","PMOVDB",""],"???"],
-  ["???","PMOVZXBQ",["","","PMOVQB",""],"???"],
-  ["???","PMOVZXWD",["","","PMOVDW",""],"???"],
-  ["???","PMOVZXWQ",["","","PMOVQW",""],"???"],
-  ["???","PMOVZXDQ",["","",["PMOVQD","PMOVQD",""],""],"???"],
-  ["???",["","PERMD",["PERMD","","PERMQ"],["PERMD","","???"]],"???","???"],
-  ["???",["PCMPGTQ","PCMPGTQ","PCMPGTQ",""],"???","???"],
-  ["???","PMINSB",["","",["PMOVM2D","","PMOVM2Q"],""],"???"],
-  ["???",["PMINSD","PMINSD",["PMINSD","","PMINSQ"],["PMINSD","","???"]],["","",["PMOVD2M","","PMOVQ2M"],""],"???"],
-  ["???","PMINUW",["","","PBROADCASTMW2D",""],"???"],
-  ["???",["PMINUD","PMINUD",["PMINUD","","PMINUQ"],["PMINUD","","???"]],"???","???"],
-  ["???","PMAXSB","???","???"],
-  ["???",["PMAXSD","PMAXSD",["PMAXSD","","PMAXSQ"],["PMAXSD","","???"]],"???","???"],
-  ["???","PMAXUW","???","???"],
-  ["???",["PMAXUD","PMAXUD",["PMAXUD","","PMAXUQ"],["PMAXUD","","???"]],"???","???"],
-  ["???",["PMULLD","PMULLD",["PMULLD","","PMULLQ"],["PMULLD","",""]],"???","???"],
-  ["???",["PHMINPOSUW",["PHMINPOSUW","PHMINPOSUW",""],"",""],"???","???"],
-  ["???",["","",["GETEXPPS","","GETEXPPD"],["GETEXPPS","","GETEXPPD"]],"???","???"],
-  ["???",["","",["GETEXPSS","","GETEXPSD"],""],"???","???"],
-  ["???",["","",["PLZCNTD","","PLZCNTQ"],""],"???","???"],
-  ["???",["",["PSRLVD","","PSRLVQ"],["PSRLVD","","PSRLVQ"],["PSRLVD","","???"]],"???","???"],
-  ["???",["",["PSRAVD","",""],["PSRAVD","","PSRAVQ"],["PSRAVD","","???"]],"???","???"],
-  ["???",["",["PSLLVD","","PSLLVQ"],["PSLLVD","","PSLLVQ"],["PSLLVD","","???"]],"???","???"],
-  "???","???","???","???",
-  ["???",["","",["RCP14PS","","RCP14PD"],""],"???","???"],
-  ["???",["","",["RCP14SS","","RCP14SD"],""],"???","???"],
-  ["???",["","",["RSQRT14PS","","RSQRT14PD"],""],"???","???"],
-  ["???",["","",["RSQRT14SS","","RSQRT14SD"],""],"???","???"],
-  ["???",["","","",["ADDNPS","","ADDNPD"]],"???","???"],
-  ["???",["","","",["GMAXABSPS","","???"]],"???","???"],
-  ["???",["","","",["GMINPS","","GMINPD"]],"???","???"],
-  ["???",["","","",["GMAXPS","","GMAXPD"]],"???","???"],
-  "",
-  ["???",["","","",["FIXUPNANPS","","FIXUPNANPD"]],"???","???"],
-  "","",
-  ["???",["","PBROADCASTD",["PBROADCASTD","","???"],["PBROADCASTD","","???"]],"???","???"],
-  ["???",["","PBROADCASTQ",["BROADCASTI32X2","","PBROADCASTQ"],["???","","PBROADCASTQ"]],"???","???"],
-  ["???",["","BROADCASTI128",["BROADCASTI32X4","","BROADCASTI64X2"],["BROADCASTI32X4","","???"]],"???","???"],
-  ["???",["","",["BROADCASTI32X8","","BROADCASTI64X4"],["???","","BROADCASTI64X4"]],"???","???"],
-  ["???",["","","",["PADCD","","???"]],"???","???"],
-  ["???",["","","",["PADDSETCD","","???"]],"???","???"],
-  ["???",["","","",["PSBBD","","???"]],"???","???"],
-  ["???",["","","",["PSUBSETBD","","???"]],"???","???"],
-  "???","???","???","???",
-  ["???",["","",["PBLENDMD","","PBLENDMQ"],["PBLENDMD","","PBLENDMQ"]],"???","???"],
-  ["???",["","",["BLENDMPS","","BLENDMPD"],["BLENDMPS","","BLENDMPD"]],"???","???"],
-  ["???",["","",["PBLENDMB","","PBLENDMW"],""],"???","???"],
-  "???","???","???","???","???",
-  ["???",["","","",["PSUBRD","","???"]],"???","???"],
-  ["???",["","","",["SUBRPS","","SUBRPD"]],"???","???"],
-  ["???",["","","",["PSBBRD","","???"]],"???","???"],
-  ["???",["","","",["PSUBRSETBD","","???"]],"???","???"],
-  "???","???","???","???",
-  ["???",["","","",["PCMPLTD","","???"]],"???","???"],
-  ["???",["","",["PERMI2B","","PERMI2W"],""],"???","???"],
-  ["???",["","",["PERMI2D","","PERMI2Q"],""],"???","???"],
-  ["???",["","",["PERMI2PS","","PERMI2PD"],""],"???","???"],
-  ["???",["","PBROADCASTB",["PBROADCASTB","","???"],""],"???","???"],
-  ["???",["","PBROADCASTW",["PBROADCASTW","","???"],""],"???","???"],
-  ["???",["???",["","",["PBROADCASTB","","???"],""],"???","???"]],
-  ["???",["???",["","",["PBROADCASTW","","???"],""],"???","???"]],
-  ["???",["","",["PBROADCASTD","","PBROADCASTQ"],""],"???","???"],
-  ["???",["","",["PERMT2B","","PERMT2W"],""],"???","???"],
-  ["???",["","",["PERMT2D","","PERMT2Q"],""],"???","???"],
-  ["???",["","",["PERMT2PS","","PERMT2PD"],""],"???","???"],
-  [["???","INVEPT","???","???"],"???"],
-  [["???","INVVPID","???","???"],"???"],
-  [["???","INVPCID","???","???"],"???"],
-  ["???",["???","???","PMULTISHIFTQB","???"],"???","???"],
-  ["???",["","","",["SCALEPS","","???"]],"???","???"],
-  "???",
-  ["???",["","","",["PMULHUD","","???"]],"???","???"],
-  ["???",["","","",["PMULHD","","???"]],"???","???"],
-  ["???",["","",["EXPANDPS","","EXPANDPD"],""],"???","???"],
-  ["???",["","",["PEXPANDD","","PEXPANDQ"],""],"???","???"],
-  ["???",["","",["COMPRESSPS","","COMPRESSPD"],""],"???","???"],
-  ["???",["","",["PCOMPRESSD","","PCOMPRESSQ"],""],"???","???"],
-  "???",
-  ["???",["","",["PERMB","","PERMW"],""],"???","???"],
-  "???","???",
-  ["???",["",["PGATHERDD","","PGATHERDQ"],["PGATHERDD","","PGATHERDQ"],["PGATHERDD","","PGATHERDQ"]],"???","???"],
-  ["???",["",["PGATHERQD","","PGATHERQQ"],["PGATHERQD","","PGATHERQQ"],""],"???","???"],
-  ["???",["",["GATHERDPS","","GATHERDPD"],["GATHERDPS","","GATHERDPD"],["GATHERDPS","","GATHERDPD"]],"???","???"],
-  ["???",["",["GATHERQPS","","GATHERQPD"],["GATHERQPS","","GATHERQPD"],""],"???","???"],
-  "???","???",
-  ["???",["",["FMADDSUB132PS","","FMADDSUB132PD"],["FMADDSUB132PS","","FMADDSUB132PD"],""],"???","???"],
-  ["???",["",["FMSUBADD132PS","","FMSUBADD132PD"],["FMSUBADD132PS","","FMSUBADD132PD"],""],"???","???"],
-  ["???",["",["FMADD132PS","","FMADD132PD"],["FMADD132PS","","FMADD132PD"],["FMADD132PS","","FMADD132PD"]],"???","???"],
-  ["???",["",["FMADD132SS","","FMADD132SD"],["FMADD132SS","","FMADD132SD"],""],"???","???"],
-  ["???",["",["FMSUB132PS","","FMSUB132PD"],["FMSUB132PS","","FMSUB132PD"],["FMSUB132PS","","FMSUB132PD"]],"???","???"],
-  ["???",["",["FMSUB132SS","","FMSUB132SD"],["FMSUB132SS","","FMSUB132SD"],""],"???","???"],
-  ["???",["",["FNMADD132PS","","FNMADD132PD"],["FNMADD132PS","","FNMADD132PD"],["NMADD132PS","","FNMADD132PD"]],"???","???"],
-  ["???",["",["FNMADD132SS","","FNMADD132SD"],["FNMADD132SS","","FNMADD132SD"],""],"???","???"],
-  ["???",["",["FNMSUB132PS","","FNMSUB132PD"],["FNMSUB132PS","","FNMSUB132PD"],["FNMSUB132PS","","FNMSUB132PS"]],"???","???"],
-  ["???",["",["FNMSUB132SS","","FNMSUB132SD"],["FNMSUB132SS","","FNMSUB132SD"],""],"???","???"],
-  ["???",["","",["PSCATTERDD","","PSCATTERDQ"],["PSCATTERDD","","PSCATTERDQ"]],"???","???"],
-  ["???",["","",["PSCATTERQD","","PSCATTERQQ"],""],"???","???"],
-  ["???",["","",["SCATTERDPS","","SCATTERDPD"],["SCATTERDPS","","SCATTERDPD"]],"???","???"],
-  ["???",["","",["SCATTERQPS","","SCATTERQPD"],""],"???","???"],
-  ["???",["","","",["FMADD233PS","","???"]],"???","???"],
-  "???",
-  ["???",["",["FMADDSUB213PS","","FMADDSUB213PD"],["FMADDSUB213PS","","FMADDSUB213PD"],""],"???","???"],
-  ["???",["",["FMSUBADD213PS","","FMSUBADD213PD"],["FMSUBADD213PS","","FMSUBADD213PD"],""],"???","???"],
-  ["???",["",["FMADD213PS","","FMADD213PD"],["FMADD213PS","","FMADD213PD"],["FMADD213PS","","FMADD213PD"]],"???","???"],
-  ["???",["",["FMADD213SS","","FMADD213SD"],["FMADD213SS","","FMADD213SD"],""],"???","???"],
-  ["???",["",["FMSUB213PS","","FMSUB213PD"],["FMSUB213PS","","FMSUB213PD"],["FMSUB213PS","","FMSUB213PD"]],"???","???"],
-  ["???",["",["FMSUB213SS","","FMSUB213SD"],["FMSUB213SS","","FMSUB213SD"],""],"???","???"],
-  ["???",["",["FNMADD213PS","","FNMADD213PD"],["FNMADD213PS","","FNMADD213PD"],["FNMADD213PS","","FNMADD213PD"]],"???","???"],
-  ["???",["",["FNMADD213SS","","FNMADD213SD"],["FNMADD213SS","","FNMADD213SD"],""],"???","???"],
-  ["???",["",["FNMSUB213PS","","FNMSUB213PD"],["FNMSUB213PS","","FNMSUB213PD"],["FNMSUB213PS","","FNMSUB213PD"]],"???","???"],
-  ["???",["",["FNMSUB213SS","","FNMSUB213SD"],["FNMSUB213SS","","FNMSUB213SD"],""],"???","???"],
-  "???","???","???","???",
-  ["???",["","","PMADD52LUQ",["PMADD233D","","???"]],"???","???"],
-  ["???",["","","PMADD52HUQ",["PMADD231D","","???"]],"???","???"],
-  ["???",["",["FMADDSUB231PS","","FMADDSUB231PD"],["FMADDSUB231PS","","FMADDSUB231PD"],""],"???","???"],
-  ["???",["",["FMSUBADD231PS","","FMSUBADD231PD"],["FMSUBADD231PS","","FMSUBADD231PD"],""],"???","???"],
-  ["???",["",["FMADD231PS","","FMADD231PD"],["FMADD231PS","","FMADD231PD"],["FMADD231PS","","FMADD231PD"]],"???","???"],
-  ["???",["",["FMADD231SS","","FMADD231SD"],["FMADD231SS","","FMADD231SD"],""],"???","???"],
-  ["???",["",["FMSUB231PS","","FMSUB231PD"],["FMSUB231PS","","FMSUB231PD"],["FMSUB231PS","","FMSUB231PD"]],"???","???"],
-  ["???",["",["FMSUB231SS","","FMSUB231SD"],["FMSUB231SS","","FMSUB231SD"],""],"???","???"],
-  ["???",["",["FNMADD231PS","","FNMADD231PD"],["FNMADD231PS","","FNMADD231PD"],["FNMADD231PS","","FNMADD231PD"]],"???","???"],
-  ["???",["",["FNMADD231SS","","FNMADD231SD"],["FNMADD231SS","","FNMADD231SD"],""],"???","???"],
-  ["???",["",["FNMSUB231PS","","FNMSUB231PD"],["FNMSUB231PS","","FNMSUB231PD"],["FNMSUB231PS","","FNMSUB231PD"]],"???","???"],
-  ["???",["",["FNMSUB231SS","","FNMSUB231SD"],["FNMSUB231SS","","FNMSUB231SD"],""],"???","???"],
-  "???","???","???","???",
-  ["???",["","",["PCONFLICTD","","PCONFLICTQ"],""],"???","???"],
-  "???",
-  [
+    [["PSHUFB", "", "", ""], "PSHUFB", "???", "???"],
+    [["PHADDW", "", "", ""], ["PHADDW", "PHADDW", "", ""], "???", "???"],
+    [["PHADDD", "", "", ""], ["PHADDD", "PHADDD", "", ""], "???", "???"],
+    [["PHADDSW", "", "", ""], ["PHADDSW", "PHADDSW", "", ""], "???", "???"],
+    [["PMADDUBSW", "", "", ""], "PMADDUBSW", "???", "???"],
+    [["PHSUBW", "", "", ""], ["PHSUBW", "PHSUBW", "", ""], "???", "???"],
+    [["PHSUBD", "", "", ""], ["PHSUBD", "PHSUBD", "", ""], "???", "???"],
+    [["PHSUBSW", "", "", ""], ["PHSUBSW", "PHSUBSW", "", ""], "???", "???"],
+    [["PSIGNB", "", "", ""], ["PSIGNB", "PSIGNB", "", ""], "???", "???"],
+    [["PSIGNW", "", "", ""], ["PSIGNW", "PSIGNW", "", ""], "???", "???"],
+    [["PSIGND", "", "", ""], ["PSIGND", "PSIGND", "", ""], "???", "???"],
+    [["PMULHRSW", "", "", ""], "PMULHRSW", "???", "???"],
+    ["???", ["", "PERMILPS", ["PERMILPS", "", "???"], ""], "???", "???"],
+    ["???", ["", "PERMILPD", "PERMILPD", ""], "???", "???"],
+    ["???", ["", "TESTPS", "", ""], "???", "???"],
+    ["???", ["", "TESTPD", "", ""], "???", "???"],
+    ["???", ["PBLENDVB", "PBLENDVB", "PSRLVW", ""], ["", "", "PMOVUSWB", ""], "???"],
+    ["???", ["", "", "PSRAVW", ""], ["", "", "PMOVUSDB", ""], "???"],
+    ["???", ["", "", "PSLLVW", ""], ["", "", "PMOVUSQB", ""], "???"],
+    ["???", ["", "CVTPH2PS", ["CVTPH2PS", "", "???"], ""], ["", "", "PMOVUSDW", ""], "???"],
+    ["???", ["BLENDVPS", "BLENDVPS", ["PRORVD", "", "PRORVQ"], ""], ["", "", "PMOVUSQW", ""], "???"],
+    ["???", ["BLENDVPD", "BLENDVPD", ["PROLVD", "", "PROLVQ"], ""], ["", "", "PMOVUSQD", ""], "???"],
+    ["???", ["", "PERMPS", ["PERMPS", "", "PERMPD"], ""], "???", "???"],
+    ["???", ["PTEST", "PTEST", "", ""], "???", "???"],
+    ["???", ["", "BROADCASTSS", ["BROADCASTSS", "", "???"], ["BROADCASTSS", "", "???"]], "???", "???"],
+    ["???", ["", "BROADCASTSD", ["BROADCASTF32X2", "", "BROADCASTSD"], ["???", "", "BROADCASTSD"]], "???", "???"],
     [
-      ["???",["","","",["GATHERPF0HINTDPS","","GATHERPF0HINTDPD"]],"???","???"],
-      ["???",["","",["GATHERPF0DPS","","GATHERPF0DPD"],["GATHERPF0DPS","",""]],"???","???"],
-      ["???",["","",["GATHERPF1DPS","","GATHERPF1DPD"],["GATHERPF1DPS","",""]],"???","???"],
-      "???",
-      ["???",["","","",["SCATTERPF0HINTDPS","","SCATTERPF0HINTDPD"]],"???","???"],
-      ["???",["","",["SCATTERPF0DPS","","SCATTERPF0DPD"],["VSCATTERPF0DPS","",""]],"???","???"],
-      ["???",["","",["SCATTERPF1DPS","","SCATTERPF1DPD"],["VSCATTERPF1DPS","",""]],"???","???"],
-      "???"
-    ],"???"
-  ],
-  [
+        "???",
+        ["", "BROADCASTF128", ["BROADCASTF32X4", "", "BROADCASTF64X2"], ["BROADCASTF32X4", "", "???"]],
+        "???",
+        "???"
+    ],
+    ["???", ["", "", ["BROADCASTF32X8", "", "BROADCASTF64X4"], ["???", "", "BROADCASTF64X4"]], "???", "???"],
+    [["PABSB", "", "", ""], "PABSB", "???", "???"],
+    [["PABSW", "", "", ""], "PABSW", "???", "???"],
+    [["PABSD", "", "", ""], ["PABSD", "", "???"], "???", "???"],
+    ["???", ["", "", "PABSQ", ""], "???", "???"],
+    ["???", "PMOVSXBW", ["", "", "PMOVSWB", ""], "???"],
+    ["???", "PMOVSXBD", ["", "", "PMOVSDB", ""], "???"],
+    ["???", "PMOVSXBQ", ["", "", "PMOVSQB", ""], "???"],
+    ["???", "PMOVSXWD", ["", "", "PMOVSDW", ""], "???"],
+    ["???", "PMOVSXWQ", ["", "", "PMOVSQW", ""], "???"],
+    ["???", "PMOVSXDQ", ["", "", "PMOVSQD", ""], "???"],
+    ["???", ["", "", ["PTESTMB", "", "PTESTMW"], ""], ["", "", ["PTESTNMB", "", "PTESTNMW"], ""], "???"],
     [
-      "???",
-      ["???",["","",["GATHERPF0QPS","","GATHERPF0QPD"],""],"???","???"],
-      ["???",["","",["GATHERPF1QPS","","GATHERPF1QPD"],""],"???","???"],
-      "???","???",
-      ["???",["","",["SCATTERPF0QPS","","SCATTERPF0QPD"],""],"???","???"],
-      ["???",["","",["SCATTERPF1QPS","","SCATTERPF1QPD"],""],"???","???"],
-      "???"
-    ],"???"
-  ],
-  [["SHA1NEXTE","","",""],["","",["EXP2PS","","EXP2PD"],["EXP223PS","","???"]],"???","???"],
-  [["SHA1MSG1","","",""],["","","",["LOG2PS","","???"]],"???","???"],
-  [["SHA1MSG2","","",""],["","",["RCP28PS","","RCP28PD"],["RCP23PS","","???"]],"???","???"],
-  [["SHA256RNDS2","","",""],["","",["RCP28SS","","RCP28SD"],["RSQRT23PS","","???"]],"???","???"],
-  [["SHA256MSG1","","",""],["","",["RSQRT28PS","","RSQRT28PD"],["ADDSETSPS","","???"]],"???","???"],
-  [["SHA256MSG2","","",""],["","",["RSQRT28SS","","RSQRT28SD"],["PADDSETSD","","???"]],"???","???"],
-  "???","???",
-  [[["","","",["LOADUNPACKLD","","LOADUNPACKLQ"]],["","","",["PACKSTORELD","","PACKSTORELQ"]],"???","???"],"???"],
-  [[["","","",["LOADUNPACKLPS","","LOADUNPACKLPD"]],["","","",["PACKSTORELPS","","PACKSTORELPD"]],"???","???"],"???"],
-  "???","???",
-  [[["","","",["LOADUNPACKHD","","LOADUNPACKHQ"]],["","","",["PACKSTOREHD","","PACKSTOREHQ"]],"???","???"],"???"],
-  [[["","","",["LOADUNPACKHPS","","LOADUNPACKHPD"]],["","","",["PACKSTOREHPS","","PACKSTOREHPD"]],"???","???"],"???"],
-  "???","???","???","???","???",
-  ["???",["AESIMC","AESIMC","",""],"???","???"],
-  ["???",["AESENC","AESENC","",""],"???","???"],
-  ["???",["AESENCLAST","AESENCLAST","",""],"???","???"],
-  ["???",["AESDEC","AESDEC","",""],"???","???"],
-  ["???",["AESDECLAST","AESDECLAST","",""],"???","???"],
-  "???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???",
-  [
-    ["MOVBE","","",""],
-    ["MOVBE","","",""],"???",
-    ["CRC32","","",""]
-  ],
-  [
-    ["MOVBE","","",""],
-    ["MOVBE","","",""],"???",
-    ["CRC32","","",""]
-  ],
-  ["???",["","ANDN","",""],"???","???"],
-  [
+        "???",
+        ["", "", ["PTESTMD", "", "PTESTMQ"], ["PTESTMD", "", "???"]],
+        ["", "", ["PTESTNMD", "", "PTESTNMQ"], ""],
+        "???"
+    ],
+    ["???", "PMULDQ", ["", "", ["PMOVM2B", "", "PMOVM2W"], ""], "???"],
+    ["???", ["PCMPEQQ", "PCMPEQQ", "PCMPEQQ", ""], ["", "", ["PMOVB2M", "", "PMOVW2M"], ""], "???"],
+    [
+        ["???", ["MOVNTDQA", "", "???"], "???", "???"],
+        ["???", "???", ["", "", ["???", "", "PBROADCASTMB2Q"], ""], "???"]
+    ],
+    ["???", ["PACKUSDW", "", "???"], "???", "???"],
+    ["???", ["", "MASKMOVPS", ["SCALEFPS", "", "SCALEFPD"], ""], "???", "???"],
+    ["???", ["", "MASKMOVPD", ["SCALEFSS", "", "SCALEFSD"], ""], "???", "???"],
+    ["???", ["", "MASKMOVPS", "", ""], "???", "???"],
+    ["???", ["", "MASKMOVPD", "", ""], "???", "???"],
+    ["???", "PMOVZXBW", ["", "", "PMOVWB", ""], "???"],
+    ["???", "PMOVZXBD", ["", "", "PMOVDB", ""], "???"],
+    ["???", "PMOVZXBQ", ["", "", "PMOVQB", ""], "???"],
+    ["???", "PMOVZXWD", ["", "", "PMOVDW", ""], "???"],
+    ["???", "PMOVZXWQ", ["", "", "PMOVQW", ""], "???"],
+    ["???", "PMOVZXDQ", ["", "", ["PMOVQD", "PMOVQD", ""], ""], "???"],
+    ["???", ["", "PERMD", ["PERMD", "", "PERMQ"], ["PERMD", "", "???"]], "???", "???"],
+    ["???", ["PCMPGTQ", "PCMPGTQ", "PCMPGTQ", ""], "???", "???"],
+    ["???", "PMINSB", ["", "", ["PMOVM2D", "", "PMOVM2Q"], ""], "???"],
+    [
+        "???",
+        ["PMINSD", "PMINSD", ["PMINSD", "", "PMINSQ"], ["PMINSD", "", "???"]],
+        ["", "", ["PMOVD2M", "", "PMOVQ2M"], ""],
+        "???"
+    ],
+    ["???", "PMINUW", ["", "", "PBROADCASTMW2D", ""], "???"],
+    ["???", ["PMINUD", "PMINUD", ["PMINUD", "", "PMINUQ"], ["PMINUD", "", "???"]], "???", "???"],
+    ["???", "PMAXSB", "???", "???"],
+    ["???", ["PMAXSD", "PMAXSD", ["PMAXSD", "", "PMAXSQ"], ["PMAXSD", "", "???"]], "???", "???"],
+    ["???", "PMAXUW", "???", "???"],
+    ["???", ["PMAXUD", "PMAXUD", ["PMAXUD", "", "PMAXUQ"], ["PMAXUD", "", "???"]], "???", "???"],
+    ["???", ["PMULLD", "PMULLD", ["PMULLD", "", "PMULLQ"], ["PMULLD", "", ""]], "???", "???"],
+    ["???", ["PHMINPOSUW", ["PHMINPOSUW", "PHMINPOSUW", ""], "", ""], "???", "???"],
+    ["???", ["", "", ["GETEXPPS", "", "GETEXPPD"], ["GETEXPPS", "", "GETEXPPD"]], "???", "???"],
+    ["???", ["", "", ["GETEXPSS", "", "GETEXPSD"], ""], "???", "???"],
+    ["???", ["", "", ["PLZCNTD", "", "PLZCNTQ"], ""], "???", "???"],
+    ["???", ["", ["PSRLVD", "", "PSRLVQ"], ["PSRLVD", "", "PSRLVQ"], ["PSRLVD", "", "???"]], "???", "???"],
+    ["???", ["", ["PSRAVD", "", ""], ["PSRAVD", "", "PSRAVQ"], ["PSRAVD", "", "???"]], "???", "???"],
+    ["???", ["", ["PSLLVD", "", "PSLLVQ"], ["PSLLVD", "", "PSLLVQ"], ["PSLLVD", "", "???"]], "???", "???"],
     "???",
-    ["???",["","BLSR","",""],"???","???"],
-    ["???",["","BLSMSK","",""],"???","???"],
-    ["???",["","BLSI","",""],"???","???"],
-    "???","???","???","???"
-  ],"???",
-  [
-    ["","BZHI","",""],"???",
-    ["","PEXT","",""],
-    ["","PDEP","",""]
-  ],
-  [
     "???",
-    ["ADCX","","",""],
-    ["ADOX","","",""],
-    ["","MULX","",""]
-  ],
-  [
-    ["","BEXTR","",""],
-    ["","SHLX","",""],
-    ["","SARX","",""],
-    ["","SHRX","",""]
-  ],
-  "???","???","???","???","???","???","???","???",
-  /*------------------------------------------------------------------------------------------------------------------------
+    "???",
+    "???",
+    ["???", ["", "", ["RCP14PS", "", "RCP14PD"], ""], "???", "???"],
+    ["???", ["", "", ["RCP14SS", "", "RCP14SD"], ""], "???", "???"],
+    ["???", ["", "", ["RSQRT14PS", "", "RSQRT14PD"], ""], "???", "???"],
+    ["???", ["", "", ["RSQRT14SS", "", "RSQRT14SD"], ""], "???", "???"],
+    ["???", ["", "", "", ["ADDNPS", "", "ADDNPD"]], "???", "???"],
+    ["???", ["", "", "", ["GMAXABSPS", "", "???"]], "???", "???"],
+    ["???", ["", "", "", ["GMINPS", "", "GMINPD"]], "???", "???"],
+    ["???", ["", "", "", ["GMAXPS", "", "GMAXPD"]], "???", "???"],
+    "",
+    ["???", ["", "", "", ["FIXUPNANPS", "", "FIXUPNANPD"]], "???", "???"],
+    "",
+    "",
+    ["???", ["", "PBROADCASTD", ["PBROADCASTD", "", "???"], ["PBROADCASTD", "", "???"]], "???", "???"],
+    ["???", ["", "PBROADCASTQ", ["BROADCASTI32X2", "", "PBROADCASTQ"], ["???", "", "PBROADCASTQ"]], "???", "???"],
+    [
+        "???",
+        ["", "BROADCASTI128", ["BROADCASTI32X4", "", "BROADCASTI64X2"], ["BROADCASTI32X4", "", "???"]],
+        "???",
+        "???"
+    ],
+    ["???", ["", "", ["BROADCASTI32X8", "", "BROADCASTI64X4"], ["???", "", "BROADCASTI64X4"]], "???", "???"],
+    ["???", ["", "", "", ["PADCD", "", "???"]], "???", "???"],
+    ["???", ["", "", "", ["PADDSETCD", "", "???"]], "???", "???"],
+    ["???", ["", "", "", ["PSBBD", "", "???"]], "???", "???"],
+    ["???", ["", "", "", ["PSUBSETBD", "", "???"]], "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", ["", "", ["PBLENDMD", "", "PBLENDMQ"], ["PBLENDMD", "", "PBLENDMQ"]], "???", "???"],
+    ["???", ["", "", ["BLENDMPS", "", "BLENDMPD"], ["BLENDMPS", "", "BLENDMPD"]], "???", "???"],
+    ["???", ["", "", ["PBLENDMB", "", "PBLENDMW"], ""], "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", ["", "", "", ["PSUBRD", "", "???"]], "???", "???"],
+    ["???", ["", "", "", ["SUBRPS", "", "SUBRPD"]], "???", "???"],
+    ["???", ["", "", "", ["PSBBRD", "", "???"]], "???", "???"],
+    ["???", ["", "", "", ["PSUBRSETBD", "", "???"]], "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", ["", "", "", ["PCMPLTD", "", "???"]], "???", "???"],
+    ["???", ["", "", ["PERMI2B", "", "PERMI2W"], ""], "???", "???"],
+    ["???", ["", "", ["PERMI2D", "", "PERMI2Q"], ""], "???", "???"],
+    ["???", ["", "", ["PERMI2PS", "", "PERMI2PD"], ""], "???", "???"],
+    ["???", ["", "PBROADCASTB", ["PBROADCASTB", "", "???"], ""], "???", "???"],
+    ["???", ["", "PBROADCASTW", ["PBROADCASTW", "", "???"], ""], "???", "???"],
+    ["???", ["???", ["", "", ["PBROADCASTB", "", "???"], ""], "???", "???"]],
+    ["???", ["???", ["", "", ["PBROADCASTW", "", "???"], ""], "???", "???"]],
+    ["???", ["", "", ["PBROADCASTD", "", "PBROADCASTQ"], ""], "???", "???"],
+    ["???", ["", "", ["PERMT2B", "", "PERMT2W"], ""], "???", "???"],
+    ["???", ["", "", ["PERMT2D", "", "PERMT2Q"], ""], "???", "???"],
+    ["???", ["", "", ["PERMT2PS", "", "PERMT2PD"], ""], "???", "???"],
+    [["???", "INVEPT", "???", "???"], "???"],
+    [["???", "INVVPID", "???", "???"], "???"],
+    [["???", "INVPCID", "???", "???"], "???"],
+    ["???", ["???", "???", "PMULTISHIFTQB", "???"], "???", "???"],
+    ["???", ["", "", "", ["SCALEPS", "", "???"]], "???", "???"],
+    "???",
+    ["???", ["", "", "", ["PMULHUD", "", "???"]], "???", "???"],
+    ["???", ["", "", "", ["PMULHD", "", "???"]], "???", "???"],
+    ["???", ["", "", ["EXPANDPS", "", "EXPANDPD"], ""], "???", "???"],
+    ["???", ["", "", ["PEXPANDD", "", "PEXPANDQ"], ""], "???", "???"],
+    ["???", ["", "", ["COMPRESSPS", "", "COMPRESSPD"], ""], "???", "???"],
+    ["???", ["", "", ["PCOMPRESSD", "", "PCOMPRESSQ"], ""], "???", "???"],
+    "???",
+    ["???", ["", "", ["PERMB", "", "PERMW"], ""], "???", "???"],
+    "???",
+    "???",
+    [
+        "???",
+        ["", ["PGATHERDD", "", "PGATHERDQ"], ["PGATHERDD", "", "PGATHERDQ"], ["PGATHERDD", "", "PGATHERDQ"]],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["PGATHERQD", "", "PGATHERQQ"], ["PGATHERQD", "", "PGATHERQQ"], ""], "???", "???"],
+    [
+        "???",
+        ["", ["GATHERDPS", "", "GATHERDPD"], ["GATHERDPS", "", "GATHERDPD"], ["GATHERDPS", "", "GATHERDPD"]],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["GATHERQPS", "", "GATHERQPD"], ["GATHERQPS", "", "GATHERQPD"], ""], "???", "???"],
+    "???",
+    "???",
+    ["???", ["", ["FMADDSUB132PS", "", "FMADDSUB132PD"], ["FMADDSUB132PS", "", "FMADDSUB132PD"], ""], "???", "???"],
+    ["???", ["", ["FMSUBADD132PS", "", "FMSUBADD132PD"], ["FMSUBADD132PS", "", "FMSUBADD132PD"], ""], "???", "???"],
+    [
+        "???",
+        ["", ["FMADD132PS", "", "FMADD132PD"], ["FMADD132PS", "", "FMADD132PD"], ["FMADD132PS", "", "FMADD132PD"]],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["FMADD132SS", "", "FMADD132SD"], ["FMADD132SS", "", "FMADD132SD"], ""], "???", "???"],
+    [
+        "???",
+        ["", ["FMSUB132PS", "", "FMSUB132PD"], ["FMSUB132PS", "", "FMSUB132PD"], ["FMSUB132PS", "", "FMSUB132PD"]],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["FMSUB132SS", "", "FMSUB132SD"], ["FMSUB132SS", "", "FMSUB132SD"], ""], "???", "???"],
+    [
+        "???",
+        ["", ["FNMADD132PS", "", "FNMADD132PD"], ["FNMADD132PS", "", "FNMADD132PD"], ["NMADD132PS", "", "FNMADD132PD"]],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["FNMADD132SS", "", "FNMADD132SD"], ["FNMADD132SS", "", "FNMADD132SD"], ""], "???", "???"],
+    [
+        "???",
+        [
+            "",
+            ["FNMSUB132PS", "", "FNMSUB132PD"],
+            ["FNMSUB132PS", "", "FNMSUB132PD"],
+            ["FNMSUB132PS", "", "FNMSUB132PS"]
+        ],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["FNMSUB132SS", "", "FNMSUB132SD"], ["FNMSUB132SS", "", "FNMSUB132SD"], ""], "???", "???"],
+    ["???", ["", "", ["PSCATTERDD", "", "PSCATTERDQ"], ["PSCATTERDD", "", "PSCATTERDQ"]], "???", "???"],
+    ["???", ["", "", ["PSCATTERQD", "", "PSCATTERQQ"], ""], "???", "???"],
+    ["???", ["", "", ["SCATTERDPS", "", "SCATTERDPD"], ["SCATTERDPS", "", "SCATTERDPD"]], "???", "???"],
+    ["???", ["", "", ["SCATTERQPS", "", "SCATTERQPD"], ""], "???", "???"],
+    ["???", ["", "", "", ["FMADD233PS", "", "???"]], "???", "???"],
+    "???",
+    ["???", ["", ["FMADDSUB213PS", "", "FMADDSUB213PD"], ["FMADDSUB213PS", "", "FMADDSUB213PD"], ""], "???", "???"],
+    ["???", ["", ["FMSUBADD213PS", "", "FMSUBADD213PD"], ["FMSUBADD213PS", "", "FMSUBADD213PD"], ""], "???", "???"],
+    [
+        "???",
+        ["", ["FMADD213PS", "", "FMADD213PD"], ["FMADD213PS", "", "FMADD213PD"], ["FMADD213PS", "", "FMADD213PD"]],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["FMADD213SS", "", "FMADD213SD"], ["FMADD213SS", "", "FMADD213SD"], ""], "???", "???"],
+    [
+        "???",
+        ["", ["FMSUB213PS", "", "FMSUB213PD"], ["FMSUB213PS", "", "FMSUB213PD"], ["FMSUB213PS", "", "FMSUB213PD"]],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["FMSUB213SS", "", "FMSUB213SD"], ["FMSUB213SS", "", "FMSUB213SD"], ""], "???", "???"],
+    [
+        "???",
+        [
+            "",
+            ["FNMADD213PS", "", "FNMADD213PD"],
+            ["FNMADD213PS", "", "FNMADD213PD"],
+            ["FNMADD213PS", "", "FNMADD213PD"]
+        ],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["FNMADD213SS", "", "FNMADD213SD"], ["FNMADD213SS", "", "FNMADD213SD"], ""], "???", "???"],
+    [
+        "???",
+        [
+            "",
+            ["FNMSUB213PS", "", "FNMSUB213PD"],
+            ["FNMSUB213PS", "", "FNMSUB213PD"],
+            ["FNMSUB213PS", "", "FNMSUB213PD"]
+        ],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["FNMSUB213SS", "", "FNMSUB213SD"], ["FNMSUB213SS", "", "FNMSUB213SD"], ""], "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", ["", "", "PMADD52LUQ", ["PMADD233D", "", "???"]], "???", "???"],
+    ["???", ["", "", "PMADD52HUQ", ["PMADD231D", "", "???"]], "???", "???"],
+    ["???", ["", ["FMADDSUB231PS", "", "FMADDSUB231PD"], ["FMADDSUB231PS", "", "FMADDSUB231PD"], ""], "???", "???"],
+    ["???", ["", ["FMSUBADD231PS", "", "FMSUBADD231PD"], ["FMSUBADD231PS", "", "FMSUBADD231PD"], ""], "???", "???"],
+    [
+        "???",
+        ["", ["FMADD231PS", "", "FMADD231PD"], ["FMADD231PS", "", "FMADD231PD"], ["FMADD231PS", "", "FMADD231PD"]],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["FMADD231SS", "", "FMADD231SD"], ["FMADD231SS", "", "FMADD231SD"], ""], "???", "???"],
+    [
+        "???",
+        ["", ["FMSUB231PS", "", "FMSUB231PD"], ["FMSUB231PS", "", "FMSUB231PD"], ["FMSUB231PS", "", "FMSUB231PD"]],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["FMSUB231SS", "", "FMSUB231SD"], ["FMSUB231SS", "", "FMSUB231SD"], ""], "???", "???"],
+    [
+        "???",
+        [
+            "",
+            ["FNMADD231PS", "", "FNMADD231PD"],
+            ["FNMADD231PS", "", "FNMADD231PD"],
+            ["FNMADD231PS", "", "FNMADD231PD"]
+        ],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["FNMADD231SS", "", "FNMADD231SD"], ["FNMADD231SS", "", "FNMADD231SD"], ""], "???", "???"],
+    [
+        "???",
+        [
+            "",
+            ["FNMSUB231PS", "", "FNMSUB231PD"],
+            ["FNMSUB231PS", "", "FNMSUB231PD"],
+            ["FNMSUB231PS", "", "FNMSUB231PD"]
+        ],
+        "???",
+        "???"
+    ],
+    ["???", ["", ["FNMSUB231SS", "", "FNMSUB231SD"], ["FNMSUB231SS", "", "FNMSUB231SD"], ""], "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", ["", "", ["PCONFLICTD", "", "PCONFLICTQ"], ""], "???", "???"],
+    "???",
+    [
+        [
+            ["???", ["", "", "", ["GATHERPF0HINTDPS", "", "GATHERPF0HINTDPD"]], "???", "???"],
+            ["???", ["", "", ["GATHERPF0DPS", "", "GATHERPF0DPD"], ["GATHERPF0DPS", "", ""]], "???", "???"],
+            ["???", ["", "", ["GATHERPF1DPS", "", "GATHERPF1DPD"], ["GATHERPF1DPS", "", ""]], "???", "???"],
+            "???",
+            ["???", ["", "", "", ["SCATTERPF0HINTDPS", "", "SCATTERPF0HINTDPD"]], "???", "???"],
+            ["???", ["", "", ["SCATTERPF0DPS", "", "SCATTERPF0DPD"], ["VSCATTERPF0DPS", "", ""]], "???", "???"],
+            ["???", ["", "", ["SCATTERPF1DPS", "", "SCATTERPF1DPD"], ["VSCATTERPF1DPS", "", ""]], "???", "???"],
+            "???"
+        ],
+        "???"
+    ],
+    [
+        [
+            "???",
+            ["???", ["", "", ["GATHERPF0QPS", "", "GATHERPF0QPD"], ""], "???", "???"],
+            ["???", ["", "", ["GATHERPF1QPS", "", "GATHERPF1QPD"], ""], "???", "???"],
+            "???",
+            "???",
+            ["???", ["", "", ["SCATTERPF0QPS", "", "SCATTERPF0QPD"], ""], "???", "???"],
+            ["???", ["", "", ["SCATTERPF1QPS", "", "SCATTERPF1QPD"], ""], "???", "???"],
+            "???"
+        ],
+        "???"
+    ],
+    [["SHA1NEXTE", "", "", ""], ["", "", ["EXP2PS", "", "EXP2PD"], ["EXP223PS", "", "???"]], "???", "???"],
+    [["SHA1MSG1", "", "", ""], ["", "", "", ["LOG2PS", "", "???"]], "???", "???"],
+    [["SHA1MSG2", "", "", ""], ["", "", ["RCP28PS", "", "RCP28PD"], ["RCP23PS", "", "???"]], "???", "???"],
+    [["SHA256RNDS2", "", "", ""], ["", "", ["RCP28SS", "", "RCP28SD"], ["RSQRT23PS", "", "???"]], "???", "???"],
+    [["SHA256MSG1", "", "", ""], ["", "", ["RSQRT28PS", "", "RSQRT28PD"], ["ADDSETSPS", "", "???"]], "???", "???"],
+    [["SHA256MSG2", "", "", ""], ["", "", ["RSQRT28SS", "", "RSQRT28SD"], ["PADDSETSD", "", "???"]], "???", "???"],
+    "???",
+    "???",
+    [
+        [
+            ["", "", "", ["LOADUNPACKLD", "", "LOADUNPACKLQ"]],
+            ["", "", "", ["PACKSTORELD", "", "PACKSTORELQ"]],
+            "???",
+            "???"
+        ],
+        "???"
+    ],
+    [
+        [
+            ["", "", "", ["LOADUNPACKLPS", "", "LOADUNPACKLPD"]],
+            ["", "", "", ["PACKSTORELPS", "", "PACKSTORELPD"]],
+            "???",
+            "???"
+        ],
+        "???"
+    ],
+    "???",
+    "???",
+    [
+        [
+            ["", "", "", ["LOADUNPACKHD", "", "LOADUNPACKHQ"]],
+            ["", "", "", ["PACKSTOREHD", "", "PACKSTOREHQ"]],
+            "???",
+            "???"
+        ],
+        "???"
+    ],
+    [
+        [
+            ["", "", "", ["LOADUNPACKHPS", "", "LOADUNPACKHPD"]],
+            ["", "", "", ["PACKSTOREHPS", "", "PACKSTOREHPD"]],
+            "???",
+            "???"
+        ],
+        "???"
+    ],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", ["AESIMC", "AESIMC", "", ""], "???", "???"],
+    ["???", ["AESENC", "AESENC", "", ""], "???", "???"],
+    ["???", ["AESENCLAST", "AESENCLAST", "", ""], "???", "???"],
+    ["???", ["AESDEC", "AESDEC", "", ""], "???", "???"],
+    ["???", ["AESDECLAST", "AESDECLAST", "", ""], "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    [["MOVBE", "", "", ""], ["MOVBE", "", "", ""], "???", ["CRC32", "", "", ""]],
+    [["MOVBE", "", "", ""], ["MOVBE", "", "", ""], "???", ["CRC32", "", "", ""]],
+    ["???", ["", "ANDN", "", ""], "???", "???"],
+    [
+        "???",
+        ["???", ["", "BLSR", "", ""], "???", "???"],
+        ["???", ["", "BLSMSK", "", ""], "???", "???"],
+        ["???", ["", "BLSI", "", ""], "???", "???"],
+        "???",
+        "???",
+        "???",
+        "???"
+    ],
+    "???",
+    [["", "BZHI", "", ""], "???", ["", "PEXT", "", ""], ["", "PDEP", "", ""]],
+    ["???", ["ADCX", "", "", ""], ["ADOX", "", "", ""], ["", "MULX", "", ""]],
+    [
+        ["", "BEXTR", "", ""],
+        ["", "SHLX", "", ""],
+        ["", "SARX", "", ""],
+        ["", "SHRX", "", ""]
+    ],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    /*------------------------------------------------------------------------------------------------------------------------
   Three Byte operations 0F38. Opcodes plus 768 goes to 767 used by escape codes "0F, 3A", Or
   set directly by adding map bits "11" because "11 00000000" bin = 768 plus opcode.
   ------------------------------------------------------------------------------------------------------------------------*/
-  ["???",["","PERMQ","PERMQ",""],"???","???"],
-  ["???",["","PERMPD","PERMPD",""],"???","???"],
-  ["???",["",["PBLENDD","",""],"",""],"???","???"],
-  ["???",["","",["ALIGND","","ALIGNQ"],["ALIGND","","???"]],"???","???"],
-  ["???",["","PERMILPS",["PERMILPS","","???"],""],"???","???"],
-  ["???",["","PERMILPD","PERMILPD",""],"???","???"],
-  ["???",["","PERM2F128","",""],"???","???"],
-  ["???",["","","",["PERMF32X4","","???"]],"???","???"],
-  ["???",["ROUNDPS","ROUNDPS",["RNDSCALEPS","","???"],""],"???","???"],
-  ["???",["ROUNDPD","ROUNDPD","RNDSCALEPD",""],"???","???"],
-  ["???",["ROUNDSS","ROUNDSS",["RNDSCALESS","","???"],""],"???","???"],
-  ["???",["ROUNDSD","ROUNDSD","RNDSCALESD",""],"???","???"],
-  ["???",["BLENDPS","BLENDPS","",""],"???","???"],
-  ["???",["BLENDPD","BLENDPD","",""],"???","???"],
-  ["???",["PBLENDW","PBLENDW","",""],"???","???"],
-  [["PALIGNR","","",""],"PALIGNR","???","???"],
-  "???","???","???","???",
-  [["???","PEXTRB","???","???"],["???","PEXTRB","???","???"]],
-  [["???","PEXTRW","???","???"],["???","PEXTRW","???","???"]],
-  ["???",["PEXTRD","","PEXTRQ"],"???","???"],
-  ["???","EXTRACTPS","???","???"],
-  ["???",["","INSERTF128",["INSERTF32X4","","INSERTF64X2"],""],"???","???"],
-  ["???",["","EXTRACTF128",["EXTRACTF32X4","","EXTRACTF64X2"],""],"???","???"],
-  ["???",["","",["INSERTF32X8","","INSERTF64X4"],""],"???","???"],
-  ["???",["","",["EXTRACTF32X8","","EXTRACTF64X4"],""],"???","???"],
-  "???",
-  ["???",["","CVTPS2PH",["CVTPS2PH","","???"],""],"???","???"],
-  ["???",["","",["PCMP,UD,","","PCMP,UQ,"],["PCMP,UD,","","???"]],"???","???"],
-  ["???",["","",["PCM,PD,","","PCM,PQ,"],["PCM,PD,","","???"]],"???","???"],
-  ["???","PINSRB","???","???"],
-  ["???",["INSERTPS","","???"],"???","???"],
-  ["???",["",["PINSRD","","PINSRQ"],["PINSRD","","PINSRQ"],""],"???","???"],
-  ["???",["","",["SHUFF32X4","","SHUFF64X2"],""],"???","???"],
-  "???",
-  ["???",["","",["PTERNLOGD","","PTERNLOGQ"],""],"???","???"],
-  ["???",["","",["GETMANTPS","","GETMANTPD"],["GETMANTPS","","GETMANTPD"]],"???","???"],
-  ["???",["","",["GETMANTSS","","GETMANTSD"],""],"???","???"],
-  "???","???","???","???","???","???","???","???",
-  ["???",["",["KSHIFTRB","","KSHIFTRW"],"",""],"???","???"],
-  ["???",["",["KSHIFTRD","","KSHIFTRQ"],"",""],"???","???"],
-  ["???",["",["KSHIFTLB","","KSHIFTLW"],"",""],"???","???"],
-  ["???",["",["KSHIFTLD","","KSHIFTLQ"],"",""],"???","???"],
-  "???","???","???","???",
-  ["???",["","INSERTI128",["INSERTI32X4","","INSERTI64X2"],""],"???","???"],
-  ["???",["","EXTRACTI128",["EXTRACTI32X4","","EXTRACTI64X2"],""],"???","???"],
-  ["???",["","",["INSERTI32X8","","INSERTI64X4"],""],"???","???"],
-  ["???",["","",["EXTRACTI32X8","","EXTRACTI64X4"],""],"???","???"],
-  "???","???",
-  ["???",["","KEXTRACT",["PCMP,UB,","","PCMP,UW,"],""],"???","???"],
-  ["???",["","",["PCM,PB,","","PCM,PW,"],""],"???","???"],
-  ["???",["DPPS","DPPS","",""],"???","???"],
-  ["???",["DPPD","DPPD","",""],"???","???"],
-  ["???",["MPSADBW","MPSADBW",["DBPSADBW","","???"],""],"???","???"],
-  ["???",["","",["SHUFI32X4","","SHUFI64X2"],""],"???","???"],
-  ["???",["PCLMULQDQ","PCLMULQDQ","",""],"???","???"],
-  "???",
-  ["???",["","PERM2I128","",""],"???","???"],
-  "???",
-  ["???",["",["PERMIL2PS","","PERMIL2PS"],"",""],"???","???"],
-  ["???",["",["PERMIL2PD","","PERMIL2PD"],"",""],"???","???"],
-  ["???",["","BLENDVPS","",""],"???","???"],
-  ["???",["","BLENDVPD","",""],"???","???"],
-  ["???",["","PBLENDVB","",""],"???","???"],
-  "???","???","???",
-  ["???",["","",["RANGEPS","","RANGEPD"],""],"???","???"],
-  ["???",["","",["RANGESS","","RANGESD"],""],"???","???"],
-  ["???",["","","",["RNDFXPNTPS","","RNDFXPNTPD"]],"???","???"],
-  "???",
-  ["???",["","",["FIXUPIMMPS","","FIXUPIMMPD"],""],"???","???"],
-  ["???",["","",["FIXUPIMMSS","","FIXUPIMMSD"],""],"???","???"],
-  ["???",["","",["REDUCEPS","","REDUCEPD"],""],"???","???"],
-  ["???",["","",["REDUCESS","","REDUCESD"],""],"???","???"],
-  "???","???","???","???",
-  ["???",["",["FMADDSUBPS","","FMADDSUBPS"],"",""],"???","???"],
-  ["???",["",["FMADDSUBPD","","FMADDSUBPD"],"",""],"???","???"],
-  ["???",["",["FMSUBADDPS","","FMSUBADDPS"],"",""],"???","???"],
-  ["???",["",["FMSUBADDPD","","FMSUBADDPD"],"",""],"???","???"],
-  ["???",["PCMPESTRM","PCMPESTRM","",""],"???","???"],
-  ["???",["PCMPESTRI","PCMPESTRI","",""],"???","???"],
-  ["???",["PCMPISTRM","PCMPISTRM","",""],"???","???"],
-  ["???",["PCMPISTRI","PCMPISTRI","",""],"???","???"],
-  "???","???",
-  ["???",["","",["FPCLASSPS","","FPCLASSPD"],""],"???","???"],
-  ["???",["","",["FPCLASSSS","","FPCLASSSD"],""],"???","???"],
-  ["???",["",["FMADDPS","","FMADDPS"],"",""],"???","???"],
-  ["???",["",["FMADDPD","","FMADDPD"],"",""],"???","???"],
-  ["???",["",["FMADDSS","","FMADDSS"],"",""],"???","???"],
-  ["???",["",["FMADDSD","","FMADDSD"],"",""],"???","???"],
-  ["???",["",["FMSUBPS","","FMSUBPS"],"",""],"???","???"],
-  ["???",["",["FMSUBPD","","FMSUBPD"],"",""],"???","???"],
-  ["???",["",["FMSUBSS","","FMSUBSS"],"",""],"???","???"],
-  ["???",["",["FMSUBSD","","FMSUBSD"],"",""],"???","???"],
-  "???","???","???","???","???","???","???","???",
-  ["???",["",["FNMADDPS","","FNMADDPS"],"",""],"???","???"],
-  ["???",["",["FNMADDPD","","FNMADDPD"],"",""],"???","???"],
-  ["???",["",["FNMADDSS","","FNMADDSS"],"",""],"???","???"],
-  ["???",["",["FNMADDSD","","FNMADDSD"],"",""],"???","???"],
-  ["???",["",["FNMSUBPS","","FNMSUBPS"],"",""],"???","???"],
-  ["???",["",["FNMSUBPD","","FNMSUBPD"],"",""],"???","???"],
-  ["???",["",["FNMSUBSS","","FNMSUBSS"],"",""],"???","???"],
-  ["???",["",["FNMSUBSD","","FNMSUBSD"],"",""],"???","???"],
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???",
-  [["","","","CVTFXPNTUDQ2PS"],["","","",["CVTFXPNTPS2UDQ","","???"]],"???",["","","","CVTFXPNTPD2UDQ"]],
-  [["","","","CVTFXPNTDQ2PS"],["","","",["CVTFXPNTPS2DQ","","???"]],"???","???"],
-  "SHA1RNDS4",
-  "???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  ["???",["AESKEYGENASSIST","AESKEYGENASSIST","",""],"???","???"],
-  "???","???","???","???","???","???",
-  ["???","???","???",["","","","CVTFXPNTPD2DQ"]],
-  "???","???","???","???","???","???","???","???","???",
-  ["???","???","???",["","RORX","",""]],
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  /*------------------------------------------------------------------------------------------------------------------------
+    ["???", ["", "PERMQ", "PERMQ", ""], "???", "???"],
+    ["???", ["", "PERMPD", "PERMPD", ""], "???", "???"],
+    ["???", ["", ["PBLENDD", "", ""], "", ""], "???", "???"],
+    ["???", ["", "", ["ALIGND", "", "ALIGNQ"], ["ALIGND", "", "???"]], "???", "???"],
+    ["???", ["", "PERMILPS", ["PERMILPS", "", "???"], ""], "???", "???"],
+    ["???", ["", "PERMILPD", "PERMILPD", ""], "???", "???"],
+    ["???", ["", "PERM2F128", "", ""], "???", "???"],
+    ["???", ["", "", "", ["PERMF32X4", "", "???"]], "???", "???"],
+    ["???", ["ROUNDPS", "ROUNDPS", ["RNDSCALEPS", "", "???"], ""], "???", "???"],
+    ["???", ["ROUNDPD", "ROUNDPD", "RNDSCALEPD", ""], "???", "???"],
+    ["???", ["ROUNDSS", "ROUNDSS", ["RNDSCALESS", "", "???"], ""], "???", "???"],
+    ["???", ["ROUNDSD", "ROUNDSD", "RNDSCALESD", ""], "???", "???"],
+    ["???", ["BLENDPS", "BLENDPS", "", ""], "???", "???"],
+    ["???", ["BLENDPD", "BLENDPD", "", ""], "???", "???"],
+    ["???", ["PBLENDW", "PBLENDW", "", ""], "???", "???"],
+    [["PALIGNR", "", "", ""], "PALIGNR", "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    [
+        ["???", "PEXTRB", "???", "???"],
+        ["???", "PEXTRB", "???", "???"]
+    ],
+    [
+        ["???", "PEXTRW", "???", "???"],
+        ["???", "PEXTRW", "???", "???"]
+    ],
+    ["???", ["PEXTRD", "", "PEXTRQ"], "???", "???"],
+    ["???", "EXTRACTPS", "???", "???"],
+    ["???", ["", "INSERTF128", ["INSERTF32X4", "", "INSERTF64X2"], ""], "???", "???"],
+    ["???", ["", "EXTRACTF128", ["EXTRACTF32X4", "", "EXTRACTF64X2"], ""], "???", "???"],
+    ["???", ["", "", ["INSERTF32X8", "", "INSERTF64X4"], ""], "???", "???"],
+    ["???", ["", "", ["EXTRACTF32X8", "", "EXTRACTF64X4"], ""], "???", "???"],
+    "???",
+    ["???", ["", "CVTPS2PH", ["CVTPS2PH", "", "???"], ""], "???", "???"],
+    ["???", ["", "", ["PCMP,UD,", "", "PCMP,UQ,"], ["PCMP,UD,", "", "???"]], "???", "???"],
+    ["???", ["", "", ["PCM,PD,", "", "PCM,PQ,"], ["PCM,PD,", "", "???"]], "???", "???"],
+    ["???", "PINSRB", "???", "???"],
+    ["???", ["INSERTPS", "", "???"], "???", "???"],
+    ["???", ["", ["PINSRD", "", "PINSRQ"], ["PINSRD", "", "PINSRQ"], ""], "???", "???"],
+    ["???", ["", "", ["SHUFF32X4", "", "SHUFF64X2"], ""], "???", "???"],
+    "???",
+    ["???", ["", "", ["PTERNLOGD", "", "PTERNLOGQ"], ""], "???", "???"],
+    ["???", ["", "", ["GETMANTPS", "", "GETMANTPD"], ["GETMANTPS", "", "GETMANTPD"]], "???", "???"],
+    ["???", ["", "", ["GETMANTSS", "", "GETMANTSD"], ""], "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", ["", ["KSHIFTRB", "", "KSHIFTRW"], "", ""], "???", "???"],
+    ["???", ["", ["KSHIFTRD", "", "KSHIFTRQ"], "", ""], "???", "???"],
+    ["???", ["", ["KSHIFTLB", "", "KSHIFTLW"], "", ""], "???", "???"],
+    ["???", ["", ["KSHIFTLD", "", "KSHIFTLQ"], "", ""], "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", ["", "INSERTI128", ["INSERTI32X4", "", "INSERTI64X2"], ""], "???", "???"],
+    ["???", ["", "EXTRACTI128", ["EXTRACTI32X4", "", "EXTRACTI64X2"], ""], "???", "???"],
+    ["???", ["", "", ["INSERTI32X8", "", "INSERTI64X4"], ""], "???", "???"],
+    ["???", ["", "", ["EXTRACTI32X8", "", "EXTRACTI64X4"], ""], "???", "???"],
+    "???",
+    "???",
+    ["???", ["", "KEXTRACT", ["PCMP,UB,", "", "PCMP,UW,"], ""], "???", "???"],
+    ["???", ["", "", ["PCM,PB,", "", "PCM,PW,"], ""], "???", "???"],
+    ["???", ["DPPS", "DPPS", "", ""], "???", "???"],
+    ["???", ["DPPD", "DPPD", "", ""], "???", "???"],
+    ["???", ["MPSADBW", "MPSADBW", ["DBPSADBW", "", "???"], ""], "???", "???"],
+    ["???", ["", "", ["SHUFI32X4", "", "SHUFI64X2"], ""], "???", "???"],
+    ["???", ["PCLMULQDQ", "PCLMULQDQ", "", ""], "???", "???"],
+    "???",
+    ["???", ["", "PERM2I128", "", ""], "???", "???"],
+    "???",
+    ["???", ["", ["PERMIL2PS", "", "PERMIL2PS"], "", ""], "???", "???"],
+    ["???", ["", ["PERMIL2PD", "", "PERMIL2PD"], "", ""], "???", "???"],
+    ["???", ["", "BLENDVPS", "", ""], "???", "???"],
+    ["???", ["", "BLENDVPD", "", ""], "???", "???"],
+    ["???", ["", "PBLENDVB", "", ""], "???", "???"],
+    "???",
+    "???",
+    "???",
+    ["???", ["", "", ["RANGEPS", "", "RANGEPD"], ""], "???", "???"],
+    ["???", ["", "", ["RANGESS", "", "RANGESD"], ""], "???", "???"],
+    ["???", ["", "", "", ["RNDFXPNTPS", "", "RNDFXPNTPD"]], "???", "???"],
+    "???",
+    ["???", ["", "", ["FIXUPIMMPS", "", "FIXUPIMMPD"], ""], "???", "???"],
+    ["???", ["", "", ["FIXUPIMMSS", "", "FIXUPIMMSD"], ""], "???", "???"],
+    ["???", ["", "", ["REDUCEPS", "", "REDUCEPD"], ""], "???", "???"],
+    ["???", ["", "", ["REDUCESS", "", "REDUCESD"], ""], "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", ["", ["FMADDSUBPS", "", "FMADDSUBPS"], "", ""], "???", "???"],
+    ["???", ["", ["FMADDSUBPD", "", "FMADDSUBPD"], "", ""], "???", "???"],
+    ["???", ["", ["FMSUBADDPS", "", "FMSUBADDPS"], "", ""], "???", "???"],
+    ["???", ["", ["FMSUBADDPD", "", "FMSUBADDPD"], "", ""], "???", "???"],
+    ["???", ["PCMPESTRM", "PCMPESTRM", "", ""], "???", "???"],
+    ["???", ["PCMPESTRI", "PCMPESTRI", "", ""], "???", "???"],
+    ["???", ["PCMPISTRM", "PCMPISTRM", "", ""], "???", "???"],
+    ["???", ["PCMPISTRI", "PCMPISTRI", "", ""], "???", "???"],
+    "???",
+    "???",
+    ["???", ["", "", ["FPCLASSPS", "", "FPCLASSPD"], ""], "???", "???"],
+    ["???", ["", "", ["FPCLASSSS", "", "FPCLASSSD"], ""], "???", "???"],
+    ["???", ["", ["FMADDPS", "", "FMADDPS"], "", ""], "???", "???"],
+    ["???", ["", ["FMADDPD", "", "FMADDPD"], "", ""], "???", "???"],
+    ["???", ["", ["FMADDSS", "", "FMADDSS"], "", ""], "???", "???"],
+    ["???", ["", ["FMADDSD", "", "FMADDSD"], "", ""], "???", "???"],
+    ["???", ["", ["FMSUBPS", "", "FMSUBPS"], "", ""], "???", "???"],
+    ["???", ["", ["FMSUBPD", "", "FMSUBPD"], "", ""], "???", "???"],
+    ["???", ["", ["FMSUBSS", "", "FMSUBSS"], "", ""], "???", "???"],
+    ["???", ["", ["FMSUBSD", "", "FMSUBSD"], "", ""], "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", ["", ["FNMADDPS", "", "FNMADDPS"], "", ""], "???", "???"],
+    ["???", ["", ["FNMADDPD", "", "FNMADDPD"], "", ""], "???", "???"],
+    ["???", ["", ["FNMADDSS", "", "FNMADDSS"], "", ""], "???", "???"],
+    ["???", ["", ["FNMADDSD", "", "FNMADDSD"], "", ""], "???", "???"],
+    ["???", ["", ["FNMSUBPS", "", "FNMSUBPS"], "", ""], "???", "???"],
+    ["???", ["", ["FNMSUBPD", "", "FNMSUBPD"], "", ""], "???", "???"],
+    ["???", ["", ["FNMSUBSS", "", "FNMSUBSS"], "", ""], "???", "???"],
+    ["???", ["", ["FNMSUBSD", "", "FNMSUBSD"], "", ""], "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    [
+        ["", "", "", "CVTFXPNTUDQ2PS"],
+        ["", "", "", ["CVTFXPNTPS2UDQ", "", "???"]],
+        "???",
+        ["", "", "", "CVTFXPNTPD2UDQ"]
+    ],
+    [["", "", "", "CVTFXPNTDQ2PS"], ["", "", "", ["CVTFXPNTPS2DQ", "", "???"]], "???", "???"],
+    "SHA1RNDS4",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", ["AESKEYGENASSIST", "AESKEYGENASSIST", "", ""], "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", "???", "???", ["", "", "", "CVTFXPNTPD2DQ"]],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", "???", "???", ["", "RORX", "", ""]],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    /*------------------------------------------------------------------------------------------------------------------------
   AMD XOP 8.
   ------------------------------------------------------------------------------------------------------------------------*/
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "VPMACSSWW","VPMACSSWD","VPMACSSDQL","???","???","???","???","???","???",
-  "VPMACSSDD","VPMACSSDQH","???","???","???","???","???","VPMACSWW","VPMACSWD","VPMACSDQL",
-  "???","???","???","???","???","???","VPMACSDD","VPMACSDQH",
-  "???","???",["VPCMOV","","VPCMOV"],["VPPERM","","VPPERM"],"???","???","VPMADCSSWD",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "VPMADCSWD","???","???","???","???","???","???","???","???","???",
-  "VPROTB","VPROTW","VPROTD","VPROTQ","???","???","???","???","???","???","???","???",
-  "VPCOM,B,","VPCOM,W,","VPCOM,D,","VPCOM,Q,","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "VPCOM,UB,","VPCOM,UW,","VPCOM,UD,","VPCOM,UQ,",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  /*------------------------------------------------------------------------------------------------------------------------
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VPMACSSWW",
+    "VPMACSSWD",
+    "VPMACSSDQL",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VPMACSSDD",
+    "VPMACSSDQH",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VPMACSWW",
+    "VPMACSWD",
+    "VPMACSDQL",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VPMACSDD",
+    "VPMACSDQH",
+    "???",
+    "???",
+    ["VPCMOV", "", "VPCMOV"],
+    ["VPPERM", "", "VPPERM"],
+    "???",
+    "???",
+    "VPMADCSSWD",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VPMADCSWD",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VPROTB",
+    "VPROTW",
+    "VPROTD",
+    "VPROTQ",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VPCOM,B,",
+    "VPCOM,W,",
+    "VPCOM,D,",
+    "VPCOM,Q,",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VPCOM,UB,",
+    "VPCOM,UW,",
+    "VPCOM,UD,",
+    "VPCOM,UQ,",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    /*------------------------------------------------------------------------------------------------------------------------
   AMD XOP 9.
   ------------------------------------------------------------------------------------------------------------------------*/
-  "???",
-  ["???","BLCFILL","BLSFILL","BLCS","TZMSK","BLCIC","BLSIC","T1MSKC"],["???","BLCMSK","???","???","???","???","BLCI","???"],
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  ["???",["LLWPCB","SLWPCB","???","???","???","???","???","???"]],
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "VFRCZPS","VFRCZPD","VFRCZSS","VFRCZSD","???","???","???","???","???","???","???","???","???","???","???","???",
-  ["VPROTB","","VPROTB"],["VPROTW","","VPROTW"],["VPROTD","","VPROTD"],["VPROTQ","","VPROTQ"],
-  ["VPSHLB","","VPSHLB"],["VPSHLW","","VPSHLW"],["VPSHLD","","VPSHLD"],["VPSHLQ","","VPSHLQ"],
-  ["VPSHAB","","VPSHAB"],["VPSHAW","","VPSHAW"],["VPSHAD","","VPSHAD"],["VPSHAQ","","VPSHAQ"],
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "VPHADDBW","VPHADDBD","VPHADDBQ","???","???","VPHADDWD","VPHADDWQ","???","???","???","VPHADDDQ","???","???","???","???","???",
-  "VPHADDUBWD","VPHADDUBD","VPHADDUBQ","???","???","VPHADDUWD","VPHADDUWQ","???","???","???","VPHADDUDQ","???","???","???","???","???",
-  "VPHSUBBW","VPHSUBWD","VPHSUBDQ","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  /*------------------------------------------------------------------------------------------------------------------------
+    "???",
+    ["???", "BLCFILL", "BLSFILL", "BLCS", "TZMSK", "BLCIC", "BLSIC", "T1MSKC"],
+    ["???", "BLCMSK", "???", "???", "???", "???", "BLCI", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    ["???", ["LLWPCB", "SLWPCB", "???", "???", "???", "???", "???", "???"]],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VFRCZPS",
+    "VFRCZPD",
+    "VFRCZSS",
+    "VFRCZSD",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    ["VPROTB", "", "VPROTB"],
+    ["VPROTW", "", "VPROTW"],
+    ["VPROTD", "", "VPROTD"],
+    ["VPROTQ", "", "VPROTQ"],
+    ["VPSHLB", "", "VPSHLB"],
+    ["VPSHLW", "", "VPSHLW"],
+    ["VPSHLD", "", "VPSHLD"],
+    ["VPSHLQ", "", "VPSHLQ"],
+    ["VPSHAB", "", "VPSHAB"],
+    ["VPSHAW", "", "VPSHAW"],
+    ["VPSHAD", "", "VPSHAD"],
+    ["VPSHAQ", "", "VPSHAQ"],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VPHADDBW",
+    "VPHADDBD",
+    "VPHADDBQ",
+    "???",
+    "???",
+    "VPHADDWD",
+    "VPHADDWQ",
+    "???",
+    "???",
+    "???",
+    "VPHADDDQ",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VPHADDUBWD",
+    "VPHADDUBD",
+    "VPHADDUBQ",
+    "???",
+    "???",
+    "VPHADDUWD",
+    "VPHADDUWQ",
+    "???",
+    "???",
+    "???",
+    "VPHADDUDQ",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VPHSUBBW",
+    "VPHSUBWD",
+    "VPHSUBDQ",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    /*------------------------------------------------------------------------------------------------------------------------
   AMD XOP A.
   ------------------------------------------------------------------------------------------------------------------------*/
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "BEXTR","???",["LWPINS","LWPVAL","???","???","???","???","???","???"],
-  "???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  /*-------------------------------------------------------------------------------------------------------------------------
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "BEXTR",
+    "???",
+    ["LWPINS", "LWPVAL", "???", "???", "???", "???", "???", "???"],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    /*-------------------------------------------------------------------------------------------------------------------------
   L1OM Vector.
   -------------------------------------------------------------------------------------------------------------------------*/
-  "???","???","???","???","DELAY","???","???","???","???","???","???","???","???","???","???","???",
-  [["VLOADD","VLOADQ","",""],"???"],"???",
-  [["VLOADUNPACKLD","VLOADUNPACKLQ","",""],"???"],
-  [["VLOADUNPACKHD","VLOADUNPACKHQ","",""],"???"],
-  [["VSTORED","VSTOREQ","",""],"???"],"???",
-  [["VPACKSTORELD","VPACKSTORELQ","",""],"???"],
-  [["VPACKSTOREHD","VPACKSTOREHQ","",""],"???"],
-  ["VGATHERD","???"],["VGATHERPFD","???"],"???",["VGATHERPF2D","???"],
-  ["VSCATTERD","???"],["VSCATTERPFD","???"],"???",["VSCATTERPF2D","???"],
-  ["VCMP,PS,","VCMP,PD,","",""],"VCMP,PI,","VCMP,PU,","???",
-  ["VCMP,PS,","VCMP,PD,","",""],"VCMP,PI,","VCMP,PU,","???",
-  "???","???","???","???","???","???","???","???",
-  "VTESTPI","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  ["VADDPS","VADDPD","",""],"VADDPI","???","VADDSETCPI","???","VADCPI","VADDSETSPS","VADDSETSPI",
-  ["VADDNPS","VADDNPD","",""],"???","???","???","???","???","???","???",
-  ["VSUBPS","VSUBPD","",""],"VSUBPI","???","VSUBSETBPI","???","VSBBPI","???","???",
-  ["VSUBRPS","VSUBRPD","",""],"VSUBRPI","???","VSUBRSETBPI","???","VSBBRPI","???","???",
-  ["VMADD231PS","VMADD231PD","",""],"VMADD231PI",
-  ["VMADD213PS","VMADD213PD","",""],"???",
-  ["VMADD132PS","VMADD132PD","",""],"???",
-  "VMADD233PS","VMADD233PI",
-  ["VMSUB231PS","VMSUB231PD","",""],"???",
-  ["VMSUB213PS","VMSUB213PD","",""],"???",
-  ["VMSUB132PS","VMSUB132PD","",""],"???","???","???",
-  ["VMADDN231PS","VMADDN231PD","",""],"???",
-  ["VMADDN213PS","VMADDN213PD","",""],"???",
-  ["VMADDN132PS","VMADDN132PD","",""],"???","???","???",
-  ["VMSUBR231PS","VMSUBR231PD","",""],"???",
-  ["VMSUBR213PS","VMSUBR213PD","",""],"???",
-  ["VMSUBR132PS","VMSUBR132PD","",""],"???",
-  ["VMSUBR23C1PS","VMSUBR23C1PD","",""],"???",
-  ["VMULPS","VMULPD","",""],"VMULHPI","VMULHPU","VMULLPI","???","???","VCLAMPZPS","VCLAMPZPI",
-  ["VMAXPS","VMAXPD","",""],"VMAXPI","VMAXPU","???",
-  ["VMINPS","VMINPD","",""],"VMINPI","VMINPU","???",
-  ["???","VCVT,PD2PS,","",""],["VCVTPS2PI","VCVT,PD2PI,","",""],["VCVTPS2PU","VCVT,PD2PU,","",""],"???",
-  ["???","VCVT,PS2PD,","",""],["VCVTPI2PS","VCVT,PI2PD,","",""],["VCVTPU2PS","VCVT,PU2PD,","",""],"???",
-  "VROUNDPS","???","VCVTINSPS2U10","VCVTINSPS2F11","???","VCVTPS2SRGB8","VMAXABSPS","???",
-  "VSLLPI","VSRAPI","VSRLPI","???",
-  ["VANDNPI","VANDNPQ","",""],["VANDPI","VANDPQ","",""],
-  ["VORPI","VORPQ","",""],["VXORPI","VXORPQ","",""],
-  "VBINTINTERLEAVE11PI","VBINTINTERLEAVE21PI","???","???","???","???","???","???",
-  "VEXP2LUTPS","VLOG2LUTPS","VRSQRTLUTPS","???","VGETEXPPS","???","???","???",
-  "VSCALEPS","???","???","???","???","???","???","???",
-  "VRCPRESPS","???","VRCPREFINEPS","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "???","???","???","???","???","???","???","???","???","???","???","???","???","???","???","???",
-  "VFIXUPPS","VSHUF128X32","VINSERTFIELDPI","VROTATEFIELDPI","???","???","???","???",
-  "???","???","???","???","???","???","???","???",
-  /*-------------------------------------------------------------------------------------------------------------------------
+    "???",
+    "???",
+    "???",
+    "???",
+    "DELAY",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    [["VLOADD", "VLOADQ", "", ""], "???"],
+    "???",
+    [["VLOADUNPACKLD", "VLOADUNPACKLQ", "", ""], "???"],
+    [["VLOADUNPACKHD", "VLOADUNPACKHQ", "", ""], "???"],
+    [["VSTORED", "VSTOREQ", "", ""], "???"],
+    "???",
+    [["VPACKSTORELD", "VPACKSTORELQ", "", ""], "???"],
+    [["VPACKSTOREHD", "VPACKSTOREHQ", "", ""], "???"],
+    ["VGATHERD", "???"],
+    ["VGATHERPFD", "???"],
+    "???",
+    ["VGATHERPF2D", "???"],
+    ["VSCATTERD", "???"],
+    ["VSCATTERPFD", "???"],
+    "???",
+    ["VSCATTERPF2D", "???"],
+    ["VCMP,PS,", "VCMP,PD,", "", ""],
+    "VCMP,PI,",
+    "VCMP,PU,",
+    "???",
+    ["VCMP,PS,", "VCMP,PD,", "", ""],
+    "VCMP,PI,",
+    "VCMP,PU,",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VTESTPI",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    ["VADDPS", "VADDPD", "", ""],
+    "VADDPI",
+    "???",
+    "VADDSETCPI",
+    "???",
+    "VADCPI",
+    "VADDSETSPS",
+    "VADDSETSPI",
+    ["VADDNPS", "VADDNPD", "", ""],
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    ["VSUBPS", "VSUBPD", "", ""],
+    "VSUBPI",
+    "???",
+    "VSUBSETBPI",
+    "???",
+    "VSBBPI",
+    "???",
+    "???",
+    ["VSUBRPS", "VSUBRPD", "", ""],
+    "VSUBRPI",
+    "???",
+    "VSUBRSETBPI",
+    "???",
+    "VSBBRPI",
+    "???",
+    "???",
+    ["VMADD231PS", "VMADD231PD", "", ""],
+    "VMADD231PI",
+    ["VMADD213PS", "VMADD213PD", "", ""],
+    "???",
+    ["VMADD132PS", "VMADD132PD", "", ""],
+    "???",
+    "VMADD233PS",
+    "VMADD233PI",
+    ["VMSUB231PS", "VMSUB231PD", "", ""],
+    "???",
+    ["VMSUB213PS", "VMSUB213PD", "", ""],
+    "???",
+    ["VMSUB132PS", "VMSUB132PD", "", ""],
+    "???",
+    "???",
+    "???",
+    ["VMADDN231PS", "VMADDN231PD", "", ""],
+    "???",
+    ["VMADDN213PS", "VMADDN213PD", "", ""],
+    "???",
+    ["VMADDN132PS", "VMADDN132PD", "", ""],
+    "???",
+    "???",
+    "???",
+    ["VMSUBR231PS", "VMSUBR231PD", "", ""],
+    "???",
+    ["VMSUBR213PS", "VMSUBR213PD", "", ""],
+    "???",
+    ["VMSUBR132PS", "VMSUBR132PD", "", ""],
+    "???",
+    ["VMSUBR23C1PS", "VMSUBR23C1PD", "", ""],
+    "???",
+    ["VMULPS", "VMULPD", "", ""],
+    "VMULHPI",
+    "VMULHPU",
+    "VMULLPI",
+    "???",
+    "???",
+    "VCLAMPZPS",
+    "VCLAMPZPI",
+    ["VMAXPS", "VMAXPD", "", ""],
+    "VMAXPI",
+    "VMAXPU",
+    "???",
+    ["VMINPS", "VMINPD", "", ""],
+    "VMINPI",
+    "VMINPU",
+    "???",
+    ["???", "VCVT,PD2PS,", "", ""],
+    ["VCVTPS2PI", "VCVT,PD2PI,", "", ""],
+    ["VCVTPS2PU", "VCVT,PD2PU,", "", ""],
+    "???",
+    ["???", "VCVT,PS2PD,", "", ""],
+    ["VCVTPI2PS", "VCVT,PI2PD,", "", ""],
+    ["VCVTPU2PS", "VCVT,PU2PD,", "", ""],
+    "???",
+    "VROUNDPS",
+    "???",
+    "VCVTINSPS2U10",
+    "VCVTINSPS2F11",
+    "???",
+    "VCVTPS2SRGB8",
+    "VMAXABSPS",
+    "???",
+    "VSLLPI",
+    "VSRAPI",
+    "VSRLPI",
+    "???",
+    ["VANDNPI", "VANDNPQ", "", ""],
+    ["VANDPI", "VANDPQ", "", ""],
+    ["VORPI", "VORPQ", "", ""],
+    ["VXORPI", "VXORPQ", "", ""],
+    "VBINTINTERLEAVE11PI",
+    "VBINTINTERLEAVE21PI",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VEXP2LUTPS",
+    "VLOG2LUTPS",
+    "VRSQRTLUTPS",
+    "???",
+    "VGETEXPPS",
+    "???",
+    "???",
+    "???",
+    "VSCALEPS",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VRCPRESPS",
+    "???",
+    "VRCPREFINEPS",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "VFIXUPPS",
+    "VSHUF128X32",
+    "VINSERTFIELDPI",
+    "VROTATEFIELDPI",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    "???",
+    /*-------------------------------------------------------------------------------------------------------------------------
   L1OM Mask, Mem, and bit opcodes.
   -------------------------------------------------------------------------------------------------------------------------*/
-  ["???","BSFI"],["???","BSFI"],["???","BSFI"],["???","BSFI"],
-  ["???","BSRI"],["???","BSRI"],["???","BSRI"],["???","BSRI"],
-  ["???","BSFF"],["???","BSFF"],["???","BSFF"],["???","BSFF"],
-  ["???","BSRF"],["???","BSRF"],["???","BSRF"],["???","BSRF"],
-  ["???","BITINTERLEAVE11"],["???","BITINTERLEAVE11"],["???","BITINTERLEAVE11"],["???","BITINTERLEAVE11"],
-  ["???","BITINTERLEAVE21"],["???","BITINTERLEAVE21"],["???","BITINTERLEAVE21"],["???","BITINTERLEAVE21"],
-  ["???","INSERTFIELD"],["???","INSERTFIELD"],["???","INSERTFIELD"],["???","INSERTFIELD"],
-  ["???","ROTATEFIELD"],["???","ROTATEFIELD"],["???","ROTATEFIELD"],["???","ROTATEFIELD"],
-  ["???","COUNTBITS"],["???","COUNTBITS"],["???","COUNTBITS"],["???","COUNTBITS"],
-  ["???","QUADMASK16"],["???","QUADMASK16"],["???","QUADMASK16"],["???","QUADMASK16"],
-  "???","???","???","???",
-  "VKMOVLHB",
-  [["CLEVICT1","CLEVICT2","LDVXCSR","STVXCSR","???","???","???","???"],"???"],
-  [["VPREFETCH1","VPREFETCH2","???","???","???","???","???","???"],"???"],
-  [["VPREFETCH1","VPREFETCH2","???","???","???","???","???","???"],"???"],
-  "VKMOV","VKMOV","VKMOV","VKMOV",
-  "VKNOT","VKANDNR","VKANDN","VKAND",
-  "VKXNOR","VKXOR","VKORTEST","VKOR",
-  "???","VKSWAPB",
-  ["???",["DELAY","SPFLT","???","???","???","???","???","???"]],
-  ["???",["DELAY","SPFLT","???","???","???","???","???","???"]]
+    ["???", "BSFI"],
+    ["???", "BSFI"],
+    ["???", "BSFI"],
+    ["???", "BSFI"],
+    ["???", "BSRI"],
+    ["???", "BSRI"],
+    ["???", "BSRI"],
+    ["???", "BSRI"],
+    ["???", "BSFF"],
+    ["???", "BSFF"],
+    ["???", "BSFF"],
+    ["???", "BSFF"],
+    ["???", "BSRF"],
+    ["???", "BSRF"],
+    ["???", "BSRF"],
+    ["???", "BSRF"],
+    ["???", "BITINTERLEAVE11"],
+    ["???", "BITINTERLEAVE11"],
+    ["???", "BITINTERLEAVE11"],
+    ["???", "BITINTERLEAVE11"],
+    ["???", "BITINTERLEAVE21"],
+    ["???", "BITINTERLEAVE21"],
+    ["???", "BITINTERLEAVE21"],
+    ["???", "BITINTERLEAVE21"],
+    ["???", "INSERTFIELD"],
+    ["???", "INSERTFIELD"],
+    ["???", "INSERTFIELD"],
+    ["???", "INSERTFIELD"],
+    ["???", "ROTATEFIELD"],
+    ["???", "ROTATEFIELD"],
+    ["???", "ROTATEFIELD"],
+    ["???", "ROTATEFIELD"],
+    ["???", "COUNTBITS"],
+    ["???", "COUNTBITS"],
+    ["???", "COUNTBITS"],
+    ["???", "COUNTBITS"],
+    ["???", "QUADMASK16"],
+    ["???", "QUADMASK16"],
+    ["???", "QUADMASK16"],
+    ["???", "QUADMASK16"],
+    "???",
+    "???",
+    "???",
+    "???",
+    "VKMOVLHB",
+    [["CLEVICT1", "CLEVICT2", "LDVXCSR", "STVXCSR", "???", "???", "???", "???"], "???"],
+    [["VPREFETCH1", "VPREFETCH2", "???", "???", "???", "???", "???", "???"], "???"],
+    [["VPREFETCH1", "VPREFETCH2", "???", "???", "???", "???", "???", "???"], "???"],
+    "VKMOV",
+    "VKMOV",
+    "VKMOV",
+    "VKMOV",
+    "VKNOT",
+    "VKANDNR",
+    "VKANDN",
+    "VKAND",
+    "VKXNOR",
+    "VKXOR",
+    "VKORTEST",
+    "VKOR",
+    "???",
+    "VKSWAPB",
+    ["???", ["DELAY", "SPFLT", "???", "???", "???", "???", "???", "???"]],
+    ["???", ["DELAY", "SPFLT", "???", "???", "???", "???", "???", "???"]]
 ];
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -1334,1123 +2853,2900 @@ Used by function ^DecodeOpcode()^ after ^DecodePrefixAdjustments()^.
 -------------------------------------------------------------------------------------------------------------------------*/
 
 const Operands = [
-  //------------------------------------------------------------------------------------------------------------------------
-  //First Byte operations.
-  //------------------------------------------------------------------------------------------------------------------------
-  "06000A000003","070E0B0E0003","0A0006000003","0B0E070E0003","16000C000003","170E0DE60003","","",
-  "06000A000003","070E0B0E0003","0A0006000003","0B0E070E0003","16000C000003","170E0DE60003","","",
-  "06000A000003","070E0B0E0003","0A0006000003","0B0E070E0003","16000C000003","170E0DE60003","","",
-  "06000A000003","070E0B0E0003","0A0006000003","0B0E070E0003","16000C000003","170E0DE60003","","",
-  "06000A000003","070E0B0E0003","0A0006000003","0B0E070E0003","16000C000003","170E0DE60003","","",
-  "06000A000003","070E0B0E0003","0A0006000003","0B0E070E0003","16000C000003","170E0DE60003","","",
-  "06000A000003","070E0B0E0003","0A0006000003","0B0E070E0003","16000C000003","170E0DE60003","","",
-  "06000A00","070E0B0E","0A000600","0B0E070E","16000C00","170E0DE6","","",
-  "03060003","03060003","03060003","03060003","03060003","03060003","03060003","03060003",
-  "03060003","03060003","03060003","03060003","03060003","03060003","03060003","03060003",
-  "030A","030A","030A","030A","030A","030A","030A","030A",
-  "030A","030A","030A","030A","030A","030A","030A","030A",
-  ["","",""],["","",""],
-  ["0A020606","0A010604",""],
-  "0B0E0704",
-  "","","","",
-  "0DE6","0B0E070E0DE6",
-  "0DA1","0B0E070E0DE1",
-  "22001A01","230E1A01","1A012000","1A01210E",
-  "10000002000C","10000002000C","10000002000C","10000002000C","10000002000C","10000002000C","10000002000C","10000002000C",
-  "10000002000C","10000002000C","10000002000C","10000002000C","10000002000C","10000002000C","10000002000C","10000002000C",
-  ["06000C000003","06000C000003","06000C000003","06000C000003","06000C000003","06000C000003","06000C000003","06000C00"],
-  ["070E0DE60003","070E0DE60003","070E0DE60003","070E0DE60003","070E0DE60003","070E0DE60003","070E0DE60003","070E0DE6"],
-  ["06000C000003","06000C000003","06000C000003","06000C000003","06000C000003","06000C000003","06000C000003","06000C00"],
-  ["070E0DE10003","070E0DE10003","070E0DE10003","070E0DE10003","070E0DE10003","070E0DE10003","070E0DE10003","070E0DE1"],
-  "06000A00","070E0B0E",
-  "0A0006000003","0B0E070E0003",
-  "06000A000001","070E0B0E0001",
-  "0A0006000001","0B0E070E0001",
-  "06020A080001",
-  ["0B0E0601",""],
-  "0A0806020001",
-  ["070A","","","","","","",""],
-  [["","","",""],["","","",""],["","","",""],["","","",""]],
-  "170E030E0003","170E030E0003","170E030E0003","170E030E0003","170E030E0003","170E030E0003","170E030E0003",
-  ["","",""],["","",""],
-  "0D060C01", //CALL Ap (w:z).
-  "",
-  ["","",""],["","",""],
-  "","",
-  "160004000001","170E050E0001",
-  "040016000001","050E170E0001",
-  "22002000","230E210E",
-  "22002000","230E210E",
-  "16000C00","170E0DE6",
-  "22001600","230E170E","16002000","170E210E","16002200","170E230E",
-  "02000C000001","02000C000001","02000C000001","02000C000001","02000C000001","02000C000001","02000C000001","02000C000001",
-  "030E0D0E0001","030E0D0E0001","030E0D0E0001","030E0D0E0001","030E0D0E0001","030E0D0E0001","030E0D0E0001","030E0D0E0001",
-  ["06000C00","06000C00","06000C00","06000C00","06000C00","06000C00","06000C00","06000C00"],
-  ["070E0C00","070E0C00","070E0C00","070E0C00","070E0C00","070E0C00","070E0C00","070E0C00"],
-  "0C010008","0008",
-  "0B060906","0B060906",
-  [
-    "06000C000001","","","","","","",
-    ["0C00","0C00","0C00","0C00","0C00","0C00","0C00","0C00"]
-  ],
-  [
-    "070E0D060001","","","","","","",
-    ["1002","1002","1002","1002","1002","1002","1002","1002"]
-  ],
-  "0C010C00","",
-  "0C01","","2C00",
-  "0C00","",
-  ["","",""],
-  ["06002A00","06002A00","06002A00","06002A00","06002A00","06002A00","06002A00","06002A00"],
-  ["070E2A00","070E2A00","070E2A00","070E2A00","070E2A00","070E2A00","070E2A00","070E2A00"],
-  ["06001800","06001800","06001800","06001800","06001800","06001800","06001800","06001800"],
-  ["070E1800","070E1800","070E1800","070E1800","070E1800","070E1800","070E1800","070E1800"],
-  "0C00","0C00","",
-  "1E00",
-  /*------------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------------
+    //First Byte operations.
+    //------------------------------------------------------------------------------------------------------------------------
+    "06000A000003",
+    "070E0B0E0003",
+    "0A0006000003",
+    "0B0E070E0003",
+    "16000C000003",
+    "170E0DE60003",
+    "",
+    "",
+    "06000A000003",
+    "070E0B0E0003",
+    "0A0006000003",
+    "0B0E070E0003",
+    "16000C000003",
+    "170E0DE60003",
+    "",
+    "",
+    "06000A000003",
+    "070E0B0E0003",
+    "0A0006000003",
+    "0B0E070E0003",
+    "16000C000003",
+    "170E0DE60003",
+    "",
+    "",
+    "06000A000003",
+    "070E0B0E0003",
+    "0A0006000003",
+    "0B0E070E0003",
+    "16000C000003",
+    "170E0DE60003",
+    "",
+    "",
+    "06000A000003",
+    "070E0B0E0003",
+    "0A0006000003",
+    "0B0E070E0003",
+    "16000C000003",
+    "170E0DE60003",
+    "",
+    "",
+    "06000A000003",
+    "070E0B0E0003",
+    "0A0006000003",
+    "0B0E070E0003",
+    "16000C000003",
+    "170E0DE60003",
+    "",
+    "",
+    "06000A000003",
+    "070E0B0E0003",
+    "0A0006000003",
+    "0B0E070E0003",
+    "16000C000003",
+    "170E0DE60003",
+    "",
+    "",
+    "06000A00",
+    "070E0B0E",
+    "0A000600",
+    "0B0E070E",
+    "16000C00",
+    "170E0DE6",
+    "",
+    "",
+    "03060003",
+    "03060003",
+    "03060003",
+    "03060003",
+    "03060003",
+    "03060003",
+    "03060003",
+    "03060003",
+    "03060003",
+    "03060003",
+    "03060003",
+    "03060003",
+    "03060003",
+    "03060003",
+    "03060003",
+    "03060003",
+    "030A",
+    "030A",
+    "030A",
+    "030A",
+    "030A",
+    "030A",
+    "030A",
+    "030A",
+    "030A",
+    "030A",
+    "030A",
+    "030A",
+    "030A",
+    "030A",
+    "030A",
+    "030A",
+    ["", "", ""],
+    ["", "", ""],
+    ["0A020606", "0A010604", ""],
+    "0B0E0704",
+    "",
+    "",
+    "",
+    "",
+    "0DE6",
+    "0B0E070E0DE6",
+    "0DA1",
+    "0B0E070E0DE1",
+    "22001A01",
+    "230E1A01",
+    "1A012000",
+    "1A01210E",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    "10000002000C",
+    [
+        "06000C000003",
+        "06000C000003",
+        "06000C000003",
+        "06000C000003",
+        "06000C000003",
+        "06000C000003",
+        "06000C000003",
+        "06000C00"
+    ],
+    [
+        "070E0DE60003",
+        "070E0DE60003",
+        "070E0DE60003",
+        "070E0DE60003",
+        "070E0DE60003",
+        "070E0DE60003",
+        "070E0DE60003",
+        "070E0DE6"
+    ],
+    [
+        "06000C000003",
+        "06000C000003",
+        "06000C000003",
+        "06000C000003",
+        "06000C000003",
+        "06000C000003",
+        "06000C000003",
+        "06000C00"
+    ],
+    [
+        "070E0DE10003",
+        "070E0DE10003",
+        "070E0DE10003",
+        "070E0DE10003",
+        "070E0DE10003",
+        "070E0DE10003",
+        "070E0DE10003",
+        "070E0DE1"
+    ],
+    "06000A00",
+    "070E0B0E",
+    "0A0006000003",
+    "0B0E070E0003",
+    "06000A000001",
+    "070E0B0E0001",
+    "0A0006000001",
+    "0B0E070E0001",
+    "06020A080001",
+    ["0B0E0601", ""],
+    "0A0806020001",
+    ["070A", "", "", "", "", "", "", ""],
+    [
+        ["", "", "", ""],
+        ["", "", "", ""],
+        ["", "", "", ""],
+        ["", "", "", ""]
+    ],
+    "170E030E0003",
+    "170E030E0003",
+    "170E030E0003",
+    "170E030E0003",
+    "170E030E0003",
+    "170E030E0003",
+    "170E030E0003",
+    ["", "", ""],
+    ["", "", ""],
+    "0D060C01", //CALL Ap (w:z).
+    "",
+    ["", "", ""],
+    ["", "", ""],
+    "",
+    "",
+    "160004000001",
+    "170E050E0001",
+    "040016000001",
+    "050E170E0001",
+    "22002000",
+    "230E210E",
+    "22002000",
+    "230E210E",
+    "16000C00",
+    "170E0DE6",
+    "22001600",
+    "230E170E",
+    "16002000",
+    "170E210E",
+    "16002200",
+    "170E230E",
+    "02000C000001",
+    "02000C000001",
+    "02000C000001",
+    "02000C000001",
+    "02000C000001",
+    "02000C000001",
+    "02000C000001",
+    "02000C000001",
+    "030E0D0E0001",
+    "030E0D0E0001",
+    "030E0D0E0001",
+    "030E0D0E0001",
+    "030E0D0E0001",
+    "030E0D0E0001",
+    "030E0D0E0001",
+    "030E0D0E0001",
+    ["06000C00", "06000C00", "06000C00", "06000C00", "06000C00", "06000C00", "06000C00", "06000C00"],
+    ["070E0C00", "070E0C00", "070E0C00", "070E0C00", "070E0C00", "070E0C00", "070E0C00", "070E0C00"],
+    "0C010008",
+    "0008",
+    "0B060906",
+    "0B060906",
+    ["06000C000001", "", "", "", "", "", "", ["0C00", "0C00", "0C00", "0C00", "0C00", "0C00", "0C00", "0C00"]],
+    ["070E0D060001", "", "", "", "", "", "", ["1002", "1002", "1002", "1002", "1002", "1002", "1002", "1002"]],
+    "0C010C00",
+    "",
+    "0C01",
+    "",
+    "2C00",
+    "0C00",
+    "",
+    ["", "", ""],
+    ["06002A00", "06002A00", "06002A00", "06002A00", "06002A00", "06002A00", "06002A00", "06002A00"],
+    ["070E2A00", "070E2A00", "070E2A00", "070E2A00", "070E2A00", "070E2A00", "070E2A00", "070E2A00"],
+    ["06001800", "06001800", "06001800", "06001800", "06001800", "06001800", "06001800", "06001800"],
+    ["070E1800", "070E1800", "070E1800", "070E1800", "070E1800", "070E1800", "070E1800", "070E1800"],
+    "0C00",
+    "0C00",
+    "",
+    "1E00",
+    /*------------------------------------------------------------------------------------------------------------------------
   X87 FPU.
   ------------------------------------------------------------------------------------------------------------------------*/
-  [
-    ["0604","0604","0604","0604","0604","0604","0604","0604"],
-    ["24080609","24080609","0609","0609","24080609","24080609","24080609","24080609"]
-  ],
-  [
-    ["0604","","0604","0604","0601","0602","0601","0602"],
     [
-      "0609","0609",
-      ["","","","","","","",""],
-      "0609",
-      ["","","","","","","",""],
-      ["","","","","","","",""],
-      ["","","","","","","",""],
-      ["","","","","","","",""]
-    ]
-  ],
-  [
-    ["0604","0604","0604","0604","0604","0604","0604","0604"],
+        ["0604", "0604", "0604", "0604", "0604", "0604", "0604", "0604"],
+        ["24080609", "24080609", "0609", "0609", "24080609", "24080609", "24080609", "24080609"]
+    ],
     [
-      "24080609","24080609","24080609","24080609","",
-      ["","","","","","","",""],"",""
-    ]
-  ],
-  [
-    ["0604","0604","0604","0604","","0607","","0607",""],
+        ["0604", "", "0604", "0604", "0601", "0602", "0601", "0602"],
+        [
+            "0609",
+            "0609",
+            ["", "", "", "", "", "", "", ""],
+            "0609",
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""]
+        ]
+    ],
     [
-      "24080609","24080609","24080609","24080609",
-      ["","","","","","","",""],
-      "24080609","24080609",""
-    ]
-  ],
-  [
-    ["0606","0606","0606","0606","0606","0606","0606","0606"],
-    ["06092408","06092408","0609","0609","06092408","06092408","06092408","06092408"]
-  ],
-  [
-    ["0606","0606","0606","0606","0606","","0601","0602"],
-    ["0609","0609","0609","0609","0609","0609","",""]
-  ],
-  [
-    ["0602","0602","0602","0602","0602","0602","0602","0602"],
+        ["0604", "0604", "0604", "0604", "0604", "0604", "0604", "0604"],
+        ["24080609", "24080609", "24080609", "24080609", "", ["", "", "", "", "", "", "", ""], "", ""]
+    ],
     [
-      "06092408","06092408","0609",
-      ["","","","","","","",""],
-      "06092408","06092408","06092408","06092408"
-    ]
-  ],
-  [
-    ["0602","0602","0602","0602","0607","0606","0607","0606"],
+        ["0604", "0604", "0604", "0604", "", "0607", "", "0607", ""],
+        ["24080609", "24080609", "24080609", "24080609", ["", "", "", "", "", "", "", ""], "24080609", "24080609", ""]
+    ],
     [
-      "0609","0609","0609","0609",
-      ["1601","","","","","","",""],
-      "24080609","24080609",
-      ""
-    ]
-  ],
-  /*------------------------------------------------------------------------------------------------------------------------
+        ["0606", "0606", "0606", "0606", "0606", "0606", "0606", "0606"],
+        ["06092408", "06092408", "0609", "0609", "06092408", "06092408", "06092408", "06092408"]
+    ],
+    [
+        ["0606", "0606", "0606", "0606", "0606", "", "0601", "0602"],
+        ["0609", "0609", "0609", "0609", "0609", "0609", "", ""]
+    ],
+    [
+        ["0602", "0602", "0602", "0602", "0602", "0602", "0602", "0602"],
+        [
+            "06092408",
+            "06092408",
+            "0609",
+            ["", "", "", "", "", "", "", ""],
+            "06092408",
+            "06092408",
+            "06092408",
+            "06092408"
+        ]
+    ],
+    [
+        ["0602", "0602", "0602", "0602", "0607", "0606", "0607", "0606"],
+        ["0609", "0609", "0609", "0609", ["1601", "", "", "", "", "", "", ""], "24080609", "24080609", ""]
+    ],
+    /*------------------------------------------------------------------------------------------------------------------------
   End of X87 FPU.
   ------------------------------------------------------------------------------------------------------------------------*/
-  "10000004","10000004","10000004","10000004",
-  "16000C00","170E0C00","0C001600","0C00170E",
-  "110E0008",
-  "110E0008",
-  "0D060C01", //JMP Ap (w:z).
-  "100000040004",
-  "16001A01","170E1A01",
-  "1A011600","1A01170E",
-  "","","","","","",
-  ["06000C00","","06000003","06000003","16000600","0600","16000600","0600"],
-  ["070E0D06","","070E0003","070E0003","170E070E","070E","170E070E","170E070E"],
-  "","","","","","",
-  ["06000003","06000003","","","","","",""],
-  [
-    ["070E0003","070E0003","070A0004","090E0008","070A0008","090E0008","070A",""],
-    ["070E0003","070E0003","070A0008","","070A0008","","070A",""]
-  ],
-  /*------------------------------------------------------------------------------------------------------------------------
+    "10000004",
+    "10000004",
+    "10000004",
+    "10000004",
+    "16000C00",
+    "170E0C00",
+    "0C001600",
+    "0C00170E",
+    "110E0008",
+    "110E0008",
+    "0D060C01", //JMP Ap (w:z).
+    "100000040004",
+    "16001A01",
+    "170E1A01",
+    "1A011600",
+    "1A01170E",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ["06000C00", "", "06000003", "06000003", "16000600", "0600", "16000600", "0600"],
+    ["070E0D06", "", "070E0003", "070E0003", "170E070E", "070E", "170E070E", "170E070E"],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ["06000003", "06000003", "", "", "", "", "", ""],
+    [
+        ["070E0003", "070E0003", "070A0004", "090E0008", "070A0008", "090E0008", "070A", ""],
+        ["070E0003", "070E0003", "070A0008", "", "070A0008", "", "070A", ""]
+    ],
+    /*------------------------------------------------------------------------------------------------------------------------
   Two Byte operations.
   ------------------------------------------------------------------------------------------------------------------------*/
-  [
-    ["0602","0602","0602","0602","0602","0602","070E",""],
-    ["070E","070E","0601","0601","0601","0601","070E",""]
-  ],
-  [
-    ["0908","0908","0908","0908","0602","","0602","0601"],
     [
-      ["","","","","","","",""],
-      ["170819081B08","17081908","","","","","",""],
-      ["","","","","","","",""],
-      ["1708","","1708","1708","","","1602","17081802"],
-      "070E","","0601",
-      ["","","170819081B08","170819081B08","","","",""]
-    ]
-  ],
-  ["0B0E0612","0B0E070E"],["0B0E0612","0B0E070E"],"",
-  "","","","",
-  "","","","",
-  [["0601","0601","","","","","",""],""],
-  "",
-  "0A0A06A9", //3DNow takes ModR/M, IMM8.
-  [
-    ["0B700770","0B700770","0A040603","0A040609"],
-    ["0B700770","0B700770","0A0412040604","0A0412040604"]
-  ],
-  [
-    ["07700B70","07700B70","06030A04","06090A04"],
-    ["07700B70","07700B70","060412040A04","060412040A04"]
-  ],
-  [
-    ["0A0412040606","0A0412040606","0B700770","0B700768"],
-    ["0A0412040604","","0B700770","0B700770"]
-  ],
-  [["06060A04","06060A04","",""],""],
-  ["0B70137007700140","0B70137007700140","",""],
-  ["0B70137007700140","0B70137007700140","",""],
-  [["0A0412040606","0A0412040606","0B700770",""],["0A0412040604","","0B700770",""]],
-  [["06060A04","06060A04","",""],""],
-  [["0601","0601","0601","0601","","","",""],""],
-  "",
-  [[["0A0B07080180","","",""],["0A0B07100180","","",""],["0A0B07080180","","",""],["0A0B07080180","","",""]],
-  ["",["0A0B060B","","",""],["0A0B07080180","","",""],["0A0B07080180","","",""]]],
-  [[["07080A0B0180","","",""],["07100A0B0180","","",""],["0A0B07080180","","",""],["0A0B07080180","","",""]],
-  ["",["0A0B060B","","",""],"",["0A0B07080180","","",""]]],
-  "","","",
-  "070E",
-  ["","07080A0C0001"],["","07080A0D0001"],
-  ["","0A0C07080001"],["","0A0D07080001"],
-  ["","07080A0E0001"],"",
-  ["","0A0E07080001"],"",
-  [
-    ["0A040648","0B300730","0B700770","0A06066C0130"],
-    ["0A040648","0B300730","0B700770","0A06066C0130"],
-    "",""
-  ],
-  [
-    [
-      ["06480A04","07300B30","07700B70","066C0A060130"],
-      ["06480A04","07300B30","07700B70","066C0A060130"],
-      ["","","",["066C0A060138","066C0A060138","066C0A060138"]],
-      ["","","",["066C0A060138","066C0A060138","066C0A060138"]]
+        ["0602", "0602", "0602", "0602", "0602", "0602", "070E", ""],
+        ["070E", "070E", "0601", "0601", "0601", "0601", "070E", ""]
     ],
     [
-      ["06480A04","07300B30","07700B70","066C0A06"],
-      ["06480A04","07300B30","07700B70","066C0A06"],
-      "",""
-    ]
-  ],
-  [
-    ["0A0406A9","","",""],["0A0406A9","","",""], //Not Allowed to be Vector encoded.
-    "0A041204070C010A","0A041204070C010A"
-  ],
-  [
+        ["0908", "0908", "0908", "0908", "0602", "", "0602", "0601"],
+        [
+            ["", "", "", "", "", "", "", ""],
+            ["170819081B08", "17081908", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["1708", "", "1708", "1708", "", "", "1602", "17081802"],
+            "070E",
+            "",
+            "0601",
+            ["", "", "170819081B08", "170819081B08", "", "", "", ""]
+        ]
+    ],
+    ["0B0E0612", "0B0E070E"],
+    ["0B0E0612", "0B0E070E"],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    [["0601", "0601", "", "", "", "", "", ""], ""],
+    "",
+    "0A0A06A9", //3DNow takes ModR/M, IMM8.
     [
-      "07700B70","07700B70",
-      ["06030A04","","",""],["06060A04","","",""] //SSE4a can not be vector encoded.
-    ],""
-  ],
-  [
-    ["0A0A0649","","",""],["0A0A0648","","",""], //Not allowed to be Vector encoded.
-    "0B0C06430109","0B0C06490109"
-  ],
-  [
-    ["0A0A0649","","",""],["0A0A0648","","",""], //Not allowed to be vector encoded.
-    "0B0C0643010A","0B0C0649010A"
-  ],
-  ["0A0406430101","0A0406490101","",""],
-  ["0A0406430101","0A0406490101","",""],
-  "","","","",
-  "","","",
-  "",
-  "",//Three byte opcodes 0F38
-  "",
-  "",//Three byte opcodes 0F3A
-  "","","","","",
-  "0B0E070E",
-  [
-    ["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],
-    ["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],"",""
-  ],
-  [
-    ["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],
-    ["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],"",""
-  ],
-  [["0B0E070E0180","0A0F06FF","",""],"","",""],
-  [
-    ["0B0E070E0180",["0A0F06FF","","0A0F06FF"],"",""],
-    ["0B0E070E0180",["0A0F06FF","","0A0F06FF"],"",""],"",""
-  ],
-  [
-    ["0A02070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],
-    ["0A02070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],"",""
-  ],
-  [
-    ["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],
-    ["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],"",""
-  ],
-  [
-    ["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],
-    ["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],"",""
-  ],
-  [["0B0E070E0180","0A0F06FF","",""],"","",""],
-  [["0B0E070E0180","0A0F06FF","",""],"","",""],
-  [
-    ["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],
-    ["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],"",""
-  ],
-  [
-    ["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],
-    ["0B0E070E0180",["0A0F120F06FF","",""],"",""],"",""
-  ],
-  "0B0E070E","0B0E070E","0B0E070E","0B0E070E",
-  ["",[["0B0C0648","0B0C0730","",""],["0B0C0648","0B0C0730","",""],"",""]],
-  ["0B7007700142","0B7007700142","0A04120406430102","0A04120406490102"],
-  [
-    ["0A040648","0A040648","",""],"",
-    ["0A040643","0A0412040643","",""],""
-  ],
-  [
-    ["0A040648","0A040648","",""],"",
-    ["0A040643","0A0412040643","",""],""
-  ],
-  ["0B70137007700140","0B70137007700140","",""],
-  ["0B70137007700140","0B70137007700140","",""],
-  ["0B70137007700140","0B70137007700140","",""],
-  ["0B70137007700140","0B70137007700140","",""],
-  [
-    ["0A040648","0B3013300730","0B70137007700152","0A061206066C0152"],
-    ["0A040648","0B3013300730","0B70137007700152","0A061206066C0152"],
-    "0A04120406430102","0A04120406460102"
-  ],
-  [
-    ["0A040648","0B3013300730","0B70137007700152","0A061206066C0152"],
-    ["0A040648","0B3013300730","0B70137007700152","0A061206066C0152"],
-    "0A04120406430102","0A04120406460102"
-  ],
-  [
-    ["0A040648","0B300718","0B7007380151","0A06065A0171"],
-    ["0A040648","0B180730","0B3807700152","0A05066C0152"],
-    "0A04120406430101","0A04120406460102"
-  ],
-  [["0B7007700142","","0B380770014A"],["0B700770014A","",""],"0B7007700141",""],
-  [
-    ["0A040648","0B3013300730","0B70137007700152","0A061206066C0152"],
-    ["0A040648","0B3013300730","0B70137007700152","0A061206066C0152"],
-    "0A04120406430102","0A04120406460102"
-  ],
-  ["0B70137007700141","0B70137007700141","0A04120406430101","0A04120406460101"],
-  ["0B70137007700142","0B70137007700142","0A04120406430102","0A04120406460102"],
-  ["0B70137007700141","0B70137007700141","0A04120406430101","0A04120406460101"],
-  [["0A0A06A3","","",""],"0B70137007700108","",""],
-  [["0A0A06A3","","",""],"0B70137007700108","",""],
-  [["0A0A06A3","","",""],"0B701370077001400108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730","0A0F137007700108",""],"",""], 
-  [["0A0A06A9","","",""],["0A040648","0B3013300730","0A0F137007700108",""],"",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730",["0A0F137007700148","",""],["0A0F1206066C0148","",""]],"",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],["0B70137007700148","",""],"",""],
-  [["0A0A06A9","","",""],["0B70137007700148","",""],"",""],
-  ["","0B70137007700140","",""],
-  ["","0B70137007700140","",""],
-  [["0A0A070C","","",""],["0A04070C0108","","0A04070C0108"],"",""],
-  [
-    [
-      ["0A0A06A9","", "",""],
-      ["0B700770","0B700770",["0B7007700108","","0B700770"],["0A06066C0128","","0A06066C0120"]],
-      ["0A040710","0B700770",["0B700770","","0B7007700108"],""],
-      ["","",["0B7007700108","","0B700770"],""]
+        ["0B700770", "0B700770", "0A040603", "0A040609"],
+        ["0B700770", "0B700770", "0A0412040604", "0A0412040604"]
     ],
     [
-      ["0A0A06A9","", "",""],
-      ["0B700770","0B700770",["0B7007700108","","0B700770"],["0A06066C0148","","0A06066C0140"]],
-      ["0A040710","0B700770",["0B700770","","0B7007700108"],""],
-      ["","",["0B7007700108","","0B700770"],""]
-    ]
-  ],
-  [
-    ["0A0A06A90C00","","",""],
-    ["0A0406480C00","0B3007300C00",["0B7007700C000108","",""],["0A06066C0C000108","",""]],
-    "0B7007700C000108",
-    "0B7007700C000108"
-  ],
-  [
-    "",
-    [
-      "","",
-      [["060A0C00","","",""],"137007700C000108","",""],"",
-      [["060A0C00","","",""],"137007700C000108","",""],"",
-      [["060A0C00","","",""],"137007700C000108","",""],""
-    ]
-  ],
-  [
-    ["",["","",["137007700C000148","","137007700C000140"],""],"",""],
-    ["",["","",["137007700C000148","","137007700C000140"],""],"",""],
-    [["060A0C00","","",""],["06480C00","133007300C00",["137007700C000148","",""],["1206066C0C000148","",""]],"",""],
-    "",
-    [["060A0C00","","",""],["06480C00","133007300C00",["137007700C000148","","137007700C000140"],["1206066C0C000148","",""]],"",""],
-    "",
-    [["060A0C00","","",""],["06480C00","133007300C00",["137007700C000148","",""],["1206066C0C000148","",""]],"",""],
-    ""
-  ],
-  [
-    "",
-    [
-      "","",
-      [["137007700C00","137007700C00","",""],"137007700C000140","",""],["","137007700C000108","",""],
-      "","",
-      [["137007700C00","137007700C00","",""],"137007100C000140","",""],["","137007700C000108","",""]
-    ]
-  ],
-  [["0A0A06A9","","",""],["0A040710","13300B300730","0A0F137007700108",""],"",""],
-  [["0A0A06A9","","",""],["0A040710","13300B300730","0A0F137007700108",""],"",""],
-  [["0A0A06A9","","",""],["0A040710","13300B300730",["0A0F137007700148","",""],["0A0F1206066C0148","",""]],"",""],
-  [["",["","",""],"",""],"","",""],
-  [
-    ["07080B080180","",["0B7007700141","","0B3807700149"],""],
-    ["064F0C000C00","",["0B7007380149","","0B7007700141"],""],
-    ["","","0B0C06440109",""],
-    ["0A04064F0C000C00","","0B0C06460109",""]
-  ],
-  [
-    ["0B0807080180","",["0B7007700142","","0B380770014A"],""],
-    ["0A04064F","",["0B700738014A","","0B7007700142"],""],
-    ["","","0B0C0644010A",""],
-    ["0A04064F","","0B0C0646010A",""]
-  ],
-  [
-    "",
-    ["","",["0B7007380149","","0B7007700141"],""],
-    ["","",["0B7007380142","","0B700770014A"],"0A06065A0170"],
-    ["","",["0B700770014A","","0B3807700142"],""]
-  ],
-  [
-    "",
-    ["","",["0B700738014A","","0B7007700142"],""],
-    ["","","0A041204070C010A",""],
-    ["","","0A041204070C010A",""]
-  ],
-  [
-    "",["0A040604","0B7013700770","",""],
-    "",["0A040604","0B7013700770","",""]
-  ],
-  [
-    "",["0A040604","0B7013700770","",""],
-    "",["0A040604","0B7013700770","",""]
-  ],
-  [["070C0A0A","","",""],["06240A040108","","06360A040108"],["0A040646","0A040646",["","","0A0406460108"],""],""],
-  [
-    ["06A90A0A","","",""],
-    ["06480A04","07300B30",["07700B700108","","07700B70"],["066C0A060128","","066C0A060120"]],
-    ["06480A04","07300B30",["07700B70","","07700B700108"],""],
-    ["","",["07700B700108","","07700B70"],""]
-  ],
-  "1106000C","1106000C","1106000C","1106000C",
-  [["1106000C","120F1002","",""],"","",""],[["1106000C","120F1002","",""],"","",""],
-  "1106000C","1106000C","1106000C","1106000C","1106000C","1106000C","1106000C","1106000C","1106000C","1106000C",
-  [
-    ["0600",["0A0F06F2","","0A0F06F6"],"",""],
-    ["0600",["0A0F06F0","","0A0F06F4"],"",""],"",""
-  ],
-  [
-    ["0600",["06120A0F","","06360A0F"],"",""],
-    ["0600",["06000A0F","","06240A0F"],"",""],"",""
-  ],
-  [
-    ["0600",["0A0F062F","",""],"",""],
-    ["0600",["0A0F062F","",""],"",""],"",
-    ["0600",["0A0F062F","","0A0F063F"],"",""]
-  ],
-  [
-    ["0600",["062F0A0F","",""],"",""],
-    ["0600",["062F0A0F","",""],"",""],"",
-    ["0600",["062F0A0F","","063F0A0F"],"",""]
-  ],
-  "0600",[["0600","0A03120F06FF","",""],"","",""],
-  "0600",[["0600","0A03120F06FF","",""],"","",""],
-  [
-    ["0600",["0A0F06FF","","0A0F06FF"],"",""],
-    ["0600",["0A0F06FF","","0A0F06FF"],"",""],"",""
-  ],
-  [
-    ["0600",["0A0F06FF","","0A0F06FF"],"",""],
-    ["0600",["0A0F06FF","","0A0F06FF"],"",""],"",""
-  ],
-  "0600","0600","0600","0600","0600","0600",
-  "2608","2608",
-  "",
-  "070E0B0E0003",
-  "070E0B0E0C00","070E0B0E1800",
-  "0B0E070E","070E0B0E",
-  "2808","2808",
-  "",
-  "070E0B0E0003",
-  "070E0B0E0C00","070E0B0E1800",
-  [
-    [
-      ["0601","","0601"],["0601","","0601"],
-      "0603","0603",
-      ["0601","","0601"],["0601","","0601"],
-      ["0601","0601","0601"],
-      ["0601","0601",""]
+        ["07700B70", "07700B70", "06030A04", "06090A04"],
+        ["07700B70", "07700B70", "060412040A04", "060412040A04"]
     ],
     [
-      ["","",["0602","","",""],""],["","",["0602","","",""],""],
-      ["","",["0602","","",""],""],["","",["0602","","",""],""],
-      "",
-      ["","","","","","","",""],
-      ["","","","","","","",""],
-      ["","","","","","","",""]
-    ]
-  ],
-  "0B0E070E",
-  "06000A000003","070E0B0E0003",
-  ["0B0E090E",""],
-  "070E0B0E0003",
-  ["0B0E090E",""],
-  ["0B0E090E",""],
-  "0B0E0600","0B0E0602",
-  [
-    ["1002","","",""],"",
-    ["0B060706","0A020602","",""],""
-  ],"",
-  ["","","","","070E0C000003","070E0C000003","070E0C000003","070E0C000003"],
-  "0B0E070E0003",
-  [
-    ["0B0E070E0180","","",""],"",
-    ["0B0E070E0180","0A020602","",""],["0B0E070E0180","0A020602","",""]
-  ],
-  [
-    ["0B0E070E0180","","",""],"",
-    ["0B0E070E0180","0A020602","",""],["0B0E070E0180","","",""]
-  ],
-  "0B0E0600","0B0E0602",
-  "06000A000003","070E0B0E0003",
-  [
-    ["0A0406480C00","0B30133007300C00","0A0F137007700C000151","0A0F066C0C000151"],
-    ["0A0406480C00","0B30133007300C00","0A0F137007700C000151","0A0F066C0C000151"],
-    ["0A0406440C00","0A04120406480C00","0A0F120406440C000151",""],
-    ["0A0406490C00","0A04120406480C00","0A0F120406460C000151",""]
-  ],
-  ["06030A02",""],
-  [["0A0A06220C00","","",""],"0A04120406220C000108","",""],
-  ["",[["06020A0A0C00","","",""],"06020A040C000108","",""]],
-  ["0B70137007700C000140","0B70137007700C000140","",""],
-  [
+        ["0A0412040606", "0A0412040606", "0B700770", "0B700768"],
+        ["0A0412040604", "", "0B700770", "0B700770"]
+    ],
+    [["06060A04", "06060A04", "", ""], ""],
+    ["0B70137007700140", "0B70137007700140", "", ""],
+    ["0B70137007700140", "0B70137007700140", "", ""],
     [
-      "",
-      ["06060003","","060B0003"],
-      "",
-      ["0601","","0601"],
-      ["0601","","0601"],
-      ["0601","","0601"],
-      ["0606","0606","0606",""],["0606","","",""]
+        ["0A0412040606", "0A0412040606", "0B700770", ""],
+        ["0A0412040604", "", "0B700770", ""]
+    ],
+    [["06060A04", "06060A04", "", ""], ""],
+    [["0601", "0601", "0601", "0601", "", "", "", ""], ""],
+    "",
+    [
+        [
+            ["0A0B07080180", "", "", ""],
+            ["0A0B07100180", "", "", ""],
+            ["0A0B07080180", "", "", ""],
+            ["0A0B07080180", "", "", ""]
+        ],
+        ["", ["0A0B060B", "", "", ""], ["0A0B07080180", "", "", ""], ["0A0B07080180", "", "", ""]]
     ],
     [
-      "",
-      ["","","","","","","",""],
-      "","","","",
-      "070E","070E"
-    ]
-  ],
-  "030E","030E","030E","030E","030E","030E","030E","030E",
-  ["",["0A040648","0B3013300730","",""],"",["0A040648","0B3013300730","",""]],
-  [["0A0A06A9","","",""],"0B70137006480108","",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300648",["0B70137006480108","",""],""],"",""],
-  [["0A0A06A9","","",""],"0B70137006480100","",""],
-  [["0A0A06A9","","",""],"0B70137007700140","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [
-    ["","06490A040100","",""],
-    ["","06490A040100",["0A040649","","",""],["0A040649","","",""]]
-  ],
-  ["",[["0B0C06A0","","",""],["0B0C0640","0B0C0730","",""],"",""]],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730",["0B70137007700148","","0B70137007700140"],["0A061206066C0148","","0A061206066C0140"]],"",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730",["0B70137007700148","","0B70137007700140"],["0A061206066C0148","","0A061206066C0140"]],"",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [
-    [["0A0A06A9","","",""],["0A040648","0B3013300648","0B70137006480108",""],"",""],
-    [["0A0A06A9","","",""],["0A040648","0B3013300730","0B70137006480108",""],"",""]
-  ],
-  [["0A0A06A9","","",""],["0A040648","0B3013300648",["0B70137006480108","","0B7013700648"],""],"",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [
+        [
+            ["07080A0B0180", "", "", ""],
+            ["07100A0B0180", "", "", ""],
+            ["0A0B07080180", "", "", ""],
+            ["0A0B07080180", "", "", ""]
+        ],
+        ["", ["0A0B060B", "", "", ""], "", ["0A0B07080180", "", "", ""]]
+    ],
     "",
-    ["0A040648","0A040730","0B3807700141",""],
-    ["0A040649","0B300738",["0A0406480140","0B7007380140","0B700770014A"],"0A06065A0170"],
-    "0B3807700142"
-  ],
-  [[["06090A0A","","",""],["07700B700108","",""],"",""],""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730",["0B70137007700148","","0B70137007700140"],["0A061206066C0148","","0A061206066C0140"]],"",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730",["0B70137007700148","","0B70137007700140"],["0A061206066C0148","","0A061206066C0140"]],"",""],
-  [["","","",["0A040648","0A040730","",""]],"0000"],
-  [["0A0A06A9","","",""],"0B70137006480108","",""],
-  [["0A0A06A9","","",""],["0B70137006480108","",""],"",""],
-  [["0A0A06A9","","",""],"0B7013700648","",""],
-  [["0A0A06A9","","",""],"0B70137007700140","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  ["",[["0A0A060A","","",""],["0B040648","0B040648","",""],"",""]],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730",["0B70137007700148","",""],["0A061206066C0148","",""]],"",""],
-  [["0A0A06A9","","",""],"0B70137007700140","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730",["0B70137007700148","",""],["0A061206066C0148","",""]],"",""],
-  "",
-  /*------------------------------------------------------------------------------------------------------------------------
+    "",
+    "",
+    "070E",
+    ["", "07080A0C0001"],
+    ["", "07080A0D0001"],
+    ["", "0A0C07080001"],
+    ["", "0A0D07080001"],
+    ["", "07080A0E0001"],
+    "",
+    ["", "0A0E07080001"],
+    "",
+    [
+        ["0A040648", "0B300730", "0B700770", "0A06066C0130"],
+        ["0A040648", "0B300730", "0B700770", "0A06066C0130"],
+        "",
+        ""
+    ],
+    [
+        [
+            ["06480A04", "07300B30", "07700B70", "066C0A060130"],
+            ["06480A04", "07300B30", "07700B70", "066C0A060130"],
+            ["", "", "", ["066C0A060138", "066C0A060138", "066C0A060138"]],
+            ["", "", "", ["066C0A060138", "066C0A060138", "066C0A060138"]]
+        ],
+        [["06480A04", "07300B30", "07700B70", "066C0A06"], ["06480A04", "07300B30", "07700B70", "066C0A06"], "", ""]
+    ],
+    [
+        ["0A0406A9", "", "", ""],
+        ["0A0406A9", "", "", ""], //Not Allowed to be Vector encoded.
+        "0A041204070C010A",
+        "0A041204070C010A"
+    ],
+    [
+        [
+            "07700B70",
+            "07700B70",
+            ["06030A04", "", "", ""],
+            ["06060A04", "", "", ""] //SSE4a can not be vector encoded.
+        ],
+        ""
+    ],
+    [
+        ["0A0A0649", "", "", ""],
+        ["0A0A0648", "", "", ""], //Not allowed to be Vector encoded.
+        "0B0C06430109",
+        "0B0C06490109"
+    ],
+    [
+        ["0A0A0649", "", "", ""],
+        ["0A0A0648", "", "", ""], //Not allowed to be vector encoded.
+        "0B0C0643010A",
+        "0B0C0649010A"
+    ],
+    ["0A0406430101", "0A0406490101", "", ""],
+    ["0A0406430101", "0A0406490101", "", ""],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "", //Three byte opcodes 0F38
+    "",
+    "", //Three byte opcodes 0F3A
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0B0E070E",
+    [
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        "",
+        ""
+    ],
+    [
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        "",
+        ""
+    ],
+    [["0B0E070E0180", "0A0F06FF", "", ""], "", "", ""],
+    [
+        ["0B0E070E0180", ["0A0F06FF", "", "0A0F06FF"], "", ""],
+        ["0B0E070E0180", ["0A0F06FF", "", "0A0F06FF"], "", ""],
+        "",
+        ""
+    ],
+    [
+        ["0A02070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        ["0A02070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        "",
+        ""
+    ],
+    [
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        "",
+        ""
+    ],
+    [
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        "",
+        ""
+    ],
+    [["0B0E070E0180", "0A0F06FF", "", ""], "", "", ""],
+    [["0B0E070E0180", "0A0F06FF", "", ""], "", "", ""],
+    [
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        "",
+        ""
+    ],
+    [
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        ["0B0E070E0180", ["0A0F120F06FF", "", ""], "", ""],
+        "",
+        ""
+    ],
+    "0B0E070E",
+    "0B0E070E",
+    "0B0E070E",
+    "0B0E070E",
+    ["", [["0B0C0648", "0B0C0730", "", ""], ["0B0C0648", "0B0C0730", "", ""], "", ""]],
+    ["0B7007700142", "0B7007700142", "0A04120406430102", "0A04120406490102"],
+    [["0A040648", "0A040648", "", ""], "", ["0A040643", "0A0412040643", "", ""], ""],
+    [["0A040648", "0A040648", "", ""], "", ["0A040643", "0A0412040643", "", ""], ""],
+    ["0B70137007700140", "0B70137007700140", "", ""],
+    ["0B70137007700140", "0B70137007700140", "", ""],
+    ["0B70137007700140", "0B70137007700140", "", ""],
+    ["0B70137007700140", "0B70137007700140", "", ""],
+    [
+        ["0A040648", "0B3013300730", "0B70137007700152", "0A061206066C0152"],
+        ["0A040648", "0B3013300730", "0B70137007700152", "0A061206066C0152"],
+        "0A04120406430102",
+        "0A04120406460102"
+    ],
+    [
+        ["0A040648", "0B3013300730", "0B70137007700152", "0A061206066C0152"],
+        ["0A040648", "0B3013300730", "0B70137007700152", "0A061206066C0152"],
+        "0A04120406430102",
+        "0A04120406460102"
+    ],
+    [
+        ["0A040648", "0B300718", "0B7007380151", "0A06065A0171"],
+        ["0A040648", "0B180730", "0B3807700152", "0A05066C0152"],
+        "0A04120406430101",
+        "0A04120406460102"
+    ],
+    [["0B7007700142", "", "0B380770014A"], ["0B700770014A", "", ""], "0B7007700141", ""],
+    [
+        ["0A040648", "0B3013300730", "0B70137007700152", "0A061206066C0152"],
+        ["0A040648", "0B3013300730", "0B70137007700152", "0A061206066C0152"],
+        "0A04120406430102",
+        "0A04120406460102"
+    ],
+    ["0B70137007700141", "0B70137007700141", "0A04120406430101", "0A04120406460101"],
+    ["0B70137007700142", "0B70137007700142", "0A04120406430102", "0A04120406460102"],
+    ["0B70137007700141", "0B70137007700141", "0A04120406430101", "0A04120406460101"],
+    [["0A0A06A3", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A3", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A3", "", "", ""], "0B701370077001400108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300730", "0A0F137007700108", ""], "", ""],
+    [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300730", "0A0F137007700108", ""], "", ""],
+    [
+        ["0A0A06A9", "", "", ""],
+        ["0A040648", "0B3013300730", ["0A0F137007700148", "", ""], ["0A0F1206066C0148", "", ""]],
+        "",
+        ""
+    ],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], ["0B70137007700148", "", ""], "", ""],
+    [["0A0A06A9", "", "", ""], ["0B70137007700148", "", ""], "", ""],
+    ["", "0B70137007700140", "", ""],
+    ["", "0B70137007700140", "", ""],
+    [["0A0A070C", "", "", ""], ["0A04070C0108", "", "0A04070C0108"], "", ""],
+    [
+        [
+            ["0A0A06A9", "", "", ""],
+            ["0B700770", "0B700770", ["0B7007700108", "", "0B700770"], ["0A06066C0128", "", "0A06066C0120"]],
+            ["0A040710", "0B700770", ["0B700770", "", "0B7007700108"], ""],
+            ["", "", ["0B7007700108", "", "0B700770"], ""]
+        ],
+        [
+            ["0A0A06A9", "", "", ""],
+            ["0B700770", "0B700770", ["0B7007700108", "", "0B700770"], ["0A06066C0148", "", "0A06066C0140"]],
+            ["0A040710", "0B700770", ["0B700770", "", "0B7007700108"], ""],
+            ["", "", ["0B7007700108", "", "0B700770"], ""]
+        ]
+    ],
+    [
+        ["0A0A06A90C00", "", "", ""],
+        ["0A0406480C00", "0B3007300C00", ["0B7007700C000108", "", ""], ["0A06066C0C000108", "", ""]],
+        "0B7007700C000108",
+        "0B7007700C000108"
+    ],
+    [
+        "",
+        [
+            "",
+            "",
+            [["060A0C00", "", "", ""], "137007700C000108", "", ""],
+            "",
+            [["060A0C00", "", "", ""], "137007700C000108", "", ""],
+            "",
+            [["060A0C00", "", "", ""], "137007700C000108", "", ""],
+            ""
+        ]
+    ],
+    [
+        ["", ["", "", ["137007700C000148", "", "137007700C000140"], ""], "", ""],
+        ["", ["", "", ["137007700C000148", "", "137007700C000140"], ""], "", ""],
+        [
+            ["060A0C00", "", "", ""],
+            ["06480C00", "133007300C00", ["137007700C000148", "", ""], ["1206066C0C000148", "", ""]],
+            "",
+            ""
+        ],
+        "",
+        [
+            ["060A0C00", "", "", ""],
+            ["06480C00", "133007300C00", ["137007700C000148", "", "137007700C000140"], ["1206066C0C000148", "", ""]],
+            "",
+            ""
+        ],
+        "",
+        [
+            ["060A0C00", "", "", ""],
+            ["06480C00", "133007300C00", ["137007700C000148", "", ""], ["1206066C0C000148", "", ""]],
+            "",
+            ""
+        ],
+        ""
+    ],
+    [
+        "",
+        [
+            "",
+            "",
+            [["137007700C00", "137007700C00", "", ""], "137007700C000140", "", ""],
+            ["", "137007700C000108", "", ""],
+            "",
+            "",
+            [["137007700C00", "137007700C00", "", ""], "137007100C000140", "", ""],
+            ["", "137007700C000108", "", ""]
+        ]
+    ],
+    [["0A0A06A9", "", "", ""], ["0A040710", "13300B300730", "0A0F137007700108", ""], "", ""],
+    [["0A0A06A9", "", "", ""], ["0A040710", "13300B300730", "0A0F137007700108", ""], "", ""],
+    [
+        ["0A0A06A9", "", "", ""],
+        ["0A040710", "13300B300730", ["0A0F137007700148", "", ""], ["0A0F1206066C0148", "", ""]],
+        "",
+        ""
+    ],
+    [["", ["", "", ""], "", ""], "", "", ""],
+    [
+        ["07080B080180", "", ["0B7007700141", "", "0B3807700149"], ""],
+        ["064F0C000C00", "", ["0B7007380149", "", "0B7007700141"], ""],
+        ["", "", "0B0C06440109", ""],
+        ["0A04064F0C000C00", "", "0B0C06460109", ""]
+    ],
+    [
+        ["0B0807080180", "", ["0B7007700142", "", "0B380770014A"], ""],
+        ["0A04064F", "", ["0B700738014A", "", "0B7007700142"], ""],
+        ["", "", "0B0C0644010A", ""],
+        ["0A04064F", "", "0B0C0646010A", ""]
+    ],
+    [
+        "",
+        ["", "", ["0B7007380149", "", "0B7007700141"], ""],
+        ["", "", ["0B7007380142", "", "0B700770014A"], "0A06065A0170"],
+        ["", "", ["0B700770014A", "", "0B3807700142"], ""]
+    ],
+    [
+        "",
+        ["", "", ["0B700738014A", "", "0B7007700142"], ""],
+        ["", "", "0A041204070C010A", ""],
+        ["", "", "0A041204070C010A", ""]
+    ],
+    ["", ["0A040604", "0B7013700770", "", ""], "", ["0A040604", "0B7013700770", "", ""]],
+    ["", ["0A040604", "0B7013700770", "", ""], "", ["0A040604", "0B7013700770", "", ""]],
+    [
+        ["070C0A0A", "", "", ""],
+        ["06240A040108", "", "06360A040108"],
+        ["0A040646", "0A040646", ["", "", "0A0406460108"], ""],
+        ""
+    ],
+    [
+        ["06A90A0A", "", "", ""],
+        ["06480A04", "07300B30", ["07700B700108", "", "07700B70"], ["066C0A060128", "", "066C0A060120"]],
+        ["06480A04", "07300B30", ["07700B70", "", "07700B700108"], ""],
+        ["", "", ["07700B700108", "", "07700B70"], ""]
+    ],
+    "1106000C",
+    "1106000C",
+    "1106000C",
+    "1106000C",
+    [["1106000C", "120F1002", "", ""], "", "", ""],
+    [["1106000C", "120F1002", "", ""], "", "", ""],
+    "1106000C",
+    "1106000C",
+    "1106000C",
+    "1106000C",
+    "1106000C",
+    "1106000C",
+    "1106000C",
+    "1106000C",
+    "1106000C",
+    "1106000C",
+    [["0600", ["0A0F06F2", "", "0A0F06F6"], "", ""], ["0600", ["0A0F06F0", "", "0A0F06F4"], "", ""], "", ""],
+    [["0600", ["06120A0F", "", "06360A0F"], "", ""], ["0600", ["06000A0F", "", "06240A0F"], "", ""], "", ""],
+    [
+        ["0600", ["0A0F062F", "", ""], "", ""],
+        ["0600", ["0A0F062F", "", ""], "", ""],
+        "",
+        ["0600", ["0A0F062F", "", "0A0F063F"], "", ""]
+    ],
+    [
+        ["0600", ["062F0A0F", "", ""], "", ""],
+        ["0600", ["062F0A0F", "", ""], "", ""],
+        "",
+        ["0600", ["062F0A0F", "", "063F0A0F"], "", ""]
+    ],
+    "0600",
+    [["0600", "0A03120F06FF", "", ""], "", "", ""],
+    "0600",
+    [["0600", "0A03120F06FF", "", ""], "", "", ""],
+    [["0600", ["0A0F06FF", "", "0A0F06FF"], "", ""], ["0600", ["0A0F06FF", "", "0A0F06FF"], "", ""], "", ""],
+    [["0600", ["0A0F06FF", "", "0A0F06FF"], "", ""], ["0600", ["0A0F06FF", "", "0A0F06FF"], "", ""], "", ""],
+    "0600",
+    "0600",
+    "0600",
+    "0600",
+    "0600",
+    "0600",
+    "2608",
+    "2608",
+    "",
+    "070E0B0E0003",
+    "070E0B0E0C00",
+    "070E0B0E1800",
+    "0B0E070E",
+    "070E0B0E",
+    "2808",
+    "2808",
+    "",
+    "070E0B0E0003",
+    "070E0B0E0C00",
+    "070E0B0E1800",
+    [
+        [
+            ["0601", "", "0601"],
+            ["0601", "", "0601"],
+            "0603",
+            "0603",
+            ["0601", "", "0601"],
+            ["0601", "", "0601"],
+            ["0601", "0601", "0601"],
+            ["0601", "0601", ""]
+        ],
+        [
+            ["", "", ["0602", "", "", ""], ""],
+            ["", "", ["0602", "", "", ""], ""],
+            ["", "", ["0602", "", "", ""], ""],
+            ["", "", ["0602", "", "", ""], ""],
+            "",
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""]
+        ]
+    ],
+    "0B0E070E",
+    "06000A000003",
+    "070E0B0E0003",
+    ["0B0E090E", ""],
+    "070E0B0E0003",
+    ["0B0E090E", ""],
+    ["0B0E090E", ""],
+    "0B0E0600",
+    "0B0E0602",
+    [["1002", "", "", ""], "", ["0B060706", "0A020602", "", ""], ""],
+    "",
+    ["", "", "", "", "070E0C000003", "070E0C000003", "070E0C000003", "070E0C000003"],
+    "0B0E070E0003",
+    [["0B0E070E0180", "", "", ""], "", ["0B0E070E0180", "0A020602", "", ""], ["0B0E070E0180", "0A020602", "", ""]],
+    [["0B0E070E0180", "", "", ""], "", ["0B0E070E0180", "0A020602", "", ""], ["0B0E070E0180", "", "", ""]],
+    "0B0E0600",
+    "0B0E0602",
+    "06000A000003",
+    "070E0B0E0003",
+    [
+        ["0A0406480C00", "0B30133007300C00", "0A0F137007700C000151", "0A0F066C0C000151"],
+        ["0A0406480C00", "0B30133007300C00", "0A0F137007700C000151", "0A0F066C0C000151"],
+        ["0A0406440C00", "0A04120406480C00", "0A0F120406440C000151", ""],
+        ["0A0406490C00", "0A04120406480C00", "0A0F120406460C000151", ""]
+    ],
+    ["06030A02", ""],
+    [["0A0A06220C00", "", "", ""], "0A04120406220C000108", "", ""],
+    ["", [["06020A0A0C00", "", "", ""], "06020A040C000108", "", ""]],
+    ["0B70137007700C000140", "0B70137007700C000140", "", ""],
+    [
+        [
+            "",
+            ["06060003", "", "060B0003"],
+            "",
+            ["0601", "", "0601"],
+            ["0601", "", "0601"],
+            ["0601", "", "0601"],
+            ["0606", "0606", "0606", ""],
+            ["0606", "", "", ""]
+        ],
+        ["", ["", "", "", "", "", "", "", ""], "", "", "", "", "070E", "070E"]
+    ],
+    "030E",
+    "030E",
+    "030E",
+    "030E",
+    "030E",
+    "030E",
+    "030E",
+    "030E",
+    ["", ["0A040648", "0B3013300730", "", ""], "", ["0A040648", "0B3013300730", "", ""]],
+    [["0A0A06A9", "", "", ""], "0B70137006480108", "", ""],
+    [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300648", ["0B70137006480108", "", ""], ""], "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137006480100", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700140", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [
+        ["", "06490A040100", "", ""],
+        ["", "06490A040100", ["0A040649", "", "", ""], ["0A040649", "", "", ""]]
+    ],
+    ["", [["0B0C06A0", "", "", ""], ["0B0C0640", "0B0C0730", "", ""], "", ""]],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [
+        ["0A0A06A9", "", "", ""],
+        [
+            "0A040648",
+            "0B3013300730",
+            ["0B70137007700148", "", "0B70137007700140"],
+            ["0A061206066C0148", "", "0A061206066C0140"]
+        ],
+        "",
+        ""
+    ],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [
+        ["0A0A06A9", "", "", ""],
+        [
+            "0A040648",
+            "0B3013300730",
+            ["0B70137007700148", "", "0B70137007700140"],
+            ["0A061206066C0148", "", "0A061206066C0140"]
+        ],
+        "",
+        ""
+    ],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [
+        [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300648", "0B70137006480108", ""], "", ""],
+        [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300730", "0B70137006480108", ""], "", ""]
+    ],
+    [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300648", ["0B70137006480108", "", "0B7013700648"], ""], "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [
+        "",
+        ["0A040648", "0A040730", "0B3807700141", ""],
+        ["0A040649", "0B300738", ["0A0406480140", "0B7007380140", "0B700770014A"], "0A06065A0170"],
+        "0B3807700142"
+    ],
+    [[["06090A0A", "", "", ""], ["07700B700108", "", ""], "", ""], ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [
+        ["0A0A06A9", "", "", ""],
+        [
+            "0A040648",
+            "0B3013300730",
+            ["0B70137007700148", "", "0B70137007700140"],
+            ["0A061206066C0148", "", "0A061206066C0140"]
+        ],
+        "",
+        ""
+    ],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [
+        ["0A0A06A9", "", "", ""],
+        [
+            "0A040648",
+            "0B3013300730",
+            ["0B70137007700148", "", "0B70137007700140"],
+            ["0A061206066C0148", "", "0A061206066C0140"]
+        ],
+        "",
+        ""
+    ],
+    [["", "", "", ["0A040648", "0A040730", "", ""]], "0000"],
+    [["0A0A06A9", "", "", ""], "0B70137006480108", "", ""],
+    [["0A0A06A9", "", "", ""], ["0B70137006480108", "", ""], "", ""],
+    [["0A0A06A9", "", "", ""], "0B7013700648", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700140", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    ["", [["0A0A060A", "", "", ""], ["0B040648", "0B040648", "", ""], "", ""]],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [
+        ["0A0A06A9", "", "", ""],
+        ["0A040648", "0B3013300730", ["0B70137007700148", "", ""], ["0A061206066C0148", "", ""]],
+        "",
+        ""
+    ],
+    [["0A0A06A9", "", "", ""], "0B70137007700140", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [
+        ["0A0A06A9", "", "", ""],
+        ["0A040648", "0B3013300730", ["0B70137007700148", "", ""], ["0A061206066C0148", "", ""]],
+        "",
+        ""
+    ],
+    "",
+    /*------------------------------------------------------------------------------------------------------------------------
   Three Byte operations 0F38.
   ------------------------------------------------------------------------------------------------------------------------*/
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730","",""],"",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730","",""],"",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730","",""],"",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730","",""],"",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730","",""],"",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730","",""],"",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730","",""],"",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730","",""],"",""],
-  [["0A0A06A9","","",""],["0A040648","0B3013300730","",""],"",""],
-  [["0A0A06A9","","",""],"0B70137007700108","",""],
-  ["",["","0B3013300730",["0B70137007700148","",""],""],"",""],
-  ["",["","0B3013300730","0B70137007700140",""],"",""],
-  ["",["","0B300730","",""],"",""],
-  ["",["","0B300730","",""],"",""],
-  ["",["0A0406482E00","0B30133007301530","0B7013700770",""],["","","07380B70",""],""],
-  ["",["","","0B7013700770",""],["","","071C0B70",""],""],
-  ["",["","","0B7013700770",""],["","","070E0B70",""],""],
-  ["",["","0B300718",["0B7007380109","",""],""],["","","07380B70",""],""],
-  ["",["0A0407102E00","0B30133007301530",["0B70137007700148","","0B70137007700140"],""],["","","071C0B70",""],""],
-  ["",["0A0407102E00","0B30133007301530",["0B70137007700148","","0B70137007700140"],""],["","","07380B70",""],""],
-  ["",["","0B3013300730",["0B70137007700148","","0B70137007700140"],""],"",""],
-  ["",["0A040648","0B300730","",""],"",""],
-  ["",["","0B300644",["0B7006440138","",""],["0A0606440138","",""]],"",""],
-  ["",["","0A050646",["0B6806460108","","0B700646"],["","","0A060646"]],"",""],
-  ["",["","0A050648",["0B6806480138","","0B680648"],["0A0606480138","",""]],"",""],
-  ["",["","",["0A06065A0108","","0A06065A"],["","","0A06065A"]],"",""],
-  [["0A0A06A9","","",""],"0B7007700108","",""],
-  [["0A0A06A9","","",""],"0B7007700108","",""],
-  [["0A0A06A9","","",""],["0B7007700148","",""],"",""],
-  ["",["","","0B7007700140",""],"",""],
-  ["","0B7007380108",["","","07380B70",""],""],
-  ["","0B70071C0108",["","","071C0B70",""],""],
-  ["","0B70070E0108",["","","070E0B70",""],""],
-  ["","0B7007380108",["","","07380B70",""],""],
-  ["","0B70071C0108",["","","071C0B70",""],""],
-  ["","0B7007380108",["","","07380B70",""],""],
-  ["",["","",["0A0F137007700108","","0A0F13700770"],""],["","",["0A0F13700770","","0A0F137007700108"],""],""],
-  ["",["","",["0A0F137007700148","","0A0F137007700140"],["0A0F1206066C0148","",""]],["","",["0A0F137007700140","","0A0F137007700148"],""],""],
-  ["","0B70137007700140",["","",["0B7006FF","","0B7006FF0108"],""],""],
-  ["",["0A040648","0B3013300730","0A0F137007700140",""],["","",["0A0F0770","","0A0F07700108"],""],""],
-  [["",["0B7007700108","",""],"",""],["","",["","",["","","0B7006FF0108"],""],""]],
-  ["",["0B70137007700148","",""],"",""],
-  ["",["","0B3013300730",["0B7013700770014A","","0B70137007700142"],""],"",""],
-  ["",["","0B3013300730",["0A0412040644014A","","0A04120406480142"],""],"",""],
-  ["",["","073013300B30","",""],"",""],
-  ["",["","0B3013300730","",""],"",""],
-  ["","0B7007380108",["","","07380B70",""],""],
-  ["","0B70071C0108",["","","071C0B70",""],""],
-  ["","0B70070E0108",["","","070E0B70",""],""],
-  ["","0B7007380108",["","","07380B70",""],""],
-  ["","0B70071C0108",["","","071C0B70",""],""],
-  ["","0B7007380108",["","",["06480A04","07380B70",""],""],""],
-  ["",["","0A051205065A",["0B70137007700148","","0B70137007700140"],["0A061206066C0108","",""]],"",""],
-  ["",["0A040710","0B3013300730","0A0F137007700140",""],"",""],
-  ["","0B70137007700108",["","",["0B7006FF","","0B7006FF0108"],""],""],
-  ["",["0A0412040648","0B3013300730",["0B70137007700148","","0B70137007700140"],["0A061206066C0148","",""]],["","",["0A0F0770","","0A0F07700108"],""],""],
-  ["","0B70137007700108",["","","0B7006FF0100",""],""],
-  ["",["0A0412040648","0B3013300730",["0B70137007700148","","0B70137007700140"],["0A061206066C0148","",""]],"",""],
-  ["","0B70137007700108","",""],
-  ["",["0A0412040648","0B3013300730",["0B70137007700148","","0B70137007700140"],["0A061206066C0148","",""]],"",""],
-  ["","0B70137007700108","",""],
-  ["",["0A0412040648","0B3013300730",["0B70137007700148","","0B70137007700140"],["0A061206066C0148","",""]],"",""],
-  ["",["0A0412040648","0B3013300730",["0B70137007700148","","0B70137007700140"],["0A061206066C0148","",""]],"",""],
-  ["",["0A040648",["0A040648","0A040648","",""],"",""],"",""],
-  ["",["","",["0B7007700159","","0B7007700151"],["0A06066C0159","","0A06066C0151"]],"",""],
-  ["",["","",["0A0412040644010A","","0A04120406460102"],""],"",""],
-  ["",["","",["0B7007700148","","0B7007700140"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B70137007700148","","0B70137007700140"],["0A061206066C0148","",""]],"",""],
-  ["",["",["0B3013300730","",""],["0B70137007700148","","0B70137007700140"],["0A061206066C0148","",""]],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B70137007700148","","0B70137007700140"],["0A061206066C0148","",""]],"",""],
-  "","","","",
-  ["",["","",["0B7007700148","","0B7007700140"],""],"",""],
-  ["",["","",["0A04120406440108","","0A0412040646"],""],"",""],
-  ["",["","",["0B7007700148","","0B7007700140"],""],"",""],
-  ["",["","",["0A04120406440108","","0A0412040646"],""],"",""],
-  ["",["","","",["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["","","",["0A061206066C0159","",""]],"",""],
-  ["",["","","",["0A061206066C0159","","0A061206066C0151"]],"",""],
-  ["",["","","",["0A061206066C0159","","0A061206066C0151"]],"",""],
-  "",
-  ["",["","","",["0A061206066C0149","","0A061206066C0141"]],"",""],
-  "","",
-  ["",["","0B300644",["0B7006440128","",""],["0A0606440128","",""]],"",""],
-  ["",["","0B300646",["0B7006460128","","0B7006460120"],["","","0A0606460120"]],"",""],
-  ["",["","0A050648",["0B6806480128","","0B6806480120"],["0A0606480128","",""]],"",""],
-  ["",["","",["0A06065A0128","","0A06065A0120"],["","","0A06065A0120"]],"",""],
-  ["",["","","",["0A06120F066C0148","",""]],"",""],
-  ["",["","","",["0A06120F066C0148","",""]],"",""],
-  ["",["","","",["0A06120F066C0148","",""]],"",""],
-  ["",["","","",["0A06120F066C0148","",""]],"",""],
-  "","","","",
-  ["",["","",["0B70137007700148","","0B70137007700140"],["0A061206066C0148","","0A061206066C0140"]],"",""],
-  ["",["","",["0B70137007700158","","0B70137007700150"],["0A061206066C0158","","0A061206066C0150"]],"",""],
-  ["",["","",["0B70137007700108","","0B7013700770"],""],"",""],
-  "","","","","",
-  ["",["","","",["0A061206066C0148","",""]],"",""],
-  ["",["","","",["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["","","",["0A06120F066C0148","",""]],"",""],
-  ["",["","","",["0A06120F066C0148","",""]],"",""],
-  "","","","",
-  ["",["","","",["0A0F1206066C0148","",""]],"",""],
-  ["",["","",["0B70137007700108","","0B7013700770"],""],"",""],
-  ["",["","",["0B70137007700148","","0B70137007700140"],""],"",""],
-  ["",["","",["0B70137007700148","","0B70137007700140"],""],"",""],
-  ["",["","0B300640",["0B7006400108","",""],""],"",""],
-  ["",["","0B300642",["0B7006420108","",""],""],"",""],
-  ["",["",["","",["0B7006000108","",""],""],"",""]],
-  ["",["",["","",["0B7006100108","",""],""],"",""]],
-  ["",["","",["0B70062F0108","","0B70063F"],""],"",""],
-  ["",["","",["0B70137007700108","","0B7013700770"],""],"",""],
-  ["",["","",["0B70137007700148","","0B70137007700140"],""],"",""],
-  ["",["","",["0B70137007700148","","0B70137007700140"],""],"",""],
-  [["","0B0C060B0180","",""],""],
-  [["","0B0C060B0180","",""],""],
-  [["","0B0C060B0180","",""],""],
-  ["",["","","0B70137007700140",""],"",""],
-  ["",["","","",["0A061206066C014A","",""]],"",""],
-  "",
-  ["",["","","",["0A061206066C0148","",""]],"",""],
-  ["",["","","",["0A061206066C0148","",""]],"",""],
-  ["",["","",["0B7007700108","","0B700770"],""],"",""],
-  ["",["","",["0B7007700108","","0B700770"],""],"",""],
-  ["",["","",["07700B700108","","07700B70"],""],"",""],
-  ["",["","",["07700B700108","","07700B70"],""],"",""],
-  "",
-  ["",["","",["0B70137007700108","","0B7013700770"],""],"",""],
-  "","",
-  ["",["",["0B30073013300124","","0B30064813300124"],["0B700770012C","","0B7007380124"],["0A06066C012C","","0A06065A0124"]],"",""],
-  ["",["",["0A04073012040104","","0B30073013300104"],["0B380770010C","","0B7007700104"],""],"",""],
-  ["",["",["0B30073013300134","","0B30064813300134"],["0B700770013C","","0B7007380134"],["0A06066C013C","","0A06065A0104"]],"",""],
-  ["",["",["0A04073012040104","","0B30073013300104"],["0B380770010C","","0B7007700104"],""],"",""],
-  "","",
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["",["0A0412040714","","0A0412040718"],["0A0412040644010A","","0A04120406460102"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["",["0A0412040714","","0A0412040718"],["0A0412040644010A","","0A04120406460102"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["",["0A0412040714","","0A0412040718"],["0A0412040644010A","","0A04120406460102"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["",["0A0412040714","","0A0412040718"],["0A0412040644010A","","0A04120406460102"],""],"",""],
-  ["",["","",["07700B70010C","","07380B700104"],["066C0A06012C","","065A0A060124"]],"",""],
-  ["",["","",["07700B38010C","","07700B700104"],""],"",""],
-  ["",["","",["07700B70013C","","07380B700134"],["066C0A06013C","","065A0A060134"]],"",""],
-  ["",["","",["07700B38010C","","07700B700104"],""],"",""],
-  ["",["","","",["0A061206066C011A","",""]],"",""],
-  "",
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["",["0A0412040644","","0A0412040646"],["0A0412040644010A","","0A04120406460102"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["",["0A0412040644","","0A0412040646"],["0A0412040644010A","","0A04120406460102"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["",["0A0412040644","","0A0412040646"],["0A0412040644010A","","0A04120406460102"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["",["0A0412040644","","0A0412040646"],["0A0412040644010A","","0A04120406460102"],""],"",""],
-  "","","","",
-  ["",["","","0B70137007700140",["0A061206066C0118","",""]],"",""],
-  ["",["","","0B70137007700140",["0A061206066C0148","",""]],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["",["0A0412040644","","0A0412040646"],["0A0412040644010A","","0A04120406460102"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["",["0A0412040644","","0A0412040646"],["0A0412040644010A","","0A04120406460102"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["",["0A0412040644","","0A0412040646"],["0A0412040644010A","","0A04120406460102"],""],"",""],
-  ["",["",["0B3013300730","","0B3013300730"],["0B7013700770014A","","0B70137007700142"],["0A061206066C015A","","0A061206066C0152"]],"",""],
-  ["",["",["0A0412040644","","0A0412040646"],["0A0412040644010A","","0A04120406460102"],""],"",""],
-  "","","","",
-  ["",["","",["0B7007700148","","0B7007700140"],""],"",""],
-  "",
-  [
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300730", "", ""], "", ""],
+    [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300730", "", ""], "", ""],
+    [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300730", "", ""], "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300730", "", ""], "", ""],
+    [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300730", "", ""], "", ""],
+    [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300730", "", ""], "", ""],
+    [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300730", "", ""], "", ""],
+    [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300730", "", ""], "", ""],
+    [["0A0A06A9", "", "", ""], ["0A040648", "0B3013300730", "", ""], "", ""],
+    [["0A0A06A9", "", "", ""], "0B70137007700108", "", ""],
+    ["", ["", "0B3013300730", ["0B70137007700148", "", ""], ""], "", ""],
+    ["", ["", "0B3013300730", "0B70137007700140", ""], "", ""],
+    ["", ["", "0B300730", "", ""], "", ""],
+    ["", ["", "0B300730", "", ""], "", ""],
+    ["", ["0A0406482E00", "0B30133007301530", "0B7013700770", ""], ["", "", "07380B70", ""], ""],
+    ["", ["", "", "0B7013700770", ""], ["", "", "071C0B70", ""], ""],
+    ["", ["", "", "0B7013700770", ""], ["", "", "070E0B70", ""], ""],
+    ["", ["", "0B300718", ["0B7007380109", "", ""], ""], ["", "", "07380B70", ""], ""],
     [
-      ["",["","","",["060C013C","","060A0134"]],"",""],
-      ["",["","",["060C013C","","060A0134"],["060C013C","",""]],"",""],
-      ["",["","",["060C013C","","070A0134"],["060C013C","",""]],"",""],
-      "",
-      ["",["","","",["060C013C","","060A0134"]],"",""],
-      ["",["","",["060C013C","","060A0134"],["060C013C","",""]],"",""],
-      ["",["","",["060C013C","","060A0134"],["060C013C","",""]],"",""],
-      ""
-    ],""
-  ],
-  [
+        "",
+        ["0A0407102E00", "0B30133007301530", ["0B70137007700148", "", "0B70137007700140"], ""],
+        ["", "", "071C0B70", ""],
+        ""
+    ],
     [
-      "",
-      ["",["","",["060C010C","","060C0104"],""],"",""],
-      ["",["","",["060C010C","","060C0104"],""],"",""],
-      "","",
-      ["",["","",["060C010C","","060C0104"],""],"",""],
-      ["",["","",["060C010C","","060C0104"],""],"",""],
-      ""
-    ],""
-  ],
-  [["0A040648","","",""],["","",["0A06066C0159","","0A06066C0151"],["0A06066C0109","",""]],"",""],
-  [["0A040648","","",""],["","","",["0A06066C0109","",""]],"",""],
-  [["0A040648","","",""],["","",["0A06066C0159","","0A06066C0151"],["0A06066C0109","",""]],"",""],
-  [["0A0406482E00","","",""],["","",["0A04120406440109","","0A04120406460101"],["0A06066C0109","",""]],"",""],
-  [["0A040648","","",""],["","",["0A06066C0159","","0A06066C0151"],["0A06066C015A","",""]],"",""],
-  [["0A040648","","",""],["","",["0A04120406440109","","0A04120406460101"],["0A06066C0148","",""]],"",""],
-  "","",
-  [[["","","",["0A06060C0120","","0A06060C0128"]],["","","",["060C0A060128","","060C0A060120"]],"",""],""],
-  [[["","","",["0A06060C0130","","0A06060C0138"]],["","","",["060C0A060138","","060C0A060130"]],"",""],""],
-  "","",
-  [[["","","",["0A06060C0120","","0A06060C0128"]],["","","",["060C0A060128","","060C0A060120"]],"",""],""],
-  [[["","","",["0A06060C0130","","0A06060C0138"]],["","","",["060C0A060138","","060C0A060130"]],"",""],""],
-  "","","","","",
-  ["",["0A040648","0A040648","",""],"",""],
-  ["",["0A040648","0A0412040648","",""],"",""],
-  ["",["0A040648","0A0412040648","",""],"",""],
-  ["",["0A040648","0A0412040648","",""],"",""],
-  ["",["0A040648","0A0412040648","",""],"",""],
-  "","","","","","","","","","","","","","","","",
-  [
-    ["0B0E070E0180","","",""],
-    ["0B0E070E0180","","",""],"",
-    ["0B0C06000180","","",""]
-  ],
-  [
-    ["070E0B0E0180","","",""],
-    ["070E0B0E0180","","",""],"",
-    ["0B0C070E0180","","",""]
-  ],
-  ["",["","0B0C130C070C","",""],"",""],
-  [
+        "",
+        ["0A0407102E00", "0B30133007301530", ["0B70137007700148", "", "0B70137007700140"], ""],
+        ["", "", "07380B70", ""],
+        ""
+    ],
+    ["", ["", "0B3013300730", ["0B70137007700148", "", "0B70137007700140"], ""], "", ""],
+    ["", ["0A040648", "0B300730", "", ""], "", ""],
+    ["", ["", "0B300644", ["0B7006440138", "", ""], ["0A0606440138", "", ""]], "", ""],
+    ["", ["", "0A050646", ["0B6806460108", "", "0B700646"], ["", "", "0A060646"]], "", ""],
+    ["", ["", "0A050648", ["0B6806480138", "", "0B680648"], ["0A0606480138", "", ""]], "", ""],
+    ["", ["", "", ["0A06065A0108", "", "0A06065A"], ["", "", "0A06065A"]], "", ""],
+    [["0A0A06A9", "", "", ""], "0B7007700108", "", ""],
+    [["0A0A06A9", "", "", ""], "0B7007700108", "", ""],
+    [["0A0A06A9", "", "", ""], ["0B7007700148", "", ""], "", ""],
+    ["", ["", "", "0B7007700140", ""], "", ""],
+    ["", "0B7007380108", ["", "", "07380B70", ""], ""],
+    ["", "0B70071C0108", ["", "", "071C0B70", ""], ""],
+    ["", "0B70070E0108", ["", "", "070E0B70", ""], ""],
+    ["", "0B7007380108", ["", "", "07380B70", ""], ""],
+    ["", "0B70071C0108", ["", "", "071C0B70", ""], ""],
+    ["", "0B7007380108", ["", "", "07380B70", ""], ""],
+    [
+        "",
+        ["", "", ["0A0F137007700108", "", "0A0F13700770"], ""],
+        ["", "", ["0A0F13700770", "", "0A0F137007700108"], ""],
+        ""
+    ],
+    [
+        "",
+        ["", "", ["0A0F137007700148", "", "0A0F137007700140"], ["0A0F1206066C0148", "", ""]],
+        ["", "", ["0A0F137007700140", "", "0A0F137007700148"], ""],
+        ""
+    ],
+    ["", "0B70137007700140", ["", "", ["0B7006FF", "", "0B7006FF0108"], ""], ""],
+    ["", ["0A040648", "0B3013300730", "0A0F137007700140", ""], ["", "", ["0A0F0770", "", "0A0F07700108"], ""], ""],
+    [
+        ["", ["0B7007700108", "", ""], "", ""],
+        ["", "", ["", "", ["", "", "0B7006FF0108"], ""], ""]
+    ],
+    ["", ["0B70137007700148", "", ""], "", ""],
+    ["", ["", "0B3013300730", ["0B7013700770014A", "", "0B70137007700142"], ""], "", ""],
+    ["", ["", "0B3013300730", ["0A0412040644014A", "", "0A04120406480142"], ""], "", ""],
+    ["", ["", "073013300B30", "", ""], "", ""],
+    ["", ["", "0B3013300730", "", ""], "", ""],
+    ["", "0B7007380108", ["", "", "07380B70", ""], ""],
+    ["", "0B70071C0108", ["", "", "071C0B70", ""], ""],
+    ["", "0B70070E0108", ["", "", "070E0B70", ""], ""],
+    ["", "0B7007380108", ["", "", "07380B70", ""], ""],
+    ["", "0B70071C0108", ["", "", "071C0B70", ""], ""],
+    ["", "0B7007380108", ["", "", ["06480A04", "07380B70", ""], ""], ""],
+    ["", ["", "0A051205065A", ["0B70137007700148", "", "0B70137007700140"], ["0A061206066C0108", "", ""]], "", ""],
+    ["", ["0A040710", "0B3013300730", "0A0F137007700140", ""], "", ""],
+    ["", "0B70137007700108", ["", "", ["0B7006FF", "", "0B7006FF0108"], ""], ""],
+    [
+        "",
+        ["0A0412040648", "0B3013300730", ["0B70137007700148", "", "0B70137007700140"], ["0A061206066C0148", "", ""]],
+        ["", "", ["0A0F0770", "", "0A0F07700108"], ""],
+        ""
+    ],
+    ["", "0B70137007700108", ["", "", "0B7006FF0100", ""], ""],
+    [
+        "",
+        ["0A0412040648", "0B3013300730", ["0B70137007700148", "", "0B70137007700140"], ["0A061206066C0148", "", ""]],
+        "",
+        ""
+    ],
+    ["", "0B70137007700108", "", ""],
+    [
+        "",
+        ["0A0412040648", "0B3013300730", ["0B70137007700148", "", "0B70137007700140"], ["0A061206066C0148", "", ""]],
+        "",
+        ""
+    ],
+    ["", "0B70137007700108", "", ""],
+    [
+        "",
+        ["0A0412040648", "0B3013300730", ["0B70137007700148", "", "0B70137007700140"], ["0A061206066C0148", "", ""]],
+        "",
+        ""
+    ],
+    [
+        "",
+        ["0A0412040648", "0B3013300730", ["0B70137007700148", "", "0B70137007700140"], ["0A061206066C0148", "", ""]],
+        "",
+        ""
+    ],
+    ["", ["0A040648", ["0A040648", "0A040648", "", ""], "", ""], "", ""],
+    ["", ["", "", ["0B7007700159", "", "0B7007700151"], ["0A06066C0159", "", "0A06066C0151"]], "", ""],
+    ["", ["", "", ["0A0412040644010A", "", "0A04120406460102"], ""], "", ""],
+    ["", ["", "", ["0B7007700148", "", "0B7007700140"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B70137007700148", "", "0B70137007700140"],
+            ["0A061206066C0148", "", ""]
+        ],
+        "",
+        ""
+    ],
+    [
+        "",
+        ["", ["0B3013300730", "", ""], ["0B70137007700148", "", "0B70137007700140"], ["0A061206066C0148", "", ""]],
+        "",
+        ""
+    ],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B70137007700148", "", "0B70137007700140"],
+            ["0A061206066C0148", "", ""]
+        ],
+        "",
+        ""
+    ],
     "",
-    ["",["","130C070C","",""],"",""],
-    ["",["","130C070C","",""],"",""],
-    ["",["","130C070C","",""],"",""],
-    "","","",""
-  ],"",
-  [
-    ["","0B0C070C130C","",""],"",
-    ["","0B0C130C070C","",""],
-    ["","0B0C130C070C","",""]
-  ],
-  [
     "",
-    ["0B0C070C","","",""],
-    ["0B0C070C","","",""],
-    ["","0B0C130C070C1B0C","",""]
-  ],
-  [
-    ["","0B0C130C070C","",""],
-    ["","0B0C130C070C","",""],
-    ["","0B0C130C070C","",""],
-    ["","0B0C130C070C","",""]
-  ],
-  "","","","","","","","",
-  /*------------------------------------------------------------------------------------------------------------------------
+    "",
+    "",
+    ["", ["", "", ["0B7007700148", "", "0B7007700140"], ""], "", ""],
+    ["", ["", "", ["0A04120406440108", "", "0A0412040646"], ""], "", ""],
+    ["", ["", "", ["0B7007700148", "", "0B7007700140"], ""], "", ""],
+    ["", ["", "", ["0A04120406440108", "", "0A0412040646"], ""], "", ""],
+    ["", ["", "", "", ["0A061206066C015A", "", "0A061206066C0152"]], "", ""],
+    ["", ["", "", "", ["0A061206066C0159", "", ""]], "", ""],
+    ["", ["", "", "", ["0A061206066C0159", "", "0A061206066C0151"]], "", ""],
+    ["", ["", "", "", ["0A061206066C0159", "", "0A061206066C0151"]], "", ""],
+    "",
+    ["", ["", "", "", ["0A061206066C0149", "", "0A061206066C0141"]], "", ""],
+    "",
+    "",
+    ["", ["", "0B300644", ["0B7006440128", "", ""], ["0A0606440128", "", ""]], "", ""],
+    ["", ["", "0B300646", ["0B7006460128", "", "0B7006460120"], ["", "", "0A0606460120"]], "", ""],
+    ["", ["", "0A050648", ["0B6806480128", "", "0B6806480120"], ["0A0606480128", "", ""]], "", ""],
+    ["", ["", "", ["0A06065A0128", "", "0A06065A0120"], ["", "", "0A06065A0120"]], "", ""],
+    ["", ["", "", "", ["0A06120F066C0148", "", ""]], "", ""],
+    ["", ["", "", "", ["0A06120F066C0148", "", ""]], "", ""],
+    ["", ["", "", "", ["0A06120F066C0148", "", ""]], "", ""],
+    ["", ["", "", "", ["0A06120F066C0148", "", ""]], "", ""],
+    "",
+    "",
+    "",
+    "",
+    ["", ["", "", ["0B70137007700148", "", "0B70137007700140"], ["0A061206066C0148", "", "0A061206066C0140"]], "", ""],
+    ["", ["", "", ["0B70137007700158", "", "0B70137007700150"], ["0A061206066C0158", "", "0A061206066C0150"]], "", ""],
+    ["", ["", "", ["0B70137007700108", "", "0B7013700770"], ""], "", ""],
+    "",
+    "",
+    "",
+    "",
+    "",
+    ["", ["", "", "", ["0A061206066C0148", "", ""]], "", ""],
+    ["", ["", "", "", ["0A061206066C015A", "", "0A061206066C0152"]], "", ""],
+    ["", ["", "", "", ["0A06120F066C0148", "", ""]], "", ""],
+    ["", ["", "", "", ["0A06120F066C0148", "", ""]], "", ""],
+    "",
+    "",
+    "",
+    "",
+    ["", ["", "", "", ["0A0F1206066C0148", "", ""]], "", ""],
+    ["", ["", "", ["0B70137007700108", "", "0B7013700770"], ""], "", ""],
+    ["", ["", "", ["0B70137007700148", "", "0B70137007700140"], ""], "", ""],
+    ["", ["", "", ["0B70137007700148", "", "0B70137007700140"], ""], "", ""],
+    ["", ["", "0B300640", ["0B7006400108", "", ""], ""], "", ""],
+    ["", ["", "0B300642", ["0B7006420108", "", ""], ""], "", ""],
+    ["", ["", ["", "", ["0B7006000108", "", ""], ""], "", ""]],
+    ["", ["", ["", "", ["0B7006100108", "", ""], ""], "", ""]],
+    ["", ["", "", ["0B70062F0108", "", "0B70063F"], ""], "", ""],
+    ["", ["", "", ["0B70137007700108", "", "0B7013700770"], ""], "", ""],
+    ["", ["", "", ["0B70137007700148", "", "0B70137007700140"], ""], "", ""],
+    ["", ["", "", ["0B70137007700148", "", "0B70137007700140"], ""], "", ""],
+    [["", "0B0C060B0180", "", ""], ""],
+    [["", "0B0C060B0180", "", ""], ""],
+    [["", "0B0C060B0180", "", ""], ""],
+    ["", ["", "", "0B70137007700140", ""], "", ""],
+    ["", ["", "", "", ["0A061206066C014A", "", ""]], "", ""],
+    "",
+    ["", ["", "", "", ["0A061206066C0148", "", ""]], "", ""],
+    ["", ["", "", "", ["0A061206066C0148", "", ""]], "", ""],
+    ["", ["", "", ["0B7007700108", "", "0B700770"], ""], "", ""],
+    ["", ["", "", ["0B7007700108", "", "0B700770"], ""], "", ""],
+    ["", ["", "", ["07700B700108", "", "07700B70"], ""], "", ""],
+    ["", ["", "", ["07700B700108", "", "07700B70"], ""], "", ""],
+    "",
+    ["", ["", "", ["0B70137007700108", "", "0B7013700770"], ""], "", ""],
+    "",
+    "",
+    [
+        "",
+        [
+            "",
+            ["0B30073013300124", "", "0B30064813300124"],
+            ["0B700770012C", "", "0B7007380124"],
+            ["0A06066C012C", "", "0A06065A0124"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A04073012040104", "", "0B30073013300104"], ["0B380770010C", "", "0B7007700104"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B30073013300134", "", "0B30064813300134"],
+            ["0B700770013C", "", "0B7007380134"],
+            ["0A06066C013C", "", "0A06065A0104"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A04073012040104", "", "0B30073013300104"], ["0B380770010C", "", "0B7007700104"], ""], "", ""],
+    "",
+    "",
+    ["", ["", ["0B3013300730", "", "0B3013300730"], ["0B7013700770014A", "", "0B70137007700142"], ""], "", ""],
+    ["", ["", ["0B3013300730", "", "0B3013300730"], ["0B7013700770014A", "", "0B70137007700142"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B7013700770014A", "", "0B70137007700142"],
+            ["0A061206066C015A", "", "0A061206066C0152"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A0412040714", "", "0A0412040718"], ["0A0412040644010A", "", "0A04120406460102"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B7013700770014A", "", "0B70137007700142"],
+            ["0A061206066C015A", "", "0A061206066C0152"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A0412040714", "", "0A0412040718"], ["0A0412040644010A", "", "0A04120406460102"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B7013700770014A", "", "0B70137007700142"],
+            ["0A061206066C015A", "", "0A061206066C0152"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A0412040714", "", "0A0412040718"], ["0A0412040644010A", "", "0A04120406460102"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B7013700770014A", "", "0B70137007700142"],
+            ["0A061206066C015A", "", "0A061206066C0152"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A0412040714", "", "0A0412040718"], ["0A0412040644010A", "", "0A04120406460102"], ""], "", ""],
+    ["", ["", "", ["07700B70010C", "", "07380B700104"], ["066C0A06012C", "", "065A0A060124"]], "", ""],
+    ["", ["", "", ["07700B38010C", "", "07700B700104"], ""], "", ""],
+    ["", ["", "", ["07700B70013C", "", "07380B700134"], ["066C0A06013C", "", "065A0A060134"]], "", ""],
+    ["", ["", "", ["07700B38010C", "", "07700B700104"], ""], "", ""],
+    ["", ["", "", "", ["0A061206066C011A", "", ""]], "", ""],
+    "",
+    ["", ["", ["0B3013300730", "", "0B3013300730"], ["0B7013700770014A", "", "0B70137007700142"], ""], "", ""],
+    ["", ["", ["0B3013300730", "", "0B3013300730"], ["0B7013700770014A", "", "0B70137007700142"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B7013700770014A", "", "0B70137007700142"],
+            ["0A061206066C015A", "", "0A061206066C0152"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A0412040644", "", "0A0412040646"], ["0A0412040644010A", "", "0A04120406460102"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B7013700770014A", "", "0B70137007700142"],
+            ["0A061206066C015A", "", "0A061206066C0152"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A0412040644", "", "0A0412040646"], ["0A0412040644010A", "", "0A04120406460102"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B7013700770014A", "", "0B70137007700142"],
+            ["0A061206066C015A", "", "0A061206066C0152"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A0412040644", "", "0A0412040646"], ["0A0412040644010A", "", "0A04120406460102"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B7013700770014A", "", "0B70137007700142"],
+            ["0A061206066C015A", "", "0A061206066C0152"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A0412040644", "", "0A0412040646"], ["0A0412040644010A", "", "0A04120406460102"], ""], "", ""],
+    "",
+    "",
+    "",
+    "",
+    ["", ["", "", "0B70137007700140", ["0A061206066C0118", "", ""]], "", ""],
+    ["", ["", "", "0B70137007700140", ["0A061206066C0148", "", ""]], "", ""],
+    ["", ["", ["0B3013300730", "", "0B3013300730"], ["0B7013700770014A", "", "0B70137007700142"], ""], "", ""],
+    ["", ["", ["0B3013300730", "", "0B3013300730"], ["0B7013700770014A", "", "0B70137007700142"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B7013700770014A", "", "0B70137007700142"],
+            ["0A061206066C015A", "", "0A061206066C0152"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A0412040644", "", "0A0412040646"], ["0A0412040644010A", "", "0A04120406460102"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B7013700770014A", "", "0B70137007700142"],
+            ["0A061206066C015A", "", "0A061206066C0152"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A0412040644", "", "0A0412040646"], ["0A0412040644010A", "", "0A04120406460102"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B7013700770014A", "", "0B70137007700142"],
+            ["0A061206066C015A", "", "0A061206066C0152"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A0412040644", "", "0A0412040646"], ["0A0412040644010A", "", "0A04120406460102"], ""], "", ""],
+    [
+        "",
+        [
+            "",
+            ["0B3013300730", "", "0B3013300730"],
+            ["0B7013700770014A", "", "0B70137007700142"],
+            ["0A061206066C015A", "", "0A061206066C0152"]
+        ],
+        "",
+        ""
+    ],
+    ["", ["", ["0A0412040644", "", "0A0412040646"], ["0A0412040644010A", "", "0A04120406460102"], ""], "", ""],
+    "",
+    "",
+    "",
+    "",
+    ["", ["", "", ["0B7007700148", "", "0B7007700140"], ""], "", ""],
+    "",
+    [
+        [
+            ["", ["", "", "", ["060C013C", "", "060A0134"]], "", ""],
+            ["", ["", "", ["060C013C", "", "060A0134"], ["060C013C", "", ""]], "", ""],
+            ["", ["", "", ["060C013C", "", "070A0134"], ["060C013C", "", ""]], "", ""],
+            "",
+            ["", ["", "", "", ["060C013C", "", "060A0134"]], "", ""],
+            ["", ["", "", ["060C013C", "", "060A0134"], ["060C013C", "", ""]], "", ""],
+            ["", ["", "", ["060C013C", "", "060A0134"], ["060C013C", "", ""]], "", ""],
+            ""
+        ],
+        ""
+    ],
+    [
+        [
+            "",
+            ["", ["", "", ["060C010C", "", "060C0104"], ""], "", ""],
+            ["", ["", "", ["060C010C", "", "060C0104"], ""], "", ""],
+            "",
+            "",
+            ["", ["", "", ["060C010C", "", "060C0104"], ""], "", ""],
+            ["", ["", "", ["060C010C", "", "060C0104"], ""], "", ""],
+            ""
+        ],
+        ""
+    ],
+    [["0A040648", "", "", ""], ["", "", ["0A06066C0159", "", "0A06066C0151"], ["0A06066C0109", "", ""]], "", ""],
+    [["0A040648", "", "", ""], ["", "", "", ["0A06066C0109", "", ""]], "", ""],
+    [["0A040648", "", "", ""], ["", "", ["0A06066C0159", "", "0A06066C0151"], ["0A06066C0109", "", ""]], "", ""],
+    [
+        ["0A0406482E00", "", "", ""],
+        ["", "", ["0A04120406440109", "", "0A04120406460101"], ["0A06066C0109", "", ""]],
+        "",
+        ""
+    ],
+    [["0A040648", "", "", ""], ["", "", ["0A06066C0159", "", "0A06066C0151"], ["0A06066C015A", "", ""]], "", ""],
+    [
+        ["0A040648", "", "", ""],
+        ["", "", ["0A04120406440109", "", "0A04120406460101"], ["0A06066C0148", "", ""]],
+        "",
+        ""
+    ],
+    "",
+    "",
+    [
+        [
+            ["", "", "", ["0A06060C0120", "", "0A06060C0128"]],
+            ["", "", "", ["060C0A060128", "", "060C0A060120"]],
+            "",
+            ""
+        ],
+        ""
+    ],
+    [
+        [
+            ["", "", "", ["0A06060C0130", "", "0A06060C0138"]],
+            ["", "", "", ["060C0A060138", "", "060C0A060130"]],
+            "",
+            ""
+        ],
+        ""
+    ],
+    "",
+    "",
+    [
+        [
+            ["", "", "", ["0A06060C0120", "", "0A06060C0128"]],
+            ["", "", "", ["060C0A060128", "", "060C0A060120"]],
+            "",
+            ""
+        ],
+        ""
+    ],
+    [
+        [
+            ["", "", "", ["0A06060C0130", "", "0A06060C0138"]],
+            ["", "", "", ["060C0A060138", "", "060C0A060130"]],
+            "",
+            ""
+        ],
+        ""
+    ],
+    "",
+    "",
+    "",
+    "",
+    "",
+    ["", ["0A040648", "0A040648", "", ""], "", ""],
+    ["", ["0A040648", "0A0412040648", "", ""], "", ""],
+    ["", ["0A040648", "0A0412040648", "", ""], "", ""],
+    ["", ["0A040648", "0A0412040648", "", ""], "", ""],
+    ["", ["0A040648", "0A0412040648", "", ""], "", ""],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    [["0B0E070E0180", "", "", ""], ["0B0E070E0180", "", "", ""], "", ["0B0C06000180", "", "", ""]],
+    [["070E0B0E0180", "", "", ""], ["070E0B0E0180", "", "", ""], "", ["0B0C070E0180", "", "", ""]],
+    ["", ["", "0B0C130C070C", "", ""], "", ""],
+    [
+        "",
+        ["", ["", "130C070C", "", ""], "", ""],
+        ["", ["", "130C070C", "", ""], "", ""],
+        ["", ["", "130C070C", "", ""], "", ""],
+        "",
+        "",
+        "",
+        ""
+    ],
+    "",
+    [["", "0B0C070C130C", "", ""], "", ["", "0B0C130C070C", "", ""], ["", "0B0C130C070C", "", ""]],
+    ["", ["0B0C070C", "", "", ""], ["0B0C070C", "", "", ""], ["", "0B0C130C070C1B0C", "", ""]],
+    [
+        ["", "0B0C130C070C", "", ""],
+        ["", "0B0C130C070C", "", ""],
+        ["", "0B0C130C070C", "", ""],
+        ["", "0B0C130C070C", "", ""]
+    ],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    /*------------------------------------------------------------------------------------------------------------------------
   Three Byte operations 0F3A.
   ------------------------------------------------------------------------------------------------------------------------*/
-  ["",["","0A05065A0C00","0B7007700C000140",""],"",""],
-  ["",["","0A05065A0C00","0B7007700C000140",""],"",""],
-  ["",["",["0B30133007300C00","",""],"",""],"",""],
-  ["",["","",["0B70137007700C000148","","0B70137007700C000140"],["0A061206066C0C000108","",""]],"",""],
-  ["",["","0B3007300C00",["0B7007700C000148","",""],""],"",""],
-  ["",["","0B3007300C00","0B7007700C000140",""],"",""],
-  ["",["","0A051205065A0C00","",""],"",""],
-  ["",["","","",["0A06066C0C000108","",""]],"",""],
-  ["",["0A0406480C00","0B3007300C00",["0B7007700C000149","",""],""],"",""],
-  ["",["0A0406480C00","0B3007300C00","0B7007700C000141",""],"",""],
-  ["",["0A0406440C00","0A04120406440C00",["0A04120406440C000109","",""],""],"",""],
-  ["",["0A0406460C00","0A04120406460C00","0A04120406460C000101",""],"",""],
-  ["",["0A0406480C00","0B30133007300C00","",""],"",""],
-  ["",["0A0406480C00","0B30133007300C00","",""],"",""],
-  ["",["0A0406480C00","0B30133007300C00","",""],"",""],
-  [["0A0A06A90C00","","",""],"0B70137007700C000108","",""],
-  "","","","",
-  [["","06000A040C000108","",""],["","070C0A040C000108","",""]],
-  [["","06020A040C000108","",""],["","070C0A040C000108","",""]],
-  ["",["06240A040C000108","","06360A040C00"],"",""],
-  ["","070C0A040C000108","",""],
-  ["",["","0A05120506480C00",["0B70137006480C000108","","0B70137006480C00"],""],"",""],
-  ["",["","06480A050C00",["06480B700C000108","","06480B700C00"],""],"",""],
-  ["",["","",["0A061206065A0C000108","","0A061206065A0C00"],""],"",""],
-  ["",["","",["065A0A060C000108","","065A0A060C00"],""],"",""],
-  "",
-  ["",["","07180B300C00",["07380B700C000109","",""],""],"",""],
-  ["",["","",["0A0F137007700C000148","","0A0F137007700C000140"],["0A0F1206066C0C000148","",""]],"",""],
-  ["",["","",["0A0F137007700C000148","","0A0F137007700C000140"],["0A0F1206066C0C000148","",""]],"",""],
-  ["","0A04120406200C000108","",""],
-  ["",["0A04120406440C000108","",""],"",""],
-  ["",["",["0A04120406240C00","","0A04120406360C00"],["0A04120406240C000108","","0A04120406360C00"],""],"",""],
-  ["",["","",["0B70137007700C000148","","0B70137007700C000140"],""],"",""],
-  "",
-  ["",["","",["0B70137007700C000148","","0B70137007700C000140"],""],"",""],
-  ["",["","",["0B7007700C000149","","0B7007700C000141"],["0A06066C0C000159","","0A06066C0C000151"]],"",""],
-  ["",["","",["0A04120406440C000109","","0A04120406460C000101"],""],"",""],
-  "","","","","","","","",
-  ["",["",["0A0F06FF0C00","","0A0F06FF0C00"],"",""],"",""],
-  ["",["",["0A0F06FF0C00","","0A0F06FF0C00"],"",""],"",""],
-  ["",["",["0A0F06FF0C00","","0A0F06FF0C00"],"",""],"",""],
-  ["",["",["0A0F06FF0C00","","0A0F06FF0C00"],"",""],"",""],
-  "","","","",
-  ["",["","0A05120506480C00",["0B70137006480C000108","","0B70137006480C00"],""],"",""],
-  ["",["","06480A050C00",["06480B700C000108","","06480B700C00"],""],"",""],
-  ["",["","",["0A061206065A0C000108","","0A061206065A0C00"],""],"",""],
-  ["",["","",["065A0A060C000108","","065A0A060C00"],""],"",""],
-  "","",
-  ["",["","0A0F063F0C00",["0A0F137007700C000108","","0A0F137007700C00"],""],"",""],
-  ["",["","",["0A0F137007700C000108","","0A0F137007700C00"],""],"",""],
-  ["",["0A0406480C00","0B30133007300C00","",""],"",""],
-  ["",["0A0406480C00","0A04120406480C00","",""],"",""],
-  ["",["0A0406480C00","0B30133007300C00",["0B70137007700C000108","",""],""],"",""],
-  ["",["","",["0B70137007700C000148","","0B70137007700C000140"],""],"",""],
-  ["",["0A0406480C00","0A04120406480C00","",""],"",""],
-  "",
-  ["",["","0A051205065A0C00","",""],"",""],
-  "",
-  ["",["",["0B301330073015300E00","","0B301330153007300E00"],"",""],"",""],
-  ["",["",["0B301330073015300E00","","0B301330153007300E00"],"",""],"",""],
-  ["",["","0B30133007301530","",""],"",""],
-  ["",["","0B30133007301530","",""],"",""],
-  ["",["","0A051205065A1505","",""],"",""],
-  "","","",
-  ["",["","",["0B70137007700C000149","","0B70137007700C000141"],""],"",""],
-  ["",["","",["0A04120406440C000109","","0A04120406460C000101"],""],"",""],
-  ["",["","","",["0A06066C0C000159","","0A06066C0C000151"]],"",""],
-  "",
-  ["",["","",["0B70137007700C000149","","0B70137007700C000141"],""],"",""],
-  ["",["","",["0A04120406440C000109","","0A04120406460C000101"],""],"",""],
-  ["",["","",["0B7007700C000149","","0B7007700C000141"],""],"",""],
-  ["",["","",["0A04120406440C000109","","0A04120406460C000101"],""],"",""],
-  "","","","",
-  ["",["",["0B30133007301530","","0B30133015300730"],"",""],"",""],
-  ["",["",["0B30133007301530","","0B30133015300730"],"",""],"",""],
-  ["",["",["0B30133007301530","","0B30133015300730"],"",""],"",""],
-  ["",["",["0B30133007301530","","0B30133015300730"],"",""],"",""],
-  ["",["0A0406480C00","0A0406480C00","",""],"",""],
-  ["",["0A0406480C00","0A0406480C00","",""],"",""],
-  ["",["0A0406480C00","0A0406480C00","",""],"",""],
-  ["",["0A0406480C00","0A0406480C00","",""],"",""],
-  "","",
-  ["",["","",["0A0F07700C000148","","0A0F07700C000140"],""],"",""],
-  ["",["","",["0A0F06440C000108","","0A0F06460C00"],""],"",""],
-  ["",["",["0B30133007301530","","0B30133015300730"],"",""],"",""],
-  ["",["",["0B30133007301530","","0B30133015300730"],"",""],"",""],
-  ["",["",["0A04120406441530","","0A04120415300644"],"",""],"",""],
-  ["",["",["0A04120406461530","","0A04120415300646"],"",""],"",""],
-  ["",["",["0B30133007301530","","0B30133015300730"],"",""],"",""],
-  ["",["",["0B30133007301530","","0B30133015300730"],"",""],"",""],
-  ["",["",["0A04120406441530","","0A04120415300644"],"",""],"",""],
-  ["",["",["0A04120406461530","","0A04120415300646"],"",""],"",""],
-  "","","","","","","","",
-  ["",["",["0B30133007301530","","0B30133015300730"],"",""],"",""],
-  ["",["",["0B30133007301530","","0B30133015300730"],"",""],"",""],
-  ["",["",["0A04120406441530","","0A04120415300644"],"",""],"",""],
-  ["",["",["0A04120406461530","","0A04120415300646"],"",""],"",""],
-  ["",["",["0B30133007301530","","0B30133015300730"],"",""],"",""],
-  ["",["",["0B30133007301530","","0B30133015300730"],"",""],"",""],
-  ["",["",["0A04120406441530","","0A04120415300644"],"",""],"",""],
-  ["",["",["0A04120406461530","","0A04120415300646"],"",""],"",""],
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","",
-  [["","","","0A06066C0C000141"],["","","",["0A06066C0C000159","",""]],"",["","","","0A06066C0C000151"]],
-  [["","","","0A06066C0C000141"],["","","",["0A06066C0C000159","",""]],"",""],
-  "0A0406480C00","","","",
-  "","","","","","","","","","","","","","","",
-  ["",["0A0406480C00","0A0406480C00","",""],"",""],
-  "","","","","","",
-  ["","","",["","","","0A06066C0C000151"]],
-  "","","","","","","","","",
-  ["","","",["","0B0C070C0C00","",""]],
-  "","","","","","","","","","","","","","","",
-  /*------------------------------------------------------------------------------------------------------------------------
+    ["", ["", "0A05065A0C00", "0B7007700C000140", ""], "", ""],
+    ["", ["", "0A05065A0C00", "0B7007700C000140", ""], "", ""],
+    ["", ["", ["0B30133007300C00", "", ""], "", ""], "", ""],
+    ["", ["", "", ["0B70137007700C000148", "", "0B70137007700C000140"], ["0A061206066C0C000108", "", ""]], "", ""],
+    ["", ["", "0B3007300C00", ["0B7007700C000148", "", ""], ""], "", ""],
+    ["", ["", "0B3007300C00", "0B7007700C000140", ""], "", ""],
+    ["", ["", "0A051205065A0C00", "", ""], "", ""],
+    ["", ["", "", "", ["0A06066C0C000108", "", ""]], "", ""],
+    ["", ["0A0406480C00", "0B3007300C00", ["0B7007700C000149", "", ""], ""], "", ""],
+    ["", ["0A0406480C00", "0B3007300C00", "0B7007700C000141", ""], "", ""],
+    ["", ["0A0406440C00", "0A04120406440C00", ["0A04120406440C000109", "", ""], ""], "", ""],
+    ["", ["0A0406460C00", "0A04120406460C00", "0A04120406460C000101", ""], "", ""],
+    ["", ["0A0406480C00", "0B30133007300C00", "", ""], "", ""],
+    ["", ["0A0406480C00", "0B30133007300C00", "", ""], "", ""],
+    ["", ["0A0406480C00", "0B30133007300C00", "", ""], "", ""],
+    [["0A0A06A90C00", "", "", ""], "0B70137007700C000108", "", ""],
+    "",
+    "",
+    "",
+    "",
+    [
+        ["", "06000A040C000108", "", ""],
+        ["", "070C0A040C000108", "", ""]
+    ],
+    [
+        ["", "06020A040C000108", "", ""],
+        ["", "070C0A040C000108", "", ""]
+    ],
+    ["", ["06240A040C000108", "", "06360A040C00"], "", ""],
+    ["", "070C0A040C000108", "", ""],
+    ["", ["", "0A05120506480C00", ["0B70137006480C000108", "", "0B70137006480C00"], ""], "", ""],
+    ["", ["", "06480A050C00", ["06480B700C000108", "", "06480B700C00"], ""], "", ""],
+    ["", ["", "", ["0A061206065A0C000108", "", "0A061206065A0C00"], ""], "", ""],
+    ["", ["", "", ["065A0A060C000108", "", "065A0A060C00"], ""], "", ""],
+    "",
+    ["", ["", "07180B300C00", ["07380B700C000109", "", ""], ""], "", ""],
+    ["", ["", "", ["0A0F137007700C000148", "", "0A0F137007700C000140"], ["0A0F1206066C0C000148", "", ""]], "", ""],
+    ["", ["", "", ["0A0F137007700C000148", "", "0A0F137007700C000140"], ["0A0F1206066C0C000148", "", ""]], "", ""],
+    ["", "0A04120406200C000108", "", ""],
+    ["", ["0A04120406440C000108", "", ""], "", ""],
+    [
+        "",
+        ["", ["0A04120406240C00", "", "0A04120406360C00"], ["0A04120406240C000108", "", "0A04120406360C00"], ""],
+        "",
+        ""
+    ],
+    ["", ["", "", ["0B70137007700C000148", "", "0B70137007700C000140"], ""], "", ""],
+    "",
+    ["", ["", "", ["0B70137007700C000148", "", "0B70137007700C000140"], ""], "", ""],
+    ["", ["", "", ["0B7007700C000149", "", "0B7007700C000141"], ["0A06066C0C000159", "", "0A06066C0C000151"]], "", ""],
+    ["", ["", "", ["0A04120406440C000109", "", "0A04120406460C000101"], ""], "", ""],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ["", ["", ["0A0F06FF0C00", "", "0A0F06FF0C00"], "", ""], "", ""],
+    ["", ["", ["0A0F06FF0C00", "", "0A0F06FF0C00"], "", ""], "", ""],
+    ["", ["", ["0A0F06FF0C00", "", "0A0F06FF0C00"], "", ""], "", ""],
+    ["", ["", ["0A0F06FF0C00", "", "0A0F06FF0C00"], "", ""], "", ""],
+    "",
+    "",
+    "",
+    "",
+    ["", ["", "0A05120506480C00", ["0B70137006480C000108", "", "0B70137006480C00"], ""], "", ""],
+    ["", ["", "06480A050C00", ["06480B700C000108", "", "06480B700C00"], ""], "", ""],
+    ["", ["", "", ["0A061206065A0C000108", "", "0A061206065A0C00"], ""], "", ""],
+    ["", ["", "", ["065A0A060C000108", "", "065A0A060C00"], ""], "", ""],
+    "",
+    "",
+    ["", ["", "0A0F063F0C00", ["0A0F137007700C000108", "", "0A0F137007700C00"], ""], "", ""],
+    ["", ["", "", ["0A0F137007700C000108", "", "0A0F137007700C00"], ""], "", ""],
+    ["", ["0A0406480C00", "0B30133007300C00", "", ""], "", ""],
+    ["", ["0A0406480C00", "0A04120406480C00", "", ""], "", ""],
+    ["", ["0A0406480C00", "0B30133007300C00", ["0B70137007700C000108", "", ""], ""], "", ""],
+    ["", ["", "", ["0B70137007700C000148", "", "0B70137007700C000140"], ""], "", ""],
+    ["", ["0A0406480C00", "0A04120406480C00", "", ""], "", ""],
+    "",
+    ["", ["", "0A051205065A0C00", "", ""], "", ""],
+    "",
+    ["", ["", ["0B301330073015300E00", "", "0B301330153007300E00"], "", ""], "", ""],
+    ["", ["", ["0B301330073015300E00", "", "0B301330153007300E00"], "", ""], "", ""],
+    ["", ["", "0B30133007301530", "", ""], "", ""],
+    ["", ["", "0B30133007301530", "", ""], "", ""],
+    ["", ["", "0A051205065A1505", "", ""], "", ""],
+    "",
+    "",
+    "",
+    ["", ["", "", ["0B70137007700C000149", "", "0B70137007700C000141"], ""], "", ""],
+    ["", ["", "", ["0A04120406440C000109", "", "0A04120406460C000101"], ""], "", ""],
+    ["", ["", "", "", ["0A06066C0C000159", "", "0A06066C0C000151"]], "", ""],
+    "",
+    ["", ["", "", ["0B70137007700C000149", "", "0B70137007700C000141"], ""], "", ""],
+    ["", ["", "", ["0A04120406440C000109", "", "0A04120406460C000101"], ""], "", ""],
+    ["", ["", "", ["0B7007700C000149", "", "0B7007700C000141"], ""], "", ""],
+    ["", ["", "", ["0A04120406440C000109", "", "0A04120406460C000101"], ""], "", ""],
+    "",
+    "",
+    "",
+    "",
+    ["", ["", ["0B30133007301530", "", "0B30133015300730"], "", ""], "", ""],
+    ["", ["", ["0B30133007301530", "", "0B30133015300730"], "", ""], "", ""],
+    ["", ["", ["0B30133007301530", "", "0B30133015300730"], "", ""], "", ""],
+    ["", ["", ["0B30133007301530", "", "0B30133015300730"], "", ""], "", ""],
+    ["", ["0A0406480C00", "0A0406480C00", "", ""], "", ""],
+    ["", ["0A0406480C00", "0A0406480C00", "", ""], "", ""],
+    ["", ["0A0406480C00", "0A0406480C00", "", ""], "", ""],
+    ["", ["0A0406480C00", "0A0406480C00", "", ""], "", ""],
+    "",
+    "",
+    ["", ["", "", ["0A0F07700C000148", "", "0A0F07700C000140"], ""], "", ""],
+    ["", ["", "", ["0A0F06440C000108", "", "0A0F06460C00"], ""], "", ""],
+    ["", ["", ["0B30133007301530", "", "0B30133015300730"], "", ""], "", ""],
+    ["", ["", ["0B30133007301530", "", "0B30133015300730"], "", ""], "", ""],
+    ["", ["", ["0A04120406441530", "", "0A04120415300644"], "", ""], "", ""],
+    ["", ["", ["0A04120406461530", "", "0A04120415300646"], "", ""], "", ""],
+    ["", ["", ["0B30133007301530", "", "0B30133015300730"], "", ""], "", ""],
+    ["", ["", ["0B30133007301530", "", "0B30133015300730"], "", ""], "", ""],
+    ["", ["", ["0A04120406441530", "", "0A04120415300644"], "", ""], "", ""],
+    ["", ["", ["0A04120406461530", "", "0A04120415300646"], "", ""], "", ""],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ["", ["", ["0B30133007301530", "", "0B30133015300730"], "", ""], "", ""],
+    ["", ["", ["0B30133007301530", "", "0B30133015300730"], "", ""], "", ""],
+    ["", ["", ["0A04120406441530", "", "0A04120415300644"], "", ""], "", ""],
+    ["", ["", ["0A04120406461530", "", "0A04120415300646"], "", ""], "", ""],
+    ["", ["", ["0B30133007301530", "", "0B30133015300730"], "", ""], "", ""],
+    ["", ["", ["0B30133007301530", "", "0B30133015300730"], "", ""], "", ""],
+    ["", ["", ["0A04120406441530", "", "0A04120415300644"], "", ""], "", ""],
+    ["", ["", ["0A04120406461530", "", "0A04120415300646"], "", ""], "", ""],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    [
+        ["", "", "", "0A06066C0C000141"],
+        ["", "", "", ["0A06066C0C000159", "", ""]],
+        "",
+        ["", "", "", "0A06066C0C000151"]
+    ],
+    [["", "", "", "0A06066C0C000141"], ["", "", "", ["0A06066C0C000159", "", ""]], "", ""],
+    "0A0406480C00",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ["", ["0A0406480C00", "0A0406480C00", "", ""], "", ""],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ["", "", "", ["", "", "", "0A06066C0C000151"]],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ["", "", "", ["", "0B0C070C0C00", "", ""]],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    /*------------------------------------------------------------------------------------------------------------------------
   AMD XOP 8.
   ------------------------------------------------------------------------------------------------------------------------*/
-  "","","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","",
-  "0A04120406481404","0A04120406481404","0A04120406481404","","","","","","",
-  "0A04120406481404","0A04120406481404","","","","","","0A04120406481404","0A04120406481404","0A04120406481404",
-  "","","","","","","0A04120406481404","0A04120406481404",
-  "","",["0B30133007301530","","0B30133015300730"],["0A04120406481404","","0A04120414040648"],"","","0A04120406481404",
-  "","","","","","","","","","","","","","","",
-  "0A04120406481404","","","","","","","","","","0A0406480C00","0A0406480C00","0A0406480C00","0A0406480C00",
-  "","","","","","","","",
-  "0A04120406480C00","0A04120406480C00","0A04120406480C00","0A04120406480C00",
-  "","","","","","","","","","","","","","","","","","","","","","","","","","","","",
-  "0A04120406480C00","0A04120406480C00","0A04120406480C00","0A04120406480C00",
-  "","","","","","","","","","","","","","","","",
-  /*------------------------------------------------------------------------------------------------------------------------
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A04120406481404",
+    "0A04120406481404",
+    "0A04120406481404",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A04120406481404",
+    "0A04120406481404",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A04120406481404",
+    "0A04120406481404",
+    "0A04120406481404",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A04120406481404",
+    "0A04120406481404",
+    "",
+    "",
+    ["0B30133007301530", "", "0B30133015300730"],
+    ["0A04120406481404", "", "0A04120414040648"],
+    "",
+    "",
+    "0A04120406481404",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A04120406481404",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A0406480C00",
+    "0A0406480C00",
+    "0A0406480C00",
+    "0A0406480C00",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A04120406480C00",
+    "0A04120406480C00",
+    "0A04120406480C00",
+    "0A04120406480C00",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A04120406480C00",
+    "0A04120406480C00",
+    "0A04120406480C00",
+    "0A04120406480C00",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    /*------------------------------------------------------------------------------------------------------------------------
   AMD XOP 9.
   ------------------------------------------------------------------------------------------------------------------------*/
-  "",
-  ["","130C070C","130C070C","130C070C","130C070C","130C070C","130C070C","130C070C"],
-  ["","130C070C","","","","","130C070C",""],
-  "","","","","","","","","","","","","","","",
-  ["",["070C","070C","","","","","",""]],
-  "","","","","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","","","",
-  "0B300730","0B300730","0B300730","0B300730",
-  "","","","","","","","","","","","",
-  ["0A0406481204","","0A0412040648"],["0A0406481204","","0A0412040648"],["0A0406481204","","0A0412040648"],["0A0406481204","","0A0412040648"],
-  ["0A0406481204","","0A0412040648"],["0A0406481204","","0A0412040648"],["0A0406481204","","0A0412040648"],["0A0406481204","","0A0412040648"],
-  ["0A0406481204","","0A0412040648"],["0A0406481204","","0A0412040648"],["0A0406481204","","0A0412040648"],["0A0406481204","","0A0412040648"],
-  "","","","","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","","","",
-  "0A040648","0A040648","0A040648","","","0A040648","0A040648","","","","0A040648","","","","","",
-  "0A040648","0A040648","0A040648","","","0A040648","0A040648","","","","0A040648","","","","","",
-  "0A040648","0A040648","0A040648","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","",
-  /*------------------------------------------------------------------------------------------------------------------------
+    "",
+    ["", "130C070C", "130C070C", "130C070C", "130C070C", "130C070C", "130C070C", "130C070C"],
+    ["", "130C070C", "", "", "", "", "130C070C", ""],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ["", ["070C", "070C", "", "", "", "", "", ""]],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0B300730",
+    "0B300730",
+    "0B300730",
+    "0B300730",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ["0A0406481204", "", "0A0412040648"],
+    ["0A0406481204", "", "0A0412040648"],
+    ["0A0406481204", "", "0A0412040648"],
+    ["0A0406481204", "", "0A0412040648"],
+    ["0A0406481204", "", "0A0412040648"],
+    ["0A0406481204", "", "0A0412040648"],
+    ["0A0406481204", "", "0A0412040648"],
+    ["0A0406481204", "", "0A0412040648"],
+    ["0A0406481204", "", "0A0412040648"],
+    ["0A0406481204", "", "0A0412040648"],
+    ["0A0406481204", "", "0A0412040648"],
+    ["0A0406481204", "", "0A0412040648"],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A040648",
+    "0A040648",
+    "0A040648",
+    "",
+    "",
+    "0A040648",
+    "0A040648",
+    "",
+    "",
+    "",
+    "0A040648",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A040648",
+    "0A040648",
+    "0A040648",
+    "",
+    "",
+    "0A040648",
+    "0A040648",
+    "",
+    "",
+    "",
+    "0A040648",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A040648",
+    "0A040648",
+    "0A040648",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    /*------------------------------------------------------------------------------------------------------------------------
   AMD XOP A.
   ------------------------------------------------------------------------------------------------------------------------*/
-  "","","","","","","","","","","","","","","","",
-  "0B0C070C0C020180","",["130C06240C020180","130C06240C020180","","","","","",""],
-  "","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  /*-------------------------------------------------------------------------------------------------------------------------
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0B0C070C0C020180",
+    "",
+    ["130C06240C020180", "130C06240C020180", "", "", "", "", "", ""],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    /*-------------------------------------------------------------------------------------------------------------------------
   L1OM Vector.
   -------------------------------------------------------------------------------------------------------------------------*/
-  "","","","","1206","","","","","","","","","","","",
-  [["0A0606610120","0A0606610120","",""],""],"",
-  [["0A0606610120","0A0606610120","",""],""],
-  [["0A0606610120","0A0606610120","",""],""],
-  [["0A0606610100","0A0606610100","",""],""],"",
-  [["0A0606610100","0A0606610100","",""],""],
-  [["0A0606610100","0A0606610100","",""],""],
-  ["0A06066C0124",""],["066C0124",""],"",["066C0124",""],
-  ["066C0A060104",""],["066C0104",""],"",["066C0104",""],
-  ["0A0F120606610150","0A0F120606610150","",""],"0A0F120606610140","0A0F120606610140","",
-  ["0A0F120606610150","0A0F120606610150","",""],"0A0F120606610140","0A0F120606610140","",
-  "","","","","","","","",
-  "0A0F120606610140","","","","","","","","","","","","","","","",
-  ["0A06120606610150","0A06120606610150","",""],"0A06120606610140","","0A06120F06610140","","0A06120F06610140","0A06120606610150","0A06120606610140",
-  ["0A06120606610150","0A06120606610150","",""],"","","","","","","",
-  ["0A06120606610150","0A06120606610150","",""],"0A06120606610140","","0A06120F06610140","","0A06120F06610140","","",
-  ["0A06120606610150","0A06120606610150","",""],"0A06120606610140","","0A06120F06610140","","0A06120F06610140","","",
-  ["0A06120606610150","0A06120606610150","",""],"0A06120606610140",
-  ["0A06120606610150","0A06120606610150","",""],"",
-  ["0A06120606610150","0A06120606610150","",""],"",
-  "0A06120606610150","0A06120606610140",
-  ["0A06120606610150","0A06120606610150","",""],"",
-  ["0A06120606610150","0A06120606610150","",""],"",
-  ["0A06120606610150","0A06120606610150","",""],"","","",
-  ["0A06120606610150","0A06120606610150","",""],"",
-  ["0A06120606610150","0A06120606610150","",""],"",
-  ["0A06120606610150","0A06120606610150","",""],"","","",
-  ["0A06120606610150","0A06120606610150","",""],"",
-  ["0A06120606610150","0A06120606610150","",""],"",
-  ["0A06120606610150","0A06120606610150","",""],"",
-  ["0A06120606610150","0A06120606610150","",""],"",
-  ["0A06120606610150","0A06120606610150","",""],"0A06120606610140","0A06120606610140","0A06120606610140","","","0A06120606610150","0A06120606610140",
-  ["0A06120606610150","0A06120606610150","",""],"0A06120606610140","0A06120606610140","",
-  ["0A06120606610150","0A06120606610150","",""],"0A06120606610140","0A06120606610140","",
-  ["","0A0606610152","",""],["0A0606610153","0A0606610152","",""],["0A0606610153","0A0606610152","",""],"",
-  ["","0A0606610158","",""],["0A0606610141","0A0606610148","",""],["0A0606610141","0A0606610148","",""],"",
-  "0A0606610153","","0A0606610150","0A0606610152","","0A0606610150","0A0606610150","",
-  "0A06120606610140","0A06120606610140","0A06120606610140","",
-  ["0A06120606610140","0A06120606610140","",""],["0A06120606610140","0A06120606610140","",""],
-  ["0A06120606610140","0A06120606610140","",""],["0A06120606610140","0A06120606610140","",""],
-  "0A06120606610140","0A06120606610140","","","","","","",
-  "0A0606610140","0A0606610150","0A0606610150","","0A0606610150","","","",
-  "0A06120606610140","","","","","","","",
-  "0A0606610150","","0A06120606610150","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "0A0606610C010150","0A0606610C000C00","0A06120606610C010140","0A0606610C010140","","","","",
-  "","","","","","","","",
-  /*-------------------------------------------------------------------------------------------------------------------------
+    "",
+    "",
+    "",
+    "",
+    "1206",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    [["0A0606610120", "0A0606610120", "", ""], ""],
+    "",
+    [["0A0606610120", "0A0606610120", "", ""], ""],
+    [["0A0606610120", "0A0606610120", "", ""], ""],
+    [["0A0606610100", "0A0606610100", "", ""], ""],
+    "",
+    [["0A0606610100", "0A0606610100", "", ""], ""],
+    [["0A0606610100", "0A0606610100", "", ""], ""],
+    ["0A06066C0124", ""],
+    ["066C0124", ""],
+    "",
+    ["066C0124", ""],
+    ["066C0A060104", ""],
+    ["066C0104", ""],
+    "",
+    ["066C0104", ""],
+    ["0A0F120606610150", "0A0F120606610150", "", ""],
+    "0A0F120606610140",
+    "0A0F120606610140",
+    "",
+    ["0A0F120606610150", "0A0F120606610150", "", ""],
+    "0A0F120606610140",
+    "0A0F120606610140",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A0F120606610140",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "0A06120606610140",
+    "",
+    "0A06120F06610140",
+    "",
+    "0A06120F06610140",
+    "0A06120606610150",
+    "0A06120606610140",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "0A06120606610140",
+    "",
+    "0A06120F06610140",
+    "",
+    "0A06120F06610140",
+    "",
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "0A06120606610140",
+    "",
+    "0A06120F06610140",
+    "",
+    "0A06120F06610140",
+    "",
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "0A06120606610140",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "",
+    "0A06120606610150",
+    "0A06120606610140",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "",
+    "",
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "",
+    "",
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "0A06120606610140",
+    "0A06120606610140",
+    "0A06120606610140",
+    "",
+    "",
+    "0A06120606610150",
+    "0A06120606610140",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "0A06120606610140",
+    "0A06120606610140",
+    "",
+    ["0A06120606610150", "0A06120606610150", "", ""],
+    "0A06120606610140",
+    "0A06120606610140",
+    "",
+    ["", "0A0606610152", "", ""],
+    ["0A0606610153", "0A0606610152", "", ""],
+    ["0A0606610153", "0A0606610152", "", ""],
+    "",
+    ["", "0A0606610158", "", ""],
+    ["0A0606610141", "0A0606610148", "", ""],
+    ["0A0606610141", "0A0606610148", "", ""],
+    "",
+    "0A0606610153",
+    "",
+    "0A0606610150",
+    "0A0606610152",
+    "",
+    "0A0606610150",
+    "0A0606610150",
+    "",
+    "0A06120606610140",
+    "0A06120606610140",
+    "0A06120606610140",
+    "",
+    ["0A06120606610140", "0A06120606610140", "", ""],
+    ["0A06120606610140", "0A06120606610140", "", ""],
+    ["0A06120606610140", "0A06120606610140", "", ""],
+    ["0A06120606610140", "0A06120606610140", "", ""],
+    "0A06120606610140",
+    "0A06120606610140",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A0606610140",
+    "0A0606610150",
+    "0A0606610150",
+    "",
+    "0A0606610150",
+    "",
+    "",
+    "",
+    "0A06120606610140",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A0606610150",
+    "",
+    "0A06120606610150",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "0A0606610C010150",
+    "0A0606610C000C00",
+    "0A06120606610C010140",
+    "0A0606610C010140",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    /*-------------------------------------------------------------------------------------------------------------------------
   L1OM Mask, Mem, and bit opcodes.
   -------------------------------------------------------------------------------------------------------------------------*/
-  ["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],
-  ["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],
-  ["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],
-  ["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],
-  ["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],
-  ["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],
-  ["","0B0E070E0C010C000C00"],["","0B0E070E0C010C000C00"],["","0B0E070E0C010C000C00"],["","0B0E070E0C010C000C00"],
-  ["","0B0E070E0C010C000C00"],["","0B0E070E0C010C000C00"],["","0B0E070E0C010C000C00"],["","0B0E070E0C010C000C00"],
-  ["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],
-  ["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],["","0B0E070E"],
-  "","","","",
-  "06FF0A0F",
-  [["0601","0601","0604","0604","","","",""],""],
-  [["0601","0601","","","","","",""],""],
-  [["0601","0601","","","","","",""],""],
-  "06FF0A0F","06FF0B06","07060A0F","06FF0B06",
-  "06FF0A0F","06FF0A0F","06FF0A0F","06FF0A0F",
-  "06FF0A0F","06FF0A0F","06FF0A0F","06FF0A0F",
-  "","06FF0A0F",
-  ["",["0B07","0B07","","","","","",""]],
-  ["",["0B07","0B07","","","","","",""]]
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E0C010C000C00"],
+    ["", "0B0E070E0C010C000C00"],
+    ["", "0B0E070E0C010C000C00"],
+    ["", "0B0E070E0C010C000C00"],
+    ["", "0B0E070E0C010C000C00"],
+    ["", "0B0E070E0C010C000C00"],
+    ["", "0B0E070E0C010C000C00"],
+    ["", "0B0E070E0C010C000C00"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    ["", "0B0E070E"],
+    "",
+    "",
+    "",
+    "",
+    "06FF0A0F",
+    [["0601", "0601", "0604", "0604", "", "", "", ""], ""],
+    [["0601", "0601", "", "", "", "", "", ""], ""],
+    [["0601", "0601", "", "", "", "", "", ""], ""],
+    "06FF0A0F",
+    "06FF0B06",
+    "07060A0F",
+    "06FF0B06",
+    "06FF0A0F",
+    "06FF0A0F",
+    "06FF0A0F",
+    "06FF0A0F",
+    "06FF0A0F",
+    "06FF0A0F",
+    "06FF0A0F",
+    "06FF0A0F",
+    "",
+    "06FF0A0F",
+    ["", ["0B07", "0B07", "", "", "", "", "", ""]],
+    ["", ["0B07", "0B07", "", "", "", "", "", ""]]
 ];
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -2464,22 +5760,262 @@ compared for if the operation code is 0x10F then the next byte is read and is us
 -------------------------------------------------------------------------------------------------------------------------*/
 
 const M3DNow = [
-  "","","","","","","","","","","","","PI2FW","PI2FD","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","PFNACC","","","","PFPNACC","",
-  "PFCMPGE","","","","PFMIN","","PFRCP","PFRSQRT","","","FPSUB","","","","FPADD","",
-  "PFCMPGT","","","","PFMAX","","PFRCPIT1","PFRSQIT1","","","PFSUBR","","","","PFACC","",
-  "PFCMPEQ","","","","PFMUL","","PFRCPIT2","PMULHRW","","","","PSWAPD","","","","PAVGUSB",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","","",
-  "","","","","","","","","","","","","","","",""
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "PI2FW",
+    "PI2FD",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "PFNACC",
+    "",
+    "",
+    "",
+    "PFPNACC",
+    "",
+    "PFCMPGE",
+    "",
+    "",
+    "",
+    "PFMIN",
+    "",
+    "PFRCP",
+    "PFRSQRT",
+    "",
+    "",
+    "FPSUB",
+    "",
+    "",
+    "",
+    "FPADD",
+    "",
+    "PFCMPGT",
+    "",
+    "",
+    "",
+    "PFMAX",
+    "",
+    "PFRCPIT1",
+    "PFRSQIT1",
+    "",
+    "",
+    "PFSUBR",
+    "",
+    "",
+    "",
+    "PFACC",
+    "",
+    "PFCMPEQ",
+    "",
+    "",
+    "",
+    "PFMUL",
+    "",
+    "PFRCPIT2",
+    "PMULHRW",
+    "",
+    "",
+    "",
+    "PSWAPD",
+    "",
+    "",
+    "",
+    "PAVGUSB",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
 ];
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -2500,11 +6036,31 @@ link to the patent https://www.google.com/patents/US7552426
 -------------------------------------------------------------------------------------------------------------------------*/
 
 const MSynthetic = [
-  "VMGETINFO","VMSETINFO","VMDXDSBL","VMDXENBL","",
-  "VMCPUID","VMHLT","VMSPLAF","","",
-  "VMPUSHFD","VMPOPFD","VMCLI","VMSTI","VMIRETD",
-  "VMSGDT","VMSIDT","VMSLDT","VMSTR","",
-  "VMSDTE","","","",""
+    "VMGETINFO",
+    "VMSETINFO",
+    "VMDXDSBL",
+    "VMDXENBL",
+    "",
+    "VMCPUID",
+    "VMHLT",
+    "VMSPLAF",
+    "",
+    "",
+    "VMPUSHFD",
+    "VMPOPFD",
+    "VMCLI",
+    "VMSTI",
+    "VMIRETD",
+    "VMSGDT",
+    "VMSIDT",
+    "VMSLDT",
+    "VMSTR",
+    "",
+    "VMSDTE",
+    "",
+    "",
+    "",
+    ""
 ];
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -2513,11 +6069,46 @@ XOP condition codes map differently.
 -------------------------------------------------------------------------------------------------------------------------*/
 
 const ConditionCodes = [
-  "EQ","LT","LE","UNORD","NEQ","NLT","NLE","ORD", //SSE/L1OM/MVEX.
-  "EQ_UQ","NGE","NGT","FALSE","NEQ_OQ","GE","GT","TRUE", //VEX/EVEX.
-  "EQ_OS","LT_OQ","LE_OQ","UNORD_S","NEQ_US","NLT_UQ","NLE_UQ","ORD_S", //VEX/EVEX.
-  "EQ_US","NGE_UQ","NGT_UQ","FALSE_OS","NEQ_OS","GE_OQ","GT_OQ","TRUE_US", //VEX/EVEX.
-  "LT","LE","GT","GE","EQ","NEQ","FALSE","TRUE" //XOP.
+    "EQ",
+    "LT",
+    "LE",
+    "UNORD",
+    "NEQ",
+    "NLT",
+    "NLE",
+    "ORD", //SSE/L1OM/MVEX.
+    "EQ_UQ",
+    "NGE",
+    "NGT",
+    "FALSE",
+    "NEQ_OQ",
+    "GE",
+    "GT",
+    "TRUE", //VEX/EVEX.
+    "EQ_OS",
+    "LT_OQ",
+    "LE_OQ",
+    "UNORD_S",
+    "NEQ_US",
+    "NLT_UQ",
+    "NLE_UQ",
+    "ORD_S", //VEX/EVEX.
+    "EQ_US",
+    "NGE_UQ",
+    "NGT_UQ",
+    "FALSE_OS",
+    "NEQ_OS",
+    "GE_OQ",
+    "GT_OQ",
+    "TRUE_US", //VEX/EVEX.
+    "LT",
+    "LE",
+    "GT",
+    "GE",
+    "EQ",
+    "NEQ",
+    "FALSE",
+    "TRUE" //XOP.
 ];
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -2543,31 +6134,30 @@ Used by function ^DecodeOperandString()^ Which sets the operands active and give
 The following X86 patent link might help http://www.google.com/patents/US7640417
 -------------------------------------------------------------------------------------------------------------------------*/
 
-var Operand = function(){
-  return(
-    {
-      Type:0, //The operand type some operands have different formats like DecodeImmediate() which has a type input.
-      BySizeAttrubute:false, //Effects how size is used depends on which operand type for which operand across the decoder array.
-      /*-------------------------------------------------------------------------------------------------------------------------
+var Operand = function () {
+    return {
+        Type: 0, //The operand type some operands have different formats like DecodeImmediate() which has a type input.
+        BySizeAttrubute: false, //Effects how size is used depends on which operand type for which operand across the decoder array.
+        /*-------------------------------------------------------------------------------------------------------------------------
       How Size is used depends on the operand it is along the decoder array for which function it uses to
       decode Like DecodeRegValue(), or Decode_ModRM_SIB_Address(), and lastly DecodeImmediate() as they all take the BySize.
       -------------------------------------------------------------------------------------------------------------------------*/
-      Size:0x00, //The Setting.
-      OperandNum:0, //The operand number basically the order each operand is read in the operand string.
-      Active:false, //This is set by the set function not all operand are used across the decoder array.
-      //set the operands attributes then set it active in the decoder array.
-      set:function(T, BySize, Settings, OperandNumber)
-      {
-        this.Type = T;
-        this.BySizeAttrubute = BySize;
-        this.Size = Settings;
-        this.OpNum = OperandNumber; //Give the operand the number it was read in the operand string.
-        this.Active = true; //set the operand active so it's settings are decoded by the ^DecodeOperands()^ function.
-      },
-      //Deactivates the operand after they are decoded by the ^DecodeOperands()^ function.
-      Deactivate:function(){ this.Active = false; }
-    }
-  );
+        Size: 0x00, //The Setting.
+        OperandNum: 0, //The operand number basically the order each operand is read in the operand string.
+        Active: false, //This is set by the set function not all operand are used across the decoder array.
+        //set the operands attributes then set it active in the decoder array.
+        set: function (T, BySize, Settings, OperandNumber) {
+            this.Type = T;
+            this.BySizeAttrubute = BySize;
+            this.Size = Settings;
+            this.OpNum = OperandNumber; //Give the operand the number it was read in the operand string.
+            this.Active = true; //set the operand active so it's settings are decoded by the ^DecodeOperands()^ function.
+        },
+        //Deactivates the operand after they are decoded by the ^DecodeOperands()^ function.
+        Deactivate: function () {
+            this.Active = false;
+        }
+    };
 };
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -2583,60 +6173,60 @@ Used by functions ^DecodeOperandString()^, and ^DecodeOperands()^, after functio
 -------------------------------------------------------------------------------------------------------------------------*/
 
 var X86Decoder = [
-  /*-------------------------------------------------------------------------------------------------------------------------
+    /*-------------------------------------------------------------------------------------------------------------------------
   First operand that is always decoded is "Reg Opcode" if used.
   Uses the function ^DecodeRegValue()^ the input RValue is the three first bits of the opcode.
   -------------------------------------------------------------------------------------------------------------------------*/
-  new Operand(), //Reg Opcode if used.
-  /*-------------------------------------------------------------------------------------------------------------------------
+    new Operand(), //Reg Opcode if used.
+    /*-------------------------------------------------------------------------------------------------------------------------
   The Second operand that is decoded in series is the ModR/M address if used.
   Reads a byte using function ^Decode_ModRM_SIB_Value()^ gives it to the function ^Decode_ModRM_SIB_Address()^ which only
   reads the Mode, and Base register for the address, and then decodes the SIB byte if base register is "100" binary in value.
   does not use the Register value in the ModR/M because the register can also be used as a group opcode used by the
   function ^DecodeOpcode()^, or uses a different register in single size with a different address pointer.
   -------------------------------------------------------------------------------------------------------------------------*/
-  new Operand(), //ModR/M address if used.
-  /*-------------------------------------------------------------------------------------------------------------------------
+    new Operand(), //ModR/M address if used.
+    /*-------------------------------------------------------------------------------------------------------------------------
   The third operand that is decoded if used is for the ModR/M reg bits.
   Uses the already decoded byte from ^Decode_ModRM_SIB_Value()^ gives the three bit reg value to the function ^DecodeRegValue()^.
   The ModR/M address, and reg are usually used together, but can also change direction in the encoding string.
   -------------------------------------------------------------------------------------------------------------------------*/
-  new Operand(), //ModR/M reg bits if used.
-  /*-------------------------------------------------------------------------------------------------------------------------
+    new Operand(), //ModR/M reg bits if used.
+    /*-------------------------------------------------------------------------------------------------------------------------
   The fourth operand that is decoded in sequence is the first Immediate input if used.
   The function ^DecodeImmediate()^ starts reading bytes as a number for input to instruction.
   -------------------------------------------------------------------------------------------------------------------------*/
-  new Operand(), //First Immediate if used.
-  /*-------------------------------------------------------------------------------------------------------------------------
+    new Operand(), //First Immediate if used.
+    /*-------------------------------------------------------------------------------------------------------------------------
   The fifth operand that is decoded in sequence is the second Immediate input if used.
   The function ^DecodeImmediate()^ starts reading bytes as a number for input to instruction.
   -------------------------------------------------------------------------------------------------------------------------*/
-  new Operand(), //Second Immediate if used (Note that the instruction "Enter" uses two immediate inputs).
-  /*-------------------------------------------------------------------------------------------------------------------------
+    new Operand(), //Second Immediate if used (Note that the instruction "Enter" uses two immediate inputs).
+    /*-------------------------------------------------------------------------------------------------------------------------
   The sixth operand that is decoded in sequence is the third Immediate input if used.
   The function ^DecodeImmediate()^ starts reading bytes as a number for input to instruction.
   -------------------------------------------------------------------------------------------------------------------------*/
-  new Operand(), //Third Immediate if used (Note that the Larrabee vector instructions can use three immediate inputs).
-  /*-------------------------------------------------------------------------------------------------------------------------
+    new Operand(), //Third Immediate if used (Note that the Larrabee vector instructions can use three immediate inputs).
+    /*-------------------------------------------------------------------------------------------------------------------------
   Vector adjustment codes allow the selection of the vector register value that is stored into variable
   VectorRegister that applies to the selected SSE instruction that is read after that uses it.
   The adjusted vector value is given to the function ^DecodeRegValue()^.
   -------------------------------------------------------------------------------------------------------------------------*/
-  new Operand(), //Vector register if used. And if vector adjustments are applied to the SSE instruction.
-  /*-------------------------------------------------------------------------------------------------------------------------
+    new Operand(), //Vector register if used. And if vector adjustments are applied to the SSE instruction.
+    /*-------------------------------------------------------------------------------------------------------------------------
   Immediate Register encoding if used.
   During the decoding of the immediate operands the ^DecodeImmediate()^ function stores the read IMM into an variable called
   IMMValue. The upper four bits of IMMValue is given to the input RValue to the function ^DecodeRegValue()^.
   -------------------------------------------------------------------------------------------------------------------------*/
-  new Operand(), //Immediate Register encoding if used.
-  /*-------------------------------------------------------------------------------------------------------------------------
+    new Operand(), //Immediate Register encoding if used.
+    /*-------------------------------------------------------------------------------------------------------------------------
   It does not matter which order the explicit operands decode as they do not require reading another byte after the opcode.
   Explicit operands are selected internally in the cpu for instruction codes that only use one register, or pointer, or number input.
   -------------------------------------------------------------------------------------------------------------------------*/
-  new Operand(), //Explicit Operand one.
-  new Operand(), //Explicit Operand two.
-  new Operand(), //Explicit Operand three.
-  new Operand()  //Explicit Operand four.
+    new Operand(), //Explicit Operand one.
+    new Operand(), //Explicit Operand two.
+    new Operand(), //Explicit Operand three.
+    new Operand() //Explicit Operand four.
 ];
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -2867,19 +6457,47 @@ Some instructions use SAE which suppresses all errors, but if an instruction use
 -------------------------------------------------------------------------------------------------------------------------*/
 
 const RoundModes = [
-  "","","","","","","","", //First 8 No rounding mode.
-  /*-------------------------------------------------------------------------------------------------------------------------
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "", //First 8 No rounding mode.
+    /*-------------------------------------------------------------------------------------------------------------------------
   MVEX/EVEX round Modes {SAE} Note MVEX (1xx) must be set 4 or higher, while EVEX uses upper 4 in rounding mode by vector length.
   -------------------------------------------------------------------------------------------------------------------------*/
-  ", {Error}", ", {Error}", ", {Error}", ", {Error}", ", {SAE}", ", {SAE}", ", {SAE}", ", {SAE}",
-  /*-------------------------------------------------------------------------------------------------------------------------
+    ", {Error}",
+    ", {Error}",
+    ", {Error}",
+    ", {Error}",
+    ", {SAE}",
+    ", {SAE}",
+    ", {SAE}",
+    ", {SAE}",
+    /*-------------------------------------------------------------------------------------------------------------------------
   L1OM/MVEX/EVEX round modes {ER}. L1OM uses the first 4, and EVEX uses the upper 4, while MVEX can use all 8.
   -------------------------------------------------------------------------------------------------------------------------*/
-  ", {RN}", ", {RD}", ", {RU}", ", {RZ}", ", {RN-SAE}", ", {RD-SAE}", ", {RU-SAE}", ", {RZ-SAE}",
-  /*-------------------------------------------------------------------------------------------------------------------------
+    ", {RN}",
+    ", {RD}",
+    ", {RU}",
+    ", {RZ}",
+    ", {RN-SAE}",
+    ", {RD-SAE}",
+    ", {RU-SAE}",
+    ", {RZ-SAE}",
+    /*-------------------------------------------------------------------------------------------------------------------------
   MVEX/EVEX round modes {SAE}, {ER} Both rounding modes can not possibly be set both at the same time.
   -------------------------------------------------------------------------------------------------------------------------*/
-  "0B", "4B", "5B", "8B", "16B", "24B", "31B", "32B" //L1OM exponent adjustments.
+    "0B",
+    "4B",
+    "5B",
+    "8B",
+    "16B",
+    "24B",
+    "31B",
+    "32B" //L1OM exponent adjustments.
 ];
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -2887,7 +6505,7 @@ L1OM/MVEX register swizzle modes. When an swizzle operation is done register to 
 Note L1OM skips swizzle type DACB thus the last swizzle type is an repeat of the DACB as the last L1OM swizzle.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-const RegSwizzleModes = [ "", "CDAB", "BADC", "DACB", "AAAA", "BBBB", "CCCC", "DDDD", "DACB" ];
+const RegSwizzleModes = ["", "CDAB", "BADC", "DACB", "AAAA", "BBBB", "CCCC", "DDDD", "DACB"];
 
 /*-------------------------------------------------------------------------------------------------------------------------
 EVEX does not support conversion modes. Only broadcast round of 1To16, or 1To8 controlled by the data size.
@@ -2910,58 +6528,92 @@ Lastly the elements are in order to the "CCCCC" value, and "SSS" value times 2, 
 -------------------------------------------------------------------------------------------------------------------------*/
 
 const ConversionModes = [
-  //------------------------------------------------------------------------
-  "", "", //Not used.
-  //------------------------------------------------------------------------
-  "1To16", "1To8", //Settable as L1OM.sss/MVEX.sss = 001. Settable using EVEX broadcast round.
-  "4To16", "4To8", //Settable as L1OM.sss/MVEX.sss = 010. Settable using EVEX broadcast round.
-  //------------------------------------------------------------------------
-  "Float16", "Error", //Settable as "MVEX.sss = 011", and "L1OM.sss = 110 , L1OM.CCCCC = 00001".
-  //------------------------------------------------------------------------
-  "Float16RZ", "Error", //Settable only as L1OM.CCCCC = 00010.
-  //------------------------------------------------------------------------
-  "SRGB8", "Error", //Settable only as L1OM.CCCCC = 00011.
-  /*------------------------------------------------------------------------
+    //------------------------------------------------------------------------
+    "",
+    "", //Not used.
+    //------------------------------------------------------------------------
+    "1To16",
+    "1To8", //Settable as L1OM.sss/MVEX.sss = 001. Settable using EVEX broadcast round.
+    "4To16",
+    "4To8", //Settable as L1OM.sss/MVEX.sss = 010. Settable using EVEX broadcast round.
+    //------------------------------------------------------------------------
+    "Float16",
+    "Error", //Settable as "MVEX.sss = 011", and "L1OM.sss = 110 , L1OM.CCCCC = 00001".
+    //------------------------------------------------------------------------
+    "Float16RZ",
+    "Error", //Settable only as L1OM.CCCCC = 00010.
+    //------------------------------------------------------------------------
+    "SRGB8",
+    "Error", //Settable only as L1OM.CCCCC = 00011.
+    /*------------------------------------------------------------------------
   MVEX/L1OM Up conversion, and down conversion types.
   ------------------------------------------------------------------------*/
-  "UInt8", "Error", //Settable as L1OM.sss/MVEX.sss = 100, and L1OM.CCCCC = 00100.
-  "SInt8", "Error", //Settable as L1OM.sss/MVEX.sss = 101, and L1OM.CCCCC = 00101.
-  //------------------------------------------------------------------------
-  "UNorm8", "Error", //Settable as L1OM.sss = 101, or L1OM.CCCCC = 00110.
-  "SNorm8", "Error", //Settable as L1OM.CCCCC = 00111.
-  //------------------------------------------------------------------------
-  "UInt16", "Error", //Settable as L1OM.sss/MVEX.sss = 110, and L1OM.CCCCC = 01000
-  "SInt16", "Error", //Settable as L1OM.sss/MVEX.sss = 111, and L1OM.CCCCC = 01001
-  //------------------------------------------------------------------------
-  "UNorm16", "Error", //Settable as L1OM.CCCCC = 01010.
-  "SNorm16", "Error", //Settable as L1OM.CCCCC = 01011.
-  "UInt8I", "Error", //Settable as L1OM.CCCCC = 01100.
-  "SInt8I", "Error", //Settable as L1OM.CCCCC = 01101.
-  "UInt16I", "Error", //Settable as L1OM.CCCCC = 01110.
-  "SInt16I", "Error", //Settable as L1OM.CCCCC = 01111.
-  /*------------------------------------------------------------------------
+    "UInt8",
+    "Error", //Settable as L1OM.sss/MVEX.sss = 100, and L1OM.CCCCC = 00100.
+    "SInt8",
+    "Error", //Settable as L1OM.sss/MVEX.sss = 101, and L1OM.CCCCC = 00101.
+    //------------------------------------------------------------------------
+    "UNorm8",
+    "Error", //Settable as L1OM.sss = 101, or L1OM.CCCCC = 00110.
+    "SNorm8",
+    "Error", //Settable as L1OM.CCCCC = 00111.
+    //------------------------------------------------------------------------
+    "UInt16",
+    "Error", //Settable as L1OM.sss/MVEX.sss = 110, and L1OM.CCCCC = 01000
+    "SInt16",
+    "Error", //Settable as L1OM.sss/MVEX.sss = 111, and L1OM.CCCCC = 01001
+    //------------------------------------------------------------------------
+    "UNorm16",
+    "Error", //Settable as L1OM.CCCCC = 01010.
+    "SNorm16",
+    "Error", //Settable as L1OM.CCCCC = 01011.
+    "UInt8I",
+    "Error", //Settable as L1OM.CCCCC = 01100.
+    "SInt8I",
+    "Error", //Settable as L1OM.CCCCC = 01101.
+    "UInt16I",
+    "Error", //Settable as L1OM.CCCCC = 01110.
+    "SInt16I",
+    "Error", //Settable as L1OM.CCCCC = 01111.
+    /*------------------------------------------------------------------------
   L1OM Up conversion, and field conversion.
   ------------------------------------------------------------------------*/
-  "UNorm10A", "Error", //Settable as L1OM.CCCCC = 10000. Also Usable as Integer Field control.
-  "UNorm10B", "Error", //Settable as L1OM.CCCCC = 10001. Also Usable as Integer Field control.
-  "UNorm10C", "Error", //Settable as L1OM.CCCCC = 10010. Also Usable as Integer Field control.
-  "UNorm2D", "Error", //Settable as L1OM.CCCCC = 10011. Also Usable as Integer Field control.
-  //------------------------------------------------------------------------
-  "Float11A", "Error", //Settable as L1OM.CCCCC = 10100. Also Usable as Float Field control.
-  "Float11B", "Error", //Settable as L1OM.CCCCC = 10101. Also Usable as Float Field control.
-  "Float10C", "Error", //Settable as L1OM.CCCCC = 10110. Also Usable as Float Field control.
-  "Error", "Error", //Settable as L1OM.CCCCC = 10111. Also Usable as Float Field control.
-  /*------------------------------------------------------------------------
+    "UNorm10A",
+    "Error", //Settable as L1OM.CCCCC = 10000. Also Usable as Integer Field control.
+    "UNorm10B",
+    "Error", //Settable as L1OM.CCCCC = 10001. Also Usable as Integer Field control.
+    "UNorm10C",
+    "Error", //Settable as L1OM.CCCCC = 10010. Also Usable as Integer Field control.
+    "UNorm2D",
+    "Error", //Settable as L1OM.CCCCC = 10011. Also Usable as Integer Field control.
+    //------------------------------------------------------------------------
+    "Float11A",
+    "Error", //Settable as L1OM.CCCCC = 10100. Also Usable as Float Field control.
+    "Float11B",
+    "Error", //Settable as L1OM.CCCCC = 10101. Also Usable as Float Field control.
+    "Float10C",
+    "Error", //Settable as L1OM.CCCCC = 10110. Also Usable as Float Field control.
+    "Error",
+    "Error", //Settable as L1OM.CCCCC = 10111. Also Usable as Float Field control.
+    /*------------------------------------------------------------------------
   Unused Conversion modes.
   ------------------------------------------------------------------------*/
-  "Error", "Error", //Settable as L1OM.CCCCC = 11000.
-  "Error", "Error", //Settable as L1OM.CCCCC = 11001.
-  "Error", "Error", //Settable as L1OM.CCCCC = 11010.
-  "Error", "Error", //Settable as L1OM.CCCCC = 11011.
-  "Error", "Error", //Settable as L1OM.CCCCC = 11100.
-  "Error", "Error", //Settable as L1OM.CCCCC = 11101.
-  "Error", "Error", //Settable as L1OM.CCCCC = 11110.
-  "Error", "Error"  //Settable as L1OM.CCCCC = 11111.
+    "Error",
+    "Error", //Settable as L1OM.CCCCC = 11000.
+    "Error",
+    "Error", //Settable as L1OM.CCCCC = 11001.
+    "Error",
+    "Error", //Settable as L1OM.CCCCC = 11010.
+    "Error",
+    "Error", //Settable as L1OM.CCCCC = 11011.
+    "Error",
+    "Error", //Settable as L1OM.CCCCC = 11100.
+    "Error",
+    "Error", //Settable as L1OM.CCCCC = 11101.
+    "Error",
+    "Error", //Settable as L1OM.CCCCC = 11110.
+    "Error",
+    "Error" //Settable as L1OM.CCCCC = 11111.
 ];
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -3011,7 +6663,8 @@ Prefix G1, and G2 are used with Intel HLE, and other prefix codes such as repeat
 applied to any instruction unless it is an SIMD instruction which uses F2, and F3 as the SIMD Mode.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-var PrefixG1 = "", PrefixG2 = "";
+var PrefixG1 = "",
+    PrefixG2 = "";
 
 /*-------------------------------------------------------------------------------------------------------------------------
 Intel HLE is used with basic arithmetic instructions like Add, and subtract, and shift operations.
@@ -3020,7 +6673,8 @@ Intel HLE instructions replace the Repeat F2, and F3, also lock F0 with XACQUIRE
 This is used by function ^DecodeInstruction()^.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-var XRelease = false, XAcquire = false;
+var XRelease = false,
+    XAcquire = false;
 
 /*-------------------------------------------------------------------------------------------------------------------------
 Intel HLE flip "G1 is used as = REP (XACQUIRE), or RENP (XRELEASE)", and "G2 is used as = LOCK" if the lock prefix was
@@ -3066,7 +6720,7 @@ Used by functions ^DecodeRegValue()^, ^Decode_ModRM_SIB_Address()^.
 -------------------------------------------------------------------------------------------------------------------------*/
 
 const REG = [
-  /*-------------------------------------------------------------------------------------------------------------------------
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG array Index 0 Is used only if the value returned from the GetOperandSize is 0 in value which is the 8 bit general use
   Arithmetic registers names. Note that these same registers can be made 16 bit across instead of using just the first 8 bit
   in size it depends on the instruction codes extension size.
@@ -3080,122 +6734,322 @@ const REG = [
   used then the first 8 bit's is used by all general use arithmetic registers. Because of this the array is broken into two
   name listings that is used with the "RValue" number given to the function ^DecodeRegValue()^.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        /*-------------------------------------------------------------------------------------------------------------------------
     8 bit registers without any rex prefix active is the normal low byte to high byte order of the
     first 4 general use registers "A, C, D, and B" using 8 bits.
     -------------------------------------------------------------------------------------------------------------------------*/
-    [
-      //Registers 8 bit names without any rex prefix index 0 to 7.
-      "AL", "CL", "DL", "BL", "AH", "CH", "DH", "BH"
-    ],
-    /*-------------------------------------------------------------------------------------------------------------------------
+        [
+            //Registers 8 bit names without any rex prefix index 0 to 7.
+            "AL",
+            "CL",
+            "DL",
+            "BL",
+            "AH",
+            "CH",
+            "DH",
+            "BH"
+        ],
+        /*-------------------------------------------------------------------------------------------------------------------------
     8 bit registers with any rex prefix active uses all 15 registers in low byte order.
     -------------------------------------------------------------------------------------------------------------------------*/
-    [
-      //Registers 8 bit names with any rex prefix index 0 to 7.
-      "AL", "CL", "DL", "BL", "SPL", "BPL", "SIL", "DIL",
-      /*-------------------------------------------------------------------------------------------------------------------------
+        [
+            //Registers 8 bit names with any rex prefix index 0 to 7.
+            "AL",
+            "CL",
+            "DL",
+            "BL",
+            "SPL",
+            "BPL",
+            "SIL",
+            "DIL",
+            /*-------------------------------------------------------------------------------------------------------------------------
       Registers 8 bit names Extended using the REX.R extend setting in the Rex prefix, or VEX.R bit, or EVEX.R.
       What ever RegExtend is set based on prefix settings is added to the select Reg Index
       -------------------------------------------------------------------------------------------------------------------------*/
-      "R8B", "R9B", "R10B", "R11B", "R12B", "R13B", "R14B", "R15B"
-    ]
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+            "R8B",
+            "R9B",
+            "R10B",
+            "R11B",
+            "R12B",
+            "R13B",
+            "R14B",
+            "R15B"
+        ]
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG array Index 1 Is used only if the value returned from the GetOperandSize function is 1 in value in which bellow is the
   general use Arithmetic register names 16 in size.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //Registers 16 bit names index 0 to 15.
-    "AX", "CX", "DX", "BX", "SP", "BP", "SI", "DI", "R8W", "R9W", "R10W", "R11W", "R12W", "R13W", "R14W", "R15W"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //Registers 16 bit names index 0 to 15.
+        "AX",
+        "CX",
+        "DX",
+        "BX",
+        "SP",
+        "BP",
+        "SI",
+        "DI",
+        "R8W",
+        "R9W",
+        "R10W",
+        "R11W",
+        "R12W",
+        "R13W",
+        "R14W",
+        "R15W"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG array Index 2 Is used only if the value from the GetOperandSize function is 2 in value in which bellow is the
   general use Arithmetic register names 32 in size.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //Registers 32 bit names index 0 to 15.
-    "EAX", "ECX", "EDX", "EBX", "ESP", "EBP", "ESI", "EDI", "R8D", "R9D", "R10D", "R11D", "R12D", "R13D", "R14D", "R15D"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //Registers 32 bit names index 0 to 15.
+        "EAX",
+        "ECX",
+        "EDX",
+        "EBX",
+        "ESP",
+        "EBP",
+        "ESI",
+        "EDI",
+        "R8D",
+        "R9D",
+        "R10D",
+        "R11D",
+        "R12D",
+        "R13D",
+        "R14D",
+        "R15D"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG array Index 3 Is used only if the value returned from the GetOperandSize function is 3 in value in which bellow is the
   general use Arithmetic register names 64 in size.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //general use Arithmetic registers 64 names index 0 to 15.
-    "RAX", "RCX", "RDX", "RBX", "RSP", "RBP", "RSI", "RDI", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //general use Arithmetic registers 64 names index 0 to 15.
+        "RAX",
+        "RCX",
+        "RDX",
+        "RBX",
+        "RSP",
+        "RBP",
+        "RSI",
+        "RDI",
+        "R8",
+        "R9",
+        "R10",
+        "R11",
+        "R12",
+        "R13",
+        "R14",
+        "R15"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG array Index 4 SIMD registers 128 across in size names. The SIMD registers are used by the SIMD Vector math unit.
   Used only if the value from the GetOperandSize function is 4 in value.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //Register XMM names index 0 to 15.
-    "XMM0", "XMM1", "XMM2", "XMM3", "XMM4", "XMM5", "XMM6", "XMM7", "XMM8", "XMM9", "XMM10", "XMM11", "XMM12", "XMM13", "XMM14", "XMM15",
-    /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //Register XMM names index 0 to 15.
+        "XMM0",
+        "XMM1",
+        "XMM2",
+        "XMM3",
+        "XMM4",
+        "XMM5",
+        "XMM6",
+        "XMM7",
+        "XMM8",
+        "XMM9",
+        "XMM10",
+        "XMM11",
+        "XMM12",
+        "XMM13",
+        "XMM14",
+        "XMM15",
+        /*-------------------------------------------------------------------------------------------------------------------------
     Register XMM names index 16 to 31.
     Note different bit settings in the EVEX prefixes allow higher Extension values in the Register Extend variables.
     -------------------------------------------------------------------------------------------------------------------------*/
-    "XMM16", "XMM17", "XMM18", "XMM19", "XMM20", "XMM21", "XMM22", "XMM23", "XMM24", "XMM25", "XMM26", "XMM27", "XMM28", "XMM29", "XMM30", "XMM31"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+        "XMM16",
+        "XMM17",
+        "XMM18",
+        "XMM19",
+        "XMM20",
+        "XMM21",
+        "XMM22",
+        "XMM23",
+        "XMM24",
+        "XMM25",
+        "XMM26",
+        "XMM27",
+        "XMM28",
+        "XMM29",
+        "XMM30",
+        "XMM31"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG array Index 5 SIMD registers 256 across in size names.
   Used only if the value from the GetOperandSize function is 5 in value. Set by vector length setting.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //Register YMM names index 0 to 15.
-    "YMM0", "YMM1", "YMM2", "YMM3", "YMM4", "YMM5", "YMM6", "YMM7", "YMM8", "YMM9", "YMM10", "YMM11", "YMM12", "YMM13", "YMM14", "YMM15",
-    /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //Register YMM names index 0 to 15.
+        "YMM0",
+        "YMM1",
+        "YMM2",
+        "YMM3",
+        "YMM4",
+        "YMM5",
+        "YMM6",
+        "YMM7",
+        "YMM8",
+        "YMM9",
+        "YMM10",
+        "YMM11",
+        "YMM12",
+        "YMM13",
+        "YMM14",
+        "YMM15",
+        /*-------------------------------------------------------------------------------------------------------------------------
     Register YMM names index 16 to 31.
     Note different bit settings in the EVEX prefixes allow higher Extension values in the Register Extend variables.
     -------------------------------------------------------------------------------------------------------------------------*/
-    "YMM16", "YMM17", "YMM18", "YMM19", "YMM20", "YMM21", "YMM22", "YMM23", "YMM24", "YMM25", "YMM26", "YMM27", "YMM28", "YMM29", "YMM30", "YMM31"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+        "YMM16",
+        "YMM17",
+        "YMM18",
+        "YMM19",
+        "YMM20",
+        "YMM21",
+        "YMM22",
+        "YMM23",
+        "YMM24",
+        "YMM25",
+        "YMM26",
+        "YMM27",
+        "YMM28",
+        "YMM29",
+        "YMM30",
+        "YMM31"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG array Index 6 SIMD registers 512 across in size names.
   Used only if the value from the GetOperandSize function is 6 in value. Set by Vector length setting.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //Register ZMM names index 0 to 15.
-    "ZMM0", "ZMM1", "ZMM2", "ZMM3", "ZMM4", "ZMM5", "ZMM6", "ZMM7", "ZMM8", "ZMM9", "ZMM10", "ZMM11", "ZMM12", "ZMM13", "ZMM14", "ZMM15",
-    /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //Register ZMM names index 0 to 15.
+        "ZMM0",
+        "ZMM1",
+        "ZMM2",
+        "ZMM3",
+        "ZMM4",
+        "ZMM5",
+        "ZMM6",
+        "ZMM7",
+        "ZMM8",
+        "ZMM9",
+        "ZMM10",
+        "ZMM11",
+        "ZMM12",
+        "ZMM13",
+        "ZMM14",
+        "ZMM15",
+        /*-------------------------------------------------------------------------------------------------------------------------
     Register ZMM names index 16 to 31.
     Note different bit settings in the EVEX prefixes allow higher Extension values in the Register Extend variables.
     -------------------------------------------------------------------------------------------------------------------------*/
-    "ZMM16", "ZMM17", "ZMM18", "ZMM19", "ZMM20", "ZMM21", "ZMM22", "ZMM23", "ZMM24", "ZMM25", "ZMM26", "ZMM27", "ZMM28", "ZMM29", "ZMM30", "ZMM31"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+        "ZMM16",
+        "ZMM17",
+        "ZMM18",
+        "ZMM19",
+        "ZMM20",
+        "ZMM21",
+        "ZMM22",
+        "ZMM23",
+        "ZMM24",
+        "ZMM25",
+        "ZMM26",
+        "ZMM27",
+        "ZMM28",
+        "ZMM29",
+        "ZMM30",
+        "ZMM31"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG array Index 7 SIMD registers 1024 bit. The SIMD registers have not been made this long yet.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //Register unknowable names index 0 to 15.
-    "?MM0", "?MM1", "?MM2", "?MM3", "?MM4", "?MM5", "?MM6", "?MM7", "?MM8", "?MM9", "?MM10", "?MM11", "?MM12", "?MM13", "?MM14", "?MM15",
-    /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //Register unknowable names index 0 to 15.
+        "?MM0",
+        "?MM1",
+        "?MM2",
+        "?MM3",
+        "?MM4",
+        "?MM5",
+        "?MM6",
+        "?MM7",
+        "?MM8",
+        "?MM9",
+        "?MM10",
+        "?MM11",
+        "?MM12",
+        "?MM13",
+        "?MM14",
+        "?MM15",
+        /*-------------------------------------------------------------------------------------------------------------------------
     Register unknowable names index 16 to 31.
     Note different bit settings in the EVEX prefixes allow higher Extension values in the Register Extend variables.
     -------------------------------------------------------------------------------------------------------------------------*/
-    "?MM16", "?MM17", "?MM18", "?MM19", "?MM20", "?MM21", "?MM22", "?MM23", "?MM24", "?MM25", "?MM26", "?MM27", "?MM28", "?MM29", "?MM30", "?MM31"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+        "?MM16",
+        "?MM17",
+        "?MM18",
+        "?MM19",
+        "?MM20",
+        "?MM21",
+        "?MM22",
+        "?MM23",
+        "?MM24",
+        "?MM25",
+        "?MM26",
+        "?MM27",
+        "?MM28",
+        "?MM29",
+        "?MM30",
+        "?MM31"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   The Registers bellow do not change size they are completely separate, thus are used for special purposes. These registers
   are selected by using size as a value for the index instead instead of giving size to the function ^GetOperandSize()^.
   ---------------------------------------------------------------------------------------------------------------------------
   REG array Index 8 Segment Registers.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //Segment Registers names index 0 to 7
-    "ES", "CS", "SS", "DS", "FS", "GS", "ST(-2)", "ST(-1)"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //Segment Registers names index 0 to 7
+        "ES",
+        "CS",
+        "SS",
+        "DS",
+        "FS",
+        "GS",
+        "ST(-2)",
+        "ST(-1)"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG array Index 9 Stack, and MM registers used by the X87 Float point unit.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //ST registers Names index 0 to 7
-    //note these are used with the X87 FPU, but are aliased to MM in MMX SSE.
-    "ST(0)", "ST(1)", "ST(2)", "ST(3)", "ST(4)", "ST(5)", "ST(6)", "ST(7)"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //ST registers Names index 0 to 7
+        //note these are used with the X87 FPU, but are aliased to MM in MMX SSE.
+        "ST(0)",
+        "ST(1)",
+        "ST(2)",
+        "ST(3)",
+        "ST(4)",
+        "ST(5)",
+        "ST(6)",
+        "ST(7)"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG index 10 Intel MM qword technology MMX vector instructions.
   ---------------------------------------------------------------------------------------------------------------------------
   These can not be used with Vector length adjustment used in vector extensions. The MM register are the ST registers aliased
@@ -3206,53 +7060,164 @@ const REG = [
   that can be adjusted by vector length are separate from the MM registers, but still use the same SIMD unit. Because of this
   some Vector instruction codes can not be used with vector extension setting codes.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //Register MM names index 0 to 7
-    "MM0", "MM1", "MM2", "MM3", "MM4", "MM5", "MM6", "MM7"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //Register MM names index 0 to 7
+        "MM0",
+        "MM1",
+        "MM2",
+        "MM3",
+        "MM4",
+        "MM5",
+        "MM6",
+        "MM7"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG Array Index 11 bound registers introduced with MPX instructions.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //BND0 to BND3,and CR0 to CR3 for two byte opcodes 0x0F1A,and 0x0F1B register index 0 to 7
-    "BND0", "BND1", "BND2", "BND3", "CR0", "CR1", "CR2", "CR3"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //BND0 to BND3,and CR0 to CR3 for two byte opcodes 0x0F1A,and 0x0F1B register index 0 to 7
+        "BND0",
+        "BND1",
+        "BND2",
+        "BND3",
+        "CR0",
+        "CR1",
+        "CR2",
+        "CR3"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG array Index 12 control registers depending on the values they are set changes the modes of the CPU.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //control Registers index 0 to 15
-    "CR0", "CR1", "CR2", "CR3", "CR4", "CR5", "CR6", "CR7", "CR8", "CR9", "CR10", "CR11", "CR12", "CR13", "CR14", "CR15"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //control Registers index 0 to 15
+        "CR0",
+        "CR1",
+        "CR2",
+        "CR3",
+        "CR4",
+        "CR5",
+        "CR6",
+        "CR7",
+        "CR8",
+        "CR9",
+        "CR10",
+        "CR11",
+        "CR12",
+        "CR13",
+        "CR14",
+        "CR15"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG array Index 13 Debug mode registers.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //debug registers index 0 to 15
-    "DR0", "DR1", "DR2", "DR3", "DR4", "DR5", "DR6", "DR7", "DR8", "DR9", "DR10", "DR11", "DR12", "DR13", "DR14", "DR15"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //debug registers index 0 to 15
+        "DR0",
+        "DR1",
+        "DR2",
+        "DR3",
+        "DR4",
+        "DR5",
+        "DR6",
+        "DR7",
+        "DR8",
+        "DR9",
+        "DR10",
+        "DR11",
+        "DR12",
+        "DR13",
+        "DR14",
+        "DR15"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG array Index 14 test registers.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //TR registers index 0 to 7
-    "TR0", "TR1", "TR2", "TR3", "TR4", "TR5", "TR6", "TR7"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //TR registers index 0 to 7
+        "TR0",
+        "TR1",
+        "TR2",
+        "TR3",
+        "TR4",
+        "TR5",
+        "TR6",
+        "TR7"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG Array Index 15 SIMD vector mask registers.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    //K registers index 0 to 7, because of vector extensions it is repeated till last extension.
-    "K0", "K1", "K2", "K3", "K4", "K5", "K6", "K7","K0", "K1", "K2", "K3", "K4", "K5", "K6", "K7",
-    "K0", "K1", "K2", "K3", "K4", "K5", "K6", "K7","K0", "K1", "K2", "K3", "K4", "K5", "K6", "K7"
-  ],
-  /*-------------------------------------------------------------------------------------------------------------------------
+    [
+        //K registers index 0 to 7, because of vector extensions it is repeated till last extension.
+        "K0",
+        "K1",
+        "K2",
+        "K3",
+        "K4",
+        "K5",
+        "K6",
+        "K7",
+        "K0",
+        "K1",
+        "K2",
+        "K3",
+        "K4",
+        "K5",
+        "K6",
+        "K7",
+        "K0",
+        "K1",
+        "K2",
+        "K3",
+        "K4",
+        "K5",
+        "K6",
+        "K7",
+        "K0",
+        "K1",
+        "K2",
+        "K3",
+        "K4",
+        "K5",
+        "K6",
+        "K7"
+    ],
+    /*-------------------------------------------------------------------------------------------------------------------------
   REG Array Index 16 SIMD L1OM vector registers.
   -------------------------------------------------------------------------------------------------------------------------*/
-  [
-    "V0", "V1", "V2", "V3", "V4", "V5", "V6", "V7", "V8", "V9", "V10", "V11", "V12", "V13", "V14", "V15",
-    "V16", "V17", "V18", "V19", "V20", "V21", "V22", "V23", "V24", "V25", "V26", "V27", "V28", "V29", "V30", "V31"
-  ]
+    [
+        "V0",
+        "V1",
+        "V2",
+        "V3",
+        "V4",
+        "V5",
+        "V6",
+        "V7",
+        "V8",
+        "V9",
+        "V10",
+        "V11",
+        "V12",
+        "V13",
+        "V14",
+        "V15",
+        "V16",
+        "V17",
+        "V18",
+        "V19",
+        "V20",
+        "V21",
+        "V22",
+        "V23",
+        "V24",
+        "V25",
+        "V26",
+        "V27",
+        "V28",
+        "V29",
+        "V30",
+        "V31"
+    ]
 ];
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -3274,49 +7239,58 @@ Used by the function ^Decode_ModRM_SIB_Address()^.
 -------------------------------------------------------------------------------------------------------------------------*/
 
 const PTR = [
-  /*-------------------------------------------------------------------------------------------------------------------------
+    /*-------------------------------------------------------------------------------------------------------------------------
   Pointer array index 0 when GetOperandSize returns size 0 then times 2 for 8 bit pointer.
   In plus 16 bit shift array index 0 is added by 1 making 0+1=1 no pointer name is used.
   The blank pointer is used for instructions like LEA which loads the effective address.
   -------------------------------------------------------------------------------------------------------------------------*/
-  "BYTE PTR ","",
-  /*-------------------------------------------------------------------------------------------------------------------------
+    "BYTE PTR ",
+    "",
+    /*-------------------------------------------------------------------------------------------------------------------------
   Pointer array index 2 when GetOperandSize returns size 1 then times 2 for 16 bit pointer alignment.
   In plus 16 bit shift index 2 is added by 1 making 2+1=3 The 32 bit pointer name is used (mathematically 16+16=32).
   -------------------------------------------------------------------------------------------------------------------------*/
-  "WORD PTR ","DWORD PTR ",
-  /*-------------------------------------------------------------------------------------------------------------------------
+    "WORD PTR ",
+    "DWORD PTR ",
+    /*-------------------------------------------------------------------------------------------------------------------------
   Pointer array index 4 when GetOperandSize returns size 2 then multiply by 2 for index 4 for the 32 bit pointer.
   In plus 16 bit shift index 4 is added by 1 making 4+1=5 the 48 bit Far pointer name is used (mathematically 32+16=48).
   -------------------------------------------------------------------------------------------------------------------------*/
-  "DWORD PTR ","FWORD PTR ",
-  /*-------------------------------------------------------------------------------------------------------------------------
+    "DWORD PTR ",
+    "FWORD PTR ",
+    /*-------------------------------------------------------------------------------------------------------------------------
   Pointer array index 6 when GetOperandSize returns size 3 then multiply by 2 gives index 6 for the 64 bit pointer.
   The Non shifted 64 bit pointer has two types the 64 bit vector "MM", and regular "QWORD" the same as the REG array.
   In plus 16 bit shift index 6 is added by 1 making 6+1=7 the 80 bit TBYTE pointer name is used (mathematically 64+16=80).
   -------------------------------------------------------------------------------------------------------------------------*/
-  "QWORD PTR ","TBYTE PTR ",
-  /*-------------------------------------------------------------------------------------------------------------------------
+    "QWORD PTR ",
+    "TBYTE PTR ",
+    /*-------------------------------------------------------------------------------------------------------------------------
   Pointer array index 8 when GetOperandSize returns size 4 then multiply by 2 gives index 8 for the 128 bit Vector pointer.
   In far pointer shift the MMX vector pointer is used.
   MM is designed to be used when the by size system is false using index 9 for Pointer, and index 10 for Reg.
   -------------------------------------------------------------------------------------------------------------------------*/
-  "XMMWORD PTR ","MMWORD PTR ",
-  /*-------------------------------------------------------------------------------------------------------------------------
+    "XMMWORD PTR ",
+    "MMWORD PTR ",
+    /*-------------------------------------------------------------------------------------------------------------------------
   Pointer array index 10 when GetOperandSize returns size 5 then multiply by 2 gives index 10 for the 256 bit SIMD pointer.
   In far pointer shift the OWORD pointer is used with the bounds instructions it is also designed to be used when the by size is set false same as MM.
   -------------------------------------------------------------------------------------------------------------------------*/
-  "YMMWORD PTR ","OWORD PTR ",
-  /*-------------------------------------------------------------------------------------------------------------------------
+    "YMMWORD PTR ",
+    "OWORD PTR ",
+    /*-------------------------------------------------------------------------------------------------------------------------
   Pointer array index 12 when GetOperandSize returns size 6 then multiply by 2 gives index 12 for the 512 bit pointer.
   In plus 16 bit shift index 12 is added by 1 making 12+1=13 there is no 528 bit pointer name (mathematically 5126+16=528).
   -------------------------------------------------------------------------------------------------------------------------*/
-  "ZMMWORD PTR ","ERROR PTR ",
-  /*-------------------------------------------------------------------------------------------------------------------------
+    "ZMMWORD PTR ",
+    "ERROR PTR ",
+    /*-------------------------------------------------------------------------------------------------------------------------
   Pointer array index 14 when GetOperandSize returns size 7 then multiply by 2 gives index 12 for the 1024 bit pointer.
   In plus 16 bit shift index 14 is added by 1 making 12+1=13 there is no 1 bit pointer name (mathematically 5126+16=528).
   -------------------------------------------------------------------------------------------------------------------------*/
-  "?MMWORD PTR ","ERROR PTR "];
+    "?MMWORD PTR ",
+    "ERROR PTR "
+];
 
 /*-------------------------------------------------------------------------------------------------------------------------
 SIB byte scale Note the Scale bits value is the selected index of the array bellow only used under
@@ -3326,12 +7300,12 @@ used by the ^Decode_ModRM_SIB_Address function()^.
 -------------------------------------------------------------------------------------------------------------------------*/
 
 const scale = [
- "", //when scale bits are 0 in value no scale multiple is used
- "*2", //when scale bits are 1 in value a scale multiple of times two is used
- "*4", //when scale bits are 2 in value a scale multiple of times four is used
- "*8"  //when scale bits are 3 in value a scale multiple of times eight is used
- ];
- 
+    "", //when scale bits are 0 in value no scale multiple is used
+    "*2", //when scale bits are 1 in value a scale multiple of times two is used
+    "*4", //when scale bits are 2 in value a scale multiple of times four is used
+    "*8" //when scale bits are 3 in value a scale multiple of times eight is used
+];
+
 /*-------------------------------------------------------------------------------------------------------------------------
 This function changes the Mnemonics array, for older instruction codes used by specific X86 cores that are under the same instruction codes.
 ---------------------------------------------------------------------------------------------------------------------------
@@ -3344,192 +7318,385 @@ If input "type" is set 5 it will adjust the mnemonic array to decode Centaur ins
 If input "type" is set 6 it will adjust the mnemonic array to decode instruction for the X86/486 CPU which conflict with the vector unit instructions with UMOV.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-export function CompatibilityMode( type )
-{
-  //Reset the changeable sections of the Mnemonics array, and operand encoding array.
-  
-  Mnemonics[0x062] = ["BOUND","BOUND",""];
-  Mnemonics[0x110] = [["MOVUPS","MOVUPD","MOVSS","MOVSD"],["MOVUPS","MOVUPD","MOVSS","MOVSD"]];
-  Mnemonics[0x111] = [["MOVUPS","MOVUPD","MOVSS","MOVSD"],["MOVUPS","MOVUPD","MOVSS","MOVSD"]];
-  Mnemonics[0x112] = [["MOVLPS","MOVLPD","MOVSLDUP","MOVDDUP"],["MOVHLPS","???","MOVSLDUP","MOVDDUP"]];
-  Mnemonics[0x113] = [["MOVLPS","MOVLPD","???","???"],"???"];
-  Mnemonics[0x138] = ""; Mnemonics[0x139] = "???"; Mnemonics[0x13A] = ""; Mnemonics[0x13B] = "???"; Mnemonics[0x13C] = "???"; Mnemonics[0x13D] = "???"; Mnemonics[0x13F] = "???";
-  Mnemonics[0x141] = [["CMOVNO",["KANDW","","KANDQ"],"",""],["CMOVNO",["KANDB","","KANDD"],"",""],"",""];
-  Mnemonics[0x142] = [["CMOVB",["KANDNW","","KANDNQ"],"",""],["CMOVB",["KANDNB","","KANDND"],"",""],"",""];
-  Mnemonics[0x144] = [["CMOVE",["KNOTW","","KNOTQ"],"",""],["CMOVE",["KNOTB","","KNOTD"],"",""],"",""];
-  Mnemonics[0x145] = [["CMOVNE",["KORW","","KORQ"],"",""],["CMOVNE",["KORB","","KORD"],"",""],"",""];
-  Mnemonics[0x146] = [["CMOVBE",["KXNORW","","KXNORQ"],"",""],["CMOVBE",["KXNORB","","KXNORD"],"",""],"",""];
-  Mnemonics[0x147] = [["CMOVA",["KXORW","","KXORQ"],"",""],["CMOVA",["KXORB","","KXORD"],"",""],"",""];
-  Mnemonics[0x150] = ["???",[["MOVMSKPS","MOVMSKPS","",""],["MOVMSKPD","MOVMSKPD","",""],"???","???"]];
-  Mnemonics[0x151] = ["SQRTPS","SQRTPD","SQRTSS","SQRTSD"];
-  Mnemonics[0x152] = [["RSQRTPS","RSQRTPS","",""],"???",["RSQRTSS","RSQRTSS","",""],"???"];
-  Mnemonics[0x154] = ["ANDPS","ANDPD","???","???"];
-  Mnemonics[0x155] = ["ANDNPS","ANDNPD","???","???"];
-  Mnemonics[0x158] = [["ADDPS","ADDPS","ADDPS","ADDPS"],["ADDPD","ADDPD","ADDPD","ADDPD"],"ADDSS","ADDSD"];
-  Mnemonics[0x159] = [["MULPS","MULPS","MULPS","MULPS"],["MULPD","MULPD","MULPD","MULPD"],"MULSS","MULSD"];
-  Mnemonics[0x15A] = [["CVTPS2PD","CVTPS2PD","CVTPS2PD","CVTPS2PD"],["CVTPD2PS","CVTPD2PS","CVTPD2PS","CVTPD2PS"],"CVTSS2SD","CVTSD2SS"];
-  Mnemonics[0x15B] = [[["CVTDQ2PS","","CVTQQ2PS"],"CVTPS2DQ",""],"???","CVTTPS2DQ","???"];
-  Mnemonics[0x15C] = [["SUBPS","SUBPS","SUBPS","SUBPS"],["SUBPD","SUBPD","SUBPD","SUBPD"],"SUBSS","SUBSD"];
-  Mnemonics[0x15D] = ["MINPS","MINPD","MINSS","MINSD"];
-  Mnemonics[0x15E] = ["DIVPS","DIVPD","DIVSS","DIVSD"];
-  Mnemonics[0x178] = [["VMREAD","",["CVTTPS2UDQ","","CVTTPD2UDQ"],""],["EXTRQ","",["CVTTPS2UQQ","","CVTTPD2UQQ"],""],["???","","CVTTSS2USI",""],["INSERTQ","","CVTTSD2USI",""]];
-  Mnemonics[0x179] = [["VMWRITE","",["CVTPS2UDQ","","CVTPD2UDQ"],""],["EXTRQ","",["CVTPS2UQQ","","CVTPD2UQQ"],""],["???","","CVTSS2USI",""],["INSERTQ","","CVTSD2USI",""]];
-  Mnemonics[0x17A] = ["???",["","",["CVTTPS2QQ","","CVTTPD2QQ"],""],["","",["CVTUDQ2PD","","CVTUQQ2PD"],"CVTUDQ2PD"],["","",["CVTUDQ2PS","","CVTUQQ2PS"],""]];
-  Mnemonics[0x17B] = ["???",["","",["CVTPS2QQ","","CVTPD2QQ"],""],["","","CVTUSI2SS",""],["","","CVTUSI2SD",""]];
-  Mnemonics[0x17C] = ["???",["HADDPD","HADDPD","",""],"???",["HADDPS","HADDPS","",""]];
-  Mnemonics[0x17D] = ["???",["HSUBPD","HSUBPD","",""],"???",["HSUBPS","HSUBPS","",""]];
-  Mnemonics[0x17E] = [["MOVD","","",""],["MOVD","","MOVQ"],["MOVQ","MOVQ",["???","","MOVQ"],""],"???"],
-  Mnemonics[0x190] = [["SETO",["KMOVW","","KMOVQ"],"",""],["SETO",["KMOVB","","KMOVD"],"",""],"",""];
-  Mnemonics[0x192] = [["SETB",["KMOVW","","???"],"",""],["SETB",["KMOVB","","???"],"",""],"",["SETB",["KMOVD","","KMOVQ"],"",""]];
-  Mnemonics[0x193] = [["SETAE",["KMOVW","","???"],"",""],["SETAE",["KMOVB","","???"],"",""],"",["SETAE",["KMOVD","","KMOVQ"],"",""]];
-  Mnemonics[0x198] = [["SETS",["KORTESTW","","KORTESTQ"],"",""],["SETS",["KORTESTB","","KORTESTD"],"",""],"",""];
-  Mnemonics[0x1A6] = "XBTS";
-  Mnemonics[0x1A7] = "IBTS";
+export function CompatibilityMode(type) {
+    //Reset the changeable sections of the Mnemonics array, and operand encoding array.
 
-  Operands[0x110] = [["0B700770","0B700770","0A040603","0A040609"],["0B700770","0B700770","0A0412040604","0A0412040604"]];
-  Operands[0x111] = [["07700B70","07700B70","06030A04","06090A04"],["07700B70","07700B70","060412040A04","060412040A04"]];
-  Operands[0x112] = [["0A0412040606","0A0412040606","0B700770","0B700768"],["0A0412040604","","0B700770","0B700770"]];
-  Operands[0x113] = [["06060A04","06060A04","",""],""];
-  Operands[0x141] = [["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],"",""];
-  Operands[0x142] = [["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],"",""];
-  Operands[0x144] = [["0B0E070E0180",["0A0F06FF","","0A0F06FF"],"",""],["0B0E070E0180",["0A0F06FF","","0A0F06FF"],"",""],"",""];
-  Operands[0x145] = [["0A02070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],["0A02070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],"",""];
-  Operands[0x146] = [["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],"",""];
-  Operands[0x147] = [["0B0E070E0180",["0A0F120F06FF","","0A0F120F06FF"],"",""],["0B0E070E0180",["0A0F120F06FF","",""],"",""],"",""];
-  Operands[0x150] = ["",[["0B0C0648","0B0C0730","",""],["0B0C0648","0B0C0730","",""],"",""]];
-  Operands[0x151] = ["0B7007700112","0B7007700112","0A04120406430102","0A04120406490102"];
-  Operands[0x152] = [["0A040648","0A040648","",""],"",["0A040643","0A0412040643","",""],""];
-  Operands[0x154] = ["0B70137007700110","0B70137007700110","",""];
-  Operands[0x155] = ["0B70137007700110","0B70137007700110","",""];
-  Operands[0x158] = [["0A040648","0B3013300730","0B70137007700112","0A061206066C0172"],["0A040648","0B3013300730","0B70137007700112","0A061206066C0112"],"0A04120406430102","0A04120406460102"];
-  Operands[0x159] = [["0A040648","0B3013300730","0B70137007700112","0A061206066C0172"],["0A040648","0B3013300730","0B70137007700112","0A061206066C0112"],"0A04120406430102","0A04120406460102"];
-  Operands[0x15A] = [["0A040648","0B300718","0B7007380111","0A06065A0111"],["0A040648","0B180730","0B3807700112","0A05066C0112"],"0A04120406430101","0A04120406460102"];
-  Operands[0x15B] = [[["0B7007700112","","0B380770011A"],"0B700770011A","",""],"","0B7007700111",""];
-  Operands[0x15C] = [["0A060648","0B3013300730","0B70137007700112","0A061206066C0172"],["0A060648","0B3013300730","0B70137007700112","0A061206066C0112"],"0A04120406430102","0A04120406460102"];
-  Operands[0x15D] = ["0B70137007700111","0B70137007700111","0A04120406430101","0A04120406460101"];
-  Operands[0x15E] = ["0B70137007700112","0B70137007700112","0A04120406430102","0A04120406460102"];
-  Operands[0x178] = [["07080B080180","",["0B7007700111","","0B3807700119"],""],["064F0C000C00","",["0B7007380119","","0B7007700111"],""],["","","0B0C06440109",""],["0A04064F0C000C00","","0B0C06460109",""]];
-  Operands[0x179] = [["0B0807080180","",["0B7007700112","","0B380770011A"],""],["0A04064F","",["0B700738011A","","0B7007700112"],""],["","","0B0C0644010A",""],["0A04064F","","0B0C0646010A",""]];
-  Operands[0x17A] = ["",["","",["0B7007380119","","0B7007700111"],""],["","",["0B7007380112","","0B700770011A"],"0A06065A0112"],["","",["0B700770011A","","0B3807700112"],""]];
-  Operands[0x17B] = ["",["","",["0B700738011A","","0B7007700112"],""],["","","0A041204070C010A",""],["","","0A041204070C010A",""]];
-  Operands[0x17C] = ["",["0A040604","0B7013700770","",""],"",["0A040604","0B7013700770","",""]];
-  Operands[0x17D] = ["",["0A040604","0B7013700770","",""],"",["0A040604","0B7013700770","",""]];
-  Operands[0x17E] = [["070C0A0A","","",""],["06240A040108","","06360A040108"],["0A040646","0A040646",["","","0A0406460108"],""],""];
-  Operands[0x190] = [["0600",["0A0F0612","","0A0F0636"],"",""],["0600",["0A0F0600","","0A0F0624"],"",""],"",""];
-  Operands[0x192] = [["0600",["0A0F06F4","",""],"",""],["0600",["0A0F06F4","",""],"",""],"",["0600",["0A0F06F6","","0A0F06F6"],"",""]];
-  Operands[0x193] = [["0600",["06F40A0F","",""],"",""],["0600",["06F40A0F","",""],"",""],"",["0600",["06F60A0F","","06F60A0F"],"",""]];
-  Operands[0x198] = [["0600",["0A0F06FF","","0A0F06FF"],"",""],["0600",["0A0F06FF","","0A0F06FF"],"",""],"",""];
-  Operands[0x1A6] = "0B0E070E";
-  Operands[0x1A7] = "070E0B0E";
-  
-  //Adjust the VEX mask instructions for K1OM (Knights corner) which conflict with the enhanced AVX512 versions.
-	
-  if( type === 1 )
-  {
-    Mnemonics[0x141] = [["CMOVNO","KAND","",""],"","",""];
-    Mnemonics[0x142] = [["CMOVB","KANDN","",""],"","",""];
-    Mnemonics[0x144] = [["CMOVE","KNOT","",""],"","",""];
-    Mnemonics[0x145] = [["CMOVNE","KOR","",""],"","",""];
-    Mnemonics[0x146] = [["CMOVBE","KXNOR","",""],"","",""];
-    Mnemonics[0x147] = [["CMOVA","KXOR","",""],"","",""];
-    Mnemonics[0x190] = [["SETO","KMOV","",""],"","",""];
-    Mnemonics[0x192] = [["SETB","KMOV","",""],"","",""];
-    Mnemonics[0x193] = [["SETAE","KMOV","",""],"","",""];
-    Mnemonics[0x198] = [["SETS","KORTEST","",""],"","",""];
-    Operands[0x141] = [["0B0E070E0180","0A0F06FF","",""],"","",""];
-    Operands[0x142] = [["0B0E070E0180","0A0F06FF","",""],"","",""];
-    Operands[0x144] = [["0B0E070E0180","0A0F06FF","",""],"","",""];
-    Operands[0x145] = [["0A02070E0180","0A0F06FF","",""],"","",""];
-    Operands[0x146] = [["0B0E070E0180","0A0F06FF","",""],"","",""];
-    Operands[0x147] = [["0B0E070E0180","0A0F06FF","",""],"","",""];
-    Operands[0x190] = [["0600","0A0F06FF","",""],"","",""];
-    Operands[0x192] = [["0600","06FF0B06","",""],"","",""];
-    Operands[0x193] = [["0600","07060A0F","",""],"","",""];
-    Operands[0x198] = [["0600","0A0F06FF","",""],"","",""];
-  }
-  
-  //Disable Knights corner, and AVX512, for L1OM (Intel Larrabee).
-  
-  if( type === 2 )
-  {
-    Mnemonics[0x62] = "";
-  }
-
-  //Adjust the Mnemonics, and Operand encoding, for the Cyrix processors.
-
-  if( type === 3 )
-  {
-    Mnemonics[0x138] = "SMINT"; Mnemonics[0x13A] = "BB0_RESET"; Mnemonics[0x13B] = "BB1_RESET"; Mnemonics[0x13C] = "CPU_WRITE"; Mnemonics[0x13D] = "CPU_READ";
-    Mnemonics[0x150] = "PAVEB"; Mnemonics[0x151] = "PADDSIW"; Mnemonics[0x152] = "PMAGW";
-    Mnemonics[0x154] = "PDISTIB"; Mnemonics[0x155] = "PSUBSIW";
-    Mnemonics[0x158] = "PMVZB"; Mnemonics[0x159] = "PMULHRW"; Mnemonics[0x15A] = "PMVNZB";
-    Mnemonics[0x15B] = "PMVLZB"; Mnemonics[0x15C] = "PMVGEZB"; Mnemonics[0x15D] = "PMULHRIW";
-    Mnemonics[0x15E] = "PMACHRIW";
-    Mnemonics[0x178] = "SVDC"; Mnemonics[0x179] = "RSDC"; Mnemonics[0x17A] = "SVLDT";
-    Mnemonics[0x17B] = "RSLDT"; Mnemonics[0x17C] = "SVTS"; Mnemonics[0x17D] = "RSTS";
-    Mnemonics[0x17E] = "SMINT";
-    Operands[0x150] = "0A0A06A9"; Operands[0x151] = "0A0A06A9"; Mnemonics[0x152] = "0A0A06A9";
-    Operands[0x154] = "0A0A06AF"; Operands[0x155] = "0A0A06A9";
-    Operands[0x158] = "0A0A06AF"; Operands[0x159] = "0A0A06A9"; Mnemonics[0x15A] = "0A0A06AF";
-    Operands[0x15B] = "0A0A06AF"; Operands[0x15C] = "0A0A06AF"; Mnemonics[0x15D] = "0A0A06A9";
-    Operands[0x15E] = "0A0A06AF";
-    Operands[0x178] = "30000A08"; Operands[0x179] = "0A083000"; Operands[0x17A] = "3000";
-    Operands[0x17B] = "3000"; Operands[0x17C] = "3000"; Operands[0x17D] = "3000";
-    Operands[0x17E] = "";
-  }
-  
-  //Adjust the Mnemonics, and Operand encoding, for the Geode processor.
-  
-  if( type === 4 )
-  {
-    Mnemonics[0x138] = "SMINT"; Mnemonics[0x139] = "DMINT"; Mnemonics[0x13A] = "RDM";
-  }
-  
-  //Adjust the Mnemonics, for the Centaur processor.
-
-  if( type === 5 )
-  {
-    Mnemonics[0x13F] = "ALTINST";
-    Mnemonics[0x1A6] = ["???",["MONTMUL","XSA1","XSA256","???","???","???","???","???"]];
-    Mnemonics[0x1A7] = [
-      "???",
-      [
-        "XSTORE",
-        ["???","???","XCRYPT-ECB","???"],
-        ["???","???","XCRYPT-CBC","???"],
-        ["???","???","XCRYPT-CTR","???"],
-        ["???","???","XCRYPT-CFB","???"],
-        ["???","???","XCRYPT-OFB","???"],
-        "???",
-        "???"
-      ]
+    Mnemonics[0x062] = ["BOUND", "BOUND", ""];
+    Mnemonics[0x110] = [
+        ["MOVUPS", "MOVUPD", "MOVSS", "MOVSD"],
+        ["MOVUPS", "MOVUPD", "MOVSS", "MOVSD"]
     ];
-    Operands[0x1A6] = ["",["","","","","","","",""]];
-    Operands[0x1A7] = [
-      "",
-      [
-        "",
-        ["","","",""],
-        ["","","",""],
-        ["","","",""],
-        ["","","",""],
-        ["","","",""],
+    Mnemonics[0x111] = [
+        ["MOVUPS", "MOVUPD", "MOVSS", "MOVSD"],
+        ["MOVUPS", "MOVUPD", "MOVSS", "MOVSD"]
+    ];
+    Mnemonics[0x112] = [
+        ["MOVLPS", "MOVLPD", "MOVSLDUP", "MOVDDUP"],
+        ["MOVHLPS", "???", "MOVSLDUP", "MOVDDUP"]
+    ];
+    Mnemonics[0x113] = [["MOVLPS", "MOVLPD", "???", "???"], "???"];
+    Mnemonics[0x138] = "";
+    Mnemonics[0x139] = "???";
+    Mnemonics[0x13a] = "";
+    Mnemonics[0x13b] = "???";
+    Mnemonics[0x13c] = "???";
+    Mnemonics[0x13d] = "???";
+    Mnemonics[0x13f] = "???";
+    Mnemonics[0x141] = [["CMOVNO", ["KANDW", "", "KANDQ"], "", ""], ["CMOVNO", ["KANDB", "", "KANDD"], "", ""], "", ""];
+    Mnemonics[0x142] = [
+        ["CMOVB", ["KANDNW", "", "KANDNQ"], "", ""],
+        ["CMOVB", ["KANDNB", "", "KANDND"], "", ""],
         "",
         ""
-      ]
     ];
-  }
-  
-  //Adjust the Mnemonics, for the X86/486 processor and older.
-  
-  if( type === 6 )
-  {
-    Mnemonics[0x110] = "UMOV"; Mnemonics[0x111] = "UMOV"; Mnemonics[0x112] = "UMOV"; Mnemonics[0x113] = "UMOV";
-    Mnemonics[0x1A6] = "CMPXCHG"; Mnemonics[0x1A7] = "CMPXCHG";
-    Operands[0x110] = "06000A00"; Operands[0x111] = "070E0B0E"; Operands[0x112] = "0A000600"; Operands[0x113] = "0B0E070E";
-    Operands[0x1A6] = ""; Operands[0x1A7] = "";
-  }
-  
+    Mnemonics[0x144] = [["CMOVE", ["KNOTW", "", "KNOTQ"], "", ""], ["CMOVE", ["KNOTB", "", "KNOTD"], "", ""], "", ""];
+    Mnemonics[0x145] = [["CMOVNE", ["KORW", "", "KORQ"], "", ""], ["CMOVNE", ["KORB", "", "KORD"], "", ""], "", ""];
+    Mnemonics[0x146] = [
+        ["CMOVBE", ["KXNORW", "", "KXNORQ"], "", ""],
+        ["CMOVBE", ["KXNORB", "", "KXNORD"], "", ""],
+        "",
+        ""
+    ];
+    Mnemonics[0x147] = [["CMOVA", ["KXORW", "", "KXORQ"], "", ""], ["CMOVA", ["KXORB", "", "KXORD"], "", ""], "", ""];
+    Mnemonics[0x150] = ["???", [["MOVMSKPS", "MOVMSKPS", "", ""], ["MOVMSKPD", "MOVMSKPD", "", ""], "???", "???"]];
+    Mnemonics[0x151] = ["SQRTPS", "SQRTPD", "SQRTSS", "SQRTSD"];
+    Mnemonics[0x152] = [["RSQRTPS", "RSQRTPS", "", ""], "???", ["RSQRTSS", "RSQRTSS", "", ""], "???"];
+    Mnemonics[0x154] = ["ANDPS", "ANDPD", "???", "???"];
+    Mnemonics[0x155] = ["ANDNPS", "ANDNPD", "???", "???"];
+    Mnemonics[0x158] = [["ADDPS", "ADDPS", "ADDPS", "ADDPS"], ["ADDPD", "ADDPD", "ADDPD", "ADDPD"], "ADDSS", "ADDSD"];
+    Mnemonics[0x159] = [["MULPS", "MULPS", "MULPS", "MULPS"], ["MULPD", "MULPD", "MULPD", "MULPD"], "MULSS", "MULSD"];
+    Mnemonics[0x15a] = [
+        ["CVTPS2PD", "CVTPS2PD", "CVTPS2PD", "CVTPS2PD"],
+        ["CVTPD2PS", "CVTPD2PS", "CVTPD2PS", "CVTPD2PS"],
+        "CVTSS2SD",
+        "CVTSD2SS"
+    ];
+    Mnemonics[0x15b] = [[["CVTDQ2PS", "", "CVTQQ2PS"], "CVTPS2DQ", ""], "???", "CVTTPS2DQ", "???"];
+    Mnemonics[0x15c] = [["SUBPS", "SUBPS", "SUBPS", "SUBPS"], ["SUBPD", "SUBPD", "SUBPD", "SUBPD"], "SUBSS", "SUBSD"];
+    Mnemonics[0x15d] = ["MINPS", "MINPD", "MINSS", "MINSD"];
+    Mnemonics[0x15e] = ["DIVPS", "DIVPD", "DIVSS", "DIVSD"];
+    Mnemonics[0x178] = [
+        ["VMREAD", "", ["CVTTPS2UDQ", "", "CVTTPD2UDQ"], ""],
+        ["EXTRQ", "", ["CVTTPS2UQQ", "", "CVTTPD2UQQ"], ""],
+        ["???", "", "CVTTSS2USI", ""],
+        ["INSERTQ", "", "CVTTSD2USI", ""]
+    ];
+    Mnemonics[0x179] = [
+        ["VMWRITE", "", ["CVTPS2UDQ", "", "CVTPD2UDQ"], ""],
+        ["EXTRQ", "", ["CVTPS2UQQ", "", "CVTPD2UQQ"], ""],
+        ["???", "", "CVTSS2USI", ""],
+        ["INSERTQ", "", "CVTSD2USI", ""]
+    ];
+    Mnemonics[0x17a] = [
+        "???",
+        ["", "", ["CVTTPS2QQ", "", "CVTTPD2QQ"], ""],
+        ["", "", ["CVTUDQ2PD", "", "CVTUQQ2PD"], "CVTUDQ2PD"],
+        ["", "", ["CVTUDQ2PS", "", "CVTUQQ2PS"], ""]
+    ];
+    Mnemonics[0x17b] = [
+        "???",
+        ["", "", ["CVTPS2QQ", "", "CVTPD2QQ"], ""],
+        ["", "", "CVTUSI2SS", ""],
+        ["", "", "CVTUSI2SD", ""]
+    ];
+    Mnemonics[0x17c] = ["???", ["HADDPD", "HADDPD", "", ""], "???", ["HADDPS", "HADDPS", "", ""]];
+    Mnemonics[0x17d] = ["???", ["HSUBPD", "HSUBPD", "", ""], "???", ["HSUBPS", "HSUBPS", "", ""]];
+    (Mnemonics[0x17e] = [["MOVD", "", "", ""], ["MOVD", "", "MOVQ"], ["MOVQ", "MOVQ", ["???", "", "MOVQ"], ""], "???"]),
+        (Mnemonics[0x190] = [
+            ["SETO", ["KMOVW", "", "KMOVQ"], "", ""],
+            ["SETO", ["KMOVB", "", "KMOVD"], "", ""],
+            "",
+            ""
+        ]);
+    Mnemonics[0x192] = [
+        ["SETB", ["KMOVW", "", "???"], "", ""],
+        ["SETB", ["KMOVB", "", "???"], "", ""],
+        "",
+        ["SETB", ["KMOVD", "", "KMOVQ"], "", ""]
+    ];
+    Mnemonics[0x193] = [
+        ["SETAE", ["KMOVW", "", "???"], "", ""],
+        ["SETAE", ["KMOVB", "", "???"], "", ""],
+        "",
+        ["SETAE", ["KMOVD", "", "KMOVQ"], "", ""]
+    ];
+    Mnemonics[0x198] = [
+        ["SETS", ["KORTESTW", "", "KORTESTQ"], "", ""],
+        ["SETS", ["KORTESTB", "", "KORTESTD"], "", ""],
+        "",
+        ""
+    ];
+    Mnemonics[0x1a6] = "XBTS";
+    Mnemonics[0x1a7] = "IBTS";
+
+    Operands[0x110] = [
+        ["0B700770", "0B700770", "0A040603", "0A040609"],
+        ["0B700770", "0B700770", "0A0412040604", "0A0412040604"]
+    ];
+    Operands[0x111] = [
+        ["07700B70", "07700B70", "06030A04", "06090A04"],
+        ["07700B70", "07700B70", "060412040A04", "060412040A04"]
+    ];
+    Operands[0x112] = [
+        ["0A0412040606", "0A0412040606", "0B700770", "0B700768"],
+        ["0A0412040604", "", "0B700770", "0B700770"]
+    ];
+    Operands[0x113] = [["06060A04", "06060A04", "", ""], ""];
+    Operands[0x141] = [
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        "",
+        ""
+    ];
+    Operands[0x142] = [
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        "",
+        ""
+    ];
+    Operands[0x144] = [
+        ["0B0E070E0180", ["0A0F06FF", "", "0A0F06FF"], "", ""],
+        ["0B0E070E0180", ["0A0F06FF", "", "0A0F06FF"], "", ""],
+        "",
+        ""
+    ];
+    Operands[0x145] = [
+        ["0A02070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        ["0A02070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        "",
+        ""
+    ];
+    Operands[0x146] = [
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        "",
+        ""
+    ];
+    Operands[0x147] = [
+        ["0B0E070E0180", ["0A0F120F06FF", "", "0A0F120F06FF"], "", ""],
+        ["0B0E070E0180", ["0A0F120F06FF", "", ""], "", ""],
+        "",
+        ""
+    ];
+    Operands[0x150] = ["", [["0B0C0648", "0B0C0730", "", ""], ["0B0C0648", "0B0C0730", "", ""], "", ""]];
+    Operands[0x151] = ["0B7007700112", "0B7007700112", "0A04120406430102", "0A04120406490102"];
+    Operands[0x152] = [["0A040648", "0A040648", "", ""], "", ["0A040643", "0A0412040643", "", ""], ""];
+    Operands[0x154] = ["0B70137007700110", "0B70137007700110", "", ""];
+    Operands[0x155] = ["0B70137007700110", "0B70137007700110", "", ""];
+    Operands[0x158] = [
+        ["0A040648", "0B3013300730", "0B70137007700112", "0A061206066C0172"],
+        ["0A040648", "0B3013300730", "0B70137007700112", "0A061206066C0112"],
+        "0A04120406430102",
+        "0A04120406460102"
+    ];
+    Operands[0x159] = [
+        ["0A040648", "0B3013300730", "0B70137007700112", "0A061206066C0172"],
+        ["0A040648", "0B3013300730", "0B70137007700112", "0A061206066C0112"],
+        "0A04120406430102",
+        "0A04120406460102"
+    ];
+    Operands[0x15a] = [
+        ["0A040648", "0B300718", "0B7007380111", "0A06065A0111"],
+        ["0A040648", "0B180730", "0B3807700112", "0A05066C0112"],
+        "0A04120406430101",
+        "0A04120406460102"
+    ];
+    Operands[0x15b] = [[["0B7007700112", "", "0B380770011A"], "0B700770011A", "", ""], "", "0B7007700111", ""];
+    Operands[0x15c] = [
+        ["0A060648", "0B3013300730", "0B70137007700112", "0A061206066C0172"],
+        ["0A060648", "0B3013300730", "0B70137007700112", "0A061206066C0112"],
+        "0A04120406430102",
+        "0A04120406460102"
+    ];
+    Operands[0x15d] = ["0B70137007700111", "0B70137007700111", "0A04120406430101", "0A04120406460101"];
+    Operands[0x15e] = ["0B70137007700112", "0B70137007700112", "0A04120406430102", "0A04120406460102"];
+    Operands[0x178] = [
+        ["07080B080180", "", ["0B7007700111", "", "0B3807700119"], ""],
+        ["064F0C000C00", "", ["0B7007380119", "", "0B7007700111"], ""],
+        ["", "", "0B0C06440109", ""],
+        ["0A04064F0C000C00", "", "0B0C06460109", ""]
+    ];
+    Operands[0x179] = [
+        ["0B0807080180", "", ["0B7007700112", "", "0B380770011A"], ""],
+        ["0A04064F", "", ["0B700738011A", "", "0B7007700112"], ""],
+        ["", "", "0B0C0644010A", ""],
+        ["0A04064F", "", "0B0C0646010A", ""]
+    ];
+    Operands[0x17a] = [
+        "",
+        ["", "", ["0B7007380119", "", "0B7007700111"], ""],
+        ["", "", ["0B7007380112", "", "0B700770011A"], "0A06065A0112"],
+        ["", "", ["0B700770011A", "", "0B3807700112"], ""]
+    ];
+    Operands[0x17b] = [
+        "",
+        ["", "", ["0B700738011A", "", "0B7007700112"], ""],
+        ["", "", "0A041204070C010A", ""],
+        ["", "", "0A041204070C010A", ""]
+    ];
+    Operands[0x17c] = ["", ["0A040604", "0B7013700770", "", ""], "", ["0A040604", "0B7013700770", "", ""]];
+    Operands[0x17d] = ["", ["0A040604", "0B7013700770", "", ""], "", ["0A040604", "0B7013700770", "", ""]];
+    Operands[0x17e] = [
+        ["070C0A0A", "", "", ""],
+        ["06240A040108", "", "06360A040108"],
+        ["0A040646", "0A040646", ["", "", "0A0406460108"], ""],
+        ""
+    ];
+    Operands[0x190] = [
+        ["0600", ["0A0F0612", "", "0A0F0636"], "", ""],
+        ["0600", ["0A0F0600", "", "0A0F0624"], "", ""],
+        "",
+        ""
+    ];
+    Operands[0x192] = [
+        ["0600", ["0A0F06F4", "", ""], "", ""],
+        ["0600", ["0A0F06F4", "", ""], "", ""],
+        "",
+        ["0600", ["0A0F06F6", "", "0A0F06F6"], "", ""]
+    ];
+    Operands[0x193] = [
+        ["0600", ["06F40A0F", "", ""], "", ""],
+        ["0600", ["06F40A0F", "", ""], "", ""],
+        "",
+        ["0600", ["06F60A0F", "", "06F60A0F"], "", ""]
+    ];
+    Operands[0x198] = [
+        ["0600", ["0A0F06FF", "", "0A0F06FF"], "", ""],
+        ["0600", ["0A0F06FF", "", "0A0F06FF"], "", ""],
+        "",
+        ""
+    ];
+    Operands[0x1a6] = "0B0E070E";
+    Operands[0x1a7] = "070E0B0E";
+
+    //Adjust the VEX mask instructions for K1OM (Knights corner) which conflict with the enhanced AVX512 versions.
+
+    if (type === 1) {
+        Mnemonics[0x141] = [["CMOVNO", "KAND", "", ""], "", "", ""];
+        Mnemonics[0x142] = [["CMOVB", "KANDN", "", ""], "", "", ""];
+        Mnemonics[0x144] = [["CMOVE", "KNOT", "", ""], "", "", ""];
+        Mnemonics[0x145] = [["CMOVNE", "KOR", "", ""], "", "", ""];
+        Mnemonics[0x146] = [["CMOVBE", "KXNOR", "", ""], "", "", ""];
+        Mnemonics[0x147] = [["CMOVA", "KXOR", "", ""], "", "", ""];
+        Mnemonics[0x190] = [["SETO", "KMOV", "", ""], "", "", ""];
+        Mnemonics[0x192] = [["SETB", "KMOV", "", ""], "", "", ""];
+        Mnemonics[0x193] = [["SETAE", "KMOV", "", ""], "", "", ""];
+        Mnemonics[0x198] = [["SETS", "KORTEST", "", ""], "", "", ""];
+        Operands[0x141] = [["0B0E070E0180", "0A0F06FF", "", ""], "", "", ""];
+        Operands[0x142] = [["0B0E070E0180", "0A0F06FF", "", ""], "", "", ""];
+        Operands[0x144] = [["0B0E070E0180", "0A0F06FF", "", ""], "", "", ""];
+        Operands[0x145] = [["0A02070E0180", "0A0F06FF", "", ""], "", "", ""];
+        Operands[0x146] = [["0B0E070E0180", "0A0F06FF", "", ""], "", "", ""];
+        Operands[0x147] = [["0B0E070E0180", "0A0F06FF", "", ""], "", "", ""];
+        Operands[0x190] = [["0600", "0A0F06FF", "", ""], "", "", ""];
+        Operands[0x192] = [["0600", "06FF0B06", "", ""], "", "", ""];
+        Operands[0x193] = [["0600", "07060A0F", "", ""], "", "", ""];
+        Operands[0x198] = [["0600", "0A0F06FF", "", ""], "", "", ""];
+    }
+
+    //Disable Knights corner, and AVX512, for L1OM (Intel Larrabee).
+
+    if (type === 2) {
+        Mnemonics[0x62] = "";
+    }
+
+    //Adjust the Mnemonics, and Operand encoding, for the Cyrix processors.
+
+    if (type === 3) {
+        Mnemonics[0x138] = "SMINT";
+        Mnemonics[0x13a] = "BB0_RESET";
+        Mnemonics[0x13b] = "BB1_RESET";
+        Mnemonics[0x13c] = "CPU_WRITE";
+        Mnemonics[0x13d] = "CPU_READ";
+        Mnemonics[0x150] = "PAVEB";
+        Mnemonics[0x151] = "PADDSIW";
+        Mnemonics[0x152] = "PMAGW";
+        Mnemonics[0x154] = "PDISTIB";
+        Mnemonics[0x155] = "PSUBSIW";
+        Mnemonics[0x158] = "PMVZB";
+        Mnemonics[0x159] = "PMULHRW";
+        Mnemonics[0x15a] = "PMVNZB";
+        Mnemonics[0x15b] = "PMVLZB";
+        Mnemonics[0x15c] = "PMVGEZB";
+        Mnemonics[0x15d] = "PMULHRIW";
+        Mnemonics[0x15e] = "PMACHRIW";
+        Mnemonics[0x178] = "SVDC";
+        Mnemonics[0x179] = "RSDC";
+        Mnemonics[0x17a] = "SVLDT";
+        Mnemonics[0x17b] = "RSLDT";
+        Mnemonics[0x17c] = "SVTS";
+        Mnemonics[0x17d] = "RSTS";
+        Mnemonics[0x17e] = "SMINT";
+        Operands[0x150] = "0A0A06A9";
+        Operands[0x151] = "0A0A06A9";
+        Mnemonics[0x152] = "0A0A06A9";
+        Operands[0x154] = "0A0A06AF";
+        Operands[0x155] = "0A0A06A9";
+        Operands[0x158] = "0A0A06AF";
+        Operands[0x159] = "0A0A06A9";
+        Mnemonics[0x15a] = "0A0A06AF";
+        Operands[0x15b] = "0A0A06AF";
+        Operands[0x15c] = "0A0A06AF";
+        Mnemonics[0x15d] = "0A0A06A9";
+        Operands[0x15e] = "0A0A06AF";
+        Operands[0x178] = "30000A08";
+        Operands[0x179] = "0A083000";
+        Operands[0x17a] = "3000";
+        Operands[0x17b] = "3000";
+        Operands[0x17c] = "3000";
+        Operands[0x17d] = "3000";
+        Operands[0x17e] = "";
+    }
+
+    //Adjust the Mnemonics, and Operand encoding, for the Geode processor.
+
+    if (type === 4) {
+        Mnemonics[0x138] = "SMINT";
+        Mnemonics[0x139] = "DMINT";
+        Mnemonics[0x13a] = "RDM";
+    }
+
+    //Adjust the Mnemonics, for the Centaur processor.
+
+    if (type === 5) {
+        Mnemonics[0x13f] = "ALTINST";
+        Mnemonics[0x1a6] = ["???", ["MONTMUL", "XSA1", "XSA256", "???", "???", "???", "???", "???"]];
+        Mnemonics[0x1a7] = [
+            "???",
+            [
+                "XSTORE",
+                ["???", "???", "XCRYPT-ECB", "???"],
+                ["???", "???", "XCRYPT-CBC", "???"],
+                ["???", "???", "XCRYPT-CTR", "???"],
+                ["???", "???", "XCRYPT-CFB", "???"],
+                ["???", "???", "XCRYPT-OFB", "???"],
+                "???",
+                "???"
+            ]
+        ];
+        Operands[0x1a6] = ["", ["", "", "", "", "", "", "", ""]];
+        Operands[0x1a7] = [
+            "",
+            ["", ["", "", "", ""], ["", "", "", ""], ["", "", "", ""], ["", "", "", ""], ["", "", "", ""], "", ""]
+        ];
+    }
+
+    //Adjust the Mnemonics, for the X86/486 processor and older.
+
+    if (type === 6) {
+        Mnemonics[0x110] = "UMOV";
+        Mnemonics[0x111] = "UMOV";
+        Mnemonics[0x112] = "UMOV";
+        Mnemonics[0x113] = "UMOV";
+        Mnemonics[0x1a6] = "CMPXCHG";
+        Mnemonics[0x1a7] = "CMPXCHG";
+        Operands[0x110] = "06000A00";
+        Operands[0x111] = "070E0B0E";
+        Operands[0x112] = "0A000600";
+        Operands[0x113] = "0B0E070E";
+        Operands[0x1a6] = "";
+        Operands[0x1a7] = "";
+    }
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -3543,59 +7710,60 @@ The function "GetPosition()" Gives back the current base address in it's proper 
 If the hex input is invalid returns false.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-export function LoadBinCode( HexStr )
-{
-  //Clear BinCode, and Reset Code Position in Bin Code array.
+export function LoadBinCode(HexStr) {
+    //Clear BinCode, and Reset Code Position in Bin Code array.
 
-  BinCode = []; CodePos = 0;
+    BinCode = [];
+    CodePos = 0;
 
-  //Iterate though the hex string and covert to 0 to 255 byte values into the BinCode array.
+    //Iterate though the hex string and covert to 0 to 255 byte values into the BinCode array.
 
-  var len = HexStr.length;
+    var len = HexStr.length;
 
-  for( var i = 0, el = 0, Sign = 0, int32 = 0; i < len; i += 8 )
-  {
-    //It is faster to read 8 hex digits at a time if possible.
+    for (var i = 0, el = 0, Sign = 0, int32 = 0; i < len; i += 8) {
+        //It is faster to read 8 hex digits at a time if possible.
 
-    int32 = parseInt( HexStr.slice( i, i + 8 ), 16 );
+        int32 = parseInt(HexStr.slice(i, i + 8), 16);
 
-    //If input is invalid return false.
+        //If input is invalid return false.
 
-    if( isNaN( int32 ) ){ return ( false ); }
+        if (isNaN(int32)) {
+            return false;
+        }
 
-    //If the end of the Hex string is reached and is not 8 digits the number has to be lined up.
+        //If the end of the Hex string is reached and is not 8 digits the number has to be lined up.
 
-    ( ( len - i ) < 8 ) && ( int32 <<= ( 8 - len - i ) << 2 );
+        len - i < 8 && (int32 <<= (8 - len - i) << 2);
 
-    //The variable sing corrects the unusable sing bits during the 4 byte rotation algorithm.
+        //The variable sing corrects the unusable sing bits during the 4 byte rotation algorithm.
 
-    Sign = int32;
+        Sign = int32;
 
-    //Remove the Sign bit value if active for when the number is changed to int32 during rotation.
+        //Remove the Sign bit value if active for when the number is changed to int32 during rotation.
 
-    int32 ^= int32 & 0x80000000;
+        int32 ^= int32 & 0x80000000;
 
-    //Rotate the 32 bit int so that each number is put in order in the BinCode array. Add the Sign Bit positions back though each rotation.
+        //Rotate the 32 bit int so that each number is put in order in the BinCode array. Add the Sign Bit positions back though each rotation.
 
-    int32 = ( int32 >> 24 ) | ( ( int32 << 8 ) & 0x7FFFFFFF );
-    BinCode[el++] = ( ( ( Sign >> 24 ) & 0x80 ) | int32 ) & 0xFF;
-    int32 = ( int32 >> 24 ) | ( ( int32 << 8 ) & 0x7FFFFFFF );
-    BinCode[el++] = ( ( ( Sign >> 16 ) & 0x80 ) | int32 ) & 0xFF;
-    int32 = ( int32 >> 24 ) | ( ( int32 << 8 ) & 0x7FFFFFFF );
-    BinCode[el++] = ( ( ( Sign >> 8 ) & 0x80 ) | int32 ) & 0xFF;
-    int32 = ( int32 >> 24 ) | ( ( int32 << 8 ) & 0x7FFFFFFF );
-    BinCode[el++] = ( ( Sign & 0x80 ) | int32 ) & 0xFF;
-  }
+        int32 = (int32 >> 24) | ((int32 << 8) & 0x7fffffff);
+        BinCode[el++] = (((Sign >> 24) & 0x80) | int32) & 0xff;
+        int32 = (int32 >> 24) | ((int32 << 8) & 0x7fffffff);
+        BinCode[el++] = (((Sign >> 16) & 0x80) | int32) & 0xff;
+        int32 = (int32 >> 24) | ((int32 << 8) & 0x7fffffff);
+        BinCode[el++] = (((Sign >> 8) & 0x80) | int32) & 0xff;
+        int32 = (int32 >> 24) | ((int32 << 8) & 0x7fffffff);
+        BinCode[el++] = ((Sign & 0x80) | int32) & 0xff;
+    }
 
-  //Remove elements past the Number of bytes in HexStr because int 32 is always 4 bytes it is possible to end in an uneven number.
+    //Remove elements past the Number of bytes in HexStr because int 32 is always 4 bytes it is possible to end in an uneven number.
 
-  len >>= 1;
+    len >>= 1;
 
-  for(; len < BinCode.length; BinCode.pop() );
+    for (; len < BinCode.length; BinCode.pop());
 
-  //Return true for that the binary code loaded properly.
+    //Return true for that the binary code loaded properly.
 
-  return ( true );
+    return true;
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -3605,25 +7773,24 @@ This function also moves the binary code array position CodePos by one basically
 disassembler as it is decoding a sequence of bytes.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function NextByte()
-{
-  //Add the current byte as hex to InstructionHex which will be displayed beside the decoded instruction.
-  //After an instruction decodes InstructionHex is only added beside the instruction if ShowInstructionHex is active.
-  var t;
-  if ( CodePos < BinCode.length ) //If not out of bounds.
-  {
-    //Convert current byte to String, and pad.
+function NextByte() {
+    //Add the current byte as hex to InstructionHex which will be displayed beside the decoded instruction.
+    //After an instruction decodes InstructionHex is only added beside the instruction if ShowInstructionHex is active.
+    var t;
+    if (CodePos < BinCode.length) {
+        //If not out of bounds.
+        //Convert current byte to String, and pad.
 
-    ( ( t = BinCode[CodePos++].toString(16) ).length === 1) && ( t = "0" + t );
+        (t = BinCode[CodePos++].toString(16)).length === 1 && (t = "0" + t);
 
-    //Add it to the current bytes used for the decode instruction.
+        //Add it to the current bytes used for the decode instruction.
 
-    InstructionHex += t;
+        InstructionHex += t;
 
-    //Continue the Base address.
+        //Continue the Base address.
 
-    ( ( Pos32 += 1 ) > 0xFFFFFFFF ) && ( Pos32 = 0, ( ( Pos64 += 1 ) > 0xFFFFFFFF ) && ( Pos64 = 0 ) );
-  }
+        (Pos32 += 1) > 0xffffffff && ((Pos32 = 0), (Pos64 += 1) > 0xffffffff && (Pos64 = 0));
+    }
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -3632,27 +7799,36 @@ segment, and offset address. Note that the Code Segment is used in 16 bit code. 
 if set 36, or higher. Effects instruction location in memory when decoding a program.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-export function SetBasePosition( Address )
-{
-  //Split the Segment:offset.
+export function SetBasePosition(Address) {
+    //Split the Segment:offset.
 
-  var t = Address.split(":");
+    var t = Address.split(":");
 
-  //Set the 16 bit code segment position if there is one.
+    //Set the 16 bit code segment position if there is one.
 
-  if ( typeof t[1] !== "undefined" ){ CodeSeg = parseInt( t[0].slice( t[0].length - 4 ), 16 ); Address = t[1]; }
+    if (typeof t[1] !== "undefined") {
+        CodeSeg = parseInt(t[0].slice(t[0].length - 4), 16);
+        Address = t[1];
+    }
 
-  //Adjust the Instruction pointer 16(IP)/32(EIP)/64(RIP). Also varies based on Bit Mode.
+    //Adjust the Instruction pointer 16(IP)/32(EIP)/64(RIP). Also varies based on Bit Mode.
 
-  var Len = Address.length;
+    var Len = Address.length;
 
-  if( Len >= 9 && BitMode == 2 ){ Pos64 = parseInt( Address.slice( Len - 16, Len - 8 ), 16 ); }
-  if( Len >= 5 && BitMode >= 1 && !( BitMode == 1 & CodeSeg >= 36 ) ){ Pos32 = parseInt( Address.slice( Len - 8 ), 16 ); }
-  else if( Len >= 1 && BitMode >= 0 ){ Pos32 = ( Pos32 & 0xFFFF0000 ) | ( parseInt( Address.slice( Len - 4 ), 16 ) ); }
+    if (Len >= 9 && BitMode == 2) {
+        Pos64 = parseInt(Address.slice(Len - 16, Len - 8), 16);
+    }
+    if (Len >= 5 && BitMode >= 1 && !((BitMode == 1) & (CodeSeg >= 36))) {
+        Pos32 = parseInt(Address.slice(Len - 8), 16);
+    } else if (Len >= 1 && BitMode >= 0) {
+        Pos32 = (Pos32 & 0xffff0000) | parseInt(Address.slice(Len - 4), 16);
+    }
 
-  //Convert Pos32 to undignified integer.
+    //Convert Pos32 to undignified integer.
 
-  if ( Pos32 < 0 ) { Pos32 += 0x100000000; }
+    if (Pos32 < 0) {
+        Pos32 += 0x100000000;
+    }
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -3661,124 +7837,115 @@ In 16 bit an instruction location is Bound to the code segment location in memor
 In 32 bit an instruction location uses the first 32 bit's of the instruction pointer.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function GetPosition()
-{
-  //If 16 bit Seg:Offset, or if 32 bit and CodeSeg is 36, or higher.
+function GetPosition() {
+    //If 16 bit Seg:Offset, or if 32 bit and CodeSeg is 36, or higher.
 
-  if( BitMode === 0 | ( BitMode === 1 & CodeSeg >= 36 ) )
-  {
-    for ( var S16 = ( Pos32 & 0xFFFF ).toString(16); S16.length < 4; S16 = "0" + S16 );
-    for ( var Seg = ( CodeSeg ).toString(16); Seg.length < 4; Seg = "0" + Seg );
-    return( ( Seg + ":" + S16 ).toUpperCase() );
-  }
+    if ((BitMode === 0) | ((BitMode === 1) & (CodeSeg >= 36))) {
+        for (var S16 = (Pos32 & 0xffff).toString(16); S16.length < 4; S16 = "0" + S16);
+        for (var Seg = CodeSeg.toString(16); Seg.length < 4; Seg = "0" + Seg);
+        return (Seg + ":" + S16).toUpperCase();
+    }
 
-  //32 bit, and 64 bit section.
+    //32 bit, and 64 bit section.
 
-  var S64="", S32="";
+    var S64 = "",
+        S32 = "";
 
-  //If 32 bit or higher.
+    //If 32 bit or higher.
 
-  if( BitMode >= 1 )
-  {
-    for ( S32 = Pos32.toString(16); S32.length < 8; S32 = "0" + S32 );
-  }
+    if (BitMode >= 1) {
+        for (S32 = Pos32.toString(16); S32.length < 8; S32 = "0" + S32);
+    }
 
-  //If 64 bit.
+    //If 64 bit.
 
-  if( BitMode === 2 )
-  {
-    for ( S64 = Pos64.toString(16); S64.length < 8; S64 = "0" + S64 );
-  }
+    if (BitMode === 2) {
+        for (S64 = Pos64.toString(16); S64.length < 8; S64 = "0" + S64);
+    }
 
-  //Return the 32/64 address.
+    //Return the 32/64 address.
 
-  return ( ( S64 + S32 ).toUpperCase() );
+    return (S64 + S32).toUpperCase();
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
 Moves the dissembler 64 bit address, and CodePos to correct address. Returns false if address location is out of bounds.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function GotoPosition( Address )
-{
-  //Current address location.
+function GotoPosition(Address) {
+    //Current address location.
 
-  var LocPos32 = Pos32;
-  var LocPos64 = Pos64;
-  var LocCodeSeg = CodeSeg;
+    var LocPos32 = Pos32;
+    var LocPos64 = Pos64;
+    var LocCodeSeg = CodeSeg;
 
-  //Split the by Segment:offset address format.
+    //Split the by Segment:offset address format.
 
-  var t = Address.split(":");
+    var t = Address.split(":");
 
-  //Set the 16 bit code segment location if there is one.
+    //Set the 16 bit code segment location if there is one.
 
-  if ( typeof t[1] !== "undefined" )
-  {
-    LocCodeSeg = parseInt(t[0].slice( t[0].length - 4 ), 16);
-    Address = t[1];
-  }
+    if (typeof t[1] !== "undefined") {
+        LocCodeSeg = parseInt(t[0].slice(t[0].length - 4), 16);
+        Address = t[1];
+    }
 
-  var len = Address.length;
+    var len = Address.length;
 
-  //If the address is 64 bit's long, and bit mode is 64 bit adjust the 64 bit location.
+    //If the address is 64 bit's long, and bit mode is 64 bit adjust the 64 bit location.
 
-  if( len >= 9 && BitMode === 2 )
-  {
-    LocPos64 = parseInt( Address.slice( len - 16, len - 8 ), 16 );
-  }
+    if (len >= 9 && BitMode === 2) {
+        LocPos64 = parseInt(Address.slice(len - 16, len - 8), 16);
+    }
 
-  //If the address is 32 bit's long, and bit mode is 32 bit, or higher adjust the 32 bit location.
+    //If the address is 32 bit's long, and bit mode is 32 bit, or higher adjust the 32 bit location.
 
-  if( len >= 5 && BitMode >= 1 & !( BitMode === 1 & CodeSeg >= 36 ) )
-  {
-    LocPos32 = parseInt( Address.slice( len - 8 ), 16 );
-  }
+    if (len >= 5 && (BitMode >= 1) & !((BitMode === 1) & (CodeSeg >= 36))) {
+        LocPos32 = parseInt(Address.slice(len - 8), 16);
+    }
 
-  //Else If the address is 16 bit's long, and bit mode is 16 bit, or higher adjust the first 16 bit's in location 32.
+    //Else If the address is 16 bit's long, and bit mode is 16 bit, or higher adjust the first 16 bit's in location 32.
+    else if (len >= 1 && BitMode >= 0) {
+        LocPos32 = LocPos32 - LocPos32 + parseInt(Address.slice(len - 4), 16);
+    }
 
-  else if( len >= 1 && BitMode >= 0 )
-  {
-    LocPos32 = ( LocPos32 - LocPos32 + parseInt( Address.slice( len - 4 ), 16 ) );
-  }
+    //Find the difference between the current base address and the selected address location.
 
-  //Find the difference between the current base address and the selected address location.
+    var Dif32 = Pos32 - LocPos32,
+        Dif64 = Pos64 - LocPos64;
 
-  var Dif32 = Pos32 - LocPos32, Dif64 = Pos64 - LocPos64;
+    //Only calculate the Code Segment location if The program uses 16 bit address mode otherwise the
+    //code segment does not affect the address location.
 
-  //Only calculate the Code Segment location if The program uses 16 bit address mode otherwise the
-  //code segment does not affect the address location.
+    if ((BitMode === 1) & (CodeSeg >= 36) || BitMode === 0) {
+        Dif32 += (CodeSeg - LocCodeSeg) << 4;
+    }
 
-  if( ( BitMode === 1 & CodeSeg >= 36 ) || BitMode === 0 )
-  {
-    Dif32 += ( CodeSeg - LocCodeSeg ) << 4;
-  }
+    //Before adjusting the Code Position Backup the Code Position in case that the address is out of bounds.
 
-  //Before adjusting the Code Position Backup the Code Position in case that the address is out of bounds.
+    t = CodePos;
 
-  t = CodePos;
+    //Subtract the difference to the CodePos position.
 
-  //Subtract the difference to the CodePos position.
+    CodePos -= Dif64 * 4294967296 + Dif32;
 
-  CodePos -= Dif64 * 4294967296 + Dif32;
+    //If code position is out of bound for the loaded binary in the BinCode array, or
+    //is a negative index return false and reset CodePos.
 
-  //If code position is out of bound for the loaded binary in the BinCode array, or
-  //is a negative index return false and reset CodePos.
+    if (CodePos < 0 || CodePos > BinCode.length) {
+        CodePos = t;
+        return false;
+    }
 
-  if( CodePos < 0 || CodePos > BinCode.length )
-  {
-    CodePos = t; return ( false );
-  }
+    //Set the base address so that it matches the Selected address location that Code position is moved to in relative space in the BinCode Array.
 
-  //Set the base address so that it matches the Selected address location that Code position is moved to in relative space in the BinCode Array.
+    CodeSeg = LocCodeSeg;
+    Pos32 = LocPos32;
+    Pos64 = LocPos64;
 
-  CodeSeg = LocCodeSeg;
-  Pos32 = LocPos32
-  Pos64 = LocPos64;
+    //Return true for that the address Position is moved in range correctly.
 
-  //Return true for that the address Position is moved in range correctly.
-
-  return ( true );
+    return true;
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -3793,107 +7960,129 @@ from this function Lines up With the Pinter array, and Register array indexes fo
 The variable SizeAttrSelect is separate from this function it is adjusted by prefixes that adjust Vector size, and General purpose registers.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function GetOperandSize( SizeAttribute )
-{
-  /*----------------------------------------------------------------------------------------------------------------------------------------
+function GetOperandSize(SizeAttribute) {
+    /*----------------------------------------------------------------------------------------------------------------------------------------
   Each S value goes in order to the vector length value in EVEX, and VEX Smallest to biggest in perfect alignment.
   SizeAttrSelect is set 1 by default, unless it is set 0 to 3 by the vector length bit's in the EVEX prefix, or 0 to 1 in the VEX prefix.
   In which if it is not an Vector instruction S2 acts as the mid default size attribute in 32 bit mode, and 64 bit mode for all instructions.
   ----------------------------------------------------------------------------------------------------------------------------------------*/
 
-  var S4 = 0, S3 = 0, S2 = 0, S1 = 0, S0 = -1; //Note S0 is Vector size 1024, which is unused.
+    var S4 = 0,
+        S3 = 0,
+        S2 = 0,
+        S1 = 0,
+        S0 = -1; //Note S0 is Vector size 1024, which is unused.
 
-  /*----------------------------------------------------------------------------------------------------------------------------------------
+    /*----------------------------------------------------------------------------------------------------------------------------------------
   Lookup the Highest active bit in the SizeAttribute value giving the position the bit is in the number. S1 will be the biggest size attribute.
   In which this size attribute is only used when the extended size is active from the Rex prefix using the W (width) bit setting.
   In which sets variable SizeAttrSelect to 2 in value when the Width bit prefix setting is decoded, or if it is an Vector this is the
   Max vector size 512 in which when the EVEX.L'L bit's are set 10 = 2 sets SizeAttrSelect 2, note 11 = 3 is reserved for vectors 1024 in size.
   ----------------------------------------------------------------------------------------------------------------------------------------*/
 
-  S1 = SizeAttribute; S1 = ( ( S1 & 0xF0 ) !== 0 ? ( S1 >>= 4, 4 ) : 0 ) | ( ( S1 & 0xC ) !== 0 ? ( S1 >>= 2, 2 ) : 0 ) | ( ( S1 >>= 1 ) !== 0 );
+    S1 = SizeAttribute;
+    S1 = ((S1 & 0xf0) !== 0 ? ((S1 >>= 4), 4) : 0) | ((S1 & 0xc) !== 0 ? ((S1 >>= 2), 2) : 0) | ((S1 >>= 1) !== 0);
 
-  /*----------------------------------------------------------------------------------------------------------------------------------------
+    /*----------------------------------------------------------------------------------------------------------------------------------------
   If there is no size attributes then set S1 to -1 then the rest are set to S1 as they should have no size setting.
   ----------------------------------------------------------------------------------------------------------------------------------------*/
 
-  if( SizeAttribute === 0 ) { S1 = -1; }
+    if (SizeAttribute === 0) {
+        S1 = -1;
+    }
 
-  /*----------------------------------------------------------------------------------------------------------------------------------------
+    /*----------------------------------------------------------------------------------------------------------------------------------------
   Convert the Bit Position of S1 into it's value and remove it by subtracting it into the SizeAttribute settings.
   ----------------------------------------------------------------------------------------------------------------------------------------*/
 
-  SizeAttribute -= ( 1 << S1 );
+    SizeAttribute -= 1 << S1;
 
-  /*----------------------------------------------------------------------------------------------------------------------------------------
+    /*----------------------------------------------------------------------------------------------------------------------------------------
   Lookup the Highest Second active bit in the SizeAttribute value giving the position the bit is in the number.
   In which S2 will be the default size attribute when SizeAttrSelect is 1 and has not been changed by prefixes, or If this is an vector
   SizeAttrSelect is set one by the EVEX.L'L bit's 01 = 1, or VEX.L is active 1 = 1 in which the Mid vector size is used.
   In which 256 is the Mid vector size some vectors are smaller some go 64/128/256 in which the mid size is 128.
   ----------------------------------------------------------------------------------------------------------------------------------------*/
 
-  S2 = SizeAttribute; S2 = ( ( S2 & 0xF0 ) !== 0 ? ( S2 >>= 4, 4 ) : 0 ) | ( ( S2 & 0xC ) !== 0 ? ( S2 >>= 2, 2 ) : 0 ) | ( ( S2 >>= 1 ) !== 0 );
+    S2 = SizeAttribute;
+    S2 = ((S2 & 0xf0) !== 0 ? ((S2 >>= 4), 4) : 0) | ((S2 & 0xc) !== 0 ? ((S2 >>= 2), 2) : 0) | ((S2 >>= 1) !== 0);
 
-  /*----------------------------------------------------------------------------------------------------------------------------------------
+    /*----------------------------------------------------------------------------------------------------------------------------------------
   Convert the Bit Position of S2 into it's value and remove it by subtracting it if it is not 0.
   ----------------------------------------------------------------------------------------------------------------------------------------*/
 
-  if( S2 !== 0 ) { SizeAttribute -= ( 1 << S2 ); }
-
-  /*----------------------------------------------------------------------------------------------------------------------------------------
+    if (S2 !== 0) {
+        SizeAttribute -= 1 << S2;
+    } else {
+        /*----------------------------------------------------------------------------------------------------------------------------------------
   If it is 0 The highest size attribute is set as the default operand size. So S2 is aliased to S1, if there is no other Size setting attributes.
   ----------------------------------------------------------------------------------------------------------------------------------------*/
+        S2 = S1;
+    }
 
-  else { S2 = S1; }
-
-  /*----------------------------------------------------------------------------------------------------------------------------------------
+    /*----------------------------------------------------------------------------------------------------------------------------------------
   Lookup the Highest third active bit in the SizeAttribute value giving the position the bit is in the number.
   The third Size is only used if the Operand override prefix is used setting SizeAttrSelect to 0, or if this is an vector the
   EVEX.L'L bit's are 00 = 0 sets SizeAttrSelect 0, or VEX.L = 0 in which SizeAttrSelect is 0 using the smallest vector size.
   ----------------------------------------------------------------------------------------------------------------------------------------*/
 
-  S3 = SizeAttribute; S3 = ( ( S3 & 0xF0 ) !== 0 ? ( S3 >>= 4, 4 ) : 0 ) | ( ( S3 & 0xC ) !== 0 ? ( S3 >>= 2, 2 ) : 0 ) | ( ( S3 >>= 1 ) !== 0 );
+    S3 = SizeAttribute;
+    S3 = ((S3 & 0xf0) !== 0 ? ((S3 >>= 4), 4) : 0) | ((S3 & 0xc) !== 0 ? ((S3 >>= 2), 2) : 0) | ((S3 >>= 1) !== 0);
 
-  /*----------------------------------------------------------------------------------------------------------------------------------------
+    /*----------------------------------------------------------------------------------------------------------------------------------------
   Convert the Bit Position of S3 into it's value and remove it by subtracting it if it is not 0.
   ----------------------------------------------------------------------------------------------------------------------------------------*/
 
-  if( S3 !== 0 ) { SizeAttribute -= ( 1 << S3 ); }
-
-  /*----------------------------------------------------------------------------------------------------------------------------------------
+    if (S3 !== 0) {
+        SizeAttribute -= 1 << S3;
+    } else {
+        /*----------------------------------------------------------------------------------------------------------------------------------------
   If it is 0 The second size attribute is set as the operand size. So S3 is aliased to S2, if there is no other Size setting attributes.
   ----------------------------------------------------------------------------------------------------------------------------------------*/
+        S3 = S2;
+        if (S2 !== 2) {
+            S2 = S1;
+        }
+    }
 
-  else { S3 = S2; if( S2 !== 2 ) { S2 = S1; } };
+    //In 32/16 bit mode the operand size must never exceed 32.
 
-  //In 32/16 bit mode the operand size must never exceed 32.
+    if (BitMode <= 1 && S2 >= 3 && !Vect) {
+        if ((S1 | S2 | S3) === S3) {
+            S1 = 2;
+            S3 = 2;
+        } //If single size all adjust 32.
+        S2 = 2; //Default operand size 32.
+    }
 
-  if ( BitMode <= 1 && S2 >= 3 && !Vect )
-  {
-    if( ( S1 | S2 | S3 ) === S3 ){ S1 = 2; S3 = 2; } //If single size all adjust 32.
-    S2 = 2; //Default operand size 32.
-  }
+    //In 16 bit mode The operand override is always active until used. This makes all operands 16 bit size.
+    //When Operand override is used it is the default 32 size. Flip S3 with S2.
 
-  //In 16 bit mode The operand override is always active until used. This makes all operands 16 bit size.
-  //When Operand override is used it is the default 32 size. Flip S3 with S2.
+    if (BitMode === 0 && !Vect) {
+        var t = S3;
+        S3 = S2;
+        S2 = t;
+    }
 
-  if( BitMode === 0 && !Vect ) { var t = S3; S3 = S2; S2 = t; }
+    //If an Vect is active, then EVEX.W, VEX.W, or XOP.W bit acts as 32/64.
 
-  //If an Vect is active, then EVEX.W, VEX.W, or XOP.W bit acts as 32/64.
+    if ((Vect || Extension > 0) && (S1 + S2 + S3 === 7) | (S1 + S2 + S3 === 5)) {
+        Vect = false;
+        return [S2, S1][WidthBit & 1];
+    }
 
-  if( ( Vect || Extension > 0 ) && ( ( S1 + S2 + S3 ) === 7 | ( S1 + S2 + S3 ) === 5 ) ) { Vect = false; return( ( [ S2, S1 ] )[ WidthBit & 1 ] ); }
+    //If it is an vector, and Bround is active vector goes max size.
 
-  //If it is an vector, and Bround is active vector goes max size.
+    if (Vect && ConversionMode === 1) {
+        S0 = S1;
+        S3 = S1;
+        S2 = S1;
+    }
 
-  if( Vect && ConversionMode === 1 )
-  {
-    S0 = S1; S3 = S1; S2 = S1;
-  }
+    //Note the fourth size that is -1 in the returned size attribute is Vector length 11=3 which is invalid unless Intel decides to add 1024 bit vectors.
+    //The only time S0 is not negative one is if vector broadcast round is active.
 
-  //Note the fourth size that is -1 in the returned size attribute is Vector length 11=3 which is invalid unless Intel decides to add 1024 bit vectors.
-  //The only time S0 is not negative one is if vector broadcast round is active.
-
-  return( ( [ S3, S2, S1, S0 ] )[ SizeAttrSelect ] );
-
+    return [S3, S2, S1, S0][SizeAttrSelect];
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -3905,44 +8094,42 @@ The second element is the three bits for the ModR/M byte Opcode/Reg bits, or the
 The third element is the last three bits for the ModR/M byte the R/M bits, or the SIB Base Register value as a number value 0 to 7.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function Decode_ModRM_SIB_Value()
-{
-  //Get the current position byte value
+function Decode_ModRM_SIB_Value() {
+    //Get the current position byte value
 
-  var v = BinCode[CodePos];
+    var v = BinCode[CodePos];
 
-  //The first tow binary digits of the read byte is the Mode bits of the ModR/M byte or
-  //The first tow binary digits of the byte is the Scale bits of the SIB byte.
+    //The first tow binary digits of the read byte is the Mode bits of the ModR/M byte or
+    //The first tow binary digits of the byte is the Scale bits of the SIB byte.
 
-  var ModeScale = (v >> 6) & 0x03; //value 0 to 3
+    var ModeScale = (v >> 6) & 0x03; //value 0 to 3
 
-  //The three binary digits of the read byte after the first two digits is the OpcodeReg Value of the ModR/M byte or
-  //The three binary digits of the read byte after the first two digits is the Index Register value for the SIB byte.
+    //The three binary digits of the read byte after the first two digits is the OpcodeReg Value of the ModR/M byte or
+    //The three binary digits of the read byte after the first two digits is the Index Register value for the SIB byte.
 
-  var OpcodeRegIndex = (v >> 3) & 0x07; //value 0 to 7
+    var OpcodeRegIndex = (v >> 3) & 0x07; //value 0 to 7
 
-  //The three binary digits at the end of the read byte is the R/M (Register,or Memory) Value of the ModR/M byte or
-  //The three binary digits at the end of the read byte is the Base Register Value of the SIB byte.
+    //The three binary digits at the end of the read byte is the R/M (Register,or Memory) Value of the ModR/M byte or
+    //The three binary digits at the end of the read byte is the Base Register Value of the SIB byte.
 
-  var RMBase = v & 0x07; //value 0 to 7
+    var RMBase = v & 0x07; //value 0 to 7
 
-  //Put the array together containing the three indexes with the value
-  //Note both the ModR/M byte and SIB byte use the same bit value pattern
+    //Put the array together containing the three indexes with the value
+    //Note both the ModR/M byte and SIB byte use the same bit value pattern
 
-  var ByteValueArray = [
-    ModeScale,//Index 0 is the first tow bits for the Mode, or Scale Depending on what the byte value is used for.
-    OpcodeRegIndex,//Index 1 is the three bits for the OpcodeReg, or Index Depending on what the byte value is used for.
-    RMBase //Index 2 is the three bits for the RM, or BASE bits Depending on what the byte value is used for.
-  ];
+    var ByteValueArray = [
+        ModeScale, //Index 0 is the first tow bits for the Mode, or Scale Depending on what the byte value is used for.
+        OpcodeRegIndex, //Index 1 is the three bits for the OpcodeReg, or Index Depending on what the byte value is used for.
+        RMBase //Index 2 is the three bits for the RM, or BASE bits Depending on what the byte value is used for.
+    ];
 
-  //Move the Decoders Position by one.
-  
-  NextByte();
+    //Move the Decoders Position by one.
 
-  //return the array containing the decoded values of the byte.
+    NextByte();
 
-  return (ByteValueArray);
+    //return the array containing the decoded values of the byte.
 
+    return ByteValueArray;
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -3958,250 +8145,254 @@ If BySize is false the SizeSetting is used numerically as a single size selectio
 0=8,1=16,2=32,3=64 by size setting value.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function DecodeImmediate( type, BySize, SizeSetting )
-{
-
-  /*-------------------------------------------------------------------------------------------------------------------------
+function DecodeImmediate(type, BySize, SizeSetting) {
+    /*-------------------------------------------------------------------------------------------------------------------------
   Initialize V32, and V64 which will store the Immediate value.
   JavaScript Float64 numbers can not accurately work with numbers 64 bit's long.
   So numbers are split into two numbers that should never exceed an 32 bit value though calculation.
   Numbers that are too big for the first 32 bit's are stored as the next 32 bit's in V64.
   -------------------------------------------------------------------------------------------------------------------------*/
 
-  var V32 = 0, V64 = 0;
+    var V32 = 0,
+        V64 = 0;
 
-  //*Initialize the Pad Size for V32, and V64 depending On the Immediate type Calculation they use.
+    //*Initialize the Pad Size for V32, and V64 depending On the Immediate type Calculation they use.
 
-  var Pad32 = 0, Pad64 = 0;
+    var Pad32 = 0,
+        Pad64 = 0;
 
-  //*Initialize the Sign value that is only set for Negative, or Positive Relative displacements.
+    //*Initialize the Sign value that is only set for Negative, or Positive Relative displacements.
 
-  var Sign = 0;
+    var Sign = 0;
 
-  //*Initialize the Sign Extend variable size as 0 Some Immediate numbers Sign extend.
+    //*Initialize the Sign Extend variable size as 0 Some Immediate numbers Sign extend.
 
-  var Extend = 0;
+    var Extend = 0;
 
-  //*The variable S is the size of the Immediate.
+    //*The variable S is the size of the Immediate.
 
-  var S = SizeSetting & 0x0F;
+    var S = SizeSetting & 0x0f;
 
-  //*Extend size.
+    //*Extend size.
 
-  Extend = SizeSetting >> 4;
+    Extend = SizeSetting >> 4;
 
-  //*If by Size attributes is set true.
+    //*If by Size attributes is set true.
 
-  if ( BySize )
-  {
-    S = GetOperandSize( S );
+    if (BySize) {
+        S = GetOperandSize(S);
 
-    if ( Extend > 0 )
-    {
-      Extend = GetOperandSize( Extend );
+        if (Extend > 0) {
+            Extend = GetOperandSize(Extend);
+        }
     }
-  }
 
-  /*-------------------------------------------------------------------------------------------------------------------------
+    /*-------------------------------------------------------------------------------------------------------------------------
   The possible values of S (Calculated Size) are S=0 is IMM8, S=1 is IMM16, S=2 is IMM32, S=3 is IMM64.
   Calculate how many bytes that are going to have to be read based on the value of S.
   S=0 is 1 byte, S=1 is 2 bytes, S=2 is 4 bytes, S=3 is 8 bytes.
   The Number of bytes to read is 2 to the power of S.
   -------------------------------------------------------------------------------------------------------------------------*/
 
-  var n = 1 << S;
+    var n = 1 << S;
 
-  //Adjust Pad32, and Pad64.
+    //Adjust Pad32, and Pad64.
 
-  Pad32 = Math.min( n, 4 ); ( n >= 8 ) && ( Pad64 = 8 );
+    Pad32 = Math.min(n, 4);
+    n >= 8 && (Pad64 = 8);
 
-  //Store the first byte of the immediate because IMM8 can use different encodings.
+    //Store the first byte of the immediate because IMM8 can use different encodings.
 
-  IMMValue = BinCode[CodePos];
+    IMMValue = BinCode[CodePos];
 
-  //*Loop and Move the Decoder to the next byte Code position to the number of bytes to read for V32, and V64.
+    //*Loop and Move the Decoder to the next byte Code position to the number of bytes to read for V32, and V64.
 
-  for ( var i = 0, v = 1; i < Pad32; V32 += BinCode[CodePos] * v, i++, v *= 256, NextByte() );
-  for ( v = 1; i < Pad64; V64 += BinCode[CodePos] * v, i++, v *= 256, NextByte() );
+    for (var i = 0, v = 1; i < Pad32; V32 += BinCode[CodePos] * v, i++, v *= 256, NextByte());
+    for (v = 1; i < Pad64; V64 += BinCode[CodePos] * v, i++, v *= 256, NextByte());
 
-  //*Adjust Pad32 so it matches the length the Immediate should be in hex for number of bytes read.
+    //*Adjust Pad32 so it matches the length the Immediate should be in hex for number of bytes read.
 
-  Pad32 <<= 1; Pad64 <<= 1;
+    Pad32 <<= 1;
+    Pad64 <<= 1;
 
-  /*---------------------------------------------------------------------------------------------------------------------------
+    /*---------------------------------------------------------------------------------------------------------------------------
   If the IMM type is used with an register operand on the upper four bit's then the IMM byte does not use the upper 4 bit's.
   ---------------------------------------------------------------------------------------------------------------------------*/
 
-  if( type === 1 ) { V32 &= ( 1 << ( ( n << 3 ) - 4 ) ) - 1; }
+    if (type === 1) {
+        V32 &= (1 << ((n << 3) - 4)) - 1;
+    }
 
-  /*---------------------------------------------------------------------------------------------------------------------------
+    /*---------------------------------------------------------------------------------------------------------------------------
   If the Immediate is an relative address calculation.
   ---------------------------------------------------------------------------------------------------------------------------*/
 
-  if ( type === 2 )
-  {
-    //Calculate the Padded size for at the end of the function an Relative is padded to the size of the address based on bit mode.
+    if (type === 2) {
+        //Calculate the Padded size for at the end of the function an Relative is padded to the size of the address based on bit mode.
 
-    Pad32 = ( Math.min( BitMode, 1 ) << 2 ) + 4; Pad64 = Math.max( Math.min( BitMode, 2 ), 1 ) << 3;
+        Pad32 = (Math.min(BitMode, 1) << 2) + 4;
+        Pad64 = Math.max(Math.min(BitMode, 2), 1) << 3;
 
-    //Carry bit to 64 bit section.
-    
-    var C64 = 0;
-    
-    //Relative size.
-    
-    var n = Math.min( 0x100000000, Math.pow( 2, 4 << ( S + 1 ) ) );
-    
-    //Sign bit adjust.
-    
-    if( V32 >= ( n >> 1 ) ) { V32 -= n; }
-    
-    //Add position.
-    
-    V32 += Pos32;
-    
-    //Remove carry bit and add it to C64.
+        //Carry bit to 64 bit section.
 
-    ( C64 = ( ( V32 ) >= 0x100000000 ) ) && ( V32 -= 0x100000000 );
-    
-    //Do not carry to 64 if address is 32, and below.
-    
-    if ( S <= 2 ) { C64 = false; }
+        var C64 = 0;
 
-    //Add the 64 bit position plus carry.
+        //Relative size.
 
-    ( ( V64 += Pos64 + C64 ) > 0xFFFFFFFF ) && ( V64 -= 0x100000000 );
-  }
+        var n = Math.min(0x100000000, Math.pow(2, 4 << (S + 1)));
 
-  /*---------------------------------------------------------------------------------------------------------------------------
+        //Sign bit adjust.
+
+        if (V32 >= n >> 1) {
+            V32 -= n;
+        }
+
+        //Add position.
+
+        V32 += Pos32;
+
+        //Remove carry bit and add it to C64.
+
+        (C64 = V32 >= 0x100000000) && (V32 -= 0x100000000);
+
+        //Do not carry to 64 if address is 32, and below.
+
+        if (S <= 2) {
+            C64 = false;
+        }
+
+        //Add the 64 bit position plus carry.
+
+        (V64 += Pos64 + C64) > 0xffffffff && (V64 -= 0x100000000);
+    }
+
+    /*---------------------------------------------------------------------------------------------------------------------------
   If the Immediate is an displacement calculation.
   ---------------------------------------------------------------------------------------------------------------------------*/
 
-  if ( type === 3 )
-  {
-    /*-------------------------------------------------------------------------------------------------------------------------
+    if (type === 3) {
+        /*-------------------------------------------------------------------------------------------------------------------------
     Calculate the displacement center point based on Immediate size.
     -------------------------------------------------------------------------------------------------------------------------*/
 
-    //An displacement can not be bigger than 32 bit's, so Pad64 is set 0.
+        //An displacement can not be bigger than 32 bit's, so Pad64 is set 0.
 
-    Pad64 = 0;
+        Pad64 = 0;
 
-    //Now calculate the Center Point.
+        //Now calculate the Center Point.
 
-    var Center = 2 * ( 1 << ( n << 3 ) - 2 );
+        var Center = 2 * (1 << ((n << 3) - 2));
 
-    //By default the Sign is Positive.
+        //By default the Sign is Positive.
 
-    Sign = 1;
+        Sign = 1;
 
-    /*-------------------------------------------------------------------------------------------------------------------------
+        /*-------------------------------------------------------------------------------------------------------------------------
     Calculate the VSIB displacement size if it is a VSIB Disp8.
     -------------------------------------------------------------------------------------------------------------------------*/
 
-    if ( VSIB && S === 0 )
-    {
-      var VScale = WidthBit | 2;
-      Center <<= VScale; V32 <<= VScale;
+        if (VSIB && S === 0) {
+            var VScale = WidthBit | 2;
+            Center <<= VScale;
+            V32 <<= VScale;
+        }
+
+        //When the value is higher than the center it is negative.
+
+        if (V32 >= Center) {
+            //Convert the number to the negative side of the center point.
+
+            V32 = Center * 2 - V32;
+
+            //The Sign is negative.
+
+            Sign = 2;
+        }
     }
 
-    //When the value is higher than the center it is negative.
-
-    if ( V32 >= Center )
-    {
-      //Convert the number to the negative side of the center point.
-
-      V32 = Center * 2 - V32;
-
-      //The Sign is negative.
-
-      Sign = 2;
-    }
-  }
-
-  /*---------------------------------------------------------------------------------------------------------------------------
+    /*---------------------------------------------------------------------------------------------------------------------------
   Pad Imm based on the calculated Immediate size, because when an value is converted to an number as text that can be displayed
   the 0 digits to the left are removed. Think of this as like the number 000179 the actual length of the number is 6 digits,
   but is displayed as 179, because the unused digits are not displayed, but they still exist in the memory.
   ---------------------------------------------------------------------------------------------------------------------------*/
 
-  for( var Imm = V32.toString(16), L = Pad32; Imm.length < L; Imm = "0" + Imm );
-  if( Pad64 > 8 ) { for( Imm = V64.toString(16) + Imm, L = Pad64; Imm.length < L; Imm = "0" + Imm ); }
+    for (var Imm = V32.toString(16), L = Pad32; Imm.length < L; Imm = "0" + Imm);
+    if (Pad64 > 8) {
+        for (Imm = V64.toString(16) + Imm, L = Pad64; Imm.length < L; Imm = "0" + Imm);
+    }
 
-  /*---------------------------------------------------------------------------------------------------------------------------
+    /*---------------------------------------------------------------------------------------------------------------------------
   Extend Imm if it's extend size is bigger than the Current Imm size.
   ---------------------------------------------------------------------------------------------------------------------------*/
 
-  if ( Extend !== S )
-  {
-    //Calculate number of bytes to Extend till by size.
+    if (Extend !== S) {
+        //Calculate number of bytes to Extend till by size.
 
-    Extend = Math.pow( 2, Extend ) * 2;
+        Extend = Math.pow(2, Extend) * 2;
 
-    //Setup the Signified pad value.
+        //Setup the Signified pad value.
 
-    var spd = "00"; ( ( ( parseInt( Imm.substring(0, 1), 16) & 8 ) >> 3 ) ) && ( spd = "FF" );
+        var spd = "00";
+        (parseInt(Imm.substring(0, 1), 16) & 8) >> 3 && (spd = "FF");
 
-    //Start padding.
+        //Start padding.
 
-    for (; Imm.length < Extend; Imm = spd + Imm);
-  }
+        for (; Imm.length < Extend; Imm = spd + Imm);
+    }
 
-  //*Return the Imm.
+    //*Return the Imm.
 
-  return ( ( Sign > 0 ? ( Sign > 1 ? "-" : "+" ) : "" ) + Imm.toUpperCase() );
-
+    return (Sign > 0 ? (Sign > 1 ? "-" : "+") : "") + Imm.toUpperCase();
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
 Decode registers by Size attributes, or a select register index.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function DecodeRegValue( RValue, BySize, Setting )
-{
-  //If the instruction is a Vector instruction, and no extension is active like EVEX, VEX Make sure Size attribute uses the default vector size.
+function DecodeRegValue(RValue, BySize, Setting) {
+    //If the instruction is a Vector instruction, and no extension is active like EVEX, VEX Make sure Size attribute uses the default vector size.
 
-  if( Vect && Extension === 0 )
-  {
-    SizeAttrSelect = 0;
-  }
+    if (Vect && Extension === 0) {
+        SizeAttrSelect = 0;
+    }
 
-  //If By size is true Use the Setting with the GetOperandSize
+    //If By size is true Use the Setting with the GetOperandSize
 
-  if ( BySize )
-  {
-    Setting = GetOperandSize( Setting ); //get decoded size value.
+    if (BySize) {
+        Setting = GetOperandSize(Setting); //get decoded size value.
 
-    //Any Vector register smaller than 128 has to XMM because XMM is the smallest SIMD Vector register.
+        //Any Vector register smaller than 128 has to XMM because XMM is the smallest SIMD Vector register.
 
-    if( Vect && Setting < 4 ) { Setting = 4; }
-  }
+        if (Vect && Setting < 4) {
+            Setting = 4;
+        }
+    }
 
-  //If XOP only vector 0 to 15 are usable.
-      
-  if( Opcode >= 0x400 ) { RValue &= 15; }
+    //If XOP only vector 0 to 15 are usable.
 
-  //Else If 16/32 bit mode in VEX/EVEX/MVEX vctor register can only go 0 though 7.
+    if (Opcode >= 0x400) {
+        RValue &= 15;
+    }
 
-  else if( BitMode <= 1 && Extension >= 1 ) { RValue &= 7; }
+    //Else If 16/32 bit mode in VEX/EVEX/MVEX vctor register can only go 0 though 7.
+    else if (BitMode <= 1 && Extension >= 1) {
+        RValue &= 7;
+    }
 
-  //If L1OM ZMM to V reg.
+    //If L1OM ZMM to V reg.
 
-  if ( Opcode >= 0x700 && Setting === 6 )
-  {
-    Setting = 16;
-  }
+    if (Opcode >= 0x700 && Setting === 6) {
+        Setting = 16;
+    }
 
-  //Else if 8 bit high/low Registers
+    //Else if 8 bit high/low Registers
+    else if (Setting === 0) {
+        return REG[0][RexActive][RValue];
+    }
 
-  else if ( Setting === 0 )
-  {
-    return (REG[0][RexActive][ RValue ]);
-  }
+    //Return the Register.
 
-  //Return the Register.
-
-  return (REG[Setting][ RValue ]);
+    return REG[Setting][RValue];
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -4210,96 +8401,94 @@ Note if by size attributes is false the lower four bits is the selected Memory p
 and the higher four bits is the selected register.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function Decode_ModRM_SIB_Address( ModRM, BySize, Setting )
-{
-  var out = ""; //the variable out is what stores the decoded address pointer, or Register if Register mode.
-  var S_C = "{"; //L1OM, and K1OM {SSS,CCCCC} setting decoding, or EVEX broadcast round.
-
-  //-------------------------------------------------------------------------------------------------------------------------
-  //If the ModR/M is not in register mode decode it as an Effective address.
-  //-------------------------------------------------------------------------------------------------------------------------
-
-  if( ModRM[0] !== 3 )
-  {
-
-    //If the instruction is a Vector instruction, and no extension is active like EVEX, VEX Make sure Size attribute uses the default vector size.
-
-    if( Vect && Extension === 0 )
-    {
-      SizeAttrSelect = 0;
-    }
+function Decode_ModRM_SIB_Address(ModRM, BySize, Setting) {
+    var out = ""; //the variable out is what stores the decoded address pointer, or Register if Register mode.
+    var S_C = "{"; //L1OM, and K1OM {SSS,CCCCC} setting decoding, or EVEX broadcast round.
 
     //-------------------------------------------------------------------------------------------------------------------------
-    //The Selected Size is setting unless BySize attribute is true.
+    //If the ModR/M is not in register mode decode it as an Effective address.
     //-------------------------------------------------------------------------------------------------------------------------
 
-    if ( BySize )
-    {
-      //-------------------------------------------------------------------------------------------------------------------------
-      //Check if it is not the non vectorized 128 which uses "Oword ptr".
-      //-------------------------------------------------------------------------------------------------------------------------
+    if (ModRM[0] !== 3) {
+        //If the instruction is a Vector instruction, and no extension is active like EVEX, VEX Make sure Size attribute uses the default vector size.
 
-      if ( Setting !== 16 || Vect )
-      {
-        Setting = ( GetOperandSize( Setting ) << 1 ) | FarPointer;
-      }
+        if (Vect && Extension === 0) {
+            SizeAttrSelect = 0;
+        }
 
-      //-------------------------------------------------------------------------------------------------------------------------
-      //Non vectorized 128 uses "Oword ptr" alaises to "QWord ptr" in 32 bit mode, or lower.
-      //-------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------
+        //The Selected Size is setting unless BySize attribute is true.
+        //-------------------------------------------------------------------------------------------------------------------------
 
-      else if ( !Vect ) { Setting = 11 - ( ( BitMode <= 1 ) * 5 ); }
-    }
+        if (BySize) {
+            //-------------------------------------------------------------------------------------------------------------------------
+            //Check if it is not the non vectorized 128 which uses "Oword ptr".
+            //-------------------------------------------------------------------------------------------------------------------------
 
-    //-------------------------------------------------------------------------------------------------------------------------
-    //If By size attributes is false the selected Memory pointer is the first four bits of the size setting for all pointer indexes 0 to 15.
-    //Also if By size attribute is also true the selected by size index can not exceed 15 anyways which is the max combination the first four bits.
-    //-------------------------------------------------------------------------------------------------------------------------
+            if (Setting !== 16 || Vect) {
+                Setting = (GetOperandSize(Setting) << 1) | FarPointer;
+            }
 
-    Setting = Setting & 0x0F;
+            //-------------------------------------------------------------------------------------------------------------------------
+            //Non vectorized 128 uses "Oword ptr" alaises to "QWord ptr" in 32 bit mode, or lower.
+            //-------------------------------------------------------------------------------------------------------------------------
+            else if (!Vect) {
+                Setting = 11 - (BitMode <= 1) * 5;
+            }
+        }
 
-    //If Vector extended then MM is changed to QWORD.
+        //-------------------------------------------------------------------------------------------------------------------------
+        //If By size attributes is false the selected Memory pointer is the first four bits of the size setting for all pointer indexes 0 to 15.
+        //Also if By size attribute is also true the selected by size index can not exceed 15 anyways which is the max combination the first four bits.
+        //-------------------------------------------------------------------------------------------------------------------------
 
-    if( Extension !== 0 && Setting === 9 ){ Setting = 6; }
+        Setting = Setting & 0x0f;
 
-    //Bround control, or 32/64 VSIB.
+        //If Vector extended then MM is changed to QWORD.
 
-    if ( ConversionMode === 1 || ConversionMode === 2 || VSIB ) { out += PTR[WidthBit > 0 ? 6 : 4]; }
+        if (Extension !== 0 && Setting === 9) {
+            Setting = 6;
+        }
 
-    //-------------------------------------------------------------------------------------------------------------------------
-    //Get the pointer size by Size setting.
-    //-------------------------------------------------------------------------------------------------------------------------
+        //Bround control, or 32/64 VSIB.
 
-    else{ out = PTR[Setting]; }
+        if (ConversionMode === 1 || ConversionMode === 2 || VSIB) {
+            out += PTR[WidthBit > 0 ? 6 : 4];
+        }
 
-    //Add the Segment override left address bracket if any segment override was used otherwise the SegOverride string should be just a normal left bracket.
+        //-------------------------------------------------------------------------------------------------------------------------
+        //Get the pointer size by Size setting.
+        //-------------------------------------------------------------------------------------------------------------------------
+        else {
+            out = PTR[Setting];
+        }
 
-    out += SegOverride;
+        //Add the Segment override left address bracket if any segment override was used otherwise the SegOverride string should be just a normal left bracket.
 
-    //-------------------------------------------------------------------------------------------------------------------------
-    //calculate the actual address size according to the Address override and the CPU bit mode.
-    //-------------------------------------------------------------------------------------------------------------------------
-    //AddressSize 1 is 16, AddressSize 2 is 32, AddressSize 3 is 64.
-    //The Bit mode is the address size except AddressOverride reacts differently in different bit modes.
-    //In 16 bit AddressOverride switches to the 32 bit ModR/M effective address system.
-    //In both 32/64 the Address size goes down by one is size.
-    //-------------------------------------------------------------------------------------------------------------------------
+        out += SegOverride;
 
-    var AddressSize = BitMode + 1;
+        //-------------------------------------------------------------------------------------------------------------------------
+        //calculate the actual address size according to the Address override and the CPU bit mode.
+        //-------------------------------------------------------------------------------------------------------------------------
+        //AddressSize 1 is 16, AddressSize 2 is 32, AddressSize 3 is 64.
+        //The Bit mode is the address size except AddressOverride reacts differently in different bit modes.
+        //In 16 bit AddressOverride switches to the 32 bit ModR/M effective address system.
+        //In both 32/64 the Address size goes down by one is size.
+        //-------------------------------------------------------------------------------------------------------------------------
 
-    if (AddressOverride)
-    {
-      AddressSize = AddressSize - 1;
+        var AddressSize = BitMode + 1;
 
-      //the only time the address size is 0 is if the BitMode is 16 bit's and is subtracted by one resulting in 0.
+        if (AddressOverride) {
+            AddressSize = AddressSize - 1;
 
-      if(AddressSize === 0)
-      {
-        AddressSize = 2; //set the address size to 32 bit from the 16 bit address mode.
-      }
-    }
+            //the only time the address size is 0 is if the BitMode is 16 bit's and is subtracted by one resulting in 0.
 
-    /*-------------------------------------------------------------------------------------------------------------------------
+            if (AddressSize === 0) {
+                AddressSize = 2; //set the address size to 32 bit from the 16 bit address mode.
+            }
+        }
+
+        /*-------------------------------------------------------------------------------------------------------------------------
     The displacement size calculation.
     ---------------------------------------------------------------------------------------------------------------------------
     In 16/32/64 the mode setting 1 will always add a Displacement of 8 to the address.
@@ -4307,19 +8496,18 @@ function Decode_ModRM_SIB_Address( ModRM, BySize, Setting )
     In 32/64 the Mode Setting 2 for the effective address adds an displacement of 32 to the effective address.
     -------------------------------------------------------------------------------------------------------------------------*/
 
-    var Disp = ModRM[0] - 1; //Let disp relate size to mode value of the ModR/M.
+        var Disp = ModRM[0] - 1; //Let disp relate size to mode value of the ModR/M.
 
-    //if 32 bit and above, and if Mode is 2 then disp size is disp32.
+        //if 32 bit and above, and if Mode is 2 then disp size is disp32.
 
-    if(AddressSize >= 2 && ModRM[0] === 2)
-    {
-      Disp += 1; //Only one more higher in size is 32.
-    }
+        if (AddressSize >= 2 && ModRM[0] === 2) {
+            Disp += 1; //Only one more higher in size is 32.
+        }
 
-    /*-------------------------------------------------------------------------------------------------------------------------
+        /*-------------------------------------------------------------------------------------------------------------------------
     End of calculation.
     -------------------------------------------------------------------------------------------------------------------------*/
-    /*-------------------------------------------------------------------------------------------------------------------------
+        /*-------------------------------------------------------------------------------------------------------------------------
     Normally the displacement type is an relative Immediate that is added ("+"),
     or subtracted ("-") from the center point to the selected base register,
     and the size depends on mode settings 1, and 2, and also Address bit mode (Displacement calculation).
@@ -4327,255 +8515,281 @@ function Decode_ModRM_SIB_Address( ModRM, BySize, Setting )
     so some modes, and registers combinations where used for different Immediate displacements.
     -------------------------------------------------------------------------------------------------------------------------*/
 
-    var DispType = 3; //by default the displacement size is added to the selected base register, or Index register if SIB byte combination is used.
+        var DispType = 3; //by default the displacement size is added to the selected base register, or Index register if SIB byte combination is used.
 
-    //-------------------------------------------16 Bit ModR/M address decode logic-------------------------------------------
+        //-------------------------------------------16 Bit ModR/M address decode logic-------------------------------------------
 
-    if( AddressSize === 1 )
-    {
+        if (AddressSize === 1) {
+            //if ModR/M mode bits 0, and Base Register value is 6 then disp16 with DispType mode 0.
 
-      //if ModR/M mode bits 0, and Base Register value is 6 then disp16 with DispType mode 0.
+            if (AddressSize === 1 && ModRM[0] === 0 && ModRM[2] === 6) {
+                Disp = 1;
+                DispType = 0;
+            }
 
-      if(AddressSize === 1 && ModRM[0] === 0 && ModRM[2] === 6)
-      {
-        Disp = 1;
-        DispType = 0;
-      }
+            //BX , BP switch based on bit 2 of the Register value
 
-      //BX , BP switch based on bit 2 of the Register value
+            if (ModRM[2] < 4) {
+                out += REG[AddressSize][3 + (ModRM[2] & 2)] + "+";
+            }
 
-      if( ModRM[2] < 4 ){ out += REG[ AddressSize ][ 3 + ( ModRM[2] & 2 ) ] + "+"; }
+            //The first bit switches between Destination index, and source index
 
-      //The first bit switches between Destination index, and source index
+            if (ModRM[2] < 6) {
+                out += REG[AddressSize][6 + (ModRM[2] & 1)];
+            }
 
-      if( ModRM[2] < 6 ){ out += REG[ AddressSize ][ 6 + ( ModRM[2] & 1 ) ]; }
+            //[BP], and [BX] as long as Mode is not 0, and Register is not 6 which sets DispType 0.
+            else if (DispType !== 0) {
+                out += REG[AddressSize][17 - (ModRM[2] << 1)];
+            }
+        } //End of 16 bit ModR/M decode logic.
 
-      //[BP], and [BX] as long as Mode is not 0, and Register is not 6 which sets DispType 0.
+        //-------------------------------------------Else 32/64 ModR/M-------------------------------------------
+        else {
+            //if Mode is 0 and Base Register value is 5 then it uses an Relative (RIP) disp32.
 
-      else if ( DispType !== 0 ) { out += REG[ AddressSize ][ 17 - ( ModRM[2] << 1 ) ]; }
-    } //End of 16 bit ModR/M decode logic.
+            if (ModRM[0] === 0 && ModRM[2] === 5) {
+                Disp = 2;
+                DispType = 2;
+            }
 
-    //-------------------------------------------Else 32/64 ModR/M-------------------------------------------
+            //check if Base Register is 4 which goes into the SIB address system
 
-    else
-    {
+            if (ModRM[2] === 4) {
+                //Decode the SIB byte.
 
-      //if Mode is 0 and Base Register value is 5 then it uses an Relative (RIP) disp32.
+                var SIB = Decode_ModRM_SIB_Value();
 
-      if( ModRM[0] === 0 && ModRM[2] === 5 )
-      {
-        Disp = 2;
-        DispType = 2;
-      }
+                //Calculate the Index register with it's Extended value because the index register will only cancel out if 4 in value.
 
-      //check if Base Register is 4 which goes into the SIB address system
+                var IndexReg = IndexExtend | SIB[1];
 
-      if( ModRM[2] === 4 )
-      {
-        //Decode the SIB byte.
+                //check if the base register is 5 in value in the SIB without it's added extended value, and that the ModR/M Mode is 0 this activates Disp32
 
-        var SIB = Decode_ModRM_SIB_Value();
+                if (ModRM[0] === 0 && SIB[2] === 5 && !VSIB) {
+                    Disp = 2; //Set Disp32
 
-        //Calculate the Index register with it's Extended value because the index register will only cancel out if 4 in value.
+                    //check if the Index register is canceled out as well
 
-        var IndexReg = IndexExtend | SIB[1];
+                    if (IndexReg === 4) {
+                        //if the Index is canceled out then
+                        DispType = 0; //a regular IMM32 is used as the address.
 
-        //check if the base register is 5 in value in the SIB without it's added extended value, and that the ModR/M Mode is 0 this activates Disp32
+                        //*if the Address size is 64 then the 32 bit Immediate must pad to the full 64 bit address.
 
-        if ( ModRM[0] === 0 && SIB[2] === 5 && !VSIB )
-        {
-          Disp = 2; //Set Disp32
+                        if (AddressSize === 3) {
+                            Disp = 50;
+                        }
+                    }
+                }
 
-          //check if the Index register is canceled out as well
+                //Else Base register is not 5, and the Mode is not 0 then decode the base register normally.
+                else {
+                    out += REG[AddressSize][(BaseExtend & 8) | SIB[2]];
 
-          if (IndexReg === 4) //if the Index is canceled out then
-          {
-            DispType = 0; //a regular IMM32 is used as the address.
+                    //If the Index Register is not Canceled out (Note this is only reachable if base register was decoded and not canceled out)
 
-            //*if the Address size is 64 then the 32 bit Immediate must pad to the full 64 bit address.
+                    if (IndexReg !== 4 || VSIB) {
+                        out = out + "+"; //Then add the Plus in front of the Base register to add the index register
+                    }
+                }
 
-            if( AddressSize === 3 ) { Disp = 50; }
-          }
+                //if Index Register is not Canceled, and that it is not an Vector register then decode the Index with the possibility of the base register.
+
+                if (IndexReg !== 4 && !VSIB) {
+                    out += REG[AddressSize][IndexExtend | IndexReg];
+
+                    //add what the scale bits decode to the Index register by the value of the scale bits which select the name from the scale array.
+
+                    out = out + scale[SIB[0]];
+                }
+
+                //Else if it is an vector register.
+                else if (VSIB) {
+                    Setting = Setting < 8 ? 4 : Setting >> 1;
+
+                    if (Opcode < 0x700) {
+                        IndexReg |= VectorRegister & 0x10;
+                    }
+
+                    out += DecodeRegValue(IndexExtend | IndexReg, false, Setting); //Decode Vector register by length setting and the V' extension.
+
+                    //add what the scale bits decode to the Index register by the value of the scale bits which select the name from the scale array.
+
+                    out = out + scale[SIB[0]];
+                }
+            } //END OF THE SIB BYTE ADDRESS DECODE.
+
+            //else Base register is not 4 and does not go into the SIB ADDRESS.
+            //Decode the Base register regularly plus it's Extended value if relative (RIP) disp32 is not used.
+            else if (DispType !== 2) {
+                out += REG[AddressSize][(BaseExtend & 8) | ModRM[2]];
+            }
         }
 
-        //Else Base register is not 5, and the Mode is not 0 then decode the base register normally.
+        //Finally the Immediate displacement is put into the Address last.
 
-        else
-        {
-          out += REG[ AddressSize ][ BaseExtend & 8 | SIB[2] ];
-
-          //If the Index Register is not Canceled out (Note this is only reachable if base register was decoded and not canceled out)
-
-          if ( IndexReg !== 4 || VSIB )
-          {
-            out = out + "+"; //Then add the Plus in front of the Base register to add the index register
-          }
+        if (Disp >= 0) {
+            out += DecodeImmediate(DispType, false, Disp);
         }
 
-        //if Index Register is not Canceled, and that it is not an Vector register then decode the Index with the possibility of the base register.
+        //Put the right bracket on the address.
 
-        if ( IndexReg !== 4 && !VSIB )
-        {
-          out += REG[ AddressSize ][ IndexExtend | IndexReg ];
+        out += "]";
 
-          //add what the scale bits decode to the Index register by the value of the scale bits which select the name from the scale array.
+        //----------------------L1OM/MVEX/EVEX memory conversion mode, or broadcast round-----------------------
 
-          out = out + scale[SIB[0]];
+        if (
+            ConversionMode !== 0 && //Not used if set 0.
+            !(
+                (
+                    (ConversionMode === 3 && (Opcode >= 0x700 || (!(Opcode >= 0x700) && !Float))) || //If bad L1OM/K1OM float conversion.
+                    (!(Opcode >= 0x700) &&
+                        (VectS === 0 ||
+                            (ConversionMode === 5 && VectS === 5) || //If K1OM UNorm conversion L1OM only.
+                            (ConversionMode !== 1 && VectS === 1) ^ (ConversionMode < 3 && !Swizzle)))
+                ) //Or K1OM broadcast Swizzle, and special case {4to16} only.
+            )
+        ) {
+            //Calculate Conversion.
+
+            if (ConversionMode >= 4) {
+                ConversionMode += 2;
+            }
+            if (ConversionMode >= 8) {
+                ConversionMode += 2;
+            }
+
+            //If L1OM.
+
+            if (Opcode >= 0x700) {
+                //If L1OM without Swizzle.
+
+                if (!Swizzle && ConversionMode > 2) {
+                    ConversionMode = 31;
+                }
+
+                //L1OM Float adjust.
+                else if (Float) {
+                    if (ConversionMode === 7) {
+                        ConversionMode++;
+                    }
+                    if (ConversionMode === 10) {
+                        ConversionMode = 3;
+                    }
+                }
+            }
+
+            //Set conversion. Note K1OM special case inverts width bit.
+
+            out +=
+                S_C + ConversionModes[(ConversionMode << 1) | ((WidthBit ^ (!(Opcode >= 0x700) & (VectS === 7))) & 1)];
+            S_C = ",";
         }
-        
-        //Else if it is an vector register.
-        
-        else if ( VSIB )
-        {
-          Setting = ( Setting < 8 ) ? 4 : Setting >> 1;
 
-          if( Opcode < 0x700 ) { IndexReg |= ( VectorRegister & 0x10 ); }
-
-          out += DecodeRegValue( IndexExtend | IndexReg, false, Setting ); //Decode Vector register by length setting and the V' extension.
-
-          //add what the scale bits decode to the Index register by the value of the scale bits which select the name from the scale array.
-
-          out = out + scale[SIB[0]];
+        //Else bad Conversion setting.
+        else if (ConversionMode !== 0) {
+            out += S_C + "Error";
+            S_C = ",";
         }
-      } //END OF THE SIB BYTE ADDRESS DECODE.
 
-      //else Base register is not 4 and does not go into the SIB ADDRESS.
-      //Decode the Base register regularly plus it's Extended value if relative (RIP) disp32 is not used.
+        //--------------------------------END of memory Conversion control logic--------------------------------
+    } //End of Memory address Modes 00, 01, 10 decode.
 
-      else if(DispType !== 2)
-      {
-        out += REG[ AddressSize ][ BaseExtend & 8 | ModRM[2] ];
-      }
-    }
+    //-----------------------------else the ModR/M mode bits are 11 register Mode-----------------------------
+    else {
+        //-------------------------------------------------------------------------------------------------------------------------
+        //The Selected Size is setting unless BySize attribute is true.
+        //-------------------------------------------------------------------------------------------------------------------------
 
+        //MVEX/EVEX round mode.
 
-    //Finally the Immediate displacement is put into the Address last.
-
-    if( Disp >= 0 ) { out += DecodeImmediate( DispType, false, Disp ); }
-
-    //Put the right bracket on the address.
-
-    out += "]";
-
-    //----------------------L1OM/MVEX/EVEX memory conversion mode, or broadcast round-----------------------
-
-    if(
-        ( ConversionMode !== 0 ) && //Not used if set 0.
-       !(
-          ( ConversionMode === 3 && ( Opcode >= 0x700 || !( Opcode >= 0x700 ) && !Float ) ) || //If bad L1OM/K1OM float conversion.
-          ( !( Opcode >= 0x700 ) && ( VectS === 0 || ( ConversionMode === 5 && VectS === 5 ) || //If K1OM UNorm conversion L1OM only.
-          ( ConversionMode !== 1 && VectS === 1 ) ^ ( ConversionMode < 3 && !Swizzle ) ) ) //Or K1OM broadcast Swizzle, and special case {4to16} only.
-        )
-    )
-    {
-      //Calculate Conversion.
-
-      if( ConversionMode >= 4 ){ ConversionMode += 2; }
-      if( ConversionMode >= 8 ){ ConversionMode += 2; }
-
-      //If L1OM.
-
-      if( Opcode >= 0x700 )
-      {
-        //If L1OM without Swizzle.
-
-        if ( !Swizzle && ConversionMode > 2 ) { ConversionMode = 31; }
-
-        //L1OM Float adjust.
-
-        else if( Float )
-        {
-          if( ConversionMode === 7 ) { ConversionMode++; }
-          if( ConversionMode === 10 ) { ConversionMode = 3; }
+        if ((Extension === 3 && HInt_ZeroMerg) || (Extension === 2 && ConversionMode === 1)) {
+            RoundMode |= RoundingSetting;
         }
-      }
 
-      //Set conversion. Note K1OM special case inverts width bit.
+        //If the upper 4 bits are defined and by size is false then the upper four bits is the selected register.
 
-      out += S_C + ConversionModes[ ( ConversionMode << 1 ) | ( WidthBit ^ ( !( Opcode >= 0x700 ) & VectS === 7 ) ) & 1 ]; S_C = ",";
+        if ((Setting & 0xf0) > 0 && !BySize) {
+            Setting >>= 4;
+        }
+
+        //Decode the register with Base expansion.
+
+        out = DecodeRegValue(BaseExtend | ModRM[2], BySize, Setting);
+
+        //L1OM/K1OM Register swizzle modes.
+
+        if (Opcode >= 0x700 || (Extension === 3 && !HInt_ZeroMerg && Swizzle)) {
+            if (Opcode >= 0x700 && ConversionMode >= 3) {
+                ConversionMode++;
+            } //L1OM skips swizzle type DACB.
+            if (ConversionMode !== 0) {
+                out += S_C + RegSwizzleModes[ConversionMode];
+                S_C = ",";
+            }
+        }
+        if (Extension !== 2) {
+            HInt_ZeroMerg = false;
+        } //Cache memory control is not possible in Register mode.
     }
 
-    //Else bad Conversion setting.
+    //--------------------------------------------------L1OM.CCCCC conversions-------------------------------------------------
 
-    else if( ConversionMode !== 0 ) { out += S_C + "Error"; S_C = ","; }
-    
-    //--------------------------------END of memory Conversion control logic--------------------------------
+    if (Opcode >= 0x700) {
+        //Swizzle Field control Int/Float, or Exponent adjustment.
 
-  } //End of Memory address Modes 00, 01, 10 decode.
+        if (Swizzle) {
+            if (Opcode === 0x79a) {
+                out += S_C + ConversionModes[(18 | (VectorRegister & 3)) << 1];
+                S_C = "}";
+            } else if (Opcode === 0x79b) {
+                out += S_C + ConversionModes[(22 + (VectorRegister & 3)) << 1];
+                S_C = "}";
+            } else if ((RoundingSetting & 8) === 8) {
+                out += S_C + RoundModes[24 | (VectorRegister & 7)];
+                S_C = "}";
+            }
+        }
 
-  //-----------------------------else the ModR/M mode bits are 11 register Mode-----------------------------
-
-  else
-  {
-    //-------------------------------------------------------------------------------------------------------------------------
-    //The Selected Size is setting unless BySize attribute is true.
-    //-------------------------------------------------------------------------------------------------------------------------
-    
-    //MVEX/EVEX round mode.
- 
-    if ( ( Extension === 3 && HInt_ZeroMerg ) || ( Extension === 2 && ConversionMode === 1 ) )
-    {
-      RoundMode |= RoundingSetting;
+        //Up/Down Conversion.
+        else if (VectorRegister !== 0) {
+            if (
+                (Up && VectorRegister !== 2) || //Up conversion "float16rz" is bad.
+                (!Up && VectorRegister !== 3 && VectorRegister <= 15) //Down conversion "srgb8", and field control is bad.
+            ) {
+                out += S_C + ConversionModes[((VectorRegister + 2) << 1) | WidthBit];
+                S_C = "}";
+            } else {
+                out += S_C + "Error";
+                S_C = "}";
+            } //Else Invalid setting.
+        }
+    }
+    if (S_C === ",") {
+        S_C = "}";
     }
 
-    //If the upper 4 bits are defined and by size is false then the upper four bits is the selected register.
+    //Right bracket if any SSS,CCCCC conversion mode setting.
 
-    if( ( ( Setting & 0xF0 ) > 0 ) && !BySize ) { Setting >>= 4; }
-
-    //Decode the register with Base expansion.
-
-    out = DecodeRegValue( BaseExtend | ModRM[2], BySize, Setting );
-    
-    //L1OM/K1OM Register swizzle modes.
-    
-    if( Opcode >= 0x700 || ( Extension === 3 && !HInt_ZeroMerg && Swizzle ) )
-    {
-      if( Opcode >= 0x700 && ConversionMode >= 3 ){ ConversionMode++; } //L1OM skips swizzle type DACB.
-      if( ConversionMode !== 0 ){ out += S_C + RegSwizzleModes[ ConversionMode ]; S_C = ","; }
-    }
-    if( Extension !== 2 ){ HInt_ZeroMerg = false; } //Cache memory control is not possible in Register mode.
-  }
-
-  //--------------------------------------------------L1OM.CCCCC conversions-------------------------------------------------
-
-  if( Opcode >= 0x700 )
-  {
-    //Swizzle Field control Int/Float, or Exponent adjustment.
-
-    if(Swizzle)
-    {
-      if( Opcode === 0x79A ) { out += S_C + ConversionModes[ ( 18 | ( VectorRegister & 3 ) ) << 1 ]; S_C = "}"; }
-      else if( Opcode === 0x79B ) { out += S_C + ConversionModes[ ( 22 + ( VectorRegister & 3 ) ) << 1 ]; S_C = "}"; }
-      else if( ( RoundingSetting & 8 ) === 8 ) { out += S_C + RoundModes [ 24 | ( VectorRegister & 7 ) ]; S_C = "}"; }
+    if (S_C === "}") {
+        out += S_C;
     }
 
-    //Up/Down Conversion.
+    //------------------------------------------L1OM/K1OM Hint cache memory control--------------------------------------------
 
-    else if( VectorRegister !== 0 )
-    {
-      if( ( ( Up && VectorRegister !== 2 ) || //Up conversion "float16rz" is bad.
-        ( !Up && VectorRegister !== 3 && VectorRegister <= 15 ) ) //Down conversion "srgb8", and field control is bad.
-      ) { out += S_C + ConversionModes[ ( ( VectorRegister + 2 ) << 1 ) | WidthBit ]; S_C = "}"; }
-      else { out += S_C + "Error"; S_C = "}"; } //Else Invalid setting.
+    if (HInt_ZeroMerg) {
+        if (Extension === 3) {
+            out += "{EH}";
+        } else if (Opcode >= 0x700) {
+            out += "{NT}";
+        }
     }
-  }
-  if ( S_C === "," ) { S_C = "}"; }
 
-  //Right bracket if any SSS,CCCCC conversion mode setting.
+    //-------------------------------------------Return the Register/Memory address--------------------------------------------
 
-  if( S_C === "}" ) { out += S_C; }
-
-  //------------------------------------------L1OM/K1OM Hint cache memory control--------------------------------------------
-
-  if( HInt_ZeroMerg )
-  {
-    if ( Extension === 3 ) { out += "{EH}"; }
-    else if ( Opcode >= 0x700 ) { out += "{NT}"; }
-  }
-
-  //-------------------------------------------Return the Register/Memory address--------------------------------------------
-
-  return (out);
+    return out;
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -4585,351 +8799,330 @@ controls in the CPU to be applied to an select instruction code that is not an P
 At the end of this function "Opcode" should not hold any prefix code, so then Opcode contains an operation code.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function DecodePrefixAdjustments()
-{
-  //-------------------------------------------------------------------------------------------------------------------------
-  Opcode = ( Opcode & 0x300 ) | BinCode[CodePos]; //Add 8 bit opcode while bits 9, and 10 are used for opcode map.
-  NextByte(); //Move to the next byte.
-  //-------------------------------------------------------------------------------------------------------------------------
-
-  //if 0F hex start at 256 for Opcode.
-
-  if(Opcode === 0x0F)
-  {
-    Opcode = 0x100; //By starting at 0x100 with binary bit 9 set one then adding the 8 bit opcode then Opcode goes 256 to 511.
-    return(DecodePrefixAdjustments()); //restart function decode more prefix settings that can effect the decode instruction.
-  }
-
-  //if 38 hex while using two byte opcode.
-
-  else if(Opcode === 0x138 && Mnemonics[0x138] === "")
-  {
-    Opcode = 0x200; //By starting at 0x200 with binary bit 10 set one then adding the 8 bit opcode then Opcode goes 512 to 767.
-    return(DecodePrefixAdjustments()); //restart function decode more prefix settings that can effect the decode instruction.
-  }
-
-  //if 3A hex while using two byte opcode go three byte opcodes.
-
-  else if(Opcode === 0x13A && Mnemonics[0x13A] === "")
-  {
-    Opcode = 0x300; //By starting at 0x300 hex and adding the 8 bit opcode then Opcode goes 768 to 1023.
-    return(DecodePrefixAdjustments()); //restart function decode more prefix settings that can effect the decode instruction.
-  }
-
-  //Rex prefix decodes only in 64 bit mode.
-
-  if( Opcode >= 0x40 & Opcode <= 0x4F && BitMode === 2 )
-  {
-    RexActive = 1; //Set Rex active uses 8 bit registers in lower order as 0 to 15.
-    BaseExtend = ( Opcode & 0x01 ) << 3; //Base Register extend setting.
-    IndexExtend = ( Opcode & 0x02 ) << 2; //Index Register extend setting.
-    RegExtend = ( Opcode & 0x04 ) << 1; //Register Extend Setting.
-    WidthBit = ( Opcode & 0x08 ) >> 3; //Set The Width Bit setting if active.
-    SizeAttrSelect = WidthBit ? 2 : 1; //The width Bit open all 64 bits.
-    return(DecodePrefixAdjustments()); //restart function decode more prefix settings that can effect the decode instruction.
-  }
-
-  //The VEX2 Operation code Extension to SSE settings decoding.
-
-  if( Opcode === 0xC5 && ( BinCode[CodePos] >= 0xC0 || BitMode === 2 ) )
-  {
-    Extension = 1;
+function DecodePrefixAdjustments() {
     //-------------------------------------------------------------------------------------------------------------------------
-    Opcode = BinCode[CodePos]; //read VEX2 byte settings.
+    Opcode = (Opcode & 0x300) | BinCode[CodePos]; //Add 8 bit opcode while bits 9, and 10 are used for opcode map.
     NextByte(); //Move to the next byte.
     //-------------------------------------------------------------------------------------------------------------------------
 
-    //some bits are inverted, so uninvert them arithmetically.
+    //if 0F hex start at 256 for Opcode.
 
-    Opcode ^= 0xF8;
-
-    //Decode bit settings.
-
-    if( BitMode === 2 )
-    {
-      RegExtend = ( Opcode & 0x80 ) >> 4; //Register Extend.
-      VectorRegister = ( Opcode & 0x78 ) >> 3; //The added in Vector register to SSE.
+    if (Opcode === 0x0f) {
+        Opcode = 0x100; //By starting at 0x100 with binary bit 9 set one then adding the 8 bit opcode then Opcode goes 256 to 511.
+        return DecodePrefixAdjustments(); //restart function decode more prefix settings that can effect the decode instruction.
     }
 
-    SizeAttrSelect = ( Opcode & 0x04 ) >> 2; //The L bit for 256 vector size.
-    SIMD = Opcode & 0x03; //The SIMD mode.
-
-    //Automatically uses the two byte opcode map starts at 256 goes to 511.
-
-    Opcode = 0x100;
-
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode = ( Opcode & 0x300 ) | BinCode[CodePos]; //read the opcode.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-
-    //Stop decoding prefixes.
-
-    return(null);
-  }
-
-  //The VEX3 prefix settings decoding.
-
-  if( Opcode === 0xC4 && ( BinCode[CodePos] >= 0xC0 || BitMode === 2 ) )
-  {
-    Extension = 1;
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode = BinCode[CodePos]; //read VEX3 byte settings.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode |= ( BinCode[CodePos] << 8 ); //Read next VEX3 byte settings.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-
-    //Some bits are inverted, so uninvert them arithmetically.
-
-    Opcode ^= 0x78E0;
-
-    //Decode bit settings.
-
-    if( BitMode === 2 )
-    {
-      RegExtend = ( Opcode & 0x0080 ) >> 4; //Extend Register Setting.
-      IndexExtend = ( Opcode & 0x0040 ) >> 3; //Extend Index register setting.
-      BaseExtend = ( Opcode & 0x0020 ) >> 2; //Extend base Register setting.
+    //if 38 hex while using two byte opcode.
+    else if (Opcode === 0x138 && Mnemonics[0x138] === "") {
+        Opcode = 0x200; //By starting at 0x200 with binary bit 10 set one then adding the 8 bit opcode then Opcode goes 512 to 767.
+        return DecodePrefixAdjustments(); //restart function decode more prefix settings that can effect the decode instruction.
     }
 
-    WidthBit = ( Opcode & 0x8000 ) >> 15; //The width bit works as a separator.
-    VectorRegister = ( Opcode & 0x7800 ) >> 11; //The added in Vector register to SSE.
-    SizeAttrSelect = ( Opcode & 0x0400 ) >> 10; //Vector length for 256 setting.
-    SIMD = ( Opcode & 0x0300 ) >> 8; //The SIMD mode.
-    Opcode = ( Opcode & 0x001F ) << 8; //Change Operation code map.
-
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode = ( Opcode & 0x300 ) | BinCode[CodePos]; //read the 8 bit opcode put them in the lower 8 bits away from opcode map bit's.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-
-    return(null);
-  }
-
-  //The AMD XOP prefix.
-
-  if( Opcode === 0x8F )
-  {
-    //If XOP
-
-    var Code = BinCode[ CodePos ] & 0x0F;
-
-    if( Code >= 8 && Code <= 10 )
-    {
-      Extension = 1;
-      //-------------------------------------------------------------------------------------------------------------------------
-      Opcode = BinCode[CodePos]; //read XOP byte settings.
-      NextByte(); //Move to the next byte.
-      //-------------------------------------------------------------------------------------------------------------------------
-      Opcode |= ( BinCode[CodePos] << 8 ); //Read next XOP byte settings.
-      NextByte(); //Move to the next byte.
-      //-------------------------------------------------------------------------------------------------------------------------
-
-      //Some bits are inverted, so uninvert them arithmetically.
-
-      Opcode ^= 0x78E0;
-
-      //Decode bit settings.
-
-      RegExtend = ( Opcode & 0x0080 ) >> 4; //Extend Register Setting.
-      IndexExtend = ( Opcode & 0x0040 ) >> 3; //Extend Index register setting.
-      BaseExtend = ( Opcode & 0x0020 ) >> 2; //Extend base Register setting.
-      WidthBit = ( Opcode & 0x8000 ) >> 15; //The width bit works as a separator.
-      VectorRegister = ( Opcode & 0x7800 ) >> 11; //The added in Vector register to SSE.
-      SizeAttrSelect = ( Opcode & 0x0400 ) >> 10; //Vector length for 256 setting.
-      SIMD = ( Opcode & 0x0300 ) >> 8; //The SIMD mode.
-      if( SIMD > 0 ) { InvalidOp = true; } //If SIMD MODE is set anything other than 0 the instruction is invalid.
-      Opcode = 0x400 | ( ( Opcode & 0x0003 ) << 8 ); //Change Operation code map.
-
-      //-------------------------------------------------------------------------------------------------------------------------
-      Opcode = ( Opcode & 0x700 ) | BinCode[CodePos]; //read the 8 bit opcode put them in the lower 8 bits away from opcode map bit's.
-      NextByte(); //Move to the next byte.
-      //-------------------------------------------------------------------------------------------------------------------------
-
-      return(null);
-    }
-  }
-  
-  //The L1OM vector prefix settings decoding.
-
-  if( Opcode === 0xD6 )
-  {
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode = BinCode[CodePos]; //read L1OM byte settings.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode |= ( BinCode[CodePos] << 8 ); //Read next L1OM byte settings.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-
-    WidthBit = SIMD & 1;
-    VectorRegister = ( Opcode & 0xF800 ) >> 11;
-    RoundMode = VectorRegister >> 3;
-    MaskRegister = ( Opcode & 0x0700 ) >> 8;
-    HInt_ZeroMerg = ( Opcode & 0x0080 ) >> 7;
-    ConversionMode = ( Opcode & 0x0070 ) >> 4;
-    RegExtend = ( Opcode & 0x000C ) << 1;
-    BaseExtend = ( Opcode & 0x0003 ) << 3;
-    IndexExtend = ( Opcode & 0x0002 ) << 2;
-
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode = 0x700 | BinCode[CodePos]; //read the 8 bit opcode.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-
-    return(null);
-  }
-
-  //Only decode L1OM instead of MVEX/EVEX if L1OM compatibility mode is set.
-
-  if( Mnemonics[0x62] === "" && Opcode === 0x62 )
-  {
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode = BinCode[CodePos]; //read L1OM byte settings.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-
-    Opcode ^= 0xF0;
-
-    IndexExtend = ( Opcode & 0x80 ) >> 4;
-    BaseExtend = ( Opcode & 0x40 ) >> 3;
-    RegExtend = ( Opcode & 0x20 ) >> 2;
-
-    if ( SIMD !== 1 ) { SizeAttrSelect = ( ( Opcode & 0x10 ) === 0x10 ) ? 2 : 1; } else { SIMD = 0; }
-
-    Opcode = 0x800 | ( ( Opcode & 0x30 ) >> 4 ) | ( ( Opcode & 0x0F ) << 2 );
-
-    return(null);
-  }
-
-  //The MVEX/EVEX prefix settings decoding.
-
-  if ( Opcode === 0x62 && ( BinCode[CodePos] >= 0xC0 || BitMode === 2 ) )
-  {
-    Extension = 2;
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode = BinCode[CodePos]; //read MVEX/EVEX byte settings.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode |= ( BinCode[CodePos] << 8 ); //read next MVEX/EVEX byte settings.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode |= ( BinCode[CodePos] << 16 ); //read next MVEX/EVEX byte settings.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-
-    //Some bits are inverted, so uninvert them arithmetically.
-
-    Opcode ^= 0x0878F0;
-
-    //Check if Reserved bits are 0 if they are not 0 the MVEX/EVEX instruction is invalid.
-
-    InvalidOp = ( Opcode & 0x00000C ) > 0;
-
-    //Decode bit settings.
-    
-    if( BitMode === 2 )
-    {
-      RegExtend = ( ( Opcode & 0x80 ) >> 4 ) | ( Opcode & 0x10 ); //The Double R'R bit decode for Register Extension 0 to 32.
-      BaseExtend = ( Opcode & 0x60 ) >> 2; //The X bit, and B Bit base register extend combination 0 to 32.
-      IndexExtend = ( Opcode & 0x40 ) >> 3; //The X extends the SIB Index by 8.
-    }
-    
-    VectorRegister = ( ( Opcode & 0x7800 ) >> 11 ) | ( ( Opcode & 0x080000 ) >> 15 ); //The Added in Vector Register for SSE under MVEX/EVEX.
-    
-    WidthBit = ( Opcode & 0x8000 ) >> 15; //The width bit separator for MVEX/EVEX.
-    SIMD = ( Opcode & 0x0300 ) >> 8; //decode the SIMD mode setting.
-    HInt_ZeroMerg = ( Opcode & 0x800000 ) >> 23; //Zero Merge to destination control, or MVEX EH control.
-      
-    //EVEX option bits take the place of Vector length control.
-      
-    if ( ( Opcode & 0x0400 ) > 0 )
-    {
-      SizeAttrSelect = ( Opcode & 0x600000 ) >> 21; //The EVEX.L'L Size combination.
-      RoundMode = SizeAttrSelect | 4; //Rounding mode is Vector length if used.
-      ConversionMode = (Opcode & 0x100000 ) >> 20; //Broadcast Round Memory address system.
-    }
-      
-    //MVEX Vector Length, and Broadcast round.
-      
-    else
-    {
-      SizeAttrSelect = 2; //Max Size by default.
-      ConversionMode = ( Opcode & 0x700000 ) >> 20; //"MVEX.sss" Option bits.
-      RoundMode = ConversionMode; //Rounding mode selection is ConversionMode if used.
-      Extension = 3;
+    //if 3A hex while using two byte opcode go three byte opcodes.
+    else if (Opcode === 0x13a && Mnemonics[0x13a] === "") {
+        Opcode = 0x300; //By starting at 0x300 hex and adding the 8 bit opcode then Opcode goes 768 to 1023.
+        return DecodePrefixAdjustments(); //restart function decode more prefix settings that can effect the decode instruction.
     }
 
-    MaskRegister = ( Opcode & 0x070000 ) >> 16; //Mask to destination.
-    Opcode = ( Opcode & 0x03 ) << 8; //Change Operation code map.
+    //Rex prefix decodes only in 64 bit mode.
 
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode = ( Opcode & 0x300 ) | BinCode[CodePos]; //read the 8 bit opcode put them in the lower 8 bits away from opcode map extend bit's.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
+    if ((Opcode >= 0x40) & (Opcode <= 0x4f) && BitMode === 2) {
+        RexActive = 1; //Set Rex active uses 8 bit registers in lower order as 0 to 15.
+        BaseExtend = (Opcode & 0x01) << 3; //Base Register extend setting.
+        IndexExtend = (Opcode & 0x02) << 2; //Index Register extend setting.
+        RegExtend = (Opcode & 0x04) << 1; //Register Extend Setting.
+        WidthBit = (Opcode & 0x08) >> 3; //Set The Width Bit setting if active.
+        SizeAttrSelect = WidthBit ? 2 : 1; //The width Bit open all 64 bits.
+        return DecodePrefixAdjustments(); //restart function decode more prefix settings that can effect the decode instruction.
+    }
 
-    //Stop decoding prefixes.
+    //The VEX2 Operation code Extension to SSE settings decoding.
 
-    return(null);
-  }
+    if (Opcode === 0xc5 && (BinCode[CodePos] >= 0xc0 || BitMode === 2)) {
+        Extension = 1;
+        //-------------------------------------------------------------------------------------------------------------------------
+        Opcode = BinCode[CodePos]; //read VEX2 byte settings.
+        NextByte(); //Move to the next byte.
+        //-------------------------------------------------------------------------------------------------------------------------
 
-  //Segment overrides
+        //some bits are inverted, so uninvert them arithmetically.
 
-  if ( ( Opcode & 0x7E7 ) === 0x26 || ( Opcode & 0x7FE ) === 0x64 )
-  {
-    SegOverride = Mnemonics[ Opcode ]; //Set the Left Bracket for the ModR/M memory address.
-    return(DecodePrefixAdjustments()); //restart function decode more prefix settings that can effect the decode instruction.
-  }
+        Opcode ^= 0xf8;
 
-  //Operand override Prefix
+        //Decode bit settings.
 
-  if(Opcode === 0x66)
-  {
-    SIMD = 1; //sets SIMD mode 1 in case of SSE instruction opcode.
-    SizeAttrSelect = 0; //Adjust the size attribute setting for the size adjustment to the next instruction.
-    return(DecodePrefixAdjustments());  //restart function decode more prefix settings that can effect the decode instruction.
-  }
+        if (BitMode === 2) {
+            RegExtend = (Opcode & 0x80) >> 4; //Register Extend.
+            VectorRegister = (Opcode & 0x78) >> 3; //The added in Vector register to SSE.
+        }
 
-  //Ram address size override.
+        SizeAttrSelect = (Opcode & 0x04) >> 2; //The L bit for 256 vector size.
+        SIMD = Opcode & 0x03; //The SIMD mode.
 
-  if(Opcode === 0x67)
-  {
-    AddressOverride = true; //Set the setting active for the ModR/M address size.
-    return(DecodePrefixAdjustments()); //restart function decode more prefix settings that can effect the decode instruction.
-  }
+        //Automatically uses the two byte opcode map starts at 256 goes to 511.
 
-  //if repeat Prefixes F2 hex REP,or F3 hex RENP
+        Opcode = 0x100;
 
-  if (Opcode === 0xF2 || Opcode === 0xF3)
-  {
-    SIMD = (Opcode & 0x02 )  |  ( 1 - Opcode & 0x01 ); //F2, and F3 change the SIMD mode during SSE instructions.
-    PrefixG1 = Mnemonics[ Opcode ]; //set the Prefix string.
-    HLEFlipG1G2 = true; //set Filp HLE in case this is the last prefix read, and LOCK was set in string G2 first for HLE.
-    return(DecodePrefixAdjustments()); //restart function decode more prefix settings that can effect the decode instruction.
-  }
+        //-------------------------------------------------------------------------------------------------------------------------
+        Opcode = (Opcode & 0x300) | BinCode[CodePos]; //read the opcode.
+        NextByte(); //Move to the next byte.
+        //-------------------------------------------------------------------------------------------------------------------------
 
-  //if the lock prefix note the lock prefix is separate
+        //Stop decoding prefixes.
 
-  if (Opcode === 0xF0)
-  {
-    PrefixG2 = Mnemonics[ Opcode ]; //set the Prefix string
-    HLEFlipG1G2 = false; //set Flip HLE false in case this is the last prefix read, and REP, or REPNE was set in string G2 first for HLE.
-    return(DecodePrefixAdjustments()); //restart function decode more prefix settings that can effect the decode instruction.
-  }
+        return null;
+    }
 
-  //Before ending the function "DecodePrefixAdjustments()" some opcode combinations are invalid in 64 bit mode.
+    //The VEX3 prefix settings decoding.
 
-  if ( BitMode === 2 )
-  {
-    InvalidOp |= ( ( ( Opcode & 0x07 ) >= 0x06 ) & ( Opcode <= 0x40 ) );
-    InvalidOp |= ( Opcode === 0x60 | Opcode === 0x61 );
-    InvalidOp |= ( Opcode === 0xD4 | Opcode === 0xD5 );
-    InvalidOp |= ( Opcode === 0x9A | Opcode === 0xEA );
-    InvalidOp |= ( Opcode === 0x82 );
-  }
+    if (Opcode === 0xc4 && (BinCode[CodePos] >= 0xc0 || BitMode === 2)) {
+        Extension = 1;
+        //-------------------------------------------------------------------------------------------------------------------------
+        Opcode = BinCode[CodePos]; //read VEX3 byte settings.
+        NextByte(); //Move to the next byte.
+        //-------------------------------------------------------------------------------------------------------------------------
+        Opcode |= BinCode[CodePos] << 8; //Read next VEX3 byte settings.
+        NextByte(); //Move to the next byte.
+        //-------------------------------------------------------------------------------------------------------------------------
 
+        //Some bits are inverted, so uninvert them arithmetically.
+
+        Opcode ^= 0x78e0;
+
+        //Decode bit settings.
+
+        if (BitMode === 2) {
+            RegExtend = (Opcode & 0x0080) >> 4; //Extend Register Setting.
+            IndexExtend = (Opcode & 0x0040) >> 3; //Extend Index register setting.
+            BaseExtend = (Opcode & 0x0020) >> 2; //Extend base Register setting.
+        }
+
+        WidthBit = (Opcode & 0x8000) >> 15; //The width bit works as a separator.
+        VectorRegister = (Opcode & 0x7800) >> 11; //The added in Vector register to SSE.
+        SizeAttrSelect = (Opcode & 0x0400) >> 10; //Vector length for 256 setting.
+        SIMD = (Opcode & 0x0300) >> 8; //The SIMD mode.
+        Opcode = (Opcode & 0x001f) << 8; //Change Operation code map.
+
+        //-------------------------------------------------------------------------------------------------------------------------
+        Opcode = (Opcode & 0x300) | BinCode[CodePos]; //read the 8 bit opcode put them in the lower 8 bits away from opcode map bit's.
+        NextByte(); //Move to the next byte.
+        //-------------------------------------------------------------------------------------------------------------------------
+
+        return null;
+    }
+
+    //The AMD XOP prefix.
+
+    if (Opcode === 0x8f) {
+        //If XOP
+
+        var Code = BinCode[CodePos] & 0x0f;
+
+        if (Code >= 8 && Code <= 10) {
+            Extension = 1;
+            //-------------------------------------------------------------------------------------------------------------------------
+            Opcode = BinCode[CodePos]; //read XOP byte settings.
+            NextByte(); //Move to the next byte.
+            //-------------------------------------------------------------------------------------------------------------------------
+            Opcode |= BinCode[CodePos] << 8; //Read next XOP byte settings.
+            NextByte(); //Move to the next byte.
+            //-------------------------------------------------------------------------------------------------------------------------
+
+            //Some bits are inverted, so uninvert them arithmetically.
+
+            Opcode ^= 0x78e0;
+
+            //Decode bit settings.
+
+            RegExtend = (Opcode & 0x0080) >> 4; //Extend Register Setting.
+            IndexExtend = (Opcode & 0x0040) >> 3; //Extend Index register setting.
+            BaseExtend = (Opcode & 0x0020) >> 2; //Extend base Register setting.
+            WidthBit = (Opcode & 0x8000) >> 15; //The width bit works as a separator.
+            VectorRegister = (Opcode & 0x7800) >> 11; //The added in Vector register to SSE.
+            SizeAttrSelect = (Opcode & 0x0400) >> 10; //Vector length for 256 setting.
+            SIMD = (Opcode & 0x0300) >> 8; //The SIMD mode.
+            if (SIMD > 0) {
+                InvalidOp = true;
+            } //If SIMD MODE is set anything other than 0 the instruction is invalid.
+            Opcode = 0x400 | ((Opcode & 0x0003) << 8); //Change Operation code map.
+
+            //-------------------------------------------------------------------------------------------------------------------------
+            Opcode = (Opcode & 0x700) | BinCode[CodePos]; //read the 8 bit opcode put them in the lower 8 bits away from opcode map bit's.
+            NextByte(); //Move to the next byte.
+            //-------------------------------------------------------------------------------------------------------------------------
+
+            return null;
+        }
+    }
+
+    //The L1OM vector prefix settings decoding.
+
+    if (Opcode === 0xd6) {
+        //-------------------------------------------------------------------------------------------------------------------------
+        Opcode = BinCode[CodePos]; //read L1OM byte settings.
+        NextByte(); //Move to the next byte.
+        //-------------------------------------------------------------------------------------------------------------------------
+        Opcode |= BinCode[CodePos] << 8; //Read next L1OM byte settings.
+        NextByte(); //Move to the next byte.
+        //-------------------------------------------------------------------------------------------------------------------------
+
+        WidthBit = SIMD & 1;
+        VectorRegister = (Opcode & 0xf800) >> 11;
+        RoundMode = VectorRegister >> 3;
+        MaskRegister = (Opcode & 0x0700) >> 8;
+        HInt_ZeroMerg = (Opcode & 0x0080) >> 7;
+        ConversionMode = (Opcode & 0x0070) >> 4;
+        RegExtend = (Opcode & 0x000c) << 1;
+        BaseExtend = (Opcode & 0x0003) << 3;
+        IndexExtend = (Opcode & 0x0002) << 2;
+
+        //-------------------------------------------------------------------------------------------------------------------------
+        Opcode = 0x700 | BinCode[CodePos]; //read the 8 bit opcode.
+        NextByte(); //Move to the next byte.
+        //-------------------------------------------------------------------------------------------------------------------------
+
+        return null;
+    }
+
+    //Only decode L1OM instead of MVEX/EVEX if L1OM compatibility mode is set.
+
+    if (Mnemonics[0x62] === "" && Opcode === 0x62) {
+        //-------------------------------------------------------------------------------------------------------------------------
+        Opcode = BinCode[CodePos]; //read L1OM byte settings.
+        NextByte(); //Move to the next byte.
+        //-------------------------------------------------------------------------------------------------------------------------
+
+        Opcode ^= 0xf0;
+
+        IndexExtend = (Opcode & 0x80) >> 4;
+        BaseExtend = (Opcode & 0x40) >> 3;
+        RegExtend = (Opcode & 0x20) >> 2;
+
+        if (SIMD !== 1) {
+            SizeAttrSelect = (Opcode & 0x10) === 0x10 ? 2 : 1;
+        } else {
+            SIMD = 0;
+        }
+
+        Opcode = 0x800 | ((Opcode & 0x30) >> 4) | ((Opcode & 0x0f) << 2);
+
+        return null;
+    }
+
+    //The MVEX/EVEX prefix settings decoding.
+
+    if (Opcode === 0x62 && (BinCode[CodePos] >= 0xc0 || BitMode === 2)) {
+        Extension = 2;
+        //-------------------------------------------------------------------------------------------------------------------------
+        Opcode = BinCode[CodePos]; //read MVEX/EVEX byte settings.
+        NextByte(); //Move to the next byte.
+        //-------------------------------------------------------------------------------------------------------------------------
+        Opcode |= BinCode[CodePos] << 8; //read next MVEX/EVEX byte settings.
+        NextByte(); //Move to the next byte.
+        //-------------------------------------------------------------------------------------------------------------------------
+        Opcode |= BinCode[CodePos] << 16; //read next MVEX/EVEX byte settings.
+        NextByte(); //Move to the next byte.
+        //-------------------------------------------------------------------------------------------------------------------------
+
+        //Some bits are inverted, so uninvert them arithmetically.
+
+        Opcode ^= 0x0878f0;
+
+        //Check if Reserved bits are 0 if they are not 0 the MVEX/EVEX instruction is invalid.
+
+        InvalidOp = (Opcode & 0x00000c) > 0;
+
+        //Decode bit settings.
+
+        if (BitMode === 2) {
+            RegExtend = ((Opcode & 0x80) >> 4) | (Opcode & 0x10); //The Double R'R bit decode for Register Extension 0 to 32.
+            BaseExtend = (Opcode & 0x60) >> 2; //The X bit, and B Bit base register extend combination 0 to 32.
+            IndexExtend = (Opcode & 0x40) >> 3; //The X extends the SIB Index by 8.
+        }
+
+        VectorRegister = ((Opcode & 0x7800) >> 11) | ((Opcode & 0x080000) >> 15); //The Added in Vector Register for SSE under MVEX/EVEX.
+
+        WidthBit = (Opcode & 0x8000) >> 15; //The width bit separator for MVEX/EVEX.
+        SIMD = (Opcode & 0x0300) >> 8; //decode the SIMD mode setting.
+        HInt_ZeroMerg = (Opcode & 0x800000) >> 23; //Zero Merge to destination control, or MVEX EH control.
+
+        //EVEX option bits take the place of Vector length control.
+
+        if ((Opcode & 0x0400) > 0) {
+            SizeAttrSelect = (Opcode & 0x600000) >> 21; //The EVEX.L'L Size combination.
+            RoundMode = SizeAttrSelect | 4; //Rounding mode is Vector length if used.
+            ConversionMode = (Opcode & 0x100000) >> 20; //Broadcast Round Memory address system.
+        }
+
+        //MVEX Vector Length, and Broadcast round.
+        else {
+            SizeAttrSelect = 2; //Max Size by default.
+            ConversionMode = (Opcode & 0x700000) >> 20; //"MVEX.sss" Option bits.
+            RoundMode = ConversionMode; //Rounding mode selection is ConversionMode if used.
+            Extension = 3;
+        }
+
+        MaskRegister = (Opcode & 0x070000) >> 16; //Mask to destination.
+        Opcode = (Opcode & 0x03) << 8; //Change Operation code map.
+
+        //-------------------------------------------------------------------------------------------------------------------------
+        Opcode = (Opcode & 0x300) | BinCode[CodePos]; //read the 8 bit opcode put them in the lower 8 bits away from opcode map extend bit's.
+        NextByte(); //Move to the next byte.
+        //-------------------------------------------------------------------------------------------------------------------------
+
+        //Stop decoding prefixes.
+
+        return null;
+    }
+
+    //Segment overrides
+
+    if ((Opcode & 0x7e7) === 0x26 || (Opcode & 0x7fe) === 0x64) {
+        SegOverride = Mnemonics[Opcode]; //Set the Left Bracket for the ModR/M memory address.
+        return DecodePrefixAdjustments(); //restart function decode more prefix settings that can effect the decode instruction.
+    }
+
+    //Operand override Prefix
+
+    if (Opcode === 0x66) {
+        SIMD = 1; //sets SIMD mode 1 in case of SSE instruction opcode.
+        SizeAttrSelect = 0; //Adjust the size attribute setting for the size adjustment to the next instruction.
+        return DecodePrefixAdjustments(); //restart function decode more prefix settings that can effect the decode instruction.
+    }
+
+    //Ram address size override.
+
+    if (Opcode === 0x67) {
+        AddressOverride = true; //Set the setting active for the ModR/M address size.
+        return DecodePrefixAdjustments(); //restart function decode more prefix settings that can effect the decode instruction.
+    }
+
+    //if repeat Prefixes F2 hex REP,or F3 hex RENP
+
+    if (Opcode === 0xf2 || Opcode === 0xf3) {
+        SIMD = (Opcode & 0x02) | ((1 - Opcode) & 0x01); //F2, and F3 change the SIMD mode during SSE instructions.
+        PrefixG1 = Mnemonics[Opcode]; //set the Prefix string.
+        HLEFlipG1G2 = true; //set Filp HLE in case this is the last prefix read, and LOCK was set in string G2 first for HLE.
+        return DecodePrefixAdjustments(); //restart function decode more prefix settings that can effect the decode instruction.
+    }
+
+    //if the lock prefix note the lock prefix is separate
+
+    if (Opcode === 0xf0) {
+        PrefixG2 = Mnemonics[Opcode]; //set the Prefix string
+        HLEFlipG1G2 = false; //set Flip HLE false in case this is the last prefix read, and REP, or REPNE was set in string G2 first for HLE.
+        return DecodePrefixAdjustments(); //restart function decode more prefix settings that can effect the decode instruction.
+    }
+
+    //Before ending the function "DecodePrefixAdjustments()" some opcode combinations are invalid in 64 bit mode.
+
+    if (BitMode === 2) {
+        InvalidOp |= ((Opcode & 0x07) >= 0x06) & (Opcode <= 0x40);
+        InvalidOp |= (Opcode === 0x60) | (Opcode === 0x61);
+        InvalidOp |= (Opcode === 0xd4) | (Opcode === 0xd5);
+        InvalidOp |= (Opcode === 0x9a) | (Opcode === 0xea);
+        InvalidOp |= Opcode === 0x82;
+    }
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -4943,89 +9136,122 @@ However DecodePrefixAdjustments can also prevent this function from being called
 used for the bit mode the CPU is in as it will set InvalidOp true.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function DecodeOpcode()
-{
-  //get the Operation name by the operations opcode.
+function DecodeOpcode() {
+    //get the Operation name by the operations opcode.
 
-  Instruction = Mnemonics[Opcode];
+    Instruction = Mnemonics[Opcode];
 
-  //get the Operands for this opcode it follows the same array structure as Mnemonics array
+    //get the Operands for this opcode it follows the same array structure as Mnemonics array
 
-  InsOperands = Operands[Opcode];
+    InsOperands = Operands[Opcode];
 
-  //Some Opcodes use the next byte automatically for extended opcode selection. Or current SIMD mode.
+    //Some Opcodes use the next byte automatically for extended opcode selection. Or current SIMD mode.
 
-  var ModRMByte = BinCode[CodePos]; //Read the byte but do not move to the next byte.
+    var ModRMByte = BinCode[CodePos]; //Read the byte but do not move to the next byte.
 
-  //If the current Mnemonic is an array two in size then Register Mode, and memory mode are separate from each other.
-  //Used in combination with Grouped opcodes, and Static opcodes.
+    //If the current Mnemonic is an array two in size then Register Mode, and memory mode are separate from each other.
+    //Used in combination with Grouped opcodes, and Static opcodes.
 
-  if(Instruction instanceof Array && Instruction.length == 2) { var bits = ( ModRMByte >> 6 ) & ( ModRMByte >> 7 ); Instruction = Instruction[bits]; InsOperands = InsOperands[bits]; }
-
-  //Arithmetic unit 8x8 combinational logic array combinations.
-  //If the current Mnemonic is an array 8 in length It is a group opcode instruction may repeat previous instructions in different forums.
-
-  if(Instruction instanceof Array && Instruction.length == 8) { var bits = ( ModRMByte & 0x38 ) >> 3; Instruction = Instruction[bits]; InsOperands = InsOperands[bits];
-
-    //if The select Group opcode is another array 8 in size it is a static opcode selection which makes the last three bits of the ModR/M byte combination.
-
-    if(Instruction instanceof Array && Instruction.length == 8) { var bits = ( ModRMByte & 0x07 ); Instruction = Instruction[bits]; InsOperands = InsOperands[bits]; NextByte(); } }
-
-  //Vector unit 4x4 combinational array logic.
-  //if the current Mnemonic is an array 4 in size it is an SIMD instruction with four possible modes N/A, 66, F3, F2.
-  //The mode is set to SIMD, it could have been set by the EVEX.pp, VEX.pp bit combination, or by prefixes N/A, 66, F3, F2.
-
-  if(Instruction instanceof Array && Instruction.length == 4)
-  {
-    Vect = true; //Set Vector Encoding true.
-
-    //Reset the prefix string G1 because prefix codes F2, and F3 are used with SSE which forum the repeat prefix.
-    //Some SSE instructions can use the REP, RENP prefixes.
-    //The Vectors that do support the repeat prefix uses Packed Single format.
-
-    if(Instruction[2] !== "" && Instruction[3] !== "") { PrefixG1 = ""; } else { SIMD = ( SIMD === 1 ) & 1; }
-    Instruction = Instruction[SIMD]; InsOperands = InsOperands[SIMD];
-
-    //If the SIMD instruction uses another array 4 in length in the Selected SIMD vector Instruction.
-    //Then each vector Extension is separate. The first extension is used if no extension is active for Regular instructions, and vector instruction septation.
-    //0=None. 1=VEX only. 2=EVEX only. 3=??? unused.
-
-    if(Instruction instanceof Array && Instruction.length == 4)
-    {
-      //Get the correct Instruction for the Active Extension type.
-
-      if(Instruction[Extension] !== "") { Instruction = Instruction[Extension]; InsOperands = InsOperands[Extension]; }
-      else{ Instruction = "???"; InsOperands = ""; }
+    if (Instruction instanceof Array && Instruction.length == 2) {
+        var bits = (ModRMByte >> 6) & (ModRMByte >> 7);
+        Instruction = Instruction[bits];
+        InsOperands = InsOperands[bits];
     }
-    else if( Extension === 3 ){ Instruction = "???"; InsOperands = ""; }
-  }
-  else if( Opcode >= 0x700 && SIMD > 0 ){ Instruction = "???"; InsOperands = ""; }
 
-  //if Any Mnemonic is an array 3 in size the instruction name goes by size.
+    //Arithmetic unit 8x8 combinational logic array combinations.
+    //If the current Mnemonic is an array 8 in length It is a group opcode instruction may repeat previous instructions in different forums.
 
-  if(Instruction instanceof Array && Instruction.length == 3)
-  {
-    var bits = ( Extension === 0 & BitMode !== 0 ) ^ ( SizeAttrSelect >= 1 ); //The first bit in SizeAttrSelect for size 32/16 Flips if 16 bit mode.
-    ( WidthBit ) && ( bits = 2 ); //Goes 64 using the Width bit.
-    ( Extension === 3 && HInt_ZeroMerg && Instruction[1] !== "" ) && ( HInt_ZeroMerg = false, bits = 1 ); //MVEX uses element 1 if MVEX.E is set for instruction that change name.
+    if (Instruction instanceof Array && Instruction.length == 8) {
+        var bits = (ModRMByte & 0x38) >> 3;
+        Instruction = Instruction[bits];
+        InsOperands = InsOperands[bits];
 
-    if (Instruction[bits] !== "") { Instruction = Instruction[bits]; InsOperands = InsOperands[bits]; }
+        //if The select Group opcode is another array 8 in size it is a static opcode selection which makes the last three bits of the ModR/M byte combination.
 
-    //else no size prefix name then use the default size Mnemonic name.
+        if (Instruction instanceof Array && Instruction.length == 8) {
+            var bits = ModRMByte & 0x07;
+            Instruction = Instruction[bits];
+            InsOperands = InsOperands[bits];
+            NextByte();
+        }
+    }
 
-    else { Instruction = Instruction[0]; InsOperands = InsOperands[0]; }
-  }
+    //Vector unit 4x4 combinational array logic.
+    //if the current Mnemonic is an array 4 in size it is an SIMD instruction with four possible modes N/A, 66, F3, F2.
+    //The mode is set to SIMD, it could have been set by the EVEX.pp, VEX.pp bit combination, or by prefixes N/A, 66, F3, F2.
 
-  //If Extension is not 0 then add the vector extend "V" to the instruction.
-  //During the decoding of the operands the instruction can be returned as invalid if it is an Arithmetic, or MM, ST instruction.
-  //Vector mask instructions start with K instead of V any instruction that starts with K and is an
-  //vector mask Instruction which starts with K instead of V.
+    if (Instruction instanceof Array && Instruction.length == 4) {
+        Vect = true; //Set Vector Encoding true.
 
-  if( Opcode <= 0x400 && Extension > 0 && Instruction.charAt(0) !== "K" && Instruction !== "???" ) { Instruction = "V" + Instruction; }
+        //Reset the prefix string G1 because prefix codes F2, and F3 are used with SSE which forum the repeat prefix.
+        //Some SSE instructions can use the REP, RENP prefixes.
+        //The Vectors that do support the repeat prefix uses Packed Single format.
 
-  //In 32 bit mode, or bellow only one instruction MOVSXD is replaced with ARPL.
+        if (Instruction[2] !== "" && Instruction[3] !== "") {
+            PrefixG1 = "";
+        } else {
+            SIMD = (SIMD === 1) & 1;
+        }
+        Instruction = Instruction[SIMD];
+        InsOperands = InsOperands[SIMD];
 
-  if( BitMode <= 1 && Instruction === "MOVSXD" ) { Instruction = "ARPL"; InsOperands = "06020A01"; }
+        //If the SIMD instruction uses another array 4 in length in the Selected SIMD vector Instruction.
+        //Then each vector Extension is separate. The first extension is used if no extension is active for Regular instructions, and vector instruction septation.
+        //0=None. 1=VEX only. 2=EVEX only. 3=??? unused.
+
+        if (Instruction instanceof Array && Instruction.length == 4) {
+            //Get the correct Instruction for the Active Extension type.
+
+            if (Instruction[Extension] !== "") {
+                Instruction = Instruction[Extension];
+                InsOperands = InsOperands[Extension];
+            } else {
+                Instruction = "???";
+                InsOperands = "";
+            }
+        } else if (Extension === 3) {
+            Instruction = "???";
+            InsOperands = "";
+        }
+    } else if (Opcode >= 0x700 && SIMD > 0) {
+        Instruction = "???";
+        InsOperands = "";
+    }
+
+    //if Any Mnemonic is an array 3 in size the instruction name goes by size.
+
+    if (Instruction instanceof Array && Instruction.length == 3) {
+        var bits = ((Extension === 0) & (BitMode !== 0)) ^ (SizeAttrSelect >= 1); //The first bit in SizeAttrSelect for size 32/16 Flips if 16 bit mode.
+        WidthBit && (bits = 2); //Goes 64 using the Width bit.
+        Extension === 3 && HInt_ZeroMerg && Instruction[1] !== "" && ((HInt_ZeroMerg = false), (bits = 1)); //MVEX uses element 1 if MVEX.E is set for instruction that change name.
+
+        if (Instruction[bits] !== "") {
+            Instruction = Instruction[bits];
+            InsOperands = InsOperands[bits];
+        }
+
+        //else no size prefix name then use the default size Mnemonic name.
+        else {
+            Instruction = Instruction[0];
+            InsOperands = InsOperands[0];
+        }
+    }
+
+    //If Extension is not 0 then add the vector extend "V" to the instruction.
+    //During the decoding of the operands the instruction can be returned as invalid if it is an Arithmetic, or MM, ST instruction.
+    //Vector mask instructions start with K instead of V any instruction that starts with K and is an
+    //vector mask Instruction which starts with K instead of V.
+
+    if (Opcode <= 0x400 && Extension > 0 && Instruction.charAt(0) !== "K" && Instruction !== "???") {
+        Instruction = "V" + Instruction;
+    }
+
+    //In 32 bit mode, or bellow only one instruction MOVSXD is replaced with ARPL.
+
+    if (BitMode <= 1 && Instruction === "MOVSXD") {
+        Instruction = "ARPL";
+        InsOperands = "06020A01";
+    }
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -5038,110 +9264,106 @@ This function is used after the function ^DecodeOpcode()^ because the function ^
 operand string for what the instruction takes as input.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function DecodeOperandString()
-{
-  //Variables that are used for decoding one operands across the operand string.
+function DecodeOperandString() {
+    //Variables that are used for decoding one operands across the operand string.
 
-  var OperandValue = 0, Code = 0, BySize = 0, Setting = 0;
+    var OperandValue = 0,
+        Code = 0,
+        BySize = 0,
+        Setting = 0;
 
-  //It does not matter which order the explicit operands decode as they do not require reading another byte.
-  //They start at 7 and are set in order, but the order they are displayed is the order they are read in the operand string because of OpNum.
+    //It does not matter which order the explicit operands decode as they do not require reading another byte.
+    //They start at 7 and are set in order, but the order they are displayed is the order they are read in the operand string because of OpNum.
 
-  var ExplicitOp = 8, ImmOp = 3;
+    var ExplicitOp = 8,
+        ImmOp = 3;
 
-  //Each operand is 4 hex digits, and OpNum is added by one for each operand that is read per Iteration.
+    //Each operand is 4 hex digits, and OpNum is added by one for each operand that is read per Iteration.
 
-  for( var i = 0, OpNum = 0; i < InsOperands.length; i+=4 ) //Iterate though operand string.
-  {
-    OperandValue = parseInt( InsOperands.substring(i, (i + 4) ), 16 ); //Convert the four hex digits to a 16 bit number value.
-    Code = ( OperandValue & 0xFE00 ) >> 9; //Get the operand Code.
-    BySize = ( OperandValue & 0x0100 ) >> 8; //Get it's by size attributes setting for if Setting is used as size attributes.
-    Setting = ( OperandValue & 0x00FF ); //Get the 8 bit Size setting.
+    for (
+        var i = 0, OpNum = 0;
+        i < InsOperands.length;
+        i += 4 //Iterate though operand string.
+    ) {
+        OperandValue = parseInt(InsOperands.substring(i, i + 4), 16); //Convert the four hex digits to a 16 bit number value.
+        Code = (OperandValue & 0xfe00) >> 9; //Get the operand Code.
+        BySize = (OperandValue & 0x0100) >> 8; //Get it's by size attributes setting for if Setting is used as size attributes.
+        Setting = OperandValue & 0x00ff; //Get the 8 bit Size setting.
 
-    //If code is 0 the next 8 bit value specifies which type of of prefix settings are active.
+        //If code is 0 the next 8 bit value specifies which type of of prefix settings are active.
 
-    if( Code === 0 )
-    {
-      if(BySize) //Vector adjustment settings.
-      {
-        RoundingSetting = ( Setting & 0x03 ) << 3;
-        if( Opcode >= 0x700 && RoundingSetting >= 0x10 ){ RoundMode |= 0x10; }
-        VSIB = ( Setting >> 2 ) & 1;
-        IgnoresWidthbit = ( Setting >> 3 ) & 1;
-        VectS = ( Setting >> 4 ) & 7;
-        Swizzle = ( VectS >> 2 ) & 1;
-        Up = ( VectS >> 1 ) & 1;
-        Float = VectS & 1;
-        if( ( Setting & 0x80 ) == 0x80 ) { Vect = false; } //If Non vector instruction set Vect false.
-      }
-      else //Instruction Prefix types.
-      {
-        XRelease = Setting & 0x01;
-        XAcquire = ( Setting & 0x02 ) >> 1;
-        HT = ( Setting & 0x04 ) >> 2;
-        BND = ( Setting & 0x08 ) >> 3;
-      }
+        if (Code === 0) {
+            if (BySize) {
+                //Vector adjustment settings.
+                RoundingSetting = (Setting & 0x03) << 3;
+                if (Opcode >= 0x700 && RoundingSetting >= 0x10) {
+                    RoundMode |= 0x10;
+                }
+                VSIB = (Setting >> 2) & 1;
+                IgnoresWidthbit = (Setting >> 3) & 1;
+                VectS = (Setting >> 4) & 7;
+                Swizzle = (VectS >> 2) & 1;
+                Up = (VectS >> 1) & 1;
+                Float = VectS & 1;
+                if ((Setting & 0x80) == 0x80) {
+                    Vect = false;
+                } //If Non vector instruction set Vect false.
+            } //Instruction Prefix types.
+            else {
+                XRelease = Setting & 0x01;
+                XAcquire = (Setting & 0x02) >> 1;
+                HT = (Setting & 0x04) >> 2;
+                BND = (Setting & 0x08) >> 3;
+            }
+        }
+
+        //if it is a opcode Reg Encoding then first element along the decoder is set as this has to be decode first, before moving to the
+        //byte for modR/M.
+        else if (Code === 1) {
+            X86Decoder[0].set(0, BySize, Setting, OpNum++);
+        }
+
+        //if it is a ModR/M, or Far pointer ModR/M, or Moffs address then second decoder element is set.
+        else if (Code >= 2 && Code <= 4) {
+            X86Decoder[1].set(Code - 2, BySize, Setting, OpNum++);
+            if (Code == 4) {
+                FarPointer = 1;
+            } //If code is 4 it is a far pointer.
+        }
+
+        //The ModR/M Reg bit's are separated from the address system above. The ModR/M register can be used as a different register with a
+        //different address pointer. The Reg bits of the ModR/M decode next as it would be inefficient to read the register value if the
+        //decoder moves to the immediate.
+        else if (Code === 5) {
+            X86Decoder[2].set(0, BySize, Setting, OpNum++);
+        }
+
+        //Immediate input one. The immediate input is just a number input it is decoded last unless the instruction does not use a
+        //ModR/M encoding, or Reg Opcode.
+        else if (Code >= 6 && Code <= 8 && ImmOp <= 5) {
+            X86Decoder[ImmOp++].set(Code - 6, BySize, Setting, OpNum++);
+        }
+
+        //Vector register. If the instruction uses this register it will not be decoded or displayed unless one of the vector extension codes are
+        //decoded by the function ^DecodePrefixAdjustments()^. The Vector extension codes also have a Vector register value that is stored into
+        //the variable VectorRegister. The variable VectorRegister is given to the function ^DecodeRegValue()^.
+        else if (Code === 9 && (Extension > 0 || Opcode >= 0x700)) {
+            X86Decoder[6].set(0, BySize, Setting, OpNum++);
+        }
+
+        //The upper four bits of the Immediate is used as an register. The variable IMM stores the last immediate byte that is read by ^DecodeImmediate()^.
+        //The upper four bits of the IMM is given to the function ^DecodeRegValue()^.
+        else if (Code === 10) {
+            X86Decoder[7].set(0, BySize, Setting, OpNum++);
+        }
+
+        //Else any other encoding type higher than 13 is an explicit operand selection.
+        //And also there can only be an max of four explicit operands.
+        else if (Code >= 11 && ExplicitOp <= 11) {
+            X86Decoder[ExplicitOp].set(Code - 11, BySize, Setting, OpNum++);
+            ExplicitOp++; //move to the next Explicit operand.
+        }
     }
-
-    //if it is a opcode Reg Encoding then first element along the decoder is set as this has to be decode first, before moving to the
-    //byte for modR/M.
-
-    else if( Code === 1 )
-    {
-      X86Decoder[0].set( 0, BySize, Setting, OpNum++ );
-    }
-
-    //if it is a ModR/M, or Far pointer ModR/M, or Moffs address then second decoder element is set.
-
-    else if( Code >= 2 && Code <= 4 )
-    {
-      X86Decoder[1].set( ( Code - 2 ), BySize, Setting, OpNum++ );
-      if( Code == 4 ){ FarPointer = 1; } //If code is 4 it is a far pointer.
-    }
-
-    //The ModR/M Reg bit's are separated from the address system above. The ModR/M register can be used as a different register with a
-    //different address pointer. The Reg bits of the ModR/M decode next as it would be inefficient to read the register value if the
-    //decoder moves to the immediate.
-
-    else if( Code === 5 )
-    {
-      X86Decoder[2].set( 0, BySize, Setting, OpNum++ );
-    }
-
-    //Immediate input one. The immediate input is just a number input it is decoded last unless the instruction does not use a
-    //ModR/M encoding, or Reg Opcode.
-
-    else if( Code >= 6 && Code <= 8 && ImmOp <= 5 )
-    {
-      X86Decoder[ImmOp++].set( ( Code - 6 ), BySize, Setting, OpNum++ );
-    }
-
-    //Vector register. If the instruction uses this register it will not be decoded or displayed unless one of the vector extension codes are
-    //decoded by the function ^DecodePrefixAdjustments()^. The Vector extension codes also have a Vector register value that is stored into
-    //the variable VectorRegister. The variable VectorRegister is given to the function ^DecodeRegValue()^.
-
-    else if( Code === 9 && ( Extension > 0 || Opcode >= 0x700 ) )
-    {
-      X86Decoder[6].set( 0, BySize, Setting, OpNum++ );
-    }
-
-    //The upper four bits of the Immediate is used as an register. The variable IMM stores the last immediate byte that is read by ^DecodeImmediate()^.
-    //The upper four bits of the IMM is given to the function ^DecodeRegValue()^.
-
-    else if( Code === 10 )
-    {
-      X86Decoder[7].set( 0, BySize, Setting, OpNum++ );
-    }
-
-    //Else any other encoding type higher than 13 is an explicit operand selection.
-    //And also there can only be an max of four explicit operands.
-
-    else if( Code >= 11 && ExplicitOp <= 11)
-    {
-      X86Decoder[ExplicitOp].set( ( Code - 11 ), BySize, Setting, OpNum++ );
-      ExplicitOp++; //move to the next Explicit operand.
-    }
-  }
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
@@ -5149,597 +9371,595 @@ Decode each of the operands along the X86Decoder and deactivate them.
 This function is used after ^DecodeOperandString()^ which sets up the X86 Decoder for the instructions operands.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function DecodeOperands()
-{
-  //The Operands array is a string array in which the operand number is the element the decoded operand is positioned.
+function DecodeOperands() {
+    //The Operands array is a string array in which the operand number is the element the decoded operand is positioned.
 
-  var out = [];
+    var out = [];
 
-  //This holds the decoded ModR/M byte from the "Decode_ModRM_SIB_Value()" function because the Register, and Address can decode differently.
+    //This holds the decoded ModR/M byte from the "Decode_ModRM_SIB_Value()" function because the Register, and Address can decode differently.
 
-  var ModRMByte = [ -1, //Mode is set negative one used to check if the ModR/M has been decoded.
-    0, //The register value is decoded separately if used.
-    0 //the base register for the address location.
-  ];
+    var ModRMByte = [
+        -1, //Mode is set negative one used to check if the ModR/M has been decoded.
+        0, //The register value is decoded separately if used.
+        0 //the base register for the address location.
+    ];
 
-  //If no Immediate operand is used then the Immediate register encoding forces an IMM8 for the register even if the immediate is not used.
+    //If no Immediate operand is used then the Immediate register encoding forces an IMM8 for the register even if the immediate is not used.
 
-  var IMM_Used = false; //This is set true for if any Immediate is read because the last Immediate byte is used as the register on the upper four bits.
+    var IMM_Used = false; //This is set true for if any Immediate is read because the last Immediate byte is used as the register on the upper four bits.
 
-  //If reg opcode is active.
+    //If reg opcode is active.
 
-  if( X86Decoder[0].Active )
-  {
-    out[ X86Decoder[0].OpNum ] = DecodeRegValue(
-      ( RegExtend | ( Opcode & 0x07 ) ), //Register value.
-      X86Decoder[0].BySizeAttrubute, //By size attribute or not.
-      X86Decoder[0].Size //Size settings.
-    );
-  }
-
-  //If ModR/M Address is active.
-
-  if( X86Decoder[1].Active )
-  {
-    //Decode the ModR/M byte Address which can end up reading another byte for SIB address, and including displacements.
-
-    if(X86Decoder[1].Type !== 0)
-    {
-      ModRMByte = Decode_ModRM_SIB_Value(); //Decode the ModR/M byte.
-      out[ X86Decoder[1].OpNum ] = Decode_ModRM_SIB_Address(
-        ModRMByte, //The ModR/M byte.
-        X86Decoder[1].BySizeAttrubute, //By size attribute or not.
-        X86Decoder[1].Size //Size settings.
-      );
-    }
-
-    //Else If the ModR/M type is 0 then it is a moffs address.
-
-    else
-    {
-      var s=0, AddrsSize = 0;
-      if( X86Decoder[1].BySizeAttrubute )
-      {
-        AddrsSize = ( Math.pow( 2, BitMode ) << 1 );
-        s = GetOperandSize( X86Decoder[1].Size, true ) << 1;
-      }
-      else
-      {
-        AddrsSize =  BitMode + 1;
-        s = X86Decoder[1].Size;
-      }
-      out[ X86Decoder[1].OpNum ] = PTR[ s ];
-      out[ X86Decoder[1].OpNum ] += SegOverride + DecodeImmediate( 0, X86Decoder[1].BySizeAttrubute, AddrsSize ) + "]";
-    }
-  }
-
-  //Decode the Register value of the ModR/M byte.
-
-  if( X86Decoder[2].Active )
-  {
-    //If the ModR/M address is not used, and ModR/M byte was not previously decoded then decode it.
-
-    if( ModRMByte[0] === -1 ){ ModRMByte = Decode_ModRM_SIB_Value(); }
-
-    //Decode only the Register Section of the ModR/M byte values.
-
-    out[ X86Decoder[2].OpNum ] = DecodeRegValue(
-      ( RegExtend | ( ModRMByte[1] & 0x07 ) ), //Register value.
-      X86Decoder[2].BySizeAttrubute, //By size attribute or not.
-      X86Decoder[2].Size //Size settings.
-    );
-  }
-
-  //First Immediate if used.
-
-  if( X86Decoder[3].Active )
-  {
-    var t = DecodeImmediate(
-      X86Decoder[3].Type, //Immediate input type.
-      X86Decoder[3].BySizeAttrubute, //By size attribute or not.
-      X86Decoder[3].Size //Size settings.
-    );
-	  
-    //Check if Instruction uses condition codes.
-
-    if( Instruction.slice(-1) === "," )
-    {
-      Instruction = Instruction.split(",");
-
-      if( ( Extension >= 1 && Extension <= 2 && Opcode <= 0x400 && IMMValue < 0x20 ) || IMMValue < 0x08 )
-      {
-        IMMValue |= ( ( ( Opcode > 0x400 ) & 1 ) << 5 ); //XOP adjust.
-        Instruction = Instruction[0] + ConditionCodes[ IMMValue ] + Instruction[1];
-      }
-      else { Instruction = Instruction[0] + Instruction[1]; out[ X86Decoder[3].OpNum ] = t; }
-    }
-
-    //else add the Immediate byte encoding to the decoded instruction operands.
-
-    else { out[ X86Decoder[3].OpNum ] = t; }
-    
-    IMM_Used = true; //Immediate byte is read.
-  }
-
-  //Second Immediate if used.
-
-  if( X86Decoder[4].Active )
-  {
-    out[ X86Decoder[4].OpNum ] = DecodeImmediate(
-      X86Decoder[4].Type, //Immediate input type.
-      X86Decoder[4].BySizeAttrubute, //By size attribute or not.
-      X86Decoder[4].Size //Size settings.
-    );
-  }
-
-  //Third Immediate if used.
-
-  if( X86Decoder[5].Active )
-  {
-    out[ X86Decoder[5].OpNum ] = DecodeImmediate(
-      X86Decoder[5].Type, //Immediate input type.
-      X86Decoder[5].BySizeAttrubute, //By size attribute or not.
-      X86Decoder[5].Size //Size settings.
-    );
-  }
-
-  //Vector register if used from an SIMD vector extended instruction.
-
-  if( X86Decoder[6].Active )
-  {
-      out[ X86Decoder[6].OpNum ] = DecodeRegValue(
-      VectorRegister, //Register value.
-      X86Decoder[6].BySizeAttrubute, //By size attribute or not.
-      X86Decoder[6].Size //Size settings.
-    );
-  }
-
-  //Immediate register encoding.
-
-  if( X86Decoder[7].Active )
-  {
-    if( !IMM_Used ) { DecodeImmediate(0, false, 0); } //forces IMM8 if no Immediate has been used.
-    out[ X86Decoder[7].OpNum ] = DecodeRegValue(
-      ( ( ( IMMValue & 0xF0 ) >> 4 ) | ( ( IMMValue & 0x08 ) << 1 ) ), //Register value.
-      X86Decoder[7].BySizeAttrubute, //By size attribute or not.
-      X86Decoder[7].Size //Size settings.
-    );
-  }
-
-  //-------------------------------------------------------------------------------------------------------------------------
-  //Iterate though the 4 possible Explicit operands The first operands that is not active ends the Iteration.
-  //-------------------------------------------------------------------------------------------------------------------------
-
-  for( var i = 8; i < 11; i++ )
-  {
-    //-------------------------------------------------------------------------------------------------------------------------
-    //if Active Type is used as which Explicit operand.
-    //-------------------------------------------------------------------------------------------------------------------------
-
-    if( X86Decoder[i].Active )
-    {
-      //General use registers value 0 though 4 there size can change by size setting but can not be extended or changed.
-
-      if( X86Decoder[i].Type <= 3 )
-      {
-        out[ X86Decoder[i].OpNum ] = DecodeRegValue(
-          X86Decoder[i].Type, //register by value for Explicit Registers A, C, D, B.
-          X86Decoder[i].BySizeAttrubute, //By size attribute or not.
-          X86Decoder[i].Size //Size attribute.
+    if (X86Decoder[0].Active) {
+        out[X86Decoder[0].OpNum] = DecodeRegValue(
+            RegExtend | (Opcode & 0x07), //Register value.
+            X86Decoder[0].BySizeAttrubute, //By size attribute or not.
+            X86Decoder[0].Size //Size settings.
         );
-      }
+    }
 
-      //RBX address Explicit Operands prefixes can extend the registers and change pointer size RegMode 0.
+    //If ModR/M Address is active.
 
-      else if( X86Decoder[i].Type === 4 )
-      {
-        s = 3; //If 32, or 64 bit ModR/M.
-        if( ( BitMode === 0 && !AddressOverride ) || ( BitMode === 1 && AddressOverride ) ){ s = 7; } //If 16 bit ModR/M.
-        out[ X86Decoder[i].OpNum ] = Decode_ModRM_SIB_Address(
-          [ 0, 0, s ], //the RBX register only for the pointer.
-          X86Decoder[i].BySizeAttrubute, //By size attribute or not.
-          X86Decoder[i].Size //size attributes.
+    if (X86Decoder[1].Active) {
+        //Decode the ModR/M byte Address which can end up reading another byte for SIB address, and including displacements.
+
+        if (X86Decoder[1].Type !== 0) {
+            ModRMByte = Decode_ModRM_SIB_Value(); //Decode the ModR/M byte.
+            out[X86Decoder[1].OpNum] = Decode_ModRM_SIB_Address(
+                ModRMByte, //The ModR/M byte.
+                X86Decoder[1].BySizeAttrubute, //By size attribute or not.
+                X86Decoder[1].Size //Size settings.
+            );
+        }
+
+        //Else If the ModR/M type is 0 then it is a moffs address.
+        else {
+            var s = 0,
+                AddrsSize = 0;
+            if (X86Decoder[1].BySizeAttrubute) {
+                AddrsSize = Math.pow(2, BitMode) << 1;
+                s = GetOperandSize(X86Decoder[1].Size, true) << 1;
+            } else {
+                AddrsSize = BitMode + 1;
+                s = X86Decoder[1].Size;
+            }
+            out[X86Decoder[1].OpNum] = PTR[s];
+            out[X86Decoder[1].OpNum] +=
+                SegOverride + DecodeImmediate(0, X86Decoder[1].BySizeAttrubute, AddrsSize) + "]";
+        }
+    }
+
+    //Decode the Register value of the ModR/M byte.
+
+    if (X86Decoder[2].Active) {
+        //If the ModR/M address is not used, and ModR/M byte was not previously decoded then decode it.
+
+        if (ModRMByte[0] === -1) {
+            ModRMByte = Decode_ModRM_SIB_Value();
+        }
+
+        //Decode only the Register Section of the ModR/M byte values.
+
+        out[X86Decoder[2].OpNum] = DecodeRegValue(
+            RegExtend | (ModRMByte[1] & 0x07), //Register value.
+            X86Decoder[2].BySizeAttrubute, //By size attribute or not.
+            X86Decoder[2].Size //Size settings.
         );
-      }
+    }
 
-      //source and destination address Explicit Operands prefixes can extend the registers and change pointer size.
+    //First Immediate if used.
 
-      else if( X86Decoder[i].Type === 5 | X86Decoder[i].Type === 6 )
-      {
-        s = 1; //If 32, or 64 bit ModR/M.
-        if( ( BitMode === 0 && !AddressOverride ) || ( BitMode === 1 & AddressOverride ) ) { s = -1; } //If 16 bit ModR/M.
-        out[ X86Decoder[i].OpNum ] = Decode_ModRM_SIB_Address(
-          [ 0, 0, ( X86Decoder[i].Type + s ) ], //source and destination pointer register by type value.
-          X86Decoder[i].BySizeAttrubute, //By size attribute or not.
-          X86Decoder[i].Size //size attributes.
+    if (X86Decoder[3].Active) {
+        var t = DecodeImmediate(
+            X86Decoder[3].Type, //Immediate input type.
+            X86Decoder[3].BySizeAttrubute, //By size attribute or not.
+            X86Decoder[3].Size //Size settings.
         );
-      }
 
-      //The ST only Operand, and FS, GS.
+        //Check if Instruction uses condition codes.
 
-      else if( X86Decoder[i].Type >= 7 )
-      {
-        out[ X86Decoder[i].OpNum ] = ["ST", "FS", "GS", "1", "3", "XMM0", "M10"][ ( X86Decoder[i].Type - 7 ) ];
-      }
+        if (Instruction.slice(-1) === ",") {
+            Instruction = Instruction.split(",");
+
+            if ((Extension >= 1 && Extension <= 2 && Opcode <= 0x400 && IMMValue < 0x20) || IMMValue < 0x08) {
+                IMMValue |= ((Opcode > 0x400) & 1) << 5; //XOP adjust.
+                Instruction = Instruction[0] + ConditionCodes[IMMValue] + Instruction[1];
+            } else {
+                Instruction = Instruction[0] + Instruction[1];
+                out[X86Decoder[3].OpNum] = t;
+            }
+        }
+
+        //else add the Immediate byte encoding to the decoded instruction operands.
+        else {
+            out[X86Decoder[3].OpNum] = t;
+        }
+
+        IMM_Used = true; //Immediate byte is read.
+    }
+
+    //Second Immediate if used.
+
+    if (X86Decoder[4].Active) {
+        out[X86Decoder[4].OpNum] = DecodeImmediate(
+            X86Decoder[4].Type, //Immediate input type.
+            X86Decoder[4].BySizeAttrubute, //By size attribute or not.
+            X86Decoder[4].Size //Size settings.
+        );
+    }
+
+    //Third Immediate if used.
+
+    if (X86Decoder[5].Active) {
+        out[X86Decoder[5].OpNum] = DecodeImmediate(
+            X86Decoder[5].Type, //Immediate input type.
+            X86Decoder[5].BySizeAttrubute, //By size attribute or not.
+            X86Decoder[5].Size //Size settings.
+        );
+    }
+
+    //Vector register if used from an SIMD vector extended instruction.
+
+    if (X86Decoder[6].Active) {
+        out[X86Decoder[6].OpNum] = DecodeRegValue(
+            VectorRegister, //Register value.
+            X86Decoder[6].BySizeAttrubute, //By size attribute or not.
+            X86Decoder[6].Size //Size settings.
+        );
+    }
+
+    //Immediate register encoding.
+
+    if (X86Decoder[7].Active) {
+        if (!IMM_Used) {
+            DecodeImmediate(0, false, 0);
+        } //forces IMM8 if no Immediate has been used.
+        out[X86Decoder[7].OpNum] = DecodeRegValue(
+            ((IMMValue & 0xf0) >> 4) | ((IMMValue & 0x08) << 1), //Register value.
+            X86Decoder[7].BySizeAttrubute, //By size attribute or not.
+            X86Decoder[7].Size //Size settings.
+        );
     }
 
     //-------------------------------------------------------------------------------------------------------------------------
-    //else inactive end iteration.
+    //Iterate though the 4 possible Explicit operands The first operands that is not active ends the Iteration.
     //-------------------------------------------------------------------------------------------------------------------------
 
-    else { break; }
+    for (var i = 8; i < 11; i++) {
+        //-------------------------------------------------------------------------------------------------------------------------
+        //if Active Type is used as which Explicit operand.
+        //-------------------------------------------------------------------------------------------------------------------------
 
-  }
+        if (X86Decoder[i].Active) {
+            //General use registers value 0 though 4 there size can change by size setting but can not be extended or changed.
 
-  /*-------------------------------------------------------------------------------------------------------------------------
+            if (X86Decoder[i].Type <= 3) {
+                out[X86Decoder[i].OpNum] = DecodeRegValue(
+                    X86Decoder[i].Type, //register by value for Explicit Registers A, C, D, B.
+                    X86Decoder[i].BySizeAttrubute, //By size attribute or not.
+                    X86Decoder[i].Size //Size attribute.
+                );
+            }
+
+            //RBX address Explicit Operands prefixes can extend the registers and change pointer size RegMode 0.
+            else if (X86Decoder[i].Type === 4) {
+                s = 3; //If 32, or 64 bit ModR/M.
+                if ((BitMode === 0 && !AddressOverride) || (BitMode === 1 && AddressOverride)) {
+                    s = 7;
+                } //If 16 bit ModR/M.
+                out[X86Decoder[i].OpNum] = Decode_ModRM_SIB_Address(
+                    [0, 0, s], //the RBX register only for the pointer.
+                    X86Decoder[i].BySizeAttrubute, //By size attribute or not.
+                    X86Decoder[i].Size //size attributes.
+                );
+            }
+
+            //source and destination address Explicit Operands prefixes can extend the registers and change pointer size.
+            else if ((X86Decoder[i].Type === 5) | (X86Decoder[i].Type === 6)) {
+                s = 1; //If 32, or 64 bit ModR/M.
+                if ((BitMode === 0 && !AddressOverride) || (BitMode === 1) & AddressOverride) {
+                    s = -1;
+                } //If 16 bit ModR/M.
+                out[X86Decoder[i].OpNum] = Decode_ModRM_SIB_Address(
+                    [0, 0, X86Decoder[i].Type + s], //source and destination pointer register by type value.
+                    X86Decoder[i].BySizeAttrubute, //By size attribute or not.
+                    X86Decoder[i].Size //size attributes.
+                );
+            }
+
+            //The ST only Operand, and FS, GS.
+            else if (X86Decoder[i].Type >= 7) {
+                out[X86Decoder[i].OpNum] = ["ST", "FS", "GS", "1", "3", "XMM0", "M10"][X86Decoder[i].Type - 7];
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------------------
+        //else inactive end iteration.
+        //-------------------------------------------------------------------------------------------------------------------------
+        else {
+            break;
+        }
+    }
+
+    /*-------------------------------------------------------------------------------------------------------------------------
   If the EVEX vector extension is active the Mask, and Zero merge control are inserted into operand 0 (Destination operand).
   -------------------------------------------------------------------------------------------------------------------------*/
 
-  //Mask Register is used if it is not 0 in value.
+    //Mask Register is used if it is not 0 in value.
 
-  if( MaskRegister !== 0 ){ out[0] += "{K" + MaskRegister + "}"; }
-  
-  //EVEX Zero Merge control.
+    if (MaskRegister !== 0) {
+        out[0] += "{K" + MaskRegister + "}";
+    }
 
-  if( Extension === 2 && HInt_ZeroMerg ) { out[0] += "{Z}"; }
+    //EVEX Zero Merge control.
 
-  //convert the operand array to a string and return it.
+    if (Extension === 2 && HInt_ZeroMerg) {
+        out[0] += "{Z}";
+    }
 
-  InsOperands = out.toString();
+    //convert the operand array to a string and return it.
+
+    InsOperands = out.toString();
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
 The main Instruction decode function plugs everything in together for the steps required to decode a full X86 instruction.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function DecodeInstruction()
-{
-  //Reset Prefix adjustments, and vector setting adjustments.
+function DecodeInstruction() {
+    //Reset Prefix adjustments, and vector setting adjustments.
 
-  Reset();
+    Reset();
 
-  var out = ""; //The instruction code that will be returned back from this function.
+    var out = ""; //The instruction code that will be returned back from this function.
 
-  //Record the starting position.
+    //Record the starting position.
 
-  InstructionPos = GetPosition();
+    InstructionPos = GetPosition();
 
-  //First read any opcodes (prefix) that act as adjustments to the main three operand decode functions ^DecodeRegValue()^,
-  //^Decode_ModRM_SIB_Address()^, and ^DecodeImmediate()^.
+    //First read any opcodes (prefix) that act as adjustments to the main three operand decode functions ^DecodeRegValue()^,
+    //^Decode_ModRM_SIB_Address()^, and ^DecodeImmediate()^.
 
-  DecodePrefixAdjustments();
+    DecodePrefixAdjustments();
 
-  //Only continue if an invalid opcode is not read by DecodePrefixAdjustments() for cpu bit mode setting.
+    //Only continue if an invalid opcode is not read by DecodePrefixAdjustments() for cpu bit mode setting.
 
-  if( !InvalidOp )
-  {
-    //Decode the instruction.
+    if (!InvalidOp) {
+        //Decode the instruction.
 
-    DecodeOpcode();
+        DecodeOpcode();
 
-    //-------------------------------------------------------------------------------------------------------------------------
-    //Intel Larrabee CCCCC condition codes.
-    //-------------------------------------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------------------------------------------------
+        //Intel Larrabee CCCCC condition codes.
+        //-------------------------------------------------------------------------------------------------------------------------
 
-    if( Opcode >= 0x700 && Instruction.slice(-1) === "," )
-    {
-      Instruction = Instruction.split(",");
+        if (Opcode >= 0x700 && Instruction.slice(-1) === ",") {
+            Instruction = Instruction.split(",");
 
-      //CMP conditions.
+            //CMP conditions.
 
-      if( Opcode >= 0x720 && Opcode <= 0x72F )
-      {
-        IMMValue = VectorRegister >> 2;
+            if (Opcode >= 0x720 && Opcode <= 0x72f) {
+                IMMValue = VectorRegister >> 2;
 
-        if( Float || ( IMMValue !== 3 && IMMValue !== 7 ) )
-        {
-          Instruction = Instruction[0] + ConditionCodes[IMMValue] + Instruction[1];
+                if (Float || (IMMValue !== 3 && IMMValue !== 7)) {
+                    Instruction = Instruction[0] + ConditionCodes[IMMValue] + Instruction[1];
+                } else {
+                    Instruction = Instruction[0] + Instruction[1];
+                }
+
+                IMMValue = 0;
+                VectorRegister &= 0x03;
+            }
+
+            //Else High/Low.
+            else {
+                Instruction = Instruction[0] + ((VectorRegister & 1) === 1 ? "H" : "L") + Instruction[1];
+            }
         }
-        else { Instruction = Instruction[0] + Instruction[1]; }
 
-        IMMValue = 0; VectorRegister &= 0x03;
-      }
+        //Setup the X86 Decoder for which operands the instruction uses.
 
-      //Else High/Low.
+        DecodeOperandString();
 
-      else
-      {
-        Instruction = Instruction[0] + ( ( ( VectorRegister & 1 ) === 1 ) ? "H" : "L" ) + Instruction[1];
-      }
+        //Now only some instructions can vector extend, and that is only if the instruction is an SIMD Vector format instruction.
+
+        if (!Vect && Extension > 0 && Opcode <= 0x400) {
+            InvalidOp = true;
+        }
+
+        //The Width Bit setting must match the vector numbers size otherwise this create an invalid operation code in MVEX/EVEX unless the Width bit is ignored.
+
+        if (Vect && !IgnoresWidthbit && Extension >= 2) {
+            InvalidOp = (SIMD & 1) !== (WidthBit & 1); //Note use, and ignore width bit pastern EVEX.
+        }
+        if (Opcode >= 0x700) {
+            WidthBit ^= IgnoresWidthbit;
+        } //L1OM Width bit invert.
     }
 
-    //Setup the X86 Decoder for which operands the instruction uses.
+    //If the instruction is invalid then set the instruction to "???"
 
-    DecodeOperandString();
-
-    //Now only some instructions can vector extend, and that is only if the instruction is an SIMD Vector format instruction.
-
-    if( !Vect && Extension > 0 && Opcode <= 0x400 ) { InvalidOp = true; }
-
-    //The Width Bit setting must match the vector numbers size otherwise this create an invalid operation code in MVEX/EVEX unless the Width bit is ignored.
-
-    if( Vect && !IgnoresWidthbit && Extension >= 2 )
-    {
-      InvalidOp = ( ( SIMD & 1 ) !== ( WidthBit & 1 ) ); //Note use, and ignore width bit pastern EVEX.
+    if (InvalidOp) {
+        out = "???"; //set the returned instruction to invalid
     }
-    if( Opcode >= 0x700 ) { WidthBit ^= IgnoresWidthbit; } //L1OM Width bit invert.
-  }
 
-  //If the instruction is invalid then set the instruction to "???"
+    //Else finish decoding the valid instruction.
+    else {
+        //Decode each operand along the Decoder array in order, and deactivate them.
 
-  if( InvalidOp )
-  {
-    out = "???" //set the returned instruction to invalid
-  }
+        DecodeOperands();
 
-  //Else finish decoding the valid instruction.
-
-  else
-  {
-    //Decode each operand along the Decoder array in order, and deactivate them.
-
-    DecodeOperands();
-
-    /*-------------------------------------------------------------------------------------------------------------------------
+        /*-------------------------------------------------------------------------------------------------------------------------
     3DNow Instruction name is encoded by the next byte after the ModR/M, and Reg operands.
     -------------------------------------------------------------------------------------------------------------------------*/
 
-    if( Opcode === 0x10F )
-    {
-      //Lookup operation code.
+        if (Opcode === 0x10f) {
+            //Lookup operation code.
 
-      Instruction = M3DNow[ BinCode[CodePos] ]; NextByte();
+            Instruction = M3DNow[BinCode[CodePos]];
+            NextByte();
 
-      //If Invalid instruction.
+            //If Invalid instruction.
 
-      if( Instruction === "" || Instruction == null )
-      {
-        Instruction = "???"; InsOperands = "";
-      }
-    }
-
-    /*-------------------------------------------------------------------------------------------------------------------------
+            if (Instruction === "" || Instruction == null) {
+                Instruction = "???";
+                InsOperands = "";
+            }
+        } else if (Instruction === "SSS") {
+            /*-------------------------------------------------------------------------------------------------------------------------
     Synthetic virtual machine operation codes.
     -------------------------------------------------------------------------------------------------------------------------*/
+            //The Next two bytes after the static opcode is the select synthetic virtual machine operation code.
 
-    else if( Instruction === "SSS" )
-    {
-      //The Next two bytes after the static opcode is the select synthetic virtual machine operation code.
+            var Code1 = BinCode[CodePos];
+            NextByte();
+            var Code2 = BinCode[CodePos];
+            NextByte();
 
-      var Code1 = BinCode[CodePos]; NextByte();
-      var Code2 = BinCode[CodePos]; NextByte();
+            //No operations exist past 4 in value for both bytes that combine to the operation code.
 
-      //No operations exist past 4 in value for both bytes that combine to the operation code.
+            if (Code1 >= 5 || Code2 >= 5) {
+                Instruction = "???";
+            }
 
-      if( Code1 >= 5 || Code2 >= 5 ) { Instruction = "???"; }
+            //Else calculate the operation code in the 5x5 map.
+            else {
+                Instruction = MSynthetic[Code1 * 5 + Code2];
 
-      //Else calculate the operation code in the 5x5 map.
+                //If Invalid instruction.
 
-      else
-      {
-        Instruction = MSynthetic[ ( Code1 * 5 ) + Code2 ];
-
-        //If Invalid instruction.
-
-        if( Instruction === "" || Instruction == null )
-        {
-          Instruction = "???";
+                if (Instruction === "" || Instruction == null) {
+                    Instruction = "???";
+                }
+            }
         }
-      }
+
+        //32/16 bit instructions 9A, and EA use Segment, and offset with Immediate format.
+
+        if (Opcode === 0x9a || Opcode === 0xea) {
+            var t = InsOperands.split(",");
+            InsOperands = t[1] + ":" + t[0];
+        }
+
+        //**Depending on the operation different prefixes replace others for  HLE, or MPX, and branch prediction.
+        //if REP prefix, and LOCK prefix are used together, and the current decoded operation allows HLE XRELEASE.
+
+        if (PrefixG1 === Mnemonics[0xf3] && PrefixG2 === Mnemonics[0xf0] && XRelease) {
+            PrefixG1 = "XRELEASE"; //Then change REP to XRELEASE.
+        }
+
+        //if REPNE prefix, and LOCK prefix are used together, and the current decoded operation allows HLE XACQUIRE.
+
+        if (PrefixG1 === Mnemonics[0xf2] && PrefixG2 === Mnemonics[0xf0] && XAcquire) {
+            PrefixG1 = "XACQUIRE"; //Then change REP to XACQUIRE
+        }
+
+        //Depending on the order that the Repeat prefix, and Lock prefix is used flip Prefix G1, and G2 if HLEFlipG1G2 it is true.
+
+        if ((PrefixG1 === "XRELEASE" || PrefixG1 === "XACQUIRE") && HLEFlipG1G2) {
+            t = PrefixG1;
+            PrefixG1 = PrefixG2;
+            PrefixG2 = t;
+        }
+
+        //if HT is active then it is a jump instruction check and adjust for the HT,and HNT prefix.
+
+        if (HT) {
+            if (SegOverride === Mnemonics[0x2e]) {
+                PrefixG1 = "HNT";
+            } else if (SegOverride === Mnemonics[0x3e]) {
+                PrefixG1 = "HT";
+            }
+        }
+
+        //else if Prefix is REPNE switch it to BND if operation is a MPX instruction.
+
+        if (PrefixG1 === Mnemonics[0xf2] && BND) {
+            PrefixG1 = "BND";
+        }
+
+        //Before the Instruction is put together check the length of the instruction if it is longer than 15 bytes the instruction is undefined.
+
+        if (InstructionHex.length > 30) {
+            //Calculate how many bytes over.
+
+            var Dif32 = (InstructionHex.length - 30) >> 1;
+
+            //Limit the instruction hex output to 15 bytes.
+
+            InstructionHex = InstructionHex.substring(0, 30);
+
+            //Calculate the Difference between the Disassembler current position.
+
+            Dif32 = Pos32 - Dif32;
+
+            //Convert Dif to unsignified numbers.
+
+            if (Dif32 < 0) {
+                Dif32 += 0x100000000;
+            }
+
+            //Convert to strings.
+
+            for (var S32 = Dif32.toString(16); S32.length < 8; S32 = "0" + S32);
+            for (var S64 = Pos64.toString(16); S64.length < 8; S64 = "0" + S64);
+
+            //Go to the Calculated address right after the Instruction UD.
+
+            GotoPosition(S64 + S32);
+
+            //Set prefixes, and operands to empty strings, and set Instruction to UD.
+
+            PrefixG1 = "";
+            PrefixG2 = "";
+            Instruction = "???";
+            InsOperands = "";
+        }
+
+        //Put the Instruction sequence together.
+
+        out = PrefixG1 + " " + PrefixG2 + " " + Instruction + " " + InsOperands;
+
+        //Remove any trailing spaces because of unused prefixes.
+
+        out = out.replace(/^[ ]+|[ ]+$/g, "");
+
+        //Add error suppression if used.
+
+        if (Opcode >= 0x700 || RoundMode !== 0) {
+            out += RoundModes[RoundMode];
+        }
+
+        //Return the instruction.
     }
 
-    //32/16 bit instructions 9A, and EA use Segment, and offset with Immediate format.
-
-    if( Opcode === 0x9A || Opcode === 0xEA )
-    {
-      var t = InsOperands.split(",");
-      InsOperands = t[1] + ":" +t[0];
-    }
-
-    //**Depending on the operation different prefixes replace others for  HLE, or MPX, and branch prediction.
-    //if REP prefix, and LOCK prefix are used together, and the current decoded operation allows HLE XRELEASE.
-
-    if(PrefixG1 === Mnemonics[0xF3] && PrefixG2 === Mnemonics[0xF0] && XRelease)
-    {
-      PrefixG1 = "XRELEASE"; //Then change REP to XRELEASE.
-    }
-
-    //if REPNE prefix, and LOCK prefix are used together, and the current decoded operation allows HLE XACQUIRE.
-
-    if(PrefixG1 === Mnemonics[0xF2] && PrefixG2 === Mnemonics[0xF0] && XAcquire)
-    {
-      PrefixG1 = "XACQUIRE"; //Then change REP to XACQUIRE
-    }
-
-    //Depending on the order that the Repeat prefix, and Lock prefix is used flip Prefix G1, and G2 if HLEFlipG1G2 it is true.
-
-    if((PrefixG1 === "XRELEASE" || PrefixG1 === "XACQUIRE") && HLEFlipG1G2)
-    {
-      t = PrefixG1; PrefixG1 = PrefixG2; PrefixG2 = t;
-    }
-
-    //if HT is active then it is a jump instruction check and adjust for the HT,and HNT prefix.
-
-    if(HT)
-    {
-      if (SegOverride === Mnemonics[0x2E])
-      {
-        PrefixG1 = "HNT";
-      }
-      else if (SegOverride === Mnemonics[0x3E])
-      {
-        PrefixG1 = "HT";
-      }
-    }
-
-    //else if Prefix is REPNE switch it to BND if operation is a MPX instruction.
-
-    if(PrefixG1 === Mnemonics[0xF2] && BND)
-    {
-      PrefixG1 = "BND";
-    }
-
-    //Before the Instruction is put together check the length of the instruction if it is longer than 15 bytes the instruction is undefined.
-
-    if ( InstructionHex.length > 30 )
-    {
-      //Calculate how many bytes over.
-
-      var Dif32 = ( ( InstructionHex.length - 30 ) >> 1 );
-
-      //Limit the instruction hex output to 15 bytes.
-
-      InstructionHex = InstructionHex.substring( 0, 30 );
-
-      //Calculate the Difference between the Disassembler current position.
-
-      Dif32 = Pos32 - Dif32;
-
-      //Convert Dif to unsignified numbers.
-
-      if( Dif32 < 0 ) { Dif32 += 0x100000000; }
-
-      //Convert to strings.
-
-      for (var S32 = Dif32.toString(16) ; S32.length < 8; S32 = "0" + S32);
-      for (var S64 = Pos64.toString(16) ; S64.length < 8; S64 = "0" + S64);
-
-      //Go to the Calculated address right after the Instruction UD.
-
-      GotoPosition( S64 + S32 );
-
-      //Set prefixes, and operands to empty strings, and set Instruction to UD.
-
-      PrefixG1 = "";PrefixG2 = ""; Instruction = "???"; InsOperands = "";
-    }
-
-    //Put the Instruction sequence together.
-
-    out = PrefixG1 + " " + PrefixG2 + " " + Instruction + " " + InsOperands;
-
-    //Remove any trailing spaces because of unused prefixes.
-
-    out = out.replace(/^[ ]+|[ ]+$/g,'');
-
-    //Add error suppression if used.
-
-    if( Opcode >= 0x700 || RoundMode !== 0 )
-    {
-      out += RoundModes[ RoundMode ];
-    }
-
-    //Return the instruction.
-  }
-
-  return( out );
+    return out;
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
 This function Resets the Decoder in case of error, or an full instruction has been decoded.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-function Reset()
-{
-  //Reset Opcode, and Size attribute selector.
+function Reset() {
+    //Reset Opcode, and Size attribute selector.
 
-  Opcode = 0; SizeAttrSelect = 1;
-  
-  //Reset Operands and instruction.
-  
-  Instruction = ""; InsOperands = "";
+    Opcode = 0;
+    SizeAttrSelect = 1;
 
-  //Reset ModR/M.
+    //Reset Operands and instruction.
 
-  RexActive = 0; RegExtend = 0; BaseExtend = 0; IndexExtend = 0;
-  SegOverride = "["; AddressOverride = false; FarPointer = 0;
+    Instruction = "";
+    InsOperands = "";
 
-  //Reset Vector extensions controls.
+    //Reset ModR/M.
 
-  Extension = 0; SIMD = 0; Vect = false; ConversionMode = 0; WidthBit = false;
-  VectorRegister = 0; MaskRegister = 0; HInt_ZeroMerg = false; RoundMode = 0x00;
+    RexActive = 0;
+    RegExtend = 0;
+    BaseExtend = 0;
+    IndexExtend = 0;
+    SegOverride = "[";
+    AddressOverride = false;
+    FarPointer = 0;
 
-  //Reset vector format settings.
+    //Reset Vector extensions controls.
 
-  IgnoresWidthbit = false; VSIB = false; RoundingSetting = 0;
-  Swizzle = false; Up = false; Float = false; VectS = 0x00;
+    Extension = 0;
+    SIMD = 0;
+    Vect = false;
+    ConversionMode = 0;
+    WidthBit = false;
+    VectorRegister = 0;
+    MaskRegister = 0;
+    HInt_ZeroMerg = false;
+    RoundMode = 0x00;
 
-  //Reset IMMValue used for Imm register encoding, and Condition codes.
+    //Reset vector format settings.
 
-  IMMValue = 0;
+    IgnoresWidthbit = false;
+    VSIB = false;
+    RoundingSetting = 0;
+    Swizzle = false;
+    Up = false;
+    Float = false;
+    VectS = 0x00;
 
-  //Reset instruction Prefixes.
+    //Reset IMMValue used for Imm register encoding, and Condition codes.
 
-  PrefixG1 = "", PrefixG2 = "";
-  XRelease = false; XAcquire = false; HLEFlipG1G2 = false;
-  HT = false;
-  BND = false;
+    IMMValue = 0;
 
-  //Reset Invalid operation code.
+    //Reset instruction Prefixes.
 
-  InvalidOp = false;
+    (PrefixG1 = ""), (PrefixG2 = "");
+    XRelease = false;
+    XAcquire = false;
+    HLEFlipG1G2 = false;
+    HT = false;
+    BND = false;
 
-  //Reset instruction hex because it is used to check if the instruction is longer than 15 bytes which is impossible for the X86 Decoder Circuit.
+    //Reset Invalid operation code.
 
-  InstructionHex = "";
+    InvalidOp = false;
 
-  //Deactivate all operands along the X86Decoder.
+    //Reset instruction hex because it is used to check if the instruction is longer than 15 bytes which is impossible for the X86 Decoder Circuit.
 
-  for( var i = 0; i < X86Decoder.length; X86Decoder[i++].Deactivate() );
+    InstructionHex = "";
+
+    //Deactivate all operands along the X86Decoder.
+
+    for (var i = 0; i < X86Decoder.length; X86Decoder[i++].Deactivate());
 }
 
 /*-------------------------------------------------------------------------------------------------------------------------
 do an linear disassemble.
 -------------------------------------------------------------------------------------------------------------------------*/
 
-export function LDisassemble()
-{
-  var Instruction = ""; //Stores the Decoded instruction.
-  var Out = "";  //The Disassemble output
+export function LDisassemble() {
+    var Instruction = ""; //Stores the Decoded instruction.
+    var Out = ""; //The Disassemble output
 
-  //Disassemble binary code using an linear pass.
+    //Disassemble binary code using an linear pass.
 
-  var len = BinCode.length;
+    var len = BinCode.length;
 
-  //Backup the base address.
+    //Backup the base address.
 
-  var BPos64 = Pos64, BPos32 = Pos32;
+    var BPos64 = Pos64,
+        BPos32 = Pos32;
 
-  while( CodePos < len )
-  {
-    Instruction = DecodeInstruction();
+    while (CodePos < len) {
+        Instruction = DecodeInstruction();
 
-    //Add the 64 bit address of the output if ShowInstructionPos decoding is active.
+        //Add the 64 bit address of the output if ShowInstructionPos decoding is active.
 
-    if( ShowInstructionPos )
-    {
-      Out += InstructionPos + " ";
+        if (ShowInstructionPos) {
+            Out += InstructionPos + " ";
+        }
+
+        //Show Each byte that was read to decode the instruction if ShowInstructionHex decoding is active.
+
+        if (ShowInstructionHex) {
+            InstructionHex = InstructionHex.toUpperCase();
+            for (; InstructionHex.length < 32; InstructionHex = InstructionHex + " ");
+            Out += InstructionHex + "";
+        }
+
+        //Put the decoded instruction into the output and make a new line.
+
+        Out += Instruction + "\r\n";
+
+        //Reset instruction Pos and Hex.
+
+        InstructionPos = "";
+        InstructionHex = "";
     }
 
-    //Show Each byte that was read to decode the instruction if ShowInstructionHex decoding is active.
+    CodePos = 0; //Reset the Code position
+    Pos32 = BPos32;
+    Pos64 = BPos64; //Reset Base address.
 
-    if(ShowInstructionHex)
-    {
-      InstructionHex = InstructionHex.toUpperCase();
-      for(; InstructionHex.length < 32; InstructionHex = InstructionHex + " " );
-      Out += InstructionHex + "";
-    }
+    //return the decoded binary code
 
-    //Put the decoded instruction into the output and make a new line.
-
-    Out += Instruction + "\r\n";
-
-    //Reset instruction Pos and Hex.
-
-    InstructionPos = ""; InstructionHex = "";
-  }
-
-  CodePos = 0; //Reset the Code position
-  Pos32 = BPos32; Pos64 = BPos64; //Reset Base address.
-
-  //return the decoded binary code
-
-  return(Out);
-
+    return Out;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -5748,13 +9968,12 @@ export function LDisassemble()
  * The following code has been added to expose public methods for use in CyberChef
  */
 
-export function setBitMode (val) {
-  BitMode = val; 
-};
-export function setShowInstructionHex (val) {
-  ShowInstructionHex = val;
-};
-export function setShowInstructionPos (val) {
-  ShowInstructionPos = val; 
-};
-
+export function setBitMode(val) {
+    BitMode = val;
+}
+export function setShowInstructionHex(val) {
+    ShowInstructionHex = val;
+}
+export function setShowInstructionPos(val) {
+    ShowInstructionPos = val;
+}

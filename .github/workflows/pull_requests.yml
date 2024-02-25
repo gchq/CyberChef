@@ -22,7 +22,7 @@ jobs:
         npm run setheapsize
 
     - name: Lint
-      run: npx grunt lint
+      run: npm run style && npx grunt lint && git diff --exit-code
 
     - name: Unit Tests
       run: |

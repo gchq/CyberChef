@@ -16,7 +16,7 @@ TestRegister.addTests([
             {
                 op: "Cetacean Cipher Decode",
                 args: []
-            },
-        ],
+            }
+        ]
     }
 ]);

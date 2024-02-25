@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Return operation
  */
 class Return extends Operation {
-
     /**
      * Return constructor
      */
@@ -37,7 +36,6 @@ class Return extends Operation {
         state.progress = state.opList.length;
         return state;
     }
-
 }
 
 export default Return;

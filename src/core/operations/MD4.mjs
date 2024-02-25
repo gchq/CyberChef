@@ -5,13 +5,12 @@
  */
 
 import Operation from "../Operation.mjs";
-import {runHash} from "../lib/Hash.mjs";
+import { runHash } from "../lib/Hash.mjs";
 
 /**
  * MD4 operation
  */
 class MD4 extends Operation {
-
     /**
      * MD4 constructor
      */
@@ -20,7 +19,8 @@ class MD4 extends Operation {
 
         this.name = "MD4";
         this.module = "Crypto";
-        this.description = "The MD4 (Message-Digest 4) algorithm is a cryptographic hash function developed by Ronald Rivest in 1990. The digest length is 128 bits. The algorithm has influenced later designs, such as the MD5, SHA-1 and RIPEMD algorithms.<br><br>The security of MD4 has been severely compromised.";
+        this.description
+            = "The MD4 (Message-Digest 4) algorithm is a cryptographic hash function developed by Ronald Rivest in 1990. The digest length is 128 bits. The algorithm has influenced later designs, such as the MD5, SHA-1 and RIPEMD algorithms.<br><br>The security of MD4 has been severely compromised.";
         this.infoURL = "https://wikipedia.org/wiki/MD4";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -35,7 +35,6 @@ class MD4 extends Operation {
     run(input, args) {
         return runHash("md4", input);
     }
-
 }
 
 export default MD4;

@@ -14,7 +14,6 @@ import { CryptoGost, GostEngine } from "@wavesenterprise/crypto-gost-js/index.js
  * GOST Key Wrap operation
  */
 class GOSTKeyWrap extends Operation {
-
     /**
      * GOSTKeyWrap constructor
      */
@@ -23,7 +22,8 @@ class GOSTKeyWrap extends Operation {
 
         this.name = "GOST Key Wrap";
         this.module = "Ciphers";
-        this.description = "A key wrapping algorithm for protecting keys in untrusted storage using one of the GOST block cipers.";
+        this.description
+            = "A key wrapping algorithm for protecting keys in untrusted storage using one of the GOST block cipers.";
         this.infoURL = "https://wikipedia.org/wiki/GOST_(block_cipher)";
         this.inputType = "string";
         this.outputType = "string";
@@ -123,7 +123,6 @@ class GOSTKeyWrap extends Operation {
             throw new OperationError(err);
         }
     }
-
 }
 
 export default GOSTKeyWrap;

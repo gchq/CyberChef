@@ -7,14 +7,12 @@
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import Utils from "../../core/Utils.mjs";
-import {escapeControlChars} from "../utils/editorUtils.mjs";
-
+import { escapeControlChars } from "../utils/editorUtils.mjs";
 
 /**
  * Waiter to handle events related to the recipe.
  */
 class RecipeWaiter {
-
     /**
      * RecipeWaiter constructor.
      *
@@ -26,7 +24,6 @@ class RecipeWaiter {
         this.manager = manager;
         this.removeIntent = false;
     }
-
 
     /**
      * Sets up the drag and drop capability for operations in the operations and recipe areas.
@@ -42,44 +39,55 @@ class RecipeWaiter {
             delay: 0,
             filter: ".arg",
             preventOnFilter: false,
-            setData: function(dataTransfer, dragEl) {
+            setData: function (dataTransfer, dragEl) {
                 dataTransfer.setData("Text", dragEl.querySelector(".op-title").textContent);
             },
-            onEnd: function(evt) {
+            onEnd: function (evt) {
                 if (this.removeIntent) {
                     evt.item.remove();
                     evt.target.dispatchEvent(this.manager.operationremove);
                 }
             }.bind(this),
-            onSort: function(evt) {
+            onSort: function (evt) {
                 if (evt.from.id === "rec-list") {
                     document.dispatchEvent(this.manager.statechange);
                 }
             }.bind(this)
         });
 
-        Sortable.utils.on(recList, "dragover", function() {
-            this.removeIntent = false;
-        }.bind(this));
+        Sortable.utils.on(
+            recList,
+            "dragover",
+            function () {
+                this.removeIntent = false;
+            }.bind(this)
+        );
 
-        Sortable.utils.on(recList, "dragleave", function() {
-            this.removeIntent = true;
-            this.app.progress = 0;
-        }.bind(this));
+        Sortable.utils.on(
+            recList,
+            "dragleave",
+            function () {
+                this.removeIntent = true;
+                this.app.progress = 0;
+            }.bind(this)
+        );
 
-        Sortable.utils.on(recList, "touchend", function(e) {
-            const loc = e.changedTouches[0];
-            const target = document.elementFromPoint(loc.clientX, loc.clientY);
+        Sortable.utils.on(
+            recList,
+            "touchend",
+            function (e) {
+                const loc = e.changedTouches[0];
+                const target = document.elementFromPoint(loc.clientX, loc.clientY);
 
-            this.removeIntent = !recList.contains(target);
-        }.bind(this));
+                this.removeIntent = !recList.contains(target);
+            }.bind(this)
+        );
 
         // Favourites category
         document.querySelector("#categories a").addEventListener("dragover", this.favDragover.bind(this));
         document.querySelector("#categories a").addEventListener("dragleave", this.favDragleave.bind(this));
         document.querySelector("#categories a").addEventListener("drop", this.favDrop.bind(this));
     }
-
 
     /**
      * Creates a drag-n-droppable seed list of operations.
@@ -91,13 +99,13 @@ class RecipeWaiter {
             group: {
                 name: "recipe",
                 pull: "clone",
-                put: false,
+                put: false
             },
             sort: false,
-            setData: function(dataTransfer, dragEl) {
+            setData: function (dataTransfer, dragEl) {
                 dataTransfer.setData("Text", dragEl.textContent);
             },
-            onStart: function(evt) {
+            onStart: function (evt) {
                 // Removes popover element and event bindings from the dragged operation but not the
                 // event bindings from the one left in the operations list. Without manually removing
                 // these bindings, we cannot re-initialise the popover on the stub operation.
@@ -107,14 +115,11 @@ class RecipeWaiter {
                     .off("mouseenter")
                     .off("mouseleave")
                     .attr("data-toggle", "popover-disabled");
-                $(evt.clone)
-                    .off(".popover")
-                    .removeData("bs.popover");
+                $(evt.clone).off(".popover").removeData("bs.popover");
             },
             onEnd: this.opSortEnd.bind(this)
         });
     }
-
 
     /**
      * Handler for operation sort end events.
@@ -149,7 +154,6 @@ class RecipeWaiter {
         evt.item.dispatchEvent(this.manager.operationadd);
     }
 
-
     /**
      * Handler for favourite dragover events.
      * If the element being dragged is an operation, displays a visual cue so that the user knows it can
@@ -158,8 +162,7 @@ class RecipeWaiter {
      * @param {event} e
      */
     favDragover(e) {
-        if (e.dataTransfer.effectAllowed !== "move")
-            return false;
+        if (e.dataTransfer.effectAllowed !== "move") return false;
 
         e.stopPropagation();
         e.preventDefault();
@@ -175,7 +178,6 @@ class RecipeWaiter {
         }
     }
 
-
     /**
      * Handler for favourite dragleave events.
      * Removes the visual cue.
@@ -187,7 +189,6 @@ class RecipeWaiter {
         e.preventDefault();
         document.querySelector("#categories a").classList.remove("favourites-hover");
     }
-
 
     /**
      * Handler for favourite drop events.
@@ -204,7 +205,6 @@ class RecipeWaiter {
         this.app.addFavourite(opName);
     }
 
-
     /**
      * Handler for ingredient change events.
      *
@@ -214,7 +214,6 @@ class RecipeWaiter {
         if (e && e?.target?.classList?.contains("no-state-change")) return;
         window.dispatchEvent(this.manager.statechange);
     }
-
 
     /**
      * Handler for disable click events.
@@ -240,7 +239,6 @@ class RecipeWaiter {
         window.dispatchEvent(this.manager.statechange);
     }
 
-
     /**
      * Handler for breakpoint click events.
      * Updates the icon status.
@@ -262,7 +260,6 @@ class RecipeWaiter {
         window.dispatchEvent(this.manager.statechange);
     }
 
-
     /**
      * Handler for operation doubleclick events.
      * Removes the operation from the recipe and auto bakes.
@@ -275,7 +272,6 @@ class RecipeWaiter {
         this.opRemove(e);
     }
 
-
     /**
      * Handler for operation child doubleclick events.
      * Removes the operation from the recipe.
@@ -287,7 +283,6 @@ class RecipeWaiter {
         e.target.parentNode.remove();
         this.opRemove(e);
     }
-
 
     /**
      * Generates a configuration object to represent the current recipe.
@@ -343,7 +338,6 @@ class RecipeWaiter {
         return config;
     }
 
-
     /**
      * Moves or removes the breakpoint indicator in the recipe based on the position.
      *
@@ -360,7 +354,6 @@ class RecipeWaiter {
             }
         }
     }
-
 
     /**
      * Given an operation stub element, this function converts it into a full recipe element with
@@ -384,7 +377,6 @@ class RecipeWaiter {
         }
     }
 
-
     /**
      * Adds the specified operation to the recipe.
      *
@@ -406,7 +398,6 @@ class RecipeWaiter {
         return item;
     }
 
-
     /**
      * Removes all operations from the recipe.
      *
@@ -419,7 +410,6 @@ class RecipeWaiter {
         }
         recList.dispatchEvent(this.manager.operationremove);
     }
-
 
     /**
      * Handler for operation dropdown events from toggleString arguments.
@@ -438,7 +428,6 @@ class RecipeWaiter {
         this.ingChange();
     }
 
-
     /**
      * Triggers various change events for operation arguments that have just been initialised.
      *
@@ -447,14 +436,13 @@ class RecipeWaiter {
     triggerArgEvents(op) {
         // Trigger populateOption and argSelector events
         const triggerableOptions = op.querySelectorAll(".populate-option, .arg-selector");
-        const evt = new Event("change", {bubbles: true});
+        const evt = new Event("change", { bubbles: true });
         if (triggerableOptions.length) {
             for (const el of triggerableOptions) {
                 el.dispatchEvent(evt);
             }
         }
     }
-
 
     /**
      * Handler for operationadd events.
@@ -470,7 +458,6 @@ class RecipeWaiter {
         window.dispatchEvent(this.manager.statechange);
     }
 
-
     /**
      * Handler for operationremove events.
      *
@@ -483,23 +470,20 @@ class RecipeWaiter {
         window.dispatchEvent(this.manager.statechange);
     }
 
-
     /**
      * Handler for text argument dragover events.
      * Gives the user a visual cue to show that items can be dropped here.
      *
      * @param {event} e
      */
-    textArgDragover (e) {
+    textArgDragover(e) {
         // This will be set if we're dragging an operation
-        if (e.dataTransfer.effectAllowed === "move")
-            return false;
+        if (e.dataTransfer.effectAllowed === "move") return false;
 
         e.stopPropagation();
         e.preventDefault();
         e.target.closest("textarea.arg").classList.add("dropping-file");
     }
-
 
     /**
      * Handler for text argument dragleave events.
@@ -507,12 +491,11 @@ class RecipeWaiter {
      *
      * @param {event} e
      */
-    textArgDragLeave (e) {
+    textArgDragLeave(e) {
         e.stopPropagation();
         e.preventDefault();
         e.target.classList.remove("dropping-file");
     }
-
 
     /**
      * Handler for text argument drop events.
@@ -522,8 +505,7 @@ class RecipeWaiter {
      */
     textArgDrop(e) {
         // This will be set if we're dragging an operation
-        if (e.dataTransfer.effectAllowed === "move")
-            return false;
+        if (e.dataTransfer.effectAllowed === "move") return false;
 
         e.stopPropagation();
         e.preventDefault();
@@ -552,7 +534,6 @@ class RecipeWaiter {
         }
     }
 
-
     /**
      * Sets register values.
      *
@@ -569,7 +550,9 @@ class RecipeWaiter {
 
         const registerList = [];
         for (let i = 0; i < registers.length; i++) {
-            registerList.push(`$R${numPrevRegisters + i} = ${escapeControlChars(Utils.escapeHtml(Utils.truncate(registers[i], 100)))}`);
+            registerList.push(
+                `$R${numPrevRegisters + i} = ${escapeControlChars(Utils.escapeHtml(Utils.truncate(registers[i], 100)))}`
+            );
         }
         const registerListEl = `<div class="register-list">
                 ${registerList.join("<br>")}
@@ -577,7 +560,6 @@ class RecipeWaiter {
 
         op.insertAdjacentHTML("beforeend", registerListEl);
     }
-
 
     /**
      * Adjusts the number of ingredient columns as the width of the recipe changes.
@@ -602,7 +584,6 @@ class RecipeWaiter {
 
         controlsContent.style.transform = `scale(${scale})`;
     }
-
 }
 
 export default RecipeWaiter;

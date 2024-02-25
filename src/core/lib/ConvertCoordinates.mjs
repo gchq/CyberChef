@@ -43,7 +43,7 @@ const NO_CHANGE = [
     "Geohash",
     "Military Grid Reference System",
     "Ordnance Survey National Grid",
-    "Universal Transverse Mercator",
+    "Universal Transverse Mercator"
 ];
 
 /**
@@ -58,7 +58,7 @@ const NO_CHANGE = [
  * @param {number} precision - Precision of the result
  * @returns {string} A formatted string of the converted co-ordinates
  */
-export function convertCoordinates (input, inFormat, inDelim, outFormat, outDelim, includeDir, precision) {
+export function convertCoordinates(input, inFormat, inDelim, outFormat, outDelim, includeDir, precision) {
     let isPair = false,
         split,
         latlon,
@@ -194,7 +194,7 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
             break;
         case "Decimal Degrees":
             if (isPair) {
-                splitLat =  splitInput(split[0]);
+                splitLat = splitInput(split[0]);
                 splitLong = splitInput(split[1]);
                 if (splitLat.length !== 1 || splitLong.length !== 1) {
                     throw new OperationError("Invalid co-ordinate format for Decimal Degrees.");
@@ -221,11 +221,11 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
         const dirs = input.toUpperCase().match(/[NESW]/g);
         if (dirs && dirs.length >= 1) {
             // Make positive lat/lon values with S/W directions into negative values
-            if (dirs[0] === "S" || dirs[0] === "W" && latlon.lat > 0) {
+            if (dirs[0] === "S" || (dirs[0] === "W" && latlon.lat > 0)) {
                 latlon.lat = -latlon.lat;
             }
             if (dirs.length >= 2) {
-                if (dirs[1] === "S" || dirs[1] === "W" && latlon.lon > 0) {
+                if (dirs[1] === "S" || (dirs[1] === "W" && latlon.lon > 0)) {
                     latlon.lon = -latlon.lon;
                 }
             }
@@ -275,7 +275,9 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
         case "Ordnance Survey National Grid":
             osng = OsGridRef.latLonToOsGrid(latlon);
             if (osng.toString() === "") {
-                throw new OperationError("Could not convert co-ordinates to OS National Grid. Are the co-ordinates in range?");
+                throw new OperationError(
+                    "Could not convert co-ordinates to OS National Grid. Are the co-ordinates in range?"
+                );
             }
             // OSNG wants a precision that's an even number between 2 and 10
             if (precision % 2 !== 0) {
@@ -340,10 +342,10 @@ export function convertCoordinates (input, inFormat, inDelim, outFormat, outDeli
  * @param {string} input - The input data to be split
  * @returns {number[]} An array of the different items in the string, stored as floats
  */
-function splitInput (input) {
+function splitInput(input) {
     const split = [];
 
-    input.split(/\s+/).forEach(item => {
+    input.split(/\s+/).forEach((item) => {
         // Remove any character that isn't a digit, decimal point or negative sign
         item = item.replace(/[^0-9.-]/g, "");
         if (item.length > 0) {
@@ -363,9 +365,9 @@ function splitInput (input) {
  * @param {number} precision - The precision the result should be rounded to
  * @returns {{string: string, degrees: number}} An object containing the raw converted value (obj.degrees), and a formatted string version (obj.string)
  */
-function convDMSToDD (degrees, minutes, seconds, precision) {
+function convDMSToDD(degrees, minutes, seconds, precision) {
     const absDegrees = Math.abs(degrees);
-    let conv = absDegrees + (minutes / 60) + (seconds / 3600);
+    let conv = absDegrees + minutes / 60 + seconds / 3600;
     let outString = round(conv, precision) + "°";
     if (isNegativeZero(degrees) || degrees < 0) {
         conv = -conv;
@@ -385,7 +387,7 @@ function convDMSToDD (degrees, minutes, seconds, precision) {
  * @param {number} precision - The precision which the result should be rounded to
  * @returns {{string: string, degrees: number}} An object containing the raw converted value (obj.degrees), and a formatted string version (obj.string)
  */
-function convDDMToDD (degrees, minutes, precision) {
+function convDDMToDD(degrees, minutes, precision) {
     const absDegrees = Math.abs(degrees);
     let conv = absDegrees + minutes / 60;
     let outString = round(conv, precision) + "°";
@@ -407,7 +409,7 @@ function convDDMToDD (degrees, minutes, precision) {
  * @param {number} precision - The precision which the result should be rounded to
  * @returns {{string: string, degrees: number}} An object containing the raw converted value (obj.degrees), and a formatted string version (obj.string)
  */
-function convDDToDD (degrees, precision) {
+function convDDToDD(degrees, precision) {
     return {
         "degrees": degrees,
         "string": round(degrees, precision) + "°"
@@ -421,12 +423,12 @@ function convDDToDD (degrees, precision) {
  * @param {number} precision - The precision which the result should be rounded to
  * @returns {{string: string, degrees: number, minutes: number, seconds: number}} An object containing the raw converted value as separate numbers (.degrees, .minutes, .seconds), and a formatted string version (obj.string)
  */
-function convDDToDMS (decDegrees, precision) {
+function convDDToDMS(decDegrees, precision) {
     const absDegrees = Math.abs(decDegrees);
     let degrees = Math.floor(absDegrees);
     const minutes = Math.floor(60 * (absDegrees - degrees)),
         seconds = round(3600 * (absDegrees - degrees) - 60 * minutes, precision);
-    let outString = degrees + "° " + minutes + "' " + seconds + "\"";
+    let outString = degrees + "° " + minutes + "' " + seconds + '"';
     if (isNegativeZero(decDegrees) || decDegrees < 0) {
         degrees = -degrees;
         outString = "-" + outString;
@@ -446,7 +448,7 @@ function convDDToDMS (decDegrees, precision) {
  * @param {number} precision - The precision the input data should be rounded to
  * @returns {{string: string, degrees: number, minutes: number}} An object containing the raw converted value as separate numbers (.degrees, .minutes), and a formatted string version (obj.string)
  */
-function convDDToDDM (decDegrees, precision) {
+function convDDToDDM(decDegrees, precision) {
     const absDegrees = Math.abs(decDegrees);
     let degrees = Math.floor(absDegrees);
     const minutes = absDegrees - degrees,
@@ -460,7 +462,7 @@ function convDDToDDM (decDegrees, precision) {
     return {
         "degrees": degrees,
         "minutes": decMinutes,
-        "string": outString,
+        "string": outString
     };
 }
 
@@ -532,7 +534,7 @@ export function findDirs(input, delim) {
  * @param {string} delim - The delimiter separating the data in input
  * @returns {string} The input format
  */
-export function findFormat (input, delim) {
+export function findFormat(input, delim) {
     let testData;
     const mgrsPattern = new RegExp(/^[0-9]{2}\s?[C-HJ-NP-X]{1}\s?[A-HJ-NP-Z][A-HJ-NP-V]\s?[0-9\s]+/),
         osngPattern = new RegExp(/^[A-HJ-Z]{2}\s+[0-9\s]+$/),
@@ -597,7 +599,7 @@ export function findFormat (input, delim) {
  * @param {string} input
  * @returns {string} Delimiter type
  */
-export function findDelim (input) {
+export function findDelim(input) {
     input = input.trim();
     const delims = [",", ";", ":"];
     const testDir = input.match(/[NnEeSsWw]/g);
@@ -634,14 +636,14 @@ export function findDelim (input) {
  * @param {string} delim The delimiter to be matched
  * @returns {string}
  */
-export function realDelim (delim) {
+export function realDelim(delim) {
     return {
-        "Auto":         "Auto",
-        "Space":        " ",
-        "\\n":          "\n",
-        "Comma":        ",",
-        "Semi-colon":   ";",
-        "Colon":        ":"
+        "Auto": "Auto",
+        "Space": " ",
+        "\\n": "\n",
+        "Comma": ",",
+        "Semi-colon": ";",
+        "Colon": ":"
     }[delim];
 }
 
@@ -652,7 +654,7 @@ export function realDelim (delim) {
  * @returns {boolean}
  */
 function isNegativeZero(zero) {
-    return zero === 0 && (1/zero < 0);
+    return zero === 0 && 1 / zero < 0;
 }
 
 /**

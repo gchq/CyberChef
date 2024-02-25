@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Image Hue/Saturation/Lightness operation
  */
 class ImageHueSaturationLightness extends Operation {
-
     /**
      * ImageHueSaturationLightness constructor
      */
@@ -74,8 +73,7 @@ class ImageHueSaturationLightness extends Operation {
         }
         try {
             if (hue !== 0) {
-                if (isWorkerEnvironment())
-                    self.sendStatusMessage("Changing image hue...");
+                if (isWorkerEnvironment()) self.sendStatusMessage("Changing image hue...");
                 image.colour([
                     {
                         apply: "hue",
@@ -84,8 +82,7 @@ class ImageHueSaturationLightness extends Operation {
                 ]);
             }
             if (saturation !== 0) {
-                if (isWorkerEnvironment())
-                    self.sendStatusMessage("Changing image saturation...");
+                if (isWorkerEnvironment()) self.sendStatusMessage("Changing image saturation...");
                 image.colour([
                     {
                         apply: "saturate",
@@ -94,8 +91,7 @@ class ImageHueSaturationLightness extends Operation {
                 ]);
             }
             if (lightness !== 0) {
-                if (isWorkerEnvironment())
-                    self.sendStatusMessage("Changing image lightness...");
+                if (isWorkerEnvironment()) self.sendStatusMessage("Changing image lightness...");
                 image.colour([
                     {
                         apply: "lighten",

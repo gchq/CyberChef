@@ -19,12 +19,10 @@ import BackgroundWorkerWaiter from "./waiters/BackgroundWorkerWaiter.mjs";
 import TabWaiter from "./waiters/TabWaiter.mjs";
 import TimingWaiter from "./waiters/TimingWaiter.mjs";
 
-
 /**
  * This object controls the Waiters responsible for handling events from all areas of the app.
  */
 class Manager {
-
     /**
      * Manager constructor.
      *
@@ -37,50 +35,49 @@ class Manager {
         /**
          * @event Manager#appstart
          */
-        this.appstart = new CustomEvent("appstart", {bubbles: true});
+        this.appstart = new CustomEvent("appstart", { bubbles: true });
         /**
          * @event Manager#apploaded
          */
-        this.apploaded = new CustomEvent("apploaded", {bubbles: true});
+        this.apploaded = new CustomEvent("apploaded", { bubbles: true });
         /**
          * @event Manager#operationadd
          */
-        this.operationadd = new CustomEvent("operationadd", {bubbles: true});
+        this.operationadd = new CustomEvent("operationadd", { bubbles: true });
         /**
          * @event Manager#operationremove
          */
-        this.operationremove = new CustomEvent("operationremove", {bubbles: true});
+        this.operationremove = new CustomEvent("operationremove", { bubbles: true });
         /**
          * @event Manager#oplistcreate
          */
-        this.oplistcreate = new CustomEvent("oplistcreate", {bubbles: true});
+        this.oplistcreate = new CustomEvent("oplistcreate", { bubbles: true });
         /**
          * @event Manager#statechange
          */
-        this.statechange = new CustomEvent("statechange", {bubbles: true});
+        this.statechange = new CustomEvent("statechange", { bubbles: true });
 
         // Define Waiter objects to handle various areas
-        this.timing      = new TimingWaiter(this.app, this);
-        this.worker      = new WorkerWaiter(this.app, this);
-        this.window      = new WindowWaiter(this.app);
-        this.controls    = new ControlsWaiter(this.app, this);
-        this.recipe      = new RecipeWaiter(this.app, this);
-        this.ops         = new OperationsWaiter(this.app, this);
-        this.tabs        = new TabWaiter(this.app, this);
-        this.input       = new InputWaiter(this.app, this);
-        this.output      = new OutputWaiter(this.app, this);
-        this.options     = new OptionsWaiter(this.app, this);
+        this.timing = new TimingWaiter(this.app, this);
+        this.worker = new WorkerWaiter(this.app, this);
+        this.window = new WindowWaiter(this.app);
+        this.controls = new ControlsWaiter(this.app, this);
+        this.recipe = new RecipeWaiter(this.app, this);
+        this.ops = new OperationsWaiter(this.app, this);
+        this.tabs = new TabWaiter(this.app, this);
+        this.input = new InputWaiter(this.app, this);
+        this.output = new OutputWaiter(this.app, this);
+        this.options = new OptionsWaiter(this.app, this);
         this.highlighter = new HighlighterWaiter(this.app, this);
-        this.seasonal    = new SeasonalWaiter(this.app, this);
-        this.bindings    = new BindingsWaiter(this.app, this);
-        this.background  = new BackgroundWorkerWaiter(this.app, this);
+        this.seasonal = new SeasonalWaiter(this.app, this);
+        this.bindings = new BindingsWaiter(this.app, this);
+        this.background = new BackgroundWorkerWaiter(this.app, this);
 
         // Object to store dynamic handlers to fire on elements that may not exist yet
         this.dynamicHandlers = {};
 
         this.initialiseEventListeners();
     }
-
 
     /**
      * Sets up the various components and listeners.
@@ -103,8 +100,7 @@ class Manager {
      * Confirms that all Waiters have loaded correctly.
      */
     confirmWaitersLoaded() {
-        if (this.tabs.getActiveTab("input") >= 0 &&
-            this.tabs.getActiveTab("output") >= 0) {
+        if (this.tabs.getActiveTab("input") >= 0 && this.tabs.getActiveTab("output") >= 0) {
             log.debug("Waiters loaded");
             this.app.waitersLoaded = true;
             this.app.loaded();
@@ -113,7 +109,6 @@ class Manager {
             setTimeout(this.confirmWaitersLoaded.bind(this), 10);
         }
     }
-
 
     /**
      * Main function to handle the creation of the event listeners.
@@ -128,37 +123,76 @@ class Manager {
 
         // Controls
         document.getElementById("bake").addEventListener("click", this.controls.bakeClick.bind(this.controls));
-        document.getElementById("auto-bake").addEventListener("change", this.controls.autoBakeChange.bind(this.controls));
+        document
+            .getElementById("auto-bake")
+            .addEventListener("change", this.controls.autoBakeChange.bind(this.controls));
         document.getElementById("step").addEventListener("click", this.controls.stepClick.bind(this.controls));
-        document.getElementById("clr-recipe").addEventListener("click", this.controls.clearRecipeClick.bind(this.controls));
+        document
+            .getElementById("clr-recipe")
+            .addEventListener("click", this.controls.clearRecipeClick.bind(this.controls));
         document.getElementById("save").addEventListener("click", this.controls.saveClick.bind(this.controls));
-        document.getElementById("save-button").addEventListener("click", this.controls.saveButtonClick.bind(this.controls));
-        document.getElementById("save-link-recipe-checkbox").addEventListener("change", this.controls.slrCheckChange.bind(this.controls));
-        document.getElementById("save-link-input-checkbox").addEventListener("change", this.controls.sliCheckChange.bind(this.controls));
+        document
+            .getElementById("save-button")
+            .addEventListener("click", this.controls.saveButtonClick.bind(this.controls));
+        document
+            .getElementById("save-link-recipe-checkbox")
+            .addEventListener("change", this.controls.slrCheckChange.bind(this.controls));
+        document
+            .getElementById("save-link-input-checkbox")
+            .addEventListener("change", this.controls.sliCheckChange.bind(this.controls));
         document.getElementById("load").addEventListener("click", this.controls.loadClick.bind(this.controls));
-        document.getElementById("load-delete-button").addEventListener("click", this.controls.loadDeleteClick.bind(this.controls));
-        document.getElementById("load-name").addEventListener("change", this.controls.loadNameChange.bind(this.controls));
-        document.getElementById("load-button").addEventListener("click", this.controls.loadButtonClick.bind(this.controls));
-        document.getElementById("support").addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
+        document
+            .getElementById("load-delete-button")
+            .addEventListener("click", this.controls.loadDeleteClick.bind(this.controls));
+        document
+            .getElementById("load-name")
+            .addEventListener("change", this.controls.loadNameChange.bind(this.controls));
+        document
+            .getElementById("load-button")
+            .addEventListener("click", this.controls.loadButtonClick.bind(this.controls));
+        document
+            .getElementById("support")
+            .addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
         this.addMultiEventListeners("#save-texts textarea", "keyup paste", this.controls.saveTextChange, this.controls);
 
         // Operations
         this.addMultiEventListener("#search", "keyup paste search", this.ops.searchOperations, this.ops);
         this.addDynamicListener(".op-list li.operation", "dblclick", this.ops.operationDblclick, this.ops);
-        document.getElementById("edit-favourites").addEventListener("click", this.ops.editFavouritesClick.bind(this.ops));
-        document.getElementById("save-favourites").addEventListener("click", this.ops.saveFavouritesClick.bind(this.ops));
-        document.getElementById("reset-favourites").addEventListener("click", this.ops.resetFavouritesClick.bind(this.ops));
+        document
+            .getElementById("edit-favourites")
+            .addEventListener("click", this.ops.editFavouritesClick.bind(this.ops));
+        document
+            .getElementById("save-favourites")
+            .addEventListener("click", this.ops.saveFavouritesClick.bind(this.ops));
+        document
+            .getElementById("reset-favourites")
+            .addEventListener("click", this.ops.resetFavouritesClick.bind(this.ops));
         this.addDynamicListener(".op-list", "oplistcreate", this.ops.opListCreate, this.ops);
         this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd, this.recipe);
 
         // Recipe
         this.addDynamicListener(".arg:not(select)", "input", this.recipe.ingChange, this.recipe);
-        this.addDynamicListener(".arg[type=checkbox], .arg[type=radio], select.arg", "change", this.recipe.ingChange, this.recipe);
+        this.addDynamicListener(
+            ".arg[type=checkbox], .arg[type=radio], select.arg",
+            "change",
+            this.recipe.ingChange,
+            this.recipe
+        );
         this.addDynamicListener(".disable-icon", "click", this.recipe.disableClick, this.recipe);
         this.addDynamicListener(".breakpoint", "click", this.recipe.breakpointClick, this.recipe);
         this.addDynamicListener("#rec-list li.operation", "dblclick", this.recipe.operationDblclick, this.recipe);
-        this.addDynamicListener("#rec-list li.operation > div", "dblclick", this.recipe.operationChildDblclick, this.recipe);
-        this.addDynamicListener("#rec-list .dropdown-menu.toggle-dropdown a", "click", this.recipe.dropdownToggleClick, this.recipe);
+        this.addDynamicListener(
+            "#rec-list li.operation > div",
+            "dblclick",
+            this.recipe.operationChildDblclick,
+            this.recipe
+        );
+        this.addDynamicListener(
+            "#rec-list .dropdown-menu.toggle-dropdown a",
+            "click",
+            this.recipe.dropdownToggleClick,
+            this.recipe
+        );
         this.addDynamicListener("#rec-list", "operationremove", this.recipe.opRemove.bind(this.recipe));
         this.addDynamicListener("textarea.arg", "dragover", this.recipe.textArgDragover, this.recipe);
         this.addDynamicListener("textarea.arg", "dragleave", this.recipe.textArgDragLeave, this.recipe);
@@ -169,64 +203,142 @@ class Manager {
         this.addListeners("#clr-io,#btn-close-all-tabs", "click", this.input.clearAllIoClick, this.input);
         this.addListeners("#open-file,#open-folder", "change", this.input.inputOpen, this.input);
         document.getElementById("btn-open-file").addEventListener("click", this.input.inputOpenClick.bind(this.input));
-        document.getElementById("btn-open-folder").addEventListener("click", this.input.folderOpenClick.bind(this.input));
+        document
+            .getElementById("btn-open-folder")
+            .addEventListener("click", this.input.folderOpenClick.bind(this.input));
         this.addListeners("#input-wrapper", "dragover", this.input.inputDragover, this.input);
         this.addListeners("#input-wrapper", "dragleave", this.input.inputDragleave, this.input);
         this.addListeners("#input-wrapper", "drop", this.input.inputDrop, this.input);
         document.getElementById("btn-new-tab").addEventListener("click", this.input.addInputClick.bind(this.input));
-        document.getElementById("btn-previous-input-tab").addEventListener("mousedown", this.input.previousTabClick.bind(this.input));
-        document.getElementById("btn-next-input-tab").addEventListener("mousedown", this.input.nextTabClick.bind(this.input));
+        document
+            .getElementById("btn-previous-input-tab")
+            .addEventListener("mousedown", this.input.previousTabClick.bind(this.input));
+        document
+            .getElementById("btn-next-input-tab")
+            .addEventListener("mousedown", this.input.nextTabClick.bind(this.input));
         this.addListeners("#btn-next-input-tab,#btn-previous-input-tab", "mouseup", this.input.tabMouseUp, this.input);
         this.addListeners("#btn-next-input-tab,#btn-previous-input-tab", "mouseout", this.input.tabMouseUp, this.input);
         document.getElementById("btn-go-to-input-tab").addEventListener("click", this.input.goToTab.bind(this.input));
         document.getElementById("btn-find-input-tab").addEventListener("click", this.input.findTab.bind(this.input));
         this.addDynamicListener("#input-tabs li .input-tab-content", "click", this.input.changeTabClick, this.input);
-        document.getElementById("input-show-pending").addEventListener("change", this.input.filterTabSearch.bind(this.input));
-        document.getElementById("input-show-loading").addEventListener("change", this.input.filterTabSearch.bind(this.input));
-        document.getElementById("input-show-loaded").addEventListener("change", this.input.filterTabSearch.bind(this.input));
-        this.addListeners("#input-filter-content,#input-filter-filename", "click", this.input.filterOptionClick, this.input);
+        document
+            .getElementById("input-show-pending")
+            .addEventListener("change", this.input.filterTabSearch.bind(this.input));
+        document
+            .getElementById("input-show-loading")
+            .addEventListener("change", this.input.filterTabSearch.bind(this.input));
+        document
+            .getElementById("input-show-loaded")
+            .addEventListener("change", this.input.filterTabSearch.bind(this.input));
+        this.addListeners(
+            "#input-filter-content,#input-filter-filename",
+            "click",
+            this.input.filterOptionClick,
+            this.input
+        );
         document.getElementById("input-filter").addEventListener("change", this.input.filterTabSearch.bind(this.input));
         document.getElementById("input-filter").addEventListener("keyup", this.input.filterTabSearch.bind(this.input));
-        document.getElementById("input-num-results").addEventListener("change", this.input.filterTabSearch.bind(this.input));
-        document.getElementById("input-num-results").addEventListener("keyup", this.input.filterTabSearch.bind(this.input));
-        document.getElementById("input-filter-refresh").addEventListener("click", this.input.filterTabSearch.bind(this.input));
+        document
+            .getElementById("input-num-results")
+            .addEventListener("change", this.input.filterTabSearch.bind(this.input));
+        document
+            .getElementById("input-num-results")
+            .addEventListener("keyup", this.input.filterTabSearch.bind(this.input));
+        document
+            .getElementById("input-filter-refresh")
+            .addEventListener("click", this.input.filterTabSearch.bind(this.input));
         this.addDynamicListener(".input-filter-result", "click", this.input.filterItemClick, this.input);
-
 
         // Output
         document.getElementById("save-to-file").addEventListener("click", this.output.saveClick.bind(this.output));
-        document.getElementById("save-all-to-file").addEventListener("click", this.output.saveAllClick.bind(this.output));
+        document
+            .getElementById("save-all-to-file")
+            .addEventListener("click", this.output.saveAllClick.bind(this.output));
         document.getElementById("copy-output").addEventListener("click", this.output.copyClick.bind(this.output));
         document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
-        document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
+        document
+            .getElementById("maximise-output")
+            .addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
         document.getElementById("magic").addEventListener("click", this.output.magicClick.bind(this.output));
         this.addDynamicListener(".extract-file,.extract-file i", "click", this.output.extractFileClick, this.output);
-        this.addDynamicListener("#output-tabs-wrapper #output-tabs li .output-tab-content", "click", this.output.changeTabClick, this.output);
-        document.getElementById("btn-previous-output-tab").addEventListener("mousedown", this.output.previousTabClick.bind(this.output));
-        document.getElementById("btn-next-output-tab").addEventListener("mousedown", this.output.nextTabClick.bind(this.output));
-        this.addListeners("#btn-next-output-tab,#btn-previous-output-tab", "mouseup", this.output.tabMouseUp, this.output);
-        this.addListeners("#btn-next-output-tab,#btn-previous-output-tab", "mouseout", this.output.tabMouseUp, this.output);
-        document.getElementById("btn-go-to-output-tab").addEventListener("click", this.output.goToTab.bind(this.output));
+        this.addDynamicListener(
+            "#output-tabs-wrapper #output-tabs li .output-tab-content",
+            "click",
+            this.output.changeTabClick,
+            this.output
+        );
+        document
+            .getElementById("btn-previous-output-tab")
+            .addEventListener("mousedown", this.output.previousTabClick.bind(this.output));
+        document
+            .getElementById("btn-next-output-tab")
+            .addEventListener("mousedown", this.output.nextTabClick.bind(this.output));
+        this.addListeners(
+            "#btn-next-output-tab,#btn-previous-output-tab",
+            "mouseup",
+            this.output.tabMouseUp,
+            this.output
+        );
+        this.addListeners(
+            "#btn-next-output-tab,#btn-previous-output-tab",
+            "mouseout",
+            this.output.tabMouseUp,
+            this.output
+        );
+        document
+            .getElementById("btn-go-to-output-tab")
+            .addEventListener("click", this.output.goToTab.bind(this.output));
         document.getElementById("btn-find-output-tab").addEventListener("click", this.output.findTab.bind(this.output));
-        document.getElementById("output-show-pending").addEventListener("change", this.output.filterTabSearch.bind(this.output));
-        document.getElementById("output-show-baking").addEventListener("change", this.output.filterTabSearch.bind(this.output));
-        document.getElementById("output-show-baked").addEventListener("change", this.output.filterTabSearch.bind(this.output));
-        document.getElementById("output-show-stale").addEventListener("change", this.output.filterTabSearch.bind(this.output));
-        document.getElementById("output-show-errored").addEventListener("change", this.output.filterTabSearch.bind(this.output));
-        document.getElementById("output-content-filter").addEventListener("change", this.output.filterTabSearch.bind(this.output));
-        document.getElementById("output-content-filter").addEventListener("keyup", this.output.filterTabSearch.bind(this.output));
-        document.getElementById("output-num-results").addEventListener("change", this.output.filterTabSearch.bind(this.output));
-        document.getElementById("output-num-results").addEventListener("keyup", this.output.filterTabSearch.bind(this.output));
-        document.getElementById("output-filter-refresh").addEventListener("click", this.output.filterTabSearch.bind(this.output));
+        document
+            .getElementById("output-show-pending")
+            .addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document
+            .getElementById("output-show-baking")
+            .addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document
+            .getElementById("output-show-baked")
+            .addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document
+            .getElementById("output-show-stale")
+            .addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document
+            .getElementById("output-show-errored")
+            .addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document
+            .getElementById("output-content-filter")
+            .addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document
+            .getElementById("output-content-filter")
+            .addEventListener("keyup", this.output.filterTabSearch.bind(this.output));
+        document
+            .getElementById("output-num-results")
+            .addEventListener("change", this.output.filterTabSearch.bind(this.output));
+        document
+            .getElementById("output-num-results")
+            .addEventListener("keyup", this.output.filterTabSearch.bind(this.output));
+        document
+            .getElementById("output-filter-refresh")
+            .addEventListener("click", this.output.filterTabSearch.bind(this.output));
         this.addDynamicListener(".output-filter-result", "click", this.output.filterItemClick, this.output);
-
 
         // Options
         document.getElementById("options").addEventListener("click", this.options.optionsClick.bind(this.options));
-        document.getElementById("reset-options").addEventListener("click", this.options.resetOptionsClick.bind(this.options));
+        document
+            .getElementById("reset-options")
+            .addEventListener("click", this.options.resetOptionsClick.bind(this.options));
         this.addDynamicListener(".option-item input[type=checkbox]", "change", this.options.switchChange, this.options);
-        this.addDynamicListener(".option-item input[type=checkbox]#wordWrap", "change", this.options.setWordWrap, this.options);
-        this.addDynamicListener(".option-item input[type=checkbox]#useMetaKey", "change", this.bindings.updateKeybList, this.bindings);
+        this.addDynamicListener(
+            ".option-item input[type=checkbox]#wordWrap",
+            "change",
+            this.options.setWordWrap,
+            this.options
+        );
+        this.addDynamicListener(
+            ".option-item input[type=checkbox]#useMetaKey",
+            "change",
+            this.bindings.updateKeybList,
+            this.bindings
+        );
         this.addDynamicListener(".option-item input[type=number]", "keyup", this.options.numberChange, this.options);
         this.addDynamicListener(".option-item input[type=number]", "change", this.options.numberChange, this.options);
         this.addDynamicListener(".option-item select", "change", this.options.selectChange, this.options);
@@ -236,7 +348,6 @@ class Manager {
         // Misc
         window.addEventListener("keydown", this.bindings.parseInput.bind(this.bindings));
     }
-
 
     /**
      * Adds an event listener to each element in the specified group.
@@ -253,11 +364,10 @@ class Manager {
      */
     addListeners(selector, eventType, callback, scope) {
         scope = scope || this;
-        [].forEach.call(document.querySelectorAll(selector), function(el) {
+        [].forEach.call(document.querySelectorAll(selector), function (el) {
             el.addEventListener(eventType, callback.bind(scope));
         });
     }
-
 
     /**
      * Adds multiple event listeners to the specified element.
@@ -279,7 +389,6 @@ class Manager {
         }
     }
 
-
     /**
      * Adds multiple event listeners to each element in the specified group.
      *
@@ -299,7 +408,6 @@ class Manager {
             this.addListeners(selector, evs[i], callback, scope);
         }
     }
-
 
     /**
      * Adds an event listener to the global document object which will listen on dynamic elements which
@@ -331,7 +439,6 @@ class Manager {
         }
     }
 
-
     /**
      * Handler for dynamic events. This function is called for any dynamic event and decides which
      * callback(s) to execute based on the type and selector.
@@ -341,11 +448,12 @@ class Manager {
     dynamicListenerHandler(e) {
         const { type, target } = e;
         const handlers = this.dynamicHandlers[type];
-        const matches = target.matches ||
-                target.webkitMatchesSelector ||
-                target.mozMatchesSelector ||
-                target.msMatchesSelector ||
-                target.oMatchesSelector;
+        const matches
+            = target.matches
+            || target.webkitMatchesSelector
+            || target.mozMatchesSelector
+            || target.msMatchesSelector
+            || target.oMatchesSelector;
 
         for (let i = 0; i < handlers.length; i++) {
             if (matches && matches.call(target, handlers[i].selector)) {

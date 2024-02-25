@@ -12,16 +12,20 @@ TestRegister.addTests([
     {
         name: "Protobuf Decode: no schema",
         input: "0d1c0000001203596f751a024d65202b2a0a0a066162633132331200",
-        expectedOutput: JSON.stringify({
-            "1": 28,
-            "2": "You",
-            "3": "Me",
-            "4": 43,
-            "5": {
-                "1": "abc123",
-                "2": {}
-            }
-        }, null, 4),
+        expectedOutput: JSON.stringify(
+            {
+                "1": 28,
+                "2": "You",
+                "3": "Me",
+                "4": 43,
+                "5": {
+                    "1": "abc123",
+                    "2": {}
+                }
+            },
+            null,
+            4
+        ),
         recipeConfig: [
             {
                 "op": "From Hex",
@@ -36,15 +40,15 @@ TestRegister.addTests([
     {
         name: "Protobuf Decode: partial schema, no unknown fields",
         input: "0d1c0000001203596f751a024d65202b2a0a0a066162633132331200",
-        expectedOutput: JSON.stringify({
-            "Apple": [
-                28
-            ],
-            "Carrot": [
-                "Me"
-            ],
-            "Banana": "You"
-        }, null, 4),
+        expectedOutput: JSON.stringify(
+            {
+                "Apple": [28],
+                "Carrot": ["Me"],
+                "Banana": "You"
+            },
+            null,
+            4
+        ),
         recipeConfig: [
             {
                 "op": "From Hex",
@@ -67,24 +71,24 @@ TestRegister.addTests([
     {
         name: "Protobuf Decode: partial schema, show unknown fields",
         input: "0d1c0000001203596f751a024d65202b2a0a0a066162633132331200",
-        expectedOutput: JSON.stringify({
-            "Test": {
-                "Apple": [
-                    28
-                ],
-                "Carrot": [
-                    "Me"
-                ],
-                "Banana": "You"
-            },
-            "Unknown Fields": {
-                "4": 43,
-                "5": {
-                    "1": "abc123",
-                    "2": {}
+        expectedOutput: JSON.stringify(
+            {
+                "Test": {
+                    "Apple": [28],
+                    "Carrot": ["Me"],
+                    "Banana": "You"
+                },
+                "Unknown Fields": {
+                    "4": 43,
+                    "5": {
+                        "1": "abc123",
+                        "2": {}
+                    }
                 }
-            }
-        }, null, 4),
+            },
+            null,
+            4
+        ),
         recipeConfig: [
             {
                 "op": "From Hex",
@@ -107,21 +111,21 @@ TestRegister.addTests([
     {
         name: "Protobuf Decode: full schema, no unknown fields",
         input: "0d1c0000001203596f751a024d65202b2a0a0a06616263313233120031ff00000000000000",
-        expectedOutput: JSON.stringify({
-            "Apple": [
-                28
-            ],
-            "Carrot": [
-                "Me"
-            ],
-            "Banana": "You",
-            "Date": 43,
-            "Elderberry": {
-                "Fig": "abc123",
-                "Grape": {}
+        expectedOutput: JSON.stringify(
+            {
+                "Apple": [28],
+                "Carrot": ["Me"],
+                "Banana": "You",
+                "Date": 43,
+                "Elderberry": {
+                    "Fig": "abc123",
+                    "Grape": {}
+                },
+                "Huckleberry": 255
             },
-            "Huckleberry": 255
-        }, null, 4),
+            null,
+            4
+        ),
         recipeConfig: [
             {
                 "op": "From Hex",
@@ -152,24 +156,26 @@ TestRegister.addTests([
     {
         name: "Protobuf Decode: partial schema, show unknown fields, show types",
         input: "0d1c0000001203596f751a024d65202b2a0a0a06616263313233120031ba32a96cc10200003801",
-        expectedOutput: JSON.stringify({
-            "Test": {
-                "Carrot (string)": [
-                    "Me"
-                ],
-                "Banana (string)": "You",
-                "Date (int32)": 43,
-                "Imbe (Options)": "Option1"
-            },
-            "Unknown Fields": {
-                "field #1: 32-Bit (e.g. fixed32, float)": 28,
-                "field #5: L-delim (e.g. string, message)": {
-                    "field #1: L-delim (e.g. string, message)": "abc123",
-                    "field #2: L-delim (e.g. string, message)": {}
+        expectedOutput: JSON.stringify(
+            {
+                "Test": {
+                    "Carrot (string)": ["Me"],
+                    "Banana (string)": "You",
+                    "Date (int32)": 43,
+                    "Imbe (Options)": "Option1"
                 },
-                "field #6: 64-Bit (e.g. fixed64, double)": 3029774971578
-            }
-        }, null, 4),
+                "Unknown Fields": {
+                    "field #1: 32-Bit (e.g. fixed32, float)": 28,
+                    "field #5: L-delim (e.g. string, message)": {
+                        "field #1: L-delim (e.g. string, message)": "abc123",
+                        "field #2: L-delim (e.g. string, message)": {}
+                    },
+                    "field #6: 64-Bit (e.g. fixed64, double)": 3029774971578
+                }
+            },
+            null,
+            4
+        ),
         recipeConfig: [
             {
                 "op": "From Hex",
@@ -202,22 +208,22 @@ TestRegister.addTests([
     },
     {
         name: "Protobuf Encode",
-        input: JSON.stringify({
-            "Apple": [
-                28
-            ],
-            "Banana": "You",
-            "Carrot": [
-                "Me"
-            ],
-            "Date": 43,
-            "Elderberry": {
-                "Fig": "abc123",
-                "Grape": {}
+        input: JSON.stringify(
+            {
+                "Apple": [28],
+                "Banana": "You",
+                "Carrot": ["Me"],
+                "Date": 43,
+                "Elderberry": {
+                    "Fig": "abc123",
+                    "Grape": {}
+                },
+                "Huckleberry": [3029774971578],
+                "Imbe": 1
             },
-            "Huckleberry": [3029774971578],
-            "Imbe": 1
-        }, null, 4),
+            null,
+            4
+        ),
         expectedOutput: "0d1c0000001203596f751a024d65202b2a0a0a06616263313233120031ba32a96cc10200003801",
         recipeConfig: [
             {
@@ -246,31 +252,28 @@ TestRegister.addTests([
             },
             {
                 "op": "To Hex",
-                "args": [
-                    "None",
-                    0
-                ]
+                "args": ["None", 0]
             }
         ]
     },
     {
         name: "Protobuf Encode: incomplete schema",
-        input: JSON.stringify({
-            "Apple": [
-                28
-            ],
-            "Banana": "You",
-            "Carrot": [
-                "Me"
-            ],
-            "Date": 43,
-            "Elderberry": {
-                "Fig": "abc123",
-                "Grape": {}
+        input: JSON.stringify(
+            {
+                "Apple": [28],
+                "Banana": "You",
+                "Carrot": ["Me"],
+                "Date": 43,
+                "Elderberry": {
+                    "Fig": "abc123",
+                    "Grape": {}
+                },
+                "Huckleberry": [3029774971578],
+                "Imbe": 1
             },
-            "Huckleberry": [3029774971578],
-            "Imbe": 1
-        }, null, 4),
+            null,
+            4
+        ),
         expectedOutput: "1203596f75202b2a0a0a06616263313233120031ba32a96cc1020000",
         recipeConfig: [
             {
@@ -296,11 +299,8 @@ TestRegister.addTests([
             },
             {
                 "op": "To Hex",
-                "args": [
-                    "None",
-                    0
-                ]
+                "args": ["None", 0]
             }
         ]
-    },
+    }
 ]);

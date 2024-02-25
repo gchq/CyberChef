@@ -17,7 +17,7 @@ TestRegister.addTests([
                 "op": "Haversine distance",
                 "args": []
             }
-        ],
+        ]
     },
     {
         name: "Haversine distance, zero distance",
@@ -28,6 +28,6 @@ TestRegister.addTests([
                 "op": "Haversine distance",
                 "args": []
             }
-        ],
+        ]
     }
 ]);

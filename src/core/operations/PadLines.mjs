@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Pad lines operation
  */
 class PadLines extends Operation {
-
     /**
      * PadLines constructor
      */
@@ -54,17 +53,16 @@ class PadLines extends Operation {
 
         if (position === "Start") {
             for (i = 0; i < lines.length; i++) {
-                output += lines[i].padStart(lines[i].length+len, chr) + "\n";
+                output += lines[i].padStart(lines[i].length + len, chr) + "\n";
             }
         } else if (position === "End") {
             for (i = 0; i < lines.length; i++) {
-                output += lines[i].padEnd(lines[i].length+len, chr) + "\n";
+                output += lines[i].padEnd(lines[i].length + len, chr) + "\n";
             }
         }
 
-        return output.slice(0, output.length-1);
+        return output.slice(0, output.length - 1);
     }
-
 }
 
 export default PadLines;

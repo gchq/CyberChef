@@ -12,7 +12,6 @@ import CryptoApi from "crypto-api/src/crypto-api.mjs";
  * HMAC operation
  */
 class HMAC extends Operation {
-
     /**
      * HMAC constructor
      */
@@ -21,7 +20,8 @@ class HMAC extends Operation {
 
         this.name = "HMAC";
         this.module = "Crypto";
-        this.description = "Keyed-Hash Message Authentication Codes (HMAC) are a mechanism for message authentication using cryptographic hash functions.";
+        this.description
+            = "Keyed-Hash Message Authentication Codes (HMAC) are a mechanism for message authentication using cryptographic hash functions.";
         this.infoURL = "https://wikipedia.org/wiki/HMAC";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -76,7 +76,6 @@ class HMAC extends Operation {
         mac.update(msg);
         return CryptoApi.encoder.toHex(mac.finalize());
     }
-
 }
 
 export default HMAC;

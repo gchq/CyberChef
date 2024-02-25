@@ -9,13 +9,12 @@ import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import jimp from "jimp";
 
-import {RGBA_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import { RGBA_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 /**
  * Extract RGBA operation
  */
 class ExtractRGBA extends Operation {
-
     /**
      * ExtractRGBA constructor
      */
@@ -24,7 +23,8 @@ class ExtractRGBA extends Operation {
 
         this.name = "Extract RGBA";
         this.module = "Image";
-        this.description = "Extracts each pixel's RGBA value in an image. These are sometimes used in Steganography to hide text or data.";
+        this.description
+            = "Extracts each pixel's RGBA value in an image. These are sometimes used in Steganography to hide text or data.";
         this.infoURL = "https://wikipedia.org/wiki/RGBA_color_space";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -59,7 +59,6 @@ class ExtractRGBA extends Operation {
 
         return bitmap.join(delimiter);
     }
-
 }
 
 export default ExtractRGBA;

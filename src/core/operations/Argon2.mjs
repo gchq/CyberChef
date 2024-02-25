@@ -13,7 +13,6 @@ import argon2 from "argon2-browser";
  * Argon2 operation
  */
 class Argon2 extends Operation {
-
     /**
      * Argon2 constructor
      */
@@ -22,7 +21,8 @@ class Argon2 extends Operation {
 
         this.name = "Argon2";
         this.module = "Crypto";
-        this.description = "Argon2 is a key derivation function that was selected as the winner of the Password Hashing Competition in July 2015. It was designed by Alex Biryukov, Daniel Dinu, and Dmitry Khovratovich from the University of Luxembourg.<br><br>Enter the password in the input to generate its hash.";
+        this.description
+            = "Argon2 is a key derivation function that was selected as the winner of the Password Hashing Competition in July 2015. It was designed by Alex Biryukov, Daniel Dinu, and Dmitry Khovratovich from the University of Luxembourg.<br><br>Enter the password in the input to generate its hash.";
         this.infoURL = "https://wikipedia.org/wiki/Argon2";
         this.inputType = "string";
         this.outputType = "string";
@@ -95,7 +95,7 @@ class Argon2 extends Operation {
                 mem,
                 parallelism,
                 hashLen,
-                type,
+                type
             });
 
             switch (outFormat) {
@@ -111,7 +111,6 @@ class Argon2 extends Operation {
             throw new OperationError(`Error: ${err.message}`);
         }
     }
-
 }
 
 export default Argon2;

@@ -7,7 +7,8 @@
 import Operation from "../Operation.mjs";
 import {
     BACON_ALPHABETS,
-    BACON_TRANSLATIONS_FOR_ENCODING, BACON_TRANSLATION_AB,
+    BACON_TRANSLATIONS_FOR_ENCODING,
+    BACON_TRANSLATION_AB,
     swapZeroAndOne
 } from "../lib/Bacon.mjs";
 
@@ -23,7 +24,8 @@ class BaconCipherEncode extends Operation {
 
         this.name = "Bacon Cipher Encode";
         this.module = "Default";
-        this.description = "Bacon's cipher or the Baconian cipher is a method of steganography devised by Francis Bacon in 1605. A message is concealed in the presentation of text, rather than its content.";
+        this.description
+            = "Bacon's cipher or the Baconian cipher is a method of steganography devised by Francis Bacon in 1605. A message is concealed in the presentation of text, rather than its content.";
         this.infoURL = "https://wikipedia.org/wiki/Bacon%27s_cipher";
         this.inputType = "string";
         this.outputType = "string";

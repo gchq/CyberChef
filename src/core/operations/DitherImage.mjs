@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Image Dither operation
  */
 class DitherImage extends Operation {
-
     /**
      * DitherImage constructor
      */
@@ -49,8 +48,7 @@ class DitherImage extends Operation {
             throw new OperationError(`Error loading image. (${err})`);
         }
         try {
-            if (isWorkerEnvironment())
-                self.sendStatusMessage("Applying dither to image...");
+            if (isWorkerEnvironment()) self.sendStatusMessage("Applying dither to image...");
             image.dither565();
 
             let imageBuffer;
@@ -81,7 +79,6 @@ class DitherImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default DitherImage;

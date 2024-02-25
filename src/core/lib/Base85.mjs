@@ -14,18 +14,17 @@ import Utils from "../Utils.mjs";
 export const ALPHABET_OPTIONS = [
     {
         name: "Standard",
-        value: "!-u",
+        value: "!-u"
     },
     {
         name: "Z85 (ZeroMQ)",
-        value: "0-9a-zA-Z.\\-:+=^!/*?&<>()[]{}@%$#",
+        value: "0-9a-zA-Z.\\-:+=^!/*?&<>()[]{}@%$#"
     },
     {
         name: "IPv6",
-        value: "0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~",
+        value: "0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~"
     }
 ];
-
 
 /**
  * Returns the name of the alphabet, when given the alphabet.
@@ -37,7 +36,7 @@ export function alphabetName(alphabet) {
     alphabet = escape(alphabet);
     let name;
 
-    ALPHABET_OPTIONS.forEach(function(a) {
+    ALPHABET_OPTIONS.forEach(function (a) {
         const expanded = Utils.expandAlphRange(a.value).join("");
         if (alphabet === escape(expanded)) name = a.name;
     });

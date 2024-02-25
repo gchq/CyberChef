@@ -7,14 +7,13 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import {IP_DELIM_OPTIONS} from "../lib/Delim.mjs";
-import {ipv6ToStr, genIpv6Mask, IPV4_REGEX, strToIpv6,  ipv4ToStr, IPV6_REGEX, strToIpv4} from "../lib/IP.mjs";
+import { IP_DELIM_OPTIONS } from "../lib/Delim.mjs";
+import { ipv6ToStr, genIpv6Mask, IPV4_REGEX, strToIpv6, ipv4ToStr, IPV6_REGEX, strToIpv4 } from "../lib/IP.mjs";
 
 /**
  * Group IP addresses operation
  */
 class GroupIPAddresses extends Operation {
-
     /**
      * GroupIPAddresses constructor
      */
@@ -41,7 +40,7 @@ class GroupIPAddresses extends Operation {
             {
                 "name": "Only show the subnets",
                 "type": "boolean",
-                "value": false,
+                "value": false
             }
         ];
     }
@@ -55,7 +54,7 @@ class GroupIPAddresses extends Operation {
         const delim = Utils.charRep(args[0]),
             cidr = args[1],
             onlySubnets = args[2],
-            ipv4Mask = cidr < 32 ? ~(0xFFFFFFFF >>> cidr) : 0xFFFFFFFF,
+            ipv4Mask = cidr < 32 ? ~(0xffffffff >>> cidr) : 0xffffffff,
             ipv6Mask = genIpv6Mask(cidr),
             ips = input.split(delim),
             ipv4Networks = {},
@@ -131,7 +130,6 @@ class GroupIPAddresses extends Operation {
 
         return output;
     }
-
 }
 
 export default GroupIPAddresses;

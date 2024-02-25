@@ -6,13 +6,12 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {INPUT_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import { INPUT_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 /**
  * Tail operation
  */
 class Tail extends Operation {
-
     /**
      * Tail constructor
      */
@@ -21,7 +20,8 @@ class Tail extends Operation {
 
         this.name = "Tail";
         this.module = "Default";
-        this.description = "Like the UNIX tail utility.<br>Gets the last n lines.<br>Optionally you can select all lines after line n by entering a negative value for n.<br>The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.";
+        this.description
+            = "Like the UNIX tail utility.<br>Gets the last n lines.<br>Optionally you can select all lines after line n by entering a negative value for n.<br>The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.";
         this.infoURL = "https://wikipedia.org/wiki/Tail_(Unix)";
         this.inputType = "string";
         this.outputType = "string";
@@ -62,9 +62,7 @@ class Tail extends Operation {
                 }
             })
             .join(delimiter);
-
     }
-
 }
 
 export default Tail;

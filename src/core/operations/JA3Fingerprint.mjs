@@ -15,13 +15,12 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import Stream from "../lib/Stream.mjs";
-import {runHash} from "../lib/Hash.mjs";
+import { runHash } from "../lib/Hash.mjs";
 
 /**
  * JA3 Fingerprint operation
  */
 class JA3Fingerprint extends Operation {
-
     /**
      * JA3Fingerprint constructor
      */
@@ -30,7 +29,8 @@ class JA3Fingerprint extends Operation {
 
         this.name = "JA3 Fingerprint";
         this.module = "Crypto";
-        this.description = "Generates a JA3 fingerprint to help identify TLS clients based on hashing together values from the Client Hello.<br><br>Input: A hex stream of the TLS Client Hello packet application layer.";
+        this.description
+            = "Generates a JA3 fingerprint to help identify TLS clients based on hashing together values from the Client Hello.<br><br>Input: A hex stream of the TLS Client Hello packet application layer.";
         this.infoURL = "https://engineering.salesforce.com/tls-fingerprinting-with-ja3-and-ja3s-247362855967";
         this.inputType = "string";
         this.outputType = "string";
@@ -60,26 +60,22 @@ class JA3Fingerprint extends Operation {
         const s = new Stream(new Uint8Array(input));
 
         const handshake = s.readInt(1);
-        if (handshake !== 0x16)
-            throw new OperationError("Not handshake data.");
+        if (handshake !== 0x16) throw new OperationError("Not handshake data.");
 
         // Version
         s.moveForwardsBy(2);
 
         // Length
         const length = s.readInt(2);
-        if (s.length !== length + 5)
-            throw new OperationError("Incorrect handshake length.");
+        if (s.length !== length + 5) throw new OperationError("Incorrect handshake length.");
 
         // Handshake type
         const handshakeType = s.readInt(1);
-        if (handshakeType !== 1)
-            throw new OperationError("Not a Client Hello.");
+        if (handshakeType !== 1) throw new OperationError("Not a Client Hello.");
 
         // Handshake length
         const handshakeLength = s.readInt(3);
-        if (s.length !== handshakeLength + 9)
-            throw new OperationError("Not enough data in Client Hello.");
+        if (s.length !== handshakeLength + 9) throw new OperationError("Not enough data in Client Hello.");
 
         // Hello version
         const helloVersion = s.readInt(2);
@@ -105,7 +101,10 @@ class JA3Fingerprint extends Operation {
         const extensionsLength = s.readInt(2);
         const extensions = s.getBytes(extensionsLength);
         const es = new Stream(extensions);
-        let ecsLen, ecs, ellipticCurves = "", ellipticCurvePointFormats = "";
+        let ecsLen,
+            ecs,
+            ellipticCurves = "",
+            ellipticCurvePointFormats = "";
         const exts = [];
         while (es.hasMore()) {
             const type = es.readInt(2);
@@ -124,18 +123,11 @@ class JA3Fingerprint extends Operation {
                 default:
                     es.moveForwardsBy(length);
             }
-            if (!GREASE_CIPHERSUITES.includes(type))
-                exts.push(type);
+            if (!GREASE_CIPHERSUITES.includes(type)) exts.push(type);
         }
 
         // Output
-        const ja3 = [
-            helloVersion.toString(),
-            cipherSegment,
-            exts.join("-"),
-            ellipticCurves,
-            ellipticCurvePointFormats
-        ];
+        const ja3 = [helloVersion.toString(), cipherSegment, exts.join("-"), ellipticCurves, ellipticCurvePointFormats];
         const ja3Str = ja3.join(",");
         const ja3Hash = runHash("md5", Utils.strToArrayBuffer(ja3Str));
 
@@ -164,7 +156,6 @@ ${ellipticCurvePointFormats}`;
                 return ja3Hash;
         }
     }
-
 }
 
 /**
@@ -173,33 +164,18 @@ ${ellipticCurvePointFormats}`;
  * @param {Stream} stream
  * @returns {string}
  */
-function parseJA3Segment(stream, size=2) {
+function parseJA3Segment(stream, size = 2) {
     const segment = [];
     while (stream.hasMore()) {
         const element = stream.readInt(size);
-        if (!GREASE_CIPHERSUITES.includes(element))
-            segment.push(element);
+        if (!GREASE_CIPHERSUITES.includes(element)) segment.push(element);
     }
     return segment.join("-");
 }
 
 const GREASE_CIPHERSUITES = [
-    0x0a0a,
-    0x1a1a,
-    0x2a2a,
-    0x3a3a,
-    0x4a4a,
-    0x5a5a,
-    0x6a6a,
-    0x7a7a,
-    0x8a8a,
-    0x9a9a,
-    0xaaaa,
-    0xbaba,
-    0xcaca,
-    0xdada,
-    0xeaea,
-    0xfafa
+    0x0a0a, 0x1a1a, 0x2a2a, 0x3a3a, 0x4a4a, 0x5a5a, 0x6a6a, 0x7a7a, 0x8a8a, 0x9a9a, 0xaaaa, 0xbaba, 0xcaca, 0xdada,
+    0xeaea, 0xfafa
 ];
 
 export default JA3Fingerprint;

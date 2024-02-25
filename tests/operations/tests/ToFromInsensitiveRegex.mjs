@@ -16,9 +16,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "From Case Insensitive Regex: nothing",
@@ -27,9 +27,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Case Insensitive Regex: simple test",
@@ -38,9 +38,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "From Case Insensitive Regex: simple test",
@@ -49,9 +49,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Case Insensitive Regex: [A-Z] -> [A-Za-z]",
@@ -60,9 +60,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Case Insensitive Regex: [a-z] -> [A-Za-z]",
@@ -71,9 +71,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Case Insensitive Regex: [H-d] -> [A-DH-dh-z]",
@@ -82,9 +82,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Case Insensitive Regex: [!-D] -> [!-Da-d]",
@@ -93,9 +93,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Case Insensitive Regex: [%-^] -> [%-^a-z]",
@@ -104,9 +104,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Case Insensitive Regex: [K-`] -> [K-`k-z]",
@@ -115,9 +115,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Case Insensitive Regex: [[-}] -> [[-}A-Z]",
@@ -126,9 +126,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Case Insensitive Regex: [b-}] -> [b-}B-Z]",
@@ -137,9 +137,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Case Insensitive Regex: [<-j] -> [<-z]",
@@ -148,9 +148,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Case Insensitive Regex: [^-j] -> [A-J^-j]",
@@ -159,20 +159,21 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Case Insensitive Regex: not simple test",
         input: "Mozilla[A-Z0-9]+[A-Z]Mozilla[0-9whatA-Z][H-d][!-H][a-~](.)+",
-        expectedOutput: "[mM][oO][zZ][iI][lL][lL][aA][A-Za-z0-9]+[A-Za-z][mM][oO][zZ][iI][lL][lL][aA][0-9[wW][hH][aA][tT]A-Za-z][A-DH-dh-z][!-Ha-h][a-~A-Z](.)+",
+        expectedOutput:
+            "[mM][oO][zZ][iI][lL][lL][aA][A-Za-z0-9]+[A-Za-z][mM][oO][zZ][iI][lL][lL][aA][0-9[wW][hH][aA][tT]A-Za-z][A-DH-dh-z][!-Ha-h][a-~A-Z](.)+",
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Case Insensitive Regex: erroneous test",
@@ -181,8 +182,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     }
 ]);

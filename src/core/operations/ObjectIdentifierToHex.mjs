@@ -11,7 +11,6 @@ import Operation from "../Operation.mjs";
  * Object Identifier to Hex operation
  */
 class ObjectIdentifierToHex extends Operation {
-
     /**
      * ObjectIdentifierToHex constructor
      */
@@ -35,7 +34,6 @@ class ObjectIdentifierToHex extends Operation {
     run(input, args) {
         return r.KJUR.asn1.ASN1Util.oidIntToHex(input);
     }
-
 }
 
 export default ObjectIdentifierToHex;

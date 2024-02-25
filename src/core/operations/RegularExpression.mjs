@@ -13,7 +13,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Regular expression operation
  */
 class RegularExpression extends Operation {
-
     /**
      * RegularExpression constructor
      */
@@ -22,7 +21,8 @@ class RegularExpression extends Operation {
 
         this.name = "Regular expression";
         this.module = "Regex";
-        this.description = "Define your own regular expression (regex) to search the input data with, optionally choosing from a list of pre-defined patterns.<br><br>Supports extended regex syntax including the 'dot matches all' flag, named capture groups, full unicode coverage (including <code>\\p{}</code> categories and scripts as well as astral codes) and recursive matching.";
+        this.description
+            = "Define your own regular expression (regex) to search the input data with, optionally choosing from a list of pre-defined patterns.<br><br>Supports extended regex syntax including the 'dot matches all' flag, named capture groups, full unicode coverage (including <code>\\p{}</code> categories and scripts as well as astral codes) and recursive matching.";
         this.infoURL = "https://wikipedia.org/wiki/Regular_expression";
         this.inputType = "string";
         this.outputType = "html";
@@ -49,7 +49,7 @@ class RegularExpression extends Operation {
                     },
                     {
                         name: "URL",
-                        value: "([A-Za-z]+://)([-\\w]+(?:\\.\\w[-\\w]*)+)(:\\d+)?(/[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]*(?:[.!,?]+[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]+)*)?"
+                        value: '([A-Za-z]+://)([-\\w]+(?:\\.\\w[-\\w]*)+)(:\\d+)?(/[^.!,?"<>\\[\\]{}\\s\\x7F-\\xFF]*(?:[.!,?]+[^.!,?"<>\\[\\]{}\\s\\x7F-\\xFF]+)*)?'
                     },
                     {
                         name: "Domain",
@@ -81,12 +81,12 @@ class RegularExpression extends Operation {
                     },
                     {
                         name: "Strings",
-                        value: "[A-Za-z\\d/\\-:.,_$%\\x27\"()<>= !\\[\\]{}@]{4,}"
+                        value: '[A-Za-z\\d/\\-:.,_$%\\x27"()<>= !\\[\\]{}@]{4,}'
                     },
                     {
                         name: "UUID (any version)",
                         value: "[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
-                    },
+                    }
                 ],
                 "target": 1
             },
@@ -128,7 +128,12 @@ class RegularExpression extends Operation {
             {
                 "name": "Output format",
                 "type": "option",
-                "value": ["Highlight matches", "List matches", "List capture groups", "List matches with capture groups"]
+                "value": [
+                    "Highlight matches",
+                    "List matches",
+                    "List capture groups",
+                    "List matches with capture groups"
+                ]
             }
         ];
     }
@@ -139,12 +144,7 @@ class RegularExpression extends Operation {
      * @returns {html}
      */
     run(input, args) {
-        const [,
-            userRegex,
-            i, m, s, u, a,
-            displayTotal,
-            outputFormat
-        ] = args;
+        const [, userRegex, i, m, s, u, a, displayTotal, outputFormat] = args;
         let modifiers = "g";
 
         if (i) modifiers += "i";
@@ -176,7 +176,6 @@ class RegularExpression extends Operation {
             return Utils.escapeHtml(input);
         }
     }
-
 }
 
 /**
@@ -214,8 +213,7 @@ function regexList(input, regex, displayTotal, matches, captureGroups) {
         }
     }
 
-    if (displayTotal)
-        output = "Total found: " + total + "\n\n" + output;
+    if (displayTotal) output = "Total found: " + total + "\n\n" + output;
 
     return output.slice(0, -1);
 }
@@ -245,7 +243,7 @@ function regexHighlight(input, regex, displayTotal) {
         if (groups.length) {
             title += "Groups:\n";
             for (let i = 0; i < groups.length; i++) {
-                title += `\t${i+1}: ${Utils.escapeHtml(groups[i] || "")}\n`;
+                title += `\t${i + 1}: ${Utils.escapeHtml(groups[i] || "")}\n`;
             }
         }
 
@@ -263,8 +261,7 @@ function regexHighlight(input, regex, displayTotal) {
         return captureGroups[i];
     });
 
-    if (displayTotal)
-        output = "Total found: " + total + "\n\n" + output;
+    if (displayTotal) output = "Total found: " + total + "\n\n" + output;
 
     return output;
 }

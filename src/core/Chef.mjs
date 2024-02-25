@@ -13,14 +13,12 @@ import { isWorkerEnvironment } from "./Utils.mjs";
  * The main controller for CyberChef.
  */
 class Chef {
-
     /**
      * Chef constructor
      */
     constructor() {
         this.dish = new Dish();
     }
-
 
     /**
      * Runs the recipe over the input.
@@ -36,12 +34,12 @@ class Chef {
      * @returns {number} response.progress - The position that we have got to in the recipe
      * @returns {number} response.duration - The number of ms it took to execute the recipe
      * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
-    */
-    async bake(input, recipeConfig, options={}) {
+     */
+    async bake(input, recipeConfig, options = {}) {
         log.debug("Chef baking");
         const startTime = Date.now(),
-            recipe      = new Recipe(recipeConfig),
-            containsFc  = recipe.containsFlowControl();
+            recipe = new Recipe(recipeConfig),
+            containsFc = recipe.containsFlowControl();
         let error = false,
             progress = 0;
 
@@ -56,7 +54,7 @@ class Chef {
         } catch (err) {
             log.error(err);
             error = {
-                displayStr: err.displayStr,
+                displayStr: err.displayStr
             };
             progress = err.progress;
         }
@@ -67,9 +65,8 @@ class Chef {
         // Present the raw result
         await recipe.present(this.dish);
 
-        const returnType =
-            this.dish.type === Dish.HTML ? Dish.HTML :
-                options?.returnType ? options.returnType : Dish.ARRAY_BUFFER;
+        const returnType
+            = this.dish.type === Dish.HTML ? Dish.HTML : options?.returnType ? options.returnType : Dish.ARRAY_BUFFER;
 
         return {
             dish: rawDish,
@@ -80,7 +77,6 @@ class Chef {
             error: error
         };
     }
-
 
     /**
      * When a browser tab is unfocused and the browser has to run lots of dynamic content in other tabs,
@@ -98,7 +94,7 @@ class Chef {
      *
      * @param {Object[]} recipeConfig - The recipe configuration object
      * @returns {number} The time it took to run the silent bake in milliseconds.
-    */
+     */
     silentBake(recipeConfig) {
         log.debug("Running silent bake");
 
@@ -113,7 +109,6 @@ class Chef {
         }
         return Date.now() - startTime;
     }
-
 
     /**
      * Calculates highlight offsets if possible.
@@ -153,7 +148,6 @@ class Chef {
         };
     }
 
-
     /**
      * Translates the dish to a specified type and returns it.
      *
@@ -173,11 +167,10 @@ class Chef {
      * @param {number} [maxLength=100]
      * @returns {string}
      */
-    async getDishTitle(dish, maxLength=100) {
+    async getDishTitle(dish, maxLength = 100) {
         const newDish = new Dish(dish);
         return await newDish.getTitle(maxLength);
     }
-
 }
 
 export default Chef;

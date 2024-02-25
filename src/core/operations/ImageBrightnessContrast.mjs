@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Image Brightness / Contrast operation
  */
 class ImageBrightnessContrast extends Operation {
-
     /**
      * ImageBrightnessContrast constructor
      */
@@ -66,13 +65,11 @@ class ImageBrightnessContrast extends Operation {
         }
         try {
             if (brightness !== 0) {
-                if (isWorkerEnvironment())
-                    self.sendStatusMessage("Changing image brightness...");
+                if (isWorkerEnvironment()) self.sendStatusMessage("Changing image brightness...");
                 image.brightness(brightness / 100);
             }
             if (contrast !== 0) {
-                if (isWorkerEnvironment())
-                    self.sendStatusMessage("Changing image contrast...");
+                if (isWorkerEnvironment()) self.sendStatusMessage("Changing image contrast...");
                 image.contrast(contrast / 100);
             }
 
@@ -104,7 +101,6 @@ class ImageBrightnessContrast extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default ImageBrightnessContrast;

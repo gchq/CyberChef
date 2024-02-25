@@ -10,7 +10,6 @@ import OperationError from "../errors/OperationError.mjs";
  * DNS over HTTPS operation
  */
 class DNSOverHTTPS extends Operation {
-
     /**
      * DNSOverHTTPS constructor
      */
@@ -98,25 +97,29 @@ class DNSOverHTTPS extends Operation {
         try {
             url = new URL(resolver);
         } catch (error) {
-            throw new OperationError(error.toString() +
-            "\n\nThis error could be caused by one of the following:\n" +
-            " - An invalid Resolver URL\n");
+            throw new OperationError(
+                error.toString()
+                    + "\n\nThis error could be caused by one of the following:\n"
+                    + " - An invalid Resolver URL\n"
+            );
         }
-        const params = {name: input, type: requestType, cd: DNSSEC};
+        const params = { name: input, type: requestType, cd: DNSSEC };
 
         url.search = new URLSearchParams(params);
 
-        return fetch(url, {headers: {"accept": "application/dns-json"}}).then(response => {
-            return response.json();
-        }).then(data => {
-            if (justAnswer) {
-                return extractData(data.Answer);
-            }
-            return data;
-        }).catch(e => {
-            throw new OperationError(`Error making request to ${url}\n${e.toString()}`);
-        });
-
+        return fetch(url, { headers: { "accept": "application/dns-json" } })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                if (justAnswer) {
+                    return extractData(data.Answer);
+                }
+                return data;
+            })
+            .catch((e) => {
+                throw new OperationError(`Error making request to ${url}\n${e.toString()}`);
+            });
     }
 }
 
@@ -128,11 +131,11 @@ class DNSOverHTTPS extends Operation {
  * @returns {JSON}
  */
 function extractData(data) {
-    if (typeof(data) == "undefined") {
+    if (typeof data == "undefined") {
         return [];
     } else {
         const dataValues = [];
-        data.forEach(element => {
+        data.forEach((element) => {
             dataValues.push(element.data);
         });
         return dataValues;

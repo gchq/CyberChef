@@ -14,12 +14,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Wrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Wrap: RFC Test Vector, 128-bit data, 192-bit KEK",
@@ -29,12 +30,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Wrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f1011121314151617"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f1011121314151617" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Wrap: RFC Test Vector, 128-bit data, 256-bit KEK",
@@ -44,12 +46,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Wrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Wrap: RFC Test Vector, 192-bit data, 192-bit KEK",
@@ -59,12 +62,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Wrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f1011121314151617"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f1011121314151617" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Wrap: RFC Test Vector, 192-bit data, 256-bit KEK",
@@ -74,12 +78,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Wrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Wrap: RFC Test Vector, 256-bit data, 256-bit KEK",
@@ -89,12 +94,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Wrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Unwrap: RFC Test Vector, 128-bit data, 128-bit KEK",
@@ -104,12 +110,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Unwrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Unwrap: RFC Test Vector, 128-bit data, 192-bit KEK",
@@ -119,12 +126,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Unwrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f1011121314151617"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f1011121314151617" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Unwrap: RFC Test Vector, 128-bit data, 256-bit KEK",
@@ -134,12 +142,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Unwrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Unwrap: RFC Test Vector, 192-bit data, 192-bit KEK",
@@ -149,12 +158,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Unwrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f1011121314151617"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f1011121314151617" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Unwrap: RFC Test Vector, 192-bit data, 256-bit KEK",
@@ -164,12 +174,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Unwrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Unwrap: RFC Test Vector, 256-bit data, 256-bit KEK",
@@ -179,12 +190,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Unwrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Wrap: invalid KEK length",
@@ -194,12 +206,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Wrap",
                 "args": [
-                    {"option": "Hex", "string": "00010203040506070809"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "00010203040506070809" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Wrap: invalid IV length",
@@ -209,12 +222,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Wrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Wrap: input length not multiple of 8",
@@ -224,12 +238,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Wrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Wrap: input too short",
@@ -239,12 +254,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Wrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Unwrap: invalid KEK length",
@@ -254,12 +270,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Unwrap",
                 "args": [
-                    {"option": "Hex", "string": "00010203040506070809"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "00010203040506070809" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Unwrap: invalid IV length",
@@ -269,12 +286,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Unwrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Unwrap: input length not multiple of 8",
@@ -284,12 +302,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Unwrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Unwrap: input too short",
@@ -299,12 +318,13 @@ TestRegister.addTests([
             {
                 "op": "AES Key Unwrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
     },
     {
         "name": "AES Key Unwrap: corrupted input",
@@ -314,11 +334,12 @@ TestRegister.addTests([
             {
                 "op": "AES Key Unwrap",
                 "args": [
-                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
-                    {"option": "Hex", "string": "a6a6a6a6a6a6a6a6"},
-                    "Hex", "Hex"
-                ],
-            },
-        ],
-    },
+                    { "option": "Hex", "string": "000102030405060708090a0b0c0d0e0f" },
+                    { "option": "Hex", "string": "a6a6a6a6a6a6a6a6" },
+                    "Hex",
+                    "Hex"
+                ]
+            }
+        ]
+    }
 ]);

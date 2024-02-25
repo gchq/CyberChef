@@ -12,7 +12,6 @@ import { bitOp, or, BITWISE_OP_DELIMS } from "../lib/BitwiseOp.mjs";
  * OR operation
  */
 class OR extends Operation {
-
     /**
      * OR constructor
      */
@@ -72,7 +71,6 @@ class OR extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default OR;

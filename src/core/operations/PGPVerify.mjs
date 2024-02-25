@@ -16,7 +16,6 @@ const promisify = es6promisify.default ? es6promisify.default.promisify : es6pro
  * PGP Verify operation
  */
 class PGPVerify extends Operation {
-
     /**
      * PGPVerify constructor
      */
@@ -34,7 +33,7 @@ class PGPVerify extends Operation {
             "<br><br>",
             "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
             "<br><br>",
-            "This function uses the Keybase implementation of PGP.",
+            "This function uses the Keybase implementation of PGP."
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Pretty_Good_Privacy";
         this.inputType = "string";
@@ -105,7 +104,6 @@ class PGPVerify extends Operation {
             throw new OperationError(`Couldn't verify message: ${err}`);
         }
     }
-
 }
 
 export default PGPVerify;

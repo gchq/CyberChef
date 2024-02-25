@@ -18,7 +18,6 @@ import { SWITCHES, VALID_ITA2 } from "../lib/Lorenz.mjs";
  * Colossus operation
  */
 class Colossus extends Operation {
-
     /**
      * Colossus constructor
      */
@@ -26,7 +25,8 @@ class Colossus extends Operation {
         super();
         this.name = "Colossus";
         this.module = "Bletchley";
-        this.description = "Colossus is the name of the world's first electronic computer. Ten Colossi were designed by Tommy Flowers and built at the Post Office Research Labs at Dollis Hill in 1943 during World War 2. They assisted with the breaking of the German Lorenz cipher attachment, a machine created to encipher communications between Hitler and his generals on the front lines.<br><br>To learn more, Virtual Colossus, an online, browser based simulation of a Colossus computer is available at <a href='https://virtualcolossus.co.uk' target='_blank'>virtualcolossus.co.uk</a>.<br><br>A more detailed description of this operation can be found <a href='https://github.com/gchq/CyberChef/wiki/Colossus' target='_blank'>here</a>.";
+        this.description
+            = "Colossus is the name of the world's first electronic computer. Ten Colossi were designed by Tommy Flowers and built at the Post Office Research Labs at Dollis Hill in 1943 during World War 2. They assisted with the breaking of the German Lorenz cipher attachment, a machine created to encipher communications between Hitler and his generals on the front lines.<br><br>To learn more, Virtual Colossus, an online, browser based simulation of a Colossus computer is available at <a href='https://virtualcolossus.co.uk' target='_blank'>virtualcolossus.co.uk</a>.<br><br>A more detailed description of this operation can be found <a href='https://github.com/gchq/CyberChef/wiki/Colossus' target='_blank'>here</a>.";
         this.infoURL = "https://wikipedia.org/wiki/Colossus_computer";
         this.inputType = "string";
         this.outputType = "JSON";
@@ -68,7 +68,10 @@ class Colossus extends Operation {
                     {
                         name: "Select Program",
                         on: [7],
-                        off: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
+                        off: [
+                            8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+                            31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+                        ]
                     },
                     {
                         name: "Top Section - Conditional",
@@ -78,11 +81,16 @@ class Colossus extends Operation {
                     {
                         name: "Bottom Section - Addition",
                         on: [31, 32, 33, 34, 35, 36, 37, 38, 39, 40],
-                        off: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+                        off: [
+                            7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+                        ]
                     },
                     {
                         name: "Advanced",
-                        on: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40],
+                        on: [
+                            8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+                            31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+                        ],
                         off: [7]
                     }
                 ]
@@ -90,7 +98,13 @@ class Colossus extends Operation {
             {
                 name: "Program to run",
                 type: "option",
-                value: ["", "Letter Count", "1+2=. (1+2 Break In, Find X1,X2)", "4=5=/1=2 (Given X1,X2 find X4,X5)", "/,5,U (Count chars to find X3)"]
+                value: [
+                    "",
+                    "Letter Count",
+                    "1+2=. (1+2 Break In, Find X1,X2)",
+                    "4=5=/1=2 (Given X1,X2 find X4,X5)",
+                    "/,5,U (Count chars to find X3)"
+                ]
             },
             {
                 name: "K Rack: Conditional",
@@ -374,7 +388,7 @@ class Colossus extends Operation {
         const qbusin = {
             "Z": args[2],
             "Chi": args[3],
-            "Psi": args[4],
+            "Psi": args[4]
         };
 
         const limitation = args[5];
@@ -383,7 +397,9 @@ class Colossus extends Operation {
         if (limitation.includes("Ψ1")) lm[1] = true;
         if (limitation.includes("P5")) lm[2] = true;
         const limit = {
-            X2: lm[0], S1: lm[1], P5: lm[2]
+            X2: lm[0],
+            S1: lm[1],
+            P5: lm[2]
         };
 
         const KRackOpt = args[6];
@@ -394,10 +410,12 @@ class Colossus extends Operation {
         }
 
         const re = new RegExp("^$|^[.x]$");
-        for (let qr=0;qr<3;qr++) {
-            for (let a=0;a<5;a++) {
-                if (!re.test(args[((qr*7)+(a+9))]))
-                    throw new OperationError("Switch R"+(qr+1)+"-Q"+(a+1)+" can only be set to blank, . or x");
+        for (let qr = 0; qr < 3; qr++) {
+            for (let a = 0; a < 5; a++) {
+                if (!re.test(args[qr * 7 + (a + 9)]))
+                    throw new OperationError(
+                        "Switch R" + (qr + 1) + "-Q" + (a + 1) + " can only be set to blank, . or x"
+                    );
             }
         }
 
@@ -407,21 +425,20 @@ class Colossus extends Operation {
         // Q1,Q2,Q3,Q4,Q5,negate,counter1
         const qbusswitches = {
             condition: [
-                {Qswitches: [args[9], args[10], args[11], args[12], args[13]], Negate: args[14], Counter: args[15]},
-                {Qswitches: [args[16], args[17], args[18], args[19], args[20]], Negate: args[21], Counter: args[22]},
-                {Qswitches: [args[23], args[24], args[25], args[26], args[27]], Negate: args[28], Counter: args[29]}
+                { Qswitches: [args[9], args[10], args[11], args[12], args[13]], Negate: args[14], Counter: args[15] },
+                { Qswitches: [args[16], args[17], args[18], args[19], args[20]], Negate: args[21], Counter: args[22] },
+                { Qswitches: [args[23], args[24], args[25], args[26], args[27]], Negate: args[28], Counter: args[29] }
             ],
             condNegateAll: args[30],
             addition: [
-                {Qswitches: [args[32], args[33], args[34], args[35], args[36]], Equals: args[37], C1: args[38]}
+                { Qswitches: [args[32], args[33], args[34], args[35], args[36]], Equals: args[37], C1: args[38] }
             ],
             addNegateAll: args[39],
             totalMotor: args[40]
         };
 
         const settotal = parseInt(args[42], 10);
-        if (settotal < 0 || settotal > 9999)
-            throw new OperationError("Set Total must be between 0000 and 9999");
+        if (settotal < 0 || settotal > 9999) throw new OperationError("Set Total must be between 0000 and 9999");
 
         // null|fast|slow for each of S1-5,M1-2,X1-5
         const control = {
@@ -430,23 +447,32 @@ class Colossus extends Operation {
         };
 
         // Start positions
-        if (args[52]<1 || args[52]>43) throw new OperationError("Ψ1 start must be between 1 and 43");
-        if (args[53]<1 || args[53]>47) throw new OperationError("Ψ2 start must be between 1 and 47");
-        if (args[54]<1 || args[54]>51) throw new OperationError("Ψ3 start must be between 1 and 51");
-        if (args[55]<1 || args[55]>53) throw new OperationError("Ψ4 start must be between 1 and 53");
-        if (args[56]<1 || args[57]>59) throw new OperationError("Ψ5 start must be between 1 and 59");
-        if (args[51]<1 || args[51]>37) throw new OperationError("Μ37 start must be between 1 and 37");
-        if (args[50]<1 || args[50]>61) throw new OperationError("Μ61 start must be between 1 and 61");
-        if (args[45]<1 || args[45]>41) throw new OperationError("Χ1 start must be between 1 and 41");
-        if (args[46]<1 || args[46]>31) throw new OperationError("Χ2 start must be between 1 and 31");
-        if (args[47]<1 || args[47]>29) throw new OperationError("Χ3 start must be between 1 and 29");
-        if (args[48]<1 || args[48]>26) throw new OperationError("Χ4 start must be between 1 and 26");
-        if (args[49]<1 || args[49]>23) throw new OperationError("Χ5 start must be between 1 and 23");
+        if (args[52] < 1 || args[52] > 43) throw new OperationError("Ψ1 start must be between 1 and 43");
+        if (args[53] < 1 || args[53] > 47) throw new OperationError("Ψ2 start must be between 1 and 47");
+        if (args[54] < 1 || args[54] > 51) throw new OperationError("Ψ3 start must be between 1 and 51");
+        if (args[55] < 1 || args[55] > 53) throw new OperationError("Ψ4 start must be between 1 and 53");
+        if (args[56] < 1 || args[57] > 59) throw new OperationError("Ψ5 start must be between 1 and 59");
+        if (args[51] < 1 || args[51] > 37) throw new OperationError("Μ37 start must be between 1 and 37");
+        if (args[50] < 1 || args[50] > 61) throw new OperationError("Μ61 start must be between 1 and 61");
+        if (args[45] < 1 || args[45] > 41) throw new OperationError("Χ1 start must be between 1 and 41");
+        if (args[46] < 1 || args[46] > 31) throw new OperationError("Χ2 start must be between 1 and 31");
+        if (args[47] < 1 || args[47] > 29) throw new OperationError("Χ3 start must be between 1 and 29");
+        if (args[48] < 1 || args[48] > 26) throw new OperationError("Χ4 start must be between 1 and 26");
+        if (args[49] < 1 || args[49] > 23) throw new OperationError("Χ5 start must be between 1 and 23");
 
         const starts = {
-            X1: args[45], X2: args[46], X3: args[47], X4: args[48], X5: args[49],
-            M61: args[50], M37: args[51],
-            S1: args[52], S2: args[53], S3: args[54], S4: args[55], S5: args[56]
+            X1: args[45],
+            X2: args[46],
+            X3: args[47],
+            X4: args[48],
+            X5: args[49],
+            M61: args[50],
+            M37: args[51],
+            S1: args[52],
+            S2: args[53],
+            S3: args[54],
+            S4: args[55],
+            S5: args[56]
         };
 
         const colossus = new ColossusComputer(input, pattern, qbusin, qbusswitches, control, starts, settotal, limit);
@@ -463,7 +489,6 @@ class Colossus extends Operation {
      * @returns {Object[]}
      */
     selectProgram(progname, args) {
-
         // Basic Letter Count
         if (progname === "Letter Count") {
             // Set Conditional R1 : count every character into counter 1
@@ -571,7 +596,8 @@ class Colossus extends Operation {
         let html = "Colossus Printer\n\n";
         html += output.printout + "\n\n";
         html += "Colossus Counters\n\n";
-        html += "<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>C1</th>  <th>C2</th>  <th>C3</th>  <th>C4</th>  <th>C5</th></tr>\n";
+        html
+            += "<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>C1</th>  <th>C2</th>  <th>C3</th>  <th>C4</th>  <th>C5</th></tr>\n";
         html += "<tr>";
         for (const ct of output.counters) {
             html += `<td>${ct}</td>\n`;
@@ -580,7 +606,6 @@ class Colossus extends Operation {
         html += "</table>";
         return html;
     }
-
 }
 
 export default Colossus;

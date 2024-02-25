@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Rail Fence Cipher Encode operation
  */
 class RailFenceCipherEncode extends Operation {
-
     /**
      * RailFenceCipherEncode constructor
      */
@@ -61,14 +60,13 @@ class RailFenceCipherEncode extends Operation {
         const rows = new Array(key).fill("");
 
         for (let pos = 0; pos < plaintext.length; pos++) {
-            const rowIdx = key - 1 - Math.abs(cycle / 2 - (pos + offset) % cycle);
+            const rowIdx = key - 1 - Math.abs(cycle / 2 - ((pos + offset) % cycle));
 
             rows[rowIdx] += plaintext[pos];
         }
 
         return rows.join("").trim();
     }
-
 }
 
 export default RailFenceCipherEncode;

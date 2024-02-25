@@ -40,7 +40,6 @@ import File from "../../../src/node/File.mjs";
 global.File = File;
 
 TestRegister.addApiTests([
-
     it("ADD: toggleString argument", () => {
         const result = chef.ADD("sample input", {
             key: {
@@ -51,10 +50,9 @@ TestRegister.addApiTests([
         assert.equal(result.toString(), "\xe6\xd0\xda\xd5\x8c\xd0\x85\xe2\xe1\xdf\xe2\xd9");
     }),
 
-
     it("ADD: default option toggleString argument", () => {
         const result = chef.ADD(3, {
-            key: "4",
+            key: "4"
         });
         assert.strictEqual(result.toString(), "7");
     }),
@@ -73,13 +71,13 @@ TestRegister.addApiTests([
         const result = AESDecrypt("4a123af235a507bbc9d5871721d61b98504d569a9a5a7847e2d78315fec7", {
             key: {
                 string: "some longer key1",
-                option: "utf8",
+                option: "utf8"
             },
             iv: {
                 string: "some iv some iv1",
-                option: "utf8",
+                option: "utf8"
             },
-            mode: "OFB",
+            mode: "OFB"
         });
         assert.equal(result.toString(), "a slightly longer sampleinput?");
     }),
@@ -121,7 +119,7 @@ Tiger-128`;
         const result = chef.AND("Scot-free", {
             key: {
                 string: "Raining Cats and Dogs",
-                option: "utf8",
+                option: "utf8"
             }
         });
         assert.strictEqual(result.toString(), "Raid)fb A");
@@ -130,7 +128,6 @@ Tiger-128`;
     it("atBash Cipher", () => {
         const result = chef.atbashCipher("Happy as a Clam");
         assert.strictEqual(result.toString(), "Szkkb zh z Xozn");
-
     }),
 
     it("Bcrypt", async () => {
@@ -140,9 +137,9 @@ Tiger-128`;
         assert.equal(strResult.slice(0, 7), "$2a$10$");
     }),
 
-    it("bcryptCompare", async() => {
+    it("bcryptCompare", async () => {
         const result = await chef.bcryptCompare("Put a Sock In It", {
-            hash: "$2a$10$2rT4a3XnIecBsd1H33dMTuyYE1HJ1n9F.V2rjQtAH73rh1qvOf/ae",
+            hash: "$2a$10$2rT4a3XnIecBsd1H33dMTuyYE1HJ1n9F.V2rjQtAH73rh1qvOf/ae"
         });
         assert.strictEqual(result.toString(), "Match: Put a Sock In It");
     }),
@@ -158,14 +155,14 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
 
     it("bifid cipher decode", () => {
         const result = chef.bifidCipherDecode("Vhef Qnte Ke Xfhz Mxon Bmgf", {
-            keyword: "Alpha",
+            keyword: "Alpha"
         });
         assert.strictEqual(result.toString(), "What Goes Up Must Come Down");
     }),
 
     it("bifid cipher encode: string option", () => {
         const result = bifidCipherEncode("some input", {
-            keyword: "mykeyword",
+            keyword: "mykeyword"
         });
         assert.strictEqual(result.toString(), "nmhs zmsdo");
     }),
@@ -178,7 +175,7 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
     it("bitShiftRight: number and option", () => {
         const result = bitShiftRight("some bits to shift", {
             type: "Arithmetic shift",
-            amount: 1,
+            amount: 1
         });
         assert.strictEqual(result.toString(), "9762\u001014:9\u0010:7\u00109443:");
     }),
@@ -187,7 +184,7 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
         const result = chef.blowfishEncrypt("Fool's Gold", {
             key: {
                 string: "0011223344556677",
-                option: "hex",
+                option: "hex"
             },
             iv: {
                 string: "exparrot",
@@ -202,11 +199,11 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
         const result = chef.blowfishDecrypt("55a2838980078ffe1722b08d5fa1d481", {
             key: {
                 string: "0011223344556677",
-                option: "hex",
+                option: "hex"
             },
             iv: {
                 string: "exparrot",
-                option: "utf8",
+                option: "utf8"
             },
             mode: "CBC"
         });
@@ -214,20 +211,25 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
     }),
 
     it("BSON Serialise / Deserialise", () => {
-        const result = chef.BSONDeserialise(chef.BSONSerialise("{\"phrase\": \"Mouth-watering\"}"));
-        assert.strictEqual(result.toString(), `{
+        const result = chef.BSONDeserialise(chef.BSONSerialise('{"phrase": "Mouth-watering"}'));
+        assert.strictEqual(
+            result.toString(),
+            `{
   "phrase": "Mouth-watering"
-}`);
+}`
+        );
     }),
 
     it("Bzip2 Decompress", async () => {
-        const result = await chef.bzip2Decompress(chef.fromBase64("QlpoOTFBWSZTWUdQlt0AAAIVgEAAAQAmJAwAIAAxBkxA0A2pTL6U2CozxdyRThQkEdQlt0A="));
+        const result = await chef.bzip2Decompress(
+            chef.fromBase64("QlpoOTFBWSZTWUdQlt0AAAIVgEAAAQAmJAwAIAAxBkxA0A2pTL6U2CozxdyRThQkEdQlt0A=")
+        );
         assert.strictEqual(result.toString(), "Fit as a Fiddle");
     }),
 
     it("cartesianProduct: binary string", () => {
         const result = cartesianProduct("1:2\\n\\n3:4", {
-            itemDelimiter: ":",
+            itemDelimiter: ":"
         });
         assert.strictEqual(result.toString(), "(1,3):(1,4):(2,3):(2,4)");
     }),
@@ -235,7 +237,7 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
     it("Change IP format", () => {
         const result = chef.changeIPFormat("172.20.23.54", {
             inputFormat: "Dotted Decimal",
-            outputFormat: "Hex",
+            outputFormat: "Hex"
         });
         assert.strictEqual(result.toString(), "ac141736");
     }),
@@ -266,7 +268,7 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
     it("Convert data units", () => {
         const result = chef.convertDataUnits("12345", {
             inputUnits: "Bits (b)",
-            outputUnits: "Kilobytes (KB)",
+            outputUnits: "Kilobytes (KB)"
         });
         assert.strictEqual(result.toString(), "1.543125");
     }),
@@ -274,7 +276,7 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
     it("Convert distance", () => {
         const result = chef.convertDistance("1234567", {
             inputUnits: "Nanometres (nm)",
-            outputUnits: "Furlongs (fur)",
+            outputUnits: "Furlongs (fur)"
         });
         assert.strictEqual(result.toString(), "0.00000613699494949495");
     }),
@@ -282,7 +284,7 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
     it("Convert mass", () => {
         const result = chef.convertMass("123", {
             inputUnits: "Earth mass (M⊕)",
-            outputUnits: "Great Pyramid of Giza (6,000,000 tonnes)",
+            outputUnits: "Great Pyramid of Giza (6,000,000 tonnes)"
         });
         assert.strictEqual(result.toString(), "122429895000000000");
     }),
@@ -290,7 +292,7 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
     it("Convert speed", () => {
         const result = chef.convertSpeed("123", {
             inputUnits: "Lunar escape velocity",
-            outputUnits: "Jet airliner cruising speed",
+            outputUnits: "Jet airliner cruising speed"
         });
         assert.strictEqual(result.toString(), "1168.5");
     }),
@@ -299,7 +301,7 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
         const result = chef.countOccurrences("Talk the Talk", {
             searchString: {
                 string: "Tal",
-                option: "Simple string",
+                option: "Simple string"
             }
         });
         assert.strictEqual(result.toString(), "2");
@@ -332,14 +334,14 @@ width: 100%;
 color: white;
 }`;
         const result = CSSMinify(input, {
-            preserveComments: true,
+            preserveComments: true
         });
         assert.strictEqual(result.toString(), "header {// comment width: 100%;color: white;}");
     }),
 
     it("CSS Selector", () => {
         const result = chef.CSSSelector("<html><header><h1>Hello</h1></header></html>", {
-            cssSelector: "h1",
+            cssSelector: "h1"
         });
         assert.strictEqual(result.toString(), "<h1>Hello</h1>");
     }),
@@ -355,10 +357,10 @@ color: white;
 
     it("Decode text", () => {
         const encoded = chef.encodeText("Ugly Duckling", {
-            encoding: "UTF-16LE (1200)",
+            encoding: "UTF-16LE (1200)"
         });
         const result = chef.decodeText(encoded, {
-            encoding: "UTF-16LE (1200)",
+            encoding: "UTF-16LE (1200)"
         });
         assert.strictEqual(result.toString(), "Ugly Duckling");
     }),
@@ -367,12 +369,12 @@ color: white;
         const result = chef.deriveEVPKey("", {
             passphrase: {
                 string: "46 6c 65 61 20 4d 61 72 6b 65 74",
-                option: "Hex",
+                option: "Hex"
             },
             salt: {
                 string: "Market",
-                option: "utf8",
-            },
+                option: "utf8"
+            }
         });
         assert.strictEqual(result.toString(), "4930d5d200e80f18c96b5550d13c6af8");
     }),
@@ -381,7 +383,7 @@ color: white;
         const result = chef.derivePBKDF2Key("", {
             passphrase: {
                 string: "Jack of All Trades Master of None",
-                option: "utf8",
+                option: "utf8"
             },
             keySize: 256,
             iterations: 2,
@@ -398,13 +400,13 @@ color: white;
         const result = chef.DESDecrypt("713081c66db781c323965ba8f166fd8c230c3bb48504a913", {
             key: {
                 string: "onetwoth",
-                option: "utf8",
+                option: "utf8"
             },
             iv: {
                 string: "threetwo",
-                option: "utf8",
+                option: "utf8"
             },
-            mode: "ECB",
+            mode: "ECB"
         });
         assert.strictEqual(result.toString(), "Put a Sock In It");
     }),
@@ -413,13 +415,13 @@ color: white;
         const result = chef.DESEncrypt("Put a Sock In It", {
             key: {
                 string: "onetwoth",
-                option: "utf8",
+                option: "utf8"
             },
             iv: {
                 string: "threetwo",
-                option: "utf8",
+                option: "utf8"
             },
-            mode: "ECB",
+            mode: "ECB"
         });
         assert.strictEqual(result.toString(), "713081c66db781c323965ba8f166fd8c230c3bb48504a913");
     }),
@@ -455,7 +457,7 @@ color: white;
             escapeLevel: "Everything",
             JSONCompatible: false,
             ES6Compatible: true,
-            uppercaseHex: true,
+            uppercaseHex: true
         });
         assert.strictEqual(result.toString(), "\\x4B\\x6E\\x6F\\x77\\x20\\x74\\x68\\x65\\x20\\x52\\x6F\\x70\\x65\\x73");
     }),
@@ -466,37 +468,44 @@ color: white;
 
     it("Expand alphabet range", () => {
         assert.strictEqual(
-            chef.expandAlphabetRange("Fight Fire With Fire", {delimiter: "t"}).toString(),
-            "Ftitgthttt tFtitrtet tWtitttht tFtitrte");
+            chef.expandAlphabetRange("Fight Fire With Fire", { delimiter: "t" }).toString(),
+            "Ftitgthttt tFtitrtet tWtitttht tFtitrte"
+        );
     }),
 
     it("Extract dates", () => {
-        assert.strictEqual(chef.extractDates("Don't Look a Gift Horse In The Mouth 01/02/1992").toString(), "01/02/1992");
+        assert.strictEqual(
+            chef.extractDates("Don't Look a Gift Horse In The Mouth 01/02/1992").toString(),
+            "01/02/1992"
+        );
     }),
 
     it("Filter", () => {
         const result = chef.filter(
             `I Smell a Rat
 Every Cloud Has a Silver Lining
-Top Drawer`, {
-                regex: "Every",
-            });
+Top Drawer`,
+            {
+                regex: "Every"
+            }
+        );
         const expected = "Every Cloud Has a Silver Lining";
         assert.strictEqual(result.toString(), expected);
     }),
 
     it("Find / Replace", () => {
         assert.strictEqual(
-            chef.findReplace(
-                "Curiosity Killed The Cat",
-                {
+            chef
+                .findReplace("Curiosity Killed The Cat", {
                     find: {
                         string: "l",
-                        option: "Regex",
+                        option: "Regex"
                     },
-                    replace: "s",
-                }).toString(),
-            "Curiosity Kissed The Cat");
+                    replace: "s"
+                })
+                .toString(),
+            "Curiosity Kissed The Cat"
+        );
     }),
 
     it("Fletcher8 Checksum", () => {
@@ -517,17 +526,18 @@ Top Drawer`, {
 
     it("Frequency distribution", () => {
         const result = chef.frequencyDistribution("Don't Count Your Chickens Before They Hatch");
-        const expected = "{\"dataLength\":43,\"percentages\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13.953488372093023,0,0,0,0,0,0,2.3255813953488373,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2.3255813953488373,4.651162790697675,2.3255813953488373,0,0,0,2.3255813953488373,0,0,0,0,0,0,0,0,0,0,0,2.3255813953488373,0,0,0,0,2.3255813953488373,0,0,0,0,0,0,0,2.3255813953488373,0,4.651162790697675,0,9.30232558139535,2.3255813953488373,0,6.976744186046512,2.3255813953488373,0,2.3255813953488373,0,0,6.976744186046512,9.30232558139535,0,0,4.651162790697675,2.3255813953488373,6.976744186046512,4.651162790697675,0,0,0,2.3255813953488373,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"distribution\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,2,0,4,1,0,3,1,0,1,0,0,3,4,0,0,2,1,3,2,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"bytesRepresented\":22}";
+        const expected
+            = '{"dataLength":43,"percentages":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13.953488372093023,0,0,0,0,0,0,2.3255813953488373,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2.3255813953488373,4.651162790697675,2.3255813953488373,0,0,0,2.3255813953488373,0,0,0,0,0,0,0,0,0,0,0,2.3255813953488373,0,0,0,0,2.3255813953488373,0,0,0,0,0,0,0,2.3255813953488373,0,4.651162790697675,0,9.30232558139535,2.3255813953488373,0,6.976744186046512,2.3255813953488373,0,2.3255813953488373,0,0,6.976744186046512,9.30232558139535,0,0,4.651162790697675,2.3255813953488373,6.976744186046512,4.651162790697675,0,0,0,2.3255813953488373,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"distribution":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,2,0,4,1,0,3,1,0,1,0,0,3,4,0,0,2,1,3,2,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"bytesRepresented":22}';
         // Whacky formatting, but the data is all there
         assert.strictEqual(result.toString().replace(/\r?\n|\r|\s/g, ""), expected);
     }),
 
     it("From base", () => {
-        assert.strictEqual(chef.fromBase("11", {radix: 13}).toString(), "14");
+        assert.strictEqual(chef.fromBase("11", { radix: 13 }).toString(), "14");
     }),
 
     it("From BCD", () => {
-        assert.strictEqual(chef.fromBCD("1143", { inputFormat: "Raw", scheme: "7 4 2 1"}).toString(), "31313433");
+        assert.strictEqual(chef.fromBCD("1143", { inputFormat: "Raw", scheme: "7 4 2 1" }).toString(), "31313433");
     }),
 
     it("From binary", () => {
@@ -535,7 +545,10 @@ Top Drawer`, {
     }),
 
     it("From Charcode", () => {
-        assert.strictEqual(chef.fromCharcode("4c 6f 6e 67 20 49 6e 20 54 68 65 20 54 6f 6f 74 68 0a").toString(), "Long In The Tooth\n");
+        assert.strictEqual(
+            chef.fromCharcode("4c 6f 6e 67 20 49 6e 20 54 68 65 20 54 6f 6f 74 68 0a").toString(),
+            "Long In The Tooth\n"
+        );
     }),
 
     it("From decimal", () => {
@@ -563,7 +576,10 @@ Top Drawer`, {
     }),
 
     it("From octal", () => {
-        assert.strictEqual(chef.fromOctal("113 156 157 167 40 164 150 145 40 122 157 160 145 163").toString(), "Know the Ropes");
+        assert.strictEqual(
+            chef.fromOctal("113 156 157 167 40 164 150 145 40 122 157 160 145 163").toString(),
+            "Know the Ropes"
+        );
     }),
 
     it("To, From punycode", () => {
@@ -576,7 +592,7 @@ Top Drawer`, {
 
     it("Generate HOTP", () => {
         const result = chef.generateHOTP("Cut The Mustard", {
-            name: "colonel",
+            name: "colonel"
         });
         const expected = `URI: otpauth://hotp/colonel?secret=IN2XIICUNBSSATLVON2GC4TE
 
@@ -586,7 +602,7 @@ Password: 034148`;
 
     it("Generate PGP Key Pair", async () => {
         const result = await chef.generatePGPKeyPair("Back To the Drawing Board", {
-            keyType: "ECC-256",
+            keyType: "ECC-256"
         });
         assert.strictEqual(result.toString().substr(0, 37), "-----BEGIN PGP PRIVATE KEY BLOCK-----");
     }),
@@ -604,7 +620,8 @@ Password: 034148`;
     it("Hex to Object Identifier", () => {
         assert.strictEqual(
             chef.hexToObjectIdentifier(chef.toHex("You Can't Teach an Old Dog New Tricks")).toString(),
-            "2.9.111.117.32.67.97.110.39.116.32.84.101.97.99.104.32.97.110.32.79.108.100.32.68.111.103.32.78.101.119.32.84.114.105.99.107.115");
+            "2.9.111.117.32.67.97.110.39.116.32.84.101.97.99.104.32.97.110.32.79.108.100.32.68.111.103.32.78.101.119.32.84.114.105.99.107.115"
+        );
     }),
 
     it("Hex to PEM", () => {
@@ -616,35 +633,48 @@ WWFkYSBZYWRh\r
     }),
 
     it("HMAC", () => {
-        assert.strictEqual(chef.HMAC("On Cloud Nine", {key: "idea"}).toString(), "e15c268b4ee755c9e52db094ed50add7");
+        assert.strictEqual(chef.HMAC("On Cloud Nine", { key: "idea" }).toString(), "e15c268b4ee755c9e52db094ed50add7");
     }),
 
     it("JPathExpression", () => {
-        assert.strictEqual(chef.JPathExpression("{\"key\" : \"value\"}", {query: "$.key"}).toString(), "\"value\"");
+        assert.strictEqual(chef.JPathExpression('{"key" : "value"}', { query: "$.key" }).toString(), '"value"');
     }),
 
     it("JSON Beautify", () => {
         assert.strictEqual(
-            chef.JSONBeautify("{\"key\" : \"value\"}").toString(),
+            chef.JSONBeautify('{"key" : "value"}').toString(),
             `{
     "key": "value"
-}`);
+}`
+        );
     }),
 
     it("Keccak", () => {
-        assert.strictEqual(chef.keccak("Flea Market").toString(), "c2a06880b19e453ee5440e8bd4c2024bedc15a6630096aa3f609acfd2b8f15f27cd293e1cc73933e81432269129ce954a6138889ce87831179d55dcff1cc7587");
+        assert.strictEqual(
+            chef.keccak("Flea Market").toString(),
+            "c2a06880b19e453ee5440e8bd4c2024bedc15a6630096aa3f609acfd2b8f15f27cd293e1cc73933e81432269129ce954a6138889ce87831179d55dcff1cc7587"
+        );
     }),
 
     it("LZNT1 Decompress", () => {
-        assert.strictEqual(chef.LZNT1Decompress("\x1a\xb0\x00compress\x00edtestda\x04ta\x07\x88alot").toString(), "compressedtestdatacompressedalot");
+        assert.strictEqual(
+            chef.LZNT1Decompress("\x1a\xb0\x00compress\x00edtestda\x04ta\x07\x88alot").toString(),
+            "compressedtestdatacompressedalot"
+        );
     }),
 
     it("MD6", () => {
-        assert.strictEqual(chef.MD6("Head Over Heels", {key: "arty"}).toString(), "d8f7fe4931fbaa37316f76283d5f615f50ddd54afdc794b61da522556aee99ad");
+        assert.strictEqual(
+            chef.MD6("Head Over Heels", { key: "arty" }).toString(),
+            "d8f7fe4931fbaa37316f76283d5f615f50ddd54afdc794b61da522556aee99ad"
+        );
     }),
 
     it("Parse ASN.1 Hex string", () => {
-        assert.strictEqual(chef.parseASN1HexString(chef.toHex("Mouth-watering")).toString(), "UNKNOWN(77) 7574682d7761746572696e67\n");
+        assert.strictEqual(
+            chef.parseASN1HexString(chef.toHex("Mouth-watering")).toString(),
+            "UNKNOWN(77) 7574682d7761746572696e67\n"
+        );
     }),
 
     it("Parse DateTime", () => {
@@ -687,7 +717,9 @@ Arguments:
     }),
 
     it("Parse user agent", () => {
-        const result = chef.parseUserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 ");
+        const result = chef.parseUserAgent(
+            "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 "
+        );
         const expected = `Browser
     Name: Firefox
     Version: 47.0
@@ -798,33 +830,55 @@ pCGTErs=
         const message = "A Fool and His Money are Soon Parted";
 
         const encrypted = await chef.PGPEncrypt(message, {
-            publicKeyOfRecipient: pbkey,
+            publicKeyOfRecipient: pbkey
         });
         const result = await chef.PGPDecrypt(encrypted, {
-            privateKeyOfRecipient: privateKey,
+            privateKeyOfRecipient: privateKey
         });
 
         assert.strictEqual(result.toString(), message);
     }),
 
     it("Raw deflate", () => {
-        assert.strictEqual(chef.rawInflate(chef.rawDeflate("Like Father Like Son", { compressionType: "Fixed Huffman Coding"})).toString(), "Like Father Like Son");
+        assert.strictEqual(
+            chef
+                .rawInflate(chef.rawDeflate("Like Father Like Son", { compressionType: "Fixed Huffman Coding" }))
+                .toString(),
+            "Like Father Like Son"
+        );
     }),
 
     it("RC4", () => {
         assert.strictEqual(
-            chef.RC4("Go Out On a Limb", {passphrase: {string: "Under Your Nose", option: "UTF8"}, inputFormat: "UTF8", outputFormat: "Hex"}).toString(),
-            "7d17e60d9bc94b7f4095851c729e69a2");
+            chef
+                .RC4("Go Out On a Limb", {
+                    passphrase: { string: "Under Your Nose", option: "UTF8" },
+                    inputFormat: "UTF8",
+                    outputFormat: "Hex"
+                })
+                .toString(),
+            "7d17e60d9bc94b7f4095851c729e69a2"
+        );
     }),
 
     it("RC4 Drop", () => {
         assert.strictEqual(
-            chef.RC4Drop("Go Out On a Limb", {passphrase: {string: "Under Your Nose", option: "UTF8"}, inputFormat: "UTF8", outputFormat: "Hex"}).toString(),
-            "b85cb1c4ed6bed8f260ab92829bba942");
+            chef
+                .RC4Drop("Go Out On a Limb", {
+                    passphrase: { string: "Under Your Nose", option: "UTF8" },
+                    inputFormat: "UTF8",
+                    outputFormat: "Hex"
+                })
+                .toString(),
+            "b85cb1c4ed6bed8f260ab92829bba942"
+        );
     }),
 
     it("Regular Expression", () => {
-        assert.strictEqual(chef.regularExpression("Wouldn't Harm a Fly", {regex: "\\'[a-z]"}).toString(), "Wouldn't Harm a Fly");
+        assert.strictEqual(
+            chef.regularExpression("Wouldn't Harm a Fly", { regex: "\\'[a-z]" }).toString(),
+            "Wouldn't Harm a Fly"
+        );
     }),
 
     it("Remove EXIF", () => {
@@ -840,26 +894,30 @@ pCGTErs=
 
     it("Scrypt", () => {
         assert.strictEqual(
-            chef.scrypt("Playing For Keeps", {salt: {string: "salty", option: "Hex"}}).toString(),
-            "5446b6d86d88515894a163201765bceed0bc39610b1506cdc4d939ffc638bc46e051bce756e2865165d89d955a43a7eb5504502567dea8bfc9e7d49aaa894c07");
+            chef.scrypt("Playing For Keeps", { salt: { string: "salty", option: "Hex" } }).toString(),
+            "5446b6d86d88515894a163201765bceed0bc39610b1506cdc4d939ffc638bc46e051bce756e2865165d89d955a43a7eb5504502567dea8bfc9e7d49aaa894c07"
+        );
     }),
 
     it("SHA3", () => {
         assert.strictEqual(
             chef.SHA3("benign gravel").toString(),
-            "2b1e36e0dbe151a89887be08da3bad141908cce62327f678161bcf058627e87abe57e3c5fce6581678714e6705a207acbd5c1f37f7a812280bc2cc558f00bed9");
+            "2b1e36e0dbe151a89887be08da3bad141908cce62327f678161bcf058627e87abe57e3c5fce6581678714e6705a207acbd5c1f37f7a812280bc2cc558f00bed9"
+        );
     }),
 
     it("Shake", () => {
         assert.strictEqual(
             chef.shake("murderous bloodshed").toString(),
-            "b79b3bb88099330bc6a15122f8dfaededf57a33b51c748d5a94e8122ff18d21e12f83412926b7e4a77a85ba6f36aa4841685e78296036337175e40096b5ac000");
+            "b79b3bb88099330bc6a15122f8dfaededf57a33b51c748d5a94e8122ff18d21e12f83412926b7e4a77a85ba6f36aa4841685e78296036337175e40096b5ac000"
+        );
     }),
 
     it("Snefru", () => {
         assert.strictEqual(
-            chef.snefru("demeaning milestone", {size: 256, rounds: 8}).toString(),
-            "a671b48770fe073ce49e9259cc2f47d345a53712639f8ae23c5ad3fec19540a5");
+            chef.snefru("demeaning milestone", { size: 256, rounds: 8 }).toString(),
+            "a671b48770fe073ce49e9259cc2f47d345a53712639f8ae23c5ad3fec19540a5"
+        );
     }),
 
     it("SQL Beautify", () => {
@@ -874,13 +932,11 @@ FROM STATS;`;
     }),
 
     it("SSDEEP", () => {
-        assert.strictEqual(
-            chef.SSDEEP("shotgun tyranny snugly").toString(),
-            "3:DLIXzMQCJc:XERKc");
+        assert.strictEqual(chef.SSDEEP("shotgun tyranny snugly").toString(), "3:DLIXzMQCJc:XERKc");
     }),
 
     it("strings", () => {
-        const result = chef.strings("smothering ampersand abreast", {displayTotal: true});
+        const result = chef.strings("smothering ampersand abreast", { displayTotal: true });
         const expected = `Total found: 1
 
 smothering ampersand abreast`;
@@ -891,14 +947,14 @@ smothering ampersand abreast`;
         const result = toBase64("some input", {
             alphabet: {
                 value: "0-9A-W+/a-zXYZ="
-            },
+            }
         });
         assert.strictEqual(result.toString(), "StXkPI1gRe1sT0==");
     }),
 
     it("toBase64: editableOptions key is value", () => {
         const result = toBase64("some input", {
-            alphabet: "0-9A-W+/a-zXYZ=",
+            alphabet: "0-9A-W+/a-zXYZ="
         });
         assert.strictEqual(result.toString(), "StXkPI1gRe1sT0==");
     }),
@@ -918,7 +974,7 @@ smothering ampersand abreast`;
 
     it("toHex: accepts args", () => {
         const result = toHex("some input", {
-            delimiter: "Colon",
+            delimiter: "Colon"
         });
         assert.strictEqual(result.toString(), "73:6f:6d:65:20:69:6e:70:75:74");
     }),
@@ -940,20 +996,34 @@ smothering ampersand abreast`;
     }),
 
     it("Translate DateTime format", () => {
-        assert.strictEqual(chef.translateDateTimeFormat("01/04/1999 22:33:01").toString(), "Thursday 1st April 1999 22:33:01 +00:00 UTC");
+        assert.strictEqual(
+            chef.translateDateTimeFormat("01/04/1999 22:33:01").toString(),
+            "Thursday 1st April 1999 22:33:01 +00:00 UTC"
+        );
     }),
 
     it("Triple DES encrypt / decrypt", () => {
         assert.strictEqual(
-            chef.tripleDESDecrypt(
-                chef.tripleDESEncrypt("Destroy Money", {
-                    key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"},
-                    iv: {string: "00 00 00 00 00 00 00 00", option: "Hex"}}),
-                {
-                    key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"},
-                    iv: {string: "00 00 00 00 00 00 00 00", option: "Hex"}
-                }).toString(),
-            "Destroy Money");
+            chef
+                .tripleDESDecrypt(
+                    chef.tripleDESEncrypt("Destroy Money", {
+                        key: {
+                            string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34",
+                            option: "Hex"
+                        },
+                        iv: { string: "00 00 00 00 00 00 00 00", option: "Hex" }
+                    }),
+                    {
+                        key: {
+                            string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34",
+                            option: "Hex"
+                        },
+                        iv: { string: "00 00 00 00 00 00 00 00", option: "Hex" }
+                    }
+                )
+                .toString(),
+            "Destroy Money"
+        );
     }),
 
     it("UNIX Timestamp to Windows Filetime", () => {
@@ -965,34 +1035,51 @@ smothering ampersand abreast`;
             chef.XMLBeautify("<contact-info><company>abc</company></contact-info>").toString(),
             `<contact-info>
 \\t<company>abc</company>
-</contact-info>`);
+</contact-info>`
+        );
     }),
 
     it("XOR: toggleString with default option", () => {
-        assert.strictEqual(chef.XOR("fe023da5", {
-            key: "73 6f 6d 65"
-        }).toString(),
-        "\u0015\n]W@\u000b\fP");
+        assert.strictEqual(
+            chef
+                .XOR("fe023da5", {
+                    key: "73 6f 6d 65"
+                })
+                .toString(),
+            "\u0015\n]W@\u000b\fP"
+        );
     }),
 
     it("XOR: toggleString with custom option", () => {
-        assert.strictEqual(chef.XOR("fe023da5", {
-            key: {
-                string: "73 6f 6d 65",
-                option: "utf8",
-            }
-        }).toString(),
-        "QV\u0010\u0004UDWQ");
+        assert.strictEqual(
+            chef
+                .XOR("fe023da5", {
+                    key: {
+                        string: "73 6f 6d 65",
+                        option: "utf8"
+                    }
+                })
+                .toString(),
+            "QV\u0010\u0004UDWQ"
+        );
     }),
 
     it("XPath expression", () => {
         assert.strictEqual(
-            chef.XPathExpression("<contact-info><company>abc</company></contact-info>", {xPath: "contact-info/company"}).toString(),
-            "<company>abc</company>");
+            chef
+                .XPathExpression("<contact-info><company>abc</company></contact-info>", {
+                    xPath: "contact-info/company"
+                })
+                .toString(),
+            "<company>abc</company>"
+        );
     }),
 
     it("Zlib deflate / inflate", () => {
-        assert.strictEqual(chef.zlibInflate(chef.zlibDeflate("cut homer wile rooky grits dizen")).toString(), "cut homer wile rooky grits dizen");
+        assert.strictEqual(
+            chef.zlibInflate(chef.zlibDeflate("cut homer wile rooky grits dizen")).toString(),
+            "cut homer wile rooky grits dizen"
+        );
     }),
 
     it("extract EXIF", () => {
@@ -1006,7 +1093,8 @@ YResolution: 72
 ResolutionUnit: 2
 ColorSpace: 1
 ExifImageWidth: 57
-ExifImageHeight: 57`);
+ExifImageHeight: 57`
+        );
     }),
 
     it("Tar", () => {
@@ -1020,7 +1108,7 @@ ExifImageHeight: 57`);
 
     it("Untar", () => {
         const tarred = chef.tar("some file content", {
-            filename: "filename.txt",
+            filename: "filename.txt"
         });
         const untarred = chef.untar(tarred);
         assert.strictEqual(untarred.type, 8);
@@ -1033,7 +1121,7 @@ ExifImageHeight: 57`);
         const zipped = chef.zip("some file content", {
             filename: "sample.zip",
             comment: "added",
-            operatingSystem: "Unix",
+            operatingSystem: "Unix"
         });
 
         assert.strictEqual(zipped.type, 7);
@@ -1044,7 +1132,7 @@ ExifImageHeight: 57`);
     it("Unzip", () => {
         const zipped = chef.zip("some file content", {
             filename: "zipped.zip",
-            comment: "zippy",
+            comment: "zippy"
         });
         const unzipped = chef.unzip(zipped);
 
@@ -1055,10 +1143,10 @@ ExifImageHeight: 57`);
 
     it("Unzip with password", () => {
         const zipped = chef.zip("some content", {
-            password: "abcd",
+            password: "abcd"
         });
         const unzipped = chef.unzip(zipped, {
-            password: "abcd",
+            password: "abcd"
         });
 
         assert.equal(unzipped.value[0].data, "some content");
@@ -1066,7 +1154,8 @@ ExifImageHeight: 57`);
 
     it("YARA Rule Matching", async () => {
         const input = "foobar foobar bar foo foobar";
-        const output = "Rule \"foo\" matches (4 times):\nPos 0, length 3, identifier $re1, data: \"foo\"\nPos 7, length 3, identifier $re1, data: \"foo\"\nPos 18, length 3, identifier $re1, data: \"foo\"\nPos 22, length 3, identifier $re1, data: \"foo\"\nRule \"bar\" matches (4 times):\nPos 3, length 3, identifier $re1, data: \"bar\"\nPos 10, length 3, identifier $re1, data: \"bar\"\nPos 14, length 3, identifier $re1, data: \"bar\"\nPos 25, length 3, identifier $re1, data: \"bar\"\n";
+        const output
+            = 'Rule "foo" matches (4 times):\nPos 0, length 3, identifier $re1, data: "foo"\nPos 7, length 3, identifier $re1, data: "foo"\nPos 18, length 3, identifier $re1, data: "foo"\nPos 22, length 3, identifier $re1, data: "foo"\nRule "bar" matches (4 times):\nPos 3, length 3, identifier $re1, data: "bar"\nPos 10, length 3, identifier $re1, data: "bar"\nPos 14, length 3, identifier $re1, data: "bar"\nPos 25, length 3, identifier $re1, data: "bar"\n';
 
         const res = await chef.YARARules(input, {
             rules: "rule foo {strings: $re1 = /foo/ condition: $re1} rule bar {strings: $re1 = /bar/ condition: $re1}",
@@ -1079,16 +1168,17 @@ ExifImageHeight: 57`);
     }),
 
     it("performs MAGIC", async () => {
-        const input = "WUagwsiae6mP8gNtCCLUFpCpCB26RmBDoDD8PacdAmzAzBVjkK2QstFXaKhpC6iUS7RHqXrJtFisoRSgoJ4whjm1arm864qaNq4RcfUmLHrcsAaZc5TXCYifNdgS83gDeejGX46gaiMyuBV6EskHt1scgJ88x2tNSotQDwbGY1mmCob2ARGFvCKYNqiN9ipMq1ZU1mgkdbNuGcb76aRtYWhCGUc8g93UJudhb8htsheZnwTpgqhx83SVJSZXMXUjJT2zmpC7uXWtumqokbdSi88YtkWDAc1Toouh2oH4D4ddmNKJWUDpMwmngUmK14xwmomccPQE9hM172APnSqwxdKQ172RkcAsysnmj5gGtRmVNNh2s359wr6mS2QRP";
+        const input
+            = "WUagwsiae6mP8gNtCCLUFpCpCB26RmBDoDD8PacdAmzAzBVjkK2QstFXaKhpC6iUS7RHqXrJtFisoRSgoJ4whjm1arm864qaNq4RcfUmLHrcsAaZc5TXCYifNdgS83gDeejGX46gaiMyuBV6EskHt1scgJ88x2tNSotQDwbGY1mmCob2ARGFvCKYNqiN9ipMq1ZU1mgkdbNuGcb76aRtYWhCGUc8g93UJudhb8htsheZnwTpgqhx83SVJSZXMXUjJT2zmpC7uXWtumqokbdSi88YtkWDAc1Toouh2oH4D4ddmNKJWUDpMwmngUmK14xwmomccPQE9hM172APnSqwxdKQ172RkcAsysnmj5gGtRmVNNh2s359wr6mS2QRP";
         const depth = 1;
 
         const res = await chef.magic(input, {
-            depth,
+            depth
         });
 
         // assert against the structure of the output, rather than the values.
         assert.strictEqual(res.value.length, depth + 1);
-        res.value.forEach(row => {
+        res.value.forEach((row) => {
             assert.ok(row.recipe);
             assert.ok(row.data);
             assert.ok(row.languageScores);
@@ -1098,40 +1188,63 @@ ExifImageHeight: 57`);
             assert.ok(Object.prototype.hasOwnProperty.call(row, "useful"));
             assert.ok(Object.prototype.hasOwnProperty.call(row, "matchesCrib"));
 
-            row.recipe.forEach(item => {
-                assert.ok(Object.prototype.hasOwnProperty.call(item, "op"),  `No 'op' property in item ${item}`);
+            row.recipe.forEach((item) => {
+                assert.ok(Object.prototype.hasOwnProperty.call(item, "op"), `No 'op' property in item ${item}`);
                 assert.strictEqual(typeof item.op, "string");
-                assert.ok(Object.prototype.hasOwnProperty.call(item, "args"),  `No 'args' property in item ${item}`);
+                assert.ok(Object.prototype.hasOwnProperty.call(item, "args"), `No 'args' property in item ${item}`);
                 assert.ok(Array.isArray(item.args));
             });
 
-            row.languageScores.forEach(score => {
-                assert.ok(Object.prototype.hasOwnProperty.call(score, "lang"), `No 'lang' property in languageScore ${score}`);
+            row.languageScores.forEach((score) => {
+                assert.ok(
+                    Object.prototype.hasOwnProperty.call(score, "lang"),
+                    `No 'lang' property in languageScore ${score}`
+                );
                 assert.strictEqual(typeof score.lang, "string");
-                assert.ok(Object.prototype.hasOwnProperty.call(score, "score"),  `No 'score' property in languageScore ${score}`);
+                assert.ok(
+                    Object.prototype.hasOwnProperty.call(score, "score"),
+                    `No 'score' property in languageScore ${score}`
+                );
                 assert.strictEqual(typeof score.score, "number");
-                assert.ok(Object.prototype.hasOwnProperty.call(score, "probability"),  `No 'probability' property in languageScore ${score}`);
+                assert.ok(
+                    Object.prototype.hasOwnProperty.call(score, "probability"),
+                    `No 'probability' property in languageScore ${score}`
+                );
                 assert.strictEqual(typeof score.probability, "number");
             });
 
-            row.matchingOps.forEach(op => {
-                assert.ok(Object.prototype.hasOwnProperty.call(op, "op"), `No 'op' property in matchingOp ${JSON.stringify(op)}`);
+            row.matchingOps.forEach((op) => {
+                assert.ok(
+                    Object.prototype.hasOwnProperty.call(op, "op"),
+                    `No 'op' property in matchingOp ${JSON.stringify(op)}`
+                );
                 assert.strictEqual(typeof op.op, "string");
-                assert.ok(Object.prototype.hasOwnProperty.call(op, "pattern"), `No 'pattern' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ok(
+                    Object.prototype.hasOwnProperty.call(op, "pattern"),
+                    `No 'pattern' property in matchingOp ${JSON.stringify(op)}`
+                );
                 assert.ok(op.pattern instanceof RegExp);
-                assert.ok(Object.prototype.hasOwnProperty.call(op, "args"), `No 'args' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ok(
+                    Object.prototype.hasOwnProperty.call(op, "args"),
+                    `No 'args' property in matchingOp ${JSON.stringify(op)}`
+                );
                 assert.ok(Array.isArray(op.args));
-                assert.ok(Object.prototype.hasOwnProperty.call(op, "useful"), `No 'useful' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ok(
+                    Object.prototype.hasOwnProperty.call(op, "useful"),
+                    `No 'useful' property in matchingOp ${JSON.stringify(op)}`
+                );
                 assert.ifError(op.useful); // Expect this to be undefined
-                assert.ok(Object.prototype.hasOwnProperty.call(op, "entropyRange"), `No 'entropyRange' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ok(
+                    Object.prototype.hasOwnProperty.call(op, "entropyRange"),
+                    `No 'entropyRange' property in matchingOp ${JSON.stringify(op)}`
+                );
                 assert.ifError(op.entropyRange); // Expect this to be undefined
-                assert.ok(Object.prototype.hasOwnProperty.call(op, "output"), `No 'output' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ok(
+                    Object.prototype.hasOwnProperty.call(op, "output"),
+                    `No 'output' property in matchingOp ${JSON.stringify(op)}`
+                );
                 assert.ifError(op.output); // Expect this to be undefined
             });
         });
-
-    }),
-
-
+    })
 ]);
-

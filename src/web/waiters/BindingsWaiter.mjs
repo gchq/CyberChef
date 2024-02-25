@@ -8,7 +8,6 @@
  * Waiter to handle keybindings to CyberChef functions (i.e. Bake, Step, Save, Load etc.)
  */
 class BindingsWaiter {
-
     /**
      * BindingsWaiter constructor.
      *
@@ -19,7 +18,6 @@ class BindingsWaiter {
         this.app = app;
         this.manager = manager;
     }
-
 
     /**
      * Handler for all keydown events
@@ -49,7 +47,9 @@ class BindingsWaiter {
                 case "Period": // Focus next operation
                     e.preventDefault();
                     try {
-                        elem = document.activeElement.closest(".operation") || document.querySelector("#rec-list .operation");
+                        elem
+                            = document.activeElement.closest(".operation")
+                            || document.querySelector("#rec-list .operation");
                         if (elem.parentNode.lastChild === elem) {
                             // If operation is last in recipe, loop around to the top operation's first argument
                             elem.parentNode.firstChild.querySelectorAll(".arg")[0].focus();
@@ -137,7 +137,8 @@ class BindingsWaiter {
                     this.manager.input.changeTabRight();
                     break;
                 default:
-                    if (e.code.match(/Digit[0-9]/g)) { // Select nth operation
+                    if (e.code.match(/Digit[0-9]/g)) {
+                        // Select nth operation
                         e.preventDefault();
                         try {
                             // Select the first argument of the operation corresponding to the number pressed
@@ -157,7 +158,6 @@ class BindingsWaiter {
             }
         }
     }
-
 
     /**
      * Updates keybinding list when metaKey option is toggled
@@ -292,17 +292,14 @@ class BindingsWaiter {
         const helpText = el.getAttribute("data-help");
         let helpTitle = el.getAttribute("data-help-title");
 
-        if (helpTitle)
-            helpTitle = "<span class='text-muted'>Help topic:</span> " + helpTitle;
-        else
-            helpTitle = "<span class='text-muted'>Help topic</span>";
+        if (helpTitle) helpTitle = "<span class='text-muted'>Help topic:</span> " + helpTitle;
+        else helpTitle = "<span class='text-muted'>Help topic</span>";
 
         document.querySelector("#help-modal .modal-body").innerHTML = helpText;
         document.querySelector("#help-modal #help-title").innerHTML = helpTitle;
 
         $("#help-modal").modal();
     }
-
 }
 
 export default BindingsWaiter;

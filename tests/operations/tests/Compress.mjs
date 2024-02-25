@@ -21,7 +21,7 @@ TestRegister.addTests([
                 "op": "Bzip2 Decompress",
                 "args": []
             }
-        ],
+        ]
     },
     {
         name: "LZMA compress & decompress",
@@ -36,8 +36,8 @@ TestRegister.addTests([
             {
                 "op": "LZMA Decompress",
                 "args": []
-            },
-        ],
+            }
+        ]
     },
     {
         name: "LZMA decompress: binary",
@@ -57,7 +57,7 @@ TestRegister.addTests([
                 "op": "To Hex",
                 "args": ["Space", 0]
             }
-        ],
+        ]
     },
     {
         name: "LZMA decompress: string",
@@ -73,7 +73,7 @@ TestRegister.addTests([
                 "op": "LZMA Decompress",
                 "args": []
             }
-        ],
+        ]
     },
     {
         name: "LZ4 Compress",
@@ -88,7 +88,7 @@ TestRegister.addTests([
                 "op": "To Hex",
                 "args": ["None", 0]
             }
-        ],
+        ]
     },
     {
         name: "LZ4 Decompress",
@@ -103,6 +103,6 @@ TestRegister.addTests([
                 "op": "LZ4 Decompress",
                 "args": []
             }
-        ],
-    },
+        ]
+    }
 ]);

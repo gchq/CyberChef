@@ -17,7 +17,7 @@ TestRegister.addTests([
                 "op": "LZString Compress",
                 "args": ["Base64"]
             }
-        ],
+        ]
     },
     {
         name: "LZString Decompress From Base64",
@@ -28,6 +28,6 @@ TestRegister.addTests([
                 "op": "LZString Decompress",
                 "args": ["Base64"]
             }
-        ],
+        ]
     }
 ]);

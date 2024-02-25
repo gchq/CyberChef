@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Drop bytes operation
  */
 class DropBytes extends Operation {
-
     /**
      * DropBytes constructor
      */
@@ -19,7 +18,8 @@ class DropBytes extends Operation {
 
         this.name = "Drop bytes";
         this.module = "Default";
-        this.description = "Cuts a slice of the specified number of bytes out of the data. Negative values are allowed.";
+        this.description
+            = "Cuts a slice of the specified number of bytes out of the data. Negative values are allowed.";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.args = [
@@ -54,11 +54,13 @@ class DropBytes extends Operation {
         const applyToEachLine = args[2];
 
         if (!applyToEachLine) {
-            if (start < 0) { // Take from the end
+            if (start < 0) {
+                // Take from the end
                 start = input.byteLength + start;
             }
 
-            if (length < 0) { // Flip start point
+            if (length < 0) {
+                // Flip start point
                 start = start + length;
                 if (start < 0) {
                     start = input.byteLength + start;
@@ -96,11 +98,13 @@ class DropBytes extends Operation {
             s = start,
             l = length;
         for (i = 0; i < lines.length; i++) {
-            if (s < 0) { // Take from the end
+            if (s < 0) {
+                // Take from the end
                 s = lines[i].length + s;
             }
 
-            if (l < 0) { // Flip start point
+            if (l < 0) {
+                // Flip start point
                 s = s + l;
                 if (s < 0) {
                     s = lines[i].length + s;
@@ -110,14 +114,13 @@ class DropBytes extends Operation {
                 }
             }
 
-            output = output.concat(lines[i].slice(0, s).concat(lines[i].slice(s+l, lines[i].length)));
+            output = output.concat(lines[i].slice(0, s).concat(lines[i].slice(s + l, lines[i].length)));
             output.push(0x0a);
             s = start;
             l = length;
         }
-        return new Uint8Array(output.slice(0, output.length-1)).buffer;
+        return new Uint8Array(output.slice(0, output.length - 1)).buffer;
     }
-
 }
 
 export default DropBytes;

@@ -5,14 +5,13 @@
  */
 
 import Operation from "../Operation.mjs";
-import {toHex, TO_HEX_DELIM_OPTIONS} from "../lib/Hex.mjs";
+import { toHex, TO_HEX_DELIM_OPTIONS } from "../lib/Hex.mjs";
 import Utils from "../Utils.mjs";
 
 /**
  * To Hex operation
  */
 class ToHex extends Operation {
-
     /**
      * ToHex constructor
      */
@@ -21,7 +20,8 @@ class ToHex extends Operation {
 
         this.name = "To Hex";
         this.module = "Default";
-        this.description = "Converts the input string to hexadecimal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code>";
+        this.description
+            = "Converts the input string to hexadecimal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code>";
         this.infoURL = "https://wikipedia.org/wiki/Hexadecimal";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -67,7 +67,8 @@ class ToHex extends Operation {
      * @returns {Object[]} pos
      */
     highlight(pos, args) {
-        let delim, commaLen = 0;
+        let delim,
+            commaLen = 0;
         if (args[0] === "0x with comma") {
             delim = "0x";
             commaLen = 1;
@@ -78,9 +79,9 @@ class ToHex extends Operation {
         const lineSize = args[1],
             len = delim.length + commaLen;
 
-        const countLF = function(p) {
+        const countLF = function (p) {
             // Count the number of LFs from 0 upto p
-            return (p / lineSize | 0) - (p >= lineSize && p % lineSize === 0);
+            return ((p / lineSize) | 0) - (p >= lineSize && p % lineSize === 0);
         };
 
         pos[0].start = pos[0].start * (2 + len) + countLF(pos[0].start);
@@ -105,7 +106,8 @@ class ToHex extends Operation {
      * @returns {Object[]} pos
      */
     highlightReverse(pos, args) {
-        let delim, commaLen = 0;
+        let delim,
+            commaLen = 0;
         if (args[0] === "0x with comma") {
             delim = "0x";
             commaLen = 1;
@@ -117,10 +119,10 @@ class ToHex extends Operation {
             len = delim.length + commaLen,
             width = len + 2;
 
-        const countLF = function(p) {
+        const countLF = function (p) {
             // Count the number of LFs from 0 up to p
             const lineLength = width * lineSize;
-            return (p / lineLength | 0) - (p >= lineLength && p % lineLength === 0);
+            return ((p / lineLength) | 0) - (p >= lineLength && p % lineLength === 0);
         };
 
         pos[0].start = pos[0].start === 0 ? 0 : Math.round((pos[0].start - countLF(pos[0].start)) / width);

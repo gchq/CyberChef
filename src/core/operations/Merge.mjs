@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Merge operation
  */
 class Merge extends Operation {
-
     /**
      * Merge constructor
      */
@@ -20,14 +19,15 @@ class Merge extends Operation {
         this.name = "Merge";
         this.flowControl = true;
         this.module = "Default";
-        this.description = "Consolidate all branches back into a single trunk. The opposite of Fork. Unticking the Merge All checkbox will only consolidate all branches up to the nearest Fork/Subsection.";
+        this.description
+            = "Consolidate all branches back into a single trunk. The opposite of Fork. Unticking the Merge All checkbox will only consolidate all branches up to the nearest Fork/Subsection.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "Merge All",
                 type: "boolean",
-                value: true,
+                value: true
             }
         ];
     }
@@ -44,7 +44,6 @@ class Merge extends Operation {
         // merge when it sees this operation.
         return state;
     }
-
 }
 
 export default Merge;

@@ -11,7 +11,6 @@ import cptable from "codepage";
  * Citrix CTX1 Encode operation
  */
 class CitrixCTX1Encode extends Operation {
-
     /**
      * CitrixCTX1Encode constructor
      */
@@ -44,7 +43,6 @@ class CitrixCTX1Encode extends Operation {
 
         return result;
     }
-
 }
 
 export default CitrixCTX1Encode;

@@ -13,7 +13,6 @@ import OperationError from "../errors/OperationError.mjs";
  * AES Decrypt operation
  */
 class AESDecrypt extends Operation {
-
     /**
      * AESDecrypt constructor
      */
@@ -22,7 +21,8 @@ class AESDecrypt extends Operation {
 
         this.name = "AES Decrypt";
         this.module = "Ciphers";
-        this.description = "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul><br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.<br><br><b>GCM Tag:</b> This field is ignored unless 'GCM' mode is used.";
+        this.description
+            = "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul><br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.<br><br><b>GCM Tag:</b> This field is ignored unless 'GCM' mode is used.";
         this.infoURL = "https://wikipedia.org/wiki/Advanced_Encryption_Standard";
         this.inputType = "string";
         this.outputType = "string";
@@ -134,7 +134,7 @@ The following algorithms will be used based on the size of the key:
 
         /* Allow for a "no padding" mode */
         if (noPadding) {
-            decipher.mode.unpad = function(output, options) {
+            decipher.mode.unpad = function (output, options) {
                 return true;
             };
         }
@@ -153,7 +153,6 @@ The following algorithms will be used based on the size of the key:
             throw new OperationError("Unable to decrypt input with these parameters.");
         }
     }
-
 }
 
 export default AESDecrypt;

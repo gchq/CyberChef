@@ -10,12 +10,10 @@ import Operation from "../Operation.mjs";
 import { multi, createNumArray } from "../lib/Arithmetic.mjs";
 import { ARITHMETIC_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
-
 /**
  * Multiply operation
  */
 class Multiply extends Operation {
-
     /**
      * Multiply constructor
      */
@@ -24,7 +22,8 @@ class Multiply extends Operation {
 
         this.name = "Multiply";
         this.module = "Default";
-        this.description = "Multiplies a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>40</code>";
+        this.description
+            = "Multiplies a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>40</code>";
         this.infoURL = "https://wikipedia.org/wiki/Multiplication";
         this.inputType = "string";
         this.outputType = "BigNumber";
@@ -32,7 +31,7 @@ class Multiply extends Operation {
             {
                 "name": "Delimiter",
                 "type": "option",
-                "value": ARITHMETIC_DELIM_OPTIONS,
+                "value": ARITHMETIC_DELIM_OPTIONS
             }
         ];
     }
@@ -46,7 +45,6 @@ class Multiply extends Operation {
         const val = multi(createNumArray(input, args[0]));
         return BigNumber.isBigNumber(val) ? val : new BigNumber(NaN);
     }
-
 }
 
 export default Multiply;

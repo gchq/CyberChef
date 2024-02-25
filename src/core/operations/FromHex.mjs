@@ -5,14 +5,13 @@
  */
 
 import Operation from "../Operation.mjs";
-import {fromHex, FROM_HEX_DELIM_OPTIONS} from "../lib/Hex.mjs";
+import { fromHex, FROM_HEX_DELIM_OPTIONS } from "../lib/Hex.mjs";
 import Utils from "../Utils.mjs";
 
 /**
  * From Hex operation
  */
 class FromHex extends Operation {
-
     /**
      * FromHex constructor
      */
@@ -21,7 +20,8 @@ class FromHex extends Operation {
 
         this.name = "From Hex";
         this.module = "Default";
-        this.description = "Converts a hexadecimal byte string back into its raw value.<br><br>e.g. <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> becomes the UTF-8 encoded string <code>Γειά σου</code>";
+        this.description
+            = "Converts a hexadecimal byte string back into its raw value.<br><br>e.g. <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> becomes the UTF-8 encoded string <code>Γειά σου</code>";
         this.infoURL = "https://wikipedia.org/wiki/Hexadecimal";
         this.inputType = "string";
         this.outputType = "byteArray";

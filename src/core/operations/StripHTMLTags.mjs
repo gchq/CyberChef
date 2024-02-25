@@ -11,7 +11,6 @@ import Utils from "../Utils.mjs";
  * Strip HTML tags operation
  */
 class StripHTMLTags extends Operation {
-
     /**
      * StripHTMLTags constructor
      */
@@ -37,9 +36,9 @@ class StripHTMLTags extends Operation {
         ];
         this.checks = [
             {
-                pattern:  "(</html>|</div>|</body>)",
-                flags:  "i",
-                args:   [true, true]
+                pattern: "(</html>|</div>|</body>)",
+                flags: "i",
+                args: [true, true]
             }
         ];
     }
@@ -66,7 +65,6 @@ class StripHTMLTags extends Operation {
 
         return input;
     }
-
 }
 
 export default StripHTMLTags;

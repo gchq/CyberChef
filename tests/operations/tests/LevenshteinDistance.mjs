@@ -13,11 +13,9 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Levenshtein Distance",
-                "args": [
-                    "\\n", 1, 1, 1,
-                ],
-            },
-        ],
+                "args": ["\\n", 1, 1, 1]
+            }
+        ]
     },
     {
         "name": "Levenshtein Distance: Wikipedia example 2",
@@ -26,11 +24,9 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Levenshtein Distance",
-                "args": [
-                    "\\n", 1, 1, 1,
-                ],
-            },
-        ],
+                "args": ["\\n", 1, 1, 1]
+            }
+        ]
     },
     {
         "name": "Levenshtein Distance: Wikipedia example 1 with substitution cost 2",
@@ -39,11 +35,9 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Levenshtein Distance",
-                "args": [
-                    "\\n", 1, 1, 2,
-                ],
-            },
-        ],
+                "args": ["\\n", 1, 1, 2]
+            }
+        ]
     },
     {
         "name": "Levenshtein Distance: varied costs 1",
@@ -52,11 +46,9 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Levenshtein Distance",
-                "args": [
-                    "\\n", 10, 100, 1000,
-                ],
-            },
-        ],
+                "args": ["\\n", 10, 100, 1000]
+            }
+        ]
     },
     {
         "name": "Levenshtein Distance: varied costs 2",
@@ -65,11 +57,9 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Levenshtein Distance",
-                "args": [
-                    "\\n", 1000, 100, 10,
-                ],
-            },
-        ],
+                "args": ["\\n", 1000, 100, 10]
+            }
+        ]
     },
     {
         "name": "Levenshtein Distance: another delimiter",
@@ -78,11 +68,9 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Levenshtein Distance",
-                "args": [
-                    " ", 1, 1, 1,
-                ],
-            },
-        ],
+                "args": [" ", 1, 1, 1]
+            }
+        ]
     },
     {
         "name": "Levenshtein Distance: too few samples",
@@ -91,11 +79,9 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Levenshtein Distance",
-                "args": [
-                    "\\n", 1, 1, 1,
-                ],
-            },
-        ],
+                "args": ["\\n", 1, 1, 1]
+            }
+        ]
     },
     {
         "name": "Levenshtein Distance: too many samples",
@@ -104,11 +90,9 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Levenshtein Distance",
-                "args": [
-                    "\\n", 1, 1, 1,
-                ],
-            },
-        ],
+                "args": ["\\n", 1, 1, 1]
+            }
+        ]
     },
     {
         "name": "Levenshtein Distance: negative insertion cost",
@@ -117,11 +101,9 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Levenshtein Distance",
-                "args": [
-                    "\\n", -1, 1, 1,
-                ],
-            },
-        ],
+                "args": ["\\n", -1, 1, 1]
+            }
+        ]
     },
     {
         "name": "Levenshtein Distance: negative deletion cost",
@@ -130,11 +112,9 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Levenshtein Distance",
-                "args": [
-                    "\\n", 1, -1, 1,
-                ],
-            },
-        ],
+                "args": ["\\n", 1, -1, 1]
+            }
+        ]
     },
     {
         "name": "Levenshtein Distance: negative substitution cost",
@@ -143,11 +123,9 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Levenshtein Distance",
-                "args": [
-                    "\\n", 1, 1, -1,
-                ],
-            },
-        ],
+                "args": ["\\n", 1, 1, -1]
+            }
+        ]
     },
     {
         "name": "Levenshtein Distance: cost zero",
@@ -156,10 +134,8 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Levenshtein Distance",
-                "args": [
-                    "\\n", 0, 0, 0,
-                ],
-            },
-        ],
-    },
+                "args": ["\\n", 0, 0, 0]
+            }
+        ]
+    }
 ]);

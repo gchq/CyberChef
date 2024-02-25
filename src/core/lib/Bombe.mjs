@@ -9,7 +9,7 @@
 
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
-import {Rotor, Plugboard, a2i, i2a} from "./Enigma.mjs";
+import { Rotor, Plugboard, a2i, i2a } from "./Enigma.mjs";
 
 /**
  * Convenience/optimisation subclass of Rotor
@@ -29,7 +29,7 @@ class CopyRotor extends Rotor {
             pos: this.pos,
             step: this.step,
             transform: this.transform,
-            revTransform: this.revTransform,
+            revTransform: this.revTransform
         };
         return clone;
     }
@@ -96,7 +96,7 @@ class SharedScrambler {
     constructor(rotors, reflector) {
         this.lowerCache = new Array(26);
         this.higherCache = new Array(26);
-        for (let i=0; i<26; i++) {
+        for (let i = 0; i < 26; i++) {
             this.higherCache[i] = new Array(26);
         }
         this.changeRotors(rotors, reflector);
@@ -121,7 +121,7 @@ class SharedScrambler {
      * the shared state, so should be 2 or more.
      */
     step(n) {
-        for (let i=0; i<n-1; i++) {
+        for (let i = 0; i < n - 1; i++) {
             this.rotors[i].step();
         }
         this.cacheGen();
@@ -136,13 +136,13 @@ class SharedScrambler {
      * iterations.
      */
     cacheGen() {
-        for (let i=0; i<26; i++) {
+        for (let i = 0; i < 26; i++) {
             this.lowerCache[i] = undefined;
-            for (let j=0; j<26; j++) {
+            for (let j = 0; j < 26; j++) {
                 this.higherCache[i][j] = undefined;
             }
         }
-        for (let i=0; i<26; i++) {
+        for (let i = 0; i < 26; i++) {
             if (this.lowerCache[i] !== undefined) {
                 continue;
             }
@@ -219,7 +219,6 @@ class Scrambler {
         this.cache = this.baseScrambler.higherCache[this.rotor.pos];
     }
 
-
     /**
      * Run a letter through the scrambler.
      * @param {number} i - The letter to transform (as a number)
@@ -262,7 +261,7 @@ class Scrambler {
         // Roll back the fast rotor by one step
         let pos = Utils.mod(this.rotor.pos - 1, 26);
         result += i2a(pos);
-        for (let i=0; i<this.baseScrambler.rotors.length; i++) {
+        for (let i = 0; i < this.baseScrambler.rotors.length; i++) {
             pos = this.baseScrambler.rotors[i].pos;
             result += i2a(pos);
         }
@@ -296,7 +295,7 @@ export class BombeMachine {
      * @param {boolean} check - Whether to use the checking machine
      * @param {function} update - Function to call to send status updates (optional)
      */
-    constructor(rotors, reflector, ciphertext, crib, check, update=undefined) {
+    constructor(rotors, reflector, ciphertext, crib, check, update = undefined) {
         if (ciphertext.length < crib.length) {
             throw new OperationError("Crib overruns supplied ciphertext");
         }
@@ -310,9 +309,11 @@ export class BombeMachine {
             // A shorter crib is preferable to reduce this chance, of course
             throw new OperationError("Crib is too long");
         }
-        for (let i=0; i<crib.length; i++) {
+        for (let i = 0; i < crib.length; i++) {
             if (ciphertext[i] === crib[i]) {
-                throw new OperationError(`Invalid crib: character ${ciphertext[i]} at pos ${i} in both ciphertext and crib`);
+                throw new OperationError(
+                    `Invalid crib: character ${ciphertext[i]} at pos ${i} in both ciphertext and crib`
+                );
             }
         }
         this.ciphertext = ciphertext;
@@ -325,12 +326,12 @@ export class BombeMachine {
 
         // This is the bundle of wires corresponding to the 26 letters within each of the 26
         // possible nodes in the menu
-        this.wires = new Array(26*26);
+        this.wires = new Array(26 * 26);
 
         // These are the pseudo-Engima devices corresponding to each edge in the menu, and the
         // nodes in the menu they each connect to
         this.scramblers = new Array();
-        for (let i=0; i<26; i++) {
+        for (let i = 0; i < 26; i++) {
             this.scramblers.push(new Array());
         }
         this.sharedScrambler = new SharedScrambler(this.baseRotors.slice(1), reflector);
@@ -465,7 +466,7 @@ export class BombeMachine {
             }
         }
         // Then all edges
-        for (let i=0; i<this.crib.length; i++) {
+        for (let i = 0; i < this.crib.length; i++) {
             const a = this.crib[i];
             const b = this.ciphertext[i];
             new Edge(i, nodes.get(a), nodes.get(b));
@@ -499,14 +500,14 @@ export class BombeMachine {
      * @param {number} j - Bombe stecker hypothesis wire within bundle
      */
     energise(i, j) {
-        const idx = 26*i + j;
+        const idx = 26 * i + j;
         if (this.wires[idx]) {
             return;
         }
         this.wires[idx] = true;
         // Welchman's diagonal board: if A steckers to B, that implies B steckers to A. Handle
         // both.
-        const idxPair = 26*j + i;
+        const idxPair = 26 * j + i;
         this.wires[idxPair] = true;
         if (i === this.testRegister || j === this.testRegister) {
             this.energiseCount++;
@@ -516,12 +517,12 @@ export class BombeMachine {
             }
         }
 
-        for (let k=0; k<this.scramblers[i].length; k++) {
+        for (let k = 0; k < this.scramblers[i].length; k++) {
             const scrambler = this.scramblers[i][k];
             const out = scrambler.transform(j);
             const other = scrambler.getOtherEnd(i);
             // Lift the pre-check before the call, to save some function call overhead
-            const otherIdx = 26*other + out;
+            const otherIdx = 26 * other + out;
             if (!this.wires[otherIdx]) {
                 this.energise(other, out);
                 if (this.energiseCount === 26) {
@@ -532,11 +533,11 @@ export class BombeMachine {
         if (i === j) {
             return;
         }
-        for (let k=0; k<this.scramblers[j].length; k++) {
+        for (let k = 0; k < this.scramblers[j].length; k++) {
             const scrambler = this.scramblers[j][k];
             const out = scrambler.transform(i);
             const other = scrambler.getOtherEnd(j);
-            const otherIdx = 26*other + out;
+            const otherIdx = 26 * other + out;
             if (!this.wires[otherIdx]) {
                 this.energise(other, out);
                 if (this.energiseCount === 26) {
@@ -561,7 +562,7 @@ export class BombeMachine {
         const res = [];
         const plugboard = new Plugboard(stecker);
         // The indicator scrambler starts in the right place for the beginning of the ciphertext.
-        for (let i=0; i<Math.min(26, this.ciphertext.length); i++) {
+        for (let i = 0; i < Math.min(26, this.ciphertext.length); i++) {
             const t = this.indicator.transform(plugboard.transform(a2i(this.ciphertext[i])));
             res.push(i2a(plugboard.transform(t)));
             this.indicator.step(1);
@@ -602,7 +603,7 @@ export class BombeMachine {
         if (pair !== this.testInput[1]) {
             // We have a new hypothesis for this stop - apply the new one.
             // De-energise the board
-            for (let i=0; i<this.wires.length; i++) {
+            for (let i = 0; i < this.wires.length; i++) {
                 this.wires[i] = false;
             }
             this.energiseCount = 0;
@@ -612,11 +613,11 @@ export class BombeMachine {
 
         const results = new Set();
         results.add(this.formatPair(this.testRegister, pair));
-        for (let i=0; i<26; i++) {
+        for (let i = 0; i < 26; i++) {
             let count = 0;
             let other;
-            for (let j=0; j<26; j++) {
-                if (this.wires[i*26 + j]) {
+            for (let j = 0; j < 26; j++) {
+                if (this.wires[i * 26 + j]) {
                     count++;
                     other = j;
                 }
@@ -649,8 +650,8 @@ export class BombeMachine {
         // started with are hypothesised to be a stecker pair.
         if (count === 25) {
             // Our steckering hypothesis is wrong. Correct value is the un-energised wire.
-            for (let j=0; j<26; j++) {
-                if (!this.wires[26*this.testRegister + j]) {
+            for (let j = 0; j < 26; j++) {
+                if (!this.wires[26 * this.testRegister + j]) {
                     steckerPair = j;
                     break;
                 }
@@ -713,9 +714,9 @@ export class BombeMachine {
         const result = [];
         // For each possible rotor setting
         const nChecks = Math.pow(26, this.baseRotors.length);
-        for (let i=1; i<=nChecks; i++) {
+        for (let i = 1; i <= nChecks; i++) {
             // Benchmarking suggests this is faster than using .fill()
-            for (let i=0; i<this.wires.length; i++) {
+            for (let i = 0; i < this.wires.length; i++) {
                 this.wires[i] = false;
             }
             this.energiseCount = 0;
@@ -732,8 +733,8 @@ export class BombeMachine {
             // This loop counts how many rotors have reached their starting position (meaning the
             // next one needs to step as well)
             let n = 1;
-            for (let j=1; j<this.baseRotors.length; j++) {
-                if ((i % Math.pow(26, j)) === 0) {
+            for (let j = 1; j < this.baseRotors.length; j++) {
+                if (i % Math.pow(26, j) === 0) {
                     n++;
                 } else {
                     break;
@@ -748,7 +749,7 @@ export class BombeMachine {
             // Send status messages at what seems to be a reasonably sensible frequency
             // (note this won't be triggered on 3-rotor runs - they run fast enough it doesn't seem necessary)
             if (n > 3) {
-                this.update(this.nLoops, stops, i/nChecks);
+                this.update(this.nLoops, stops, i / nChecks);
             }
         }
         return result;

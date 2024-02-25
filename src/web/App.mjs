@@ -5,7 +5,7 @@
  */
 
 import Utils, { debounce } from "../core/Utils.mjs";
-import {fromBase64} from "../core/lib/Base64.mjs";
+import { fromBase64 } from "../core/lib/Base64.mjs";
 import Manager from "./Manager.mjs";
 import HTMLCategory from "./HTMLCategory.mjs";
 import HTMLOperation from "./HTMLOperation.mjs";
@@ -13,13 +13,11 @@ import Split from "split.js";
 import moment from "moment-timezone";
 import cptable from "codepage";
 
-
 /**
  * HTML view for CyberChef responsible for building the web page and dealing with all user
  * interactions.
  */
 class App {
-
     /**
      * App constructor.
      *
@@ -29,25 +27,24 @@ class App {
      * @param {Object} options - Default setting for app options.
      */
     constructor(categories, operations, defaultFavourites, defaultOptions) {
-        this.categories    = categories;
-        this.operations    = operations;
-        this.dfavourites   = defaultFavourites;
-        this.doptions      = defaultOptions;
-        this.options       = Object.assign({}, defaultOptions);
+        this.categories = categories;
+        this.operations = operations;
+        this.dfavourites = defaultFavourites;
+        this.doptions = defaultOptions;
+        this.options = Object.assign({}, defaultOptions);
 
-        this.manager       = new Manager(this);
+        this.manager = new Manager(this);
 
-        this.baking        = false;
-        this.autoBake_     = false;
+        this.baking = false;
+        this.autoBake_ = false;
         this.autoBakePause = false;
-        this.progress      = 0;
-        this.ingId         = 0;
+        this.progress = 0;
+        this.ingId = 0;
 
-        this.appLoaded     = false;
-        this.workerLoaded  = false;
+        this.appLoaded = false;
+        this.workerLoaded = false;
         this.waitersLoaded = false;
     }
-
 
     /**
      * This function sets up the stage and creates listeners for all events.
@@ -71,7 +68,6 @@ class App {
         this.loaded();
     }
 
-
     /**
      * Fires once all setup activities have completed.
      *
@@ -80,8 +76,8 @@ class App {
     loaded() {
         // Check that both the app and the worker have loaded successfully, and that
         // we haven't already loaded before attempting to remove the loading screen.
-        if (!this.workerLoaded || !this.appLoaded || !this.waitersLoaded ||
-            !document.getElementById("loader-wrapper")) return;
+        if (!this.workerLoaded || !this.appLoaded || !this.waitersLoaded || !document.getElementById("loader-wrapper"))
+            return;
 
         // Load state from URI
         this.loadURIParams(this.uriParams);
@@ -91,13 +87,16 @@ class App {
 
         // Wait for animations to complete then remove the preloader and loaded style
         // so that the animations for existing elements don't play again.
-        setTimeout(function() {
-            document.getElementById("loader-wrapper").remove();
-            document.body.classList.remove("loaded");
+        setTimeout(
+            function () {
+                document.getElementById("loader-wrapper").remove();
+                document.body.classList.remove("loaded");
 
-            // Bake initial input
-            this.manager.input.bakeAll();
-        }.bind(this), 1000);
+                // Bake initial input
+                this.manager.input.bakeAll();
+            }.bind(this),
+            1000
+        );
 
         // Clear the loading message interval
         clearInterval(window.loadingMsgsInt);
@@ -111,7 +110,6 @@ class App {
         this.manager.output.calcMaxTabs();
     }
 
-
     /**
      * An error handler for displaying the error to the user.
      *
@@ -124,14 +122,13 @@ class App {
         this.alert(Utils.escapeHtml(msg), this.options.errorTimeout, !this.options.showErrors);
     }
 
-
     /**
      * Asks the ChefWorker to bake the current input using the current recipe.
      *
      * @param {boolean} [step] - Set to true if we should only execute one operation instead of the
      *   whole recipe.
      */
-    bake(step=false) {
+    bake(step = false) {
         if (this.baking) return;
 
         // Reset attemptHighlight flag
@@ -142,12 +139,11 @@ class App {
 
         this.manager.worker.bake(
             this.getRecipeConfig(), // The configuration of the recipe
-            this.options,           // Options set by the user
-            this.progress,          // The current position in the recipe
-            step                    // Whether or not to take one step or execute the whole recipe
+            this.options, // Options set by the user
+            this.progress, // The current position in the recipe
+            step // Whether or not to take one step or execute the whole recipe
         );
     }
-
 
     /**
      * Runs Auto Bake if it is set.
@@ -168,7 +164,6 @@ class App {
             this.manager.controls.showStaleIndicator();
         }
     }
-
 
     /**
      * Executes the next step of the recipe.
@@ -197,7 +192,6 @@ class App {
         });
     }
 
-
     /**
      * Runs a silent bake, forcing the browser to load and cache all the relevant JavaScript code needed
      * to do a real bake.
@@ -216,7 +210,6 @@ class App {
 
         this.manager.worker.silentBake(recipeConfig);
     }
-
 
     /**
      * Sets the user's input data.
@@ -238,7 +231,6 @@ class App {
             }
         });
     }
-
 
     /**
      * Populates the operations accordion list with the categories and operations specified in the
@@ -284,21 +276,23 @@ class App {
         const favCat = document.querySelector("#categories a");
         favCat.appendChild(document.getElementById("edit-favourites"));
         favCat.setAttribute("data-help-title", "Favourite operations");
-        favCat.setAttribute("data-help", `<p>This category displays your favourite operations.</p>
+        favCat.setAttribute(
+            "data-help",
+            `<p>This category displays your favourite operations.</p>
         <ul>
             <li><b>To add:</b> drag an operation over the Favourites category</li>
             <li><b>To reorder:</b> Click on the 'Edit favourites' button and drag operations up and down in the list provided</li>
             <li><b>To remove:</b> Click on the 'Edit favourites' button and hit the delete button next to the operation you want to remove</li>
-        </ul>`);
+        </ul>`
+        );
     }
-
 
     /**
      * Sets up the adjustable splitter to allow the user to resize areas of the page.
      *
      * @param {boolean} [minimise=false] - Set this flag if attempting to minimise frames to 0 width
      */
-    initialiseSplitter(minimise=false) {
+    initialiseSplitter(minimise = false) {
         if (this.columnSplitter) this.columnSplitter.destroy();
         if (this.ioSplitter) this.ioSplitter.destroy();
 
@@ -307,9 +301,15 @@ class App {
             minSize: minimise ? [0, 0, 0] : [240, 310, 450],
             gutterSize: 4,
             expandToMin: true,
-            onDrag: debounce(function() {
-                this.adjustComponentSizes();
-            }, 50, "dragSplitter", this, [])
+            onDrag: debounce(
+                function () {
+                    this.adjustComponentSizes();
+                },
+                50,
+                "dragSplitter",
+                this,
+                []
+            )
         });
 
         this.ioSplitter = Split(["#input", "#output"], {
@@ -320,7 +320,6 @@ class App {
 
         this.adjustComponentSizes();
     }
-
 
     /**
      * Loads the information previously saved to the HTML5 local storage object so that user options
@@ -338,7 +337,6 @@ class App {
         this.loadFavourites();
     }
 
-
     /**
      * Loads the user's favourite operations from the HTML5 local storage object and populates the
      * Favourites category with them.
@@ -348,16 +346,14 @@ class App {
         let favourites;
 
         if (this.isLocalStorageAvailable()) {
-            favourites = localStorage?.favourites?.length > 2 ?
-                JSON.parse(localStorage.favourites) :
-                this.dfavourites;
+            favourites = localStorage?.favourites?.length > 2 ? JSON.parse(localStorage.favourites) : this.dfavourites;
             favourites = this.validFavourites(favourites);
             this.saveFavourites(favourites);
         } else {
             favourites = this.dfavourites;
         }
 
-        const favCat = this.categories.filter(function(c) {
+        const favCat = this.categories.filter(function (c) {
             return c.name === "Favourites";
         })[0];
 
@@ -370,7 +366,6 @@ class App {
             });
         }
     }
-
 
     /**
      * Filters the list of favourite operations that the user had stored and removes any that are no
@@ -385,13 +380,14 @@ class App {
             if (favourites[i] in this.operations) {
                 validFavs.push(favourites[i]);
             } else {
-                this.alert(`The operation "${Utils.escapeHtml(favourites[i])}" is no longer available. ` +
-                    "It has been removed from your favourites.");
+                this.alert(
+                    `The operation "${Utils.escapeHtml(favourites[i])}" is no longer available. `
+                        + "It has been removed from your favourites."
+                );
             }
         }
         return validFavs;
     }
-
 
     /**
      * Saves a list of favourite operations to the HTML5 local storage object.
@@ -410,7 +406,6 @@ class App {
         localStorage.setItem("favourites", JSON.stringify(this.validFavourites(favourites)));
     }
 
-
     /**
      * Resets favourite operations back to the default as specified in the view constructor and
      * refreshes the operation list.
@@ -421,7 +416,6 @@ class App {
         this.populateOperationsList();
         this.manager.recipe.initialiseOperationDragNDrop();
     }
-
 
     /**
      * Adds an operation to the user's favourites.
@@ -453,9 +447,7 @@ class App {
         // We prefer getting the hash by splitting the href rather than referencing
         // location.hash as some browsers (Firefox) automatically URL decode it,
         // which cause issues.
-        const params = window.location.search ||
-            window.location.href.split("#")[1] ||
-            window.location.hash;
+        const params = window.location.search || window.location.href.split("#")[1] || window.location.hash;
         const parsedParams = Utils.parseURIParams(params);
         return parsedParams;
     }
@@ -470,7 +462,7 @@ class App {
      * @param {Object} params
      * @fires Manager#statechange
      */
-    loadURIParams(params=this.getURIParams()) {
+    loadURIParams(params = this.getURIParams()) {
         this.autoBakePause = true;
         this.uriParams = params;
 
@@ -542,7 +534,6 @@ class App {
         window.dispatchEvent(this.manager.statechange);
     }
 
-
     /**
      * Returns the next ingredient ID and increments it for next time.
      *
@@ -552,7 +543,6 @@ class App {
         return this.ingId++;
     }
 
-
     /**
      * Gets the current recipe configuration.
      *
@@ -561,7 +551,6 @@ class App {
     getRecipeConfig() {
         return this.manager.recipe.getConfig();
     }
-
 
     /**
      * Given a recipe configuration, sets the recipe to that configuration.
@@ -590,8 +579,9 @@ class App {
                 } else if (args[j].classList.contains("toggle-string")) {
                     // toggleString
                     args[j].value = recipeConfig[i].args[j].string;
-                    args[j].parentNode.parentNode.querySelector("button").innerHTML =
-                        Utils.escapeHtml(recipeConfig[i].args[j].option);
+                    args[j].parentNode.parentNode.querySelector("button").innerHTML = Utils.escapeHtml(
+                        recipeConfig[i].args[j].option
+                    );
                 } else {
                     // all others
                     args[j].value = recipeConfig[i].args[j];
@@ -615,7 +605,6 @@ class App {
         this.autoBakePause = false;
     }
 
-
     /**
      * Resets the splitter positions to default.
      */
@@ -635,7 +624,6 @@ class App {
         this.manager.controls.calcControlsHeight();
     }
 
-
     /**
      * Sets the compile message.
      */
@@ -646,7 +634,7 @@ class App {
             timeSinceCompile = moment.duration(msSinceCompile, "milliseconds").humanize();
 
         // Calculate previous version to compare to
-        const prev = PKG_VERSION.split(".").map(n => {
+        const prev = PKG_VERSION.split(".").map((n) => {
             return parseInt(n, 10);
         });
         if (prev[2] > 0) prev[2]--;
@@ -665,9 +653,11 @@ class App {
         notice.innerHTML = compileInfo;
         notice.setAttribute("title", Utils.stripHtmlTags(window.compileMessage));
         notice.setAttribute("data-help-title", "Last build");
-        notice.setAttribute("data-help", "This live version of CyberChef is updated whenever new commits are added to the master branch of the CyberChef repository. It represents the latest, most up-to-date build of CyberChef.");
+        notice.setAttribute(
+            "data-help",
+            "This live version of CyberChef is updated whenever new commits are added to the master branch of the CyberChef repository. It represents the latest, most up-to-date build of CyberChef."
+        );
     }
-
 
     /**
      * Determines whether the browser supports Local Storage and if it is accessible.
@@ -683,7 +673,6 @@ class App {
             return false;
         }
     }
-
 
     /**
      * Pops up a message to the user and writes it to the console log.
@@ -702,7 +691,7 @@ class App {
      * // Pops up a box with the message "Happy Christmas!" that will disappear after 5 seconds.
      * this.alert("Happy Christmas!", 5000);
      */
-    alert(str, timeout=0, silent=false) {
+    alert(str, timeout = 0, silent = false) {
         const time = new Date();
 
         log.info("[" + time.toLocaleString() + "] " + str);
@@ -717,7 +706,6 @@ class App {
             }
         });
     }
-
 
     /**
      * Pops up a box asking the user a question and sending the answer to a specified callback function.
@@ -743,27 +731,41 @@ class App {
         document.getElementById("confirm-modal").style.display = "block";
 
         this.confirmClosed = false;
-        $("#confirm-modal").modal()
-            .one("show.bs.modal", function(e) {
-                this.confirmClosed = false;
-            }.bind(this))
-            .one("click", "#confirm-yes", function() {
-                this.confirmClosed = true;
-                callback.bind(scope)(true);
-                $("#confirm-modal").modal("hide");
-            }.bind(this))
-            .one("click", "#confirm-no", function() {
-                this.confirmClosed = true;
-                callback.bind(scope)(false);
-            }.bind(this))
-            .one("hide.bs.modal", function(e) {
-                if (!this.confirmClosed) {
-                    callback.bind(scope)(undefined);
-                }
-                this.confirmClosed = true;
-            }.bind(this));
+        $("#confirm-modal")
+            .modal()
+            .one(
+                "show.bs.modal",
+                function (e) {
+                    this.confirmClosed = false;
+                }.bind(this)
+            )
+            .one(
+                "click",
+                "#confirm-yes",
+                function () {
+                    this.confirmClosed = true;
+                    callback.bind(scope)(true);
+                    $("#confirm-modal").modal("hide");
+                }.bind(this)
+            )
+            .one(
+                "click",
+                "#confirm-no",
+                function () {
+                    this.confirmClosed = true;
+                    callback.bind(scope)(false);
+                }.bind(this)
+            )
+            .one(
+                "hide.bs.modal",
+                function (e) {
+                    if (!this.confirmClosed) {
+                        callback.bind(scope)(undefined);
+                    }
+                    this.confirmClosed = true;
+                }.bind(this)
+            );
     }
-
 
     /**
      * Handler for CyerChef statechange events.
@@ -773,13 +775,18 @@ class App {
      * @param {event} e
      */
     stateChange(e) {
-        debounce(function() {
-            this.progress = 0;
-            this.autoBake();
-            this.updateURL(true, null, true);
-        }, 20, "stateChange", this, [])();
+        debounce(
+            function () {
+                this.progress = 0;
+                this.autoBake();
+                this.updateURL(true, null, true);
+            },
+            20,
+            "stateChange",
+            this,
+            []
+        )();
     }
-
 
     /**
      * Update the page title and URL to contain the new recipe
@@ -788,7 +795,7 @@ class App {
      * @param {string} [input=null]
      * @param {boolean} [changeUrl=true]
      */
-    updateURL(includeInput, input=null, changeUrl=true) {
+    updateURL(includeInput, input = null, changeUrl = true) {
         // Set title
         const recipeConfig = this.getRecipeConfig();
         let title = "CyberChef";
@@ -796,7 +803,7 @@ class App {
             title = `${recipeConfig[0].op} - ${title}`;
         } else if (recipeConfig.length > 1) {
             // See how long the full recipe is
-            const ops = recipeConfig.map(op => op.op).join(", ");
+            const ops = recipeConfig.map((op) => op.op).join(", ");
             if (ops.length < 45) {
                 title = `${ops} - ${title}`;
             } else {
@@ -813,7 +820,6 @@ class App {
         }
     }
 
-
     /**
      * Handler for the history popstate event.
      * Reloads parameters from the URL.
@@ -823,7 +829,6 @@ class App {
     popState(e) {
         this.loadURIParams();
     }
-
 }
 
 export default App;

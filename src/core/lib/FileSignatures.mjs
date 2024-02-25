@@ -23,7 +23,10 @@ export const FILE_SIGNATURES = {
                 0: 0xff,
                 1: 0xd8,
                 2: 0xff,
-                3: [0xc0, 0xc4, 0xdb, 0xdd, 0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe7, 0xe8, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xfe]
+                3: [
+                    0xc0, 0xc4, 0xdb, 0xdd, 0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe7, 0xe8, 0xea, 0xeb, 0xec, 0xed,
+                    0xee, 0xfe
+                ]
             },
             extractor: extractJPEG
         },
@@ -38,7 +41,7 @@ export const FILE_SIGNATURES = {
                 2: 0x46,
                 3: 0x38, // 8
                 4: [0x37, 0x39], // 7|9
-                5: 0x61  // a
+                5: 0x61 // a
             },
             extractor: extractGIF
         },
@@ -89,7 +92,8 @@ export const FILE_SIGNATURES = {
             },
             extractor: null
         },
-        { // Place before tiff check
+        {
+            // Place before tiff check
             name: "Canon CR2 raw image",
             extension: "cr2",
             mime: "image/x-canon-cr2",
@@ -273,7 +277,10 @@ export const FILE_SIGNATURES = {
                 1: 0x0,
                 2: 0x1,
                 3: 0x0,
-                4: [0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15],
+                4: [
+                    0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10, 0x11, 0x12, 0x13,
+                    0x14, 0x15
+                ],
                 5: 0x0,
                 6: [0x10, 0x20, 0x30, 0x40, 0x80],
                 7: [0x10, 0x20, 0x30, 0x40, 0x80],
@@ -474,7 +481,8 @@ export const FILE_SIGNATURES = {
             mime: "image/x-targa",
             description: "",
             signature: [
-                { // This signature is not at the beginning of the file. The extractor works backwards.
+                {
+                    // This signature is not at the beginning of the file. The extractor works backwards.
                     0: 0x54,
                     1: 0x52,
                     2: 0x55,
@@ -498,7 +506,8 @@ export const FILE_SIGNATURES = {
         }
     ],
     "Video": [
-        { // Place before webm
+        {
+            // Place before webm
             name: "Matroska Multimedia Container",
             extension: "mkv",
             mime: "video/x-matroska",
@@ -528,7 +537,8 @@ export const FILE_SIGNATURES = {
             },
             extractor: null
         },
-        { // Place before MPEG-4
+        {
+            // Place before MPEG-4
             name: "Flash MP4 video",
             extension: "f4v",
             mime: "video/mp4",
@@ -746,7 +756,7 @@ export const FILE_SIGNATURES = {
                 }
             ],
             extractor: null
-        },
+        }
     ],
     "Audio": [
         {
@@ -984,7 +994,8 @@ export const FILE_SIGNATURES = {
             },
             extractor: null
         },
-        { // Place before PostScript
+        {
+            // Place before PostScript
             name: "Adobe PostScript",
             extension: "ps,eps,ai,pfa",
             mime: "application/postscript",
@@ -1275,7 +1286,7 @@ export const FILE_SIGNATURES = {
                 57: 0x70
             },
             extractor: extractZIP
-        },
+        }
     ],
     "Applications": [
         {
@@ -1355,7 +1366,7 @@ export const FILE_SIGNATURES = {
             signature: {
                 0: [0x43, 0x46],
                 1: 0x57,
-                2: 0x53,
+                2: 0x53
             },
             extractor: null
         },
@@ -1401,7 +1412,7 @@ export const FILE_SIGNATURES = {
                 3: 0x34
             },
             extractor: null
-        },
+        }
     ],
     "Archives": [
         {
@@ -1654,7 +1665,7 @@ export const FILE_SIGNATURES = {
             mime: "application/mac-binhex",
             description: "",
             signature: {
-                11: 0x6d,  // must be converted with BinHex
+                11: 0x6d, // must be converted with BinHex
                 12: 0x75,
                 13: 0x73,
                 14: 0x74,
@@ -1759,7 +1770,7 @@ export const FILE_SIGNATURES = {
             description: "",
             signature: {
                 0: 0x50,
-                1: 0x4B,
+                1: 0x4b,
                 2: 0x03,
                 3: 0x04,
                 4: 0x14,
@@ -1795,7 +1806,7 @@ export const FILE_SIGNATURES = {
             description: "",
             signature: {
                 0: 0x21,
-                1: 0x3C,
+                1: 0x3c,
                 2: 0x61,
                 3: 0x72,
                 4: 0x63,
@@ -1834,7 +1845,8 @@ export const FILE_SIGNATURES = {
             },
             extractor: null
         },
-        { // Place before UTF-16 LE text
+        {
+            // Place before UTF-16 LE text
             name: "UTF-32 LE text",
             extension: "utf32le",
             mime: "charset/utf32le",
@@ -1918,7 +1930,7 @@ export const FILE_SIGNATURES = {
                     10: 0x2,
                     34: 0x4c,
                     35: 0x50
-                },
+                }
             ],
             extractor: null
         },
@@ -2217,7 +2229,7 @@ export const FILE_SIGNATURES = {
                 14: 0x45,
                 15: 0x00,
                 21: 0x00,
-                22: b => b >= 0x01 && b <= 0x80,
+                22: (b) => b >= 0x01 && b <= 0x80,
                 23: 0x06
             },
             extractor: null
@@ -2233,7 +2245,7 @@ export const FILE_SIGNATURES = {
                 14: 0x45,
                 15: 0x00,
                 16: [0x00, 0x01, 0x02, 0x03, 0x04, 0x05],
-                22: b => b >= 0x01 && b <= 0x80,
+                22: (b) => b >= 0x01 && b <= 0x80,
                 23: 0x11
             },
             extractor: null
@@ -2319,7 +2331,7 @@ export const FILE_SIGNATURES = {
             signature: {
                 0: 0x30,
                 1: 0x83,
-                2: b => b !== 0x00,
+                2: (b) => b !== 0x00,
                 5: 0x06,
                 6: 0x09
             },
@@ -2445,7 +2457,7 @@ export const FILE_SIGNATURES = {
                 7: 0x62,
                 8: 0x61,
                 9: 0x73,
-                10: 0x68,
+                10: 0x68
             },
             extractor: null
         },
@@ -2463,7 +2475,7 @@ export const FILE_SIGNATURES = {
                 5: 0x6e,
                 6: 0x2f,
                 7: 0x73,
-                8: 0x68,
+                8: 0x68
             },
             extractor: null
         },
@@ -2490,7 +2502,7 @@ export const FILE_SIGNATURES = {
                 14: 0x68,
                 15: 0x6f,
                 16: 0x6e,
-                17: [0x32, 0x33, 0xa, 0xd],
+                17: [0x32, 0x33, 0xa, 0xd]
             },
             extractor: null
         },
@@ -2514,7 +2526,7 @@ export const FILE_SIGNATURES = {
                 11: 0x72,
                 12: 0x75,
                 13: 0x62,
-                14: 0x79,
+                14: 0x79
             },
             extractor: null
         },
@@ -2538,7 +2550,7 @@ export const FILE_SIGNATURES = {
                 11: 0x70,
                 12: 0x65,
                 13: 0x72,
-                14: 0x6c,
+                14: 0x6c
             },
             extractor: null
         },
@@ -2552,7 +2564,7 @@ export const FILE_SIGNATURES = {
                 1: 0x3f,
                 2: 0x70,
                 3: 0x68,
-                4: 0x70,
+                4: 0x70
             },
             extractor: null
         },
@@ -2597,7 +2609,6 @@ export const FILE_SIGNATURES = {
     ]
 };
 
-
 /**
  * JPEG extractor.
  *
@@ -2610,7 +2621,8 @@ export function extractJPEG(bytes, offset) {
 
     while (stream.hasMore()) {
         const marker = stream.getBytes(2);
-        if (marker[0] !== 0xff) throw new Error(`Invalid marker while parsing JPEG at pos ${stream.position}: ${marker}`);
+        if (marker[0] !== 0xff)
+            throw new Error(`Invalid marker while parsing JPEG at pos ${stream.position}: ${marker}`);
 
         let segmentSize = 0;
         switch (marker[1]) {
@@ -2701,7 +2713,6 @@ export function extractJPEG(bytes, offset) {
     throw new Error("Unable to parse JPEG successfully");
 }
 
-
 /**
  * GIF extractor.
  *
@@ -2730,20 +2741,17 @@ export function extractGIF(bytes, offset) {
         while (stream.getBytes(2) !== [0x21, 0xf9]) {
             stream.moveBackwardsBy(2);
             stream.moveForwardsBy(stream.readInt(1));
-            if (!stream.readInt(1))
-                break;
+            if (!stream.readInt(1)) break;
             stream.moveBackwardsBy(1);
         }
 
         // When the end of the file is [0x00, 0x3b], end.
-        if (stream.readInt(1) === 0x3b)
-            break;
+        if (stream.readInt(1) === 0x3b) break;
 
         stream.moveForwardsBy(1);
     }
     return stream.carve();
 }
-
 
 /**
  * Portable executable extractor.
@@ -2812,7 +2820,6 @@ export function extractMZPE(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * PDF extractor.
  *
@@ -2831,7 +2838,6 @@ export function extractPDF(bytes, offset) {
 
     return stream.carve();
 }
-
 
 /**
  * ZIP extractor.
@@ -2854,7 +2860,6 @@ export function extractZIP(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * MACHO extractor
  *
@@ -2863,12 +2868,10 @@ export function extractZIP(bytes, offset) {
  * @returns {Uint8Array}
  */
 export function extractMACHO(bytes, offset) {
-
     // Magic bytes.
     const MHCIGAM64 = "207250237254";
     const MHMAGIC64 = "254237250207";
     const MHCIGAM = "206250237254";
-
 
     /**
      * Checks to see if the file is 64-bit.
@@ -2880,7 +2883,6 @@ export function extractMACHO(bytes, offset) {
         return magic === MHCIGAM64 || magic === MHMAGIC64;
     }
 
-
     /**
      * Checks the endianness of the file.
      *
@@ -2890,7 +2892,6 @@ export function extractMACHO(bytes, offset) {
     function shouldSwapBytes(magic) {
         return magic === MHCIGAM || magic === MHCIGAM64;
     }
-
 
     /**
      * Jumps through segment information and calculates the sum of the segement sizes.
@@ -2907,12 +2908,10 @@ export function extractMACHO(bytes, offset) {
         const LCSEGEMENT = 0x1;
 
         for (let i = 0; i < ncmds; i++) {
-
             // Move to start of segment.
             stream.moveTo(offset);
             const cmd = stream.readInt(4, isSwap);
             if (cmd === LCSEGEMENT64) {
-
                 // Move to size of segment field.
                 stream.moveTo(offset + 48);
 
@@ -2934,7 +2933,6 @@ export function extractMACHO(bytes, offset) {
         return total;
     }
 
-
     /**
      * Reads the number of command segments.
      *
@@ -2945,15 +2943,13 @@ export function extractMACHO(bytes, offset) {
      */
     function dumpMachHeader(stream, is64, isSwap) {
         let loadCommandsOffset = 28;
-        if (is64)
-            loadCommandsOffset += 4;
+        if (is64) loadCommandsOffset += 4;
 
         // Move to number of commands field.
         stream.moveTo(16);
         const ncmds = stream.readInt(4, isSwap);
         return dumpSegmentCommands(stream, loadCommandsOffset, isSwap, ncmds);
     }
-
 
     const stream = new Stream(bytes.slice(offset));
     const magic = stream.getBytes(4).join("");
@@ -2962,7 +2958,6 @@ export function extractMACHO(bytes, offset) {
     stream.moveTo(dumpMachHeader(stream, isMagic64(magic), shouldSwapBytes(magic) ? "le" : "be"));
     return stream.carve();
 }
-
 
 /**
  * TAR extractor.
@@ -2974,7 +2969,6 @@ export function extractMACHO(bytes, offset) {
 export function extractTAR(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
     while (stream.hasMore()) {
-
         // Move to ustar identifier.
         stream.moveForwardsBy(0x101);
         if (stream.getBytes(5).join("") !== [0x75, 0x73, 0x74, 0x61, 0x72].join("")) {
@@ -2993,7 +2987,7 @@ export function extractTAR(bytes, offset) {
         });
 
         // Round number up from octet to nearest 512.
-        fsize = (Math.ceil(parseInt(fsize, 8) / 512) * 512);
+        fsize = Math.ceil(parseInt(fsize, 8) / 512) * 512;
 
         // Move forwards to the end of that file.
         stream.moveForwardsBy(fsize + 0x179);
@@ -3001,7 +2995,6 @@ export function extractTAR(bytes, offset) {
     stream.consumeWhile(0x00);
     return stream.carve();
 }
-
 
 /**
  * PNG extractor.
@@ -3027,10 +3020,8 @@ export function extractPNG(bytes, offset) {
         stream.moveForwardsBy(chunkSize + 4);
     }
 
-
     return stream.carve();
 }
-
 
 /**
  * WEBP extractor.
@@ -3055,7 +3046,6 @@ export function extractWEBP(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * BMP extractor.
  *
@@ -3078,7 +3068,6 @@ export function extractBMP(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * ICO extractor.
  *
@@ -3095,7 +3084,7 @@ export function extractICO(bytes, offset) {
     const numberFiles = stream.readInt(2, "le");
 
     // Move forward to the last file header.
-    stream.moveForwardsBy(8 + ((numberFiles-1) * 16));
+    stream.moveForwardsBy(8 + (numberFiles - 1) * 16);
     const fileSize = stream.readInt(4, "le");
     const fileOffset = stream.readInt(4, "le");
 
@@ -3103,7 +3092,6 @@ export function extractICO(bytes, offset) {
     stream.moveTo(fileOffset + fileSize);
     return stream.carve();
 }
-
 
 /**
  * TARGA extractor.
@@ -3137,8 +3125,7 @@ export function extractTARGA(bytes, offset) {
             stream.moveBackwardsBy(sizeOfSize);
 
             // If the size matches.
-            if (size === i)
-                break;
+            if (size === i) break;
         }
     }
 
@@ -3150,11 +3137,9 @@ export function extractTARGA(bytes, offset) {
 
         // The documentation said that 0x100000 was the largest the file could be.
         for (let i = 0; i < 0x100000; i++) {
-
             // (Height * Width * pixel depth in bits)/8
-            const total = (stream.readInt(2, "le") * stream.readInt(2, "le") * stream.readInt(1))/8;
-            if (total === i-1)
-                break;
+            const total = (stream.readInt(2, "le") * stream.readInt(2, "le") * stream.readInt(1)) / 8;
+            if (total === i - 1) break;
 
             stream.moveBackwardsBy(6);
         }
@@ -3182,12 +3167,11 @@ export function extractTARGA(bytes, offset) {
         moveBackwardsUntilImageSize();
 
         // Move backwards over the reaminder of the header + the 5 we borrowed in moveBackwardsUntilImageSize().
-        stream.moveBackwardsBy(0xc+5);
+        stream.moveBackwardsBy(0xc + 5);
     }
 
-    return stream.carve(stream.position, offset+0x12);
+    return stream.carve(stream.position, offset + 0x12);
 }
-
 
 /**
  * WAV extractor.
@@ -3208,7 +3192,6 @@ export function extractWAV(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * MP3 extractor.
  *
@@ -3220,14 +3203,32 @@ export function extractMP3(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
     // Constants for flag byte.
-    const bitRateIndexes = ["free", 32000, 40000, 48000, 56000, 64000, 80000, 96000, 112000, 128000, 160000, 192000, 224000, 256000, 320000, "bad"];
+    const bitRateIndexes = [
+        "free",
+        32000,
+        40000,
+        48000,
+        56000,
+        64000,
+        80000,
+        96000,
+        112000,
+        128000,
+        160000,
+        192000,
+        224000,
+        256000,
+        320000,
+        "bad"
+    ];
 
     const samplingRateFrequencyIndex = [44100, 48000, 32000, "reserved"];
 
     // ID3 tag, move over it.
-    if ((stream.getBytes(3).toString() === [0x49, 0x44, 0x33].toString())) {
+    if (stream.getBytes(3).toString() === [0x49, 0x44, 0x33].toString()) {
         stream.moveTo(6);
-        const tagSize = (stream.readInt(1) << 21) | (stream.readInt(1) << 14) | (stream.readInt(1) << 7) | stream.readInt(1);
+        const tagSize
+            = (stream.readInt(1) << 21) | (stream.readInt(1) << 14) | (stream.readInt(1) << 7) | stream.readInt(1);
         stream.moveForwardsBy(tagSize);
     } else {
         stream.moveTo(0);
@@ -3235,7 +3236,6 @@ export function extractMP3(bytes, offset) {
 
     // Loop over all the frame headers in the file.
     while (stream.hasMore()) {
-
         // If it has an old TAG frame at the end of it, fixed size, 128 bytes.
         if (stream.getBytes(3) === [0x54, 0x41, 0x47].toString()) {
             stream.moveForwardsBy(125);
@@ -3267,11 +3267,11 @@ export function extractMP3(bytes, offset) {
         }
 
         // Formula: FrameLength = (144 * BitRate / SampleRate ) + Padding
-        const frameSize = Math.floor(((144 * bitRate) / sampleRate) + padding);
+        const frameSize = Math.floor((144 * bitRate) / sampleRate + padding);
 
         // If the next move goes past the end of the bytestream then extract the entire bytestream.
         // We assume complete frames in the above formula because there is no field that suggests otherwise.
-        if ((stream.position + frameSize) > stream.length) {
+        if (stream.position + frameSize > stream.length) {
             stream.moveTo(stream.length);
             break;
         } else {
@@ -3280,7 +3280,6 @@ export function extractMP3(bytes, offset) {
     }
     return stream.carve();
 }
-
 
 /**
  * FLV extractor.
@@ -3312,7 +3311,7 @@ export function extractFLV(bytes, offset) {
             break;
         }
 
-        if (prevTagSize !== (tagSize + 11)) {
+        if (prevTagSize !== tagSize + 11) {
             // Previous tag was not valid, reverse back over this header
             // and the previous tag body and header
             stream.moveBackwardsBy(tagSize + 11 + 5);
@@ -3328,7 +3327,6 @@ export function extractFLV(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * RTF extractor.
  *
@@ -3341,7 +3339,8 @@ export function extractRTF(bytes, offset) {
 
     let openTags = 0;
 
-    if (stream.readInt(1) !== 0x7b) { // {
+    if (stream.readInt(1) !== 0x7b) {
+        // {
         throw new Error("Not a valid RTF file");
     } else {
         openTags++;
@@ -3368,7 +3367,6 @@ export function extractRTF(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * SQLITE extractor.
  *
@@ -3388,11 +3386,10 @@ export function extractSQLITE(bytes, offset) {
     const numPages = stream.readInt(4);
 
     // Move to the end of all the pages.
-    stream.moveTo(pageSize*numPages);
+    stream.moveTo(pageSize * numPages);
 
     return stream.carve();
 }
-
 
 /**
  * PList (XML) extractor.
@@ -3414,7 +3411,6 @@ export function extractPListXML(bytes, offset) {
     // While we have an unequal amount of braces.
     while (braceCount > 0 && stream.hasMore()) {
         if (stream.readInt(1) === 0x3c) {
-
             // If we hit an <plist.
             if (stream.getBytes(5).join("") === [0x70, 0x6c, 0x69, 0x73, 0x74].join("")) {
                 braceCount++;
@@ -3435,7 +3431,6 @@ export function extractPListXML(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * MacOS X Keychain Extactor.
  *
@@ -3455,7 +3450,6 @@ export function extractMacOSXKeychain(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * OLE2 extractor.
  *
@@ -3466,16 +3460,62 @@ export function extractMacOSXKeychain(bytes, offset) {
 export function extractOLE2(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
     const entries = [
-        [[0x52, 0x00, 0x6f, 0x00, 0x6f, 0x00, 0x74, 0x00, 0x20, 0x00, 0x45, 0x00, 0x6e, 0x00, 0x74, 0x00, 0x72, 0x00, 0x79], 19, "Root Entry"],
+        [
+            [
+                0x52, 0x00, 0x6f, 0x00, 0x6f, 0x00, 0x74, 0x00, 0x20, 0x00, 0x45, 0x00, 0x6e, 0x00, 0x74, 0x00, 0x72,
+                0x00, 0x79
+            ],
+            19,
+            "Root Entry"
+        ],
         [[0x57, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x6b, 0x00, 0x62, 0x00, 0x6f, 0x00, 0x6f, 0x00, 0x6b], 15, "Workbook"],
-        [[0x43, 0x00, 0x75, 0x00, 0x72, 0x00, 0x72, 0x00, 0x65, 0x00, 0x6e, 0x00, 0x74, 0x00, 0x20, 0x00, 0x55, 0x00, 0x73, 0x00, 0x65, 0x00, 0x72],  23,  "Current User"],
-        [[0x50, 0x00, 0x6f, 0x00, 0x77, 0x00, 0x65, 0x00, 0x72, 0x00, 0x50, 0x00, 0x6f, 0x00, 0x69, 0x00, 0x6e, 0x00, 0x74, 0x00, 0x20, 0x00, 0x44, 0x00, 0x6f, 0x00, 0x63, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x65, 0x00, 0x6e, 0x00, 0x74], 37, "PowerPoint Document"],
-        [[0x57, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x64, 0x00, 0x44, 0x00, 0x6f, 0x00, 0x63, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x65, 0x00, 0x6e, 0x00, 0x74], 23, "WordDocument"],
+        [
+            [
+                0x43, 0x00, 0x75, 0x00, 0x72, 0x00, 0x72, 0x00, 0x65, 0x00, 0x6e, 0x00, 0x74, 0x00, 0x20, 0x00, 0x55,
+                0x00, 0x73, 0x00, 0x65, 0x00, 0x72
+            ],
+            23,
+            "Current User"
+        ],
+        [
+            [
+                0x50, 0x00, 0x6f, 0x00, 0x77, 0x00, 0x65, 0x00, 0x72, 0x00, 0x50, 0x00, 0x6f, 0x00, 0x69, 0x00, 0x6e,
+                0x00, 0x74, 0x00, 0x20, 0x00, 0x44, 0x00, 0x6f, 0x00, 0x63, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x65, 0x00,
+                0x6e, 0x00, 0x74
+            ],
+            37,
+            "PowerPoint Document"
+        ],
+        [
+            [
+                0x57, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x64, 0x00, 0x44, 0x00, 0x6f, 0x00, 0x63, 0x00, 0x75, 0x00, 0x6d,
+                0x00, 0x65, 0x00, 0x6e, 0x00, 0x74
+            ],
+            23,
+            "WordDocument"
+        ],
         [[0x44, 0x00, 0x61, 0x00, 0x74, 0x00, 0x61], 7, "Data"],
         [[0x50, 0x00, 0x69, 0x00, 0x63, 0x00, 0x74, 0x00, 0x75, 0x00, 0x72, 0x00, 0x65, 0x00, 0x73], 15, "Pictures"],
         [[0x31, 0x00, 0x54, 0x00, 0x61, 0x00, 0x62, 0x00, 0x6c, 0x00, 0x65], 11, "1Table"],
-        [[0x05, 0x00, 0x53, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x72, 0x00, 0x79, 0x00, 0x49, 0x00, 0x6e, 0x00, 0x66, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x74, 0x00, 0x69, 0x00, 0x6f, 0x00, 0x6e], 37, "SummaryInformation"],
-        [[0x05, 0x00, 0x44, 0x00, 0x6f, 0x00, 0x63, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x65, 0x00, 0x6e, 0x00, 0x74, 0x00, 0x53, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x72, 0x00, 0x79, 0x00, 0x49, 0x00, 0x6e, 0x00, 0x66, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x74, 0x00, 0x69, 0x00, 0x6f, 0x00, 0x6e], 53, "DocumentSummaryInformation"],
+        [
+            [
+                0x05, 0x00, 0x53, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x72, 0x00, 0x79, 0x00, 0x49,
+                0x00, 0x6e, 0x00, 0x66, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x74, 0x00, 0x69, 0x00,
+                0x6f, 0x00, 0x6e
+            ],
+            37,
+            "SummaryInformation"
+        ],
+        [
+            [
+                0x05, 0x00, 0x44, 0x00, 0x6f, 0x00, 0x63, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x65, 0x00, 0x6e, 0x00, 0x74,
+                0x00, 0x53, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x72, 0x00, 0x79, 0x00, 0x49, 0x00,
+                0x6e, 0x00, 0x66, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x74, 0x00, 0x69, 0x00, 0x6f,
+                0x00, 0x6e
+            ],
+            53,
+            "DocumentSummaryInformation"
+        ],
         [[0x43, 0x00, 0x6f, 0x00, 0x6d, 0x00, 0x70, 0x00, 0x4f, 0x00, 0x62, 0x00, 0x6a], 13, "Comp Obj"],
         [[0x01, 0x00], 2, "Entry"]
     ];
@@ -3483,8 +3523,7 @@ export function extractOLE2(bytes, offset) {
 
     // Move to endianess field.
     stream.moveForwardsBy(28);
-    if (stream.readInt(2, endianness) === 0xfffe)
-        endianness = "be";
+    if (stream.readInt(2, endianness) === 0xfffe) endianness = "be";
 
     // Calculate the size of the normal sectors.
     const sizeOfSector = 2 ** stream.readInt(2, endianness);
@@ -3493,10 +3532,10 @@ export function extractOLE2(bytes, offset) {
     stream.moveTo(48);
 
     // Read root directory offset.
-    const rootStuff  = stream.readInt(4, endianness);
+    const rootStuff = stream.readInt(4, endianness);
 
     // Calculate root directory offset.
-    let total = 512 + (rootStuff * sizeOfSector);
+    let total = 512 + rootStuff * sizeOfSector;
     stream.moveTo(total);
 
     // While valid directory entries.
@@ -3506,7 +3545,6 @@ export function extractOLE2(bytes, offset) {
 
         // Attempt to determine what directory entry it is.
         for (const element of entries) {
-
             // If the byte pattern matches.
             if (stream.getBytes(element[1]).join("") === element[0].join("")) {
                 stream.moveBackwardsBy(element[1]);
@@ -3514,12 +3552,10 @@ export function extractOLE2(bytes, offset) {
 
                 // Move forwards by the size of the comp obj.
                 if (element[2] === "Comp Obj") {
-
                     // The size of the Comp Obj entry - 128. Since we add 128 later.
                     total += 128 * 6;
                     stream.moveTo(total);
                 } else if (element[2] === "Entry") {
-
                     // If there is an entry move backwards by 126 to then move forwards by 128. Hence a total displacement of 2.
                     stream.moveBackwardsBy(126);
                 }
@@ -3530,7 +3566,6 @@ export function extractOLE2(bytes, offset) {
 
         // If we have found a valid entry, move forwards by 128.
         if (found) {
-
             // Every entry is at least 128 in size, some are bigger which is dealt with by the above if statement.
             total += 128;
             stream.moveForwardsBy(128);
@@ -3544,7 +3579,6 @@ export function extractOLE2(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * GZIP extractor.
  *
@@ -3554,7 +3588,6 @@ export function extractOLE2(bytes, offset) {
  */
 export function extractGZIP(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
-
 
     /* HEADER */
 
@@ -3572,7 +3605,6 @@ export function extractGZIP(bytes, offset) {
 
     // Skip over OS
     stream.moveForwardsBy(1);
-
 
     /* OPTIONAL HEADERS */
 
@@ -3599,11 +3631,9 @@ export function extractGZIP(bytes, offset) {
         stream.moveForwardsBy(2);
     }
 
-
     /* DEFLATE DATA */
 
     parseDEFLATE(stream);
-
 
     /* FOOTER */
 
@@ -3612,7 +3642,6 @@ export function extractGZIP(bytes, offset) {
 
     return stream.carve();
 }
-
 
 /**
  * BZIP2 extractor.
@@ -3640,8 +3669,7 @@ export function extractBZIP2(bytes, offset) {
     for (let i = 0; i < lookingfor.length; i++) {
         // Continue until an EOF.
         stream.continueUntil(lookingfor[i]);
-        if (stream.getBytes(5).join("") === lookingfor[i].join(""))
-            break;
+        if (stream.getBytes(5).join("") === lookingfor[i].join("")) break;
 
         // Jump back to the start if invalid EOF.
         stream.moveTo(0);
@@ -3649,7 +3677,6 @@ export function extractBZIP2(bytes, offset) {
     stream.moveForwardsBy(4);
     return stream.carve();
 }
-
 
 /**
  * Zlib extractor.
@@ -3681,7 +3708,6 @@ export function extractZlib(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * XZ extractor.
  *
@@ -3701,7 +3727,6 @@ export function extractXZ(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * DEB extractor.
  *
@@ -3714,10 +3739,9 @@ export function extractDEB(bytes, offset) {
     // Move past !<arch>
     stream.moveForwardsBy(8);
     while (stream.hasMore()) {
-
         // Move to size field.
         stream.moveForwardsBy(48);
-        let fsize= "";
+        let fsize = "";
 
         // Convert size to a usable number.
         for (const elem of stream.getBytes(10)) {
@@ -3731,7 +3755,6 @@ export function extractDEB(bytes, offset) {
     }
     return stream.carve();
 }
-
 
 /**
  * ELF extractor.
@@ -3776,15 +3799,10 @@ export function extractELF(bytes, offset) {
     return stream.carve();
 }
 
-
 // Construct required Huffman Tables
 const fixedLiteralTableLengths = new Array(288);
 for (let i = 0; i < fixedLiteralTableLengths.length; i++) {
-    fixedLiteralTableLengths[i] =
-        (i <= 143) ? 8 :
-            (i <= 255) ? 9 :
-                (i <= 279) ? 7 :
-                    8;
+    fixedLiteralTableLengths[i] = i <= 143 ? 8 : i <= 255 ? 9 : i <= 279 ? 7 : 8;
 }
 const fixedLiteralTable = buildHuffmanTable(fixedLiteralTableLengths);
 const fixedDistanceTableLengths = new Array(30).fill(5);
@@ -3873,15 +3891,11 @@ function parseDEFLATE(stream) {
     }
 
     // Consume final byte if it has not been fully consumed yet
-    if (stream.bitPos > 0)
-        stream.moveForwardsBy(1);
+    if (stream.bitPos > 0) stream.moveForwardsBy(1);
 }
 
-
 // Static length tables
-const lengthExtraTable = [
-    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, 0, 0
-];
+const lengthExtraTable = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, 0, 0];
 const distanceExtraTable = [
     0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13
 ];
@@ -3903,8 +3917,7 @@ function parseHuffmanBlock(stream, litTab, distTab) {
         if (code === 256) break;
 
         // Detect probably infinite loops
-        if (++loops > 10000)
-            throw new Error("Caught in probable infinite loop while parsing Huffman Block");
+        if (++loops > 10000) throw new Error("Caught in probable infinite loop while parsing Huffman Block");
 
         // Literal
         if (code < 256) continue;
@@ -3917,7 +3930,6 @@ function parseHuffmanBlock(stream, litTab, distTab) {
         stream.readBits(distanceExtraTable[code], "le");
     }
 }
-
 
 /**
  * Builds a Huffman table given the relevant code lengths
@@ -3960,7 +3972,6 @@ function buildHuffmanTable(lengths) {
     return [table, maxCodeLength, minCodeLength];
 }
 
-
 /**
  * Reads the next Huffman code from the stream, given the relevant code table
  *
@@ -3977,14 +3988,15 @@ function readHuffmanCode(stream, table) {
     const codeLength = codeWithLength >>> 16;
 
     if (codeLength > maxCodeLength) {
-        throw new Error(`Invalid Huffman Code length while parsing DEFLATE block at pos ${stream.position}: ${codeLength}`);
+        throw new Error(
+            `Invalid Huffman Code length while parsing DEFLATE block at pos ${stream.position}: ${codeLength}`
+        );
     }
 
     stream.moveBackwardsByBits(maxCodeLength - codeLength);
 
     return codeWithLength & 0xffff;
 }
-
 
 /**
  * EVTX extractor.
@@ -4003,14 +4015,12 @@ export function extractEVTX(bytes, offset) {
 
     while (stream.hasMore()) {
         // Loop through ELFCHNKs.
-        if (stream.getBytes(7).join("") !== [0x45, 0x6c, 0x66, 0x43, 0x68, 0x6e, 0x6b].join(""))
-            break;
+        if (stream.getBytes(7).join("") !== [0x45, 0x6c, 0x66, 0x43, 0x68, 0x6e, 0x6b].join("")) break;
         stream.moveForwardsBy(0xfff9);
     }
     stream.consumeWhile(0x00);
     return stream.carve();
 }
-
 
 /**
  * EVT extractor.
@@ -4031,10 +4041,9 @@ export function extractEVT(bytes, offset) {
     const eofSize = stream.readInt(4, "le");
 
     // Move past EOF.
-    stream.moveForwardsBy(eofSize-4);
+    stream.moveForwardsBy(eofSize - 4);
     return stream.carve();
 }
-
 
 /**
  * DMP extractor.
@@ -4055,7 +4064,6 @@ export function extractDMP(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * PF extractor.
  *
@@ -4073,7 +4081,6 @@ export function extractPF(bytes, offset) {
     return stream.carve();
 }
 
-
 /**
  * PF (Win 10) extractor.
  *
@@ -4089,7 +4096,6 @@ export function extractPFWin10(bytes, offset) {
 
     return stream.carve();
 }
-
 
 /**
  * LNK extractor.
@@ -4107,7 +4113,6 @@ export function extractLNK(bytes, offset) {
 
     return stream.carve();
 }
-
 
 /**
  * LZOP extractor.
@@ -4127,7 +4132,8 @@ export function extractLZOP(bytes, offset) {
     const F_H_FILTER = 0x00000800;
     const F_H_EXTRA_FIELD = 0x00000040;
 
-    let numCheckSumC = 0, numCheckSumD = 0;
+    let numCheckSumC = 0,
+        numCheckSumD = 0;
 
     // Move over magic bytes.
     stream.moveForwardsBy(9);
@@ -4138,26 +4144,20 @@ export function extractLZOP(bytes, offset) {
     stream.moveForwardsBy(6);
     const flags = stream.readInt(4, "be");
 
-    if (version & F_H_FILTER)
-        stream.moveForwardsBy(4);
+    if (version & F_H_FILTER) stream.moveForwardsBy(4);
 
-    if (flags & F_ADLER32_C)
-        numCheckSumC++;
+    if (flags & F_ADLER32_C) numCheckSumC++;
 
-    if (flags & F_CRC32_C)
-        numCheckSumC++;
+    if (flags & F_CRC32_C) numCheckSumC++;
 
-    if (flags & F_ADLER32_D)
-        numCheckSumD++;
+    if (flags & F_ADLER32_D) numCheckSumD++;
 
-    if (flags & F_CRC32_D)
-        numCheckSumD++;
+    if (flags & F_CRC32_D) numCheckSumD++;
 
     // Move over the mode, mtime_low
     stream.moveForwardsBy(8);
 
-    if (version >= 0x0940)
-        stream.moveForwardsBy(4);
+    if (version >= 0x0940) stream.moveForwardsBy(4);
 
     const fnameSize = stream.readInt(1, "be");
 
@@ -4176,16 +4176,14 @@ export function extractLZOP(bytes, offset) {
         const uncompSize = stream.readInt(4, "be");
 
         // If data has no length, break.
-        if (uncompSize === 0)
-            break;
+        if (uncompSize === 0) break;
 
         const compSize = stream.readInt(4, "be");
 
-        const numCheckSumSkip = (uncompSize === compSize) ? numCheckSumD : numCheckSumD + numCheckSumC;
+        const numCheckSumSkip = uncompSize === compSize ? numCheckSumD : numCheckSumD + numCheckSumC;
 
         // skip forwards by compressed data size and the size of the checksum(s).
-        stream.moveForwardsBy(compSize + (numCheckSumSkip * 4));
+        stream.moveForwardsBy(compSize + numCheckSumSkip * 4);
     }
     return stream.carve();
-
 }

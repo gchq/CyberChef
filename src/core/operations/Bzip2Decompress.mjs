@@ -13,7 +13,6 @@ import { isWorkerEnvironment } from "../Utils.mjs";
  * Bzip2 Decompress operation
  */
 class Bzip2Decompress extends Operation {
-
     /**
      * Bzip2Decompress constructor
      */
@@ -54,7 +53,7 @@ class Bzip2Decompress extends Operation {
         }
         if (isWorkerEnvironment()) self.sendStatusMessage("Loading Bzip2...");
         return new Promise((resolve, reject) => {
-            Bzip2().then(bzip2 => {
+            Bzip2().then((bzip2) => {
                 if (isWorkerEnvironment()) self.sendStatusMessage("Decompressing data...");
                 const inpArray = new Uint8Array(input);
                 const bzip2cc = bzip2.decompressBZ2(inpArray, small ? 1 : 0);
@@ -67,7 +66,6 @@ class Bzip2Decompress extends Operation {
             });
         });
     }
-
 }
 
 export default Bzip2Decompress;

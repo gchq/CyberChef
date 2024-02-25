@@ -16,7 +16,7 @@ loglevelMessagePrefix(log, {
     staticPrefixes: ["DishWorker"]
 });
 
-self.addEventListener("message", function(e) {
+self.addEventListener("message", function (e) {
     // Handle message from the main thread
     const r = e.data;
     log.debug(`Receiving command '${r.action}'`);
@@ -50,15 +50,18 @@ self.addEventListener("message", function(e) {
 async function getDishAs(data) {
     const newDish = new Dish(data.dish),
         value = await newDish.get(data.type),
-        transferable = (data.type === "ArrayBuffer") ? [value] : undefined;
+        transferable = data.type === "ArrayBuffer" ? [value] : undefined;
 
-    self.postMessage({
-        action: "dishReturned",
-        data: {
-            value: value,
-            id: data.id
-        }
-    }, transferable);
+    self.postMessage(
+        {
+            action: "dishReturned",
+            data: {
+                value: value,
+                id: data.id
+            }
+        },
+        transferable
+    );
 }
 
 /**

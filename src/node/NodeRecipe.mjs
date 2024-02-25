@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import {operations} from "./index.mjs";
+import { operations } from "./index.mjs";
 import { sanitise } from "./apiUtils.mjs";
 
 /**
@@ -13,7 +13,6 @@ import { sanitise } from "./apiUtils.mjs";
  * environment.
  */
 class NodeRecipe {
-
     /**
      * Recipe constructor
      * @param recipeConfig
@@ -21,7 +20,6 @@ class NodeRecipe {
     constructor(recipeConfig) {
         this._parseConfig(recipeConfig);
     }
-
 
     /**
      * Validate an ingredient & coerce to operation if necessary.
@@ -42,10 +40,12 @@ class NodeRecipe {
             } else {
                 throw new TypeError(`Couldn't find an operation with name '${ing}'.`);
             }
-        // CASE operation given. Check its a chef operation and check its not flowcontrol
+            // CASE operation given. Check its a chef operation and check its not flowcontrol
         } else if (typeof ing === "function") {
             if (ing.flowControl) {
-                throw new TypeError(`flowControl operations like ${ing.opName} are not currently allowed in recipes for chef.bake in the Node API`);
+                throw new TypeError(
+                    `flowControl operations like ${ing.opName} are not currently allowed in recipes for chef.bake in the Node API`
+                );
             }
 
             if (operations.includes(ing)) {
@@ -53,18 +53,17 @@ class NodeRecipe {
             } else {
                 throw new TypeError("Inputted function not a Chef operation.");
             }
-        // CASE: op, maybe with configuration
+            // CASE: op, maybe with configuration
         } else if (ing.op) {
             const sanitisedOp = this._validateIngredient(ing.op);
             if (ing.args) {
-                return {op: sanitisedOp, args: ing.args};
+                return { op: sanitisedOp, args: ing.args };
             }
             return sanitisedOp;
         } else {
             throw new TypeError("Recipe can only contain function names or functions");
         }
     }
-
 
     /**
      * Parse an opList from a recipeConfig and assign it to the recipe's opList.
@@ -91,8 +90,10 @@ class NodeRecipe {
     execute(dish) {
         return this.opList.reduce((prev, curr) => {
             // CASE where opList item is op and args
-            if (Object.prototype.hasOwnProperty.call(curr, "op") &&
-                Object.prototype.hasOwnProperty.call(curr, "args")) {
+            if (
+                Object.prototype.hasOwnProperty.call(curr, "op")
+                && Object.prototype.hasOwnProperty.call(curr, "args")
+            ) {
                 return curr.op(prev, curr.args);
             }
             // CASE opList item is just op.

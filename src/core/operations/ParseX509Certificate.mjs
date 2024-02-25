@@ -15,7 +15,6 @@ import Utils from "../Utils.mjs";
  * Parse X.509 certificate operation
  */
 class ParseX509Certificate extends Operation {
-
     /**
      * ParseX509Certificate constructor
      */
@@ -24,7 +23,8 @@ class ParseX509Certificate extends Operation {
 
         this.name = "Parse X.509 certificate";
         this.module = "PublicKey";
-        this.description = "X.509 is an ITU-T standard for a public key infrastructure (PKI) and Privilege Management Infrastructure (PMI). It is commonly involved with SSL/TLS security.<br><br>This operation displays the contents of a certificate in a human readable format, similar to the openssl command line tool.<br><br>Tags: X509, server hello, handshake";
+        this.description
+            = "X.509 is an ITU-T standard for a public key infrastructure (PKI) and Privilege Management Infrastructure (PMI). It is commonly involved with SSL/TLS security.<br><br>This operation displays the contents of a certificate in a human readable format, similar to the openssl command line tool.<br><br>Tags: X509, server hello, handshake";
         this.infoURL = "https://wikipedia.org/wiki/X.509";
         this.inputType = "string";
         this.outputType = "string";
@@ -98,20 +98,22 @@ class ParseX509Certificate extends Operation {
             value: pk.type
         });
 
-        if (pk.type === "EC") { // ECDSA
+        if (pk.type === "EC") {
+            // ECDSA
             pkFields.push({
                 key: "Curve Name",
                 value: pk.curveName
             });
             pkFields.push({
                 key: "Length",
-                value: (((new r.BigInteger(pk.pubKeyHex, 16)).bitLength()-3) /2) + " bits"
+                value: (new r.BigInteger(pk.pubKeyHex, 16).bitLength() - 3) / 2 + " bits"
             });
             pkFields.push({
                 key: "pub",
                 value: formatByteStr(pk.pubKeyHex, 16, 18)
             });
-        } else if (pk.type === "DSA") { // DSA
+        } else if (pk.type === "DSA") {
+            // DSA
             pkFields.push({
                 key: "pub",
                 value: formatByteStr(pk.y.toString(16), 16, 18)
@@ -128,7 +130,8 @@ class ParseX509Certificate extends Operation {
                 key: "G",
                 value: formatByteStr(pk.g.toString(16), 16, 18)
             });
-        } else if (pk.e) { // RSA
+        } else if (pk.e) {
+            // RSA
             pkFields.push({
                 key: "Length",
                 value: pk.n.bitLength() + " bits"
@@ -164,10 +167,12 @@ class ParseX509Certificate extends Operation {
             // Error processing signature, output without further breakout
         }
 
-        if (breakoutSig) { // DSA or ECDSA
+        if (breakoutSig) {
+            // DSA or ECDSA
             sigStr = `  r:              ${formatByteStr(r.ASN1HEX.getV(sig, 4), 16, 18)}
   s:              ${formatByteStr(r.ASN1HEX.getV(sig, 48), 16, 18)}`;
-        } else { // RSA or unknown
+        } else {
+            // RSA or unknown
             sigStr = `  Signature:      ${formatByteStr(sig, 16, 18)}`;
         }
 
@@ -200,7 +205,6 @@ ${sigStr}
 Extensions
 ${extensions}`;
     }
-
 }
 
 /**
@@ -209,16 +213,32 @@ ${extensions}`;
  * @param {string} dateStr
  * @returns {string}
  */
-function formatDate (dateStr) {
-    if (dateStr.length === 13) { // UTC Time
+function formatDate(dateStr) {
+    if (dateStr.length === 13) {
+        // UTC Time
         dateStr = (dateStr[0] < "5" ? "20" : "19") + dateStr;
     }
-    return dateStr[6] + dateStr[7] + "/" +
-        dateStr[4] + dateStr[5] + "/" +
-        dateStr[0] + dateStr[1] + dateStr[2] + dateStr[3] + " " +
-        dateStr[8] + dateStr[9] + ":" +
-        dateStr[10] + dateStr[11] + ":" +
-        dateStr[12] + dateStr[13];
+    return (
+        dateStr[6]
+        + dateStr[7]
+        + "/"
+        + dateStr[4]
+        + dateStr[5]
+        + "/"
+        + dateStr[0]
+        + dateStr[1]
+        + dateStr[2]
+        + dateStr[3]
+        + " "
+        + dateStr[8]
+        + dateStr[9]
+        + ":"
+        + dateStr[10]
+        + dateStr[11]
+        + ":"
+        + dateStr[12]
+        + dateStr[13]
+    );
 }
 
 export default ParseX509Certificate;

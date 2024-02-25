@@ -12,7 +12,6 @@ import CryptoJS from "crypto-js";
  * Derive EVP key operation
  */
 class DeriveEVPKey extends Operation {
-
     /**
      * DeriveEVPKey constructor
      */
@@ -21,7 +20,8 @@ class DeriveEVPKey extends Operation {
 
         this.name = "Derive EVP key";
         this.module = "Ciphers";
-        this.description = "This operation performs a password-based key derivation function (PBKDF) used extensively in OpenSSL. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>If you leave the salt argument empty, a random salt will be generated.";
+        this.description
+            = "This operation performs a password-based key derivation function (PBKDF) used extensively in OpenSSL. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>If you leave the salt argument empty, a random salt will be generated.";
         this.infoURL = "https://wikipedia.org/wiki/Key_derivation_function";
         this.inputType = "string";
         this.outputType = "string";
@@ -67,15 +67,15 @@ class DeriveEVPKey extends Operation {
             iterations = args[2],
             hasher = args[3],
             salt = Utils.convertToByteString(args[4].string, args[4].option),
-            key = CryptoJS.EvpKDF(passphrase, salt, { // lgtm [js/insufficient-password-hash]
+            key = CryptoJS.EvpKDF(passphrase, salt, {
+                // lgtm [js/insufficient-password-hash]
                 keySize: keySize,
                 hasher: CryptoJS.algo[hasher],
-                iterations: iterations,
+                iterations: iterations
             });
 
         return key.toString(CryptoJS.enc.Hex);
     }
-
 }
 
 export default DeriveEVPKey;
@@ -106,7 +106,7 @@ CryptoJS.kdf.OpenSSL.execute = function (password, keySize, ivSize, salt) {
     // Generate random salt if no salt specified and not set to false
     // This line changed from `if (!salt) {` to the following
     if (salt === undefined || salt === null) {
-        salt = CryptoJS.lib.WordArray.random(64/8);
+        salt = CryptoJS.lib.WordArray.random(64 / 8);
     }
 
     // Derive key and IV
@@ -119,7 +119,6 @@ CryptoJS.kdf.OpenSSL.execute = function (password, keySize, ivSize, salt) {
     // Return params
     return CryptoJS.lib.CipherParams.create({ key: key, iv: iv, salt: salt });
 };
-
 
 /**
  * Override for the CryptoJS Hex encoding parser to remove whitespace before attempting to parse

@@ -14,7 +14,6 @@ import jimp from "jimp";
  * Convert Image Format operation
  */
 class ConvertImageFormat extends Operation {
-
     /**
      * ConvertImageFormat constructor
      */
@@ -23,7 +22,8 @@ class ConvertImageFormat extends Operation {
 
         this.name = "Convert Image Format";
         this.module = "Image";
-        this.description = "Converts an image between different formats. Supported formats:<br><ul><li>Joint Photographic Experts Group (JPEG)</li><li>Portable Network Graphics (PNG)</li><li>Bitmap (BMP)</li><li>Tagged Image File Format (TIFF)</li></ul><br>Note: GIF files are supported for input, but cannot be outputted.";
+        this.description
+            = "Converts an image between different formats. Supported formats:<br><ul><li>Joint Photographic Experts Group (JPEG)</li><li>Portable Network Graphics (PNG)</li><li>Bitmap (BMP)</li><li>Tagged Image File Format (TIFF)</li></ul><br>Note: GIF files are supported for input, but cannot be outputted.";
         this.infoURL = "https://wikipedia.org/wiki/Image_file_formats";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -32,12 +32,7 @@ class ConvertImageFormat extends Operation {
             {
                 name: "Output Format",
                 type: "option",
-                value: [
-                    "JPEG",
-                    "PNG",
-                    "BMP",
-                    "TIFF"
-                ]
+                value: ["JPEG", "PNG", "BMP", "TIFF"]
             },
             {
                 name: "JPEG Quality",
@@ -49,14 +44,7 @@ class ConvertImageFormat extends Operation {
             {
                 name: "PNG Filter Type",
                 type: "option",
-                value: [
-                    "Auto",
-                    "None",
-                    "Sub",
-                    "Up",
-                    "Average",
-                    "Paeth"
-                ]
+                value: ["Auto", "None", "Sub", "Up", "Average", "Paeth"]
             },
             {
                 name: "PNG Deflate Level",
@@ -137,7 +125,6 @@ class ConvertImageFormat extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default ConvertImageFormat;

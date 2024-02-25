@@ -46,7 +46,7 @@ function chacha(key, nonce, counter, rounds) {
      * @returns {integer}
      */
     function ROL32(x, n) {
-        return ((x << n) & 0xFFFFFFFF) | (x >>> (32 - n));
+        return ((x << n) & 0xffffffff) | (x >>> (32 - n));
     }
 
     /**
@@ -60,25 +60,29 @@ function chacha(key, nonce, counter, rounds) {
      * @returns {integer}
      */
     function quarterround(x, a, b, c, d) {
-        x[a] = ((x[a] + x[b]) & 0xFFFFFFFF); x[d] = ROL32(x[d] ^ x[a], 16);
-        x[c] = ((x[c] + x[d]) & 0xFFFFFFFF); x[b] = ROL32(x[b] ^ x[c], 12);
-        x[a] = ((x[a] + x[b]) & 0xFFFFFFFF); x[d] = ROL32(x[d] ^ x[a], 8);
-        x[c] = ((x[c] + x[d]) & 0xFFFFFFFF); x[b] = ROL32(x[b] ^ x[c], 7);
+        x[a] = (x[a] + x[b]) & 0xffffffff;
+        x[d] = ROL32(x[d] ^ x[a], 16);
+        x[c] = (x[c] + x[d]) & 0xffffffff;
+        x[b] = ROL32(x[b] ^ x[c], 12);
+        x[a] = (x[a] + x[b]) & 0xffffffff;
+        x[d] = ROL32(x[d] ^ x[a], 8);
+        x[c] = (x[c] + x[d]) & 0xffffffff;
+        x[b] = ROL32(x[b] ^ x[c], 7);
     }
 
-    for (let i = 0; i < rounds / 2; i++)  {
-        quarterround(x, 0, 4,  8, 12);
-        quarterround(x, 1, 5,  9, 13);
+    for (let i = 0; i < rounds / 2; i++) {
+        quarterround(x, 0, 4, 8, 12);
+        quarterround(x, 1, 5, 9, 13);
         quarterround(x, 2, 6, 10, 14);
         quarterround(x, 3, 7, 11, 15);
         quarterround(x, 0, 5, 10, 15);
         quarterround(x, 1, 6, 11, 12);
-        quarterround(x, 2, 7,  8, 13);
-        quarterround(x, 3, 4,  9, 14);
+        quarterround(x, 2, 7, 8, 13);
+        quarterround(x, 3, 4, 9, 14);
     }
 
     for (let i = 0; i < 16; i++) {
-        x[i] = (x[i] + a[i]) & 0xFFFFFFFF;
+        x[i] = (x[i] + a[i]) & 0xffffffff;
     }
 
     let output = Array();
@@ -92,7 +96,6 @@ function chacha(key, nonce, counter, rounds) {
  * ChaCha operation
  */
 class ChaCha extends Operation {
-
     /**
      * ChaCha constructor
      */
@@ -101,7 +104,8 @@ class ChaCha extends Operation {
 
         this.name = "ChaCha";
         this.module = "Default";
-        this.description = "ChaCha is a stream cipher designed by Daniel J. Bernstein. It is a variant of the Salsa stream cipher. Several parameterizations exist; 'ChaCha' may refer to the original construction, or to the variant as described in RFC-8439. ChaCha is often used with Poly1305, in the ChaCha20-Poly1305 AEAD construction.<br><br><b>Key:</b> ChaCha uses a key of 16 or 32 bytes (128 or 256 bits).<br><br><b>Nonce:</b> ChaCha uses a nonce of 8 or 12 bytes (64 or 96 bits).<br><br><b>Counter:</b> ChaCha uses a counter of 4 or 8 bytes (32 or 64 bits); together, the nonce and counter must add up to 16 bytes. The counter starts at zero at the start of the keystream, and is incremented at every 64 bytes.";
+        this.description
+            = "ChaCha is a stream cipher designed by Daniel J. Bernstein. It is a variant of the Salsa stream cipher. Several parameterizations exist; 'ChaCha' may refer to the original construction, or to the variant as described in RFC-8439. ChaCha is often used with Poly1305, in the ChaCha20-Poly1305 AEAD construction.<br><br><b>Key:</b> ChaCha uses a key of 16 or 32 bytes (128 or 256 bits).<br><br><b>Nonce:</b> ChaCha uses a nonce of 8 or 12 bytes (64 or 96 bits).<br><br><b>Counter:</b> ChaCha uses a counter of 4 or 8 bytes (32 or 64 bits); together, the nonce and counter must add up to 16 bytes. The counter starts at zero at the start of the keystream, and is incremented at every 64 bytes.";
         this.infoURL = "https://wikipedia.org/wiki/Salsa20#ChaCha_variant";
         this.inputType = "string";
         this.outputType = "string";
@@ -228,7 +232,6 @@ ChaCha uses a nonce of 8 or 12 bytes (64 or 96 bits).`);
             return pos;
         }
     }
-
 }
 
 export default ChaCha;

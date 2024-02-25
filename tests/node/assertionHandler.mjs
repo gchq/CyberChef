@@ -11,7 +11,6 @@
 
 /* eslint no-console: 0 */
 
-
 /**
  * Print useful stack on error
  */
@@ -23,7 +22,6 @@ const wrapRun = (run) => async () => {
         throw e;
     }
 };
-
 
 /**
  * it - wrapper for assertions to provide a helpful description
@@ -53,7 +51,7 @@ const wrapRun = (run) => async () => {
 export function it(name, run) {
     return {
         name: `Node API: ${name}`,
-        run: wrapRun(run),
+        run: wrapRun(run)
     };
 }
 

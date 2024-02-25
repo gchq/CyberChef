@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Add line numbers operation
  */
 class AddLineNumbers extends Operation {
-
     /**
      * AddLineNumbers constructor
      */
@@ -36,11 +35,10 @@ class AddLineNumbers extends Operation {
         let output = "";
 
         for (let n = 0; n < lines.length; n++) {
-            output += (n+1).toString().padStart(width, " ") + " " + lines[n] + "\n";
+            output += (n + 1).toString().padStart(width, " ") + " " + lines[n] + "\n";
         }
-        return output.slice(0, output.length-1);
+        return output.slice(0, output.length - 1);
     }
-
 }
 
 export default AddLineNumbers;

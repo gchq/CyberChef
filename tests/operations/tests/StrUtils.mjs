@@ -17,7 +17,7 @@ TestRegister.addTests([
                 "op": "Diff",
                 "args": ["\\n\\n", "Character", true, true, false, false]
             }
-        ],
+        ]
     },
     {
         name: "Diff added with subtraction, basic usage",
@@ -28,7 +28,7 @@ TestRegister.addTests([
                 "op": "Diff",
                 "args": ["\\n\\n", "Character", true, true, true, false]
             }
-        ],
+        ]
     },
     {
         name: "Diff removed with subtraction, basic usage",
@@ -39,7 +39,7 @@ TestRegister.addTests([
                 "op": "Diff",
                 "args": ["\\n\\n", "Character", true, true, true, false]
             }
-        ],
+        ]
     },
     {
         name: "Head 0",
@@ -50,7 +50,7 @@ TestRegister.addTests([
                 "op": "Head",
                 "args": ["Line feed", 0]
             }
-        ],
+        ]
     },
     {
         name: "Head 1",
@@ -61,7 +61,7 @@ TestRegister.addTests([
                 "op": "Head",
                 "args": ["Line feed", 1]
             }
-        ],
+        ]
     },
     {
         name: "Head 2",
@@ -72,7 +72,7 @@ TestRegister.addTests([
                 "op": "Head",
                 "args": ["Line feed", 2]
             }
-        ],
+        ]
     },
     {
         name: "Head 6",
@@ -83,7 +83,7 @@ TestRegister.addTests([
                 "op": "Head",
                 "args": ["Line feed", 6]
             }
-        ],
+        ]
     },
     {
         name: "Head big",
@@ -94,7 +94,7 @@ TestRegister.addTests([
                 "op": "Head",
                 "args": ["Line feed", 100]
             }
-        ],
+        ]
     },
     {
         name: "Head all but 1",
@@ -105,7 +105,7 @@ TestRegister.addTests([
                 "op": "Head",
                 "args": ["Line feed", -1]
             }
-        ],
+        ]
     },
     {
         name: "Head all but 2",
@@ -116,7 +116,7 @@ TestRegister.addTests([
                 "op": "Head",
                 "args": ["Line feed", -2]
             }
-        ],
+        ]
     },
     {
         name: "Head all but 6",
@@ -127,7 +127,7 @@ TestRegister.addTests([
                 "op": "Head",
                 "args": ["Line feed", -6]
             }
-        ],
+        ]
     },
     {
         name: "Head all but big",
@@ -138,7 +138,7 @@ TestRegister.addTests([
                 "op": "Head",
                 "args": ["Line feed", -100]
             }
-        ],
+        ]
     },
     {
         name: "Tail 0",
@@ -149,7 +149,7 @@ TestRegister.addTests([
                 "op": "Tail",
                 "args": ["Line feed", 0]
             }
-        ],
+        ]
     },
     {
         name: "Tail 1",
@@ -160,7 +160,7 @@ TestRegister.addTests([
                 "op": "Tail",
                 "args": ["Line feed", 1]
             }
-        ],
+        ]
     },
     {
         name: "Tail 2",
@@ -171,7 +171,7 @@ TestRegister.addTests([
                 "op": "Tail",
                 "args": ["Line feed", 2]
             }
-        ],
+        ]
     },
     {
         name: "Tail 6",
@@ -182,7 +182,7 @@ TestRegister.addTests([
                 "op": "Tail",
                 "args": ["Line feed", 6]
             }
-        ],
+        ]
     },
     {
         name: "Tail big",
@@ -193,7 +193,7 @@ TestRegister.addTests([
                 "op": "Tail",
                 "args": ["Line feed", 100]
             }
-        ],
+        ]
     },
     {
         name: "Tail all but 1",
@@ -204,7 +204,7 @@ TestRegister.addTests([
                 "op": "Tail",
                 "args": ["Line feed", -1]
             }
-        ],
+        ]
     },
     {
         name: "Tail all but 2",
@@ -215,7 +215,7 @@ TestRegister.addTests([
                 "op": "Tail",
                 "args": ["Line feed", -2]
             }
-        ],
+        ]
     },
     {
         name: "Tail all but 6",
@@ -226,7 +226,7 @@ TestRegister.addTests([
                 "op": "Tail",
                 "args": ["Line feed", -6]
             }
-        ],
+        ]
     },
     {
         name: "Tail all but big",
@@ -237,7 +237,7 @@ TestRegister.addTests([
                 "op": "Tail",
                 "args": ["Line feed", -100]
             }
-        ],
+        ]
     },
     {
         name: "Escape String: single quotes",
@@ -248,29 +248,30 @@ TestRegister.addTests([
                 "op": "Escape string",
                 "args": ["Special chars", "Single", false, true, false]
             }
-        ],
+        ]
     },
     {
         name: "Escape String: double quotes",
-        input: "Hello \"World\"!",
-        expectedOutput: "Hello \\\"World\\\"!",
+        input: 'Hello "World"!',
+        expectedOutput: 'Hello \\"World\\"!',
         recipeConfig: [
             {
                 "op": "Escape string",
                 "args": ["Special chars", "Double", false, true, false]
             }
-        ],
+        ]
     },
     {
         name: "Escape String: special characters",
-        input: "Fizz & buzz\n\ttabbed newline\rcarriage returned line\nbackspace character: \"\" form feed character: \"\"",
-        expectedOutput: "Fizz & buzz\\n\\ttabbed newline\\rcarriage returned line\\nbackspace character: \\\"\\b\\\" form feed character: \\\"\\f\\\"",
+        input: 'Fizz & buzz\n\ttabbed newline\rcarriage returned line\nbackspace character: "" form feed character: ""',
+        expectedOutput:
+            'Fizz & buzz\\n\\ttabbed newline\\rcarriage returned line\\nbackspace character: \\"\\b\\" form feed character: \\"\\f\\"',
         recipeConfig: [
             {
                 "op": "Escape string",
                 "args": ["Special chars", "Double", false, true, false]
             }
-        ],
+        ]
     },
     {
         name: "Unescape String: quotes",
@@ -281,39 +282,42 @@ TestRegister.addTests([
                 "op": "Unescape string",
                 "args": []
             }
-        ],
+        ]
     },
     {
         name: "Unescape String: special characters",
-        input: "Fizz \x26 buzz\\n\\ttabbed newline\\rcarriage returned line\\nbackspace character: \\\"\\b\\\" form feed character: \\\"\\f\\\"",
-        expectedOutput: "Fizz & buzz\n\ttabbed newline\rcarriage returned line\nbackspace character: \"\" form feed character: \"\"",
+        input: 'Fizz \x26 buzz\\n\\ttabbed newline\\rcarriage returned line\\nbackspace character: \\"\\b\\" form feed character: \\"\\f\\"',
+        expectedOutput:
+            'Fizz & buzz\n\ttabbed newline\rcarriage returned line\nbackspace character: "" form feed character: ""',
         recipeConfig: [
             {
                 "op": "Unescape string",
                 "args": []
             }
-        ],
+        ]
     },
     {
         name: "Escape String: complex",
         input: "null\0backspace\btab\tnewline\nverticaltab\vformfeed\fcarriagereturn\rdoublequote\"singlequote'hex\xa9unicode\u2665codepoint\u{1D306}",
-        expectedOutput: "null\\0backspace\\btab\\tnewline\\nverticaltab\\x0bformfeed\\fcarriagereturn\\rdoublequote\"singlequote\\'hex\\xa9unicode\\u2665codepoint\\u{1d306}",
+        expectedOutput:
+            "null\\0backspace\\btab\\tnewline\\nverticaltab\\x0bformfeed\\fcarriagereturn\\rdoublequote\"singlequote\\'hex\\xa9unicode\\u2665codepoint\\u{1d306}",
         recipeConfig: [
             {
                 "op": "Escape string",
                 "args": ["Special chars", "Single", false, true, false]
             }
-        ],
+        ]
     },
     {
         name: "Unescape String: complex",
         input: "null\\0backspace\\btab\\tnewline\\nverticaltab\\vformfeed\\fcarriagereturn\\rdoublequote\\\"singlequote\\'hex\\xa9unicode\\u2665codepoint\\u{1D306}",
-        expectedOutput: "null\0backspace\btab\tnewline\nverticaltab\vformfeed\fcarriagereturn\rdoublequote\"singlequote'hex\xa9unicode\u2665codepoint\u{1D306}",
+        expectedOutput:
+            "null\0backspace\btab\tnewline\nverticaltab\vformfeed\fcarriagereturn\rdoublequote\"singlequote'hex\xa9unicode\u2665codepoint\u{1D306}",
         recipeConfig: [
             {
                 "op": "Unescape string",
                 "args": []
             }
-        ],
-    },
+        ]
+    }
 ]);

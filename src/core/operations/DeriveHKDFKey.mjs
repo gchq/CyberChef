@@ -13,7 +13,6 @@ import CryptoApi from "crypto-api/src/crypto-api.mjs";
  * Derive HKDF Key operation
  */
 class DeriveHKDFKey extends Operation {
-
     /**
      * DeriveHKDFKey constructor
      */
@@ -22,7 +21,8 @@ class DeriveHKDFKey extends Operation {
 
         this.name = "Derive HKDF key";
         this.module = "Crypto";
-        this.description = "A simple Hashed Message Authenticaton Code (HMAC)-based key derivation function (HKDF), defined in RFC5869.";
+        this.description
+            = "A simple Hashed Message Authenticaton Code (HMAC)-based key derivation function (HKDF), defined in RFC5869.";
         this.infoURL = "https://wikipedia.org/wiki/HKDF";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -89,7 +89,7 @@ class DeriveHKDFKey extends Operation {
                 "type": "number",
                 "value": 16,
                 "min": 0
-            },
+            }
         ];
     }
 
@@ -112,10 +112,10 @@ class DeriveHKDFKey extends Operation {
             throw new OperationError("L must be non-negative");
         }
         if (L > 255 * HashLen) {
-            throw new OperationError("L too large (maximum length for " + args[2] + " is " + (255 * HashLen) + ")");
+            throw new OperationError("L too large (maximum length for " + args[2] + " is " + 255 * HashLen + ")");
         }
 
-        const hmacHash = function(key, data) {
+        const hmacHash = function (key, data) {
             hasher.reset();
             const mac = CryptoApi.getHmac(key, hasher);
             mac.update(data);
@@ -132,7 +132,6 @@ class DeriveHKDFKey extends Operation {
         }
         return CryptoApi.encoder.toHex(result.substring(0, L));
     }
-
 }
 
 export default DeriveHKDFKey;

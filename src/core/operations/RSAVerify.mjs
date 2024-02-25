@@ -13,7 +13,6 @@ import { MD_ALGORITHMS } from "../lib/RSA.mjs";
  * RSA Verify operation
  */
 class RSAVerify extends Operation {
-
     /**
      * RSAVerify constructor
      */
@@ -66,12 +65,13 @@ class RSAVerify extends Operation {
             return result ? "Verified OK" : "Verification Failure";
         } catch (err) {
             if (err.message === "Encrypted message length is invalid.") {
-                throw new OperationError(`Signature length (${err.length}) does not match expected length based on key (${err.expected}).`);
+                throw new OperationError(
+                    `Signature length (${err.length}) does not match expected length based on key (${err.expected}).`
+                );
             }
             throw new OperationError(err);
         }
     }
-
 }
 
 export default RSAVerify;

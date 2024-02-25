@@ -13,7 +13,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Diff operation
  */
 class Diff extends Operation {
-
     /**
      * Diff constructor
      */
@@ -22,7 +21,8 @@ class Diff extends Operation {
 
         this.name = "Diff";
         this.module = "Diff";
-        this.description = "Compares two inputs (separated by the specified delimiter) and highlights the differences between them.";
+        this.description
+            = "Compares two inputs (separated by the specified delimiter) and highlights the differences between them.";
         this.infoURL = "https://wikipedia.org/wiki/File_comparison";
         this.inputType = "string";
         this.outputType = "html";
@@ -67,14 +67,7 @@ class Diff extends Operation {
      * @returns {html}
      */
     run(input, args) {
-        const [
-                sampleDelim,
-                diffBy,
-                showAdded,
-                showRemoved,
-                showSubtraction,
-                ignoreWhitespace
-            ] = args,
+        const [sampleDelim, diffBy, showAdded, showRemoved, showSubtraction, ignoreWhitespace] = args,
             samples = input.split(sampleDelim);
         let output = "",
             diff;
@@ -83,7 +76,9 @@ class Diff extends Operation {
         const jsdiff = JsDiff.default ? JsDiff.default : JsDiff;
 
         if (!samples || samples.length !== 2) {
-            throw new OperationError("Incorrect number of samples, perhaps you need to modify the sample delimiter or add more samples?");
+            throw new OperationError(
+                "Incorrect number of samples, perhaps you need to modify the sample delimiter or add more samples?"
+            );
         }
 
         switch (diffBy) {
@@ -129,7 +124,6 @@ class Diff extends Operation {
 
         return output;
     }
-
 }
 
 export default Diff;

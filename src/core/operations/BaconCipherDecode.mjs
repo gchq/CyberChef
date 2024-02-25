@@ -7,7 +7,11 @@
 import Operation from "../Operation.mjs";
 import {
     BACON_ALPHABETS,
-    BACON_TRANSLATION_CASE, BACON_TRANSLATION_AMNZ, BACON_TRANSLATIONS, BACON_CLEARER_MAP, BACON_NORMALIZE_MAP,
+    BACON_TRANSLATION_CASE,
+    BACON_TRANSLATION_AMNZ,
+    BACON_TRANSLATIONS,
+    BACON_CLEARER_MAP,
+    BACON_NORMALIZE_MAP,
     swapZeroAndOne
 } from "../lib/Bacon.mjs";
 
@@ -23,7 +27,8 @@ class BaconCipherDecode extends Operation {
 
         this.name = "Bacon Cipher Decode";
         this.module = "Default";
-        this.description = "Bacon's cipher or the Baconian cipher is a method of steganography devised by Francis Bacon in 1605. A message is concealed in the presentation of text, rather than its content.";
+        this.description
+            = "Bacon's cipher or the Baconian cipher is a method of steganography devised by Francis Bacon in 1605. A message is concealed in the presentation of text, rather than its content.";
         this.infoURL = "https://wikipedia.org/wiki/Bacon%27s_cipher";
         this.inputType = "string";
         this.outputType = "string";
@@ -46,44 +51,44 @@ class BaconCipherDecode extends Operation {
         ];
         this.checks = [
             {
-                pattern:  "^\\s*([01]{5}\\s?)+$",
-                flags:  "",
-                args:   ["Standard (I=J and U=V)", "0/1", false]
+                pattern: "^\\s*([01]{5}\\s?)+$",
+                flags: "",
+                args: ["Standard (I=J and U=V)", "0/1", false]
             },
             {
-                pattern:  "^\\s*([01]{5}\\s?)+$",
-                flags:  "",
-                args:   ["Standard (I=J and U=V)", "0/1", true]
+                pattern: "^\\s*([01]{5}\\s?)+$",
+                flags: "",
+                args: ["Standard (I=J and U=V)", "0/1", true]
             },
             {
-                pattern:  "^\\s*([AB]{5}\\s?)+$",
-                flags:  "",
-                args:   ["Standard (I=J and U=V)", "A/B", false]
+                pattern: "^\\s*([AB]{5}\\s?)+$",
+                flags: "",
+                args: ["Standard (I=J and U=V)", "A/B", false]
             },
             {
-                pattern:  "^\\s*([AB]{5}\\s?)+$",
-                flags:  "",
-                args:   ["Standard (I=J and U=V)", "A/B", true]
+                pattern: "^\\s*([AB]{5}\\s?)+$",
+                flags: "",
+                args: ["Standard (I=J and U=V)", "A/B", true]
             },
             {
-                pattern:  "^\\s*([01]{5}\\s?)+$",
-                flags:  "",
-                args:   ["Complete", "0/1", false]
+                pattern: "^\\s*([01]{5}\\s?)+$",
+                flags: "",
+                args: ["Complete", "0/1", false]
             },
             {
-                pattern:  "^\\s*([01]{5}\\s?)+$",
-                flags:  "",
-                args:   ["Complete", "0/1", true]
+                pattern: "^\\s*([01]{5}\\s?)+$",
+                flags: "",
+                args: ["Complete", "0/1", true]
             },
             {
-                pattern:  "^\\s*([AB]{5}\\s?)+$",
-                flags:  "",
-                args:   ["Complete", "A/B", false]
+                pattern: "^\\s*([AB]{5}\\s?)+$",
+                flags: "",
+                args: ["Complete", "A/B", false]
             },
             {
-                pattern:  "^\\s*([AB]{5}\\s?)+$",
-                flags:  "",
-                args:   ["Complete", "A/B", true]
+                pattern: "^\\s*([AB]{5}\\s?)+$",
+                flags: "",
+                args: ["Complete", "A/B", true]
             }
         ];
     }

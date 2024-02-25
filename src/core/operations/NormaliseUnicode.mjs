@@ -6,14 +6,13 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import {UNICODE_NORMALISATION_FORMS} from "../lib/ChrEnc.mjs";
+import { UNICODE_NORMALISATION_FORMS } from "../lib/ChrEnc.mjs";
 import unorm from "unorm";
 
 /**
  * Normalise Unicode operation
  */
 class NormaliseUnicode extends Operation {
-
     /**
      * NormaliseUnicode constructor
      */
@@ -56,7 +55,6 @@ class NormaliseUnicode extends Operation {
                 throw new OperationError("Unknown Normalisation Form");
         }
     }
-
 }
 
 export default NormaliseUnicode;

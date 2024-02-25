@@ -15,9 +15,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "MurmurHash3",
-                args: [0],
-            },
-        ],
+                args: [0]
+            }
+        ]
     },
     {
         name: "To MurmurHash3: 1",
@@ -26,9 +26,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "MurmurHash3",
-                args: [0],
-            },
-        ],
+                args: [0]
+            }
+        ]
     },
     {
         name: "To MurmurHash3: Hello World!",
@@ -37,9 +37,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "MurmurHash3",
-                args: [0],
-            },
-        ],
+                args: [0]
+            }
+        ]
     },
     {
         name: "To MurmurHash3: Hello World! with seed",
@@ -48,9 +48,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "MurmurHash3",
-                args: [1337],
-            },
-        ],
+                args: [1337]
+            }
+        ]
     },
     {
         name: "To MurmurHash3: foo",
@@ -59,9 +59,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "MurmurHash3",
-                args: [0],
-            },
-        ],
+                args: [0]
+            }
+        ]
     },
     {
         name: "To MurmurHash3: foo signed",
@@ -70,8 +70,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "MurmurHash3",
-                args: [0, true],
-            },
-        ],
+                args: [0, true]
+            }
+        ]
     }
 ]);

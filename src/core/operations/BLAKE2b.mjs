@@ -14,7 +14,6 @@ import { toBase64 } from "../lib/Base64.mjs";
  * BLAKE2b operation
  */
 class BLAKE2b extends Operation {
-
     /**
      * BLAKE2b constructor
      */
@@ -34,11 +33,13 @@ class BLAKE2b extends Operation {
                 "name": "Size",
                 "type": "option",
                 "value": ["512", "384", "256", "160", "128"]
-            }, {
+            },
+            {
                 "name": "Output Encoding",
                 "type": "option",
                 "value": ["Hex", "Base64", "Raw"]
-            }, {
+            },
+            {
                 "name": "Key",
                 "type": "toggleString",
                 "value": "",
@@ -58,7 +59,9 @@ class BLAKE2b extends Operation {
         if (key.length === 0) {
             key = null;
         } else if (key.length > 64) {
-            throw new OperationError(["Key cannot be greater than 64 bytes", "It is currently " + key.length + " bytes."].join("\n"));
+            throw new OperationError(
+                ["Key cannot be greater than 64 bytes", "It is currently " + key.length + " bytes."].join("\n")
+            );
         }
 
         input = new Uint8Array(input);
@@ -73,7 +76,6 @@ class BLAKE2b extends Operation {
                 return new OperationError("Unsupported Output Type");
         }
     }
-
 }
 
 export default BLAKE2b;

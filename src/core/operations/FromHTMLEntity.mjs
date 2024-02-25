@@ -11,7 +11,6 @@ import Utils from "../Utils.mjs";
  * From HTML Entity operation
  */
 class FromHTMLEntity extends Operation {
-
     /**
      * FromHTMLEntity constructor
      */
@@ -20,7 +19,8 @@ class FromHTMLEntity extends Operation {
 
         this.name = "From HTML Entity";
         this.module = "Encodings";
-        this.description = "Converts HTML entities back to characters<br><br>e.g. <code>&amp;<span>amp;</span></code> becomes <code>&amp;</code>";
+        this.description
+            = "Converts HTML entities back to characters<br><br>e.g. <code>&amp;<span>amp;</span></code> becomes <code>&amp;</code>";
         this.infoURL = "https://wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references";
         this.inputType = "string";
         this.outputType = "string";
@@ -47,8 +47,7 @@ class FromHTMLEntity extends Operation {
 
         while ((m = regex.exec(input))) {
             // Add up to match
-            for (; i < m.index;)
-                output += input[i++];
+            for (; i < m.index;) output += input[i++];
 
             // Add match
             const bite = entityToByte[m[1]];
@@ -64,21 +63,17 @@ class FromHTMLEntity extends Operation {
                 output += Utils.chr(parseInt(hex, 16));
             } else {
                 // Not a valid entity, print as normal
-                for (; i < regex.lastIndex;)
-                    output += input[i++];
+                for (; i < regex.lastIndex;) output += input[i++];
             }
 
             i = regex.lastIndex;
         }
         // Add all after final match
-        for (; i < input.length;)
-            output += input[i++];
+        for (; i < input.length;) output += input[i++];
 
         return output;
     }
-
 }
-
 
 /**
  * Lookup table to translate HTML entity codes to their byte values.

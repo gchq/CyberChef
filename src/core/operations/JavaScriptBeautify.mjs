@@ -13,7 +13,6 @@ import * as esprima from "esprima";
  * JavaScript Beautify operation
  */
 class JavaScriptBeautify extends Operation {
-
     /**
      * JavaScriptBeautify constructor
      */
@@ -22,7 +21,8 @@ class JavaScriptBeautify extends Operation {
 
         this.name = "JavaScript Beautify";
         this.module = "Code";
-        this.description = "Parses and pretty prints valid JavaScript code. Also works with JavaScript Object Notation (JSON).";
+        this.description
+            = "Parses and pretty prints valid JavaScript code. Also works with JavaScript Object Notation (JSON).";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -57,7 +57,7 @@ class JavaScriptBeautify extends Operation {
     run(input, args) {
         const beautifyIndent = args[0] || "\\t",
             quotes = args[1].toLowerCase(),
-            [,, beautifySemicolons, beautifyComment] = args;
+            [, , beautifySemicolons, beautifyComment] = args;
         let result = "",
             AST;
 
@@ -74,13 +74,12 @@ class JavaScriptBeautify extends Operation {
                         style: beautifyIndent
                     },
                     quotes: quotes,
-                    semicolons: beautifySemicolons,
+                    semicolons: beautifySemicolons
                 },
                 comment: beautifyComment
             };
 
-            if (options.comment)
-                AST = escodegen.attachComments(AST, AST.comments, AST.tokens);
+            if (options.comment) AST = escodegen.attachComments(AST, AST.comments, AST.tokens);
 
             result = escodegen.generate(AST, options);
         } catch (e) {
@@ -89,7 +88,6 @@ class JavaScriptBeautify extends Operation {
         }
         return result;
     }
-
 }
 
 export default JavaScriptBeautify;

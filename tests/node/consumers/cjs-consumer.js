@@ -8,25 +8,23 @@
 
 const assert = require("assert");
 
-require("cyberchef").then(chef => {
-
+require("cyberchef").then((chef) => {
     const d = chef.bake("Testing, 1 2 3", [
         chef.toHex,
         chef.reverse,
         {
             op: chef.unique,
             args: {
-                delimiter: "Space",
+                delimiter: "Space"
             }
         },
         {
             op: chef.multiply,
             args: {
-                delimiter: "Space",
+                delimiter: "Space"
             }
         }
     ]);
 
     assert.equal(d.value, "630957449041920");
-
 });

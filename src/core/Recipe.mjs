@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import OperationConfig from "./config/OperationConfig.json" assert {type: "json"};
+import OperationConfig from "./config/OperationConfig.json" assert { type: "json" };
 import OperationError from "./errors/OperationError.mjs";
 import Operation from "./Operation.mjs";
 import DishError from "./errors/DishError.mjs";
@@ -17,8 +17,7 @@ let modules = null;
 /**
  * The Recipe controls a list of Operations and the Dish they operate on.
  */
-class Recipe  {
-
+class Recipe {
     /**
      * Recipe constructor
      *
@@ -32,7 +31,6 @@ class Recipe  {
         }
     }
 
-
     /**
      * Reads and parses the given config.
      *
@@ -40,17 +38,16 @@ class Recipe  {
      * @param {Object} recipeConfig
      */
     _parseConfig(recipeConfig) {
-        recipeConfig.forEach(c => {
+        recipeConfig.forEach((c) => {
             this.opList.push({
                 name: c.op,
                 module: OperationConfig[c.op].module,
                 ingValues: c.args,
                 breakpoint: c.breakpoint,
-                disabled: c.disabled || c.op === "Comment",
+                disabled: c.disabled || c.op === "Comment"
             });
         });
     }
-
 
     /**
      * Populate elements of opList with operation instances.
@@ -66,7 +63,7 @@ class Recipe  {
             modules = modules.default;
         }
 
-        this.opList = this.opList.map(o => {
+        this.opList = this.opList.map((o) => {
             if (o instanceof Operation) {
                 return o;
             } else {
@@ -79,19 +76,17 @@ class Recipe  {
         });
     }
 
-
     /**
      * Returns the value of the Recipe as it should be displayed in a recipe config.
      *
      * @returns {Object[]}
      */
     get config() {
-        return this.opList.map(op => ({
+        return this.opList.map((op) => ({
             op: op.name,
-            args: op.ingValues,
+            args: op.ingValues
         }));
     }
-
 
     /**
      * Adds a new Operation to this Recipe.
@@ -102,14 +97,13 @@ class Recipe  {
         this.opList.push(operation);
     }
 
-
     /**
      * Adds a list of Operations to this Recipe.
      *
      * @param {Operation[]} operations
      */
     addOperations(operations) {
-        operations.forEach(o => {
+        operations.forEach((o) => {
             if (o instanceof Operation) {
                 this.opList.push(o);
             } else {
@@ -118,12 +112,11 @@ class Recipe  {
                     module: o.module,
                     ingValues: o.args,
                     breakpoint: o.breakpoint,
-                    disabled: o.disabled,
+                    disabled: o.disabled
                 });
             }
         });
     }
-
 
     /**
      * Set a breakpoint on a specified Operation.
@@ -139,7 +132,6 @@ class Recipe  {
         }
     }
 
-
     /**
      * Remove breakpoints on all Operations in the Recipe up to the specified position. Used by Flow
      * Control Fork operation.
@@ -152,7 +144,6 @@ class Recipe  {
         }
     }
 
-
     /**
      * Returns true if there is a Flow Control Operation in this Recipe.
      *
@@ -163,7 +154,6 @@ class Recipe  {
             return acc || curr.flowControl;
         }, false);
     }
-
 
     /**
      * Executes each operation in the recipe over the given Dish.
@@ -176,8 +166,10 @@ class Recipe  {
      * @returns {number}
      *     - The final progress through the recipe
      */
-    async execute(dish, startFrom=0, forkState={}) {
-        let op, input, output,
+    async execute(dish, startFrom = 0, forkState = {}) {
+        let op,
+            input,
+            output,
             numJumps = 0,
             numRegisters = forkState.numRegisters || 0;
 
@@ -204,19 +196,19 @@ class Recipe  {
                 log.debug(`Executing operation '${op.name}'`);
 
                 if (isWorkerEnvironment()) {
-                    self.sendStatusMessage(`Baking... (${i+1}/${this.opList.length})`);
+                    self.sendStatusMessage(`Baking... (${i + 1}/${this.opList.length})`);
                     self.sendProgressMessage(i + 1, this.opList.length);
                 }
 
                 if (op.flowControl) {
                     // Package up the current state
                     let state = {
-                        "progress":     i,
-                        "dish":         dish,
-                        "opList":       this.opList,
-                        "numJumps":     numJumps,
+                        "progress": i,
+                        "dish": dish,
+                        "opList": this.opList,
+                        "numJumps": numJumps,
                         "numRegisters": numRegisters,
-                        "forkOffset":   forkState.forkOffset || 0
+                        "forkOffset": forkState.forkOffset || 0
                     };
 
                     state = await op.run(state);
@@ -243,8 +235,9 @@ class Recipe  {
 
                     e.progress = i;
                     if (e.fileName) {
-                        e.displayStr = `${op.name} - ${e.name} in ${e.fileName} on line ` +
-                            `${e.lineNumber}.<br><br>Message: ${e.displayStr || e.message}`;
+                        e.displayStr
+                            = `${op.name} - ${e.name} in ${e.fileName} on line `
+                            + `${e.lineNumber}.<br><br>Message: ${e.displayStr || e.message}`;
                     } else {
                         e.displayStr = `${op.name} - ${e.displayStr || e.message}`;
                     }
@@ -257,7 +250,6 @@ class Recipe  {
         log.debug("Recipe complete");
         return this.opList.length;
     }
-
 
     /**
      * Present the results of the final operation.
@@ -274,7 +266,6 @@ class Recipe  {
         dish.set(output, this.lastRunOp.presentType);
     }
 
-
     /**
      * Returns the recipe configuration in string format.
      *
@@ -283,7 +274,6 @@ class Recipe  {
     toString() {
         return JSON.stringify(this.config);
     }
-
 
     /**
      * Creates a Recipe from a given configuration string.
@@ -294,7 +284,6 @@ class Recipe  {
         const recipeConfig = JSON.parse(recipeStr);
         this._parseConfig(recipeConfig);
     }
-
 
     /**
      * Generates a list of all the highlight functions assigned to operations in the recipe, if the
@@ -329,7 +318,6 @@ class Recipe  {
         return highlights;
     }
 
-
     /**
      * Determines whether the previous operation has a different presentation type to its normal output.
      *
@@ -338,9 +326,8 @@ class Recipe  {
      */
     lastOpPresented(progress) {
         if (progress < 1) return false;
-        return this.opList[progress-1].presentType !== this.opList[progress-1].outputType;
+        return this.opList[progress - 1].presentType !== this.opList[progress - 1].outputType;
     }
-
 }
 
 export default Recipe;
