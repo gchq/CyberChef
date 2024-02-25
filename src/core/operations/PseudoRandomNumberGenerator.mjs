@@ -14,6 +14,7 @@ import { isWorkerEnvironment } from "../Utils.mjs";
  * Pseudo-Random Number Generator operation
  */
 class PseudoRandomNumberGenerator extends Operation {
+
     /**
      * PseudoRandomNumberGenerator constructor
      */
@@ -22,23 +23,21 @@ class PseudoRandomNumberGenerator extends Operation {
 
         this.name = "Pseudo-Random Number Generator";
         this.module = "Ciphers";
-        this.description =
-            "A cryptographically-secure pseudo-random number generator (PRNG).<br><br>This operation uses the browser's built-in <code>crypto.getRandomValues()</code> method if available. If this cannot be found, it falls back to a Fortuna-based PRNG algorithm.";
-        this.infoURL =
-            "https://wikipedia.org/wiki/Pseudorandom_number_generator";
+        this.description = "A cryptographically-secure pseudo-random number generator (PRNG).<br><br>This operation uses the browser's built-in <code>crypto.getRandomValues()</code> method if available. If this cannot be found, it falls back to a Fortuna-based PRNG algorithm.";
+        this.infoURL = "https://wikipedia.org/wiki/Pseudorandom_number_generator";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Number of bytes",
-                type: "number",
-                value: 32,
+                "name": "Number of bytes",
+                "type": "number",
+                "value": 32
             },
             {
-                name: "Output as",
-                type: "option",
-                value: ["Hex", "Integer", "Byte array", "Raw"],
-            },
+                "name": "Output as",
+                "type": "option",
+                "value": ["Hex", "Integer", "Byte array", "Raw"]
+            }
         ];
     }
 
@@ -56,13 +55,7 @@ class PseudoRandomNumberGenerator extends Operation {
             bytes = new ArrayBuffer(numBytes);
             const CHUNK_SIZE = 65536;
             for (let i = 0; i < numBytes; i += CHUNK_SIZE) {
-                self.crypto.getRandomValues(
-                    new Uint8Array(
-                        bytes,
-                        i,
-                        Math.min(numBytes - i, CHUNK_SIZE),
-                    ),
-                );
+                self.crypto.getRandomValues(new Uint8Array(bytes, i, Math.min(numBytes - i, CHUNK_SIZE)));
             }
             bytes = Utils.arrayBufferToStr(bytes);
         } else {
@@ -87,6 +80,7 @@ class PseudoRandomNumberGenerator extends Operation {
                 return bytes;
         }
     }
+
 }
 
 export default PseudoRandomNumberGenerator;

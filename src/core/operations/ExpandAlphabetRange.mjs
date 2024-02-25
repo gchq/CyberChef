@@ -11,6 +11,7 @@ import Utils from "../Utils.mjs";
  * Expand alphabet range operation
  */
 class ExpandAlphabetRange extends Operation {
+
     /**
      * ExpandAlphabetRange constructor
      */
@@ -19,16 +20,15 @@ class ExpandAlphabetRange extends Operation {
 
         this.name = "Expand alphabet range";
         this.module = "Default";
-        this.description =
-            "Expand an alphabet range string into a list of the characters in that range.<br><br>e.g. <code>a-z</code> becomes <code>abcdefghijklmnopqrstuvwxyz</code>.";
+        this.description = "Expand an alphabet range string into a list of the characters in that range.<br><br>e.g. <code>a-z</code> becomes <code>abcdefghijklmnopqrstuvwxyz</code>.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Delimiter",
-                type: "binaryString",
-                value: "",
-            },
+                "name": "Delimiter",
+                "type": "binaryString",
+                "value": ""
+            }
         ];
     }
 
@@ -40,6 +40,7 @@ class ExpandAlphabetRange extends Operation {
     run(input, args) {
         return Utils.expandAlphRange(input).join(args[0]);
     }
+
 }
 
 export default ExpandAlphabetRange;

@@ -13,6 +13,7 @@ import OperationError from "../errors/OperationError.mjs";
  * AES Encrypt operation
  */
 class AESEncrypt extends Operation {
+
     /**
      * AESEncrypt constructor
      */
@@ -21,71 +22,69 @@ class AESEncrypt extends Operation {
 
         this.name = "AES Encrypt";
         this.module = "Ciphers";
-        this.description =
-            "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.";
-        this.infoURL =
-            "https://wikipedia.org/wiki/Advanced_Encryption_Standard";
+        this.description = "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.";
+        this.infoURL = "https://wikipedia.org/wiki/Advanced_Encryption_Standard";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Key",
-                type: "toggleString",
-                value: "",
-                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"],
+                "name": "Key",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
             },
             {
-                name: "IV",
-                type: "toggleString",
-                value: "",
-                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"],
+                "name": "IV",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
             },
             {
-                name: "Mode",
-                type: "argSelector",
-                value: [
+                "name": "Mode",
+                "type": "argSelector",
+                "value": [
                     {
                         name: "CBC",
-                        off: [5],
+                        off: [5]
                     },
                     {
                         name: "CFB",
-                        off: [5],
+                        off: [5]
                     },
                     {
                         name: "OFB",
-                        off: [5],
+                        off: [5]
                     },
                     {
                         name: "CTR",
-                        off: [5],
+                        off: [5]
                     },
                     {
                         name: "GCM",
-                        on: [5],
+                        on: [5]
                     },
                     {
                         name: "ECB",
-                        off: [5],
-                    },
-                ],
+                        off: [5]
+                    }
+                ]
             },
             {
-                name: "Input",
-                type: "option",
-                value: ["Raw", "Hex"],
+                "name": "Input",
+                "type": "option",
+                "value": ["Raw", "Hex"]
             },
             {
-                name: "Output",
-                type: "option",
-                value: ["Hex", "Raw"],
+                "name": "Output",
+                "type": "option",
+                "value": ["Hex", "Raw"]
             },
             {
-                name: "Additional Authenticated Data",
-                type: "toggleString",
-                value: "",
-                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"],
-            },
+                "name": "Additional Authenticated Data",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
+            }
         ];
     }
 
@@ -118,33 +117,26 @@ The following algorithms will be used based on the size of the key:
         const cipher = forge.cipher.createCipher("AES-" + mode, key);
         cipher.start({
             iv: iv,
-            additionalData: mode === "GCM" ? aad : undefined,
+            additionalData: mode === "GCM" ? aad : undefined
         });
         cipher.update(forge.util.createBuffer(input));
         cipher.finish();
 
         if (outputType === "Hex") {
             if (mode === "GCM") {
-                return (
-                    cipher.output.toHex() +
-                    "\n\n" +
-                    "Tag: " +
-                    cipher.mode.tag.toHex()
-                );
+                return cipher.output.toHex() + "\n\n" +
+                    "Tag: " + cipher.mode.tag.toHex();
             }
             return cipher.output.toHex();
         } else {
             if (mode === "GCM") {
-                return (
-                    cipher.output.getBytes() +
-                    "\n\n" +
-                    "Tag: " +
-                    cipher.mode.tag.getBytes()
-                );
+                return cipher.output.getBytes() + "\n\n" +
+                    "Tag: " + cipher.mode.tag.getBytes();
             }
             return cipher.output.getBytes();
         }
     }
+
 }
 
 export default AESEncrypt;

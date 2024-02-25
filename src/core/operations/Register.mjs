@@ -13,6 +13,7 @@ import { isWorkerEnvironment } from "../Utils.mjs";
  * Register operation
  */
 class Register extends Operation {
+
     /**
      * Register constructor
      */
@@ -22,32 +23,31 @@ class Register extends Operation {
         this.name = "Register";
         this.flowControl = true;
         this.module = "Regex";
-        this.description =
-            "Extract data from the input and store it in registers which can then be passed into subsequent operations as arguments. Regular expression capture groups are used to select the data to extract.<br><br>To use registers in arguments, refer to them using the notation <code>$Rn</code> where n is the register number, starting at 0.<br><br>For example:<br>Input: <code>Test</code><br>Extractor: <code>(.*)</code><br>Argument: <code>$R0</code> becomes <code>Test</code><br><br>Registers can be escaped in arguments using a backslash. e.g. <code>\\$R0</code> would become <code>$R0</code> rather than <code>Test</code>.";
+        this.description = "Extract data from the input and store it in registers which can then be passed into subsequent operations as arguments. Regular expression capture groups are used to select the data to extract.<br><br>To use registers in arguments, refer to them using the notation <code>$Rn</code> where n is the register number, starting at 0.<br><br>For example:<br>Input: <code>Test</code><br>Extractor: <code>(.*)</code><br>Argument: <code>$R0</code> becomes <code>Test</code><br><br>Registers can be escaped in arguments using a backslash. e.g. <code>\\$R0</code> would become <code>$R0</code> rather than <code>Test</code>.";
         this.infoURL = "https://wikipedia.org/wiki/Regular_expression#Syntax";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Extractor",
-                type: "binaryString",
-                value: "([\\s\\S]*)",
+                "name": "Extractor",
+                "type": "binaryString",
+                "value": "([\\s\\S]*)"
             },
             {
-                name: "Case insensitive",
-                type: "boolean",
-                value: true,
+                "name": "Case insensitive",
+                "type": "boolean",
+                "value": true
             },
             {
-                name: "Multiline matching",
-                type: "boolean",
-                value: false,
+                "name": "Multiline matching",
+                "type": "boolean",
+                "value": false
             },
             {
-                name: "Dot matches all",
-                type: "boolean",
-                value: false,
-            },
+                "name": "Dot matches all",
+                "type": "boolean",
+                "value": false
+            }
         ];
     }
 
@@ -74,11 +74,7 @@ class Register extends Operation {
         if (!registers) return state;
 
         if (isWorkerEnvironment()) {
-            self.setRegisters(
-                state.forkOffset + state.progress,
-                state.numRegisters,
-                registers.slice(1),
-            );
+            self.setRegisters(state.forkOffset + state.progress, state.numRegisters, registers.slice(1));
         }
 
         /**
@@ -89,19 +85,13 @@ class Register extends Operation {
          */
         function replaceRegister(str) {
             // Replace references to registers ($Rn) with contents of registers
-            return str.replace(
-                /(\\*)\$R(\d{1,2})/g,
-                (match, slashes, regNum) => {
-                    const index = parseInt(regNum, 10) + 1;
-                    if (
-                        index <= state.numRegisters ||
-                        index >= state.numRegisters + registers.length
-                    )
-                        return match;
-                    if (slashes.length % 2 !== 0) return match.slice(1); // Remove escape
-                    return slashes + registers[index - state.numRegisters];
-                },
-            );
+            return str.replace(/(\\*)\$R(\d{1,2})/g, (match, slashes, regNum) => {
+                const index = parseInt(regNum, 10) + 1;
+                if (index <= state.numRegisters || index >= state.numRegisters + registers.length)
+                    return match;
+                if (slashes.length % 2 !== 0) return match.slice(1); // Remove escape
+                return slashes + registers[index - state.numRegisters];
+            });
         }
 
         // Step through all subsequent ops and replace registers in args with extracted content
@@ -109,14 +99,10 @@ class Register extends Operation {
             if (state.opList[i].disabled) continue;
 
             let args = state.opList[i].ingValues;
-            args = args.map((arg) => {
-                if (typeof arg !== "string" && typeof arg !== "object")
-                    return arg;
+            args = args.map(arg => {
+                if (typeof arg !== "string" && typeof arg !== "object") return arg;
 
-                if (
-                    typeof arg === "object" &&
-                    Object.prototype.hasOwnProperty.call(arg, "string")
-                ) {
+                if (typeof arg === "object" && Object.prototype.hasOwnProperty.call(arg, "string")) {
                     arg.string = replaceRegister(arg.string);
                     return arg;
                 }
@@ -128,6 +114,7 @@ class Register extends Operation {
         state.numRegisters += registers.length - 1;
         return state;
     }
+
 }
 
 export default Register;

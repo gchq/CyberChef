@@ -11,6 +11,7 @@ import * as esprima from "esprima";
  * JavaScript Parser operation
  */
 class JavaScriptParser extends Operation {
+
     /**
      * JavaScriptParser constructor
      */
@@ -19,37 +20,36 @@ class JavaScriptParser extends Operation {
 
         this.name = "JavaScript Parser";
         this.module = "Code";
-        this.description =
-            "Returns an Abstract Syntax Tree for valid JavaScript code.";
+        this.description = "Returns an Abstract Syntax Tree for valid JavaScript code.";
         this.infoURL = "https://wikipedia.org/wiki/Abstract_syntax_tree";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Location info",
-                type: "boolean",
-                value: false,
+                "name": "Location info",
+                "type": "boolean",
+                "value": false
             },
             {
-                name: "Range info",
-                type: "boolean",
-                value: false,
+                "name": "Range info",
+                "type": "boolean",
+                "value": false
             },
             {
-                name: "Include tokens array",
-                type: "boolean",
-                value: false,
+                "name": "Include tokens array",
+                "type": "boolean",
+                "value": false
             },
             {
-                name: "Include comments array",
-                type: "boolean",
-                value: false,
+                "name": "Include comments array",
+                "type": "boolean",
+                "value": false
             },
             {
-                name: "Report errors and try to continue",
-                type: "boolean",
-                value: false,
-            },
+                "name": "Report errors and try to continue",
+                "type": "boolean",
+                "value": false
+            }
         ];
     }
 
@@ -59,20 +59,20 @@ class JavaScriptParser extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [parseLoc, parseRange, parseTokens, parseComment, parseTolerant] =
-                args,
+        const [parseLoc, parseRange, parseTokens, parseComment, parseTolerant] = args,
             options = {
-                loc: parseLoc,
-                range: parseRange,
-                tokens: parseTokens,
-                comment: parseComment,
-                tolerant: parseTolerant,
+                loc:      parseLoc,
+                range:    parseRange,
+                tokens:   parseTokens,
+                comment:  parseComment,
+                tolerant: parseTolerant
             };
         let result = {};
 
         result = esprima.parseScript(input, options);
         return JSON.stringify(result, null, 2);
     }
+
 }
 
 export default JavaScriptParser;

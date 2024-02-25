@@ -166,8 +166,7 @@ TestRegister.addTests([
     {
         name: "To Case Insensitive Regex: not simple test",
         input: "Mozilla[A-Z0-9]+[A-Z]Mozilla[0-9whatA-Z][H-d][!-H][a-~](.)+",
-        expectedOutput:
-            "[mM][oO][zZ][iI][lL][lL][aA][A-Za-z0-9]+[A-Za-z][mM][oO][zZ][iI][lL][lL][aA][0-9[wW][hH][aA][tT]A-Za-z][A-DH-dh-z][!-Ha-h][a-~A-Z](.)+",
+        expectedOutput: "[mM][oO][zZ][iI][lL][lL][aA][A-Za-z0-9]+[A-Za-z][mM][oO][zZ][iI][lL][lL][aA][0-9[wW][hH][aA][tT]A-Za-z][A-DH-dh-z][!-Ha-h][a-~A-Z](.)+",
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
@@ -178,13 +177,12 @@ TestRegister.addTests([
     {
         name: "To Case Insensitive Regex: erroneous test",
         input: "Mozilla[A-Z",
-        expectedOutput:
-            "Invalid Regular Expression (Please note this version of node does not support look behinds).",
+        expectedOutput: "Invalid Regular Expression (Please note this version of node does not support look behinds).",
         recipeConfig: [
             {
                 op: "To Case Insensitive Regex",
                 args: [],
             },
         ],
-    },
+    }
 ]);

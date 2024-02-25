@@ -14,6 +14,7 @@ import { isWorkerEnvironment } from "../Utils.mjs";
  * To Charcode operation
  */
 class ToCharcode extends Operation {
+
     /**
      * ToCharcode constructor
      */
@@ -22,22 +23,21 @@ class ToCharcode extends Operation {
 
         this.name = "To Charcode";
         this.module = "Default";
-        this.description =
-            "Converts text to its unicode character code equivalent.<br><br>e.g. <code>Γειά σου</code> becomes <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code>";
+        this.description = "Converts text to its unicode character code equivalent.<br><br>e.g. <code>Γειά σου</code> becomes <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code>";
         this.infoURL = "https://wikipedia.org/wiki/Plane_(Unicode)";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Delimiter",
-                type: "option",
-                value: DELIM_OPTIONS,
+                "name": "Delimiter",
+                "type": "option",
+                "value": DELIM_OPTIONS
             },
             {
-                name: "Base",
-                type: "number",
-                value: 16,
-            },
+                "name": "Base",
+                "type": "number",
+                "value": 16
+            }
         ];
     }
 
@@ -56,9 +56,7 @@ class ToCharcode extends Operation {
             ordinal;
 
         if (base < 2 || base > 36) {
-            throw new OperationError(
-                "Error: Base argument must be between 2 and 36",
-            );
+            throw new OperationError("Error: Base argument must be between 2 and 36");
         }
 
         const charcode = Utils.strToCharcode(input);
@@ -72,19 +70,18 @@ class ToCharcode extends Operation {
                 else if (ordinal < 4294967296) padding = 8;
                 else padding = 2;
 
-                if (padding > 2 && isWorkerEnvironment())
-                    self.setOption("attemptHighlight", false);
+                if (padding > 2 && isWorkerEnvironment()) self.setOption("attemptHighlight", false);
 
                 output += Utils.hex(ordinal, padding) + delim;
             } else {
-                if (isWorkerEnvironment())
-                    self.setOption("attemptHighlight", false);
+                if (isWorkerEnvironment()) self.setOption("attemptHighlight", false);
                 output += ordinal.toString(base) + delim;
             }
         }
 
         return output.slice(0, -delim.length);
     }
+
 }
 
 export default ToCharcode;

@@ -12,21 +12,18 @@
 /* eslint no-console: ["off"] */
 
 import path from "path";
-import fs from "fs";
+import fs  from "fs";
 import process from "process";
 import * as Ops from "../../operations/index.mjs";
 
 const dir = path.join(process.cwd() + "/src/core/config/");
 if (!fs.existsSync(dir)) {
     console.log("\nCWD: " + process.cwd());
-    console.log(
-        "Error: generateConfig.mjs should be run from the project root",
-    );
-    console.log(
-        "Example> node --experimental-modules src/core/config/scripts/generateConfig.mjs",
-    );
+    console.log("Error: generateConfig.mjs should be run from the project root");
+    console.log("Example> node --experimental-modules src/core/config/scripts/generateConfig.mjs");
     process.exit(1);
 }
+
 
 const operationConfig = {},
     modules = {};
@@ -38,29 +35,32 @@ for (const opObj in Ops) {
     const op = new Ops[opObj]();
 
     operationConfig[op.name] = {
-        module: op.module,
+        module:      op.module,
         description: op.description,
-        infoURL: op.infoURL,
-        inputType: op.inputType,
-        outputType: op.presentType,
+        infoURL:     op.infoURL,
+        inputType:   op.inputType,
+        outputType:  op.presentType,
         flowControl: op.flowControl,
-        manualBake: op.manualBake,
-        args: op.args,
-        checks: op.checks,
+        manualBake:  op.manualBake,
+        args:        op.args,
+        checks:      op.checks
     };
 
-    if (!(op.module in modules)) modules[op.module] = {};
+    if (!(op.module in modules))
+        modules[op.module] = {};
     modules[op.module][op.name] = opObj;
 }
+
 
 /**
  * Write OperationConfig.
  */
 fs.writeFileSync(
     path.join(dir, "OperationConfig.json"),
-    JSON.stringify(operationConfig, null, 4),
+    JSON.stringify(operationConfig, null, 4)
 );
 console.log("Written OperationConfig.json");
+
 
 /**
  * Write modules.
@@ -98,9 +98,13 @@ OpModules.${module} = {
 
 export default OpModules;
 `;
-    fs.writeFileSync(path.join(dir, `modules/${module}.mjs`), code);
+    fs.writeFileSync(
+        path.join(dir, `modules/${module}.mjs`),
+        code
+    );
     console.log(`Written ${module} module`);
 }
+
 
 /**
  * Write OpModules wrapper.
@@ -136,5 +140,8 @@ opModulesCode += `);
 export default OpModules;
 `;
 
-fs.writeFileSync(path.join(dir, "modules/OpModules.mjs"), opModulesCode);
+fs.writeFileSync(
+    path.join(dir, "modules/OpModules.mjs"),
+    opModulesCode
+);
 console.log("Written OpModules.mjs");

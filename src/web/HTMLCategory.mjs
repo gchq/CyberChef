@@ -8,6 +8,7 @@
  * Object to handle the creation of operation categories.
  */
 class HTMLCategory {
+
     /**
      * HTMLCategory constructor.
      *
@@ -20,6 +21,7 @@ class HTMLCategory {
         this.opList = [];
     }
 
+
     /**
      * Adds an operation to this category.
      *
@@ -28,6 +30,7 @@ class HTMLCategory {
     addOperation(operation) {
         this.opList.push(operation);
     }
+
 
     /**
      * Renders the category and all operations within it in HTML.
@@ -40,9 +43,7 @@ class HTMLCategory {
         <a class="category-title" data-toggle="collapse" data-target="#${catName}">
             ${this.name}
         </a>
-        <div id="${catName}" class="panel-collapse collapse ${
-            this.selected ? " show" : ""
-        }" data-parent="#categories">
+        <div id="${catName}" class="panel-collapse collapse ${(this.selected ? " show" : "")}" data-parent="#categories">
             <ul class="op-list">`;
 
         for (let i = 0; i < this.opList.length; i++) {
@@ -52,6 +53,7 @@ class HTMLCategory {
         html += "</ul></div></div>";
         return html;
     }
+
 }
 
 export default HTMLCategory;

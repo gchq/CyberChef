@@ -14,9 +14,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Rison Encode",
-                args: ["Encode"],
-            },
-        ],
+                args: ["Encode"]
+            }
+        ]
     },
     {
         name: "Rison Encode: Encoding example 2",
@@ -25,9 +25,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Rison Encode",
-                args: ["Encode Object"],
-            },
-        ],
+                args: ["Encode Object"]
+            }
+        ]
     },
     {
         name: "Rison Encode: Encoding example 3",
@@ -36,23 +36,21 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Rison Encode",
-                args: ["Encode Array"],
-            },
-        ],
+                args: ["Encode Array"]
+            }
+        ]
     },
     {
         name: "Rison Encode: Object for an array",
         input: JSON.stringify({ supportsObjects: true, ints: 435 }),
-        expectedOutput:
-            "Rison Encode - rison.encode_array expects an array argument",
-        expectedError:
-            "Rison Encode - rison.encode_array expects an array argument",
+        expectedOutput: "Rison Encode - rison.encode_array expects an array argument",
+        expectedError: "Rison Encode - rison.encode_array expects an array argument",
         recipeConfig: [
             {
                 op: "Rison Encode",
-                args: ["Encode Array"],
-            },
-        ],
+                args: ["Encode Array"]
+            }
+        ]
     },
     {
         name: "Rison Decode: Decoding example 1",
@@ -61,8 +59,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Rison Decode",
-                args: ["Decode"],
-            },
-        ],
-    },
+                args: ["Decode"]
+            }
+        ]
+    }
 ]);

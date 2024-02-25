@@ -12,6 +12,7 @@ import { caseInsensitiveSort } from "../lib/Sort.mjs";
  * Extract file paths operation
  */
 class ExtractFilePaths extends Operation {
+
     /**
      * ExtractFilePaths constructor
      */
@@ -20,36 +21,35 @@ class ExtractFilePaths extends Operation {
 
         this.name = "Extract file paths";
         this.module = "Regex";
-        this.description =
-            "Extracts anything that looks like a Windows or UNIX file path.<br><br>Note that if UNIX is selected, there will likely be a lot of false positives.";
+        this.description = "Extracts anything that looks like a Windows or UNIX file path.<br><br>Note that if UNIX is selected, there will likely be a lot of false positives.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "Windows",
                 type: "boolean",
-                value: true,
+                value: true
             },
             {
                 name: "UNIX",
                 type: "boolean",
-                value: true,
+                value: true
             },
             {
                 name: "Display total",
                 type: "boolean",
-                value: false,
+                value: false
             },
             {
                 name: "Sort",
                 type: "boolean",
-                value: false,
+                value: false
             },
             {
                 name: "Unique",
                 type: "boolean",
-                value: false,
-            },
+                value: false
+            }
         ];
     }
 
@@ -59,20 +59,12 @@ class ExtractFilePaths extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [includeWinPath, includeUnixPath, displayTotal, sort, unique] =
-                args,
+        const [includeWinPath, includeUnixPath, displayTotal, sort, unique] = args,
             winDrive = "[A-Z]:\\\\",
             winName = "[A-Z\\d][A-Z\\d\\- '_\\(\\)~]{0,61}",
             winExt = "[A-Z\\d]{1,6}",
-            winPath =
-                winDrive +
-                "(?:" +
-                winName +
-                "\\\\?)*" +
-                winName +
-                "(?:\\." +
-                winExt +
-                ")?",
+            winPath = winDrive + "(?:" + winName + "\\\\?)*" + winName +
+                "(?:\\." + winExt + ")?",
             unixPath = "(?:/[A-Z\\d.][A-Z\\d\\-.]{0,61})+";
         let filePaths = "";
 
@@ -94,7 +86,7 @@ class ExtractFilePaths extends Operation {
             regex,
             null,
             sort ? caseInsensitiveSort : null,
-            unique,
+            unique
         );
 
         if (displayTotal) {
@@ -102,7 +94,9 @@ class ExtractFilePaths extends Operation {
         } else {
             return results.join("\n");
         }
+
     }
+
 }
 
 export default ExtractFilePaths;

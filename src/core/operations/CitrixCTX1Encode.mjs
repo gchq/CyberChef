@@ -11,6 +11,7 @@ import cptable from "codepage";
  * Citrix CTX1 Encode operation
  */
 class CitrixCTX1Encode extends Operation {
+
     /**
      * CitrixCTX1Encode constructor
      */
@@ -20,8 +21,7 @@ class CitrixCTX1Encode extends Operation {
         this.name = "Citrix CTX1 Encode";
         this.module = "Encodings";
         this.description = "Encodes strings to Citrix CTX1 password format.";
-        this.infoURL =
-            "https://www.reddit.com/r/AskNetsec/comments/1s3r6y/citrix_ctx1_hash_decoding/";
+        this.infoURL = "https://www.reddit.com/r/AskNetsec/comments/1s3r6y/citrix_ctx1_hash_decoding/";
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];
@@ -44,6 +44,7 @@ class CitrixCTX1Encode extends Operation {
 
         return result;
     }
+
 }
 
 export default CitrixCTX1Encode;

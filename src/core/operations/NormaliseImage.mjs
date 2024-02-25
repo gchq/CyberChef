@@ -14,6 +14,7 @@ import jimp from "jimp";
  * Normalise Image operation
  */
 class NormaliseImage extends Operation {
+
     /**
      * NormaliseImage constructor
      */
@@ -26,7 +27,7 @@ class NormaliseImage extends Operation {
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
-        this.presentType = "html";
+        this.presentType=  "html";
         this.args = [];
     }
 
@@ -78,6 +79,7 @@ class NormaliseImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
+
 }
 
 export default NormaliseImage;

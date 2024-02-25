@@ -10,6 +10,7 @@ import Operation from "../Operation.mjs";
  * Dechunk HTTP response operation
  */
 class DechunkHTTPResponse extends Operation {
+
     /**
      * DechunkHTTPResponse constructor
      */
@@ -18,18 +19,17 @@ class DechunkHTTPResponse extends Operation {
 
         this.name = "Dechunk HTTP response";
         this.module = "Default";
-        this.description =
-            "Parses an HTTP response transferred using Transfer-Encoding: Chunked";
+        this.description = "Parses an HTTP response transferred using Transfer-Encoding: Chunked";
         this.infoURL = "https://wikipedia.org/wiki/Chunked_transfer_encoding";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
         this.checks = [
             {
-                pattern: "^[0-9A-F]+\r\n",
-                flags: "i",
-                args: [],
-            },
+                pattern:  "^[0-9A-F]+\r\n",
+                flags:  "i",
+                args:   []
+            }
         ];
     }
 
@@ -41,8 +41,7 @@ class DechunkHTTPResponse extends Operation {
     run(input, args) {
         const chunks = [];
         let chunkSizeEnd = input.indexOf("\n") + 1;
-        const lineEndings =
-            input.charAt(chunkSizeEnd - 2) === "\r" ? "\r\n" : "\n";
+        const lineEndings = input.charAt(chunkSizeEnd - 2) === "\r" ? "\r\n" : "\n";
         const lineEndingsLength = lineEndings.length;
         let chunkSize = parseInt(input.slice(0, chunkSizeEnd), 16);
         while (!isNaN(chunkSize)) {
@@ -53,6 +52,7 @@ class DechunkHTTPResponse extends Operation {
         }
         return chunks.join("") + input;
     }
+
 }
 
 export default DechunkHTTPResponse;

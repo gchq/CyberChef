@@ -9,12 +9,7 @@
 /**
  * DateTime units.
  */
-export const UNITS = [
-    "Seconds (s)",
-    "Milliseconds (ms)",
-    "Microseconds (μs)",
-    "Nanoseconds (ns)",
-];
+export const UNITS = ["Seconds (s)", "Milliseconds (ms)", "Microseconds (μs)", "Nanoseconds (ns)"];
 
 /**
  * DateTime formats.
@@ -22,31 +17,31 @@ export const UNITS = [
 export const DATETIME_FORMATS = [
     {
         name: "Standard date and time",
-        value: "DD/MM/YYYY HH:mm:ss",
+        value: "DD/MM/YYYY HH:mm:ss"
     },
     {
         name: "American-style date and time",
-        value: "MM/DD/YYYY HH:mm:ss",
+        value: "MM/DD/YYYY HH:mm:ss"
     },
     {
         name: "International date and time",
-        value: "YYYY-MM-DD HH:mm:ss",
+        value: "YYYY-MM-DD HH:mm:ss"
     },
     {
         name: "Verbose date and time",
-        value: "dddd Do MMMM YYYY HH:mm:ss Z z",
+        value: "dddd Do MMMM YYYY HH:mm:ss Z z"
     },
     {
         name: "UNIX timestamp (seconds)",
-        value: "X",
+        value: "X"
     },
     {
         name: "UNIX timestamp offset (milliseconds)",
-        value: "x",
+        value: "x"
     },
     {
         name: "Automatic",
-        value: "",
+        value: ""
     },
 ];
 
@@ -315,3 +310,4 @@ export const FORMAT_EXAMPLES = `Format string tokens:
     </tr>
   </tbody>
 </table>`;
+

@@ -13,6 +13,7 @@ import OperationError from "../errors/OperationError.mjs";
  * Parse TLV operation
  */
 class ParseTLV extends Operation {
+
     /**
      * ParseTLV constructor
      */
@@ -21,8 +22,7 @@ class ParseTLV extends Operation {
 
         this.name = "Parse TLV";
         this.module = "Default";
-        this.description =
-            "Converts a Type-Length-Value (TLV) encoded string into a JSON object.  Can optionally include a <code>Key</code> / <code>Type</code> entry. <br><br>Tags: Key-Length-Value, KLV, Length-Value, LV";
+        this.description = "Converts a Type-Length-Value (TLV) encoded string into a JSON object.  Can optionally include a <code>Key</code> / <code>Type</code> entry. <br><br>Tags: Key-Length-Value, KLV, Length-Value, LV";
         this.infoURL = "https://wikipedia.org/wiki/Type-length-value";
         this.inputType = "ArrayBuffer";
         this.outputType = "JSON";
@@ -30,18 +30,18 @@ class ParseTLV extends Operation {
             {
                 name: "Type/Key size",
                 type: "number",
-                value: 1,
+                value: 1
             },
             {
                 name: "Length size",
                 type: "number",
-                value: 1,
+                value: 1
             },
             {
                 name: "Use BER",
                 type: "boolean",
-                value: false,
-            },
+                value: false
+            }
         ];
     }
 
@@ -55,9 +55,7 @@ class ParseTLV extends Operation {
         input = new Uint8Array(input);
 
         if (bytesInKey <= 0 && bytesInLength <= 0)
-            throw new OperationError(
-                "Type or Length size must be greater than 0",
-            );
+            throw new OperationError("Type or Length size must be greater than 0");
 
         const tlv = new TLVParser(input, { bytesInLength, basicEncodingRules });
 
@@ -73,6 +71,7 @@ class ParseTLV extends Operation {
 
         return data;
     }
+
 }
 
 export default ParseTLV;

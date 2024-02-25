@@ -16,7 +16,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ *    
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -27,78 +27,55 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  */
 
-import GostRandom from "./gostRandom.mjs";
-import GostCipher from "./gostCipher.mjs";
-import GostDigest from "./gostDigest.mjs";
-import GostSign from "./gostSign.mjs";
+import GostRandom from './gostRandom.mjs';
+import GostCipher from './gostCipher.mjs';
+import GostDigest from './gostDigest.mjs';
+import GostSign from './gostSign.mjs';
 
 /*
- * Engine definition base on normalized algorithm identifier
- *
- */ // <editor-fold defaultstate="collapsed">
+    * Engine definition base on normalized algorithm identifier
+    * 
+    */ // <editor-fold defaultstate="collapsed">
 
 var root = {};
 
 // Define engine
 function defineEngine(method, algorithm) {
     if (!algorithm)
-        throw new (root.SyntaxError || Error)("Algorithm not defined");
+        throw new (root.SyntaxError || Error)('Algorithm not defined');
 
     if (!algorithm.name)
-        throw new (root.SyntaxError || Error)("Algorithm name not defined");
+        throw new (root.SyntaxError || Error)('Algorithm name not defined');
 
-    var name = algorithm.name,
-        mode = algorithm.mode;
-    if (
-        (name === "GOST 28147" || name === "GOST R 34.12" || name === "RC2") &&
-        (method === "generateKey" ||
-            (mode === "MAC" && (method === "sign" || method === "verify")) ||
-            ((mode === "KW" || mode === "MASK") &&
-                (method === "wrapKey" || method === "unwrapKey")) ||
-            ((!mode || mode === "ES") &&
-                (method === "encrypt" || method === "decrypt")))
-    ) {
-        return "GostCipher";
-    } else if (
-        (name === "GOST R 34.11" || name === "SHA") &&
-        (method === "digest" ||
-            (mode === "HMAC" &&
-                (method === "sign" ||
-                    method === "verify" ||
-                    method === "generateKey")) ||
-            ((mode === "KDF" ||
-                mode === "PBKDF2" ||
-                mode === "PFXKDF" ||
-                mode === "CPKDF") &&
-                (method === "deriveKey" ||
-                    method === "deriveBits" ||
-                    method === "generateKey")))
-    ) {
-        return "GostDigest";
-    } else if (
-        name === "GOST R 34.10" &&
-        (method === "generateKey" ||
-            ((!mode || mode === "SIGN") &&
-                (method === "sign" || method === "verify")) ||
-            (mode === "MASK" &&
-                (method === "wrapKey" || method === "unwrapKey")) ||
-            (mode === "DH" &&
-                (method === "deriveKey" || method === "deriveBits")))
-    ) {
-        return "GostSign";
+    var name = algorithm.name, mode = algorithm.mode;
+    if ((name === 'GOST 28147' || name === 'GOST R 34.12' || name === 'RC2') && (method === 'generateKey' ||
+            (mode === 'MAC' && (method === 'sign' || method === 'verify')) ||
+            ((mode === 'KW' || mode === 'MASK') && (method === 'wrapKey' || method === 'unwrapKey')) ||
+            ((!mode || mode === 'ES') && (method === 'encrypt' || method === 'decrypt')))) {
+        return 'GostCipher';
+
+    } else if ((name === 'GOST R 34.11' || name === 'SHA') && (method === 'digest' ||
+            (mode === 'HMAC' && (method === 'sign' || method === 'verify' || method === 'generateKey')) ||
+            ((mode === 'KDF' || mode === 'PBKDF2' || mode === 'PFXKDF' || mode === 'CPKDF') &&
+                    (method === 'deriveKey' || method === 'deriveBits' || method === 'generateKey')))) {
+        return 'GostDigest';
+
+    } else if (name === 'GOST R 34.10' && (method === 'generateKey' ||
+            ((!mode || mode === 'SIGN') && (method === 'sign' || method === 'verify')) ||
+            (mode === 'MASK' && (method === 'wrapKey' || method === 'unwrapKey')) ||
+            (mode === 'DH' && (method === 'deriveKey' || method === 'deriveBits')))) {
+        return 'GostSign';
     } else
-        throw new (root.NotSupportedError || Error)(
-            "Algorithm " + name + "-" + mode + " is not valid for " + method,
-        );
+        throw new (root.NotSupportedError || Error)('Algorithm ' + name + '-' + mode + ' is not valid for ' + method);
 } // </editor-fold>
 
 /**
- * Object implements dedicated Web Workers and provide a simple way to create
- * and run GOST cryptographic algorithms in background thread.
- *
+ * Object implements dedicated Web Workers and provide a simple way to create 
+ * and run GOST cryptographic algorithms in background thread. 
+ * 
  * Object provide interface to GOST low-level cryptogric classes:
  *  <ul>
  *      <li>GostCipher - implementation of GOST 28147, GOST R 34.12, GOST R 34.13 Encryption algorithms. Reference {@link http://tools.ietf.org/html/rfc5830}</li>
@@ -109,39 +86,39 @@ function defineEngine(method, algorithm) {
  */
 var gostEngine = {
     /**
-     * gostEngine.execute(algorithm, method, args) Entry point to execution
+     * gostEngine.execute(algorithm, method, args) Entry point to execution 
      * all low-level GOST cryptographic methods
-     *
+     * 
      *  <ul>
      *      <li>Determine the appropriate engine for a given execution method</li>
      *      <li>Create cipher object for determineted engine</li>
      *      <li>Execute method of cipher with given args</li>
      *  </ul>
-     *
+     * 
      * @memberOf gostEngine
      * @param {AlgorithmIndentifier} algorithm Algorithm identifier
      * @param {string} method Crypto method for execution
      * @param {Array} args Method arguments (keys, data, additional parameters)
      * @returns {(CryptoOperationData|Key|KeyPair|boolean)} Result of method execution
      */
-    execute: function (algorithm, method, args) {
-        // <editor-fold defaultstate="collapsed">
+    execute: function (algorithm, method, args) // <editor-fold defaultstate="collapsed">
+    {
         // Define engine for GOST algorithms
         var engine = defineEngine(method, algorithm);
-        // Create cipher
-        var cipher = this["get" + engine](algorithm);
+        // Create cipher 
+        var cipher = this['get' + engine](algorithm);
         // Execute method
         return cipher[method].apply(cipher, args);
     }, // </editor-fold>
     /**
      * gostEngine.getGostCipher(algorithm) returns GOST 28147 / GOST R 34.12 cipher instance<br><br>
-     *
-     * GOST 28147-89 / GOST R 34.12-15 Encryption Algorithm<br><br>
-     * When keys and initialization vectors are converted to/from byte arrays,
+     * 
+     * GOST 28147-89 / GOST R 34.12-15 Encryption Algorithm<br><br> 
+     * When keys and initialization vectors are converted to/from byte arrays, 
      * little-endian byte order is assumed.<br><br>
-     *
+     * 
      * Normalized algorithm identifier common parameters:
-     *
+     * 
      *  <ul>
      *      <li><b>name</b> Algorithm name 'GOST 28147' or 'GOST R 34.12'</li>
      *      <li><b>version</b> Algorithm version, number
@@ -166,9 +143,9 @@ var gostEngine = {
      *      </li>
      *      <li><b>sBox</b> Paramset sBox for GOST 28147-89, string. Used only if version = 1989</li>
      *  </ul>
-     *
+     *  
      * Supported algorithms, modes and parameters:
-     *
+     * 
      *  <ul>
      *      <li>Encript/Decrypt mode (ES)
      *          <ul>
@@ -192,9 +169,9 @@ var gostEngine = {
      *      </li>
      *      <li>Wrap/Unwrap key mode (MASK)</li>
      *  </ul>
-     *
+     *      
      * Supported paramters values:
-     *
+     *      
      *  <ul>
      *      <li>Block modes (parameter 'block')
      *          <ul>
@@ -226,20 +203,20 @@ var gostEngine = {
      *          </ul>
      *      </li>
      *  </ul>
-     *
+     * 
      * @memberOf gostEngine
      * @param {AlgorithmIndentifier} algorithm Algorithm identifier
      * @returns {GostCipher} Instance of GostCipher
      */
-    getGostCipher: function (algorithm) {
-        // <editor-fold defaultstate="collapsed">
+    getGostCipher: function (algorithm) // <editor-fold defaultstate="collapsed">
+    {
         return new (GostCipher || (GostCipher = root.GostCipher))(algorithm);
     }, // </editor-fold>
     /**
      * gostEngine.getGostDigest(algorithm) returns GOST R 34.11 cipher instance<br><br>
-     *
+     * 
      * Normalized algorithm identifier common parameters:
-     *
+     * 
      *  <ul>
      *      <li><b>name</b> Algorithm name 'GOST R 34.11'</li>
      *      <li><b>version</b> Algorithm version
@@ -266,9 +243,9 @@ var gostEngine = {
      *      </li>
      *      <li><b>sBox</b> Paramset sBox for GOST 28147-89. Used only if version = 1994</li>
      *  </ul>
-     *
+     * 
      * Supported algorithms, modes and parameters:
-     *
+     * 
      *  <ul>
      *      <li>Digest HASH mode (default)</li>
      *      <li>Sign/Verify HMAC modes parameters depends on version and length
@@ -294,7 +271,7 @@ var gostEngine = {
      *          <ul>
      *              <li><b>salt</b> {@link CryptoOperationData} Random salt as input for HMAC algorithm</li>
      *              <li><b>iterations</b> Iteration count. GOST recomended value 1000 (default) or 2000</li>
-     *              <li><b>diversifier</b> Deversifier, ID=1 - key material for performing encryption or decryption,
+     *              <li><b>diversifier</b> Deversifier, ID=1 - key material for performing encryption or decryption, 
      *              ID=2 - IV (Initial Value) for encryption or decryption, ID=3 - integrity key for MACing</li>
      *          </ul>
      *      </li>
@@ -305,20 +282,20 @@ var gostEngine = {
      *          </ul>
      *      </li>
      *  </ul>
-     *
+     * 
      * @memberOf gostEngine
      * @param {AlgorithmIndentifier} algorithm Algorithm identifier
      * @returns {GostDigest} Instance of GostDigest
      */
-    getGostDigest: function (algorithm) {
-        // <editor-fold defaultstate="collapsed">
+    getGostDigest: function (algorithm) // <editor-fold defaultstate="collapsed">
+    {
         return new (GostDigest || (GostDigest = root.GostDigest))(algorithm);
     }, // </editor-fold>
     /**
      * gostEngine.getGostSign(algorithm) returns GOST R 34.10 cipher instance<br><br>
-     *
+     * 
      * Normalized algorithm identifier common parameters:
-     *
+     * 
      *  <ul>
      *      <li><b>name</b> Algorithm name 'GOST R 34.10'</li>
      *      <li><b>version</b> Algorithm version
@@ -343,9 +320,9 @@ var gostEngine = {
      *      </li>
      *      <li><b>sBox</b> Paramset sBox for GOST 34.11-94. Used only if version = 1994 or 2001</li>
      *  </ul>
-     *
+     *  
      * Supported algorithms, modes and parameters:
-     *
+     * 
      *  <ul>
      *      <li>Sign/Verify mode (SIGN)</li>
      *      <li>Wrap/Unwrap mode (MASK)</li>
@@ -382,31 +359,32 @@ var gostEngine = {
      *          </ul>
      *      </li>
      *  </ul>
-     *
+     *  
      * @memberOf gostEngine
      * @param {AlgorithmIndentifier} algorithm Algorithm identifier
      * @returns {GostSign} Instance of GostSign
      */
-    getGostSign: function (algorithm) {
-        // <editor-fold defaultstate="collapsed">
+    getGostSign: function (algorithm) // <editor-fold defaultstate="collapsed">
+    {
         return new (GostSign || (GostSign = root.GostSign))(algorithm);
-    }, // </editor-fold>
+    } // </editor-fold>
 };
 
 /*
- * Worker method execution
- *
- */ // <editor-fold defaultstate="collapsed">
+    * Worker method execution
+    * 
+    */ // <editor-fold defaultstate="collapsed">
 
 // Worker for gostCripto method execution
 if (root.importScripts) {
+
     /**
-     * Method called when {@link SubtleCrypto} calls its own postMessage()
+     * Method called when {@link SubtleCrypto} calls its own postMessage() 
      * method with data parameter: algorithm, method and arg.<br>
-     * Call method execute and postMessage() results to onmessage event handler
+     * Call method execute and postMessage() results to onmessage event handler 
      * in the main process.<br>
      * If error occurred onerror event handler executed in main process.
-     *
+     * 
      * @memberOf gostEngine
      * @name onmessage
      * @param {MessageEvent} event Message event with data {algorithm, method, args}
@@ -415,30 +393,26 @@ if (root.importScripts) {
         try {
             postMessage({
                 id: event.data.id,
-                result: gostEngine.execute(
-                    event.data.algorithm,
-                    event.data.method,
-                    event.data.args,
-                ),
-            });
+                result: gostEngine.execute(event.data.algorithm,
+                        event.data.method, event.data.args)});
         } catch (e) {
             postMessage({
                 id: event.data.id,
-                error: e.message,
+                error: e.message
             });
         }
     };
 } else {
+
     // Load dependens
-    var baseUrl = "",
-        nameSuffix = "";
+    var baseUrl = '', nameSuffix = '';
     // Try to define from DOM model
-    if (typeof document !== "undefined") {
+    if (typeof document !== 'undefined') {
         (function () {
             var regs = /^(.*)gostCrypto(.*)\.js$/i;
-            var list = document.querySelectorAll("script");
+            var list = document.querySelectorAll('script');
             for (var i = 0, n = list.length; i < n; i++) {
-                var value = list[i].getAttribute("src");
+                var value = list[i].getAttribute('src');
                 var test = regs.exec(value);
                 if (test) {
                     baseUrl = test[1];
@@ -451,22 +425,27 @@ if (root.importScripts) {
     // Local importScripts procedure for include dependens
     var importScripts = function () {
         for (var i = 0, n = arguments.length; i < n; i++) {
-            var name = arguments[i].split("."),
-                src = baseUrl + name[0] + nameSuffix + "." + name[1];
+            var name = arguments[i].split('.'),
+                    src = baseUrl + name[0] + nameSuffix + '.' + name[1];
             var el = document.querySelector('script[src="' + src + '"]');
             if (!el) {
-                el = document.createElement("script");
-                el.setAttribute("src", src);
+                el = document.createElement('script');
+                el.setAttribute('src', src);
                 document.head.appendChild(el);
             }
         }
     };
 
     // Import engines
-    if (!GostRandom) importScripts("gostRandom.js");
-    if (!GostCipher) importScripts("gostCipher.js");
-    if (!GostDigest) importScripts("gostDigest.js");
-    if (!GostSign) importScripts("gostSign.js");
+    if (!GostRandom)
+        importScripts('gostRandom.js');
+    if (!GostCipher)
+        importScripts('gostCipher.js');
+    if (!GostDigest)
+        importScripts('gostDigest.js');
+    if (!GostSign)
+        importScripts('gostSign.js');
 } // </editor-fold>
 
 export default gostEngine;
+

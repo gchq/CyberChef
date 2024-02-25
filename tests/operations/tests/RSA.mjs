@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 import TestRegister from "../../lib/TestRegister.mjs";
-import { ASCII_TEXT, UTF8_TEXT, ALL_BYTES } from "../../samples/Ciphers.mjs";
+import {ASCII_TEXT, UTF8_TEXT, ALL_BYTES} from "../../samples/Ciphers.mjs";
 
 const PEM_PRIV_2048 = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEAwfaUOpUEutKyU3wkCv6kYunz4MqxzSuTSckRz1IxwZtwIiqq
@@ -53,14 +53,14 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-1"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-1"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-1"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-1"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-1, ASCII",
@@ -68,14 +68,14 @@ TestRegister.addTests([
         expectedOutput: ASCII_TEXT,
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-1"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-1"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-1"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-1"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-1, UTF-8",
@@ -83,14 +83,14 @@ TestRegister.addTests([
         expectedOutput: UTF8_TEXT.substr(0, 100),
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-1"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-1"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-1"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-1"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-1, All bytes",
@@ -98,14 +98,14 @@ TestRegister.addTests([
         expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-1"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-1"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-1"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-1"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/MD5, nothing",
@@ -113,14 +113,14 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "MD5"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "MD5"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "MD5"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "MD5"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/MD5, ASCII",
@@ -128,14 +128,14 @@ TestRegister.addTests([
         expectedOutput: ASCII_TEXT,
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "MD5"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "MD5"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "MD5"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "MD5"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/MD5, UTF-8",
@@ -143,14 +143,14 @@ TestRegister.addTests([
         expectedOutput: UTF8_TEXT.substr(0, 100),
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "MD5"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "MD5"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "MD5"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "MD5"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/MD5, All bytes",
@@ -158,14 +158,14 @@ TestRegister.addTests([
         expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "MD5"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "MD5"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "MD5"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "MD5"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-256, nothing",
@@ -173,14 +173,14 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-256"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-256"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-256"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-256"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-256, ASCII",
@@ -188,14 +188,14 @@ TestRegister.addTests([
         expectedOutput: ASCII_TEXT,
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-256"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-256"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-256"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-256"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-256, UTF-8",
@@ -203,14 +203,14 @@ TestRegister.addTests([
         expectedOutput: UTF8_TEXT.substr(0, 100),
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-256"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-256"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-256"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-256"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-256, All bytes",
@@ -218,14 +218,14 @@ TestRegister.addTests([
         expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-256"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-256"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-256"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-256"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-384, nothing",
@@ -233,14 +233,14 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-384"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-384"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-384"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-384"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-384, ASCII",
@@ -248,14 +248,14 @@ TestRegister.addTests([
         expectedOutput: ASCII_TEXT,
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-384"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-384"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-384"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-384"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-384, UTF-8",
@@ -263,14 +263,14 @@ TestRegister.addTests([
         expectedOutput: UTF8_TEXT.substr(0, 80),
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-384"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-384"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-384"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-384"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-384, All bytes",
@@ -278,14 +278,14 @@ TestRegister.addTests([
         expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-384"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-384"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-384"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-384"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-512, nothing",
@@ -293,14 +293,14 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-512"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-512"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-512"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-512"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-512, ASCII",
@@ -308,14 +308,14 @@ TestRegister.addTests([
         expectedOutput: ASCII_TEXT.substr(0, 100),
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-512"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-512"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-512"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-512"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-512, UTF-8",
@@ -323,14 +323,14 @@ TestRegister.addTests([
         expectedOutput: UTF8_TEXT.substr(0, 60),
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-512"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-512"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-512"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-512"]
+            }
+        ]
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-512, All bytes",
@@ -338,13 +338,13 @@ TestRegister.addTests([
         expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
-                op: "RSA Encrypt",
-                args: [PEM_PUB_2048, "RSA-OAEP", "SHA-512"],
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RSA-OAEP", "SHA-512"]
             },
             {
-                op: "RSA Decrypt",
-                args: [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-512"],
-            },
-        ],
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-512"]
+            }
+        ]
     },
 ]);

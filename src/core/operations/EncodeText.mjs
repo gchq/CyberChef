@@ -6,12 +6,13 @@
 
 import Operation from "../Operation.mjs";
 import cptable from "codepage";
-import { CHR_ENC_CODE_PAGES } from "../lib/ChrEnc.mjs";
+import {CHR_ENC_CODE_PAGES} from "../lib/ChrEnc.mjs";
 
 /**
  * Encode text operation
  */
 class EncodeText extends Operation {
+
     /**
      * EncodeText constructor
      */
@@ -25,9 +26,7 @@ class EncodeText extends Operation {
             "<br><br>",
             "Supported charsets are:",
             "<ul>",
-            Object.keys(CHR_ENC_CODE_PAGES)
-                .map((e) => `<li>${e}</li>`)
-                .join("\n"),
+            Object.keys(CHR_ENC_CODE_PAGES).map(e => `<li>${e}</li>`).join("\n"),
             "</ul>",
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Character_encoding";
@@ -35,10 +34,10 @@ class EncodeText extends Operation {
         this.outputType = "ArrayBuffer";
         this.args = [
             {
-                name: "Encoding",
-                type: "option",
-                value: Object.keys(CHR_ENC_CODE_PAGES),
-            },
+                "name": "Encoding",
+                "type": "option",
+                "value": Object.keys(CHR_ENC_CODE_PAGES)
+            }
         ];
     }
 
@@ -52,6 +51,8 @@ class EncodeText extends Operation {
         const encoded = cptable.utils.encode(format, input);
         return new Uint8Array(encoded).buffer;
     }
+
 }
+
 
 export default EncodeText;

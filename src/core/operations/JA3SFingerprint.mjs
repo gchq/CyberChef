@@ -15,12 +15,13 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import Stream from "../lib/Stream.mjs";
-import { runHash } from "../lib/Hash.mjs";
+import {runHash} from "../lib/Hash.mjs";
 
 /**
  * JA3S Fingerprint operation
  */
 class JA3SFingerprint extends Operation {
+
     /**
      * JA3SFingerprint constructor
      */
@@ -29,23 +30,21 @@ class JA3SFingerprint extends Operation {
 
         this.name = "JA3S Fingerprint";
         this.module = "Crypto";
-        this.description =
-            "Generates a JA3S fingerprint to help identify TLS servers based on hashing together values from the Server Hello.<br><br>Input: A hex stream of the TLS Server Hello record application layer.";
-        this.infoURL =
-            "https://engineering.salesforce.com/tls-fingerprinting-with-ja3-and-ja3s-247362855967";
+        this.description = "Generates a JA3S fingerprint to help identify TLS servers based on hashing together values from the Server Hello.<br><br>Input: A hex stream of the TLS Server Hello record application layer.";
+        this.infoURL = "https://engineering.salesforce.com/tls-fingerprinting-with-ja3-and-ja3s-247362855967";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "Input format",
                 type: "option",
-                value: ["Hex", "Base64", "Raw"],
+                value: ["Hex", "Base64", "Raw"]
             },
             {
                 name: "Output format",
                 type: "option",
-                value: ["Hash digest", "JA3S string", "Full details"],
-            },
+                value: ["Hash digest", "JA3S string", "Full details"]
+            }
         ];
     }
 
@@ -61,7 +60,8 @@ class JA3SFingerprint extends Operation {
         const s = new Stream(new Uint8Array(input));
 
         const handshake = s.readInt(1);
-        if (handshake !== 0x16) throw new OperationError("Not handshake data.");
+        if (handshake !== 0x16)
+            throw new OperationError("Not handshake data.");
 
         // Version
         s.moveForwardsBy(2);
@@ -110,7 +110,11 @@ class JA3SFingerprint extends Operation {
         }
 
         // Output
-        const ja3s = [helloVersion.toString(), cipherSuite, exts.join("-")];
+        const ja3s = [
+            helloVersion.toString(),
+            cipherSuite,
+            exts.join("-")
+        ];
         const ja3sStr = ja3s.join(",");
         const ja3sHash = runHash("md5", Utils.strToArrayBuffer(ja3sStr));
 
@@ -135,6 +139,7 @@ ${exts.join("-")}`;
                 return ja3sHash;
         }
     }
+
 }
 
 export default JA3SFingerprint;

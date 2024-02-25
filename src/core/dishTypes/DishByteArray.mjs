@@ -10,6 +10,7 @@ import DishType from "./DishType.mjs";
  * Translation methods for ArrayBuffer Dishes
  */
 class DishByteArray extends DishType {
+
     /**
      * convert the given value to a ArrayBuffer
      */

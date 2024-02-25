@@ -14,7 +14,7 @@ const tiles = [];
  */
 export function initTiles() {
     for (let i = 0; i < 49; i++)
-        tiles.push([letters.charAt(i), [Math.floor(i / 7), i % 7]]);
+        tiles.push([letters.charAt(i), [Math.floor(i/7), i % 7]]);
 }
 
 /**
@@ -27,19 +27,21 @@ export function initTiles() {
  */
 function rotateDown(key, col, n) {
     const lines = [];
-    for (let i = 0; i < 7; i++) lines.push(key.slice(i * 7, (i + 1) * 7));
+    for (let i = 0; i < 7; i++)
+        lines.push(key.slice(i*7, (i + 1) * 7));
     const lefts = [];
     let mids = [];
     const rights = [];
     lines.forEach((element) => {
         lefts.push(element.slice(0, col));
         mids.push(element.charAt(col));
-        rights.push(element.slice(col + 1));
+        rights.push(element.slice(col+1));
     });
-    n = (7 - (n % 7)) % 7;
+    n = (7 - n % 7) % 7;
     mids = mids.slice(n).concat(mids.slice(0, n));
     let result = "";
-    for (let i = 0; i < 7; i++) result += lefts[i] + mids[i] + rights[i];
+    for (let i = 0; i < 7; i++)
+        result += lefts[i] + mids[i] + rights[i];
     return result;
 }
 
@@ -53,13 +55,8 @@ function rotateDown(key, col, n) {
  */
 function rotateRight(key, row, n) {
     const mid = key.slice(row * 7, (row + 1) * 7);
-    n = (7 - (n % 7)) % 7;
-    return (
-        key.slice(0, 7 * row) +
-        mid.slice(n) +
-        mid.slice(0, n) +
-        key.slice(7 * (row + 1))
-    );
+    n = (7 - n % 7) % 7;
+    return key.slice(0, 7 * row) + mid.slice(n) + mid.slice(0, n) + key.slice(7 * (row + 1));
 }
 
 /**
@@ -70,7 +67,8 @@ function rotateRight(key, row, n) {
  */
 function findIx(letter) {
     for (let i = 0; i < tiles.length; i++)
-        if (tiles[i][0] === letter) return tiles[i][1];
+        if (tiles[i][0] === letter)
+            return tiles[i][1];
     throw new OperationError("Letter " + letter + " is not included in LS47");
 }
 
@@ -100,7 +98,8 @@ function checkKey(key) {
     if (key.length !== letters.length)
         throw new OperationError("Wrong key size");
     const counts = new Array();
-    for (let i = 0; i < letters.length; i++) counts[letters.charAt(i)] = 0;
+    for (let i = 0; i < letters.length; i++)
+        counts[letters.charAt(i)] = 0;
     for (const elem of letters) {
         if (letters.indexOf(elem) === -1)
             throw new OperationError("Letter " + elem + " not in LS47");
@@ -117,9 +116,10 @@ function checkKey(key) {
  * @param {string} letter
  * @returns {object}
  */
-function findPos(key, letter) {
+function findPos (key, letter) {
     const index = key.indexOf(letter);
-    if (index >= 0 && index < 49) return [Math.floor(index / 7), index % 7];
+    if (index >= 0 && index < 49)
+        return [Math.floor(index/7), index%7];
     throw new OperationError("Letter " + letter + " is not in the key");
 }
 
@@ -131,7 +131,7 @@ function findPos(key, letter) {
  * @returns {string}
  */
 function findAtPos(key, coord) {
-    return key.charAt(coord[1] + coord[0] * 7);
+    return key.charAt(coord[1] + (coord[0] * 7));
 }
 
 /**
@@ -157,7 +157,7 @@ function addPos(a, b) {
 function subPos(a, b) {
     const asub = a[0] - b[0];
     const bsub = a[1] - b[1];
-    return [asub - Math.floor(asub / 7) * 7, bsub - Math.floor(bsub / 7) * 7];
+    return [asub - (Math.floor(asub/7) * 7), bsub - (Math.floor(bsub/7) * 7)];
 }
 
 /**
@@ -226,7 +226,7 @@ export function encryptPad(key, plaintext, signature, paddingSize) {
     for (let i = 0; i < paddingSize; i++) {
         padding += letters.charAt(Math.floor(Math.random() * letters.length));
     }
-    return encrypt(key, padding + plaintext + "---" + signature);
+    return encrypt(key, padding+plaintext+"---"+signature);
 }
 
 /**

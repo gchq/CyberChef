@@ -14,12 +14,12 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                op: "Encode text",
-                args: ["UTF-8 (65001)"],
+                "op": "Encode text",
+                "args": ["UTF-8 (65001)"]
             },
             {
-                op: "Decode text",
-                args: ["UTF-8 (65001)"],
+                "op": "Decode text",
+                "args": ["UTF-8 (65001)"]
             },
         ],
     },
@@ -29,12 +29,12 @@ TestRegister.addTests([
         expectedOutput: "hello",
         recipeConfig: [
             {
-                op: "Encode text",
-                args: ["UTF-8 (65001)"],
+                "op": "Encode text",
+                "args": ["UTF-8 (65001)"]
             },
             {
-                op: "Decode text",
-                args: ["UTF-8 (65001)"],
+                "op": "Decode text",
+                "args": ["UTF-8 (65001)"]
             },
         ],
     },
@@ -44,12 +44,12 @@ TestRegister.addTests([
         expectedOutput: "88 85 93 93 96",
         recipeConfig: [
             {
-                op: "Encode text",
-                args: ["IBM EBCDIC International (500)"],
+                "op": "Encode text",
+                "args": ["IBM EBCDIC International (500)"]
             },
             {
-                op: "To Hex",
-                args: ["Space"],
+                "op": "To Hex",
+                "args": ["Space"]
             },
         ],
     },
@@ -59,31 +59,31 @@ TestRegister.addTests([
         expectedOutput: "hello",
         recipeConfig: [
             {
-                op: "From Hex",
-                args: ["Space"],
+                "op": "From Hex",
+                "args": ["Space"]
             },
             {
-                op: "Decode text",
-                args: ["IBM EBCDIC International (500)"],
+                "op": "Decode text",
+                "args": ["IBM EBCDIC International (500)"]
             },
         ],
     },
     {
         name: "Generate Base64 Windows PowerShell",
         input: "ZABpAHIAIAAiAGMAOgBcAHAAcgBvAGcAcgBhAG0AIABmAGkAbABlAHMAIgAgAA==",
-        expectedOutput: 'dir "c:\\program files" ',
+        expectedOutput: "dir \"c:\\program files\" ",
         recipeConfig: [
             {
-                op: "From Base64",
-                args: ["A-Za-z0-9+/=", true],
+                "op": "From Base64",
+                "args": ["A-Za-z0-9+/=", true]
             },
             {
-                op: "Decode text",
-                args: ["UTF-16LE (1200)"],
+                "op": "Decode text",
+                "args": ["UTF-16LE (1200)"]
             },
             {
-                op: "Encode text",
-                args: ["UTF-8 (65001)"],
+                "op": "Encode text",
+                "args": ["UTF-8 (65001)"]
             },
         ],
     },

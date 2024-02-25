@@ -15,7 +15,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Decimal",
-                args: ["Space", false],
+                args: ["Space", false]
             },
         ],
     },
@@ -26,7 +26,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Decimal",
-                args: ["Comma", true],
+                args: ["Comma", true]
             },
         ],
     },

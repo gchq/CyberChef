@@ -13,6 +13,7 @@ import * as esprima from "esprima";
  * JavaScript Beautify operation
  */
 class JavaScriptBeautify extends Operation {
+
     /**
      * JavaScriptBeautify constructor
      */
@@ -21,31 +22,30 @@ class JavaScriptBeautify extends Operation {
 
         this.name = "JavaScript Beautify";
         this.module = "Code";
-        this.description =
-            "Parses and pretty prints valid JavaScript code. Also works with JavaScript Object Notation (JSON).";
+        this.description = "Parses and pretty prints valid JavaScript code. Also works with JavaScript Object Notation (JSON).";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Indent string",
-                type: "binaryShortString",
-                value: "\\t",
+                "name": "Indent string",
+                "type": "binaryShortString",
+                "value": "\\t"
             },
             {
-                name: "Quotes",
-                type: "option",
-                value: ["Auto", "Single", "Double"],
+                "name": "Quotes",
+                "type": "option",
+                "value": ["Auto", "Single", "Double"]
             },
             {
-                name: "Semicolons before closing braces",
-                type: "boolean",
-                value: true,
+                "name": "Semicolons before closing braces",
+                "type": "boolean",
+                "value": true
             },
             {
-                name: "Include comments",
-                type: "boolean",
-                value: true,
-            },
+                "name": "Include comments",
+                "type": "boolean",
+                "value": true
+            }
         ];
     }
 
@@ -57,7 +57,7 @@ class JavaScriptBeautify extends Operation {
     run(input, args) {
         const beautifyIndent = args[0] || "\\t",
             quotes = args[1].toLowerCase(),
-            [, , beautifySemicolons, beautifyComment] = args;
+            [,, beautifySemicolons, beautifyComment] = args;
         let result = "",
             AST;
 
@@ -65,18 +65,18 @@ class JavaScriptBeautify extends Operation {
             AST = esprima.parseScript(input, {
                 range: true,
                 tokens: true,
-                comment: true,
+                comment: true
             });
 
             const options = {
                 format: {
                     indent: {
-                        style: beautifyIndent,
+                        style: beautifyIndent
                     },
                     quotes: quotes,
                     semicolons: beautifySemicolons,
                 },
-                comment: beautifyComment,
+                comment: beautifyComment
             };
 
             if (options.comment)
@@ -85,12 +85,11 @@ class JavaScriptBeautify extends Operation {
             result = escodegen.generate(AST, options);
         } catch (e) {
             // Leave original error so the user can see the detail
-            throw new OperationError(
-                "Unable to parse JavaScript.<br>" + e.message,
-            );
+            throw new OperationError("Unable to parse JavaScript.<br>" + e.message);
         }
         return result;
     }
+
 }
 
 export default JavaScriptBeautify;

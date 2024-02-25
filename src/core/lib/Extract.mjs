@@ -18,13 +18,7 @@
  * @param {boolean} [unique=false] - Whether to unique the results
  * @returns {string}
  */
-export function search(
-    input,
-    searchRegex,
-    removeRegex = null,
-    sortBy = null,
-    unique = false,
-) {
+export function search(input, searchRegex, removeRegex=null, sortBy=null, unique=false) {
     let results = [];
     let match;
 
@@ -34,7 +28,8 @@ export function search(
             searchRegex.lastIndex++;
         }
 
-        if (removeRegex && removeRegex.test(match[0])) continue;
+        if (removeRegex && removeRegex.test(match[0]))
+            continue;
 
         results.push(match[0]);
     }
@@ -50,23 +45,20 @@ export function search(
     return results;
 }
 
+
 /**
  * URL regular expression
  */
 const protocol = "[A-Z]+://",
     hostname = "[-\\w]+(?:\\.\\w[-\\w]*)+",
     port = ":\\d+",
-    path =
-        '/[^.!,?"<>\\[\\]{}\\s\\x7F-\\xFF]*' +
-        '(?:[.!,?]+[^.!,?"<>\\[\\]{}\\s\\x7F-\\xFF]+)*';
+    path = "/[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]*" +
+        "(?:[.!,?]+[^.!,?\"<>\\[\\]{}\\s\\x7F-\\xFF]+)*";
 
-export const URL_REGEX = new RegExp(
-    protocol + hostname + "(?:" + port + ")?(?:" + path + ")?",
-    "ig",
-);
+export const URL_REGEX = new RegExp(protocol + hostname + "(?:" + port + ")?(?:" + path + ")?", "ig");
+
 
 /**
  * Domain name regular expression
  */
-export const DOMAIN_REGEX =
-    /\b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b/gi;
+export const DOMAIN_REGEX = /\b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b/ig;

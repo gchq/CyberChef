@@ -5,20 +5,21 @@
  */
 
 import Utils from "./Utils.mjs";
-import { fromHex } from "./lib/Hex.mjs";
+import {fromHex} from "./lib/Hex.mjs";
 
 /**
  * The arguments to operations.
  */
 class Ingredient {
+
     /**
      * Ingredient constructor
      *
      * @param {Object} ingredientConfig
      */
     constructor(ingredientConfig) {
-        this.name = "";
-        this.type = "";
+        this.name  = "";
+        this.type  = "";
         this._value = null;
         this.disabled = false;
         this.hint = "";
@@ -36,6 +37,7 @@ class Ingredient {
         }
     }
 
+
     /**
      * Reads and parses the given config.
      *
@@ -50,19 +52,14 @@ class Ingredient {
         this.hint = ingredientConfig.hint || false;
         this.rows = ingredientConfig.rows || false;
         this.toggleValues = ingredientConfig.toggleValues;
-        this.target =
-            typeof ingredientConfig.target !== "undefined"
-                ? ingredientConfig.target
-                : null;
-        this.defaultIndex =
-            typeof ingredientConfig.defaultIndex !== "undefined"
-                ? ingredientConfig.defaultIndex
-                : 0;
+        this.target = typeof ingredientConfig.target !== "undefined" ? ingredientConfig.target : null;
+        this.defaultIndex = typeof ingredientConfig.defaultIndex !== "undefined" ? ingredientConfig.defaultIndex : 0;
         this.maxLength = ingredientConfig.maxLength || null;
         this.min = ingredientConfig.min;
         this.max = ingredientConfig.max;
         this.step = ingredientConfig.step;
     }
+
 
     /**
      * Returns the value of the Ingredient as it should be displayed in a recipe config.
@@ -73,6 +70,7 @@ class Ingredient {
         return this._value;
     }
 
+
     /**
      * Sets the value of the Ingredient.
      *
@@ -81,6 +79,7 @@ class Ingredient {
     set value(value) {
         this._value = Ingredient.prepare(value, this.type);
     }
+
 
     /**
      * Gets the value of the Ingredient.
@@ -91,13 +90,14 @@ class Ingredient {
         return this._value;
     }
 
+
     /**
      * Most values will be strings when they are entered. This function converts them to the correct
      * type.
      *
      * @param {*} data
      * @param {string} type - The name of the data type.
-     */
+    */
     static prepare(data, type) {
         let number;
 
@@ -126,6 +126,7 @@ class Ingredient {
                 return data;
         }
     }
+
 }
 
 export default Ingredient;

@@ -10,6 +10,7 @@ import { debounce } from "../../core/Utils.mjs";
  * Waiter to handle events related to the window object.
  */
 class WindowWaiter {
+
     /**
      * WindowWaiter constructor.
      *
@@ -19,20 +20,16 @@ class WindowWaiter {
         this.app = app;
     }
 
+
     /**
      * Handler for window resize events.
      * Resets adjustable component sizes after 200ms (so that continuous resizing doesn't cause
      * continuous resetting).
      */
     windowResize() {
-        debounce(
-            this.app.adjustComponentSizes,
-            200,
-            "windowResize",
-            this.app,
-            [],
-        )();
+        debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();
     }
+
 
     /**
      * Handler for window blur events.
@@ -42,6 +39,7 @@ class WindowWaiter {
     windowBlur() {
         this.windowBlurTime = Date.now();
     }
+
 
     /**
      * Handler for window focus events.
@@ -59,6 +57,7 @@ class WindowWaiter {
             this.app.silentBake();
         }
     }
+
 }
 
 export default WindowWaiter;

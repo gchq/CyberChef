@@ -5,13 +5,14 @@
  */
 
 import Operation from "../Operation.mjs";
-import { FORMATS, convertCoordinates } from "../lib/ConvertCoordinates.mjs";
+import {FORMATS, convertCoordinates} from "../lib/ConvertCoordinates.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Show on map operation
  */
 class ShowOnMap extends Operation {
+
     /**
      * ShowOnMap constructor
      */
@@ -20,10 +21,8 @@ class ShowOnMap extends Operation {
 
         this.name = "Show on map";
         this.module = "Hashing";
-        this.description =
-            "Displays co-ordinates on a slippy map.<br><br>Co-ordinates will be converted to decimal degrees before being shown on the map.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li><li>Ordnance Survey National Grid (OSNG)</li><li>Universal Transverse Mercator (UTM)</li></ul><br>This operation will not work offline.";
-        this.infoURL =
-            "https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use";
+        this.description = "Displays co-ordinates on a slippy map.<br><br>Co-ordinates will be converted to decimal degrees before being shown on the map.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li><li>Ordnance Survey National Grid (OSNG)</li><li>Universal Transverse Mercator (UTM)</li></ul><br>This operation will not work offline.";
+        this.infoURL = "https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use";
         this.inputType = "string";
         this.outputType = "string";
         this.presentType = "html";
@@ -31,12 +30,12 @@ class ShowOnMap extends Operation {
             {
                 name: "Zoom Level",
                 type: "number",
-                value: 13,
+                value: 13
             },
             {
                 name: "Input Format",
                 type: "option",
-                value: ["Auto"].concat(FORMATS),
+                value: ["Auto"].concat(FORMATS)
             },
             {
                 name: "Input Delimiter",
@@ -48,9 +47,9 @@ class ShowOnMap extends Operation {
                     "\\n",
                     "Comma",
                     "Semi-colon",
-                    "Colon",
-                ],
-            },
+                    "Colon"
+                ]
+            }
         ];
     }
 
@@ -65,15 +64,7 @@ class ShowOnMap extends Operation {
                 inDelim = args[2];
             let latLong;
             try {
-                latLong = convertCoordinates(
-                    input,
-                    inFormat,
-                    inDelim,
-                    "Decimal Degrees",
-                    "Comma",
-                    "None",
-                    5,
-                );
+                latLong = convertCoordinates(input, inFormat, inDelim, "Decimal Degrees", "Comma", "None", 5);
             } catch (error) {
                 throw new OperationError(error);
             }
@@ -95,8 +86,7 @@ class ShowOnMap extends Operation {
         }
         const zoomLevel = args[0];
         const tileUrl = "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png",
-            tileAttribution =
-                '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia maps</a> | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            tileAttribution = "<a href=\"https://wikimediafoundation.org/wiki/Maps_Terms_of_Use\">Wikimedia maps</a> | &copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
             leafletUrl = "https://unpkg.com/leaflet@1.5.0/dist/leaflet.js",
             leafletCssUrl = "https://unpkg.com/leaflet@1.5.0/dist/leaflet.css";
         return `<link rel="stylesheet" href="${leafletCssUrl}" crossorigin=""/>

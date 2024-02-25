@@ -12,6 +12,7 @@ import jsesc from "jsesc";
  * Escape string operation
  */
 class EscapeString extends Operation {
+
     /**
      * EscapeString constructor
      */
@@ -20,37 +21,36 @@ class EscapeString extends Operation {
 
         this.name = "Escape string";
         this.module = "Default";
-        this.description =
-            "Escapes special characters in a string so that they do not cause conflicts. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.<br><br>Supports the following escape sequences:<ul><li><code>\\n</code> (Line feed/newline)</li><li><code>\\r</code> (Carriage return)</li><li><code>\\t</code> (Horizontal tab)</li><li><code>\\b</code> (Backspace)</li><li><code>\\f</code> (Form feed)</li><li><code>\\xnn</code> (Hex, where n is 0-f)</li><li><code>\\\\</code> (Backslash)</li><li><code>\\'</code> (Single quote)</li><li><code>\\&quot;</code> (Double quote)</li><li><code>\\unnnn</code> (Unicode character)</li><li><code>\\u{nnnnnn}</code> (Unicode code point)</li></ul>";
+        this.description = "Escapes special characters in a string so that they do not cause conflicts. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.<br><br>Supports the following escape sequences:<ul><li><code>\\n</code> (Line feed/newline)</li><li><code>\\r</code> (Carriage return)</li><li><code>\\t</code> (Horizontal tab)</li><li><code>\\b</code> (Backspace)</li><li><code>\\f</code> (Form feed)</li><li><code>\\xnn</code> (Hex, where n is 0-f)</li><li><code>\\\\</code> (Backslash)</li><li><code>\\'</code> (Single quote)</li><li><code>\\&quot;</code> (Double quote)</li><li><code>\\unnnn</code> (Unicode character)</li><li><code>\\u{nnnnnn}</code> (Unicode code point)</li></ul>";
         this.infoURL = "https://wikipedia.org/wiki/Escape_sequence";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Escape level",
-                type: "option",
-                value: ["Special chars", "Everything", "Minimal"],
+                "name": "Escape level",
+                "type": "option",
+                "value": ["Special chars", "Everything", "Minimal"]
             },
             {
-                name: "Escape quote",
-                type: "option",
-                value: ["Single", "Double", "Backtick"],
+                "name": "Escape quote",
+                "type": "option",
+                "value": ["Single", "Double", "Backtick"]
             },
             {
-                name: "JSON compatible",
-                type: "boolean",
-                value: false,
+                "name": "JSON compatible",
+                "type": "boolean",
+                "value": false
             },
             {
-                name: "ES6 compatible",
-                type: "boolean",
-                value: true,
+                "name": "ES6 compatible",
+                "type": "boolean",
+                "value": true
             },
             {
-                name: "Uppercase hex",
-                type: "boolean",
-                value: false,
-            },
+                "name": "Uppercase hex",
+                "type": "boolean",
+                "value": false
+            }
         ];
     }
 
@@ -82,6 +82,7 @@ class EscapeString extends Operation {
             lowercaseHex: lowercaseHex,
         });
     }
+
 }
 
 export default EscapeString;

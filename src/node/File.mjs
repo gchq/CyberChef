@@ -6,6 +6,7 @@
 
 import { detectFileType } from "../core/lib/FileType.mjs";
 
+
 /**
  * FileShim
  *
@@ -15,6 +16,7 @@ import { detectFileType } from "../core/lib/FileType.mjs";
  * File doesn't write to disk, but it would be easy to do so with e.gfs.writeFile.
  */
 class File {
+
     /**
      * Constructor
      *
@@ -24,7 +26,8 @@ class File {
      * @param {String} name (optional) - file name
      * @param {Object} stats (optional) - file stats e.g. lastModified
      */
-    constructor(data, name = "", stats = {}) {
+    constructor(data, name="", stats={}) {
+
         if (!Array.isArray(data)) {
             data = [data];
         }
@@ -67,6 +70,7 @@ class File {
     get lastModifiedDate() {
         return new Date(this.lastModified);
     }
+
 }
 
 export default File;

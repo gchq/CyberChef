@@ -8,4 +8,5 @@ TestRegister.addApiTests([
         const dish = new Dish();
         assert(dish.presentAs);
     }),
+
 ]);

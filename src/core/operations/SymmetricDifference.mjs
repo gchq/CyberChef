@@ -12,6 +12,7 @@ import OperationError from "../errors/OperationError.mjs";
  * Set Symmetric Difference operation
  */
 class SymmetricDifference extends Operation {
+
     /**
      * Symmetric Difference constructor
      */
@@ -28,12 +29,12 @@ class SymmetricDifference extends Operation {
             {
                 name: "Sample delimiter",
                 type: "binaryString",
-                value: Utils.escapeHtml("\\n\\n"),
+                value: Utils.escapeHtml("\\n\\n")
             },
             {
                 name: "Item delimiter",
                 type: "binaryString",
-                value: ",",
+                value: ","
             },
         ];
     }
@@ -45,10 +46,8 @@ class SymmetricDifference extends Operation {
      * @throws {Error} if not two sets
      */
     validateSampleNumbers(sets) {
-        if (!sets || sets.length !== 2) {
-            throw new OperationError(
-                "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?",
-            );
+        if (!sets || (sets.length !== 2)) {
+            throw new OperationError("Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?");
         }
     }
 
@@ -66,9 +65,7 @@ class SymmetricDifference extends Operation {
 
         this.validateSampleNumbers(sets);
 
-        return this.runSymmetricDifference(
-            ...sets.map((s) => s.split(this.itemDelimiter)),
-        );
+        return this.runSymmetricDifference(...sets.map(s => s.split(this.itemDelimiter)));
     }
 
     /**
@@ -96,6 +93,7 @@ class SymmetricDifference extends Operation {
             .concat(this.runSetDifference(b, a))
             .join(this.itemDelimiter);
     }
+
 }
 
 export default SymmetricDifference;

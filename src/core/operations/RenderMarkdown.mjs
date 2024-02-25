@@ -12,6 +12,7 @@ import hljs from "highlight.js";
  * Render Markdown operation
  */
 class RenderMarkdown extends Operation {
+
     /**
      * RenderMarkdown constructor
      */
@@ -20,8 +21,7 @@ class RenderMarkdown extends Operation {
 
         this.name = "Render Markdown";
         this.module = "Code";
-        this.description =
-            "Renders input Markdown as HTML. HTML rendering is disabled to avoid XSS.";
+        this.description = "Renders input Markdown as HTML. HTML rendering is disabled to avoid XSS.";
         this.infoURL = "https://wikipedia.org/wiki/Markdown";
         this.inputType = "string";
         this.outputType = "html";
@@ -29,13 +29,13 @@ class RenderMarkdown extends Operation {
             {
                 name: "Autoconvert URLs to links",
                 type: "boolean",
-                value: false,
+                value: false
             },
             {
                 name: "Enable syntax highlighting",
                 type: "boolean",
-                value: true,
-            },
+                value: true
+            }
         ];
     }
 
@@ -49,7 +49,7 @@ class RenderMarkdown extends Operation {
             md = new MarkdownIt({
                 linkify: convertLinks,
                 html: false, // Explicitly disable HTML rendering
-                highlight: function (str, lang) {
+                highlight: function(str, lang) {
                     if (lang && hljs.getLanguage(lang) && enableHighlighting) {
                         try {
                             return hljs.highlight(lang, str).value;
@@ -57,12 +57,13 @@ class RenderMarkdown extends Operation {
                     }
 
                     return "";
-                },
+                }
             }),
             rendered = md.render(input);
 
         return `<div style="font-family: var(--primary-font-family)">${rendered}</div>`;
     }
+
 }
 
 export default RenderMarkdown;

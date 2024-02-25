@@ -7,12 +7,13 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
-import { fromHex } from "../lib/Hex.mjs";
+import {fromHex} from "../lib/Hex.mjs";
 
 /**
  * Change IP format operation
  */
 class ChangeIPFormat extends Operation {
+
     /**
      * ChangeIPFormat constructor
      */
@@ -21,21 +22,20 @@ class ChangeIPFormat extends Operation {
 
         this.name = "Change IP format";
         this.module = "Default";
-        this.description =
-            "Convert an IP address from one format to another, e.g. <code>172.20.23.54</code> to <code>ac141736</code>";
+        this.description = "Convert an IP address from one format to another, e.g. <code>172.20.23.54</code> to <code>ac141736</code>";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Input format",
-                type: "option",
-                value: ["Dotted Decimal", "Decimal", "Octal", "Hex"],
+                "name": "Input format",
+                "type": "option",
+                "value": ["Dotted Decimal", "Decimal", "Octal", "Hex"]
             },
             {
-                name: "Output format",
-                type: "option",
-                value: ["Dotted Decimal", "Decimal", "Octal", "Hex"],
-            },
+                "name": "Output format",
+                "type": "option",
+                "value": ["Dotted Decimal", "Decimal", "Octal", "Hex"]
+            }
         ];
     }
 
@@ -92,24 +92,14 @@ class ChangeIPFormat extends Operation {
                     for (j = 0; j < baIp.length; j++) {
                         ddIp += baIp[j] + ".";
                     }
-                    output += ddIp.slice(0, ddIp.length - 1) + "\n";
+                    output += ddIp.slice(0, ddIp.length-1) + "\n";
                     break;
                 case "Decimal":
-                    decIp =
-                        ((baIp[0] << 24) |
-                            (baIp[1] << 16) |
-                            (baIp[2] << 8) |
-                            baIp[3]) >>>
-                        0;
+                    decIp = ((baIp[0] << 24) | (baIp[1] << 16) | (baIp[2] << 8) | baIp[3]) >>> 0;
                     output += decIp.toString() + "\n";
                     break;
                 case "Octal":
-                    decIp =
-                        ((baIp[0] << 24) |
-                            (baIp[1] << 16) |
-                            (baIp[2] << 8) |
-                            baIp[3]) >>>
-                        0;
+                    decIp = ((baIp[0] << 24) | (baIp[1] << 16) | (baIp[2] << 8) | baIp[3]) >>> 0;
                     output += "0" + decIp.toString(8) + "\n";
                     break;
                 case "Hex":
@@ -124,7 +114,7 @@ class ChangeIPFormat extends Operation {
             }
         }
 
-        return output.slice(0, output.length - 1);
+        return output.slice(0, output.length-1);
     }
 
     /**
@@ -136,12 +126,13 @@ class ChangeIPFormat extends Operation {
     fromNumber(value, radix) {
         const decimal = parseInt(value, radix);
         const baIp = [];
-        baIp.push((decimal >> 24) & 255);
-        baIp.push((decimal >> 16) & 255);
-        baIp.push((decimal >> 8) & 255);
+        baIp.push(decimal >> 24 & 255);
+        baIp.push(decimal >> 16 & 255);
+        baIp.push(decimal >> 8 & 255);
         baIp.push(decimal & 255);
         return baIp;
     }
+
 }
 
 export default ChangeIPFormat;

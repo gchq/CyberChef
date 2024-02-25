@@ -11,113 +11,98 @@ TestRegister.addTests([
         // Plugboard for this test is BO LC KE GA
         name: "Bombe: 3 rotor (self-stecker)",
         input: "BBYFLTHHYIJQAYBBYS",
-        expectedMatch:
-            /<td>LGA<\/td> {2}<td>SS<\/td> {2}<td>VFISUSGTKSTMPSUNAK<\/td>/,
+        expectedMatch: /<td>LGA<\/td> {2}<td>SS<\/td> {2}<td>VFISUSGTKSTMPSUNAK<\/td>/,
         recipeConfig: [
             {
-                op: "Bombe",
-                args: [
+                "op": "Bombe",
+                "args": [
                     "3-rotor",
                     "",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTMESSAGE",
-                    0,
-                    false,
-                ],
-            },
-        ],
+                    "THISISATESTMESSAGE", 0, false
+                ]
+            }
+        ]
     },
     {
         // This test produces a menu that doesn't use the first letter, which is also a good test
         name: "Bombe: 3 rotor (other stecker)",
         input: "JBYALIHDYNUAAVKBYM",
-        expectedMatch:
-            /<td>LGA<\/td> {2}<td>AG<\/td> {2}<td>QFIMUMAFKMQSKMYNGW<\/td>/,
+        expectedMatch: /<td>LGA<\/td> {2}<td>AG<\/td> {2}<td>QFIMUMAFKMQSKMYNGW<\/td>/,
         recipeConfig: [
             {
-                op: "Bombe",
-                args: [
+                "op": "Bombe",
+                "args": [
                     "3-rotor",
                     "",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTMESSAGE",
-                    0,
-                    false,
-                ],
-            },
-        ],
+                    "THISISATESTMESSAGE", 0, false
+                ]
+            }
+        ]
     },
     {
         name: "Bombe: crib offset",
         input: "AAABBYFLTHHYIJQAYBBYS", // first three chars here are faked
-        expectedMatch:
-            /<td>LGA<\/td> {2}<td>SS<\/td> {2}<td>VFISUSGTKSTMPSUNAK<\/td>/,
+        expectedMatch: /<td>LGA<\/td> {2}<td>SS<\/td> {2}<td>VFISUSGTKSTMPSUNAK<\/td>/,
         recipeConfig: [
             {
-                op: "Bombe",
-                args: [
+                "op": "Bombe",
+                "args": [
                     "3-rotor",
                     "",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTMESSAGE",
-                    3,
-                    false,
-                ],
-            },
-        ],
+                    "THISISATESTMESSAGE", 3, false
+                ]
+            }
+        ]
     },
     {
         name: "Bombe: multiple stops",
         input: "BBYFLTHHYIJQAYBBYS",
-        expectedMatch:
-            /<td>LGA<\/td> {2}<td>TT<\/td> {2}<td>VFISUSGTKSTMPSUNAK<\/td>/,
+        expectedMatch: /<td>LGA<\/td> {2}<td>TT<\/td> {2}<td>VFISUSGTKSTMPSUNAK<\/td>/,
         recipeConfig: [
             {
-                op: "Bombe",
-                args: [
+                "op": "Bombe",
+                "args": [
                     "3-rotor",
                     "",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTM",
-                    0,
-                    false,
-                ],
-            },
-        ],
+                    "THISISATESTM", 0, false
+                ]
+            }
+        ]
     },
     {
         name: "Bombe: checking machine",
         input: "BBYFLTHHYIJQAYBBYS",
-        expectedMatch:
-            /<td>LGA<\/td> {2}<td>TT AG BO CL EK FF HH II JJ SS YY<\/td> {2}<td>THISISATESTMESSAGE<\/td>/,
+        expectedMatch: /<td>LGA<\/td> {2}<td>TT AG BO CL EK FF HH II JJ SS YY<\/td> {2}<td>THISISATESTMESSAGE<\/td>/,
         recipeConfig: [
             {
-                op: "Bombe",
-                args: [
+                "op": "Bombe",
+                "args": [
                     "3-rotor",
                     "",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTM",
-                    0,
-                    true,
-                ],
-            },
-        ],
+                    "THISISATESTM", 0, true
+                ]
+            }
+        ]
     },
     // Takes a while to run, so disabling for general purpose testing. Re-enable if modifying this operation.
     // {
@@ -145,20 +130,18 @@ TestRegister.addTests([
         expectedMatch: /Crib cannot be empty/,
         recipeConfig: [
             {
-                op: "Bombe",
-                args: [
+                "op": "Bombe",
+                "args": [
                     "3-rotor",
                     "",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "",
-                    0,
-                    false,
-                ],
-            },
-        ],
+                    "", 0, false
+                ]
+            }
+        ]
     },
     {
         name: "Bombe: short crib",
@@ -166,20 +149,18 @@ TestRegister.addTests([
         expectedMatch: /Crib is too short/,
         recipeConfig: [
             {
-                op: "Bombe",
-                args: [
+                "op": "Bombe",
+                "args": [
                     "3-rotor",
                     "",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "A",
-                    0,
-                    false,
-                ],
-            },
-        ],
+                    "A", 0, false
+                ]
+            }
+        ]
     },
     {
         name: "Bombe: invalid crib",
@@ -187,20 +168,18 @@ TestRegister.addTests([
         expectedMatch: /Invalid crib: .* in both ciphertext and crib/,
         recipeConfig: [
             {
-                op: "Bombe",
-                args: [
+                "op": "Bombe",
+                "args": [
                     "3-rotor",
                     "",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "AAAAAAAA",
-                    0,
-                    false,
-                ],
-            },
-        ],
+                    "AAAAAAAA", 0, false
+                ]
+            }
+        ]
     },
     {
         name: "Bombe: long crib",
@@ -208,20 +187,18 @@ TestRegister.addTests([
         expectedMatch: /Crib overruns supplied ciphertext/,
         recipeConfig: [
             {
-                op: "Bombe",
-                args: [
+                "op": "Bombe",
+                "args": [
                     "3-rotor",
                     "",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "CCCCCCCCCCCCCCCCCCCCCC",
-                    0,
-                    false,
-                ],
-            },
-        ],
+                    "CCCCCCCCCCCCCCCCCCCCCC", 0, false
+                ]
+            }
+        ]
     },
     {
         name: "Bombe: really long crib",
@@ -229,20 +206,18 @@ TestRegister.addTests([
         expectedMatch: /Crib is too long/,
         recipeConfig: [
             {
-                op: "Bombe",
-                args: [
+                "op": "Bombe",
+                "args": [
                     "3-rotor",
                     "",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "AAAAAAAAAAAAAAAAAAAAAAAAAA",
-                    0,
-                    false,
-                ],
-            },
-        ],
+                    "AAAAAAAAAAAAAAAAAAAAAAAAAA", 0, false
+                ]
+            }
+        ]
     },
     {
         name: "Bombe: negative offset",
@@ -250,20 +225,18 @@ TestRegister.addTests([
         expectedMatch: /Offset cannot be negative/,
         recipeConfig: [
             {
-                op: "Bombe",
-                args: [
+                "op": "Bombe",
+                "args": [
                     "3-rotor",
                     "",
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
                     "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
                     "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "BBBBB",
-                    -1,
-                    false,
-                ],
-            },
-        ],
+                    "BBBBB", -1, false
+                ]
+            }
+        ]
     },
     // Enigma tests cover validation of rotors and reflector
 ]);

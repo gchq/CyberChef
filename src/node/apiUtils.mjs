@@ -6,6 +6,7 @@
  * @license Apache-2.0
  */
 
+
 /**
  * someName => Somename
  *
@@ -25,6 +26,7 @@ const capitalise = function capitalise(str) {
     return `${str.charAt(0).toUpperCase()}${str.substr(1).toLowerCase()}`;
 };
 
+
 /**
  * SomeName => someName
  * @param {String} name - string to be altered
@@ -43,9 +45,10 @@ export function decapitalise(str) {
     return `${str.charAt(0).toLowerCase()}${str.substr(1)}`;
 }
 
+
 /**
  * Remove strings surrounded with [] from the given array.
- */
+*/
 export function removeSubheadingsFromArray(array) {
     if (Array.isArray(array)) {
         return array.filter((i) => {
@@ -57,6 +60,7 @@ export function removeSubheadingsFromArray(array) {
     }
 }
 
+
 /**
  * Remove spaces, make lower case.
  * @param str
@@ -65,13 +69,13 @@ export function sanitise(str) {
     return str.replace(/ /g, "").toLowerCase();
 }
 
+
 /**
  * something like this => somethingLikeThis
  * ABC a sentence => ABCASentence
- */
+*/
 export function sentenceToCamelCase(str) {
-    return str
-        .split(" ")
+    return str.split(" ")
         .map((s, index) => {
             if (index === 0) {
                 return decapitalise(s);

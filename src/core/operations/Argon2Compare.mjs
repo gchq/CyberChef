@@ -11,6 +11,7 @@ import argon2 from "argon2-browser";
  * Argon2 compare operation
  */
 class Argon2Compare extends Operation {
+
     /**
      * Argon2Compare constructor
      */
@@ -19,17 +20,16 @@ class Argon2Compare extends Operation {
 
         this.name = "Argon2 compare";
         this.module = "Crypto";
-        this.description =
-            "Tests whether the input matches the given Argon2 hash. To test multiple possible passwords, use the 'Fork' operation.";
+        this.description = "Tests whether the input matches the given Argon2 hash. To test multiple possible passwords, use the 'Fork' operation.";
         this.infoURL = "https://wikipedia.org/wiki/Argon2";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Encoded hash",
-                type: "string",
-                value: "",
-            },
+                "name": "Encoded hash",
+                "type": "string",
+                "value": ""
+            }
         ];
     }
 
@@ -44,7 +44,7 @@ class Argon2Compare extends Operation {
         try {
             await argon2.verify({
                 pass: input,
-                encoded,
+                encoded
             });
 
             return `Match: ${input}`;
@@ -52,6 +52,7 @@ class Argon2Compare extends Operation {
             return "No match";
         }
     }
+
 }
 
 export default Argon2Compare;

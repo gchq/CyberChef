@@ -12,6 +12,7 @@ import OperationError from "../errors/OperationError.mjs";
  * Remove EXIF operation
  */
 class RemoveEXIF extends Operation {
+
     /**
      * RemoveEXIF constructor
      */
@@ -46,11 +47,10 @@ class RemoveEXIF extends Operation {
         } catch (err) {
             // Simply return input if no EXIF data is found
             if (err === "Exif not found.") return input;
-            throw new OperationError(
-                `Could not remove EXIF data from image: ${err}`,
-            );
+            throw new OperationError(`Could not remove EXIF data from image: ${err}`);
         }
     }
+
 }
 
 export default RemoveEXIF;

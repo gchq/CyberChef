@@ -6,19 +6,14 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import { INPUT_DELIM_OPTIONS } from "../lib/Delim.mjs";
-import {
-    caseInsensitiveSort,
-    ipSort,
-    numericSort,
-    hexadecimalSort,
-    lengthSort,
-} from "../lib/Sort.mjs";
+import {INPUT_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import {caseInsensitiveSort, ipSort, numericSort, hexadecimalSort, lengthSort} from "../lib/Sort.mjs";
 
 /**
  * Sort operation
  */
 class Sort extends Operation {
+
     /**
      * Sort constructor
      */
@@ -27,33 +22,25 @@ class Sort extends Operation {
 
         this.name = "Sort";
         this.module = "Default";
-        this.description =
-            "Alphabetically sorts strings separated by the specified delimiter.<br><br>The IP address option supports IPv4 only.";
+        this.description = "Alphabetically sorts strings separated by the specified delimiter.<br><br>The IP address option supports IPv4 only.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Delimiter",
-                type: "option",
-                value: INPUT_DELIM_OPTIONS,
+                "name": "Delimiter",
+                "type": "option",
+                "value": INPUT_DELIM_OPTIONS
             },
             {
-                name: "Reverse",
-                type: "boolean",
-                value: false,
+                "name": "Reverse",
+                "type": "boolean",
+                "value": false
             },
             {
-                name: "Order",
-                type: "option",
-                value: [
-                    "Alphabetical (case sensitive)",
-                    "Alphabetical (case insensitive)",
-                    "IP address",
-                    "Numeric",
-                    "Numeric (hexadecimal)",
-                    "Length",
-                ],
-            },
+                "name": "Order",
+                "type": "option",
+                "value": ["Alphabetical (case sensitive)", "Alphabetical (case insensitive)", "IP address", "Numeric", "Numeric (hexadecimal)", "Length"]
+            }
         ];
     }
 
@@ -85,6 +72,7 @@ class Sort extends Operation {
         if (sortReverse) sorted.reverse();
         return sorted.join(delim);
     }
+
 }
 
 export default Sort;

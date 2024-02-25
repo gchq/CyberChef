@@ -15,6 +15,7 @@ import jimp from "jimp";
  * Rotate Image operation
  */
 class RotateImage extends Operation {
+
     /**
      * RotateImage constructor
      */
@@ -23,8 +24,7 @@ class RotateImage extends Operation {
 
         this.name = "Rotate Image";
         this.module = "Image";
-        this.description =
-            "Rotates an image by the specified number of degrees.";
+        this.description = "Rotates an image by the specified number of degrees.";
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -33,8 +33,8 @@ class RotateImage extends Operation {
             {
                 name: "Rotation amount (degrees)",
                 type: "number",
-                value: 90,
-            },
+                value: 90
+            }
         ];
     }
 
@@ -89,6 +89,7 @@ class RotateImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
+
 }
 
 export default RotateImage;

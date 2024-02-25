@@ -8,6 +8,7 @@
  * Waiter to handle keybindings to CyberChef functions (i.e. Bake, Step, Save, Load etc.)
  */
 class BindingsWaiter {
+
     /**
      * BindingsWaiter constructor.
      *
@@ -18,6 +19,7 @@ class BindingsWaiter {
         this.app = app;
         this.manager = manager;
     }
+
 
     /**
      * Handler for all keydown events
@@ -47,19 +49,13 @@ class BindingsWaiter {
                 case "Period": // Focus next operation
                     e.preventDefault();
                     try {
-                        elem =
-                            document.activeElement.closest(".operation") ||
-                            document.querySelector("#rec-list .operation");
+                        elem = document.activeElement.closest(".operation") || document.querySelector("#rec-list .operation");
                         if (elem.parentNode.lastChild === elem) {
                             // If operation is last in recipe, loop around to the top operation's first argument
-                            elem.parentNode.firstChild
-                                .querySelectorAll(".arg")[0]
-                                .focus();
+                            elem.parentNode.firstChild.querySelectorAll(".arg")[0].focus();
                         } else {
                             // Focus first argument of next operation
-                            elem.nextSibling
-                                .querySelectorAll(".arg")[0]
-                                .focus();
+                            elem.nextSibling.querySelectorAll(".arg")[0].focus();
                         }
                     } catch (e) {
                         // do nothing, just don't throw an error
@@ -68,9 +64,7 @@ class BindingsWaiter {
                 case "KeyB": // Set breakpoint
                     e.preventDefault();
                     try {
-                        elem = document.activeElement
-                            .closest(".operation")
-                            .querySelectorAll(".breakpoint")[0];
+                        elem = document.activeElement.closest(".operation").querySelectorAll(".breakpoint")[0];
                         if (elem.getAttribute("break") === "false") {
                             elem.setAttribute("break", "true"); // add break point if not already enabled
                             elem.classList.add("breakpoint-selected");
@@ -86,21 +80,15 @@ class BindingsWaiter {
                 case "KeyD": // Disable operation
                     e.preventDefault();
                     try {
-                        elem = document.activeElement
-                            .closest(".operation")
-                            .querySelectorAll(".disable-icon")[0];
+                        elem = document.activeElement.closest(".operation").querySelectorAll(".disable-icon")[0];
                         if (elem.getAttribute("disabled") === "false") {
                             elem.setAttribute("disabled", "true"); // disable operation if enabled
                             elem.classList.add("disable-elem-selected");
-                            elem.parentNode.parentNode.classList.add(
-                                "disabled",
-                            );
+                            elem.parentNode.parentNode.classList.add("disabled");
                         } else {
                             elem.setAttribute("disabled", "false"); // enable operation if disabled
                             elem.classList.remove("disable-elem-selected");
-                            elem.parentNode.parentNode.classList.remove(
-                                "disabled",
-                            );
+                            elem.parentNode.parentNode.classList.remove("disabled");
                         }
                         this.app.progress = 0;
                         window.dispatchEvent(this.manager.statechange);
@@ -138,9 +126,7 @@ class BindingsWaiter {
                     break;
                 case "KeyW": // Close tab
                     e.preventDefault();
-                    this.manager.input.removeInput(
-                        this.manager.tabs.getActiveTab("input"),
-                    );
+                    this.manager.input.removeInput(this.manager.tabs.getActiveTab("input"));
                     break;
                 case "ArrowLeft": // Go to previous tab
                     e.preventDefault();
@@ -151,16 +137,11 @@ class BindingsWaiter {
                     this.manager.input.changeTabRight();
                     break;
                 default:
-                    if (e.code.match(/Digit[0-9]/g)) {
-                        // Select nth operation
+                    if (e.code.match(/Digit[0-9]/g)) { // Select nth operation
                         e.preventDefault();
                         try {
                             // Select the first argument of the operation corresponding to the number pressed
-                            document
-                                .querySelector(
-                                    `li:nth-child(${e.code.substr(-1)}) .arg`,
-                                )
-                                .focus();
+                            document.querySelector(`li:nth-child(${e.code.substr(-1)}) .arg`).focus();
                         } catch (e) {
                             // do nothing, just don't throw an error
                         }
@@ -176,6 +157,7 @@ class BindingsWaiter {
             }
         }
     }
+
 
     /**
      * Updates keybinding list when metaKey option is toggled
@@ -289,9 +271,7 @@ class BindingsWaiter {
      * Shows contextual help message based on where the mouse pointer is
      */
     contextualHelp() {
-        const hoveredHelpEls = document.querySelectorAll(
-            ":hover[data-help],:hover[data-help-proxy]",
-        );
+        const hoveredHelpEls = document.querySelectorAll(":hover[data-help],:hover[data-help-proxy]");
         if (!hoveredHelpEls.length) return;
 
         let helpEl = hoveredHelpEls[hoveredHelpEls.length - 1];
@@ -313,15 +293,16 @@ class BindingsWaiter {
         let helpTitle = el.getAttribute("data-help-title");
 
         if (helpTitle)
-            helpTitle =
-                "<span class='text-muted'>Help topic:</span> " + helpTitle;
-        else helpTitle = "<span class='text-muted'>Help topic</span>";
+            helpTitle = "<span class='text-muted'>Help topic:</span> " + helpTitle;
+        else
+            helpTitle = "<span class='text-muted'>Help topic</span>";
 
         document.querySelector("#help-modal .modal-body").innerHTML = helpText;
         document.querySelector("#help-modal #help-title").innerHTML = helpTitle;
 
         $("#help-modal").modal();
     }
+
 }
 
 export default BindingsWaiter;

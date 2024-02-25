@@ -5,12 +5,13 @@
  */
 
 import Operation from "../Operation.mjs";
-import { toBinary } from "../lib/Binary.mjs";
+import {toBinary} from "../lib/Binary.mjs";
 
 /**
  * Cetacean Cipher Encode operation
  */
 class CetaceanCipherEncode extends Operation {
+
     /**
      * CetaceanCipherEncode constructor
      */
@@ -19,8 +20,7 @@ class CetaceanCipherEncode extends Operation {
 
         this.name = "Cetacean Cipher Encode";
         this.module = "Ciphers";
-        this.description =
-            "Converts any input into Cetacean Cipher. <br/><br/>e.g. <code>hi</code> becomes <code>EEEEEEEEEeeEeEEEEEEEEEEEEeeEeEEe</code>";
+        this.description = "Converts any input into Cetacean Cipher. <br/><br/>e.g. <code>hi</code> becomes <code>EEEEEEEEEeeEeEEEEEEEEEEEEeeEeEEe</code>";
         this.infoURL = "https://hitchhikers.fandom.com/wiki/Dolphins";
         this.inputType = "string";
         this.outputType = "string";
@@ -35,20 +35,12 @@ class CetaceanCipherEncode extends Operation {
         const result = [];
         const charArray = input.split("");
 
-        charArray.map((character) => {
+        charArray.map(character => {
             if (character === " ") {
                 result.push(character);
             } else {
-                const binaryArray = toBinary(
-                    character.charCodeAt(0),
-                    "None",
-                    16,
-                ).split("");
-                result.push(
-                    binaryArray
-                        .map((str) => (str === "1" ? "e" : "E"))
-                        .join(""),
-                );
+                const binaryArray = toBinary(character.charCodeAt(0), "None", 16).split("");
+                result.push(binaryArray.map(str => str === "1" ? "e" : "E").join(""));
             }
         });
 

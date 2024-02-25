@@ -35,12 +35,12 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Hexdump",
-                args: [16, false, false],
+                args: [16, false, false]
             },
             {
                 op: "From Hexdump",
-                args: [],
-            },
+                args: []
+            }
         ],
     },
     {
@@ -50,12 +50,12 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Hexdump",
-                args: [16, false, false],
+                args: [16, false, false]
             },
             {
                 op: "From Hexdump",
-                args: [],
-            },
+                args: []
+            }
         ],
     },
     {
@@ -65,12 +65,12 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Hexdump",
-                args: [16, false, false],
+                args: [16, false, false]
             },
             {
                 op: "From Hexdump",
-                args: [],
-            },
+                args: []
+            }
         ],
     },
     {
@@ -80,12 +80,12 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Hexdump",
-                args: [16, false, false],
+                args: [16, false, false]
             },
             {
                 op: "From Hexdump",
-                args: [],
-            },
+                args: []
+            }
         ],
     },
     {
@@ -96,8 +96,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Hexdump",
-                args: [16, false, false],
-            },
+                args: [16, false, false]
+            }
         ],
     },
     {
@@ -122,8 +122,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Hexdump",
-                args: [16, false, false],
-            },
+                args: [16, false, false]
+            }
         ],
     },
     {
@@ -148,8 +148,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hexdump",
-                args: [],
-            },
+                args: []
+            }
         ],
     },
     {
@@ -175,8 +175,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hexdump",
-                args: [],
-            },
+                args: []
+            }
         ],
     },
     {
@@ -201,8 +201,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hexdump",
-                args: [],
-            },
+                args: []
+            }
         ],
     },
     {
@@ -227,8 +227,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hexdump",
-                args: [],
-            },
+                args: []
+            }
         ],
     },
     {
@@ -254,8 +254,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hexdump",
-                args: [],
-            },
+                args: []
+            }
         ],
     },
 ]);

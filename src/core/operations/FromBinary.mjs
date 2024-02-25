@@ -6,13 +6,14 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import { BIN_DELIM_OPTIONS } from "../lib/Delim.mjs";
-import { fromBinary } from "../lib/Binary.mjs";
+import {BIN_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import {fromBinary} from "../lib/Binary.mjs";
 
 /**
  * From Binary operation
  */
 class FromBinary extends Operation {
+
     /**
      * FromBinary constructor
      */
@@ -21,59 +22,58 @@ class FromBinary extends Operation {
 
         this.name = "From Binary";
         this.module = "Default";
-        this.description =
-            "Converts a binary string back into its raw form.<br><br>e.g. <code>01001000 01101001</code> becomes <code>Hi</code>";
+        this.description = "Converts a binary string back into its raw form.<br><br>e.g. <code>01001000 01101001</code> becomes <code>Hi</code>";
         this.infoURL = "https://wikipedia.org/wiki/Binary_code";
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [
             {
-                name: "Delimiter",
-                type: "option",
-                value: BIN_DELIM_OPTIONS,
+                "name": "Delimiter",
+                "type": "option",
+                "value": BIN_DELIM_OPTIONS
             },
             {
-                name: "Byte Length",
-                type: "number",
-                value: 8,
-                min: 1,
-            },
+                "name": "Byte Length",
+                "type": "number",
+                "value": 8,
+                "min": 1
+            }
         ];
         this.checks = [
             {
                 pattern: "^(?:[01]{8})+$",
                 flags: "",
-                args: ["None"],
+                args: ["None"]
             },
             {
                 pattern: "^(?:[01]{8})(?: [01]{8})*$",
                 flags: "",
-                args: ["Space"],
+                args: ["Space"]
             },
             {
                 pattern: "^(?:[01]{8})(?:,[01]{8})*$",
                 flags: "",
-                args: ["Comma"],
+                args: ["Comma"]
             },
             {
                 pattern: "^(?:[01]{8})(?:;[01]{8})*$",
                 flags: "",
-                args: ["Semi-colon"],
+                args: ["Semi-colon"]
             },
             {
                 pattern: "^(?:[01]{8})(?::[01]{8})*$",
                 flags: "",
-                args: ["Colon"],
+                args: ["Colon"]
             },
             {
                 pattern: "^(?:[01]{8})(?:\\n[01]{8})*$",
                 flags: "",
-                args: ["Line feed"],
+                args: ["Line feed"]
             },
             {
                 pattern: "^(?:[01]{8})(?:\\r\\n[01]{8})*$",
                 flags: "",
-                args: ["CRLF"],
+                args: ["CRLF"]
             },
         ];
     }
@@ -99,12 +99,8 @@ class FromBinary extends Operation {
      */
     highlight(pos, args) {
         const delim = Utils.charRep(args[0] || "Space");
-        pos[0].start =
-            pos[0].start === 0
-                ? 0
-                : Math.floor(pos[0].start / (8 + delim.length));
-        pos[0].end =
-            pos[0].end === 0 ? 0 : Math.ceil(pos[0].end / (8 + delim.length));
+        pos[0].start = pos[0].start === 0 ? 0 : Math.floor(pos[0].start / (8 + delim.length));
+        pos[0].end = pos[0].end === 0 ? 0 : Math.ceil(pos[0].end / (8 + delim.length));
         return pos;
     }
 
@@ -123,6 +119,7 @@ class FromBinary extends Operation {
         pos[0].end = pos[0].end * (8 + delim.length) - delim.length;
         return pos;
     }
+
 }
 
 export default FromBinary;

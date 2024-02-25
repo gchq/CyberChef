@@ -14,6 +14,7 @@ import OperationError from "../errors/OperationError.mjs";
  * AES Key Wrap operation
  */
 class AESKeyWrap extends Operation {
+
     /**
      * AESKeyWrap constructor
      */
@@ -22,33 +23,32 @@ class AESKeyWrap extends Operation {
 
         this.name = "AES Key Wrap";
         this.module = "Ciphers";
-        this.description =
-            "A key wrapping algorithm defined in RFC3394, which is used to protect keys in untrusted storage or communications, using AES.<br><br>This algorithm uses an AES key (KEK: key-encryption key) and a 64-bit IV to encrypt 64-bit blocks.";
+        this.description = "A key wrapping algorithm defined in RFC3394, which is used to protect keys in untrusted storage or communications, using AES.<br><br>This algorithm uses an AES key (KEK: key-encryption key) and a 64-bit IV to encrypt 64-bit blocks.";
         this.infoURL = "https://wikipedia.org/wiki/Key_wrap";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Key (KEK)",
-                type: "toggleString",
-                value: "",
-                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"],
+                "name": "Key (KEK)",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
             },
             {
-                name: "IV",
-                type: "toggleString",
-                value: "a6a6a6a6a6a6a6a6",
-                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"],
+                "name": "IV",
+                "type": "toggleString",
+                "value": "a6a6a6a6a6a6a6a6",
+                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
             },
             {
-                name: "Input",
-                type: "option",
-                value: ["Hex", "Raw"],
+                "name": "Input",
+                "type": "option",
+                "value": ["Hex", "Raw"]
             },
             {
-                name: "Output",
-                type: "option",
-                value: ["Hex", "Raw"],
+                "name": "Output",
+                "type": "option",
+                "value": ["Hex", "Raw"]
             },
         ];
     }
@@ -65,24 +65,14 @@ class AESKeyWrap extends Operation {
             outputType = args[3];
 
         if (kek.length !== 16 && kek.length !== 24 && kek.length !== 32) {
-            throw new OperationError(
-                "KEK must be either 16, 24, or 32 bytes (currently " +
-                    kek.length +
-                    " bytes)",
-            );
+            throw new OperationError("KEK must be either 16, 24, or 32 bytes (currently " + kek.length + " bytes)");
         }
         if (iv.length !== 8) {
-            throw new OperationError(
-                "IV must be 8 bytes (currently " + iv.length + " bytes)",
-            );
+            throw new OperationError("IV must be 8 bytes (currently " + iv.length + " bytes)");
         }
         const inputData = Utils.convertToByteString(input, inputType);
         if (inputData.length % 8 !== 0 || inputData.length < 16) {
-            throw new OperationError(
-                "input must be 8n (n>=2) bytes (currently " +
-                    inputData.length +
-                    " bytes)",
-            );
+            throw new OperationError("input must be 8n (n>=2) bytes (currently " + inputData.length + " bytes)");
         }
 
         const cipher = forge.cipher.createCipher("AES-ECB", kek);
@@ -92,8 +82,7 @@ class AESKeyWrap extends Operation {
         for (let i = 0; i < inputData.length; i += 8) {
             R.push(inputData.substring(i, i + 8));
         }
-        let cntLower = 1,
-            cntUpper = 0;
+        let cntLower = 1, cntUpper = 0;
         for (let j = 0; j < 6; j++) {
             for (let i = 0; i < R.length; i++) {
                 cipher.start();
@@ -120,6 +109,7 @@ class AESKeyWrap extends Operation {
         }
         return C;
     }
+
 }
 
 export default AESKeyWrap;

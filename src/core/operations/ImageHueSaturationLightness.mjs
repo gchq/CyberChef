@@ -15,6 +15,7 @@ import jimp from "jimp";
  * Image Hue/Saturation/Lightness operation
  */
 class ImageHueSaturationLightness extends Operation {
+
     /**
      * ImageHueSaturationLightness constructor
      */
@@ -23,8 +24,7 @@ class ImageHueSaturationLightness extends Operation {
 
         this.name = "Image Hue/Saturation/Lightness";
         this.module = "Image";
-        this.description =
-            "Adjusts the hue / saturation / lightness (HSL) values of an image.";
+        this.description = "Adjusts the hue / saturation / lightness (HSL) values of an image.";
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -35,22 +35,22 @@ class ImageHueSaturationLightness extends Operation {
                 type: "number",
                 value: 0,
                 min: -360,
-                max: 360,
+                max: 360
             },
             {
                 name: "Saturation",
                 type: "number",
                 value: 0,
                 min: -100,
-                max: 100,
+                max: 100
             },
             {
                 name: "Lightness",
                 type: "number",
                 value: 0,
                 min: -100,
-                max: 100,
-            },
+                max: 100
+            }
         ];
     }
 
@@ -79,8 +79,8 @@ class ImageHueSaturationLightness extends Operation {
                 image.colour([
                     {
                         apply: "hue",
-                        params: [hue],
-                    },
+                        params: [hue]
+                    }
                 ]);
             }
             if (saturation !== 0) {
@@ -89,8 +89,8 @@ class ImageHueSaturationLightness extends Operation {
                 image.colour([
                     {
                         apply: "saturate",
-                        params: [saturation],
-                    },
+                        params: [saturation]
+                    }
                 ]);
             }
             if (lightness !== 0) {
@@ -99,8 +99,8 @@ class ImageHueSaturationLightness extends Operation {
                 image.colour([
                     {
                         apply: "lighten",
-                        params: [lightness],
-                    },
+                        params: [lightness]
+                    }
                 ]);
             }
 
@@ -112,9 +112,7 @@ class ImageHueSaturationLightness extends Operation {
             }
             return imageBuffer.buffer;
         } catch (err) {
-            throw new OperationError(
-                `Error adjusting image hue / saturation / lightness. (${err})`,
-            );
+            throw new OperationError(`Error adjusting image hue / saturation / lightness. (${err})`);
         }
     }
 

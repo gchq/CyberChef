@@ -12,6 +12,7 @@ import { genPolybiusSquare } from "../lib/Ciphers.mjs";
  * Bifid Cipher Encode operation
  */
 class BifidCipherEncode extends Operation {
+
     /**
      * BifidCipherEncode constructor
      */
@@ -20,17 +21,16 @@ class BifidCipherEncode extends Operation {
 
         this.name = "Bifid Cipher Encode";
         this.module = "Ciphers";
-        this.description =
-            "The Bifid cipher is a cipher which uses a Polybius square in conjunction with transposition, which can be fairly difficult to decipher without knowing the alphabet keyword.";
+        this.description = "The Bifid cipher is a cipher which uses a Polybius square in conjunction with transposition, which can be fairly difficult to decipher without knowing the alphabet keyword.";
         this.infoURL = "https://wikipedia.org/wiki/Bifid_cipher";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Keyword",
-                type: "string",
-                value: "",
-            },
+                "name": "Keyword",
+                "type": "string",
+                "value": ""
+            }
         ];
     }
 
@@ -52,51 +52,44 @@ class BifidCipherEncode extends Operation {
         let output = "",
             count = 0;
 
+
         if (!/^[A-Z]+$/.test(keywordStr) && keyword.length > 0)
-            throw new OperationError(
-                "The key must consist only of letters in the English alphabet",
-            );
+            throw new OperationError("The key must consist only of letters in the English alphabet");
 
         const polybius = genPolybiusSquare(keywordStr);
 
-        input
-            .replace("J", "I")
-            .split("")
-            .forEach((letter) => {
-                const alpInd =
-                    alpha.split("").indexOf(letter.toLocaleUpperCase()) >= 0;
-                let polInd;
+        input.replace("J", "I").split("").forEach(letter => {
+            const alpInd = alpha.split("").indexOf(letter.toLocaleUpperCase()) >= 0;
+            let polInd;
 
-                if (alpInd) {
-                    for (let i = 0; i < 5; i++) {
-                        polInd = polybius[i].indexOf(
-                            letter.toLocaleUpperCase(),
-                        );
-                        if (polInd >= 0) {
-                            xCo.push(polInd);
-                            yCo.push(i);
-                        }
+            if (alpInd) {
+                for (let i = 0; i < 5; i++) {
+                    polInd = polybius[i].indexOf(letter.toLocaleUpperCase());
+                    if (polInd >= 0) {
+                        xCo.push(polInd);
+                        yCo.push(i);
                     }
-
-                    if (alpha.split("").indexOf(letter) >= 0) {
-                        structure.push(true);
-                    } else if (alpInd) {
-                        structure.push(false);
-                    }
-                } else {
-                    structure.push(letter);
                 }
-            });
+
+                if (alpha.split("").indexOf(letter) >= 0) {
+                    structure.push(true);
+                } else if (alpInd) {
+                    structure.push(false);
+                }
+            } else {
+                structure.push(letter);
+            }
+        });
 
         const trans = `${yCo.join("")}${xCo.join("")}`;
 
-        structure.forEach((pos) => {
+        structure.forEach(pos => {
             if (typeof pos === "boolean") {
-                const coords = trans.substr(2 * count, 2).split("");
+                const coords = trans.substr(2*count, 2).split("");
 
-                output += pos
-                    ? polybius[coords[0]][coords[1]]
-                    : polybius[coords[0]][coords[1]].toLocaleLowerCase();
+                output += pos ?
+                    polybius[coords[0]][coords[1]] :
+                    polybius[coords[0]][coords[1]].toLocaleLowerCase();
                 count++;
             } else {
                 output += pos;
@@ -131,6 +124,7 @@ class BifidCipherEncode extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
+
 }
 
 export default BifidCipherEncode;

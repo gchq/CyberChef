@@ -9,7 +9,7 @@
 import zip from "zlibjs/bin/zip.min.js";
 import Utils from "../../core/Utils.mjs";
 import Dish from "../../core/Dish.mjs";
-import { detectFileType } from "../../core/lib/FileType.mjs";
+import {detectFileType} from "../../core/lib/FileType.mjs";
 import loglevelMessagePrefix from "loglevel-message-prefix";
 
 loglevelMessagePrefix(log, {
@@ -22,18 +22,14 @@ const Zlib = zip.Zlib;
 /**
  * Respond to message from parent thread.
  */
-self.addEventListener("message", function (e) {
+self.addEventListener("message", function(e) {
     // Handle message from the main thread
     const r = e.data;
     log.debug(`Receiving command '${r.action}'`);
 
     switch (r.action) {
         case "zipFiles":
-            self.zipFiles(
-                r.data.outputs,
-                r.data.filename,
-                r.data.fileExtension,
-            );
+            self.zipFiles(r.data.outputs, r.data.filename, r.data.fileExtension);
             break;
         case "setLogLevel":
             log.setLevel(r.data, false);
@@ -43,7 +39,7 @@ self.addEventListener("message", function (e) {
     }
 });
 
-self.setOption = function (...args) {};
+self.setOption = function(...args) {};
 
 /**
  * Compress the files into a zip file and send the zip back
@@ -53,7 +49,7 @@ self.setOption = function (...args) {};
  * @param {string} filename
  * @param {string} fileExtension
  */
-self.zipFiles = async function (outputs, filename, fileExtension) {
+self.zipFiles = async function(outputs, filename, fileExtension) {
     const zip = new Zlib.Zip();
     const inputNums = Object.keys(outputs);
 
@@ -75,15 +71,12 @@ self.zipFiles = async function (outputs, filename, fileExtension) {
         }
         const name = Utils.strToByteArray(iNum + ext);
 
-        zip.addFile(output, { filename: name });
+        zip.addFile(output, {filename: name});
     }
 
     const zippedFile = zip.compress();
-    self.postMessage(
-        {
-            zippedFile: zippedFile.buffer,
-            filename: filename,
-        },
-        [zippedFile.buffer],
-    );
+    self.postMessage({
+        zippedFile: zippedFile.buffer,
+        filename: filename
+    }, [zippedFile.buffer]);
 };

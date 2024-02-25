@@ -12,6 +12,7 @@ import { getLabelIndex } from "../lib/FlowControl.mjs";
  * Conditional Jump operation
  */
 class ConditionalJump extends Operation {
+
     /**
      * ConditionalJump constructor
      */
@@ -21,31 +22,30 @@ class ConditionalJump extends Operation {
         this.name = "Conditional Jump";
         this.flowControl = true;
         this.module = "Default";
-        this.description =
-            "Conditionally jump forwards or backwards to the specified Label  based on whether the data matches the specified regular expression.";
+        this.description = "Conditionally jump forwards or backwards to the specified Label  based on whether the data matches the specified regular expression.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Match (regex)",
-                type: "string",
-                value: "",
+                "name": "Match (regex)",
+                "type": "string",
+                "value": ""
             },
             {
-                name: "Invert match",
-                type: "boolean",
-                value: false,
+                "name": "Invert match",
+                "type": "boolean",
+                "value": false
             },
             {
-                name: "Label name",
-                type: "shortString",
-                value: "",
+                "name": "Label name",
+                "type": "shortString",
+                "value": ""
             },
             {
-                name: "Maximum jumps (if jumping backwards)",
-                type: "number",
-                value: 10,
-            },
+                "name": "Maximum jumps (if jumping backwards)",
+                "type": "number",
+                "value": 10
+            }
         ];
     }
 
@@ -58,8 +58,8 @@ class ConditionalJump extends Operation {
      * @returns {Object} The updated state of the recipe.
      */
     async run(state) {
-        const ings = state.opList[state.progress].ingValues,
-            dish = state.dish,
+        const ings   = state.opList[state.progress].ingValues,
+            dish     = state.dish,
             [regexStr, invert, label, maxJumps] = ings,
             jmpIndex = getLabelIndex(label, state);
 
@@ -71,7 +71,7 @@ class ConditionalJump extends Operation {
         if (regexStr !== "") {
             const str = await dish.get(Dish.STRING);
             const strMatch = str.search(regexStr) > -1;
-            if ((!invert && strMatch) || (invert && !strMatch)) {
+            if (!invert && strMatch || invert && !strMatch) {
                 state.progress = jmpIndex;
                 state.numJumps++;
             } else {
@@ -81,6 +81,7 @@ class ConditionalJump extends Operation {
 
         return state;
     }
+
 }
 
 export default ConditionalJump;

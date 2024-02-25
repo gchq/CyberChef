@@ -7,12 +7,13 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import GostDigest from "../vendor/gost/gostDigest.mjs";
-import { toHexFast } from "../lib/Hex.mjs";
+import {toHexFast} from "../lib/Hex.mjs";
 
 /**
  * Streebog operation
  */
 class Streebog extends Operation {
+
     /**
      * Streebog constructor
      */
@@ -21,17 +22,16 @@ class Streebog extends Operation {
 
         this.name = "Streebog";
         this.module = "Hashing";
-        this.description =
-            "Streebog is a cryptographic hash function defined in the Russian national standard GOST R 34.11-2012 <i>Information Technology \u2013 Cryptographic Information Security \u2013 Hash Function</i>. It was created to replace an obsolete GOST hash function defined in the old standard GOST R 34.11-94, and as an asymmetric reply to SHA-3 competition by the US National Institute of Standards and Technology.";
+        this.description = "Streebog is a cryptographic hash function defined in the Russian national standard GOST R 34.11-2012 <i>Information Technology \u2013 Cryptographic Information Security \u2013 Hash Function</i>. It was created to replace an obsolete GOST hash function defined in the old standard GOST R 34.11-94, and as an asymmetric reply to SHA-3 competition by the US National Institute of Standards and Technology.";
         this.infoURL = "https://wikipedia.org/wiki/Streebog";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
-                name: "Digest length",
-                type: "option",
-                value: ["256", "512"],
-            },
+                "name": "Digest length",
+                "type": "option",
+                "value": ["256", "512"]
+            }
         ];
     }
 
@@ -46,7 +46,7 @@ class Streebog extends Operation {
         const algorithm = {
             version: 2012,
             mode: "HASH",
-            length: parseInt(length, 10),
+            length: parseInt(length, 10)
         };
 
         try {
@@ -57,6 +57,7 @@ class Streebog extends Operation {
             throw new OperationError(err);
         }
     }
+
 }
 
 export default Streebog;

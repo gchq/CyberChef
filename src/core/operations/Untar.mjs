@@ -12,6 +12,7 @@ import Stream from "../lib/Stream.mjs";
  * Untar operation
  */
 class Untar extends Operation {
+
     /**
      * Untar constructor
      */
@@ -28,10 +29,10 @@ class Untar extends Operation {
         this.args = [];
         this.checks = [
             {
-                pattern: "^.{257}\\x75\\x73\\x74\\x61\\x72",
-                flags: "",
-                args: [],
-            },
+                "pattern": "^.{257}\\x75\\x73\\x74\\x61\\x72",
+                "flags": "",
+                "args": []
+            }
         ];
     }
 
@@ -54,9 +55,7 @@ class Untar extends Operation {
                 ownerUID: stream.readString(8),
                 ownerGID: stream.readString(8),
                 size: parseInt(stream.readString(12), 8), // Octal
-                lastModTime: new Date(
-                    1000 * parseInt(stream.readString(12), 8),
-                ), // Octal
+                lastModTime: new Date(1000 * parseInt(stream.readString(12), 8)), // Octal
                 checksum: stream.readString(8),
                 type: stream.readString(1),
                 linkedFileName: stream.readString(100),
@@ -82,15 +81,11 @@ class Untar extends Operation {
                 }
 
                 file.bytes = stream.getBytes(file.size);
-                files.push(
-                    new File([new Uint8Array(file.bytes)], file.fileName),
-                );
+                files.push(new File([new Uint8Array(file.bytes)], file.fileName));
                 stream.position = endPosition;
             } else if (file.type === "5") {
                 // Directory
-                files.push(
-                    new File([new Uint8Array(file.bytes)], file.fileName),
-                );
+                files.push(new File([new Uint8Array(file.bytes)], file.fileName));
             } else {
                 // Symlink or empty bytes
             }
@@ -108,6 +103,7 @@ class Untar extends Operation {
     async present(files) {
         return await Utils.displayFilesAsHTML(files);
     }
+
 }
 
 export default Untar;

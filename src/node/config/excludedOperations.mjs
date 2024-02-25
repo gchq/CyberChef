@@ -5,7 +5,7 @@
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
  */
-export default [
+export default  [
     // This functionality can be done more easily using JavaScript
     "Fork",
     "Merge",

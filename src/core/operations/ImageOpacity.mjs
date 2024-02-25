@@ -15,6 +15,7 @@ import jimp from "jimp";
  * Image Opacity operation
  */
 class ImageOpacity extends Operation {
+
     /**
      * ImageOpacity constructor
      */
@@ -34,8 +35,8 @@ class ImageOpacity extends Operation {
                 type: "number",
                 value: 100,
                 min: 0,
-                max: 100,
-            },
+                max: 100
+            }
         ];
     }
 
@@ -89,6 +90,7 @@ class ImageOpacity extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
+
 }
 
 export default ImageOpacity;

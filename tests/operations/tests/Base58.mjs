@@ -16,9 +16,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base58",
-                args: [
-                    "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz",
-                ],
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"],
             },
         ],
     },
@@ -29,9 +27,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base58",
-                args: [
-                    "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz",
-                ],
+                args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz"],
             },
         ],
     },
@@ -42,9 +38,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base58",
-                args: [
-                    "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz",
-                ],
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"],
             },
         ],
     },
@@ -55,9 +49,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base58",
-                args: [
-                    "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz",
-                ],
+                args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz"],
             },
         ],
     },
@@ -68,9 +60,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base58",
-                args: [
-                    "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz",
-                ],
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"],
             },
         ],
     },
@@ -81,9 +71,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base58",
-                args: [
-                    "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz",
-                ],
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"],
             },
         ],
     },
@@ -94,9 +82,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base58",
-                args: [
-                    "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz",
-                ],
+                args: ["123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"],
             },
         ],
     },
@@ -107,9 +93,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base58",
-                args: [
-                    "rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz",
-                ],
+                args: ["rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz"],
             },
         ],
     },

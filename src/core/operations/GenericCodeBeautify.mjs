@@ -10,6 +10,7 @@ import Operation from "../Operation.mjs";
  * Generic Code Beautify operation
  */
 class GenericCodeBeautify extends Operation {
+
     /**
      * GenericCodeBeautify constructor
      */
@@ -18,8 +19,7 @@ class GenericCodeBeautify extends Operation {
 
         this.name = "Generic Code Beautify";
         this.module = "Code";
-        this.description =
-            "Attempts to pretty print C-style languages such as C, C++, C#, Java, PHP, JavaScript etc.<br><br>This will not do a perfect job, and the resulting code may not work any more. This operation is designed purely to make obfuscated or minified code more easy to read and understand.<br><br>Things which will not work properly:<ul><li>For loop formatting</li><li>Do-While loop formatting</li><li>Switch/Case indentation</li><li>Certain bit shift operators</li></ul>";
+        this.description = "Attempts to pretty print C-style languages such as C, C++, C#, Java, PHP, JavaScript etc.<br><br>This will not do a perfect job, and the resulting code may not work any more. This operation is designed purely to make obfuscated or minified code more easy to read and understand.<br><br>Things which will not work properly:<ul><li>For loop formatting</li><li>Do-While loop formatting</li><li>Switch/Case indentation</li><li>Certain bit shift operators</li></ul>";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
@@ -100,16 +100,13 @@ class GenericCodeBeautify extends Operation {
                     level++;
                     break;
                 case "\n":
-                    if (i + 1 >= code.length) break;
+                    if (i+1 >= code.length) break;
 
-                    if (code[i + 1] === "}") level--;
-                    indent = level >= 0 ? Array(level * 4 + 1).join(" ") : "";
+                    if (code[i+1] === "}") level--;
+                    indent = (level >= 0) ? Array(level*4+1).join(" ") : "";
 
-                    code =
-                        code.substring(0, i + 1) +
-                        indent +
-                        code.substring(i + 1);
-                    if (level > 0) i += level * 4;
+                    code = code.substring(0, i+1) + indent + code.substring(i+1);
+                    if (level > 0) i += level*4;
                     break;
             }
             i++;
@@ -128,33 +125,21 @@ class GenericCodeBeautify extends Operation {
             .replace(/\s*{/g, " {")
             .replace(/}\n/g, "}\n\n")
             // Hacky horribleness
-            .replace(
-                /(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)\s*\n([^{])/gim,
-                "$1 ($2)\n    $3",
-            )
-            .replace(
-                /(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)([^{])/gim,
-                "$1 ($2) $3",
-            )
+            .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)\s*\n([^{])/gim, "$1 ($2)\n    $3")
+            .replace(/(if|for|while|with|elif|elseif)\s*\(([^\n]*)\)([^{])/gim, "$1 ($2) $3")
             .replace(/else\s*\n([^{])/gim, "else\n    $1")
             .replace(/else\s+([^{])/gim, "else $1")
             // Remove strategic spaces
             .replace(/\s+;/g, ";")
             .replace(/\{\s+\}/g, "{}")
             .replace(/\[\s+\]/g, "[]")
-            .replace(
-                /}\s*(else|catch|except|finally|elif|elseif|else if)/gi,
-                "} $1",
-            );
+            .replace(/}\s*(else|catch|except|finally|elif|elseif|else if)/gi, "} $1");
 
         // Replace preserved tokens
         const ptokens = /###preservedToken(\d+)###/g;
         while ((m = ptokens.exec(code))) {
             const ti = parseInt(m[1], 10);
-            code =
-                code.substring(0, m.index) +
-                preservedTokens[ti] +
-                code.substring(m.index + m[0].length);
+            code = code.substring(0, m.index) + preservedTokens[ti] + code.substring(m.index + m[0].length);
             ptokens.lastIndex = m.index;
         }
 
@@ -165,15 +150,12 @@ class GenericCodeBeautify extends Operation {
          */
         function preserveToken(str, match, t) {
             preservedTokens[t] = match[0];
-            return (
-                str.substring(0, match.index) +
-                "###preservedToken" +
-                t +
-                "###" +
-                str.substring(match.index + match[0].length)
-            );
+            return str.substring(0, match.index) +
+                "###preservedToken" + t + "###" +
+                str.substring(match.index + match[0].length);
         }
     }
+
 }
 
 export default GenericCodeBeautify;

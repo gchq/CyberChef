@@ -5,12 +5,13 @@
  */
 
 import Operation from "../Operation.mjs";
-import { smbhash } from "ntlm";
+import {smbhash} from "ntlm";
 
 /**
  * LM Hash operation
  */
 class LMHash extends Operation {
+
     /**
      * LMHash constructor
      */
@@ -19,10 +20,8 @@ class LMHash extends Operation {
 
         this.name = "LM Hash";
         this.module = "Crypto";
-        this.description =
-            "An LM Hash, or LAN Manager Hash, is a deprecated way of storing passwords on old Microsoft operating systems. It is particularly weak and can be cracked in seconds on modern hardware using rainbow tables.";
-        this.infoURL =
-            "https://wikipedia.org/wiki/LAN_Manager#Password_hashing_algorithm";
+        this.description = "An LM Hash, or LAN Manager Hash, is a deprecated way of storing passwords on old Microsoft operating systems. It is particularly weak and can be cracked in seconds on modern hardware using rainbow tables.";
+        this.infoURL = "https://wikipedia.org/wiki/LAN_Manager#Password_hashing_algorithm";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
@@ -36,6 +35,7 @@ class LMHash extends Operation {
     run(input, args) {
         return smbhash.lmhash(input);
     }
+
 }
 
 export default LMHash;

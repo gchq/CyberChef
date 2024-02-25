@@ -12,6 +12,7 @@ import Utils from "../Utils.mjs";
  * CSV to JSON operation
  */
 class CSVToJSON extends Operation {
+
     /**
      * CSVToJSON constructor
      */
@@ -28,18 +29,18 @@ class CSVToJSON extends Operation {
             {
                 name: "Cell delimiters",
                 type: "binaryShortString",
-                value: ",",
+                value: ","
             },
             {
                 name: "Row delimiters",
                 type: "binaryShortString",
-                value: "\\r\\n",
+                value: "\\r\\n"
             },
             {
                 name: "Format",
                 type: "option",
-                value: ["Array of dictionaries", "Array of arrays"],
-            },
+                value: ["Array of dictionaries", "Array of arrays"]
+            }
         ];
     }
 
@@ -53,11 +54,7 @@ class CSVToJSON extends Operation {
         let json, header;
 
         try {
-            json = Utils.parseCSV(
-                input,
-                cellDelims.split(""),
-                rowDelims.split(""),
-            );
+            json = Utils.parseCSV(input, cellDelims.split(""), rowDelims.split(""));
         } catch (err) {
             throw new OperationError("Unable to parse CSV: " + err);
         }
@@ -65,7 +62,7 @@ class CSVToJSON extends Operation {
         switch (format) {
             case "Array of dictionaries":
                 header = json[0];
-                return json.slice(1).map((row) => {
+                return json.slice(1).map(row => {
                     const obj = {};
                     header.forEach((h, i) => {
                         obj[h] = row[i];
@@ -77,6 +74,7 @@ class CSVToJSON extends Operation {
                 return json;
         }
     }
+
 }
 
 export default CSVToJSON;

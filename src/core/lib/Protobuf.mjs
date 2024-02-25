@@ -13,6 +13,7 @@ import protobuf from "protobufjs";
  * @license Apache-2.0
  */
 class Protobuf {
+
     /**
      * Protobuf constructor
      *
@@ -124,8 +125,7 @@ class Protobuf {
         try {
             this.parsedProto = protobuf.parse(protoText);
             if (this.parsedProto.package) {
-                this.parsedProto.root =
-                    this.parsedProto.root.nested[this.parsedProto.package];
+                this.parsedProto.root = this.parsedProto.root.nested[this.parsedProto.package];
             }
             this.updateMainMessageName();
         } catch (error) {
@@ -140,14 +140,12 @@ class Protobuf {
     static updateMainMessageName() {
         const messageNames = [];
         const fieldTypes = [];
-        this.parsedProto.root.nestedArray.forEach((block) => {
+        this.parsedProto.root.nestedArray.forEach(block => {
             if (block instanceof protobuf.Type) {
                 messageNames.push(block.name);
-                this.parsedProto.root.nested[block.name].fieldsArray.forEach(
-                    (field) => {
-                        fieldTypes.push(field.type);
-                    },
-                );
+                this.parsedProto.root.nested[block.name].fieldsArray.forEach(field => {
+                    fieldTypes.push(field.type);
+                });
             }
         });
 
@@ -177,9 +175,7 @@ class Protobuf {
 
         if (this.showTypes) {
             rawDecode = this.showRawTypes(rawDecode, pb.fieldTypes);
-            this.parsedProto.root = this.appendTypesToFieldNames(
-                this.parsedProto.root,
-            );
+            this.parsedProto.root = this.appendTypesToFieldNames(this.parsedProto.root);
         }
 
         try {
@@ -188,20 +184,18 @@ class Protobuf {
                 bytes: String,
                 longs: Number,
                 enums: String,
-                defaults: true,
+                defaults: true
             });
             const output = {};
 
             if (this.showUnknownFields) {
                 output[message.name] = packageDecode;
-                output["Unknown Fields"] = this.compareFields(
-                    rawDecode,
-                    message,
-                );
+                output["Unknown Fields"] = this.compareFields(rawDecode, message);
                 return output;
             } else {
                 return packageDecode;
             }
+
         } catch (error) {
             if (message) {
                 throw new Error("Input " + error);
@@ -220,20 +214,9 @@ class Protobuf {
     static appendTypesToFieldNames(schemaRoot) {
         for (const block of schemaRoot.nestedArray) {
             if (block instanceof protobuf.Type) {
-                for (const [fieldName, fieldData] of Object.entries(
-                    block.fields,
-                )) {
-                    schemaRoot.nested[block.name].remove(
-                        block.fields[fieldName],
-                    );
-                    schemaRoot.nested[block.name].add(
-                        new protobuf.Field(
-                            `${fieldName} (${fieldData.type})`,
-                            fieldData.id,
-                            fieldData.type,
-                            fieldData.rule,
-                        ),
-                    );
+                for (const [fieldName, fieldData] of Object.entries(block.fields)) {
+                    schemaRoot.nested[block.name].remove(block.fields[fieldName]);
+                    schemaRoot.nested[block.name].add(new protobuf.Field(`${fieldName} (${fieldData.type})`, fieldData.id, fieldData.type, fieldData.rule));
                 }
             }
         }
@@ -261,31 +244,27 @@ class Protobuf {
                 if (Array.isArray(value)) {
                     const fieldInstances = [];
                     for (const instance of Object.keys(value)) {
-                        if (typeof value[instance] !== "string") {
-                            fieldInstances.push(
-                                this.showRawTypes(value[instance], fieldType),
-                            );
+                        if (typeof(value[instance]) !== "string") {
+                            fieldInstances.push(this.showRawTypes(value[instance], fieldType));
                         } else {
                             fieldInstances.push(value[instance]);
                         }
                     }
                     outputFieldValue = fieldInstances;
 
-                    // Single submessage
+                // Single submessage
                 } else {
                     outputFieldValue = this.showRawTypes(value, fieldType);
                 }
 
-                // Non-submessage field
+            // Non-submessage field
             } else {
                 outputFieldType = fieldType;
                 outputFieldValue = value;
             }
 
             // Substitute fieldNum with field number and type
-            rawDecode[
-                `field #${fieldNum}: ${this.getTypeInfo(outputFieldType)}`
-            ] = outputFieldValue;
+            rawDecode[`field #${fieldNum}: ${this.getTypeInfo(outputFieldType)}`] = outputFieldValue;
             delete rawDecode[fieldNum];
         }
         return rawDecode;
@@ -302,10 +281,7 @@ class Protobuf {
         // Define message data using raw decode output and schema
         const schemaFieldProperties = {};
         const schemaFieldNames = Object.keys(schemaMessage.fields);
-        schemaFieldNames.forEach(
-            (field) =>
-                (schemaFieldProperties[schemaMessage.fields[field].id] = field),
-        );
+        schemaFieldNames.forEach(field => schemaFieldProperties[schemaMessage.fields[field].id] = field);
 
         // Loop over each field present in the raw decode output
         for (const fieldName in rawDecodedMessage) {
@@ -326,26 +302,21 @@ class Protobuf {
 
                 // Check for repeated fields
                 if (Array.isArray(rawFieldData) && !schemaField.repeated) {
-                    rawDecodedMessage[
-                        `(${schemaMessage.name}) ${schemaFieldName} is a repeated field`
-                    ] = rawFieldData;
+                    rawDecodedMessage[`(${schemaMessage.name}) ${schemaFieldName} is a repeated field`] = rawFieldData;
                 }
 
                 // Check for submessage fields
                 if (schemaField.resolvedType instanceof protobuf.Type) {
-                    const subMessageType =
-                        schemaMessage.fields[schemaFieldName].type;
-                    const schemaSubMessage =
-                        this.parsedProto.root.nested[subMessageType];
+                    const subMessageType = schemaMessage.fields[schemaFieldName].type;
+                    const schemaSubMessage = this.parsedProto.root.nested[subMessageType];
                     const rawSubMessages = rawDecodedMessage[fieldName];
                     let rawDecodedSubMessage = {};
 
                     // Squash multiple submessage instances into one submessage
                     if (Array.isArray(rawSubMessages)) {
-                        rawSubMessages.forEach((subMessageInstance) => {
-                            const instanceFields =
-                                Object.entries(subMessageInstance);
-                            instanceFields.forEach((subField) => {
+                        rawSubMessages.forEach(subMessageInstance => {
+                            const instanceFields = Object.entries(subMessageInstance);
+                            instanceFields.forEach(subField => {
                                 rawDecodedSubMessage[subField[0]] = subField[1];
                             });
                         });
@@ -354,14 +325,9 @@ class Protobuf {
                     }
 
                     // Treat submessage as own message and compare its fields
-                    rawDecodedSubMessage = Protobuf.compareFields(
-                        rawDecodedSubMessage,
-                        schemaSubMessage,
-                    );
+                    rawDecodedSubMessage = Protobuf.compareFields(rawDecodedSubMessage, schemaSubMessage);
                     if (Object.entries(rawDecodedSubMessage).length !== 0) {
-                        rawDecodedMessage[
-                            `${schemaFieldName} (${subMessageType}) has missing fields`
-                        ] = rawDecodedSubMessage;
+                        rawDecodedMessage[`${schemaFieldName} (${subMessageType}) has missing fields`] = rawDecodedSubMessage;
                     }
                 }
                 delete rawDecodedMessage[fieldName];
@@ -426,11 +392,11 @@ class Protobuf {
         // Get the field key/values
         const key = field.key;
         const value = field.value;
-        object[key] = Object.prototype.hasOwnProperty.call(object, key)
-            ? object[key] instanceof Array
-                ? object[key].concat([value])
-                : [object[key], value]
-            : value;
+        object[key] = Object.prototype.hasOwnProperty.call(object, key) ?
+            object[key] instanceof Array ?
+                object[key].concat([value]) :
+                [object[key], value] :
+            value;
         return object;
     }
 
@@ -446,23 +412,23 @@ class Protobuf {
         const type = header.type;
         const key = header.key;
 
-        if (typeof this.fieldTypes[key] !== "object") {
+        if (typeof(this.fieldTypes[key]) !== "object") {
             this.fieldTypes[key] = type;
         }
 
         switch (type) {
             // varint
             case 0:
-                return { key: key, value: this._varInt() };
+                return { "key": key, "value": this._varInt() };
             // fixed 64
             case 1:
-                return { key: key, value: this._uint64() };
+                return { "key": key, "value": this._uint64() };
             // length delimited
             case 2:
-                return { key: key, value: this._lenDelim(key) };
+                return { "key": key, "value": this._lenDelim(key) };
             // fixed 32
             case 5:
-                return { key: key, value: this._uint32() };
+                return { "key": key, "value": this._uint32() };
             // unknown type
             default:
                 throw new Error("Unknown type 0x" + type.toString(16));
@@ -477,7 +443,7 @@ class Protobuf {
      */
     _fieldHeader() {
         // Make sure we call type then number to preserve offset
-        return { type: this._fieldType(), key: this._fieldNumber() };
+        return { "type": this._fieldType(), "key": this._fieldNumber() };
     }
 
     /**
@@ -506,13 +472,11 @@ class Protobuf {
         let shift = -3;
         let fieldNumber = 0;
         do {
-            fieldNumber +=
-                shift < 28
-                    ? shift === -3
-                        ? (this.data[this.offset] & this.NUMBER) >> -shift
-                        : (this.data[this.offset] & this.VALUE) << shift
-                    : (this.data[this.offset] & this.VALUE) *
-                      Math.pow(2, shift);
+            fieldNumber += shift < 28 ?
+                shift === -3 ?
+                    (this.data[this.offset] & this.NUMBER) >> -shift :
+                    (this.data[this.offset] & this.VALUE) << shift :
+                (this.data[this.offset] & this.VALUE) * Math.pow(2, shift);
             shift += 7;
         } while ((this.data[this.offset++] & this.MSB) === this.MSB);
         return fieldNumber;
@@ -531,11 +495,9 @@ class Protobuf {
         let shift = 0;
         // Keep reading while upper bit set
         do {
-            value +=
-                shift < 28
-                    ? (this.data[this.offset] & this.VALUE) << shift
-                    : (this.data[this.offset] & this.VALUE) *
-                      Math.pow(2, shift);
+            value += shift < 28 ?
+                (this.data[this.offset] & this.VALUE) << shift :
+                (this.data[this.offset] & this.VALUE) * Math.pow(2, shift);
             shift += 7;
         } while ((this.data[this.offset++] & this.MSB) === this.MSB);
         return value;
@@ -549,16 +511,8 @@ class Protobuf {
      */
     _uint64() {
         // Read off a Uint64 with little-endian
-        const lowerHalf =
-            this.data[this.offset++] +
-            this.data[this.offset++] * 0x100 +
-            this.data[this.offset++] * 0x10000 +
-            this.data[this.offset++] * 0x1000000;
-        const upperHalf =
-            this.data[this.offset++] +
-            this.data[this.offset++] * 0x100 +
-            this.data[this.offset++] * 0x10000 +
-            this.data[this.offset++] * 0x1000000;
+        const lowerHalf = this.data[this.offset++] + (this.data[this.offset++] * 0x100) + (this.data[this.offset++] * 0x10000) + this.data[this.offset++] * 0x1000000;
+        const upperHalf = this.data[this.offset++] + (this.data[this.offset++] * 0x100) + (this.data[this.offset++] * 0x10000) + this.data[this.offset++] * 0x1000000;
         return upperHalf * 0x100000000 + lowerHalf;
     }
 
@@ -579,10 +533,8 @@ class Protobuf {
             field = pbObject._parse();
 
             // Set field types object
-            this.fieldTypes[fieldNum] = {
-                ...this.fieldTypes[fieldNum],
-                ...pbObject.fieldTypes,
-            };
+            this.fieldTypes[fieldNum] = {...this.fieldTypes[fieldNum], ...pbObject.fieldTypes};
+
         } catch (err) {
             // Otherwise treat as bytes
             field = Utils.byteArrayToChars(fieldBytes);
@@ -600,10 +552,7 @@ class Protobuf {
      */
     _uint32() {
         // Use a dataview to read off the integer
-        const dataview = new DataView(
-            new Uint8Array(this.data.slice(this.offset, this.offset + 4))
-                .buffer,
-        );
+        const dataview = new DataView(new Uint8Array(this.data.slice(this.offset, this.offset + 4)).buffer);
         const value = dataview.getUint32(0, true);
         this.offset += 4;
         return value;

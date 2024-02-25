@@ -15,6 +15,7 @@ import jimp from "jimp";
  * Contain Image operation
  */
 class ContainImage extends Operation {
+
     /**
      * ContainImage constructor
      */
@@ -23,8 +24,7 @@ class ContainImage extends Operation {
 
         this.name = "Contain Image";
         this.module = "Image";
-        this.description =
-            "Scales an image to the specified width and height, maintaining the aspect ratio. The image may be letterboxed.";
+        this.description = "Scales an image to the specified width and height, maintaining the aspect ratio. The image may be letterboxed.";
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -34,25 +34,33 @@ class ContainImage extends Operation {
                 name: "Width",
                 type: "number",
                 value: 100,
-                min: 1,
+                min: 1
             },
             {
                 name: "Height",
                 type: "number",
                 value: 100,
-                min: 1,
+                min: 1
             },
             {
                 name: "Horizontal align",
                 type: "option",
-                value: ["Left", "Center", "Right"],
-                defaultIndex: 1,
+                value: [
+                    "Left",
+                    "Center",
+                    "Right"
+                ],
+                defaultIndex: 1
             },
             {
                 name: "Vertical align",
                 type: "option",
-                value: ["Top", "Middle", "Bottom"],
-                defaultIndex: 1,
+                value: [
+                    "Top",
+                    "Middle",
+                    "Bottom"
+                ],
+                defaultIndex: 1
             },
             {
                 name: "Resizing algorithm",
@@ -62,15 +70,15 @@ class ContainImage extends Operation {
                     "Bilinear",
                     "Bicubic",
                     "Hermite",
-                    "Bezier",
+                    "Bezier"
                 ],
-                defaultIndex: 1,
+                defaultIndex: 1
             },
             {
                 name: "Opaque background",
                 type: "boolean",
-                value: true,
-            },
+                value: true
+            }
         ];
     }
 
@@ -84,19 +92,19 @@ class ContainImage extends Operation {
 
         const resizeMap = {
             "Nearest Neighbour": jimp.RESIZE_NEAREST_NEIGHBOR,
-            Bilinear: jimp.RESIZE_BILINEAR,
-            Bicubic: jimp.RESIZE_BICUBIC,
-            Hermite: jimp.RESIZE_HERMITE,
-            Bezier: jimp.RESIZE_BEZIER,
+            "Bilinear": jimp.RESIZE_BILINEAR,
+            "Bicubic": jimp.RESIZE_BICUBIC,
+            "Hermite": jimp.RESIZE_HERMITE,
+            "Bezier": jimp.RESIZE_BEZIER
         };
 
         const alignMap = {
-            Left: jimp.HORIZONTAL_ALIGN_LEFT,
-            Center: jimp.HORIZONTAL_ALIGN_CENTER,
-            Right: jimp.HORIZONTAL_ALIGN_RIGHT,
-            Top: jimp.VERTICAL_ALIGN_TOP,
-            Middle: jimp.VERTICAL_ALIGN_MIDDLE,
-            Bottom: jimp.VERTICAL_ALIGN_BOTTOM,
+            "Left": jimp.HORIZONTAL_ALIGN_LEFT,
+            "Center": jimp.HORIZONTAL_ALIGN_CENTER,
+            "Right": jimp.HORIZONTAL_ALIGN_RIGHT,
+            "Top": jimp.VERTICAL_ALIGN_TOP,
+            "Middle": jimp.VERTICAL_ALIGN_MIDDLE,
+            "Bottom": jimp.VERTICAL_ALIGN_BOTTOM
         };
 
         if (!isImage(input)) {
@@ -112,15 +120,10 @@ class ContainImage extends Operation {
         try {
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Containing image...");
-            image.contain(
-                width,
-                height,
-                alignMap[hAlign] | alignMap[vAlign],
-                resizeMap[alg],
-            );
+            image.contain(width, height, alignMap[hAlign] | alignMap[vAlign], resizeMap[alg]);
 
             if (opaqueBg) {
-                const newImage = await jimp.read(width, height, 0x000000ff);
+                const newImage = await jimp.read(width, height, 0x000000FF);
                 newImage.blit(image, 0, 0);
                 image = newImage;
             }
@@ -153,6 +156,7 @@ class ContainImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
+
 }
 
 export default ContainImage;

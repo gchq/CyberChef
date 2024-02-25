@@ -5,20 +5,21 @@
  */
 
 import Operation from "../Operation.mjs";
-import { INFLATE_BUFFER_TYPE } from "../lib/Zlib.mjs";
+import {INFLATE_BUFFER_TYPE} from "../lib/Zlib.mjs";
 import rawinflate from "zlibjs/bin/rawinflate.min.js";
 
 const Zlib = rawinflate.Zlib;
 
 const RAW_BUFFER_TYPE_LOOKUP = {
-    Adaptive: Zlib.RawInflate.BufferType.ADAPTIVE,
-    Block: Zlib.RawInflate.BufferType.BLOCK,
+    "Adaptive": Zlib.RawInflate.BufferType.ADAPTIVE,
+    "Block":    Zlib.RawInflate.BufferType.BLOCK,
 };
 
 /**
  * Raw Inflate operation
  */
 class RawInflate extends Operation {
+
     /**
      * RawInflate constructor
      */
@@ -27,8 +28,7 @@ class RawInflate extends Operation {
 
         this.name = "Raw Inflate";
         this.module = "Compression";
-        this.description =
-            "Decompresses data which has been compressed using the deflate algorithm with no headers.";
+        this.description = "Decompresses data which has been compressed using the deflate algorithm with no headers.";
         this.infoURL = "https://wikipedia.org/wiki/DEFLATE";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -36,34 +36,34 @@ class RawInflate extends Operation {
             {
                 name: "Start index",
                 type: "number",
-                value: 0,
+                value: 0
             },
             {
                 name: "Initial output buffer size",
                 type: "number",
-                value: 0,
+                value: 0
             },
             {
                 name: "Buffer expansion type",
                 type: "option",
-                value: INFLATE_BUFFER_TYPE,
+                value: INFLATE_BUFFER_TYPE
             },
             {
                 name: "Resize buffer after decompression",
                 type: "boolean",
-                value: false,
+                value: false
             },
             {
                 name: "Verify result",
                 type: "boolean",
-                value: false,
-            },
+                value: false
+            }
         ];
         this.checks = [
             {
                 entropyRange: [7.5, 8],
-                args: [0, 0, INFLATE_BUFFER_TYPE, false, false],
-            },
+                args: [0, 0, INFLATE_BUFFER_TYPE, false, false]
+            }
         ];
     }
 
@@ -78,12 +78,13 @@ class RawInflate extends Operation {
                 bufferSize: args[1],
                 bufferType: RAW_BUFFER_TYPE_LOOKUP[args[2]],
                 resize: args[3],
-                verify: args[4],
+                verify: args[4]
             }),
             result = new Uint8Array(inflate.decompress());
 
         return result.buffer;
     }
+
 }
 
 export default RawInflate;

@@ -15,8 +15,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "LZNT1 Decompress",
-                args: [],
-            },
+                args: []
+            }
         ],
-    },
+    }
 ]);

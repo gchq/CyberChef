@@ -17,13 +17,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hex",
-                args: ["None"],
+                args: ["None"]
             },
             {
                 op: "Gunzip",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "Gunzip: No comment, no checksum and filename",
@@ -32,13 +32,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hex",
-                args: ["None"],
+                args: ["None"]
             },
             {
                 op: "Gunzip",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "Gunzip: Has a comment, no checksum and has a filename",
@@ -47,12 +47,12 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Hex",
-                args: ["None"],
+                args: ["None"]
             },
             {
                 op: "Gunzip",
-                args: [],
-            },
-        ],
-    },
+                args: []
+            }
+        ]
+    }
 ]);

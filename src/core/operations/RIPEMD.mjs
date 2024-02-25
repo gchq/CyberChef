@@ -5,12 +5,13 @@
  */
 
 import Operation from "../Operation.mjs";
-import { runHash } from "../lib/Hash.mjs";
+import {runHash} from "../lib/Hash.mjs";
 
 /**
  * RIPEMD operation
  */
 class RIPEMD extends Operation {
+
     /**
      * RIPEMD constructor
      */
@@ -19,17 +20,16 @@ class RIPEMD extends Operation {
 
         this.name = "RIPEMD";
         this.module = "Crypto";
-        this.description =
-            "RIPEMD (RACE Integrity Primitives Evaluation Message Digest) is a family of cryptographic hash functions developed in Leuven, Belgium, by Hans Dobbertin, Antoon Bosselaers and Bart Preneel at the COSIC research group at the Katholieke Universiteit Leuven, and first published in 1996.<br><br>RIPEMD was based upon the design principles used in MD4, and is similar in performance to the more popular SHA-1.<br><br>";
+        this.description = "RIPEMD (RACE Integrity Primitives Evaluation Message Digest) is a family of cryptographic hash functions developed in Leuven, Belgium, by Hans Dobbertin, Antoon Bosselaers and Bart Preneel at the COSIC research group at the Katholieke Universiteit Leuven, and first published in 1996.<br><br>RIPEMD was based upon the design principles used in MD4, and is similar in performance to the more popular SHA-1.<br><br>";
         this.infoURL = "https://wikipedia.org/wiki/RIPEMD";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
-                name: "Size",
-                type: "option",
-                value: ["320", "256", "160", "128"],
-            },
+                "name": "Size",
+                "type": "option",
+                "value": ["320", "256", "160", "128"]
+            }
         ];
     }
 
@@ -42,6 +42,7 @@ class RIPEMD extends Operation {
         const size = args[0];
         return runHash("ripemd" + size, input);
     }
+
 }
 
 export default RIPEMD;

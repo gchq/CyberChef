@@ -11,6 +11,7 @@ import Operation from "../Operation.mjs";
  * SQL Beautify operation
  */
 class SQLBeautify extends Operation {
+
     /**
      * SQLBeautify constructor
      */
@@ -19,16 +20,15 @@ class SQLBeautify extends Operation {
 
         this.name = "SQL Beautify";
         this.module = "Code";
-        this.description =
-            "Indents and prettifies Structured Query Language (SQL) code.";
+        this.description = "Indents and prettifies Structured Query Language (SQL) code.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Indent string",
-                type: "binaryShortString",
-                value: "\\t",
-            },
+                "name": "Indent string",
+                "type": "binaryShortString",
+                "value": "\\t"
+            }
         ];
     }
 
@@ -41,6 +41,7 @@ class SQLBeautify extends Operation {
         const indentStr = args[0];
         return vkbeautify.sql(input, indentStr);
     }
+
 }
 
 export default SQLBeautify;

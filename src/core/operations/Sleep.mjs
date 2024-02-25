@@ -10,6 +10,7 @@ import Operation from "../Operation.mjs";
  * Sleep operation
  */
 class Sleep extends Operation {
+
     /**
      * Sleep constructor
      */
@@ -18,16 +19,15 @@ class Sleep extends Operation {
 
         this.name = "Sleep";
         this.module = "Default";
-        this.description =
-            "Sleep causes the recipe to wait for a specified number of milliseconds before continuing execution.";
+        this.description = "Sleep causes the recipe to wait for a specified number of milliseconds before continuing execution.";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.args = [
             {
-                name: "Time (ms)",
-                type: "number",
-                value: 1000,
-            },
+                "name": "Time (ms)",
+                "type": "number",
+                "value": 1000
+            }
         ];
     }
 
@@ -38,9 +38,10 @@ class Sleep extends Operation {
      */
     async run(input, args) {
         const ms = args[0];
-        await new Promise((r) => setTimeout(r, ms));
+        await new Promise(r => setTimeout(r, ms));
         return input;
     }
+
 }
 
 export default Sleep;

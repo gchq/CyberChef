@@ -11,6 +11,7 @@ import Utils, { isNodeEnvironment } from "../Utils.mjs";
  * Translation methods for file Dishes
  */
 class DishFile extends DishType {
+
     /**
      * convert the given value to an ArrayBuffer
      * @param {File} value
@@ -22,7 +23,7 @@ class DishFile extends DishType {
         } else {
             return new Promise((resolve, reject) => {
                 Utils.readFile(this.value)
-                    .then((v) => (this.value = v.buffer))
+                    .then(v => this.value = v.buffer)
                     .then(resolve)
                     .catch(reject);
             });

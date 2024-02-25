@@ -13,6 +13,7 @@ import { toHexFast } from "../lib/Hex.mjs";
  * GOST hash operation
  */
 class GOSTHash extends Operation {
+
     /**
      * GOSTHash constructor
      */
@@ -21,8 +22,7 @@ class GOSTHash extends Operation {
 
         this.name = "GOST Hash";
         this.module = "Hashing";
-        this.description =
-            "The GOST hash function, defined in the standards GOST R 34.11-94 and GOST 34.311-95 is a 256-bit cryptographic hash function. It was initially defined in the Russian national standard GOST R 34.11-94 <i>Information Technology – Cryptographic Information Security – Hash Function</i>. The equivalent standard used by other member-states of the CIS is GOST 34.311-95.<br><br>This function must not be confused with a different Streebog hash function, which is defined in the new revision of the standard GOST R 34.11-2012.<br><br>The GOST hash function is based on the GOST block cipher.";
+        this.description = "The GOST hash function, defined in the standards GOST R 34.11-94 and GOST 34.311-95 is a 256-bit cryptographic hash function. It was initially defined in the Russian national standard GOST R 34.11-94 <i>Information Technology – Cryptographic Information Security – Hash Function</i>. The equivalent standard used by other member-states of the CIS is GOST 34.311-95.<br><br>This function must not be confused with a different Streebog hash function, which is defined in the new revision of the standard GOST R 34.11-2012.<br><br>The GOST hash function is based on the GOST block cipher.";
         this.infoURL = "https://wikipedia.org/wiki/GOST_(hash_function)";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -34,36 +34,25 @@ class GOSTHash extends Operation {
                     {
                         name: "GOST 28147 (1994)",
                         off: [1],
-                        on: [2],
+                        on: [2]
                     },
                     {
                         name: "GOST R 34.11 (Streebog, 2012)",
                         on: [1],
-                        off: [2],
-                    },
-                ],
+                        off: [2]
+                    }
+                ]
             },
             {
                 name: "Digest length",
                 type: "option",
-                value: ["256", "512"],
+                value: ["256", "512"]
             },
             {
                 name: "sBox",
                 type: "option",
-                value: [
-                    "E-TEST",
-                    "E-A",
-                    "E-B",
-                    "E-C",
-                    "E-D",
-                    "E-SC",
-                    "E-Z",
-                    "D-TEST",
-                    "D-A",
-                    "D-SC",
-                ],
-            },
+                value: ["E-TEST", "E-A", "E-B", "E-C", "E-D", "E-SC", "E-Z", "D-TEST", "D-A", "D-SC"]
+            }
         ];
     }
 
@@ -79,7 +68,7 @@ class GOSTHash extends Operation {
         const algorithm = {
             name: versionNum === 1994 ? "GOST 28147" : "GOST R 34.10",
             version: versionNum,
-            mode: "HASH",
+            mode: "HASH"
         };
 
         if (versionNum === 1994) {
@@ -96,6 +85,7 @@ class GOSTHash extends Operation {
             throw new OperationError(err);
         }
     }
+
 }
 
 export default GOSTHash;

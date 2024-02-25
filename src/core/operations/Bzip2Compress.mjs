@@ -13,6 +13,7 @@ import { isWorkerEnvironment } from "../Utils.mjs";
  * Bzip2 Compress operation
  */
 class Bzip2Compress extends Operation {
+
     /**
      * Bzip2Compress constructor
      */
@@ -21,8 +22,7 @@ class Bzip2Compress extends Operation {
 
         this.name = "Bzip2 Compress";
         this.module = "Compression";
-        this.description =
-            "Bzip2 is a compression library developed by Julian Seward (of GHC fame) that uses the Burrows-Wheeler algorithm. It only supports compressing single files and its compression is slow, however is more effective than Deflate (.gz & .zip).";
+        this.description = "Bzip2 is a compression library developed by Julian Seward (of GHC fame) that uses the Burrows-Wheeler algorithm. It only supports compressing single files and its compression is slow, however is more effective than Deflate (.gz & .zip).";
         this.infoURL = "https://wikipedia.org/wiki/Bzip2";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -32,13 +32,13 @@ class Bzip2Compress extends Operation {
                 type: "number",
                 value: 9,
                 min: 1,
-                max: 9,
+                max: 9
             },
             {
                 name: "Work factor",
                 type: "number",
-                value: 30,
-            },
+                value: 30
+            }
         ];
     }
 
@@ -54,29 +54,20 @@ class Bzip2Compress extends Operation {
         }
         if (isWorkerEnvironment()) self.sendStatusMessage("Loading Bzip2...");
         return new Promise((resolve, reject) => {
-            Bzip2().then((bzip2) => {
-                if (isWorkerEnvironment())
-                    self.sendStatusMessage("Compressing data...");
+            Bzip2().then(bzip2 => {
+                if (isWorkerEnvironment()) self.sendStatusMessage("Compressing data...");
                 const inpArray = new Uint8Array(input);
-                const bzip2cc = bzip2.compressBZ2(
-                    inpArray,
-                    blockSize,
-                    workFactor,
-                );
+                const bzip2cc = bzip2.compressBZ2(inpArray, blockSize, workFactor);
                 if (bzip2cc.error !== 0) {
                     reject(new OperationError(bzip2cc.error_msg));
                 } else {
                     const output = bzip2cc.output;
-                    resolve(
-                        output.buffer.slice(
-                            output.byteOffset,
-                            output.byteLength + output.byteOffset,
-                        ),
-                    );
+                    resolve(output.buffer.slice(output.byteOffset, output.byteLength + output.byteOffset));
                 }
             });
         });
     }
+
 }
 
 export default Bzip2Compress;

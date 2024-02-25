@@ -35,6 +35,7 @@ export function formatDnObj(dnObj, indent) {
     return output.slice(0, -1);
 }
 
+
 /**
  * Formats byte strings by adding line breaks and delimiters.
  *
@@ -57,5 +58,5 @@ export function formatByteStr(byteStr, length, indent) {
         }
     }
 
-    return output.slice(0, output.length - 1);
+    return output.slice(0, output.length-1);
 }

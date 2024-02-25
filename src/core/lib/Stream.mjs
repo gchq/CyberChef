@@ -13,6 +13,7 @@
  * as various data types.
  */
 export default class Stream {
+
     /**
      * Stream constructor.
      *
@@ -31,11 +32,12 @@ export default class Stream {
      * @param {number} [numBytes=null]
      * @returns {Uint8Array}
      */
-    getBytes(numBytes = null) {
+    getBytes(numBytes=null) {
         if (this.position > this.length) return undefined;
 
-        const newPosition =
-            numBytes !== null ? this.position + numBytes : this.length;
+        const newPosition = numBytes !== null ?
+            this.position + numBytes :
+            this.length;
         const bytes = this.bytes.slice(this.position, newPosition);
         this.position = newPosition;
         this.bitPos = 0;
@@ -49,7 +51,7 @@ export default class Stream {
      * @param {number} [numBytes=-1]
      * @returns {string}
      */
-    readString(numBytes = -1) {
+    readString(numBytes=-1) {
         if (this.position > this.length) return undefined;
 
         if (numBytes === -1) numBytes = this.length - this.position;
@@ -72,7 +74,7 @@ export default class Stream {
      * @param {string} [endianness="be"]
      * @returns {number}
      */
-    readInt(numBytes, endianness = "be") {
+    readInt(numBytes, endianness="be") {
         if (this.position > this.length) return undefined;
 
         let val = 0;
@@ -82,11 +84,7 @@ export default class Stream {
                 val |= this.bytes[i];
             }
         } else {
-            for (
-                let i = this.position + numBytes - 1;
-                i >= this.position;
-                i--
-            ) {
+            for (let i = this.position + numBytes - 1; i >= this.position; i--) {
                 val = val << 8;
                 val |= this.bytes[i];
             }
@@ -103,7 +101,7 @@ export default class Stream {
      * @param {string} [endianness="be"]
      * @returns {number}
      */
-    readBits(numBits, endianness = "be") {
+    readBits(numBits, endianness="be") {
         if (this.position > this.length) return undefined;
 
         let bitBuf = 0,
@@ -119,15 +117,18 @@ export default class Stream {
         while (bitBufLen < numBits) {
             if (endianness === "be")
                 bitBuf = (bitBuf << bitBufLen) | this.bytes[this.position++];
-            else bitBuf |= this.bytes[this.position++] << bitBufLen;
+            else
+                bitBuf |= this.bytes[this.position++] << bitBufLen;
             bitBufLen += 8;
         }
 
         // Reverse back to numBits
         if (bitBufLen > numBits) {
             const excess = bitBufLen - numBits;
-            if (endianness === "be") bitBuf >>>= excess;
-            else bitBuf &= (1 << numBits) - 1;
+            if (endianness === "be")
+                bitBuf >>>= excess;
+            else
+                bitBuf &= (1 << numBits) - 1;
             bitBufLen -= excess;
             this.position--;
             this.bitPos = 8 - excess;
@@ -142,9 +143,9 @@ export default class Stream {
          * @returns {number} The bit mask
          */
         function bitMask(bitPos) {
-            return endianness === "be"
-                ? (1 << (8 - bitPos)) - 1
-                : 256 - (1 << bitPos);
+            return endianness === "be" ?
+                (1 << (8 - bitPos)) - 1 :
+                256 - (1 << bitPos);
         }
     }
 
@@ -159,10 +160,7 @@ export default class Stream {
         this.bitPos = 0;
 
         if (typeof val === "number") {
-            while (
-                ++this.position < this.length &&
-                this.bytes[this.position] !== val
-            ) {
+            while (++this.position < this.length && this.bytes[this.position] !== val) {
                 continue;
             }
             return;
@@ -186,7 +184,7 @@ export default class Stream {
         }
 
         const length = val.length;
-        const initial = val[length - 1];
+        const initial = val[length-1];
         this.position = length;
 
         // Get the skip table.
@@ -195,15 +193,12 @@ export default class Stream {
 
         while (this.position < this.length) {
             // Until we hit the final element of val in the stream.
-            while (
-                this.position < this.length &&
-                this.bytes[this.position++] !== initial
-            );
+            while ((this.position < this.length) && (this.bytes[this.position++] !== initial));
 
             found = true;
 
             // Loop through the elements comparing them to val.
-            for (let x = length - 1; x >= 0; x--) {
+            for (let x = length-1; x >= 0; x--) {
                 if (this.bytes[this.position - length + x] !== val[x]) {
                     found = false;
 
@@ -218,6 +213,7 @@ export default class Stream {
             }
         }
     }
+
 
     /**
      * Consume bytes if they match the supplied value.
@@ -254,9 +250,7 @@ export default class Stream {
     moveForwardsBy(numBytes) {
         const pos = this.position + numBytes;
         if (pos < 0 || pos > this.length)
-            throw new Error(
-                "Cannot move to position " + pos + " in stream. Out of bounds.",
-            );
+            throw new Error("Cannot move to position " + pos + " in stream. Out of bounds.");
         this.position = pos;
         this.bitPos = 0;
     }
@@ -269,9 +263,7 @@ export default class Stream {
     moveBackwardsBy(numBytes) {
         const pos = this.position - numBytes;
         if (pos < 0 || pos > this.length)
-            throw new Error(
-                "Cannot move to position " + pos + " in stream. Out of bounds.",
-            );
+            throw new Error("Cannot move to position " + pos + " in stream. Out of bounds.");
         this.position = pos;
         this.bitPos = 0;
     }
@@ -306,9 +298,7 @@ export default class Stream {
      */
     moveTo(pos) {
         if (pos < 0 || pos > this.length)
-            throw new Error(
-                "Cannot move to position " + pos + " in stream. Out of bounds.",
-            );
+            throw new Error("Cannot move to position " + pos + " in stream. Out of bounds.");
         this.position = pos;
         this.bitPos = 0;
     }
@@ -329,8 +319,9 @@ export default class Stream {
      * @param {number} [finish=this.position]
      * @returns {Uint8Array}
      */
-    carve(start = 0, finish = this.position) {
+    carve(start=0, finish=this.position) {
         if (this.bitPos > 0) finish++;
         return this.bytes.slice(start, finish);
     }
+
 }

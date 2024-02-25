@@ -14,9 +14,9 @@ TestRegister.addTests([
         expectedOutput: "bed95e1b525d2f41db3a6d68fac5b566",
         recipeConfig: [
             {
-                op: "JA3S Fingerprint",
-                args: ["Hex", "Hash digest"],
-            },
+                "op": "JA3S Fingerprint",
+                "args": ["Hex", "Hash digest"]
+            }
         ],
     },
     {
@@ -25,9 +25,9 @@ TestRegister.addTests([
         expectedOutput: "130fac2dc19b142500acb0abc63b6379",
         recipeConfig: [
             {
-                op: "JA3S Fingerprint",
-                args: ["Hex", "Hash digest"],
-            },
+                "op": "JA3S Fingerprint",
+                "args": ["Hex", "Hash digest"]
+            }
         ],
     },
     {
@@ -36,9 +36,9 @@ TestRegister.addTests([
         expectedOutput: "ccc514751b175866924439bdbb5bba34",
         recipeConfig: [
             {
-                op: "JA3S Fingerprint",
-                args: ["Hex", "Hash digest"],
-            },
+                "op": "JA3S Fingerprint",
+                "args": ["Hex", "Hash digest"]
+            }
         ],
     },
     // This Server Hello was based on draft 18 of the TLS1.3 spec which does not include a Session ID field, leading it to fail.

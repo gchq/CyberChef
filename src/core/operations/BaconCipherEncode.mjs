@@ -7,9 +7,8 @@
 import Operation from "../Operation.mjs";
 import {
     BACON_ALPHABETS,
-    BACON_TRANSLATIONS_FOR_ENCODING,
-    BACON_TRANSLATION_AB,
-    swapZeroAndOne,
+    BACON_TRANSLATIONS_FOR_ENCODING, BACON_TRANSLATION_AB,
+    swapZeroAndOne
 } from "../lib/Bacon.mjs";
 
 /**
@@ -24,32 +23,31 @@ class BaconCipherEncode extends Operation {
 
         this.name = "Bacon Cipher Encode";
         this.module = "Default";
-        this.description =
-            "Bacon's cipher or the Baconian cipher is a method of steganography devised by Francis Bacon in 1605. A message is concealed in the presentation of text, rather than its content.";
+        this.description = "Bacon's cipher or the Baconian cipher is a method of steganography devised by Francis Bacon in 1605. A message is concealed in the presentation of text, rather than its content.";
         this.infoURL = "https://wikipedia.org/wiki/Bacon%27s_cipher";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Alphabet",
-                type: "option",
-                value: Object.keys(BACON_ALPHABETS),
+                "name": "Alphabet",
+                "type": "option",
+                "value": Object.keys(BACON_ALPHABETS)
             },
             {
-                name: "Translation",
-                type: "option",
-                value: BACON_TRANSLATIONS_FOR_ENCODING,
+                "name": "Translation",
+                "type": "option",
+                "value": BACON_TRANSLATIONS_FOR_ENCODING
             },
             {
-                name: "Keep extra characters",
-                type: "boolean",
-                value: false,
+                "name": "Keep extra characters",
+                "type": "boolean",
+                "value": false
             },
             {
-                name: "Invert Translation",
-                type: "boolean",
-                value: false,
-            },
+                "name": "Invert Translation",
+                "type": "boolean",
+                "value": false
+            }
         ];
     }
 
@@ -90,8 +88,8 @@ class BaconCipherEncode extends Operation {
         if (translation === BACON_TRANSLATION_AB) {
             output = output.replace(/[01]/g, function (c) {
                 return {
-                    0: "A",
-                    1: "B",
+                    "0": "A",
+                    "1": "B"
                 }[c];
             });
         }

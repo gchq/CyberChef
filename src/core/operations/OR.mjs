@@ -12,6 +12,7 @@ import { bitOp, or, BITWISE_OP_DELIMS } from "../lib/BitwiseOp.mjs";
  * OR operation
  */
 class OR extends Operation {
+
     /**
      * OR constructor
      */
@@ -20,18 +21,17 @@ class OR extends Operation {
 
         this.name = "OR";
         this.module = "Default";
-        this.description =
-            "OR the input with the given key.<br>e.g. <code>fe023da5</code>";
+        this.description = "OR the input with the given key.<br>e.g. <code>fe023da5</code>";
         this.infoURL = "https://wikipedia.org/wiki/Bitwise_operation#OR";
         this.inputType = "ArrayBuffer";
         this.outputType = "byteArray";
         this.args = [
             {
-                name: "Key",
-                type: "toggleString",
-                value: "",
-                toggleValues: BITWISE_OP_DELIMS,
-            },
+                "name": "Key",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": BITWISE_OP_DELIMS
+            }
         ];
     }
 
@@ -41,10 +41,7 @@ class OR extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        const key = Utils.convertToByteArray(
-            args[0].string || "",
-            args[0].option,
-        );
+        const key = Utils.convertToByteArray(args[0].string || "", args[0].option);
         input = new Uint8Array(input);
 
         return bitOp(input, key, or);
@@ -75,6 +72,7 @@ class OR extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
+
 }
 
 export default OR;

@@ -10,6 +10,7 @@ import Operation from "../Operation.mjs";
  * Chi Square operation
  */
 class ChiSquare extends Operation {
+
     /**
      * ChiSquare constructor
      */
@@ -41,14 +42,13 @@ class ChiSquare extends Operation {
 
         for (let i = 0; i < distArray.length; i++) {
             if (distArray[i] > 0) {
-                total +=
-                    Math.pow(distArray[i] - data.length / 256, 2) /
-                    (data.length / 256);
+                total += Math.pow(distArray[i] - data.length / 256, 2) / (data.length / 256);
             }
         }
 
         return total;
     }
+
 }
 
 export default ChiSquare;

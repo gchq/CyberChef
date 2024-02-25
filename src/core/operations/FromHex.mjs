@@ -5,13 +5,14 @@
  */
 
 import Operation from "../Operation.mjs";
-import { fromHex, FROM_HEX_DELIM_OPTIONS } from "../lib/Hex.mjs";
+import {fromHex, FROM_HEX_DELIM_OPTIONS} from "../lib/Hex.mjs";
 import Utils from "../Utils.mjs";
 
 /**
  * From Hex operation
  */
 class FromHex extends Operation {
+
     /**
      * FromHex constructor
      */
@@ -20,8 +21,7 @@ class FromHex extends Operation {
 
         this.name = "From Hex";
         this.module = "Default";
-        this.description =
-            "Converts a hexadecimal byte string back into its raw value.<br><br>e.g. <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> becomes the UTF-8 encoded string <code>Γειά σου</code>";
+        this.description = "Converts a hexadecimal byte string back into its raw value.<br><br>e.g. <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> becomes the UTF-8 encoded string <code>Γειά σου</code>";
         this.infoURL = "https://wikipedia.org/wiki/Hexadecimal";
         this.inputType = "string";
         this.outputType = "byteArray";
@@ -29,60 +29,60 @@ class FromHex extends Operation {
             {
                 name: "Delimiter",
                 type: "option",
-                value: FROM_HEX_DELIM_OPTIONS,
-            },
+                value: FROM_HEX_DELIM_OPTIONS
+            }
         ];
         this.checks = [
             {
                 pattern: "^(?:[\\dA-F]{2})+$",
                 flags: "i",
-                args: ["None"],
+                args: ["None"]
             },
             {
                 pattern: "^[\\dA-F]{2}(?: [\\dA-F]{2})*$",
                 flags: "i",
-                args: ["Space"],
+                args: ["Space"]
             },
             {
                 pattern: "^[\\dA-F]{2}(?:,[\\dA-F]{2})*$",
                 flags: "i",
-                args: ["Comma"],
+                args: ["Comma"]
             },
             {
                 pattern: "^[\\dA-F]{2}(?:;[\\dA-F]{2})*$",
                 flags: "i",
-                args: ["Semi-colon"],
+                args: ["Semi-colon"]
             },
             {
                 pattern: "^[\\dA-F]{2}(?::[\\dA-F]{2})*$",
                 flags: "i",
-                args: ["Colon"],
+                args: ["Colon"]
             },
             {
                 pattern: "^[\\dA-F]{2}(?:\\n[\\dA-F]{2})*$",
                 flags: "i",
-                args: ["Line feed"],
+                args: ["Line feed"]
             },
             {
                 pattern: "^[\\dA-F]{2}(?:\\r\\n[\\dA-F]{2})*$",
                 flags: "i",
-                args: ["CRLF"],
+                args: ["CRLF"]
             },
             {
                 pattern: "^(?:0x[\\dA-F]{2})+$",
                 flags: "i",
-                args: ["0x"],
+                args: ["0x"]
             },
             {
                 pattern: "^0x[\\dA-F]{2}(?:,0x[\\dA-F]{2})*$",
                 flags: "i",
-                args: ["0x with comma"],
+                args: ["0x with comma"]
             },
             {
                 pattern: "^(?:\\\\x[\\dA-F]{2})+$",
                 flags: "i",
-                args: ["\\x"],
-            },
+                args: ["\\x"]
+            }
         ];
     }
 
@@ -119,8 +119,7 @@ class FromHex extends Operation {
             else pos[0].end = 0;
         }
 
-        pos[0].start =
-            pos[0].start === 0 ? 0 : Math.round(pos[0].start / width);
+        pos[0].start = pos[0].start === 0 ? 0 : Math.round(pos[0].start / width);
         pos[0].end = pos[0].end === 0 ? 0 : Math.ceil(pos[0].end / width);
         return pos;
     }

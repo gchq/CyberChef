@@ -10,6 +10,7 @@ import Operation from "../Operation.mjs";
  * Caesar Box Cipher operation
  */
 class CaesarBoxCipher extends Operation {
+
     /**
      * CaesarBoxCipher constructor
      */
@@ -18,8 +19,7 @@ class CaesarBoxCipher extends Operation {
 
         this.name = "Caesar Box Cipher";
         this.module = "Ciphers";
-        this.description =
-            "Caesar Box is a transposition cipher used in the Roman Empire, in which letters of the message are written in rows in a square (or a rectangle) and then, read by column.";
+        this.description = "Caesar Box is a transposition cipher used in the Roman Empire, in which letters of the message are written in rows in a square (or a rectangle) and then, read by column.";
         this.infoURL = "https://www.dcode.fr/caesar-box-cipher";
         this.inputType = "string";
         this.outputType = "string";
@@ -27,8 +27,8 @@ class CaesarBoxCipher extends Operation {
             {
                 name: "Box Height",
                 type: "number",
-                value: 1,
-            },
+                value: 1
+            }
         ];
     }
 
@@ -40,8 +40,9 @@ class CaesarBoxCipher extends Operation {
     run(input, args) {
         const tableHeight = args[0];
         const tableWidth = Math.ceil(input.length / tableHeight);
-        while (input.indexOf(" ") !== -1) input = input.replace(" ", "");
-        for (let i = 0; i < tableHeight * tableWidth - input.length; i++) {
+        while (input.indexOf(" ") !== -1)
+            input = input.replace(" ", "");
+        for (let i = 0; i < (tableHeight * tableWidth) - input.length; i++) {
             input += "\x00";
         }
         let result = "";
@@ -54,6 +55,7 @@ class CaesarBoxCipher extends Operation {
         }
         return result;
     }
+
 }
 
 export default CaesarBoxCipher;

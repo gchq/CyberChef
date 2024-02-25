@@ -7,15 +7,13 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
-import {
-    COMPRESSION_OUTPUT_FORMATS,
-    DECOMPRESSION_FUNCTIONS,
-} from "../lib/LZString.mjs";
+import {COMPRESSION_OUTPUT_FORMATS, DECOMPRESSION_FUNCTIONS} from "../lib/LZString.mjs";
 
 /**
  * LZString Decompress operation
  */
 class LZStringDecompress extends Operation {
+
     /**
      * LZStringDecompress constructor
      */
@@ -24,8 +22,7 @@ class LZStringDecompress extends Operation {
 
         this.name = "LZString Decompress";
         this.module = "Compression";
-        this.description =
-            "Decompresses data that was compressed with lz-string.";
+        this.description = "Decompresses data that was compressed with lz-string.";
         this.infoURL = "https://pieroxy.net/blog/pages/lz-string/index.html";
         this.inputType = "string";
         this.outputType = "string";
@@ -34,8 +31,8 @@ class LZStringDecompress extends Operation {
                 name: "Compression Format",
                 type: "option",
                 defaultIndex: 0,
-                value: COMPRESSION_OUTPUT_FORMATS,
-            },
+                value: COMPRESSION_OUTPUT_FORMATS
+            }
         ];
     }
 
@@ -52,6 +49,8 @@ class LZStringDecompress extends Operation {
             throw new OperationError("Unable to find decompression function");
         }
     }
+
+
 }
 
 export default LZStringDecompress;

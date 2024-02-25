@@ -11,6 +11,7 @@ import Operation from "../Operation.mjs";
  * XML Beautify operation
  */
 class XMLBeautify extends Operation {
+
     /**
      * XMLBeautify constructor
      */
@@ -19,16 +20,15 @@ class XMLBeautify extends Operation {
 
         this.name = "XML Beautify";
         this.module = "Code";
-        this.description =
-            "Indents and prettifies eXtensible Markup Language (XML) code.";
+        this.description = "Indents and prettifies eXtensible Markup Language (XML) code.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Indent string",
-                type: "binaryShortString",
-                value: "\\t",
-            },
+                "name": "Indent string",
+                "type": "binaryShortString",
+                "value": "\\t"
+            }
         ];
     }
 
@@ -41,6 +41,7 @@ class XMLBeautify extends Operation {
         const indentStr = args[0];
         return vkbeautify.xml(input, indentStr);
     }
+
 }
 
 export default XMLBeautify;

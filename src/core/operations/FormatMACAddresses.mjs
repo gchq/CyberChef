@@ -10,6 +10,7 @@ import Operation from "../Operation.mjs";
  * Format MAC addresses operation
  */
 class FormatMACAddresses extends Operation {
+
     /**
      * FormatMACAddresses constructor
      */
@@ -18,43 +19,41 @@ class FormatMACAddresses extends Operation {
 
         this.name = "Format MAC addresses";
         this.module = "Default";
-        this.description =
-            "Displays given MAC addresses in multiple different formats.<br><br>Expects addresses in a list separated by newlines, spaces or commas.<br><br>WARNING: There are no validity checks.";
-        this.infoURL =
-            "https://wikipedia.org/wiki/MAC_address#Notational_conventions";
+        this.description = "Displays given MAC addresses in multiple different formats.<br><br>Expects addresses in a list separated by newlines, spaces or commas.<br><br>WARNING: There are no validity checks.";
+        this.infoURL = "https://wikipedia.org/wiki/MAC_address#Notational_conventions";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Output case",
-                type: "option",
-                value: ["Both", "Upper only", "Lower only"],
+                "name": "Output case",
+                "type": "option",
+                "value": ["Both", "Upper only", "Lower only"]
             },
             {
-                name: "No delimiter",
-                type: "boolean",
-                value: true,
+                "name": "No delimiter",
+                "type": "boolean",
+                "value": true
             },
             {
-                name: "Dash delimiter",
-                type: "boolean",
-                value: true,
+                "name": "Dash delimiter",
+                "type": "boolean",
+                "value": true
             },
             {
-                name: "Colon delimiter",
-                type: "boolean",
-                value: true,
+                "name": "Colon delimiter",
+                "type": "boolean",
+                "value": true
             },
             {
-                name: "Cisco style",
-                type: "boolean",
-                value: false,
+                "name": "Cisco style",
+                "type": "boolean",
+                "value": false
             },
             {
-                name: "IPv6 interface ID",
-                type: "boolean",
-                value: false,
-            },
+                "name": "IPv6 interface ID",
+                "type": "boolean",
+                "value": false
+            }
         ];
     }
 
@@ -72,12 +71,12 @@ class FormatMACAddresses extends Operation {
                 dashDelim,
                 colonDelim,
                 ciscoStyle,
-                ipv6IntID,
+                ipv6IntID
             ] = args,
             outputList = [],
             macs = input.toLowerCase().split(/[,\s\r\n]+/);
 
-        macs.forEach(function (mac) {
+        macs.forEach(function(mac) {
             const cleanMac = mac.replace(/[:.-]+/g, ""),
                 macHyphen = cleanMac.replace(/(.{2}(?=.))/g, "$1-"),
                 macColon = cleanMac.replace(/(.{2}(?=.))/g, "$1:"),
@@ -103,23 +102,21 @@ class FormatMACAddresses extends Operation {
                 if (ipv6IntID) outputList.push(macIPv6.toUpperCase());
             } else {
                 if (noDelim) outputList.push(cleanMac, cleanMac.toUpperCase());
-                if (dashDelim)
-                    outputList.push(macHyphen, macHyphen.toUpperCase());
-                if (colonDelim)
-                    outputList.push(macColon, macColon.toUpperCase());
-                if (ciscoStyle)
-                    outputList.push(macCisco, macCisco.toUpperCase());
+                if (dashDelim) outputList.push(macHyphen, macHyphen.toUpperCase());
+                if (colonDelim) outputList.push(macColon, macColon.toUpperCase());
+                if (ciscoStyle) outputList.push(macCisco, macCisco.toUpperCase());
                 if (ipv6IntID) outputList.push(macIPv6, macIPv6.toUpperCase());
             }
 
             outputList.push(
-                "", // Empty line to delimit groups
+                "" // Empty line to delimit groups
             );
         });
 
         // Return the data as a string
         return outputList.join("\n");
     }
+
 }
 
 export default FormatMACAddresses;

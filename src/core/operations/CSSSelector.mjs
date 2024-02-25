@@ -13,6 +13,7 @@ import nwmatcher from "nwmatcher";
  * CSS selector operation
  */
 class CSSSelector extends Operation {
+
     /**
      * CSSSelector constructor
      */
@@ -21,23 +22,21 @@ class CSSSelector extends Operation {
 
         this.name = "CSS selector";
         this.module = "Code";
-        this.description =
-            "Extract information from an HTML document with a CSS selector";
-        this.infoURL =
-            "https://wikipedia.org/wiki/Cascading_Style_Sheets#Selector";
+        this.description = "Extract information from an HTML document with a CSS selector";
+        this.infoURL = "https://wikipedia.org/wiki/Cascading_Style_Sheets#Selector";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "CSS selector",
-                type: "string",
-                value: "",
+                "name": "CSS selector",
+                "type": "string",
+                "value": ""
             },
             {
-                name: "Delimiter",
-                type: "binaryShortString",
-                value: "\\n",
-            },
+                "name": "Delimiter",
+                "type": "binaryShortString",
+                "value": "\\n"
+            }
         ];
     }
 
@@ -49,7 +48,8 @@ class CSSSelector extends Operation {
     run(input, args) {
         const [query, delimiter] = args,
             parser = new xmldom.DOMParser();
-        let dom, result;
+        let dom,
+            result;
 
         if (!query.length || !input.length) {
             return "";
@@ -62,15 +62,13 @@ class CSSSelector extends Operation {
         }
 
         try {
-            const matcher = nwmatcher({ document: dom });
+            const matcher = nwmatcher({document: dom});
             result = matcher.select(query, dom);
         } catch (err) {
-            throw new OperationError(
-                "Invalid CSS Selector. Details:\n" + err.message,
-            );
+            throw new OperationError("Invalid CSS Selector. Details:\n" + err.message);
         }
 
-        const nodeToString = function (node) {
+        const nodeToString = function(node) {
             return node.toString();
             /* xmldom does not return the outerHTML value.
             switch (node.nodeType) {
@@ -83,8 +81,11 @@ class CSSSelector extends Operation {
             }*/
         };
 
-        return result.map(nodeToString).join(delimiter);
+        return result
+            .map(nodeToString)
+            .join(delimiter);
     }
+
 }
 
 export default CSSSelector;

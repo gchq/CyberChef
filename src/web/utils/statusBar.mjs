@@ -4,16 +4,14 @@
  * @license Apache-2.0
  */
 
-import { showPanel } from "@codemirror/view";
-import {
-    CHR_ENC_SIMPLE_LOOKUP,
-    CHR_ENC_SIMPLE_REVERSE_LOOKUP,
-} from "../../core/lib/ChrEnc.mjs";
+import {showPanel} from "@codemirror/view";
+import {CHR_ENC_SIMPLE_LOOKUP, CHR_ENC_SIMPLE_REVERSE_LOOKUP} from "../../core/lib/ChrEnc.mjs";
 
 /**
  * A Status bar extension for CodeMirror
  */
 class StatusBarPanel {
+
     /**
      * StatusBarPanel constructor
      * @param {Object} opts
@@ -44,10 +42,7 @@ class StatusBarPanel {
 
         dom.className = "cm-status-bar";
         dom.setAttribute("data-help-title", `${this.label} status bar`);
-        dom.setAttribute(
-            "data-help",
-            `This status bar provides information about data in the ${this.label}. Help topics are available for each of the components by activating help when hovering over them.`,
-        );
+        dom.setAttribute("data-help", `This status bar provides information about data in the ${this.label}. Help topics are available for each of the components by activating help when hovering over them.`);
         lhs.innerHTML = this.constructLHS();
         rhs.innerHTML = this.constructRHS();
 
@@ -55,24 +50,12 @@ class StatusBarPanel {
         dom.appendChild(rhs);
 
         // Event listeners
-        dom.querySelectorAll(".cm-status-bar-select-btn").forEach((el) =>
-            el.addEventListener("click", this.showDropUp.bind(this), false),
+        dom.querySelectorAll(".cm-status-bar-select-btn").forEach(
+            el => el.addEventListener("click", this.showDropUp.bind(this), false)
         );
-        dom.querySelector(".eol-select").addEventListener(
-            "click",
-            this.eolSelectClick.bind(this),
-            false,
-        );
-        dom.querySelector(".chr-enc-select").addEventListener(
-            "click",
-            this.chrEncSelectClick.bind(this),
-            false,
-        );
-        dom.querySelector(".cm-status-bar-filter-input").addEventListener(
-            "keyup",
-            this.chrEncFilter.bind(this),
-            false,
-        );
+        dom.querySelector(".eol-select").addEventListener("click", this.eolSelectClick.bind(this), false);
+        dom.querySelector(".chr-enc-select").addEventListener("click", this.chrEncSelectClick.bind(this), false);
+        dom.querySelector(".cm-status-bar-filter-input").addEventListener("keyup", this.chrEncFilter.bind(this), false);
 
         return dom;
     }
@@ -110,14 +93,14 @@ class StatusBarPanel {
         e.preventDefault();
 
         const eolLookup = {
-            LF: "\u000a",
-            VT: "\u000b",
-            FF: "\u000c",
-            CR: "\u000d",
-            CRLF: "\u000d\u000a",
-            NEL: "\u0085",
-            LS: "\u2028",
-            PS: "\u2029",
+            "LF": "\u000a",
+            "VT": "\u000b",
+            "FF": "\u000c",
+            "CR": "\u000d",
+            "CRLF": "\u000d\u000a",
+            "NEL": "\u0085",
+            "LS": "\u2028",
+            "PS": "\u2029"
         };
         const eolval = eolLookup[e.target.getAttribute("data-val")];
 
@@ -178,8 +161,7 @@ class StatusBarPanel {
         // CodeMirror always counts line breaks as one character.
         // We want to show an accurate reading of how many bytes there are.
         if (state.lineBreak.length !== 1) {
-            docLength +=
-                state.lineBreak.length * state.doc.lines - state.doc.lines - 1;
+            docLength += (state.lineBreak.length * state.doc.lines) - state.doc.lines - 1;
         }
         length.textContent = docLength;
         lines.textContent = state.doc.lines;
@@ -191,9 +173,9 @@ class StatusBarPanel {
      * @param {boolean} selectionSet
      */
     updateSelection(state, selectionSet) {
-        const selLen = state?.selection?.main
-            ? state.selection.main.to - state.selection.main.from
-            : 0;
+        const selLen = state?.selection?.main ?
+            state.selection.main.to - state.selection.main.from :
+            0;
 
         const selInfo = this.dom.querySelector(".sel-info"),
             curOffsetInfo = this.dom.querySelector(".cur-offset-info");
@@ -211,12 +193,11 @@ class StatusBarPanel {
         if (state.lineBreak.length !== 1) {
             const fromLine = state.doc.lineAt(from).number;
             const toLine = state.doc.lineAt(to).number;
-            from += state.lineBreak.length * fromLine - fromLine - 1;
-            to += state.lineBreak.length * toLine - toLine - 1;
+            from += (state.lineBreak.length * fromLine) - fromLine - 1;
+            to += (state.lineBreak.length * toLine) - toLine - 1;
         }
 
-        if (selLen > 0) {
-            // Range
+        if (selLen > 0) { // Range
             const start = this.dom.querySelector(".sel-start-value"),
                 end = this.dom.querySelector(".sel-end-value"),
                 length = this.dom.querySelector(".sel-length-value");
@@ -226,8 +207,7 @@ class StatusBarPanel {
             start.textContent = from;
             end.textContent = to;
             length.textContent = to - from;
-        } else {
-            // Position
+        } else { // Position
             const offset = this.dom.querySelector(".cur-offset-value");
 
             selInfo.style.display = "none";
@@ -251,7 +231,7 @@ class StatusBarPanel {
             "\u000d\u000a": ["CRLF", "Carriage Return + Line Feed"],
             "\u0085": ["NEL", "Next Line"],
             "\u2028": ["LS", "Line Separator"],
-            "\u2029": ["PS", "Paragraph Separator"],
+            "\u2029": ["PS", "Paragraph Separator"]
         };
 
         const val = this.dom.querySelector(".eol-value");
@@ -259,12 +239,10 @@ class StatusBarPanel {
         const eolName = eolLookup[state.lineBreak];
         val.textContent = eolName[0];
         button.setAttribute("title", `End of line sequence:<br>${eolName[1]}`);
-        button.setAttribute(
-            "data-original-title",
-            `End of line sequence:<br>${eolName[1]}`,
-        );
+        button.setAttribute("data-original-title", `End of line sequence:<br>${eolName[1]}`);
         this.eolVal = state.lineBreak;
     }
+
 
     /**
      * Sets the current character encoding of the document
@@ -273,21 +251,13 @@ class StatusBarPanel {
         const chrEncVal = this.chrEncGetter();
         if (chrEncVal === this.chrEncVal) return;
 
-        const name = CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal]
-            ? CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal]
-            : "Raw Bytes";
+        const name = CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] ? CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] : "Raw Bytes";
 
         const val = this.dom.querySelector(".chr-enc-value");
         const button = val.closest(".cm-status-bar-select-btn");
         val.textContent = name;
-        button.setAttribute(
-            "title",
-            `${this.label} character encoding:<br>${name}`,
-        );
-        button.setAttribute(
-            "data-original-title",
-            `${this.label} character encoding:<br>${name}`,
-        );
+        button.setAttribute("title", `${this.label} character encoding:<br>${name}`);
+        button.setAttribute("data-original-title", `${this.label} character encoding:<br>${name}`);
         this.chrEncVal = chrEncVal;
     }
 
@@ -304,9 +274,7 @@ class StatusBarPanel {
             bakingTimeInfo.style.display = "inline-block";
             bakingTime.textContent = this.timing.duration(this.tabNumGetter());
 
-            const info = this.timing
-                .printStages(this.tabNumGetter())
-                .replace(/\n/g, "<br>");
+            const info = this.timing.printStages(this.tabNumGetter()).replace(/\n/g, "<br>");
             bakingTimeInfo.setAttribute("data-original-title", info);
         } else {
             bakingTimeInfo.style.display = "none";
@@ -319,11 +287,11 @@ class StatusBarPanel {
      */
     updateSizing(view) {
         const viewHeight = view.contentDOM.parentNode.clientHeight;
-        this.dom
-            .querySelectorAll(".cm-status-bar-select-scroll")
-            .forEach((el) => {
-                el.style.maxHeight = viewHeight - 50 + "px";
-            });
+        this.dom.querySelectorAll(".cm-status-bar-select-scroll").forEach(
+            el => {
+                el.style.maxHeight = (viewHeight - 50) + "px";
+            }
+        );
     }
 
     /**
@@ -334,27 +302,19 @@ class StatusBarPanel {
 
         if (this.htmlOutput?.html === "") {
             // Enable all controls
-            this.dom.querySelectorAll(".disabled").forEach((el) => {
+            this.dom.querySelectorAll(".disabled").forEach(el => {
                 el.classList.remove("disabled");
             });
         } else {
             // Disable chrenc, length, selection etc.
-            this.dom
-                .querySelectorAll(".cm-status-bar-select-btn")
-                .forEach((el) => {
-                    el.classList.add("disabled");
-                });
+            this.dom.querySelectorAll(".cm-status-bar-select-btn").forEach(el => {
+                el.classList.add("disabled");
+            });
 
-            this.dom
-                .querySelector(".stats-length-value")
-                .parentNode.classList.add("disabled");
-            this.dom
-                .querySelector(".stats-lines-value")
-                .parentNode.classList.add("disabled");
+            this.dom.querySelector(".stats-length-value").parentNode.classList.add("disabled");
+            this.dom.querySelector(".stats-lines-value").parentNode.classList.add("disabled");
             this.dom.querySelector(".sel-info").classList.add("disabled");
-            this.dom
-                .querySelector(".cur-offset-info")
-                .classList.add("disabled");
+            this.dom.querySelector(".cur-offset-info").classList.add("disabled");
         }
     }
 
@@ -391,25 +351,18 @@ class StatusBarPanel {
      * @returns {string}
      */
     constructRHS() {
-        const chrEncOptions = Object.keys(CHR_ENC_SIMPLE_LOOKUP)
-            .map(
-                (name) =>
-                    `<a href="#" draggable="false" data-val="${CHR_ENC_SIMPLE_LOOKUP[name]}">${name}</a>`,
-            )
-            .join("");
+        const chrEncOptions = Object.keys(CHR_ENC_SIMPLE_LOOKUP).map(name =>
+            `<a href="#" draggable="false" data-val="${CHR_ENC_SIMPLE_LOOKUP[name]}">${name}</a>`
+        ).join("");
 
         let chrEncHelpText = "",
             eolHelpText = "";
         if (this.label === "Input") {
-            chrEncHelpText =
-                "The input character encoding defines how the input text is encoded into bytes which are then processed by the Recipe.<br><br>The 'Raw bytes' option attempts to treat the input as individual bytes in the range 0-255. If it detects any characters with Unicode values above 255, it will treat the entire input as UTF-8. 'Raw bytes' is usually the best option if you are inputting binary data, such as a file.";
-            eolHelpText =
-                "The End of Line Sequence defines which bytes are considered EOL terminators. Pressing the return key will enter this value into the input and create a new line.<br><br>Changing the EOL sequence will not modify any existing data in the input but may change how previously entered line breaks are displayed. Lines added while a different EOL terminator was set may not now result in a new line, but may be displayed as control characters instead.";
+            chrEncHelpText = "The input character encoding defines how the input text is encoded into bytes which are then processed by the Recipe.<br><br>The 'Raw bytes' option attempts to treat the input as individual bytes in the range 0-255. If it detects any characters with Unicode values above 255, it will treat the entire input as UTF-8. 'Raw bytes' is usually the best option if you are inputting binary data, such as a file.";
+            eolHelpText = "The End of Line Sequence defines which bytes are considered EOL terminators. Pressing the return key will enter this value into the input and create a new line.<br><br>Changing the EOL sequence will not modify any existing data in the input but may change how previously entered line breaks are displayed. Lines added while a different EOL terminator was set may not now result in a new line, but may be displayed as control characters instead.";
         } else {
-            chrEncHelpText =
-                "The output character encoding defines how the output bytes are decoded into text which can be displayed to you.<br><br>The 'Raw bytes' option treats the output data as individual bytes in the range 0-255.";
-            eolHelpText =
-                "The End of Line Sequence defines which bytes are considered EOL terminators.<br><br>Changing this value will not modify the value of the output, but may change how certain bytes are displayed and whether they result in a new line being created.";
+            chrEncHelpText = "The output character encoding defines how the output bytes are decoded into text which can be displayed to you.<br><br>The 'Raw bytes' option treats the output data as individual bytes in the range 0-255.";
+            eolHelpText = "The End of Line Sequence defines which bytes are considered EOL terminators.<br><br>Changing this value will not modify the value of the output, but may change how certain bytes are displayed and whether they result in a new line being created.";
         }
 
         return `
@@ -454,6 +407,7 @@ class StatusBarPanel {
                 </div>
             </div>`;
     }
+
 }
 
 const elementsWithListeners = {};
@@ -469,24 +423,18 @@ function hideOnClickOutside(element, instantiatingEvent) {
      * Closes element if click is outside it.
      * @param {Event} event
      */
-    const outsideClickListener = (event) => {
+    const outsideClickListener = event => {
         // Don't trigger if we're clicking inside the element, or if the element
         // is not visible, or if this is the same click event that opened it.
-        if (
-            !element.contains(event.target) &&
-            event.timeStamp !== instantiatingEvent.timeStamp
-        ) {
+        if (!element.contains(event.target) &&
+            event.timeStamp !== instantiatingEvent.timeStamp) {
             hideElement(element);
         }
     };
 
     if (!Object.prototype.hasOwnProperty.call(elementsWithListeners, element)) {
         elementsWithListeners[element] = outsideClickListener;
-        document.addEventListener(
-            "click",
-            elementsWithListeners[element],
-            false,
-        );
+        document.addEventListener("click", elementsWithListeners[element], false);
     }
 }
 
@@ -496,13 +444,10 @@ function hideOnClickOutside(element, instantiatingEvent) {
  */
 function hideElement(element) {
     element.classList.remove("show");
-    document.removeEventListener(
-        "click",
-        elementsWithListeners[element],
-        false,
-    );
+    document.removeEventListener("click", elementsWithListeners[element], false);
     delete elementsWithListeners[element];
 }
+
 
 /**
  * A panel constructor factory building a panel that re-counts the stats every time the document changes.
@@ -521,7 +466,7 @@ function makePanel(opts) {
         sbPanel.monitorHTMLOutput();
 
         return {
-            dom: sbPanel.dom,
+            "dom": sbPanel.dom,
             update(update) {
                 sbPanel.updateEOL(update.state);
                 sbPanel.updateCharEnc();
@@ -534,7 +479,7 @@ function makePanel(opts) {
                 if (update.docChanged) {
                     sbPanel.updateStats(update.state);
                 }
-            },
+            }
         };
     };
 }

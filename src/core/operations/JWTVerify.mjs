@@ -6,12 +6,14 @@
 import Operation from "../Operation.mjs";
 import jwt from "jsonwebtoken";
 import OperationError from "../errors/OperationError.mjs";
-import { JWT_ALGORITHMS } from "../lib/JWT.mjs";
+import {JWT_ALGORITHMS} from "../lib/JWT.mjs";
+
 
 /**
  * JWT Verify operation
  */
 class JWTVerify extends Operation {
+
     /**
      * JWTVerify constructor
      */
@@ -20,8 +22,7 @@ class JWTVerify extends Operation {
 
         this.name = "JWT Verify";
         this.module = "Crypto";
-        this.description =
-            "Verifies that a JSON Web Token is valid and has been signed with the provided secret / private key.<br><br>The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.";
+        this.description = "Verifies that a JSON Web Token is valid and has been signed with the provided secret / private key.<br><br>The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.";
         this.infoURL = "https://wikipedia.org/wiki/JSON_Web_Token";
         this.inputType = "string";
         this.outputType = "JSON";
@@ -29,7 +30,7 @@ class JWTVerify extends Operation {
             {
                 name: "Public/Secret Key",
                 type: "text",
-                value: "secret",
+                value: "secret"
             },
         ];
     }
@@ -47,10 +48,7 @@ class JWTVerify extends Operation {
         try {
             const verified = jwt.verify(input, key, { algorithms: algos });
 
-            if (
-                Object.prototype.hasOwnProperty.call(verified, "name") &&
-                verified.name === "JsonWebTokenError"
-            ) {
+            if (Object.prototype.hasOwnProperty.call(verified, "name") && verified.name === "JsonWebTokenError") {
                 throw new OperationError(verified.message);
             }
 
@@ -59,6 +57,7 @@ class JWTVerify extends Operation {
             throw new OperationError(err);
         }
     }
+
 }
 
 export default JWTVerify;

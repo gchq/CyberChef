@@ -10,14 +10,13 @@ import OperationError from "../errors/OperationError.mjs";
 import kbpgp from "kbpgp";
 import { ASP, importPublicKey } from "../lib/PGP.mjs";
 import * as es6promisify from "es6-promisify";
-const promisify = es6promisify.default
-    ? es6promisify.default.promisify
-    : es6promisify.promisify;
+const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
 
 /**
  * PGP Verify operation
  */
 class PGPVerify extends Operation {
+
     /**
      * PGPVerify constructor
      */
@@ -42,10 +41,10 @@ class PGPVerify extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                name: "Public key of signer",
-                type: "text",
-                value: "",
-            },
+                "name": "Public key of signer",
+                "type": "text",
+                "value": ""
+            }
         ];
     }
 
@@ -60,8 +59,7 @@ class PGPVerify extends Operation {
             keyring = new kbpgp.keyring.KeyRing();
         let unboxedLiterals;
 
-        if (!publicKey)
-            throw new OperationError("Enter the public key of the signer.");
+        if (!publicKey) throw new OperationError("Enter the public key of the signer.");
         const pubKey = await importPublicKey(publicKey);
         keyring.add_key_manager(pubKey);
 
@@ -69,7 +67,7 @@ class PGPVerify extends Operation {
             unboxedLiterals = await promisify(kbpgp.unbox)({
                 armored: signedMessage,
                 keyfetch: keyring,
-                asp: ASP,
+                asp: ASP
             });
             const ds = unboxedLiterals[0].get_data_signer();
             if (ds) {
@@ -91,30 +89,23 @@ class PGPVerify extends Operation {
                     }
                     text += [
                         `PGP key ID: ${km.get_pgp_short_key_id()}`,
-                        `PGP fingerprint: ${km
-                            .get_pgp_fingerprint()
-                            .toString("hex")}`,
-                        `Signed on ${new Date(
-                            ds.sig.when_generated() * 1000,
-                        ).toUTCString()}`,
-                        "----------------------------------\n",
+                        `PGP fingerprint: ${km.get_pgp_fingerprint().toString("hex")}`,
+                        `Signed on ${new Date(ds.sig.when_generated() * 1000).toUTCString()}`,
+                        "----------------------------------\n"
                     ].join("\n");
                     text += unboxedLiterals.toString();
                     return text.trim();
                 } else {
-                    throw new OperationError(
-                        "Could not identify a key manager.",
-                    );
+                    throw new OperationError("Could not identify a key manager.");
                 }
             } else {
-                throw new OperationError(
-                    "The data does not appear to be signed.",
-                );
+                throw new OperationError("The data does not appear to be signed.");
             }
         } catch (err) {
             throw new OperationError(`Couldn't verify message: ${err}`);
         }
     }
+
 }
 
 export default PGPVerify;

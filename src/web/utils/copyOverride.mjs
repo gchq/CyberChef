@@ -16,7 +16,7 @@
  * impact of breaking changes.
  */
 
-import { EditorView } from "@codemirror/view";
+import {EditorView} from "@codemirror/view";
 
 /**
  * Copies the currently selected text from the state doc.
@@ -29,14 +29,13 @@ import { EditorView } from "@codemirror/view";
 function copiedRange(state) {
     const content = [];
     let linewise = false;
-    for (const range of state.selection.ranges)
-        if (!range.empty) {
-            content.push(state.sliceDoc(range.from, range.to));
-        }
+    for (const range of state.selection.ranges) if (!range.empty) {
+        content.push(state.sliceDoc(range.from, range.to));
+    }
     if (!content.length) {
         // Nothing selected, do a line-wise copy
         let upto = -1;
-        for (const { from } of state.selection.ranges) {
+        for (const {from} of state.selection.ranges) {
             const line = state.doc.lineAt(from);
             if (line.number > upto) {
                 content.push(line.text);
@@ -46,7 +45,7 @@ function copiedRange(state) {
         linewise = true;
     }
 
-    return { text: content.join(state.lineBreak), linewise };
+    return {text: content.join(state.lineBreak), linewise};
 }
 
 /**
@@ -74,7 +73,7 @@ const CPRegexG = new RegExp("[\u2400-\u243f]", "g");
 export function copyOverride() {
     return EditorView.domEventHandlers({
         copy(event, view) {
-            const { text, linewise } = copiedRange(view.state);
+            const {text, linewise} = copiedRange(view.state);
             if (!text && !linewise) return;
 
             // If there are no PUA chars in the copied text, return false and allow the built-in
@@ -82,7 +81,7 @@ export function copyOverride() {
             if (!PUARegex.test(text)) return false;
 
             // If PUA chars are detected, modify them back to their original values and copy that instead
-            const rawText = text.replace(PUARegexG, function (c) {
+            const rawText = text.replace(PUARegexG, function(c) {
                 return String.fromCharCode(c.charCodeAt(0) - 0xe000);
             });
 
@@ -92,9 +91,10 @@ export function copyOverride() {
 
             // Returning true prevents CodeMirror default handlers from firing
             return true;
-        },
+        }
     });
 }
+
 
 /**
  * Handler for copy events in output-html decorations. If there are control pictures present,
@@ -113,7 +113,7 @@ export function htmlCopyOverride(event) {
     if (!CPRegex.test(text)) return false;
 
     // If control picture chars are detected, modify them back to their original values and copy that instead
-    const rawText = text.replace(CPRegexG, function (c) {
+    const rawText = text.replace(CPRegexG, function(c) {
         return String.fromCharCode(c.charCodeAt(0) - 0x2400);
     });
 

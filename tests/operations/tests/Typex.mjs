@@ -15,35 +15,24 @@ TestRegister.addTests([
         expectedOutput: "VIXQQ VHLPN UCVLA QDZNZ EAYAT HWC",
         recipeConfig: [
             {
-                op: "Typex",
-                args: [
+                "op": "Typex",
+                "args": [
                     "MCYLPQUVRXGSAOWNBJEZDTFKHI<BFHNQUW",
-                    false,
-                    "B",
-                    "C",
+                    false, "B", "C",
                     "KHWENRCBISXJQGOFMAPVYZDLTU<BFHNQUW",
-                    false,
-                    "D",
-                    "E",
+                    false, "D", "E",
                     "BYPDZMGIKQCUSATREHOJNLFWXV<BFHNQUW",
-                    false,
-                    "F",
-                    "G",
+                    false, "F", "G",
                     "ZANJCGDLVHIXOBRPMSWQUKFYET<BFHNQUW",
-                    true,
-                    "H",
-                    "I",
+                    true, "H", "I",
                     "QXBGUTOVFCZPJIHSWERYNDAMLK<BFHNQUW",
-                    true,
-                    "J",
-                    "K",
+                    true, "J", "K",
                     "AN BC FG IE KD LU MH OR TS VZ WQ XJ YP",
                     "EHZTLCVKFRPQSYANBUIWOJXGMD",
-                    "None",
-                    true,
-                ],
-            },
-        ],
+                    "None", true
+                ]
+            }
+        ]
     },
     {
         name: "Typex: keyboard",
@@ -51,35 +40,24 @@ TestRegister.addTests([
         expectedOutput: "VIXQQ FDJXT WKLDQ DFQOD CNCSK NULBG JKQDD MVGQ",
         recipeConfig: [
             {
-                op: "Typex",
-                args: [
+                "op": "Typex",
+                "args": [
                     "MCYLPQUVRXGSAOWNBJEZDTFKHI<BFHNQUW",
-                    false,
-                    "B",
-                    "C",
+                    false, "B", "C",
                     "KHWENRCBISXJQGOFMAPVYZDLTU<BFHNQUW",
-                    false,
-                    "D",
-                    "E",
+                    false, "D", "E",
                     "BYPDZMGIKQCUSATREHOJNLFWXV<BFHNQUW",
-                    false,
-                    "F",
-                    "G",
+                    false, "F", "G",
                     "ZANJCGDLVHIXOBRPMSWQUKFYET<BFHNQUW",
-                    true,
-                    "H",
-                    "I",
+                    true, "H", "I",
                     "QXBGUTOVFCZPJIHSWERYNDAMLK<BFHNQUW",
-                    true,
-                    "J",
-                    "K",
+                    true, "J", "K",
                     "AN BC FG IE KD LU MH OR TS VZ WQ XJ YP",
                     "EHZTLCVKFRPQSYANBUIWOJXGMD",
-                    "Encrypt",
-                    true,
-                ],
-            },
-        ],
+                    "Encrypt", true
+                ]
+            }
+        ]
     },
     {
         name: "Typex: self-decrypt",
@@ -87,63 +65,41 @@ TestRegister.addTests([
         expectedOutput: "HELLO WORLD, THIS IS A TEST MESSAGE.",
         recipeConfig: [
             {
-                op: "Typex",
-                args: [
+                "op": "Typex",
+                "args": [
                     "MCYLPQUVRXGSAOWNBJEZDTFKHI<BFHNQUW",
-                    false,
-                    "B",
-                    "C",
+                    false, "B", "C",
                     "KHWENRCBISXJQGOFMAPVYZDLTU<BFHNQUW",
-                    false,
-                    "D",
-                    "E",
+                    false, "D", "E",
                     "BYPDZMGIKQCUSATREHOJNLFWXV<BFHNQUW",
-                    false,
-                    "F",
-                    "G",
+                    false, "F", "G",
                     "ZANJCGDLVHIXOBRPMSWQUKFYET<BFHNQUW",
-                    true,
-                    "H",
-                    "I",
+                    true, "H", "I",
                     "QXBGUTOVFCZPJIHSWERYNDAMLK<BFHNQUW",
-                    true,
-                    "J",
-                    "K",
+                    true, "J", "K",
                     "AN BC FG IE KD LU MH OR TS VZ WQ XJ YP",
                     "EHZTLCVKFRPQSYANBUIWOJXGMD",
-                    "Encrypt",
-                    true,
-                ],
+                    "Encrypt", true
+                ]
             },
             {
-                op: "Typex",
-                args: [
+                "op": "Typex",
+                "args": [
                     "MCYLPQUVRXGSAOWNBJEZDTFKHI<BFHNQUW",
-                    false,
-                    "B",
-                    "C",
+                    false, "B", "C",
                     "KHWENRCBISXJQGOFMAPVYZDLTU<BFHNQUW",
-                    false,
-                    "D",
-                    "E",
+                    false, "D", "E",
                     "BYPDZMGIKQCUSATREHOJNLFWXV<BFHNQUW",
-                    false,
-                    "F",
-                    "G",
+                    false, "F", "G",
                     "ZANJCGDLVHIXOBRPMSWQUKFYET<BFHNQUW",
-                    true,
-                    "H",
-                    "I",
+                    true, "H", "I",
                     "QXBGUTOVFCZPJIHSWERYNDAMLK<BFHNQUW",
-                    true,
-                    "J",
-                    "K",
+                    true, "J", "K",
                     "AN BC FG IE KD LU MH OR TS VZ WQ XJ YP",
                     "EHZTLCVKFRPQSYANBUIWOJXGMD",
-                    "Decrypt",
-                    true,
-                ],
-            },
-        ],
+                    "Decrypt", true
+                ]
+            }
+        ]
     },
 ]);

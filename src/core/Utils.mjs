@@ -7,15 +7,16 @@
 // loglevel import required for Node API
 import log from "loglevel";
 import utf8 from "utf8";
-import { fromBase64, toBase64 } from "./lib/Base64.mjs";
-import { fromHex } from "./lib/Hex.mjs";
-import { fromDecimal } from "./lib/Decimal.mjs";
-import { fromBinary } from "./lib/Binary.mjs";
+import {fromBase64, toBase64} from "./lib/Base64.mjs";
+import {fromHex} from "./lib/Hex.mjs";
+import {fromDecimal} from "./lib/Decimal.mjs";
+import {fromBinary} from "./lib/Binary.mjs";
 
 /**
  * Utility functions for use in operations, the core framework and the stage.
  */
 class Utils {
+
     /**
      * Translates an ordinal into a character.
      *
@@ -32,13 +33,14 @@ class Utils {
         // https://mathiasbynens.be/notes/javascript-unicode
         if (o > 0xffff) {
             o -= 0x10000;
-            const high = String.fromCharCode(((o >>> 10) & 0x3ff) | 0xd800);
-            o = 0xdc00 | (o & 0x3ff);
+            const high = String.fromCharCode(o >>> 10 & 0x3ff | 0xd800);
+            o = 0xdc00 | o & 0x3ff;
             return high + String.fromCharCode(o);
         }
 
         return String.fromCharCode(o);
     }
+
 
     /**
      * Translates a character into an ordinal.
@@ -57,18 +59,15 @@ class Utils {
         if (c.length === 2) {
             const high = c.charCodeAt(0);
             const low = c.charCodeAt(1);
-            if (
-                high >= 0xd800 &&
-                high < 0xdc00 &&
-                low >= 0xdc00 &&
-                low < 0xe000
-            ) {
+            if (high >= 0xd800 && high < 0xdc00 &&
+                low >= 0xdc00 && low < 0xe000) {
                 return (high - 0xd800) * 0x400 + low - 0xdc00 + 0x10000;
             }
         }
 
         return c.charCodeAt(0);
     }
+
 
     /**
      * Adds trailing bytes to a byteArray.
@@ -93,7 +92,7 @@ class Utils {
      * // returns ["t", "e", "s", "t", 1, 1, 1, 1]
      * Utils.padBytesRight("test", 8, 1);
      */
-    static padBytesRight(arr, numBytes, padByte = 0) {
+    static padBytesRight(arr, numBytes, padByte=0) {
         const paddedBytes = new Array(numBytes);
         paddedBytes.fill(padByte);
 
@@ -103,6 +102,7 @@ class Utils {
 
         return paddedBytes;
     }
+
 
     /**
      * Truncates a long string to max length and adds suffix.
@@ -119,12 +119,13 @@ class Utils {
      * // returns "A long s-"
      * Utils.truncate("A long string", 9, "-");
      */
-    static truncate(str, max, suffix = "...") {
+    static truncate(str, max, suffix="...") {
         if (str.length > max) {
             str = str.slice(0, max - suffix.length) + suffix;
         }
         return str;
     }
+
 
     /**
      * Converts a character or number to its hex representation.
@@ -140,10 +141,11 @@ class Utils {
      * // returns "6e"
      * Utils.hex(110);
      */
-    static hex(c, length = 2) {
+    static hex(c, length=2) {
         c = typeof c == "string" ? Utils.ord(c) : c;
         return c.toString(16).padStart(length, "0");
     }
+
 
     /**
      * Converts a character or number to its binary representation.
@@ -159,10 +161,11 @@ class Utils {
      * // returns "01101110"
      * Utils.bin(110);
      */
-    static bin(c, length = 8) {
+    static bin(c, length=8) {
         c = typeof c == "string" ? Utils.ord(c) : c;
         return c.toString(2).padStart(length, "0");
     }
+
 
     /**
      * Returns a string with all non-printable chars as dots, optionally preserving whitespace.
@@ -172,20 +175,20 @@ class Utils {
      * @param {boolean} [onlyAscii=false] - Whether or not to replace non ASCII characters.
      * @returns {string}
      */
-    static printable(str, preserveWs = false, onlyAscii = false) {
+    static printable(str, preserveWs=false, onlyAscii=false) {
         if (onlyAscii) {
             return str.replace(/[^\x20-\x7f]/g, ".");
         }
 
         // eslint-disable-next-line no-misleading-character-class
-        const re =
-            /[\0-\x08\x0B-\x0C\x0E-\x1F\x7F-\x9F\xAD\u0378\u0379\u037F-\u0383\u038B\u038D\u03A2\u0528-\u0530\u0557\u0558\u0560\u0588\u058B-\u058E\u0590\u05C8-\u05CF\u05EB-\u05EF\u05F5-\u0605\u061C\u061D\u06DD\u070E\u070F\u074B\u074C\u07B2-\u07BF\u07FB-\u07FF\u082E\u082F\u083F\u085C\u085D\u085F-\u089F\u08A1\u08AD-\u08E3\u08FF\u0978\u0980\u0984\u098D\u098E\u0991\u0992\u09A9\u09B1\u09B3-\u09B5\u09BA\u09BB\u09C5\u09C6\u09C9\u09CA\u09CF-\u09D6\u09D8-\u09DB\u09DE\u09E4\u09E5\u09FC-\u0A00\u0A04\u0A0B-\u0A0E\u0A11\u0A12\u0A29\u0A31\u0A34\u0A37\u0A3A\u0A3B\u0A3D\u0A43-\u0A46\u0A49\u0A4A\u0A4E-\u0A50\u0A52-\u0A58\u0A5D\u0A5F-\u0A65\u0A76-\u0A80\u0A84\u0A8E\u0A92\u0AA9\u0AB1\u0AB4\u0ABA\u0ABB\u0AC6\u0ACA\u0ACE\u0ACF\u0AD1-\u0ADF\u0AE4\u0AE5\u0AF2-\u0B00\u0B04\u0B0D\u0B0E\u0B11\u0B12\u0B29\u0B31\u0B34\u0B3A\u0B3B\u0B45\u0B46\u0B49\u0B4A\u0B4E-\u0B55\u0B58-\u0B5B\u0B5E\u0B64\u0B65\u0B78-\u0B81\u0B84\u0B8B-\u0B8D\u0B91\u0B96-\u0B98\u0B9B\u0B9D\u0BA0-\u0BA2\u0BA5-\u0BA7\u0BAB-\u0BAD\u0BBA-\u0BBD\u0BC3-\u0BC5\u0BC9\u0BCE\u0BCF\u0BD1-\u0BD6\u0BD8-\u0BE5\u0BFB-\u0C00\u0C04\u0C0D\u0C11\u0C29\u0C34\u0C3A-\u0C3C\u0C45\u0C49\u0C4E-\u0C54\u0C57\u0C5A-\u0C5F\u0C64\u0C65\u0C70-\u0C77\u0C80\u0C81\u0C84\u0C8D\u0C91\u0CA9\u0CB4\u0CBA\u0CBB\u0CC5\u0CC9\u0CCE-\u0CD4\u0CD7-\u0CDD\u0CDF\u0CE4\u0CE5\u0CF0\u0CF3-\u0D01\u0D04\u0D0D\u0D11\u0D3B\u0D3C\u0D45\u0D49\u0D4F-\u0D56\u0D58-\u0D5F\u0D64\u0D65\u0D76-\u0D78\u0D80\u0D81\u0D84\u0D97-\u0D99\u0DB2\u0DBC\u0DBE\u0DBF\u0DC7-\u0DC9\u0DCB-\u0DCE\u0DD5\u0DD7\u0DE0-\u0DF1\u0DF5-\u0E00\u0E3B-\u0E3E\u0E5C-\u0E80\u0E83\u0E85\u0E86\u0E89\u0E8B\u0E8C\u0E8E-\u0E93\u0E98\u0EA0\u0EA4\u0EA6\u0EA8\u0EA9\u0EAC\u0EBA\u0EBE\u0EBF\u0EC5\u0EC7\u0ECE\u0ECF\u0EDA\u0EDB\u0EE0-\u0EFF\u0F48\u0F6D-\u0F70\u0F98\u0FBD\u0FCD\u0FDB-\u0FFF\u10C6\u10C8-\u10CC\u10CE\u10CF\u1249\u124E\u124F\u1257\u1259\u125E\u125F\u1289\u128E\u128F\u12B1\u12B6\u12B7\u12BF\u12C1\u12C6\u12C7\u12D7\u1311\u1316\u1317\u135B\u135C\u137D-\u137F\u139A-\u139F\u13F5-\u13FF\u169D-\u169F\u16F1-\u16FF\u170D\u1715-\u171F\u1737-\u173F\u1754-\u175F\u176D\u1771\u1774-\u177F\u17DE\u17DF\u17EA-\u17EF\u17FA-\u17FF\u180F\u181A-\u181F\u1878-\u187F\u18AB-\u18AF\u18F6-\u18FF\u191D-\u191F\u192C-\u192F\u193C-\u193F\u1941-\u1943\u196E\u196F\u1975-\u197F\u19AC-\u19AF\u19CA-\u19CF\u19DB-\u19DD\u1A1C\u1A1D\u1A5F\u1A7D\u1A7E\u1A8A-\u1A8F\u1A9A-\u1A9F\u1AAE-\u1AFF\u1B4C-\u1B4F\u1B7D-\u1B7F\u1BF4-\u1BFB\u1C38-\u1C3A\u1C4A-\u1C4C\u1C80-\u1CBF\u1CC8-\u1CCF\u1CF7-\u1CFF\u1DE7-\u1DFB\u1F16\u1F17\u1F1E\u1F1F\u1F46\u1F47\u1F4E\u1F4F\u1F58\u1F5A\u1F5C\u1F5E\u1F7E\u1F7F\u1FB5\u1FC5\u1FD4\u1FD5\u1FDC\u1FF0\u1FF1\u1FF5\u1FFF\u200B-\u200F\u202A-\u202E\u2060-\u206F\u2072\u2073\u208F\u209D-\u209F\u20BB-\u20CF\u20F1-\u20FF\u218A-\u218F\u23F4-\u23FF\u2427-\u243F\u244B-\u245F\u2700\u2B4D-\u2B4F\u2B5A-\u2BFF\u2C2F\u2C5F\u2CF4-\u2CF8\u2D26\u2D28-\u2D2C\u2D2E\u2D2F\u2D68-\u2D6E\u2D71-\u2D7E\u2D97-\u2D9F\u2DA7\u2DAF\u2DB7\u2DBF\u2DC7\u2DCF\u2DD7\u2DDF\u2E3C-\u2E7F\u2E9A\u2EF4-\u2EFF\u2FD6-\u2FEF\u2FFC-\u2FFF\u3040\u3097\u3098\u3100-\u3104\u312E-\u3130\u318F\u31BB-\u31BF\u31E4-\u31EF\u321F\u32FF\u4DB6-\u4DBF\u9FCD-\u9FFF\uA48D-\uA48F\uA4C7-\uA4CF\uA62C-\uA63F\uA698-\uA69E\uA6F8-\uA6FF\uA78F\uA794-\uA79F\uA7AB-\uA7F7\uA82C-\uA82F\uA83A-\uA83F\uA878-\uA87F\uA8C5-\uA8CD\uA8DA-\uA8DF\uA8FC-\uA8FF\uA954-\uA95E\uA97D-\uA97F\uA9CE\uA9DA-\uA9DD\uA9E0-\uA9FF\uAA37-\uAA3F\uAA4E\uAA4F\uAA5A\uAA5B\uAA7C-\uAA7F\uAAC3-\uAADA\uAAF7-\uAB00\uAB07\uAB08\uAB0F\uAB10\uAB17-\uAB1F\uAB27\uAB2F-\uABBF\uABEE\uABEF\uABFA-\uABFF\uD7A4-\uD7AF\uD7C7-\uD7CA\uD7FC-\uD7FF\uE000-\uF8FF\uFA6E\uFA6F\uFADA-\uFAFF\uFB07-\uFB12\uFB18-\uFB1C\uFB37\uFB3D\uFB3F\uFB42\uFB45\uFBC2-\uFBD2\uFD40-\uFD4F\uFD90\uFD91\uFDC8-\uFDEF\uFDFE\uFDFF\uFE1A-\uFE1F\uFE27-\uFE2F\uFE53\uFE67\uFE6C-\uFE6F\uFE75\uFEFD-\uFF00\uFFBF-\uFFC1\uFFC8\uFFC9\uFFD0\uFFD1\uFFD8\uFFD9\uFFDD-\uFFDF\uFFE7\uFFEF-\uFFFB\uFFFE\uFFFF]/g;
+        const re = /[\0-\x08\x0B-\x0C\x0E-\x1F\x7F-\x9F\xAD\u0378\u0379\u037F-\u0383\u038B\u038D\u03A2\u0528-\u0530\u0557\u0558\u0560\u0588\u058B-\u058E\u0590\u05C8-\u05CF\u05EB-\u05EF\u05F5-\u0605\u061C\u061D\u06DD\u070E\u070F\u074B\u074C\u07B2-\u07BF\u07FB-\u07FF\u082E\u082F\u083F\u085C\u085D\u085F-\u089F\u08A1\u08AD-\u08E3\u08FF\u0978\u0980\u0984\u098D\u098E\u0991\u0992\u09A9\u09B1\u09B3-\u09B5\u09BA\u09BB\u09C5\u09C6\u09C9\u09CA\u09CF-\u09D6\u09D8-\u09DB\u09DE\u09E4\u09E5\u09FC-\u0A00\u0A04\u0A0B-\u0A0E\u0A11\u0A12\u0A29\u0A31\u0A34\u0A37\u0A3A\u0A3B\u0A3D\u0A43-\u0A46\u0A49\u0A4A\u0A4E-\u0A50\u0A52-\u0A58\u0A5D\u0A5F-\u0A65\u0A76-\u0A80\u0A84\u0A8E\u0A92\u0AA9\u0AB1\u0AB4\u0ABA\u0ABB\u0AC6\u0ACA\u0ACE\u0ACF\u0AD1-\u0ADF\u0AE4\u0AE5\u0AF2-\u0B00\u0B04\u0B0D\u0B0E\u0B11\u0B12\u0B29\u0B31\u0B34\u0B3A\u0B3B\u0B45\u0B46\u0B49\u0B4A\u0B4E-\u0B55\u0B58-\u0B5B\u0B5E\u0B64\u0B65\u0B78-\u0B81\u0B84\u0B8B-\u0B8D\u0B91\u0B96-\u0B98\u0B9B\u0B9D\u0BA0-\u0BA2\u0BA5-\u0BA7\u0BAB-\u0BAD\u0BBA-\u0BBD\u0BC3-\u0BC5\u0BC9\u0BCE\u0BCF\u0BD1-\u0BD6\u0BD8-\u0BE5\u0BFB-\u0C00\u0C04\u0C0D\u0C11\u0C29\u0C34\u0C3A-\u0C3C\u0C45\u0C49\u0C4E-\u0C54\u0C57\u0C5A-\u0C5F\u0C64\u0C65\u0C70-\u0C77\u0C80\u0C81\u0C84\u0C8D\u0C91\u0CA9\u0CB4\u0CBA\u0CBB\u0CC5\u0CC9\u0CCE-\u0CD4\u0CD7-\u0CDD\u0CDF\u0CE4\u0CE5\u0CF0\u0CF3-\u0D01\u0D04\u0D0D\u0D11\u0D3B\u0D3C\u0D45\u0D49\u0D4F-\u0D56\u0D58-\u0D5F\u0D64\u0D65\u0D76-\u0D78\u0D80\u0D81\u0D84\u0D97-\u0D99\u0DB2\u0DBC\u0DBE\u0DBF\u0DC7-\u0DC9\u0DCB-\u0DCE\u0DD5\u0DD7\u0DE0-\u0DF1\u0DF5-\u0E00\u0E3B-\u0E3E\u0E5C-\u0E80\u0E83\u0E85\u0E86\u0E89\u0E8B\u0E8C\u0E8E-\u0E93\u0E98\u0EA0\u0EA4\u0EA6\u0EA8\u0EA9\u0EAC\u0EBA\u0EBE\u0EBF\u0EC5\u0EC7\u0ECE\u0ECF\u0EDA\u0EDB\u0EE0-\u0EFF\u0F48\u0F6D-\u0F70\u0F98\u0FBD\u0FCD\u0FDB-\u0FFF\u10C6\u10C8-\u10CC\u10CE\u10CF\u1249\u124E\u124F\u1257\u1259\u125E\u125F\u1289\u128E\u128F\u12B1\u12B6\u12B7\u12BF\u12C1\u12C6\u12C7\u12D7\u1311\u1316\u1317\u135B\u135C\u137D-\u137F\u139A-\u139F\u13F5-\u13FF\u169D-\u169F\u16F1-\u16FF\u170D\u1715-\u171F\u1737-\u173F\u1754-\u175F\u176D\u1771\u1774-\u177F\u17DE\u17DF\u17EA-\u17EF\u17FA-\u17FF\u180F\u181A-\u181F\u1878-\u187F\u18AB-\u18AF\u18F6-\u18FF\u191D-\u191F\u192C-\u192F\u193C-\u193F\u1941-\u1943\u196E\u196F\u1975-\u197F\u19AC-\u19AF\u19CA-\u19CF\u19DB-\u19DD\u1A1C\u1A1D\u1A5F\u1A7D\u1A7E\u1A8A-\u1A8F\u1A9A-\u1A9F\u1AAE-\u1AFF\u1B4C-\u1B4F\u1B7D-\u1B7F\u1BF4-\u1BFB\u1C38-\u1C3A\u1C4A-\u1C4C\u1C80-\u1CBF\u1CC8-\u1CCF\u1CF7-\u1CFF\u1DE7-\u1DFB\u1F16\u1F17\u1F1E\u1F1F\u1F46\u1F47\u1F4E\u1F4F\u1F58\u1F5A\u1F5C\u1F5E\u1F7E\u1F7F\u1FB5\u1FC5\u1FD4\u1FD5\u1FDC\u1FF0\u1FF1\u1FF5\u1FFF\u200B-\u200F\u202A-\u202E\u2060-\u206F\u2072\u2073\u208F\u209D-\u209F\u20BB-\u20CF\u20F1-\u20FF\u218A-\u218F\u23F4-\u23FF\u2427-\u243F\u244B-\u245F\u2700\u2B4D-\u2B4F\u2B5A-\u2BFF\u2C2F\u2C5F\u2CF4-\u2CF8\u2D26\u2D28-\u2D2C\u2D2E\u2D2F\u2D68-\u2D6E\u2D71-\u2D7E\u2D97-\u2D9F\u2DA7\u2DAF\u2DB7\u2DBF\u2DC7\u2DCF\u2DD7\u2DDF\u2E3C-\u2E7F\u2E9A\u2EF4-\u2EFF\u2FD6-\u2FEF\u2FFC-\u2FFF\u3040\u3097\u3098\u3100-\u3104\u312E-\u3130\u318F\u31BB-\u31BF\u31E4-\u31EF\u321F\u32FF\u4DB6-\u4DBF\u9FCD-\u9FFF\uA48D-\uA48F\uA4C7-\uA4CF\uA62C-\uA63F\uA698-\uA69E\uA6F8-\uA6FF\uA78F\uA794-\uA79F\uA7AB-\uA7F7\uA82C-\uA82F\uA83A-\uA83F\uA878-\uA87F\uA8C5-\uA8CD\uA8DA-\uA8DF\uA8FC-\uA8FF\uA954-\uA95E\uA97D-\uA97F\uA9CE\uA9DA-\uA9DD\uA9E0-\uA9FF\uAA37-\uAA3F\uAA4E\uAA4F\uAA5A\uAA5B\uAA7C-\uAA7F\uAAC3-\uAADA\uAAF7-\uAB00\uAB07\uAB08\uAB0F\uAB10\uAB17-\uAB1F\uAB27\uAB2F-\uABBF\uABEE\uABEF\uABFA-\uABFF\uD7A4-\uD7AF\uD7C7-\uD7CA\uD7FC-\uD7FF\uE000-\uF8FF\uFA6E\uFA6F\uFADA-\uFAFF\uFB07-\uFB12\uFB18-\uFB1C\uFB37\uFB3D\uFB3F\uFB42\uFB45\uFBC2-\uFBD2\uFD40-\uFD4F\uFD90\uFD91\uFDC8-\uFDEF\uFDFE\uFDFF\uFE1A-\uFE1F\uFE27-\uFE2F\uFE53\uFE67\uFE6C-\uFE6F\uFE75\uFEFD-\uFF00\uFFBF-\uFFC1\uFFC8\uFFC9\uFFD0\uFFD1\uFFD8\uFFD9\uFFDD-\uFFDF\uFFE7\uFFEF-\uFFFB\uFFFE\uFFFF]/g;
         const wsRe = /[\x09-\x10\u2028\u2029]/g;
 
         str = str.replace(re, ".");
         if (!preserveWs) str = str.replace(wsRe, ".");
         return str;
     }
+
 
     /**
      * Returns a string with whitespace represented as special characters from the
@@ -196,10 +199,11 @@ class Utils {
      * @returns {string}
      */
     static escapeWhitespace(str) {
-        return str.replace(/[\x09-\x10]/g, function (c) {
+        return str.replace(/[\x09-\x10]/g, function(c) {
             return String.fromCharCode(0xe000 + c.charCodeAt(0));
         });
     }
+
 
     /**
      * Parse a string entered by a user and replace escaped chars with the bytes they represent.
@@ -215,54 +219,48 @@ class Utils {
      * Utils.parseEscapedChars("\\n");
      */
     static parseEscapedChars(str) {
-        return str.replace(
-            /\\([abfnrtv'"]|[0-3][0-7]{2}|[0-7]{1,2}|x[\da-fA-F]{2}|u[\da-fA-F]{4}|u\{[\da-fA-F]{1,6}\}|\\)/g,
-            function (m, a) {
-                switch (a[0]) {
-                    case "\\":
-                        return "\\";
-                    case "0":
-                    case "1":
-                    case "2":
-                    case "3":
-                    case "4":
-                    case "5":
-                    case "6":
-                    case "7":
-                        return String.fromCharCode(parseInt(a, 8));
-                    case "a":
-                        return String.fromCharCode(7);
-                    case "b":
-                        return "\b";
-                    case "t":
-                        return "\t";
-                    case "n":
-                        return "\n";
-                    case "v":
-                        return "\v";
-                    case "f":
-                        return "\f";
-                    case "r":
-                        return "\r";
-                    case '"':
-                        return '"';
-                    case "'":
-                        return "'";
-                    case "x":
+        return str.replace(/\\([abfnrtv'"]|[0-3][0-7]{2}|[0-7]{1,2}|x[\da-fA-F]{2}|u[\da-fA-F]{4}|u\{[\da-fA-F]{1,6}\}|\\)/g, function(m, a) {
+            switch (a[0]) {
+                case "\\":
+                    return "\\";
+                case "0":
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                case "5":
+                case "6":
+                case "7":
+                    return String.fromCharCode(parseInt(a, 8));
+                case "a":
+                    return String.fromCharCode(7);
+                case "b":
+                    return "\b";
+                case "t":
+                    return "\t";
+                case "n":
+                    return "\n";
+                case "v":
+                    return "\v";
+                case "f":
+                    return "\f";
+                case "r":
+                    return "\r";
+                case '"':
+                    return '"';
+                case "'":
+                    return "'";
+                case "x":
+                    return String.fromCharCode(parseInt(a.substr(1), 16));
+                case "u":
+                    if (a[1] === "{")
+                        return String.fromCodePoint(parseInt(a.slice(2, -1), 16));
+                    else
                         return String.fromCharCode(parseInt(a.substr(1), 16));
-                    case "u":
-                        if (a[1] === "{")
-                            return String.fromCodePoint(
-                                parseInt(a.slice(2, -1), 16),
-                            );
-                        else
-                            return String.fromCharCode(
-                                parseInt(a.substr(1), 16),
-                            );
-                }
-            },
-        );
+            }
+        });
     }
+
 
     /**
      * Escape a string containing regex control characters so that it can be safely
@@ -278,6 +276,7 @@ class Utils {
     static escapeRegex(str) {
         return str.replace(/([.*+?^=!:${}()|[\]/\\])/g, "\\$1");
     }
+
 
     /**
      * Expand an alphabet range string into a list of the characters in that range.
@@ -299,23 +298,19 @@ class Utils {
         const alphArr = [];
 
         for (let i = 0; i < alphStr.length; i++) {
-            if (
-                i < alphStr.length - 2 &&
-                alphStr[i + 1] === "-" &&
-                alphStr[i] !== "\\"
-            ) {
+            if (i < alphStr.length - 2 &&
+                alphStr[i+1] === "-" &&
+                alphStr[i] !== "\\") {
                 const start = Utils.ord(alphStr[i]),
-                    end = Utils.ord(alphStr[i + 2]);
+                    end = Utils.ord(alphStr[i+2]);
 
                 for (let j = start; j <= end; j++) {
                     alphArr.push(Utils.chr(j));
                 }
                 i += 2;
-            } else if (
-                i < alphStr.length - 2 &&
+            } else if (i < alphStr.length - 2 &&
                 alphStr[i] === "\\" &&
-                alphStr[i + 1] === "-"
-            ) {
+                alphStr[i+1] === "-") {
                 alphArr.push("-");
                 i++;
             } else {
@@ -324,6 +319,7 @@ class Utils {
         }
         return alphArr;
     }
+
 
     /**
      * Coverts data of varying types to a byteArray.
@@ -361,6 +357,7 @@ class Utils {
         }
     }
 
+
     /**
      * Coverts data of varying types to a byte string.
      * Accepts hex, Base64, UTF8 and Latin1 strings.
@@ -388,9 +385,7 @@ class Utils {
             case "decimal":
                 return Utils.byteArrayToChars(fromDecimal(str));
             case "base64":
-                return Utils.byteArrayToChars(
-                    fromBase64(str, null, "byteArray"),
-                );
+                return Utils.byteArrayToChars(fromBase64(str, null, "byteArray"));
             case "utf8":
                 return utf8.encode(str);
             case "latin1":
@@ -398,6 +393,7 @@ class Utils {
                 return str;
         }
     }
+
 
     /**
      * Converts a byte array to an integer.
@@ -417,15 +413,16 @@ class Utils {
         let value = 0;
         if (byteorder === "big") {
             for (let i = 0; i < byteArray.length; i++) {
-                value = value * 256 + byteArray[i];
+                value = (value * 256) + byteArray[i];
             }
         } else {
             for (let i = byteArray.length - 1; i >= 0; i--) {
-                value = value * 256 + byteArray[i];
+                value = (value * 256) + byteArray[i];
             }
         }
         return value;
     }
+
 
     /**
      * Converts an integer to a byte array of {length} bytes.
@@ -449,17 +446,18 @@ class Utils {
         const arr = new Array(length);
         if (byteorder === "little") {
             for (let i = 0; i < length; i++) {
-                arr[i] = value & 0xff;
+                arr[i] = value & 0xFF;
                 value = value >>> 8;
             }
         } else {
             for (let i = length - 1; i >= 0; i--) {
-                arr[i] = value & 0xff;
+                arr[i] = value & 0xFF;
                 value = value >>> 8;
             }
         }
         return arr;
     }
+
 
     /**
      * Converts a string to an ArrayBuffer.
@@ -477,11 +475,10 @@ class Utils {
      */
     static strToArrayBuffer(str) {
         log.debug(`Converting string[${str?.length}] to array buffer`);
-        if (!str) return new ArrayBuffer();
+        if (!str) return new ArrayBuffer;
 
         const arr = new Uint8Array(str.length);
-        let i = str.length,
-            b;
+        let i = str.length, b;
         while (i--) {
             b = str.charCodeAt(i);
             arr[i] = b;
@@ -490,6 +487,7 @@ class Utils {
         }
         return arr.buffer;
     }
+
 
     /**
      * Converts a string to a UTF-8 ArrayBuffer.
@@ -506,16 +504,12 @@ class Utils {
      */
     static strToUtf8ArrayBuffer(str) {
         log.debug(`Converting string[${str?.length}] to UTF8 array buffer`);
-        if (!str) return new ArrayBuffer();
+        if (!str) return new ArrayBuffer;
 
         const buffer = new TextEncoder("utf-8").encode(str);
 
         if (str.length !== buffer.length) {
-            if (
-                isWorkerEnvironment() &&
-                self &&
-                typeof self.setOption === "function"
-            ) {
+            if (isWorkerEnvironment() && self && typeof self.setOption === "function") {
                 self.setOption("attemptHighlight", false);
             } else if (isWebEnvironment()) {
                 window.app.options.attemptHighlight = false;
@@ -524,6 +518,7 @@ class Utils {
 
         return buffer.buffer;
     }
+
 
     /**
      * Converts a string to a byte array.
@@ -543,8 +538,7 @@ class Utils {
         log.debug(`Converting string[${str?.length}] to byte array`);
         if (!str) return [];
         const byteArray = new Array(str.length);
-        let i = str.length,
-            b;
+        let i = str.length, b;
         while (i--) {
             b = str.charCodeAt(i);
             byteArray[i] = b;
@@ -553,6 +547,7 @@ class Utils {
         }
         return byteArray;
     }
+
 
     /**
      * Converts a string to a UTF-8 byte array.
@@ -582,6 +577,7 @@ class Utils {
 
         return Utils.strToByteArray(utf8Str);
     }
+
 
     /**
      * Converts a string to a unicode charcode array
@@ -618,6 +614,7 @@ class Utils {
         return charcode;
     }
 
+
     /**
      * Attempts to convert a byte array to a UTF-8 string.
      *
@@ -638,9 +635,7 @@ class Utils {
             byteArray = new Uint8Array(byteArray);
 
         try {
-            const str = new TextDecoder("utf-8", { fatal: true }).decode(
-                byteArray,
-            );
+            const str = new TextDecoder("utf-8", {fatal: true}).decode(byteArray);
 
             if (str.length !== byteArray.length) {
                 if (isWorkerEnvironment()) {
@@ -656,6 +651,7 @@ class Utils {
             return Utils.byteArrayToChars(byteArray);
         }
     }
+
 
     /**
      * Converts a charcode array to a string.
@@ -677,10 +673,11 @@ class Utils {
         // Maxiumum arg length for fromCharCode is 65535, but the stack may already be fairly deep,
         // so don't get too near it.
         for (let i = 0; i < byteArray.length; i += 20000) {
-            str += String.fromCharCode(...byteArray.slice(i, i + 20000));
+            str += String.fromCharCode(...(byteArray.slice(i, i+20000)));
         }
         return str;
     }
+
 
     /**
      * Converts an ArrayBuffer to a string.
@@ -693,7 +690,7 @@ class Utils {
      * // returns "hello"
      * Utils.arrayBufferToStr(Uint8Array.from([104,101,108,108,111]).buffer);
      */
-    static arrayBufferToStr(arrayBuffer, utf8 = true) {
+    static arrayBufferToStr(arrayBuffer, utf8=true) {
         log.debug(`Converting array buffer[${arrayBuffer?.byteLength}] to str`);
         if (!arrayBuffer || !arrayBuffer.byteLength) return "";
         const arr = new Uint8Array(arrayBuffer);
@@ -732,11 +729,12 @@ class Utils {
 
         for (i = 0; i < prob.length; i++) {
             p = prob[i];
-            entropy += (p * Math.log(p)) / Math.log(2);
+            entropy += p * Math.log(p) / Math.log(2);
         }
 
         return -entropy;
     }
+
 
     /**
      * Parses CSV data and returns it as a two dimensional array or strings.
@@ -750,7 +748,7 @@ class Utils {
      * // returns [["head1", "head2"], ["data1", "data2"]]
      * Utils.parseCSV("head1,head2\ndata1,data2");
      */
-    static parseCSV(data, cellDelims = [","], lineDelims = ["\n", "\r"]) {
+    static parseCSV(data, cellDelims=[","], lineDelims=["\n", "\r"]) {
         let b,
             next,
             renderNext = false,
@@ -764,14 +762,14 @@ class Utils {
 
         for (let i = 0; i < data.length; i++) {
             b = data[i];
-            next = data[i + 1] || "";
+            next = data[i+1] || "";
             if (renderNext) {
                 cell += b;
                 renderNext = false;
-            } else if (b === '"' && !inString) {
+            } else if (b === "\"" && !inString) {
                 inString = true;
-            } else if (b === '"' && inString) {
-                if (next === '"') renderNext = true;
+            } else if (b === "\"" && inString) {
+                if (next === "\"") renderNext = true;
                 else inString = false;
             } else if (!inString && cellDelims.indexOf(b) >= 0) {
                 line.push(cell);
@@ -798,6 +796,7 @@ class Utils {
         return lines;
     }
 
+
     /**
      * Removes all HTML (or XML) tags from the input string.
      *
@@ -810,7 +809,7 @@ class Utils {
      * // returns "Test"
      * Utils.stripHtmlTags("<div>Test</div>");
      */
-    static stripHtmlTags(htmlStr, removeScriptAndStyle = false) {
+    static stripHtmlTags(htmlStr, removeScriptAndStyle=false) {
         /**
          * Recursively remove a pattern from a string until there are no more matches.
          * Avoids incomplete sanitization e.g. "aabcbc".replace(/abc/g, "") === "abc"
@@ -821,23 +820,16 @@ class Utils {
          */
         function recursiveRemove(pattern, str) {
             const newStr = str.replace(pattern, "");
-            return newStr.length === str.length
-                ? newStr
-                : recursiveRemove(pattern, newStr);
+            return newStr.length === str.length ? newStr : recursiveRemove(pattern, newStr);
         }
 
         if (removeScriptAndStyle) {
-            htmlStr = recursiveRemove(
-                /<script[^>]*>(\s|\S)*?<\/script[^>]*>/gi,
-                htmlStr,
-            );
-            htmlStr = recursiveRemove(
-                /<style[^>]*>(\s|\S)*?<\/style[^>]*>/gi,
-                htmlStr,
-            );
+            htmlStr = recursiveRemove(/<script[^>]*>(\s|\S)*?<\/script[^>]*>/gi, htmlStr);
+            htmlStr = recursiveRemove(/<style[^>]*>(\s|\S)*?<\/style[^>]*>/gi, htmlStr);
         }
         return recursiveRemove(/<[^>]+>/g, htmlStr);
     }
+
 
     /**
      * Escapes HTML tags in a string to stop them being rendered.
@@ -863,15 +855,14 @@ class Utils {
             '"': "&quot;",
             "'": "&#x27;", // &apos; not recommended because it's not in the HTML spec
             "`": "&#x60;",
-            "\u0000": "\ue000",
+            "\u0000": "\ue000"
         };
 
-        return str
-            ? str.replace(/[&<>"'`\u0000]/g, function (match) {
-                  return HTML_CHARS[match];
-              })
-            : str;
+        return str ? str.replace(/[&<>"'`\u0000]/g, function (match) {
+            return HTML_CHARS[match];
+        }) : str;
     }
+
 
     /**
      * Unescapes HTML tags in a string to make them render again.
@@ -885,20 +876,21 @@ class Utils {
      */
     static unescapeHtml(str) {
         const HTML_CHARS = {
-            "&amp;": "&",
-            "&lt;": "<",
-            "&gt;": ">",
+            "&amp;":  "&",
+            "&lt;":   "<",
+            "&gt;":   ">",
             "&quot;": '"',
             "&#x27;": "'",
             "&#x2F;": "/",
             "&#x60;": "`",
-            "\ue000": "\u0000",
+            "\ue000": "\u0000"
         };
 
-        return str.replace(/(&#?x?[a-z0-9]{2,4};|\ue000)/gi, function (match) {
+        return str.replace(/(&#?x?[a-z0-9]{2,4};|\ue000)/ig, function (match) {
             return HTML_CHARS[match] || match;
         });
     }
+
 
     /**
      * Converts a string to it's title case equivalent.
@@ -911,10 +903,11 @@ class Utils {
      * Utils.toTitleCase("a tIny String");
      */
     static toTitleCase(str) {
-        return str.replace(/\w\S*/g, function (txt) {
+        return str.replace(/\w\S*/g, function(txt) {
             return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         });
     }
+
 
     /**
      * Encodes a URI fragment (#) or query (?) using a minimal amount of percent-encoding.
@@ -958,7 +951,7 @@ class Utils {
             "%3A": ":",
             "%40": "@",
             "%2F": "/",
-            "%3F": "?",
+            "%3F": "?"
         };
         str = encodeURIComponent(str);
 
@@ -966,6 +959,7 @@ class Utils {
             return LEGAL_CHARS[match] || match;
         });
     }
+
 
     /**
      * Generates a "pretty" recipe format from a recipeConfig object.
@@ -988,7 +982,7 @@ class Utils {
             disabled = "",
             bp = "";
 
-        recipeConfig.forEach((op) => {
+        recipeConfig.forEach(op => {
             name = op.op.replace(/ /g, "_");
             args = JSON.stringify(op.args)
                 .slice(1, -1) // Remove [ and ] as they are implied
@@ -998,13 +992,14 @@ class Utils {
                 .replace(/"((?:[^"\\]|\\.)*)"/g, "'$1'") // Replace opening and closing " with '
                 .replace(/\\"/g, '"'); // Unescape double quotes
 
-            disabled = op.disabled ? "/disabled" : "";
+            disabled = op.disabled ? "/disabled": "";
             bp = op.breakpoint ? "/breakpoint" : "";
             prettyConfig += `${name}(${args}${disabled}${bp})`;
             if (newline) prettyConfig += "\n";
         });
         return prettyConfig;
     }
+
 
     /**
      * Converts a recipe string to the JSON representation of the recipe.
@@ -1021,8 +1016,7 @@ class Utils {
         // Parse bespoke recipe format
         recipe = recipe.replace(/\n/g, "");
         let m, args;
-        const recipeRegex =
-                /([^(]+)\(((?:'[^'\\]*(?:\\.[^'\\]*)*'|[^)/'])*)(\/[^)]+)?\)/g,
+        const recipeRegex = /([^(]+)\(((?:'[^'\\]*(?:\\.[^'\\]*)*'|[^)/'])*)(\/[^)]+)?\)/g,
             recipeConfig = [];
 
         while ((m = recipeRegex.exec(recipe))) {
@@ -1036,7 +1030,7 @@ class Utils {
 
             const op = {
                 op: m[1].replace(/_/g, " "),
-                args: JSON.parse(args),
+                args: JSON.parse(args)
             };
             if (m[3] && m[3].indexOf("disabled") > 0) op.disabled = true;
             if (m[3] && m[3].indexOf("breakpoint") > 0) op.breakpoint = true;
@@ -1044,6 +1038,7 @@ class Utils {
         }
         return recipeConfig;
     }
+
 
     /**
      * Formats a list of files or directories.
@@ -1055,7 +1050,7 @@ class Utils {
      * @returns {html}
      */
     static async displayFilesAsHTML(files) {
-        const formatDirectory = function (file) {
+        const formatDirectory = function(file) {
             const html = `<div class='card' style='white-space: normal;'>
                     <div class='card-header'>
                         <h6 class="mb-0">
@@ -1073,17 +1068,16 @@ class Utils {
                 dataURI += "base64," + toBase64(buff);
                 return "<img style='max-width: 100%;' src='" + dataURI + "'>";
             } else {
-                return `<pre>${Utils.escapeHtml(
-                    Utils.arrayBufferToStr(buff.buffer),
-                )}</pre>`;
+                return `<pre>${Utils.escapeHtml(Utils.arrayBufferToStr(buff.buffer))}</pre>`;
             }
         };
 
-        const formatFile = async function (file, i) {
+        const formatFile = async function(file, i) {
             const buff = await Utils.readFile(file);
-            const blob = new Blob([buff], {
-                type: file.type || "octet/stream",
-            });
+            const blob = new Blob(
+                [buff],
+                {type: file.type || "octet/stream"}
+            );
             const blobURL = URL.createObjectURL(blob);
 
             const html = `<div class='card' style='white-space: normal;'>
@@ -1094,15 +1088,11 @@ class Utils {
                                 href='#collapse${i}'
                                 aria-expanded='false'
                                 aria-controls='collapse${i}'
-                                title="Show/hide contents of '${Utils.escapeHtml(
-                                    file.name,
-                                )}'">
+                                title="Show/hide contents of '${Utils.escapeHtml(file.name)}'">
                                 ${Utils.escapeHtml(file.name)}</a>
                             <span class='float-right' style="margin-top: -3px">
                                 ${file.size.toLocaleString()} bytes
-                                <a title="Download ${Utils.escapeHtml(
-                                    file.name,
-                                )}"
+                                <a title="Download ${Utils.escapeHtml(file.name)}"
                                     href="${blobURL}"
                                     download="${Utils.escapeHtml(file.name)}"
                                     data-toggle="tooltip">
@@ -1140,8 +1130,9 @@ class Utils {
             }
         }
 
-        return (html += "</div>");
+        return html += "</div>";
     }
+
 
     /**
      * Parses URI parameters into a JSON object.
@@ -1158,7 +1149,8 @@ class Utils {
         if (paramStr === "") return {};
 
         // Cut off ? or # and split on &
-        if (paramStr[0] === "?" || paramStr[0] === "#") {
+        if (paramStr[0] === "?" ||
+            paramStr[0] === "#") {
             paramStr = paramStr.substr(1);
         }
 
@@ -1170,14 +1162,13 @@ class Utils {
             if (param.length !== 2) {
                 result[params[i]] = true;
             } else {
-                result[param[0]] = decodeURIComponent(
-                    param[1].replace(/\+/g, " "),
-                );
+                result[param[0]] = decodeURIComponent(param[1].replace(/\+/g, " "));
             }
         }
 
         return result;
     }
+
 
     /**
      * Reads a File and returns the data as a Uint8Array.
@@ -1190,8 +1181,10 @@ class Utils {
      * await Utils.readFile(new File(["hello"], "test"))
      */
     static readFile(file) {
+
         if (isNodeEnvironment()) {
             return Buffer.from(file).buffer;
+
         } else {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1199,7 +1192,7 @@ class Utils {
                 let offset = 0;
                 const CHUNK_SIZE = 10485760; // 10MiB
 
-                const seek = function () {
+                const seek = function() {
                     if (offset >= file.size) {
                         resolve(data);
                         return;
@@ -1208,13 +1201,13 @@ class Utils {
                     reader.readAsArrayBuffer(slice);
                 };
 
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     data.set(new Uint8Array(reader.result), offset);
                     offset += CHUNK_SIZE;
                     seek();
                 };
 
-                reader.onerror = function (e) {
+                reader.onerror = function(e) {
                     reject(reader.error.message);
                 };
 
@@ -1234,14 +1227,13 @@ class Utils {
      */
     static readFileSync(file) {
         if (!isNodeEnvironment()) {
-            throw new TypeError(
-                "Browser environment cannot support readFileSync",
-            );
+            throw new TypeError("Browser environment cannot support readFileSync");
         }
 
         const arrayBuffer = Uint8Array.from(file.data);
         return arrayBuffer.buffer;
     }
+
 
     /**
      * Actual modulo function, since % is actually the remainder function in JS.
@@ -1254,6 +1246,7 @@ class Utils {
     static mod(x, y) {
         return ((x % y) + y) % y;
     }
+
 
     /**
      * Finds the greatest common divisor of two numbers.
@@ -1269,6 +1262,7 @@ class Utils {
         }
         return Utils.gcd(y, x % y);
     }
+
 
     /**
      * Finds the modular inverse of two values.
@@ -1287,6 +1281,7 @@ class Utils {
         }
     }
 
+
     /**
      * A mapping of names of delimiter characters to their symbols.
      *
@@ -1295,22 +1290,23 @@ class Utils {
      */
     static charRep(token) {
         return {
-            Space: " ",
-            Percent: "%",
-            Comma: ",",
-            "Semi-colon": ";",
-            Colon: ":",
-            Tab: "\t",
-            "Line feed": "\n",
-            CRLF: "\r\n",
+            "Space":         " ",
+            "Percent":       "%",
+            "Comma":         ",",
+            "Semi-colon":    ";",
+            "Colon":         ":",
+            "Tab":           "\t",
+            "Line feed":     "\n",
+            "CRLF":          "\r\n",
             "Forward slash": "/",
-            Backslash: "\\",
-            "0x": "0x",
-            "\\x": "\\x",
+            "Backslash":     "\\",
+            "0x":            "0x",
+            "\\x":           "\\x",
             "Nothing (separate chars)": "",
-            None: "",
+            "None":          "",
         }[token];
     }
+
 
     /**
      * A mapping of names of delimiter characters to regular expressions which can select them.
@@ -1320,19 +1316,19 @@ class Utils {
      */
     static regexRep(token) {
         return {
-            Space: /\s+/g,
-            Percent: /%/g,
-            Comma: /,/g,
-            "Semi-colon": /;/g,
-            Colon: /:/g,
-            "Line feed": /\n/g,
-            CRLF: /\r\n/g,
+            "Space":         /\s+/g,
+            "Percent":       /%/g,
+            "Comma":         /,/g,
+            "Semi-colon":    /;/g,
+            "Colon":         /:/g,
+            "Line feed":     /\n/g,
+            "CRLF":          /\r\n/g,
             "Forward slash": /\//g,
-            Backslash: /\\/g,
+            "Backslash":     /\\/g,
             "0x with comma": /,?0x/g,
-            "0x": /0x/g,
-            "\\x": /\\x/g,
-            None: /\s+/g, // Included here to remove whitespace when there shouldn't be any
+            "0x":            /0x/g,
+            "\\x":           /\\x/g,
+            "None":          /\s+/g // Included here to remove whitespace when there shouldn't be any
         }[token];
     }
 
@@ -1342,7 +1338,7 @@ class Utils {
      * @param {Iterable} iterable
      * @param {number} chunksize
      */
-    static *chunked(iterable, chunksize) {
+    static* chunked(iterable, chunksize) {
         const iterator = iterable[Symbol.iterator]();
         while (true) {
             const res = [];
@@ -1367,17 +1363,13 @@ class Utils {
  * @returns {boolean}
  */
 export function isNodeEnvironment() {
-    return (
-        typeof process !== "undefined" &&
-        process.versions != null &&
-        process.versions.node != null
-    );
+    return typeof process !== "undefined" && process.versions != null && process.versions.node != null;
 }
 
 /**
  * Check whether the code is running in a web environment
  * @returns {boolean}
- */
+*/
 export function isWebEnvironment() {
     return typeof window === "object";
 }
@@ -1385,12 +1377,13 @@ export function isWebEnvironment() {
 /**
  * Check whether the code is running in a worker
  * @returns {boolean}
- */
+*/
 export function isWorkerEnvironment() {
     return typeof importScripts === "function";
 }
 
 export default Utils;
+
 
 /**
  * Removes all duplicates from an array.
@@ -1404,9 +1397,8 @@ export default Utils;
  * // returns ["One", "Two", "Three"]
  * ["One", "Two", "Three", "One"].unique();
  */
-Array.prototype.unique = function () {
-    const u = {},
-        a = [];
+Array.prototype.unique = function() {
+    const u = {}, a = [];
     for (let i = 0, l = this.length; i < l; i++) {
         if (Object.prototype.hasOwnProperty.call(u, this[i])) {
             continue;
@@ -1417,6 +1409,7 @@ Array.prototype.unique = function () {
     return a;
 };
 
+
 /**
  * Returns the largest value in the array.
  *
@@ -1426,9 +1419,10 @@ Array.prototype.unique = function () {
  * // returns 7
  * [4,2,5,3,7].max();
  */
-Array.prototype.max = function () {
+Array.prototype.max = function() {
     return Math.max.apply(null, this);
 };
+
 
 /**
  * Returns the smallest value in the array.
@@ -1439,9 +1433,10 @@ Array.prototype.max = function () {
  * // returns 2
  * [4,2,5,3,7].min();
  */
-Array.prototype.min = function () {
+Array.prototype.min = function() {
     return Math.min.apply(null, this);
 };
+
 
 /**
  * Sums all the values in an array.
@@ -1452,11 +1447,12 @@ Array.prototype.min = function () {
  * // returns 21
  * [4,2,5,3,7].sum();
  */
-Array.prototype.sum = function () {
+Array.prototype.sum = function() {
     return this.reduce(function (a, b) {
         return a + b;
     }, 0);
 };
+
 
 /**
  * Determine whether two arrays are equal or not.
@@ -1471,7 +1467,7 @@ Array.prototype.sum = function () {
  * // returns false
  * [1,2,3].equals([3,2,1]);
  */
-Array.prototype.equals = function (other) {
+Array.prototype.equals = function(other) {
     if (!other) return false;
     let i = this.length;
     if (i !== other.length) return false;
@@ -1480,6 +1476,7 @@ Array.prototype.equals = function (other) {
     }
     return true;
 };
+
 
 /**
  * Counts the number of times a char appears in a string.
@@ -1491,9 +1488,10 @@ Array.prototype.equals = function (other) {
  * // returns 2
  * "Hello".count("l");
  */
-String.prototype.count = function (chr) {
+String.prototype.count = function(chr) {
     return this.split(chr).length - 1;
 };
+
 
 /**
  * Wrapper for self.sendStatusMessage to handle different environments.
@@ -1501,8 +1499,10 @@ String.prototype.count = function (chr) {
  * @param {string} msg
  */
 export function sendStatusMessage(msg) {
-    if (isWorkerEnvironment()) self.sendStatusMessage(msg);
-    else if (isWebEnvironment()) app.alert(msg, 10000);
+    if (isWorkerEnvironment())
+        self.sendStatusMessage(msg);
+    else if (isWebEnvironment())
+        app.alert(msg, 10000);
     else if (isNodeEnvironment() && !global.TESTING)
         // eslint-disable-next-line no-console
         console.debug(msg);
@@ -1523,14 +1523,15 @@ const debounceTimeouts = {};
  * @returns {function}
  */
 export function debounce(func, wait, id, scope, args) {
-    return function () {
-        const later = function () {
+    return function() {
+        const later = function() {
             func.apply(scope, args);
         };
         clearTimeout(debounceTimeouts[id]);
         debounceTimeouts[id] = setTimeout(later, wait);
     };
 }
+
 
 /*
  * Polyfills
@@ -1540,32 +1541,33 @@ export function debounce(func, wait, id, scope, args) {
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
 if (!String.prototype.padStart) {
     String.prototype.padStart = function padStart(targetLength, padString) {
-        targetLength = targetLength >> 0; // floor if number or convert non-number to 0;
-        padString = String(typeof padString !== "undefined" ? padString : " ");
+        targetLength = targetLength>>0; // floor if number or convert non-number to 0;
+        padString = String((typeof padString !== "undefined" ? padString : " "));
         if (this.length > targetLength) {
             return String(this);
         } else {
-            targetLength = targetLength - this.length;
+            targetLength = targetLength-this.length;
             if (targetLength > padString.length) {
-                padString += padString.repeat(targetLength / padString.length); // append to original to ensure we are longer than needed
+                padString += padString.repeat(targetLength/padString.length); // append to original to ensure we are longer than needed
             }
             return padString.slice(0, targetLength) + String(this);
         }
     };
 }
 
+
 // https://github.com/uxitten/polyfill/blob/master/string.polyfill.js
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd
 if (!String.prototype.padEnd) {
     String.prototype.padEnd = function padEnd(targetLength, padString) {
-        targetLength = targetLength >> 0; // floor if number or convert non-number to 0;
-        padString = String(typeof padString !== "undefined" ? padString : " ");
+        targetLength = targetLength>>0; // floor if number or convert non-number to 0;
+        padString = String((typeof padString !== "undefined" ? padString : " "));
         if (this.length > targetLength) {
             return String(this);
         } else {
-            targetLength = targetLength - this.length;
+            targetLength = targetLength-this.length;
             if (targetLength > padString.length) {
-                padString += padString.repeat(targetLength / padString.length); // append to original to ensure we are longer than needed
+                padString += padString.repeat(targetLength/padString.length); // append to original to ensure we are longer than needed
             }
             return String(this) + padString.slice(0, targetLength);
         }

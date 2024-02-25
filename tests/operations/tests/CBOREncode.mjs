@@ -16,13 +16,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "CBOR Encode",
-                args: [],
+                args: []
             },
             {
                 op: "To Hex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "CBOR Decode: Can encode decimal",
@@ -31,28 +31,28 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "CBOR Encode",
-                args: [],
+                args: []
             },
             {
                 op: "To Hex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "CBOR Encode: Can encode text",
-        input: '"Text"',
+        input: "\"Text\"",
         expectedOutput: "64 54 65 78 74",
         recipeConfig: [
             {
                 op: "CBOR Encode",
-                args: [],
+                args: []
             },
             {
                 op: "To Hex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "CBOR Encode: Can encode boolean true",
@@ -61,13 +61,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "CBOR Encode",
-                args: [],
+                args: []
             },
             {
                 op: "To Hex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "CBOR Encode: Can encode boolean false",
@@ -76,28 +76,28 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "CBOR Encode",
-                args: [],
+                args: []
             },
             {
                 op: "To Hex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "CBOR Encode: Can encode map",
-        input: JSON.stringify({ a: 1, b: 2, c: 3 }),
+        input: JSON.stringify({a: 1, b: 2, c: 3}),
         expectedOutput: "a3 61 61 01 61 62 02 61 63 03",
         recipeConfig: [
             {
                 op: "CBOR Encode",
-                args: [],
+                args: []
             },
             {
                 op: "To Hex",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "CBOR Encode: Can encode list",
@@ -106,12 +106,12 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "CBOR Encode",
-                args: [],
+                args: []
             },
             {
                 op: "To Hex",
-                args: [],
-            },
-        ],
-    },
+                args: []
+            }
+        ]
+    }
 ]);

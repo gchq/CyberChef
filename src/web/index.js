@@ -17,10 +17,9 @@ import * as CanvasComponents from "../core/lib/CanvasComponents.mjs";
 
 // CyberChef
 import App from "./App.mjs";
-import Categories from "../core/config/Categories.json" assert { type: "json" };
-import OperationConfig from "../core/config/OperationConfig.json" assert {
-    type: "json",
-};
+import Categories from "../core/config/Categories.json" assert {type: "json"};
+import OperationConfig from "../core/config/OperationConfig.json" assert {type: "json"};
+
 
 /**
  * Main function used to build the CyberChef web app.
@@ -37,40 +36,34 @@ function main() {
         "Regular expression",
         "Entropy",
         "Fork",
-        "Magic",
+        "Magic"
     ];
 
     const defaultOptions = {
-        updateUrl: true,
-        showHighlighter: true,
-        wordWrap: true,
-        showErrors: true,
-        errorTimeout: 4000,
-        attemptHighlight: true,
-        theme: "classic",
-        useMetaKey: false,
-        logLevel: "info",
-        autoMagic: true,
-        imagePreview: true,
-        syncTabs: true,
+        updateUrl:           true,
+        showHighlighter:     true,
+        wordWrap:            true,
+        showErrors:          true,
+        errorTimeout:        4000,
+        attemptHighlight:    true,
+        theme:               "classic",
+        useMetaKey:          false,
+        logLevel:            "info",
+        autoMagic:           true,
+        imagePreview:        true,
+        syncTabs:            true
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);
-    window.app = new App(
-        Categories,
-        OperationConfig,
-        defaultFavourites,
-        defaultOptions,
-    );
+    window.app = new App(Categories, OperationConfig, defaultFavourites, defaultOptions);
     window.app.setup();
 }
 
-window.compileTime = moment
-    .tz(COMPILE_TIME, "DD/MM/YYYY HH:mm:ss z", "UTC")
-    .valueOf();
+window.compileTime = moment.tz(COMPILE_TIME, "DD/MM/YYYY HH:mm:ss z", "UTC").valueOf();
 window.compileMessage = COMPILE_MSG;
 
 // Make libs available to operation outputs
 window.CanvasComponents = CanvasComponents;
 
 document.addEventListener("DOMContentLoaded", main, false);
+

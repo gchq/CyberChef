@@ -13,7 +13,7 @@ import Stream from "./Stream.mjs";
  * to extract them where possible.
  */
 export const FILE_SIGNATURES = {
-    Images: [
+    "Images": [
         {
             name: "Joint Photographic Experts Group image",
             extension: "jpg,jpeg,jpe,thm,mpo",
@@ -23,12 +23,9 @@ export const FILE_SIGNATURES = {
                 0: 0xff,
                 1: 0xd8,
                 2: 0xff,
-                3: [
-                    0xc0, 0xc4, 0xdb, 0xdd, 0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5,
-                    0xe7, 0xe8, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xfe,
-                ],
+                3: [0xc0, 0xc4, 0xdb, 0xdd, 0xe0, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe7, 0xe8, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xfe]
             },
-            extractor: extractJPEG,
+            extractor: extractJPEG
         },
         {
             name: "Graphics Interchange Format image",
@@ -41,9 +38,9 @@ export const FILE_SIGNATURES = {
                 2: 0x46,
                 3: 0x38, // 8
                 4: [0x37, 0x39], // 7|9
-                5: 0x61, // a
+                5: 0x61  // a
             },
-            extractor: extractGIF,
+            extractor: extractGIF
         },
         {
             name: "Portable Network Graphics image",
@@ -58,9 +55,9 @@ export const FILE_SIGNATURES = {
                 4: 0x0d,
                 5: 0x0a,
                 6: 0x1a,
-                7: 0x0a,
+                7: 0x0a
             },
-            extractor: extractPNG,
+            extractor: extractPNG
         },
         {
             name: "WEBP Image",
@@ -71,9 +68,9 @@ export const FILE_SIGNATURES = {
                 8: 0x57,
                 9: 0x45,
                 10: 0x42,
-                11: 0x50,
+                11: 0x50
             },
-            extractor: extractWEBP,
+            extractor: extractWEBP
         },
         {
             name: "Camera Image File Format",
@@ -88,12 +85,11 @@ export const FILE_SIGNATURES = {
                 10: 0x43,
                 11: 0x43,
                 12: 0x44,
-                13: 0x52,
+                13: 0x52
             },
-            extractor: null,
+            extractor: null
         },
-        {
-            // Place before tiff check
+        { // Place before tiff check
             name: "Canon CR2 raw image",
             extension: "cr2",
             mime: "image/x-canon-cr2",
@@ -105,7 +101,7 @@ export const FILE_SIGNATURES = {
                     2: 0x2a,
                     3: 0x0,
                     8: 0x43,
-                    9: 0x52,
+                    9: 0x52
                 },
                 {
                     0: 0x4d,
@@ -113,10 +109,10 @@ export const FILE_SIGNATURES = {
                     2: 0x0,
                     3: 0x2a,
                     8: 0x43,
-                    9: 0x52,
-                },
+                    9: 0x52
+                }
             ],
-            extractor: null,
+            extractor: null
         },
         {
             name: "Tagged Image File Format image",
@@ -128,16 +124,16 @@ export const FILE_SIGNATURES = {
                     0: 0x49,
                     1: 0x49,
                     2: 0x2a,
-                    3: 0x0,
+                    3: 0x0
                 },
                 {
                     0: 0x4d,
                     1: 0x4d,
                     2: 0x0,
-                    3: 0x2a,
-                },
+                    3: 0x2a
+                }
             ],
-            extractor: null,
+            extractor: null
         },
         {
             name: "Bitmap image",
@@ -152,9 +148,9 @@ export const FILE_SIGNATURES = {
                 14: [0x0c, 0x28, 0x38, 0x40, 0x6c, 0x7c],
                 15: 0x0,
                 16: 0x0,
-                17: 0x0,
+                17: 0x0
             },
-            extractor: extractBMP,
+            extractor: extractBMP
         },
         {
             name: "JPEG Extended Range image",
@@ -164,9 +160,9 @@ export const FILE_SIGNATURES = {
             signature: {
                 0: 0x49,
                 1: 0x49,
-                2: 0xbc,
+                2: 0xbc
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Photoshop image",
@@ -185,9 +181,9 @@ export const FILE_SIGNATURES = {
                 8: 0x0,
                 9: 0x0,
                 10: 0x0,
-                11: 0x0,
+                11: 0x0
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Photoshop Large Document",
@@ -207,9 +203,9 @@ export const FILE_SIGNATURES = {
                 9: 0x0,
                 10: 0x0,
                 11: 0x0,
-                12: 0x0,
+                12: 0x0
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Paint Shop Pro image",
@@ -234,16 +230,16 @@ export const FILE_SIGNATURES = {
                     13: 0x6f,
                     14: 0x20,
                     15: 0x49,
-                    16: 0x6d,
+                    16: 0x6d
                 },
                 {
                     0: 0x7e,
                     1: 0x42,
                     2: 0x4b,
-                    3: 0x0,
-                },
+                    3: 0x0
+                }
             ],
-            extractor: null,
+            extractor: null
         },
         {
             name: "The GIMP image",
@@ -263,9 +259,9 @@ export const FILE_SIGNATURES = {
                 9: [0x66, 0x76],
                 10: [0x69, 0x30],
                 11: [0x6c, 0x30],
-                12: [0x65, 0x31, 0x32, 0x33],
+                12: [0x65, 0x31, 0x32, 0x33]
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Icon image",
@@ -277,17 +273,14 @@ export const FILE_SIGNATURES = {
                 1: 0x0,
                 2: 0x1,
                 3: 0x0,
-                4: [
-                    0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc,
-                    0xd, 0xe, 0xf, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
-                ],
+                4: [0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15],
                 5: 0x0,
                 6: [0x10, 0x20, 0x30, 0x40, 0x80],
                 7: [0x10, 0x20, 0x30, 0x40, 0x80],
                 9: 0x0,
-                10: [0x0, 0x1],
+                10: [0x0, 0x1]
             },
-            extractor: extractICO,
+            extractor: extractICO
         },
         {
             name: "Radiance High Dynamic Range image",
@@ -305,9 +298,9 @@ export const FILE_SIGNATURES = {
                 7: 0x4e,
                 8: 0x43,
                 9: 0x45,
-                10: 0x0a,
+                10: 0x0a
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Sony ARW image",
@@ -322,9 +315,9 @@ export const FILE_SIGNATURES = {
                 4: 0x41,
                 5: 0x57,
                 6: 0x31,
-                7: 0x2e,
+                7: 0x2e
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Fujifilm Raw Image",
@@ -346,9 +339,9 @@ export const FILE_SIGNATURES = {
                 11: 0x2d,
                 12: 0x52,
                 13: 0x41,
-                14: 0x57,
+                14: 0x57
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Minolta RAW image",
@@ -359,9 +352,9 @@ export const FILE_SIGNATURES = {
                 0: 0x0,
                 1: 0x4d, // MRM
                 2: 0x52,
-                3: 0x4d,
+                3: 0x4d
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Adobe Bridge Thumbnail Cache",
@@ -376,9 +369,9 @@ export const FILE_SIGNATURES = {
                 4: 0x02,
                 5: 0x0,
                 6: 0x0,
-                7: 0x0,
+                7: 0x0
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Microsoft Document Imaging",
@@ -389,9 +382,9 @@ export const FILE_SIGNATURES = {
                 0: 0x45,
                 1: 0x50,
                 2: 0x2a,
-                3: 0x00,
+                3: 0x00
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Joint Photographic Experts Group image (under Base64)",
@@ -403,9 +396,9 @@ export const FILE_SIGNATURES = {
                 1: 0x39,
                 2: 0x6a,
                 3: 0x2f,
-                4: 0x34,
+                4: 0x34
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Portable Network Graphics image (under Base64)",
@@ -419,9 +412,9 @@ export const FILE_SIGNATURES = {
                 3: 0x4f,
                 4: 0x52,
                 5: 0x77,
-                6: 0x30,
+                6: 0x30
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "AutoCAD Drawing",
@@ -435,9 +428,9 @@ export const FILE_SIGNATURES = {
                 3: 0x30,
                 4: [0x30, 0x31],
                 5: [0x30, 0x31, 0x32, 0x33, 0x34, 0x35],
-                6: 0x00,
+                6: 0x00
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "AutoCAD Drawing",
@@ -452,7 +445,7 @@ export const FILE_SIGNATURES = {
                     3: 0x30,
                     4: 0x31,
                     5: 0x38,
-                    6: 0x00,
+                    6: 0x00
                 },
                 {
                     0: 0x41,
@@ -461,7 +454,7 @@ export const FILE_SIGNATURES = {
                     3: 0x30,
                     4: 0x32,
                     5: 0x34,
-                    6: 0x00,
+                    6: 0x00
                 },
                 {
                     0: 0x41,
@@ -470,10 +463,10 @@ export const FILE_SIGNATURES = {
                     3: 0x30,
                     4: 0x32,
                     5: 0x37,
-                    6: 0x00,
-                },
+                    6: 0x00
+                }
             ],
-            extractor: null,
+            extractor: null
         },
         {
             name: "Targa Image",
@@ -481,8 +474,7 @@ export const FILE_SIGNATURES = {
             mime: "image/x-targa",
             description: "",
             signature: [
-                {
-                    // This signature is not at the beginning of the file. The extractor works backwards.
+                { // This signature is not at the beginning of the file. The extractor works backwards.
                     0: 0x54,
                     1: 0x52,
                     2: 0x55,
@@ -499,15 +491,14 @@ export const FILE_SIGNATURES = {
                     13: 0x49,
                     14: 0x4c,
                     15: 0x45,
-                    16: 0x2e,
-                },
+                    16: 0x2e
+                }
             ],
-            extractor: extractTARGA,
-        },
+            extractor: extractTARGA
+        }
     ],
-    Video: [
-        {
-            // Place before webm
+    "Video": [
+        { // Place before webm
             name: "Matroska Multimedia Container",
             extension: "mkv",
             mime: "video/x-matroska",
@@ -520,9 +511,9 @@ export const FILE_SIGNATURES = {
                 35: 0x6f,
                 36: 0x73,
                 37: 0x6b,
-                38: 0x61,
+                38: 0x61
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "WEBM video",
@@ -533,12 +524,11 @@ export const FILE_SIGNATURES = {
                 0: 0x1a,
                 1: 0x45,
                 2: 0xdf,
-                3: 0xa3,
+                3: 0xa3
             },
-            extractor: null,
+            extractor: null
         },
-        {
-            // Place before MPEG-4
+        { // Place before MPEG-4
             name: "Flash MP4 video",
             extension: "f4v",
             mime: "video/mp4",
@@ -551,9 +541,9 @@ export const FILE_SIGNATURES = {
                 8: [0x66, 0x46],
                 9: 0x34,
                 10: [0x76, 0x56],
-                11: 0x20,
+                11: 0x20
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "MPEG-4 video",
@@ -569,13 +559,13 @@ export const FILE_SIGNATURES = {
                     4: 0x66,
                     5: 0x74,
                     6: 0x79,
-                    7: 0x70,
+                    7: 0x70
                 },
                 {
                     0: 0x33, // 3gp5
                     1: 0x67,
                     2: 0x70,
-                    3: 0x35,
+                    3: 0x35
                 },
                 {
                     0: 0x0,
@@ -601,10 +591,10 @@ export const FILE_SIGNATURES = {
                     24: 0x69,
                     25: 0x73,
                     26: 0x6f,
-                    27: 0x6d,
-                },
+                    27: 0x6d
+                }
             ],
-            extractor: null,
+            extractor: null
         },
         {
             name: "M4V video",
@@ -622,9 +612,9 @@ export const FILE_SIGNATURES = {
                 7: 0x70,
                 8: 0x4d,
                 9: 0x34,
-                10: 0x56,
+                10: 0x56
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Quicktime video",
@@ -639,9 +629,9 @@ export const FILE_SIGNATURES = {
                 4: 0x66,
                 5: 0x74,
                 6: 0x79,
-                7: 0x70,
+                7: 0x70
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Audio Video Interleave",
@@ -655,9 +645,9 @@ export const FILE_SIGNATURES = {
                 3: 0x46,
                 8: 0x41,
                 9: 0x56,
-                10: 0x49,
+                10: 0x49
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Windows Media Video",
@@ -674,9 +664,9 @@ export const FILE_SIGNATURES = {
                 6: 0xcf,
                 7: 0x11,
                 8: 0xa6,
-                9: 0xd9,
+                9: 0xd9
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "MPEG video",
@@ -687,9 +677,9 @@ export const FILE_SIGNATURES = {
                 0: 0x0,
                 1: 0x0,
                 2: 0x1,
-                3: 0xba,
+                3: 0xba
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Flash Video",
@@ -700,9 +690,9 @@ export const FILE_SIGNATURES = {
                 0: 0x46,
                 1: 0x4c,
                 2: 0x56,
-                3: 0x1,
+                3: 0x1
             },
-            extractor: extractFLV,
+            extractor: extractFLV
         },
         {
             name: "OGG Video",
@@ -722,7 +712,7 @@ export const FILE_SIGNATURES = {
                     30: 0x69,
                     31: 0x64,
                     32: 0x65,
-                    33: 0x6f,
+                    33: 0x6f
                 },
                 {
                     0: 0x4f, // OggS
@@ -737,7 +727,7 @@ export const FILE_SIGNATURES = {
                     31: 0x65,
                     32: 0x6f,
                     33: 0x72,
-                    34: 0x61,
+                    34: 0x61
                 },
                 {
                     0: 0x4f, // OggS
@@ -752,13 +742,13 @@ export const FILE_SIGNATURES = {
                     31: 0x68,
                     32: 0x65,
                     33: 0x61,
-                    34: 0x64,
-                },
+                    34: 0x64
+                }
             ],
-            extractor: null,
+            extractor: null
         },
     ],
-    Audio: [
+    "Audio": [
         {
             name: "Waveform Audio",
             extension: "wav",
@@ -772,9 +762,9 @@ export const FILE_SIGNATURES = {
                 8: 0x57,
                 9: 0x41,
                 10: 0x56,
-                11: 0x45,
+                11: 0x45
             },
-            extractor: extractWAV,
+            extractor: extractWAV
         },
         {
             name: "OGG audio",
@@ -785,9 +775,9 @@ export const FILE_SIGNATURES = {
                 0: 0x4f,
                 1: 0x67,
                 2: 0x67,
-                3: 0x53,
+                3: 0x53
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Musical Instrument Digital Interface audio",
@@ -798,9 +788,9 @@ export const FILE_SIGNATURES = {
                 0: 0x4d,
                 1: 0x54,
                 2: 0x68,
-                3: 0x64,
+                3: 0x64
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "MPEG-3 audio",
@@ -811,14 +801,14 @@ export const FILE_SIGNATURES = {
                 {
                     0: 0x49,
                     1: 0x44,
-                    2: 0x33,
+                    2: 0x33
                 },
                 {
                     0: 0xff,
-                    1: 0xfb,
-                },
+                    1: 0xfb
+                }
             ],
-            extractor: extractMP3,
+            extractor: extractMP3
         },
         {
             name: "MPEG-4 Part 14 audio",
@@ -833,16 +823,16 @@ export const FILE_SIGNATURES = {
                     7: 0x70,
                     8: 0x4d,
                     9: 0x34,
-                    10: 0x41,
+                    10: 0x41
                 },
                 {
                     0: 0x4d,
                     1: 0x34,
                     2: 0x41,
-                    3: 0x20,
-                },
+                    3: 0x20
+                }
             ],
-            extractor: null,
+            extractor: null
         },
         {
             name: "Free Lossless Audio Codec",
@@ -853,9 +843,9 @@ export const FILE_SIGNATURES = {
                 0: 0x66,
                 1: 0x4c,
                 2: 0x61,
-                3: 0x43,
+                3: 0x43
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Adaptive Multi-Rate audio codec",
@@ -868,9 +858,9 @@ export const FILE_SIGNATURES = {
                 2: 0x41,
                 3: 0x4d,
                 4: 0x52,
-                5: 0x0a,
+                5: 0x0a
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Audacity",
@@ -899,9 +889,9 @@ export const FILE_SIGNATURES = {
                 37: 0x46,
                 38: 0x69,
                 39: 0x6c,
-                40: 0x65,
+                40: 0x65
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Audacity Block",
@@ -925,9 +915,9 @@ export const FILE_SIGNATURES = {
                 13: 0x46,
                 14: 0x69,
                 15: 0x6c,
-                16: 0x65,
+                16: 0x65
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Audio Interchange File",
@@ -942,9 +932,9 @@ export const FILE_SIGNATURES = {
                 8: 0x41, // AIFF
                 9: 0x49,
                 10: 0x46,
-                11: 0x46,
+                11: 0x46
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Audio Interchange File (compressed)",
@@ -959,12 +949,12 @@ export const FILE_SIGNATURES = {
                 8: 0x41, // AIFC
                 9: 0x49,
                 10: 0x46,
-                11: 0x43,
+                11: 0x43
             },
-            extractor: null,
-        },
+            extractor: null
+        }
     ],
-    Documents: [
+    "Documents": [
         {
             name: "Portable Document Format",
             extension: "pdf",
@@ -974,9 +964,9 @@ export const FILE_SIGNATURES = {
                 0: 0x25,
                 1: 0x50,
                 2: 0x44,
-                3: 0x46,
+                3: 0x46
             },
-            extractor: extractPDF,
+            extractor: extractPDF
         },
         {
             name: "Portable Document Format (under Base64)",
@@ -990,12 +980,11 @@ export const FILE_SIGNATURES = {
                 3: 0x42,
                 4: 0x45,
                 5: 0x52,
-                6: 0x69,
+                6: 0x69
             },
-            extractor: null,
+            extractor: null
         },
-        {
-            // Place before PostScript
+        { // Place before PostScript
             name: "Adobe PostScript",
             extension: "ps,eps,ai,pfa",
             mime: "application/postscript",
@@ -1010,9 +999,9 @@ export const FILE_SIGNATURES = {
                 6: 0x64,
                 7: 0x6f,
                 8: 0x62,
-                9: 0x65,
+                9: 0x65
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "PostScript",
@@ -1021,9 +1010,9 @@ export const FILE_SIGNATURES = {
             description: "",
             signature: {
                 0: 0x25,
-                1: 0x21,
+                1: 0x21
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Encapsulated PostScript",
@@ -1034,9 +1023,9 @@ export const FILE_SIGNATURES = {
                 0: 0xc5,
                 1: 0xd0,
                 2: 0xd3,
-                3: 0xc6,
+                3: 0xc6
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Rich Text Format",
@@ -1047,14 +1036,13 @@ export const FILE_SIGNATURES = {
                 0: 0x7b,
                 1: 0x5c,
                 2: 0x72,
-                3: 0x74,
+                3: 0x74
             },
-            extractor: extractRTF,
+            extractor: extractRTF
         },
         {
             name: "Microsoft Office document/OLE2",
-            extension:
-                "ole2,doc,xls,dot,ppt,xla,ppa,pps,pot,msi,sdw,db,vsd,msg",
+            extension: "ole2,doc,xls,dot,ppt,xla,ppa,pps,pot,msi,sdw,db,vsd,msg",
             mime: "application/msword,application/vnd.ms-excel,application/vnd.ms-powerpoint",
             description: "Microsoft Office documents",
             signature: {
@@ -1065,9 +1053,9 @@ export const FILE_SIGNATURES = {
                 4: 0xa1,
                 5: 0xb1,
                 6: 0x1a,
-                7: 0xe1,
+                7: 0xe1
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Microsoft Office document/OLE2 (under Base64)",
@@ -1082,9 +1070,9 @@ export const FILE_SIGNATURES = {
                 4: 0x34,
                 5: 0x4b,
                 6: 0x47,
-                7: 0x78,
+                7: 0x78
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Microsoft Office 2007+ document",
@@ -1102,9 +1090,9 @@ export const FILE_SIGNATURES = {
                 45: 0x2e,
                 46: 0x78,
                 47: 0x6d,
-                48: 0x6c,
+                48: 0x6c
             },
-            extractor: extractZIP,
+            extractor: extractZIP
         },
         {
             name: "Microsoft Access database",
@@ -1127,9 +1115,9 @@ export const FILE_SIGNATURES = {
                 12: 0x20,
                 13: 0x4a,
                 14: 0x65,
-                15: 0x74,
+                15: 0x74
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Microsoft Access 2007+ database",
@@ -1153,9 +1141,9 @@ export const FILE_SIGNATURES = {
                 13: 0x41,
                 14: 0x43,
                 15: 0x45,
-                16: 0x20,
+                16: 0x20
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Microsoft OneNote document",
@@ -1178,9 +1166,9 @@ export const FILE_SIGNATURES = {
                 12: 0xd0,
                 13: 0x29,
                 14: 0x96,
-                15: 0xd3,
+                15: 0xd3
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Outlook Express database",
@@ -1193,9 +1181,9 @@ export const FILE_SIGNATURES = {
                 2: 0x12,
                 3: 0xfe,
                 4: [0x30, 0xc5, 0xc6, 0xc7],
-                11: 0x11,
+                11: 0x11
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Personal Storage Table (Outlook)",
@@ -1206,9 +1194,9 @@ export const FILE_SIGNATURES = {
                 0: 0x21, // !BDN
                 1: 0x42,
                 2: 0x44,
-                3: 0x4e,
+                3: 0x4e
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Microsoft Exchange Database",
@@ -1227,9 +1215,9 @@ export const FILE_SIGNATURES = {
                 12: [0x00, 0x01],
                 13: 0x00,
                 14: 0x00,
-                15: 0x00,
+                15: 0x00
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "WordPerfect document",
@@ -1243,9 +1231,9 @@ export const FILE_SIGNATURES = {
                 3: 0x43,
                 7: [0x00, 0x01, 0x02],
                 8: 0x01,
-                9: 0x0a,
+                9: 0x0a
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "EPUB e-book",
@@ -1284,12 +1272,12 @@ export const FILE_SIGNATURES = {
                 54: 0x2b,
                 55: 0x7a,
                 56: 0x69,
-                57: 0x70,
+                57: 0x70
             },
-            extractor: extractZIP,
+            extractor: extractZIP
         },
     ],
-    Applications: [
+    "Applications": [
         {
             name: "Windows Portable Executable",
             extension: "exe,dll,drv,vxd,sys,ocx,vbx,com,fon,scr",
@@ -1299,23 +1287,22 @@ export const FILE_SIGNATURES = {
                 0: 0x4d,
                 1: 0x5a,
                 3: [0x0, 0x1, 0x2],
-                5: [0x0, 0x1, 0x2],
+                5: [0x0, 0x1, 0x2]
             },
-            extractor: extractMZPE,
+            extractor: extractMZPE
         },
         {
             name: "Executable and Linkable Format",
             extension: "elf,bin,axf,o,prx,so",
             mime: "application/x-executable",
-            description:
-                "Executable and Linkable Format file. No standard file extension.",
+            description: "Executable and Linkable Format file. No standard file extension.",
             signature: {
                 0: 0x7f,
                 1: 0x45,
                 2: 0x4c,
-                3: 0x46,
+                3: 0x46
             },
-            extractor: extractELF,
+            extractor: extractELF
         },
         {
             name: "MacOS Mach-O object",
@@ -1331,7 +1318,7 @@ export const FILE_SIGNATURES = {
                     4: 0x00,
                     5: 0x00,
                     6: 0x00,
-                    7: [0x01, 0x02, 0x03],
+                    7: [0x01, 0x02, 0x03]
                 },
                 {
                     0: 0xce,
@@ -1342,10 +1329,10 @@ export const FILE_SIGNATURES = {
                     5: 0x00,
                     6: 0x00,
                     7: 0x00,
-                    8: [0x01, 0x02, 0x03],
-                },
+                    8: [0x01, 0x02, 0x03]
+                }
             ],
-            extractor: extractMACHO,
+            extractor: extractMACHO
         },
         {
             name: "MacOS Mach-O 64-bit object",
@@ -1356,9 +1343,9 @@ export const FILE_SIGNATURES = {
                 0: 0xcf,
                 1: 0xfa,
                 2: 0xed,
-                3: 0xfe,
+                3: 0xfe
             },
-            extractor: extractMACHO,
+            extractor: extractMACHO
         },
         {
             name: "Adobe Flash",
@@ -1370,7 +1357,7 @@ export const FILE_SIGNATURES = {
                 1: 0x57,
                 2: 0x53,
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Java Class",
@@ -1381,9 +1368,9 @@ export const FILE_SIGNATURES = {
                 0: 0xca,
                 1: 0xfe,
                 2: 0xba,
-                3: 0xbe,
+                3: 0xbe
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Dalvik Executable",
@@ -1398,9 +1385,9 @@ export const FILE_SIGNATURES = {
                 4: 0x30,
                 5: 0x33,
                 6: 0x35,
-                7: 0x0,
+                7: 0x0
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Google Chrome Extension",
@@ -1411,12 +1398,12 @@ export const FILE_SIGNATURES = {
                 0: 0x43,
                 1: 0x72,
                 2: 0x32,
-                3: 0x34,
+                3: 0x34
             },
-            extractor: null,
+            extractor: null
         },
     ],
-    Archives: [
+    "Archives": [
         {
             name: "PKZIP archive",
             extension: "zip",
@@ -1426,9 +1413,9 @@ export const FILE_SIGNATURES = {
                 0: 0x50,
                 1: 0x4b,
                 2: [0x3, 0x5, 0x7],
-                3: [0x4, 0x6, 0x8],
+                3: [0x4, 0x6, 0x8]
             },
-            extractor: extractZIP,
+            extractor: extractZIP
         },
         {
             name: "PKZIP archive (under Base64)",
@@ -1441,9 +1428,9 @@ export const FILE_SIGNATURES = {
                 2: 0x73,
                 3: 0x44,
                 4: 0x42,
-                5: 0x42,
+                5: 0x42
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "TAR archive",
@@ -1455,9 +1442,9 @@ export const FILE_SIGNATURES = {
                 258: 0x73,
                 259: 0x74,
                 260: 0x61,
-                261: 0x72,
+                261: 0x72
             },
-            extractor: extractTAR,
+            extractor: extractTAR
         },
         {
             name: "Roshal Archive",
@@ -1471,9 +1458,9 @@ export const FILE_SIGNATURES = {
                 3: 0x21,
                 4: 0x1a,
                 5: 0x7,
-                6: [0x0, 0x1],
+                6: [0x0, 0x1]
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Gzip",
@@ -1483,9 +1470,9 @@ export const FILE_SIGNATURES = {
             signature: {
                 0: 0x1f,
                 1: 0x8b,
-                2: 0x8,
+                2: 0x8
             },
-            extractor: extractGZIP,
+            extractor: extractGZIP
         },
         {
             name: "Bzip2",
@@ -1495,9 +1482,9 @@ export const FILE_SIGNATURES = {
             signature: {
                 0: 0x42,
                 1: 0x5a,
-                2: 0x68,
+                2: 0x68
             },
-            extractor: extractBZIP2,
+            extractor: extractBZIP2
         },
         {
             name: "7zip",
@@ -1510,9 +1497,9 @@ export const FILE_SIGNATURES = {
                 2: 0xbc,
                 3: 0xaf,
                 4: 0x27,
-                5: 0x1c,
+                5: 0x1c
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Zlib Deflate",
@@ -1521,9 +1508,9 @@ export const FILE_SIGNATURES = {
             description: "",
             signature: {
                 0: 0x78,
-                1: [0x1, 0x9c, 0xda, 0x5e],
+                1: [0x1, 0x9c, 0xda, 0x5e]
             },
-            extractor: extractZlib,
+            extractor: extractZlib
         },
         {
             name: "xz compression",
@@ -1536,9 +1523,9 @@ export const FILE_SIGNATURES = {
                 2: 0x7a,
                 3: 0x58,
                 4: 0x5a,
-                5: 0x0,
+                5: 0x0
             },
-            extractor: extractXZ,
+            extractor: extractXZ
         },
         {
             name: "Tarball",
@@ -1547,9 +1534,9 @@ export const FILE_SIGNATURES = {
             description: "",
             signature: {
                 0: 0x1f,
-                1: [0x9d, 0xa0],
+                1: [0x9d, 0xa0]
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "ISO disk image",
@@ -1562,24 +1549,24 @@ export const FILE_SIGNATURES = {
                     0x8002: 0x44,
                     0x8003: 0x30,
                     0x8004: 0x30,
-                    0x8005: 0x31,
+                    0x8005: 0x31
                 },
                 {
                     0x8801: 0x43,
                     0x8802: 0x44,
                     0x8803: 0x30,
                     0x8804: 0x30,
-                    0x8805: 0x31,
+                    0x8805: 0x31
                 },
                 {
                     0x9001: 0x43,
                     0x9002: 0x44,
                     0x9003: 0x30,
                     0x9004: 0x30,
-                    0x9005: 0x31,
-                },
+                    0x9005: 0x31
+                }
             ],
-            extractor: null,
+            extractor: null
         },
         {
             name: "Virtual Machine Disk",
@@ -1593,9 +1580,9 @@ export const FILE_SIGNATURES = {
                 3: 0x56,
                 5: 0x00,
                 6: 0x00,
-                7: 0x00,
+                7: 0x00
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Virtual Hard Drive",
@@ -1610,9 +1597,9 @@ export const FILE_SIGNATURES = {
                 4: 0x63,
                 5: 0x74,
                 6: 0x69,
-                7: 0x78,
+                7: 0x78
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Macintosh disk image",
@@ -1627,9 +1614,9 @@ export const FILE_SIGNATURES = {
                 4: 0x62,
                 5: 0x62,
                 6: 0x60,
-                7: 0x60,
+                7: 0x60
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "ARJ Archive",
@@ -1641,9 +1628,9 @@ export const FILE_SIGNATURES = {
                 1: 0xea,
                 8: [0x0, 0x10, 0x14],
                 9: 0x0,
-                10: 0x2,
+                10: 0x2
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "WinAce Archive",
@@ -1657,9 +1644,9 @@ export const FILE_SIGNATURES = {
                 10: 0x43,
                 11: 0x45,
                 12: 0x2a,
-                13: 0x2a,
+                13: 0x2a
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Macintosh BinHex Encoded File",
@@ -1667,7 +1654,7 @@ export const FILE_SIGNATURES = {
             mime: "application/mac-binhex",
             description: "",
             signature: {
-                11: 0x6d, // must be converted with BinHex
+                11: 0x6d,  // must be converted with BinHex
                 12: 0x75,
                 13: 0x73,
                 14: 0x74,
@@ -1695,9 +1682,9 @@ export const FILE_SIGNATURES = {
                 36: 0x6e,
                 37: 0x48,
                 38: 0x65,
-                39: 0x78,
+                39: 0x78
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "ALZip Archive",
@@ -1712,9 +1699,9 @@ export const FILE_SIGNATURES = {
                 4: 0x0a,
                 5: 0x0,
                 6: 0x0,
-                7: 0x0,
+                7: 0x0
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "KGB Compressed Archive",
@@ -1731,9 +1718,9 @@ export const FILE_SIGNATURES = {
                 6: 0x63,
                 7: 0x68,
                 8: 0x20,
-                9: 0x2d,
+                9: 0x2d
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Microsoft Cabinet",
@@ -1748,9 +1735,9 @@ export const FILE_SIGNATURES = {
                 4: 0x00,
                 5: 0x00,
                 6: 0x00,
-                7: 0x00,
+                7: 0x00
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Jar Archive",
@@ -1761,9 +1748,9 @@ export const FILE_SIGNATURES = {
                 0: 0x5f,
                 1: 0x27,
                 2: 0xa8,
-                3: 0x89,
+                3: 0x89
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Jar Archive",
@@ -1772,7 +1759,7 @@ export const FILE_SIGNATURES = {
             description: "",
             signature: {
                 0: 0x50,
-                1: 0x4b,
+                1: 0x4B,
                 2: 0x03,
                 3: 0x04,
                 4: 0x14,
@@ -1780,9 +1767,9 @@ export const FILE_SIGNATURES = {
                 6: 0x08,
                 7: 0x00,
                 8: 0x08,
-                9: 0x00,
+                9: 0x00
             },
-            extractor: extractZIP,
+            extractor: extractZIP
         },
         {
             name: "lzop compressed",
@@ -1797,9 +1784,9 @@ export const FILE_SIGNATURES = {
                 4: 0x00,
                 5: 0x0d,
                 6: 0x0a,
-                7: 0x1a,
+                7: 0x1a
             },
-            extractor: extractLZOP,
+            extractor: extractLZOP
         },
         {
             name: "Linux deb package",
@@ -1808,14 +1795,14 @@ export const FILE_SIGNATURES = {
             description: "",
             signature: {
                 0: 0x21,
-                1: 0x3c,
+                1: 0x3C,
                 2: 0x61,
                 3: 0x72,
                 4: 0x63,
                 5: 0x68,
-                6: 0x3e,
+                6: 0x3e
             },
-            extractor: extractDEB,
+            extractor: extractDEB
         },
         {
             name: "Apple Disk Image",
@@ -1829,51 +1816,47 @@ export const FILE_SIGNATURES = {
                 3: 0x0d,
                 4: 0x62,
                 5: 0x62,
-                6: 0x60,
+                6: 0x60
             },
-            extractor: null,
-        },
+            extractor: null
+        }
     ],
-    Miscellaneous: [
+    "Miscellaneous": [
         {
             name: "UTF-8 text",
             extension: "txt",
             mime: "text/plain",
-            description:
-                "UTF-8 encoded Unicode byte order mark, commonly but not exclusively seen in text files.",
+            description: "UTF-8 encoded Unicode byte order mark, commonly but not exclusively seen in text files.",
             signature: {
                 0: 0xef,
                 1: 0xbb,
-                2: 0xbf,
+                2: 0xbf
             },
-            extractor: null,
+            extractor: null
         },
-        {
-            // Place before UTF-16 LE text
+        { // Place before UTF-16 LE text
             name: "UTF-32 LE text",
             extension: "utf32le",
             mime: "charset/utf32le",
-            description:
-                "Little-endian UTF-32 encoded Unicode byte order mark.",
+            description: "Little-endian UTF-32 encoded Unicode byte order mark.",
             signature: {
                 0: 0xff,
                 1: 0xfe,
                 2: 0x00,
-                3: 0x00,
+                3: 0x00
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "UTF-16 LE text",
             extension: "utf16le",
             mime: "charset/utf16le",
-            description:
-                "Little-endian UTF-16 encoded Unicode byte order mark.",
+            description: "Little-endian UTF-16 encoded Unicode byte order mark.",
             signature: {
                 0: 0xff,
-                1: 0xfe,
+                1: 0xfe
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Web Open Font Format",
@@ -1888,9 +1871,9 @@ export const FILE_SIGNATURES = {
                 4: 0x0,
                 5: 0x1,
                 6: 0x0,
-                7: 0x0,
+                7: 0x0
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Web Open Font Format 2",
@@ -1905,9 +1888,9 @@ export const FILE_SIGNATURES = {
                 4: 0x0,
                 5: 0x1,
                 6: 0x0,
-                7: 0x0,
+                7: 0x0
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Embedded OpenType font",
@@ -1920,24 +1903,24 @@ export const FILE_SIGNATURES = {
                     9: 0x0,
                     10: 0x1,
                     34: 0x4c,
-                    35: 0x50,
+                    35: 0x50
                 },
                 {
                     8: 0x1,
                     9: 0x0,
                     10: 0x0,
                     34: 0x4c,
-                    35: 0x50,
+                    35: 0x50
                 },
                 {
                     8: 0x2,
                     9: 0x0,
                     10: 0x2,
                     34: 0x4c,
-                    35: 0x50,
+                    35: 0x50
                 },
             ],
-            extractor: null,
+            extractor: null
         },
         {
             name: "TrueType Font",
@@ -1949,9 +1932,9 @@ export const FILE_SIGNATURES = {
                 1: 0x1,
                 2: 0x0,
                 3: 0x0,
-                4: 0x0,
+                4: 0x0
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "OpenType Font",
@@ -1963,9 +1946,9 @@ export const FILE_SIGNATURES = {
                 1: 0x54,
                 2: 0x54,
                 3: 0x4f,
-                4: 0x0,
+                4: 0x0
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "SQLite",
@@ -1976,9 +1959,9 @@ export const FILE_SIGNATURES = {
                 0: 0x53,
                 1: 0x51,
                 2: 0x4c,
-                3: 0x69,
+                3: 0x69
             },
-            extractor: extractSQLITE,
+            extractor: extractSQLITE
         },
         {
             name: "BitTorrent link",
@@ -2000,7 +1983,7 @@ export const FILE_SIGNATURES = {
                     10: 0x65,
                     11: 0x23,
                     12: 0x23,
-                    13: 0x3a,
+                    13: 0x3a
                 },
                 {
                     0: 0x64, // d4:infod
@@ -2012,10 +1995,10 @@ export const FILE_SIGNATURES = {
                     6: 0x6f,
                     7: 0x64,
                     8: [0x34, 0x35, 0x36],
-                    9: 0x3a,
-                },
+                    9: 0x3a
+                }
             ],
-            extractor: null,
+            extractor: null
         },
         {
             name: "Cryptocurrency wallet",
@@ -2038,9 +2021,9 @@ export const FILE_SIGNATURES = {
                 12: 0x62,
                 13: 0x31,
                 14: 0x05,
-                15: 0x00,
+                15: 0x00
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Registry fragment",
@@ -2052,9 +2035,9 @@ export const FILE_SIGNATURES = {
                 1: 0x62,
                 2: 0x69,
                 3: 0x6e,
-                4: 0x00,
+                4: 0x00
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Registry script",
@@ -2069,9 +2052,9 @@ export const FILE_SIGNATURES = {
                 4: 0x0d,
                 5: 0x0a,
                 6: 0x5c,
-                7: 0x7b,
+                7: 0x7b
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "WinNT Registry Hive",
@@ -2082,9 +2065,9 @@ export const FILE_SIGNATURES = {
                 0: 0x72,
                 1: 0x65,
                 2: 0x67,
-                3: 0x66,
+                3: 0x66
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Windows Event Log",
@@ -2099,9 +2082,9 @@ export const FILE_SIGNATURES = {
                 4: 0x4c,
                 5: 0x66,
                 6: 0x4c,
-                7: 0x65,
+                7: 0x65
             },
-            extractor: extractEVT,
+            extractor: extractEVT
         },
         {
             name: "Windows Event Log",
@@ -2115,9 +2098,9 @@ export const FILE_SIGNATURES = {
                 3: 0x46,
                 4: 0x69,
                 5: 0x6c,
-                6: 0x65,
+                6: 0x65
             },
-            extractor: extractEVTX,
+            extractor: extractEVTX
         },
         {
             name: "Windows Pagedump",
@@ -2132,9 +2115,9 @@ export const FILE_SIGNATURES = {
                 4: 0x44,
                 5: 0x55,
                 6: [0x4d, 0x36],
-                7: [0x50, 0x34],
+                7: [0x50, 0x34]
             },
-            extractor: extractDMP,
+            extractor: extractDMP
         },
         {
             name: "Windows Prefetch",
@@ -2149,9 +2132,9 @@ export const FILE_SIGNATURES = {
                 4: 0x53,
                 5: 0x43,
                 6: 0x43,
-                7: 0x41,
+                7: 0x41
             },
-            extractor: extractPF,
+            extractor: extractPF
         },
         {
             name: "Windows Prefetch (Win 10)",
@@ -2163,9 +2146,9 @@ export const FILE_SIGNATURES = {
                 1: 0x41,
                 2: 0x4d,
                 3: 0x04,
-                7: 0x0,
+                7: 0x0
             },
-            extractor: extractPFWin10,
+            extractor: extractPFWin10
         },
         {
             name: "PList (XML)",
@@ -2187,14 +2170,13 @@ export const FILE_SIGNATURES = {
                 50: 0x6c,
                 51: 0x69,
                 52: 0x73,
-                53: 0x74,
+                53: 0x74
             },
-            extractor: extractPListXML,
+            extractor: extractPListXML
         },
         {
             name: "PList (binary)",
-            extension:
-                "bplist,plist,ipmeta,abcdp,mdbackup,mdinfo,strings,nib,ichat,qtz,webbookmark,webhistory",
+            extension: "bplist,plist,ipmeta,abcdp,mdbackup,mdinfo,strings,nib,ichat,qtz,webbookmark,webhistory",
             mime: "application/x-plist",
             description: "",
             signature: {
@@ -2205,9 +2187,9 @@ export const FILE_SIGNATURES = {
                 4: 0x73,
                 5: 0x74,
                 6: 0x30,
-                7: 0x30,
+                7: 0x30
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "MacOS X Keychain",
@@ -2220,9 +2202,9 @@ export const FILE_SIGNATURES = {
                 2: 0x63,
                 3: 0x68,
                 4: 0x00,
-                5: 0x01,
+                5: 0x01
             },
-            extractor: extractMacOSXKeychain,
+            extractor: extractMacOSXKeychain
         },
         {
             name: "TCP Packet",
@@ -2235,10 +2217,10 @@ export const FILE_SIGNATURES = {
                 14: 0x45,
                 15: 0x00,
                 21: 0x00,
-                22: (b) => b >= 0x01 && b <= 0x80,
-                23: 0x06,
+                22: b => b >= 0x01 && b <= 0x80,
+                23: 0x06
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "UDP Packet",
@@ -2251,10 +2233,10 @@ export const FILE_SIGNATURES = {
                 14: 0x45,
                 15: 0x00,
                 16: [0x00, 0x01, 0x02, 0x03, 0x04, 0x05],
-                22: (b) => b >= 0x01 && b <= 0x80,
-                23: 0x11,
+                22: b => b >= 0x01 && b <= 0x80,
+                23: 0x11
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Compiled HTML",
@@ -2269,9 +2251,9 @@ export const FILE_SIGNATURES = {
                 4: 0x03,
                 5: 0x00,
                 6: 0x00,
-                7: 0x00,
+                7: 0x00
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Windows Password",
@@ -2282,9 +2264,9 @@ export const FILE_SIGNATURES = {
                 0: 0xe3,
                 1: 0x82,
                 2: 0x85,
-                3: 0x96,
+                3: 0x96
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Bitlocker recovery key",
@@ -2313,9 +2295,9 @@ export const FILE_SIGNATURES = {
                 18: 0x72,
                 19: 0x00,
                 20: 0x20,
-                21: 0x00,
+                21: 0x00
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Certificate",
@@ -2325,9 +2307,9 @@ export const FILE_SIGNATURES = {
             signature: {
                 0: 0x30,
                 1: 0x82,
-                4: [0x06, 0x0a, 0x30],
+                4: [0x06, 0x0a, 0x30]
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Certificate",
@@ -2337,11 +2319,11 @@ export const FILE_SIGNATURES = {
             signature: {
                 0: 0x30,
                 1: 0x83,
-                2: (b) => b !== 0x00,
+                2: b => b !== 0x00,
                 5: 0x06,
-                6: 0x09,
+                6: 0x09
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "PGP pubring",
@@ -2352,9 +2334,9 @@ export const FILE_SIGNATURES = {
                 0: 0x99,
                 1: 0x01,
                 2: [0x0d, 0xa2],
-                3: 0x04,
+                3: 0x04
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "PGP secring",
@@ -2366,22 +2348,22 @@ export const FILE_SIGNATURES = {
                     0: 0x95,
                     1: 0x01,
                     2: 0xcf,
-                    3: 0x04,
+                    3: 0x04
                 },
                 {
                     0: 0x95,
                     1: 0x03,
                     2: 0xc6,
-                    3: 0x04,
+                    3: 0x04
                 },
                 {
                     0: 0x95,
                     1: 0x05,
                     2: 0x86,
-                    3: 0x04,
-                },
+                    3: 0x04
+                }
             ],
-            extractor: null,
+            extractor: null
         },
         {
             name: "PGP Safe",
@@ -2399,9 +2381,9 @@ export const FILE_SIGNATURES = {
                 7: 0x4e,
                 8: 0x60,
                 9: 0x01,
-                10: 0x00,
+                10: 0x00
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Task Scheduler",
@@ -2414,9 +2396,9 @@ export const FILE_SIGNATURES = {
                 2: 0x01,
                 3: 0x00,
                 20: 0x46,
-                21: 0x00,
+                21: 0x00
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Windows Shortcut",
@@ -2443,9 +2425,9 @@ export const FILE_SIGNATURES = {
                 16: 0x00,
                 17: 0x00,
                 18: 0x00,
-                19: 0x46,
+                19: 0x46
             },
-            extractor: extractLNK,
+            extractor: extractLNK
         },
         {
             name: "Bash",
@@ -2465,7 +2447,7 @@ export const FILE_SIGNATURES = {
                 9: 0x73,
                 10: 0x68,
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Shell",
@@ -2483,7 +2465,7 @@ export const FILE_SIGNATURES = {
                 7: 0x73,
                 8: 0x68,
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Python",
@@ -2510,7 +2492,7 @@ export const FILE_SIGNATURES = {
                 16: 0x6e,
                 17: [0x32, 0x33, 0xa, 0xd],
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Ruby",
@@ -2534,7 +2516,7 @@ export const FILE_SIGNATURES = {
                 13: 0x62,
                 14: 0x79,
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "perl",
@@ -2558,7 +2540,7 @@ export const FILE_SIGNATURES = {
                 13: 0x72,
                 14: 0x6c,
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "php",
@@ -2572,7 +2554,7 @@ export const FILE_SIGNATURES = {
                 3: 0x68,
                 4: 0x70,
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Smile",
@@ -2582,9 +2564,9 @@ export const FILE_SIGNATURES = {
             signature: {
                 0: 0x3a,
                 1: 0x29,
-                2: 0xa,
+                2: 0xa
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "Lua Bytecode",
@@ -2595,9 +2577,9 @@ export const FILE_SIGNATURES = {
                 0: 0x1b,
                 1: 0x4c,
                 2: 0x75,
-                3: 0x61,
+                3: 0x61
             },
-            extractor: null,
+            extractor: null
         },
         {
             name: "WebAssembly binary",
@@ -2608,12 +2590,13 @@ export const FILE_SIGNATURES = {
                 0: 0x00,
                 1: 0x61,
                 2: 0x73,
-                3: 0x6d,
+                3: 0x6d
             },
-            extractor: null,
-        },
-    ],
+            extractor: null
+        }
+    ]
 };
+
 
 /**
  * JPEG extractor.
@@ -2627,10 +2610,7 @@ export function extractJPEG(bytes, offset) {
 
     while (stream.hasMore()) {
         const marker = stream.getBytes(2);
-        if (marker[0] !== 0xff)
-            throw new Error(
-                `Invalid marker while parsing JPEG at pos ${stream.position}: ${marker}`,
-            );
+        if (marker[0] !== 0xff) throw new Error(`Invalid marker while parsing JPEG at pos ${stream.position}: ${marker}`);
 
         let segmentSize = 0;
         switch (marker[1]) {
@@ -2721,6 +2701,7 @@ export function extractJPEG(bytes, offset) {
     throw new Error("Unable to parse JPEG successfully");
 }
 
+
 /**
  * GIF extractor.
  *
@@ -2749,17 +2730,20 @@ export function extractGIF(bytes, offset) {
         while (stream.getBytes(2) !== [0x21, 0xf9]) {
             stream.moveBackwardsBy(2);
             stream.moveForwardsBy(stream.readInt(1));
-            if (!stream.readInt(1)) break;
+            if (!stream.readInt(1))
+                break;
             stream.moveBackwardsBy(1);
         }
 
         // When the end of the file is [0x00, 0x3b], end.
-        if (stream.readInt(1) === 0x3b) break;
+        if (stream.readInt(1) === 0x3b)
+            break;
 
         stream.moveForwardsBy(1);
     }
     return stream.carve();
 }
+
 
 /**
  * Portable executable extractor.
@@ -2828,6 +2812,7 @@ export function extractMZPE(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * PDF extractor.
  *
@@ -2846,6 +2831,7 @@ export function extractPDF(bytes, offset) {
 
     return stream.carve();
 }
+
 
 /**
  * ZIP extractor.
@@ -2868,6 +2854,7 @@ export function extractZIP(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * MACHO extractor
  *
@@ -2876,10 +2863,12 @@ export function extractZIP(bytes, offset) {
  * @returns {Uint8Array}
  */
 export function extractMACHO(bytes, offset) {
+
     // Magic bytes.
     const MHCIGAM64 = "207250237254";
     const MHMAGIC64 = "254237250207";
     const MHCIGAM = "206250237254";
+
 
     /**
      * Checks to see if the file is 64-bit.
@@ -2891,6 +2880,7 @@ export function extractMACHO(bytes, offset) {
         return magic === MHCIGAM64 || magic === MHMAGIC64;
     }
 
+
     /**
      * Checks the endianness of the file.
      *
@@ -2900,6 +2890,7 @@ export function extractMACHO(bytes, offset) {
     function shouldSwapBytes(magic) {
         return magic === MHCIGAM || magic === MHCIGAM64;
     }
+
 
     /**
      * Jumps through segment information and calculates the sum of the segement sizes.
@@ -2916,10 +2907,12 @@ export function extractMACHO(bytes, offset) {
         const LCSEGEMENT = 0x1;
 
         for (let i = 0; i < ncmds; i++) {
+
             // Move to start of segment.
             stream.moveTo(offset);
             const cmd = stream.readInt(4, isSwap);
             if (cmd === LCSEGEMENT64) {
+
                 // Move to size of segment field.
                 stream.moveTo(offset + 48);
 
@@ -2941,6 +2934,7 @@ export function extractMACHO(bytes, offset) {
         return total;
     }
 
+
     /**
      * Reads the number of command segments.
      *
@@ -2951,7 +2945,8 @@ export function extractMACHO(bytes, offset) {
      */
     function dumpMachHeader(stream, is64, isSwap) {
         let loadCommandsOffset = 28;
-        if (is64) loadCommandsOffset += 4;
+        if (is64)
+            loadCommandsOffset += 4;
 
         // Move to number of commands field.
         stream.moveTo(16);
@@ -2959,19 +2954,15 @@ export function extractMACHO(bytes, offset) {
         return dumpSegmentCommands(stream, loadCommandsOffset, isSwap, ncmds);
     }
 
+
     const stream = new Stream(bytes.slice(offset));
     const magic = stream.getBytes(4).join("");
 
     // Move to the end of the final segment.
-    stream.moveTo(
-        dumpMachHeader(
-            stream,
-            isMagic64(magic),
-            shouldSwapBytes(magic) ? "le" : "be",
-        ),
-    );
+    stream.moveTo(dumpMachHeader(stream, isMagic64(magic), shouldSwapBytes(magic) ? "le" : "be"));
     return stream.carve();
 }
+
 
 /**
  * TAR extractor.
@@ -2983,12 +2974,10 @@ export function extractMACHO(bytes, offset) {
 export function extractTAR(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
     while (stream.hasMore()) {
+
         // Move to ustar identifier.
         stream.moveForwardsBy(0x101);
-        if (
-            stream.getBytes(5).join("") !==
-            [0x75, 0x73, 0x74, 0x61, 0x72].join("")
-        ) {
+        if (stream.getBytes(5).join("") !== [0x75, 0x73, 0x74, 0x61, 0x72].join("")) {
             // Reverse back to the end of the last section.
             stream.moveBackwardsBy(0x106);
             break;
@@ -3004,7 +2993,7 @@ export function extractTAR(bytes, offset) {
         });
 
         // Round number up from octet to nearest 512.
-        fsize = Math.ceil(parseInt(fsize, 8) / 512) * 512;
+        fsize = (Math.ceil(parseInt(fsize, 8) / 512) * 512);
 
         // Move forwards to the end of that file.
         stream.moveForwardsBy(fsize + 0x179);
@@ -3012,6 +3001,7 @@ export function extractTAR(bytes, offset) {
     stream.consumeWhile(0x00);
     return stream.carve();
 }
+
 
 /**
  * PNG extractor.
@@ -3037,8 +3027,10 @@ export function extractPNG(bytes, offset) {
         stream.moveForwardsBy(chunkSize + 4);
     }
 
+
     return stream.carve();
 }
+
 
 /**
  * WEBP extractor.
@@ -3063,6 +3055,7 @@ export function extractWEBP(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * BMP extractor.
  *
@@ -3085,6 +3078,7 @@ export function extractBMP(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * ICO extractor.
  *
@@ -3101,7 +3095,7 @@ export function extractICO(bytes, offset) {
     const numberFiles = stream.readInt(2, "le");
 
     // Move forward to the last file header.
-    stream.moveForwardsBy(8 + (numberFiles - 1) * 16);
+    stream.moveForwardsBy(8 + ((numberFiles-1) * 16));
     const fileSize = stream.readInt(4, "le");
     const fileOffset = stream.readInt(4, "le");
 
@@ -3109,6 +3103,7 @@ export function extractICO(bytes, offset) {
     stream.moveTo(fileOffset + fileSize);
     return stream.carve();
 }
+
 
 /**
  * TARGA extractor.
@@ -3142,7 +3137,8 @@ export function extractTARGA(bytes, offset) {
             stream.moveBackwardsBy(sizeOfSize);
 
             // If the size matches.
-            if (size === i) break;
+            if (size === i)
+                break;
         }
     }
 
@@ -3154,13 +3150,11 @@ export function extractTARGA(bytes, offset) {
 
         // The documentation said that 0x100000 was the largest the file could be.
         for (let i = 0; i < 0x100000; i++) {
+
             // (Height * Width * pixel depth in bits)/8
-            const total =
-                (stream.readInt(2, "le") *
-                    stream.readInt(2, "le") *
-                    stream.readInt(1)) /
-                8;
-            if (total === i - 1) break;
+            const total = (stream.readInt(2, "le") * stream.readInt(2, "le") * stream.readInt(1))/8;
+            if (total === i-1)
+                break;
 
             stream.moveBackwardsBy(6);
         }
@@ -3188,11 +3182,12 @@ export function extractTARGA(bytes, offset) {
         moveBackwardsUntilImageSize();
 
         // Move backwards over the reaminder of the header + the 5 we borrowed in moveBackwardsUntilImageSize().
-        stream.moveBackwardsBy(0xc + 5);
+        stream.moveBackwardsBy(0xc+5);
     }
 
-    return stream.carve(stream.position, offset + 0x12);
+    return stream.carve(stream.position, offset+0x12);
 }
+
 
 /**
  * WAV extractor.
@@ -3213,6 +3208,7 @@ export function extractWAV(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * MP3 extractor.
  *
@@ -3224,35 +3220,14 @@ export function extractMP3(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
 
     // Constants for flag byte.
-    const bitRateIndexes = [
-        "free",
-        32000,
-        40000,
-        48000,
-        56000,
-        64000,
-        80000,
-        96000,
-        112000,
-        128000,
-        160000,
-        192000,
-        224000,
-        256000,
-        320000,
-        "bad",
-    ];
+    const bitRateIndexes = ["free", 32000, 40000, 48000, 56000, 64000, 80000, 96000, 112000, 128000, 160000, 192000, 224000, 256000, 320000, "bad"];
 
     const samplingRateFrequencyIndex = [44100, 48000, 32000, "reserved"];
 
     // ID3 tag, move over it.
-    if (stream.getBytes(3).toString() === [0x49, 0x44, 0x33].toString()) {
+    if ((stream.getBytes(3).toString() === [0x49, 0x44, 0x33].toString())) {
         stream.moveTo(6);
-        const tagSize =
-            (stream.readInt(1) << 21) |
-            (stream.readInt(1) << 14) |
-            (stream.readInt(1) << 7) |
-            stream.readInt(1);
+        const tagSize = (stream.readInt(1) << 21) | (stream.readInt(1) << 14) | (stream.readInt(1) << 7) | stream.readInt(1);
         stream.moveForwardsBy(tagSize);
     } else {
         stream.moveTo(0);
@@ -3260,6 +3235,7 @@ export function extractMP3(bytes, offset) {
 
     // Loop over all the frame headers in the file.
     while (stream.hasMore()) {
+
         // If it has an old TAG frame at the end of it, fixed size, 128 bytes.
         if (stream.getBytes(3) === [0x54, 0x41, 0x47].toString()) {
             stream.moveForwardsBy(125);
@@ -3285,21 +3261,17 @@ export function extractMP3(bytes, offset) {
         const padding = (flags & 0x02) >> 1;
 
         // Things that are either not standard or undocumented.
-        if (
-            bitRate === "free" ||
-            bitRate === "bad" ||
-            sampleRate === "reserved"
-        ) {
+        if (bitRate === "free" || bitRate === "bad" || sampleRate === "reserved") {
             stream.moveBackwardsBy(1);
             break;
         }
 
         // Formula: FrameLength = (144 * BitRate / SampleRate ) + Padding
-        const frameSize = Math.floor((144 * bitRate) / sampleRate + padding);
+        const frameSize = Math.floor(((144 * bitRate) / sampleRate) + padding);
 
         // If the next move goes past the end of the bytestream then extract the entire bytestream.
         // We assume complete frames in the above formula because there is no field that suggests otherwise.
-        if (stream.position + frameSize > stream.length) {
+        if ((stream.position + frameSize) > stream.length) {
             stream.moveTo(stream.length);
             break;
         } else {
@@ -3308,6 +3280,7 @@ export function extractMP3(bytes, offset) {
     }
     return stream.carve();
 }
+
 
 /**
  * FLV extractor.
@@ -3339,7 +3312,7 @@ export function extractFLV(bytes, offset) {
             break;
         }
 
-        if (prevTagSize !== tagSize + 11) {
+        if (prevTagSize !== (tagSize + 11)) {
             // Previous tag was not valid, reverse back over this header
             // and the previous tag body and header
             stream.moveBackwardsBy(tagSize + 11 + 5);
@@ -3355,6 +3328,7 @@ export function extractFLV(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * RTF extractor.
  *
@@ -3367,8 +3341,7 @@ export function extractRTF(bytes, offset) {
 
     let openTags = 0;
 
-    if (stream.readInt(1) !== 0x7b) {
-        // {
+    if (stream.readInt(1) !== 0x7b) { // {
         throw new Error("Not a valid RTF file");
     } else {
         openTags++;
@@ -3395,6 +3368,7 @@ export function extractRTF(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * SQLITE extractor.
  *
@@ -3414,10 +3388,11 @@ export function extractSQLITE(bytes, offset) {
     const numPages = stream.readInt(4);
 
     // Move to the end of all the pages.
-    stream.moveTo(pageSize * numPages);
+    stream.moveTo(pageSize*numPages);
 
     return stream.carve();
 }
+
 
 /**
  * PList (XML) extractor.
@@ -3439,21 +3414,16 @@ export function extractPListXML(bytes, offset) {
     // While we have an unequal amount of braces.
     while (braceCount > 0 && stream.hasMore()) {
         if (stream.readInt(1) === 0x3c) {
+
             // If we hit an <plist.
-            if (
-                stream.getBytes(5).join("") ===
-                [0x70, 0x6c, 0x69, 0x73, 0x74].join("")
-            ) {
+            if (stream.getBytes(5).join("") === [0x70, 0x6c, 0x69, 0x73, 0x74].join("")) {
                 braceCount++;
             } else {
                 stream.moveBackwardsBy(5);
             }
 
             // If we hit an </plist>.
-            if (
-                stream.getBytes(7).join("") ===
-                [0x2f, 0x70, 0x6c, 0x69, 0x73, 0x74, 0x3e].join("")
-            ) {
+            if (stream.getBytes(7).join("") === [0x2f, 0x70, 0x6c, 0x69, 0x73, 0x74, 0x3e].join("")) {
                 braceCount--;
             } else {
                 stream.moveBackwardsBy(7);
@@ -3464,6 +3434,7 @@ export function extractPListXML(bytes, offset) {
 
     return stream.carve();
 }
+
 
 /**
  * MacOS X Keychain Extactor.
@@ -3484,6 +3455,7 @@ export function extractMacOSXKeychain(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * OLE2 extractor.
  *
@@ -3494,101 +3466,25 @@ export function extractMacOSXKeychain(bytes, offset) {
 export function extractOLE2(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
     const entries = [
-        [
-            [
-                0x52, 0x00, 0x6f, 0x00, 0x6f, 0x00, 0x74, 0x00, 0x20, 0x00,
-                0x45, 0x00, 0x6e, 0x00, 0x74, 0x00, 0x72, 0x00, 0x79,
-            ],
-            19,
-            "Root Entry",
-        ],
-        [
-            [
-                0x57, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x6b, 0x00, 0x62, 0x00,
-                0x6f, 0x00, 0x6f, 0x00, 0x6b,
-            ],
-            15,
-            "Workbook",
-        ],
-        [
-            [
-                0x43, 0x00, 0x75, 0x00, 0x72, 0x00, 0x72, 0x00, 0x65, 0x00,
-                0x6e, 0x00, 0x74, 0x00, 0x20, 0x00, 0x55, 0x00, 0x73, 0x00,
-                0x65, 0x00, 0x72,
-            ],
-            23,
-            "Current User",
-        ],
-        [
-            [
-                0x50, 0x00, 0x6f, 0x00, 0x77, 0x00, 0x65, 0x00, 0x72, 0x00,
-                0x50, 0x00, 0x6f, 0x00, 0x69, 0x00, 0x6e, 0x00, 0x74, 0x00,
-                0x20, 0x00, 0x44, 0x00, 0x6f, 0x00, 0x63, 0x00, 0x75, 0x00,
-                0x6d, 0x00, 0x65, 0x00, 0x6e, 0x00, 0x74,
-            ],
-            37,
-            "PowerPoint Document",
-        ],
-        [
-            [
-                0x57, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x64, 0x00, 0x44, 0x00,
-                0x6f, 0x00, 0x63, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x65, 0x00,
-                0x6e, 0x00, 0x74,
-            ],
-            23,
-            "WordDocument",
-        ],
+        [[0x52, 0x00, 0x6f, 0x00, 0x6f, 0x00, 0x74, 0x00, 0x20, 0x00, 0x45, 0x00, 0x6e, 0x00, 0x74, 0x00, 0x72, 0x00, 0x79], 19, "Root Entry"],
+        [[0x57, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x6b, 0x00, 0x62, 0x00, 0x6f, 0x00, 0x6f, 0x00, 0x6b], 15, "Workbook"],
+        [[0x43, 0x00, 0x75, 0x00, 0x72, 0x00, 0x72, 0x00, 0x65, 0x00, 0x6e, 0x00, 0x74, 0x00, 0x20, 0x00, 0x55, 0x00, 0x73, 0x00, 0x65, 0x00, 0x72],  23,  "Current User"],
+        [[0x50, 0x00, 0x6f, 0x00, 0x77, 0x00, 0x65, 0x00, 0x72, 0x00, 0x50, 0x00, 0x6f, 0x00, 0x69, 0x00, 0x6e, 0x00, 0x74, 0x00, 0x20, 0x00, 0x44, 0x00, 0x6f, 0x00, 0x63, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x65, 0x00, 0x6e, 0x00, 0x74], 37, "PowerPoint Document"],
+        [[0x57, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x64, 0x00, 0x44, 0x00, 0x6f, 0x00, 0x63, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x65, 0x00, 0x6e, 0x00, 0x74], 23, "WordDocument"],
         [[0x44, 0x00, 0x61, 0x00, 0x74, 0x00, 0x61], 7, "Data"],
-        [
-            [
-                0x50, 0x00, 0x69, 0x00, 0x63, 0x00, 0x74, 0x00, 0x75, 0x00,
-                0x72, 0x00, 0x65, 0x00, 0x73,
-            ],
-            15,
-            "Pictures",
-        ],
-        [
-            [0x31, 0x00, 0x54, 0x00, 0x61, 0x00, 0x62, 0x00, 0x6c, 0x00, 0x65],
-            11,
-            "1Table",
-        ],
-        [
-            [
-                0x05, 0x00, 0x53, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x6d, 0x00,
-                0x61, 0x00, 0x72, 0x00, 0x79, 0x00, 0x49, 0x00, 0x6e, 0x00,
-                0x66, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x6d, 0x00, 0x61, 0x00,
-                0x74, 0x00, 0x69, 0x00, 0x6f, 0x00, 0x6e,
-            ],
-            37,
-            "SummaryInformation",
-        ],
-        [
-            [
-                0x05, 0x00, 0x44, 0x00, 0x6f, 0x00, 0x63, 0x00, 0x75, 0x00,
-                0x6d, 0x00, 0x65, 0x00, 0x6e, 0x00, 0x74, 0x00, 0x53, 0x00,
-                0x75, 0x00, 0x6d, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x72, 0x00,
-                0x79, 0x00, 0x49, 0x00, 0x6e, 0x00, 0x66, 0x00, 0x6f, 0x00,
-                0x72, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x74, 0x00, 0x69, 0x00,
-                0x6f, 0x00, 0x6e,
-            ],
-            53,
-            "DocumentSummaryInformation",
-        ],
-        [
-            [
-                0x43, 0x00, 0x6f, 0x00, 0x6d, 0x00, 0x70, 0x00, 0x4f, 0x00,
-                0x62, 0x00, 0x6a,
-            ],
-            13,
-            "Comp Obj",
-        ],
-        [[0x01, 0x00], 2, "Entry"],
+        [[0x50, 0x00, 0x69, 0x00, 0x63, 0x00, 0x74, 0x00, 0x75, 0x00, 0x72, 0x00, 0x65, 0x00, 0x73], 15, "Pictures"],
+        [[0x31, 0x00, 0x54, 0x00, 0x61, 0x00, 0x62, 0x00, 0x6c, 0x00, 0x65], 11, "1Table"],
+        [[0x05, 0x00, 0x53, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x72, 0x00, 0x79, 0x00, 0x49, 0x00, 0x6e, 0x00, 0x66, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x74, 0x00, 0x69, 0x00, 0x6f, 0x00, 0x6e], 37, "SummaryInformation"],
+        [[0x05, 0x00, 0x44, 0x00, 0x6f, 0x00, 0x63, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x65, 0x00, 0x6e, 0x00, 0x74, 0x00, 0x53, 0x00, 0x75, 0x00, 0x6d, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x72, 0x00, 0x79, 0x00, 0x49, 0x00, 0x6e, 0x00, 0x66, 0x00, 0x6f, 0x00, 0x72, 0x00, 0x6d, 0x00, 0x61, 0x00, 0x74, 0x00, 0x69, 0x00, 0x6f, 0x00, 0x6e], 53, "DocumentSummaryInformation"],
+        [[0x43, 0x00, 0x6f, 0x00, 0x6d, 0x00, 0x70, 0x00, 0x4f, 0x00, 0x62, 0x00, 0x6a], 13, "Comp Obj"],
+        [[0x01, 0x00], 2, "Entry"]
     ];
     let endianness = "le";
 
     // Move to endianess field.
     stream.moveForwardsBy(28);
-    if (stream.readInt(2, endianness) === 0xfffe) endianness = "be";
+    if (stream.readInt(2, endianness) === 0xfffe)
+        endianness = "be";
 
     // Calculate the size of the normal sectors.
     const sizeOfSector = 2 ** stream.readInt(2, endianness);
@@ -3597,10 +3493,10 @@ export function extractOLE2(bytes, offset) {
     stream.moveTo(48);
 
     // Read root directory offset.
-    const rootStuff = stream.readInt(4, endianness);
+    const rootStuff  = stream.readInt(4, endianness);
 
     // Calculate root directory offset.
-    let total = 512 + rootStuff * sizeOfSector;
+    let total = 512 + (rootStuff * sizeOfSector);
     stream.moveTo(total);
 
     // While valid directory entries.
@@ -3610,6 +3506,7 @@ export function extractOLE2(bytes, offset) {
 
         // Attempt to determine what directory entry it is.
         for (const element of entries) {
+
             // If the byte pattern matches.
             if (stream.getBytes(element[1]).join("") === element[0].join("")) {
                 stream.moveBackwardsBy(element[1]);
@@ -3617,10 +3514,12 @@ export function extractOLE2(bytes, offset) {
 
                 // Move forwards by the size of the comp obj.
                 if (element[2] === "Comp Obj") {
+
                     // The size of the Comp Obj entry - 128. Since we add 128 later.
                     total += 128 * 6;
                     stream.moveTo(total);
                 } else if (element[2] === "Entry") {
+
                     // If there is an entry move backwards by 126 to then move forwards by 128. Hence a total displacement of 2.
                     stream.moveBackwardsBy(126);
                 }
@@ -3631,6 +3530,7 @@ export function extractOLE2(bytes, offset) {
 
         // If we have found a valid entry, move forwards by 128.
         if (found) {
+
             // Every entry is at least 128 in size, some are bigger which is dealt with by the above if statement.
             total += 128;
             stream.moveForwardsBy(128);
@@ -3644,6 +3544,7 @@ export function extractOLE2(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * GZIP extractor.
  *
@@ -3653,6 +3554,7 @@ export function extractOLE2(bytes, offset) {
  */
 export function extractGZIP(bytes, offset) {
     const stream = new Stream(bytes.slice(offset));
+
 
     /* HEADER */
 
@@ -3670,6 +3572,7 @@ export function extractGZIP(bytes, offset) {
 
     // Skip over OS
     stream.moveForwardsBy(1);
+
 
     /* OPTIONAL HEADERS */
 
@@ -3696,9 +3599,11 @@ export function extractGZIP(bytes, offset) {
         stream.moveForwardsBy(2);
     }
 
+
     /* DEFLATE DATA */
 
     parseDEFLATE(stream);
+
 
     /* FOOTER */
 
@@ -3707,6 +3612,7 @@ export function extractGZIP(bytes, offset) {
 
     return stream.carve();
 }
+
 
 /**
  * BZIP2 extractor.
@@ -3728,13 +3634,14 @@ export function extractBZIP2(bytes, offset) {
         [0xbb, 0x92, 0x29, 0xc2, 0x84],
         [0x5d, 0xc9, 0x14, 0xe1, 0x42],
         [0x2e, 0xe4, 0x8a, 0x70, 0xa1],
-        [0x17, 0x72, 0x45, 0x38, 0x50],
+        [0x17, 0x72, 0x45, 0x38, 0x50]
     ];
 
     for (let i = 0; i < lookingfor.length; i++) {
         // Continue until an EOF.
         stream.continueUntil(lookingfor[i]);
-        if (stream.getBytes(5).join("") === lookingfor[i].join("")) break;
+        if (stream.getBytes(5).join("") === lookingfor[i].join(""))
+            break;
 
         // Jump back to the start if invalid EOF.
         stream.moveTo(0);
@@ -3742,6 +3649,7 @@ export function extractBZIP2(bytes, offset) {
     stream.moveForwardsBy(4);
     return stream.carve();
 }
+
 
 /**
  * Zlib extractor.
@@ -3773,6 +3681,7 @@ export function extractZlib(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * XZ extractor.
  *
@@ -3792,6 +3701,7 @@ export function extractXZ(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * DEB extractor.
  *
@@ -3804,9 +3714,10 @@ export function extractDEB(bytes, offset) {
     // Move past !<arch>
     stream.moveForwardsBy(8);
     while (stream.hasMore()) {
+
         // Move to size field.
         stream.moveForwardsBy(48);
-        let fsize = "";
+        let fsize= "";
 
         // Convert size to a usable number.
         for (const elem of stream.getBytes(10)) {
@@ -3820,6 +3731,7 @@ export function extractDEB(bytes, offset) {
     }
     return stream.carve();
 }
+
 
 /**
  * ELF extractor.
@@ -3864,18 +3776,20 @@ export function extractELF(bytes, offset) {
     return stream.carve();
 }
 
+
 // Construct required Huffman Tables
 const fixedLiteralTableLengths = new Array(288);
 for (let i = 0; i < fixedLiteralTableLengths.length; i++) {
     fixedLiteralTableLengths[i] =
-        i <= 143 ? 8 : i <= 255 ? 9 : i <= 279 ? 7 : 8;
+        (i <= 143) ? 8 :
+            (i <= 255) ? 9 :
+                (i <= 279) ? 7 :
+                    8;
 }
 const fixedLiteralTable = buildHuffmanTable(fixedLiteralTableLengths);
 const fixedDistanceTableLengths = new Array(30).fill(5);
 const fixedDistanceTable = buildHuffmanTable(fixedDistanceTableLengths);
-const huffmanOrder = [
-    16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15,
-];
+const huffmanOrder = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15];
 
 /**
  * Steps through a DEFLATE stream
@@ -3925,7 +3839,7 @@ function parseDEFLATE(stream) {
             const lengthTable = new Uint8Array(hlit + hdist);
 
             let code, repeat, prev;
-            for (let i = 0; i < hlit + hdist; ) {
+            for (let i = 0; i < hlit + hdist;) {
                 code = readHuffmanCode(stream, codeLengthsTable);
                 switch (code) {
                     case 16:
@@ -3949,37 +3863,27 @@ function parseDEFLATE(stream) {
                 }
             }
 
-            const dynamicLiteralTable = buildHuffmanTable(
-                lengthTable.subarray(0, hlit),
-            );
-            const dynamicDistanceTable = buildHuffmanTable(
-                lengthTable.subarray(hlit),
-            );
+            const dynamicLiteralTable = buildHuffmanTable(lengthTable.subarray(0, hlit));
+            const dynamicDistanceTable = buildHuffmanTable(lengthTable.subarray(hlit));
 
-            parseHuffmanBlock(
-                stream,
-                dynamicLiteralTable,
-                dynamicDistanceTable,
-            );
+            parseHuffmanBlock(stream, dynamicLiteralTable, dynamicDistanceTable);
         } else {
-            throw new Error(
-                `Invalid block type while parsing DEFLATE stream at pos ${stream.position}`,
-            );
+            throw new Error(`Invalid block type while parsing DEFLATE stream at pos ${stream.position}`);
         }
     }
 
     // Consume final byte if it has not been fully consumed yet
-    if (stream.bitPos > 0) stream.moveForwardsBy(1);
+    if (stream.bitPos > 0)
+        stream.moveForwardsBy(1);
 }
+
 
 // Static length tables
 const lengthExtraTable = [
-    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5,
-    5, 5, 5, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0, 0, 0
 ];
 const distanceExtraTable = [
-    0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10,
-    11, 11, 12, 12, 13, 13,
+    0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13
 ];
 
 /**
@@ -4000,9 +3904,7 @@ function parseHuffmanBlock(stream, litTab, distTab) {
 
         // Detect probably infinite loops
         if (++loops > 10000)
-            throw new Error(
-                "Caught in probable infinite loop while parsing Huffman Block",
-            );
+            throw new Error("Caught in probable infinite loop while parsing Huffman Block");
 
         // Literal
         if (code < 256) continue;
@@ -4015,6 +3917,7 @@ function parseHuffmanBlock(stream, litTab, distTab) {
         stream.readBits(distanceExtraTable[code], "le");
     }
 }
+
 
 /**
  * Builds a Huffman table given the relevant code lengths
@@ -4031,7 +3934,7 @@ function buildHuffmanTable(lengths) {
     const size = 1 << maxCodeLength;
     const table = new Uint32Array(size);
 
-    for (let bitLength = 1, code = 0, skip = 2; bitLength <= maxCodeLength; ) {
+    for (let bitLength = 1, code = 0, skip = 2; bitLength <= maxCodeLength;) {
         for (let i = 0; i < lengths.length; i++) {
             if (lengths[i] === bitLength) {
                 let reversed, rtemp, j;
@@ -4057,6 +3960,7 @@ function buildHuffmanTable(lengths) {
     return [table, maxCodeLength, minCodeLength];
 }
 
+
 /**
  * Reads the next Huffman code from the stream, given the relevant code table
  *
@@ -4073,15 +3977,14 @@ function readHuffmanCode(stream, table) {
     const codeLength = codeWithLength >>> 16;
 
     if (codeLength > maxCodeLength) {
-        throw new Error(
-            `Invalid Huffman Code length while parsing DEFLATE block at pos ${stream.position}: ${codeLength}`,
-        );
+        throw new Error(`Invalid Huffman Code length while parsing DEFLATE block at pos ${stream.position}: ${codeLength}`);
     }
 
     stream.moveBackwardsByBits(maxCodeLength - codeLength);
 
     return codeWithLength & 0xffff;
 }
+
 
 /**
  * EVTX extractor.
@@ -4100,16 +4003,14 @@ export function extractEVTX(bytes, offset) {
 
     while (stream.hasMore()) {
         // Loop through ELFCHNKs.
-        if (
-            stream.getBytes(7).join("") !==
-            [0x45, 0x6c, 0x66, 0x43, 0x68, 0x6e, 0x6b].join("")
-        )
+        if (stream.getBytes(7).join("") !== [0x45, 0x6c, 0x66, 0x43, 0x68, 0x6e, 0x6b].join(""))
             break;
         stream.moveForwardsBy(0xfff9);
     }
     stream.consumeWhile(0x00);
     return stream.carve();
 }
+
 
 /**
  * EVT extractor.
@@ -4130,9 +4031,10 @@ export function extractEVT(bytes, offset) {
     const eofSize = stream.readInt(4, "le");
 
     // Move past EOF.
-    stream.moveForwardsBy(eofSize - 4);
+    stream.moveForwardsBy(eofSize-4);
     return stream.carve();
 }
+
 
 /**
  * DMP extractor.
@@ -4153,6 +4055,7 @@ export function extractDMP(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * PF extractor.
  *
@@ -4170,6 +4073,7 @@ export function extractPF(bytes, offset) {
     return stream.carve();
 }
 
+
 /**
  * PF (Win 10) extractor.
  *
@@ -4185,6 +4089,7 @@ export function extractPFWin10(bytes, offset) {
 
     return stream.carve();
 }
+
 
 /**
  * LNK extractor.
@@ -4202,6 +4107,7 @@ export function extractLNK(bytes, offset) {
 
     return stream.carve();
 }
+
 
 /**
  * LZOP extractor.
@@ -4221,8 +4127,7 @@ export function extractLZOP(bytes, offset) {
     const F_H_FILTER = 0x00000800;
     const F_H_EXTRA_FIELD = 0x00000040;
 
-    let numCheckSumC = 0,
-        numCheckSumD = 0;
+    let numCheckSumC = 0, numCheckSumD = 0;
 
     // Move over magic bytes.
     stream.moveForwardsBy(9);
@@ -4233,20 +4138,26 @@ export function extractLZOP(bytes, offset) {
     stream.moveForwardsBy(6);
     const flags = stream.readInt(4, "be");
 
-    if (version & F_H_FILTER) stream.moveForwardsBy(4);
+    if (version & F_H_FILTER)
+        stream.moveForwardsBy(4);
 
-    if (flags & F_ADLER32_C) numCheckSumC++;
+    if (flags & F_ADLER32_C)
+        numCheckSumC++;
 
-    if (flags & F_CRC32_C) numCheckSumC++;
+    if (flags & F_CRC32_C)
+        numCheckSumC++;
 
-    if (flags & F_ADLER32_D) numCheckSumD++;
+    if (flags & F_ADLER32_D)
+        numCheckSumD++;
 
-    if (flags & F_CRC32_D) numCheckSumD++;
+    if (flags & F_CRC32_D)
+        numCheckSumD++;
 
     // Move over the mode, mtime_low
     stream.moveForwardsBy(8);
 
-    if (version >= 0x0940) stream.moveForwardsBy(4);
+    if (version >= 0x0940)
+        stream.moveForwardsBy(4);
 
     const fnameSize = stream.readInt(1, "be");
 
@@ -4265,17 +4176,16 @@ export function extractLZOP(bytes, offset) {
         const uncompSize = stream.readInt(4, "be");
 
         // If data has no length, break.
-        if (uncompSize === 0) break;
+        if (uncompSize === 0)
+            break;
 
         const compSize = stream.readInt(4, "be");
 
-        const numCheckSumSkip =
-            uncompSize === compSize
-                ? numCheckSumD
-                : numCheckSumD + numCheckSumC;
+        const numCheckSumSkip = (uncompSize === compSize) ? numCheckSumD : numCheckSumD + numCheckSumC;
 
         // skip forwards by compressed data size and the size of the checksum(s).
-        stream.moveForwardsBy(compSize + numCheckSumSkip * 4);
+        stream.moveForwardsBy(compSize + (numCheckSumSkip * 4));
     }
     return stream.carve();
+
 }

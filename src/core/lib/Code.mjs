@@ -14,7 +14,7 @@
  * @returns {string}
  */
 export function replaceVariableNames(input, replacer) {
-    const tokenRegex = /\\"|"(?:\\"|[^"])*"|(\b[a-z0-9\-_]+\b)/gi;
+    const tokenRegex = /\\"|"(?:\\"|[^"])*"|(\b[a-z0-9\-_]+\b)/ig;
 
     return input.replace(tokenRegex, (...args) => {
         const match = args[0],

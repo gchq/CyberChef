@@ -6,10 +6,12 @@
 
 import Operation from "../Operation.mjs";
 
+
 /**
  * ROT13 operation.
  */
 class ROT13 extends Operation {
+
     /**
      * ROT13 constructor
      */
@@ -18,8 +20,7 @@ class ROT13 extends Operation {
 
         this.name = "ROT13";
         this.module = "Default";
-        this.description =
-            "A simple caesar substitution cipher which rotates alphabet characters by the specified amount (default 13).";
+        this.description = "A simple caesar substitution cipher which rotates alphabet characters by the specified amount (default 13).";
         this.infoURL = "https://wikipedia.org/wiki/ROT13";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
@@ -27,22 +28,22 @@ class ROT13 extends Operation {
             {
                 name: "Rotate lower case chars",
                 type: "boolean",
-                value: true,
+                value: true
             },
             {
                 name: "Rotate upper case chars",
                 type: "boolean",
-                value: true,
+                value: true
             },
             {
                 name: "Rotate numbers",
                 type: "boolean",
-                value: false,
+                value: false
             },
             {
                 name: "Amount",
                 type: "number",
-                value: 13,
+                value: 13
             },
         ];
     }
@@ -67,16 +68,13 @@ class ROT13 extends Operation {
 
             for (let i = 0; i < input.length; i++) {
                 chr = input[i];
-                if (rot13Upperacse && chr >= 65 && chr <= 90) {
-                    // Upper case
+                if (rot13Upperacse && chr >= 65 && chr <= 90) { // Upper case
                     chr = (chr - 65 + amount) % 26;
                     output[i] = chr + 65;
-                } else if (rot13Lowercase && chr >= 97 && chr <= 122) {
-                    // Lower case
+                } else if (rot13Lowercase && chr >= 97 && chr <= 122) { // Lower case
                     chr = (chr - 97 + amount) % 26;
                     output[i] = chr + 97;
-                } else if (rotNumbers && chr >= 48 && chr <= 57) {
-                    // Numbers
+                } else if (rotNumbers && chr >= 48 && chr <= 57) { // Numbers
                     chr = (chr - 48 + amount) % 10;
                     output[i] = chr + 48;
                 }

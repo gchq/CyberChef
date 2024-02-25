@@ -8,6 +8,7 @@
 
 import Utils from "../Utils.mjs";
 
+
 /**
  * Convert a string of decimal values into a byte array.
  *
@@ -22,12 +23,12 @@ import Utils from "../Utils.mjs";
  * // returns [10,20,30]
  * fromDecimal("10:20:30", "Colon");
  */
-export function fromDecimal(data, delim = "Auto") {
+export function fromDecimal(data, delim="Auto") {
     delim = Utils.charRep(delim);
     const output = [];
     let byteStr = data.split(delim);
-    if (byteStr[byteStr.length - 1] === "")
-        byteStr = byteStr.slice(0, byteStr.length - 1);
+    if (byteStr[byteStr.length-1] === "")
+        byteStr = byteStr.slice(0, byteStr.length-1);
 
     for (let i = 0; i < byteStr.length; i++) {
         output[i] = parseInt(byteStr[i], 10);

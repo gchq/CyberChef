@@ -7,12 +7,13 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import { UNITS } from "../lib/DateTime.mjs";
+import {UNITS} from "../lib/DateTime.mjs";
 
 /**
  * Get Time operation
  */
 class GetTime extends Operation {
+
     /**
      * GetTime constructor
      */
@@ -21,8 +22,7 @@ class GetTime extends Operation {
 
         this.name = "Get Time";
         this.module = "Default";
-        this.description =
-            "Generates a timestamp showing the amount of time since the UNIX epoch (1970-01-01 00:00:00 UTC). Uses the W3C High Resolution Time API.";
+        this.description = "Generates a timestamp showing the amount of time since the UNIX epoch (1970-01-01 00:00:00 UTC). Uses the W3C High Resolution Time API.";
         this.infoURL = "https://wikipedia.org/wiki/Unix_time";
         this.inputType = "string";
         this.outputType = "number";
@@ -30,8 +30,8 @@ class GetTime extends Operation {
             {
                 name: "Granularity",
                 type: "option",
-                value: UNITS,
-            },
+                value: UNITS
+            }
         ];
     }
 
@@ -41,7 +41,7 @@ class GetTime extends Operation {
      * @returns {number}
      */
     run(input, args) {
-        const nowMs = performance.timeOrigin + performance.now(),
+        const nowMs = (performance.timeOrigin + performance.now()),
             granularity = args[0];
 
         switch (granularity) {
@@ -54,11 +54,10 @@ class GetTime extends Operation {
             case "Seconds (s)":
                 return Math.round(nowMs / 1000);
             default:
-                throw new OperationError(
-                    "Unknown granularity value: " + granularity,
-                );
+                throw new OperationError("Unknown granularity value: " + granularity);
         }
     }
+
 }
 
 export default GetTime;

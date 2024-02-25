@@ -11,6 +11,7 @@ import Utils from "../Utils.mjs";
  * Index of Coincidence operation
  */
 class IndexOfCoincidence extends Operation {
+
     /**
      * IndexOfCoincidence constructor
      */
@@ -19,8 +20,7 @@ class IndexOfCoincidence extends Operation {
 
         this.name = "Index of Coincidence";
         this.module = "Default";
-        this.description =
-            "Index of Coincidence (IC) is the probability of two randomly selected characters being the same. This can be used to determine whether text is readable or random, with English text having an IC of around 0.066. IC can therefore be a sound method to automate frequency analysis.";
+        this.description = "Index of Coincidence (IC) is the probability of two randomly selected characters being the same. This can be used to determine whether text is readable or random, with English text having an IC of around 0.066. IC can therefore be a sound method to automate frequency analysis.";
         this.infoURL = "https://wikipedia.org/wiki/Index_of_coincidence";
         this.inputType = "string";
         this.outputType = "number";
@@ -37,16 +37,16 @@ class IndexOfCoincidence extends Operation {
         const text = input.toLowerCase().replace(/[^a-z]/g, ""),
             frequencies = new Array(26).fill(0),
             alphabet = Utils.expandAlphRange("a-z");
-        let coincidence = 0.0,
-            density = 0.0,
-            result = 0.0,
+        let coincidence = 0.00,
+            density = 0.00,
+            result = 0.00,
             i;
 
-        for (i = 0; i < alphabet.length; i++) {
+        for (i=0; i < alphabet.length; i++) {
             frequencies[i] = text.count(alphabet[i]);
         }
 
-        for (i = 0; i < frequencies.length; i++) {
+        for (i=0; i < frequencies.length; i++) {
             coincidence += frequencies[i] * (frequencies[i] - 1);
         }
 
@@ -101,6 +101,7 @@ The graph shows the IC of the input data. A low IC generally means that the text
 </script>
      `;
     }
+
 }
 
 export default IndexOfCoincidence;

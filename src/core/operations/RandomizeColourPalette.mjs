@@ -16,6 +16,7 @@ import jimp from "jimp";
  * Randomize Colour Palette operation
  */
 class RandomizeColourPalette extends Operation {
+
     /**
      * RandomizeColourPalette constructor
      */
@@ -24,8 +25,7 @@ class RandomizeColourPalette extends Operation {
 
         this.name = "Randomize Colour Palette";
         this.module = "Image";
-        this.description =
-            "Randomizes each colour in an image's colour palette. This can often reveal text or symbols that were previously a very similar colour to their surroundings, a technique sometimes used in Steganography.";
+        this.description = "Randomizes each colour in an image's colour palette. This can often reveal text or symbols that were previously a very similar colour to their surroundings, a technique sometimes used in Steganography.";
         this.infoURL = "https://wikipedia.org/wiki/Indexed_color";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -34,8 +34,8 @@ class RandomizeColourPalette extends Operation {
             {
                 name: "Seed",
                 type: "string",
-                value: "",
-            },
+                value: ""
+            }
         ];
     }
 
@@ -45,18 +45,17 @@ class RandomizeColourPalette extends Operation {
      * @returns {ArrayBuffer}
      */
     async run(input, args) {
-        if (!isImage(input))
-            throw new OperationError("Please enter a valid image file.");
+        if (!isImage(input)) throw new OperationError("Please enter a valid image file.");
 
-        const seed = args[0] || Math.random().toString().substr(2),
+        const seed = args[0] || (Math.random().toString().substr(2)),
             parsedImage = await jimp.read(input),
             width = parsedImage.bitmap.width,
             height = parsedImage.bitmap.height;
 
         let rgbString, rgbHash, rgbHex;
 
-        parsedImage.scan(0, 0, width, height, function (x, y, idx) {
-            rgbString = this.bitmap.data.slice(idx, idx + 3).join(".");
+        parsedImage.scan(0, 0, width, height, function(x, y, idx) {
+            rgbString = this.bitmap.data.slice(idx, idx+3).join(".");
             rgbHash = runHash("md5", Utils.strToArrayBuffer(seed + rgbString));
             rgbHex = rgbHash.substr(0, 6) + "ff";
             parsedImage.setPixelColor(parseInt(rgbHex, 16), x, y);
@@ -78,6 +77,7 @@ class RandomizeColourPalette extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(data)}">`;
     }
+
 }
 
 export default RandomizeColourPalette;

@@ -5,12 +5,13 @@
  */
 
 import Operation from "../Operation.mjs";
-import { SPLIT_DELIM_OPTIONS, JOIN_DELIM_OPTIONS } from "../lib/Delim.mjs";
+import {SPLIT_DELIM_OPTIONS, JOIN_DELIM_OPTIONS} from "../lib/Delim.mjs";
 
 /**
  * Split operation
  */
 class Split extends Operation {
+
     /**
      * Split constructor
      */
@@ -19,21 +20,20 @@ class Split extends Operation {
 
         this.name = "Split";
         this.module = "Default";
-        this.description =
-            "Splits a string into sections around a given delimiter.";
+        this.description = "Splits a string into sections around a given delimiter.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Split delimiter",
-                type: "editableOptionShort",
-                value: SPLIT_DELIM_OPTIONS,
+                "name": "Split delimiter",
+                "type": "editableOptionShort",
+                "value": SPLIT_DELIM_OPTIONS
             },
             {
-                name: "Join delimiter",
-                type: "editableOptionShort",
-                value: JOIN_DELIM_OPTIONS,
-            },
+                "name": "Join delimiter",
+                "type": "editableOptionShort",
+                "value": JOIN_DELIM_OPTIONS
+            }
         ];
     }
 
@@ -49,6 +49,7 @@ class Split extends Operation {
 
         return sections.join(joinDelim);
     }
+
 }
 
 export default Split;

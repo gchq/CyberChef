@@ -13,6 +13,7 @@ import OperationError from "../errors/OperationError.mjs";
  * Rabbit operation
  */
 class Rabbit extends Operation {
+
     /**
      * Rabbit constructor
      */
@@ -21,39 +22,38 @@ class Rabbit extends Operation {
 
         this.name = "Rabbit";
         this.module = "Ciphers";
-        this.description =
-            "Rabbit is a high-speed stream cipher introduced in 2003 and defined in RFC 4503.<br><br>The cipher uses a 128-bit key and an optional 64-bit initialization vector (IV).<br><br>big-endian: based on RFC4503 and RFC3447<br>little-endian: compatible with Crypto++";
+        this.description = "Rabbit is a high-speed stream cipher introduced in 2003 and defined in RFC 4503.<br><br>The cipher uses a 128-bit key and an optional 64-bit initialization vector (IV).<br><br>big-endian: based on RFC4503 and RFC3447<br>little-endian: compatible with Crypto++";
         this.infoURL = "https://wikipedia.org/wiki/Rabbit_(cipher)";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Key",
-                type: "toggleString",
-                value: "",
-                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"],
+                "name": "Key",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
             },
             {
-                name: "IV",
-                type: "toggleString",
-                value: "",
-                toggleValues: ["Hex", "UTF8", "Latin1", "Base64"],
+                "name": "IV",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
             },
             {
-                name: "Endianness",
-                type: "option",
-                value: ["Big", "Little"],
+                "name": "Endianness",
+                "type": "option",
+                "value": ["Big", "Little"]
             },
             {
-                name: "Input",
-                type: "option",
-                value: ["Raw", "Hex"],
+                "name": "Input",
+                "type": "option",
+                "value": ["Raw", "Hex"]
             },
             {
-                name: "Output",
-                type: "option",
-                value: ["Raw", "Hex"],
-            },
+                "name": "Output",
+                "type": "option",
+                "value": ["Raw", "Hex"]
+            }
         ];
     }
 
@@ -72,27 +72,22 @@ class Rabbit extends Operation {
         const littleEndian = endianness === "Little";
 
         if (key.length !== 16) {
-            throw new OperationError(
-                `Invalid key length: ${key.length} bytes (expected: 16)`,
-            );
+            throw new OperationError(`Invalid key length: ${key.length} bytes (expected: 16)`);
         }
         if (iv.length !== 0 && iv.length !== 8) {
-            throw new OperationError(
-                `Invalid IV length: ${iv.length} bytes (expected: 0 or 8)`,
-            );
+            throw new OperationError(`Invalid IV length: ${iv.length} bytes (expected: 0 or 8)`);
         }
 
         // Inner State
-        const X = new Uint32Array(8),
-            C = new Uint32Array(8);
+        const X = new Uint32Array(8), C = new Uint32Array(8);
         let b = 0;
 
         // Counter System
         const A = [
-            0x4d34d34d, 0xd34d34d3, 0x34d34d34, 0x4d34d34d, 0xd34d34d3,
-            0x34d34d34, 0x4d34d34d, 0xd34d34d3,
+            0x4d34d34d, 0xd34d34d3, 0x34d34d34, 0x4d34d34d,
+            0xd34d34d3, 0x34d34d34, 0x4d34d34d, 0xd34d34d3
         ];
-        const counterUpdate = function () {
+        const counterUpdate = function() {
             for (let j = 0; j < 8; j++) {
                 const temp = C[j] + A[j] + b;
                 b = (temp / ((1 << 30) * 4)) >>> 0;
@@ -101,10 +96,9 @@ class Rabbit extends Operation {
         };
 
         // Next-State Function
-        const g = function (u, v) {
+        const g = function(u, v) {
             const uv = (u + v) >>> 0;
-            const upper = uv >>> 16,
-                lower = uv & 0xffff;
+            const upper = uv >>> 16, lower = uv & 0xffff;
             const upperUpper = upper * upper;
             const upperLower2 = 2 * upper * lower;
             const lowerLower = lower * lower;
@@ -114,17 +108,17 @@ class Rabbit extends Operation {
             const lsw = lswTemp >>> 0;
             return lsw ^ msw;
         };
-        const leftRotate = function (value, width) {
+        const leftRotate = function(value, width) {
             return (value << width) | (value >>> (32 - width));
         };
-        const nextStateHelper1 = function (v0, v1, v2) {
+        const nextStateHelper1 = function(v0, v1, v2) {
             return v0 + leftRotate(v1, 16) + leftRotate(v2, 16);
         };
-        const nextStateHelper2 = function (v0, v1, v2) {
+        const nextStateHelper2 = function(v0, v1, v2) {
             return v0 + leftRotate(v1, 8) + v2;
         };
         const G = new Uint32Array(8);
-        const nextState = function () {
+        const nextState = function() {
             for (let j = 0; j < 8; j++) {
                 G[j] = g(X[j], C[j]);
             }
@@ -168,16 +162,13 @@ class Rabbit extends Operation {
 
         // IV Setup Scheme
         if (iv.length === 8) {
-            const getIVValue = function (a, b, c, d) {
+            const getIVValue = function(a, b, c, d) {
                 if (littleEndian) {
-                    return (iv[a] << 24) | (iv[b] << 16) | (iv[c] << 8) | iv[d];
+                    return (iv[a] << 24) | (iv[b] << 16) |
+                        (iv[c] << 8) | iv[d];
                 } else {
-                    return (
-                        (iv[7 - a] << 24) |
-                        (iv[7 - b] << 16) |
-                        (iv[7 - c] << 8) |
-                        iv[7 - d]
-                    );
+                    return (iv[7 - a] << 24) | (iv[7 - b] << 16) |
+                        (iv[7 - c] << 8) | iv[7 - d];
                 }
             };
             C[0] = C[0] ^ getIVValue(3, 2, 1, 0);
@@ -196,9 +187,9 @@ class Rabbit extends Operation {
 
         // Extraction Scheme
         const S = new Uint8Array(16);
-        const extract = function () {
+        const extract = function() {
             let pos = 0;
-            const addPart = function (value) {
+            const addPart = function(value) {
                 S[pos++] = value >>> 8;
                 S[pos++] = value & 0xff;
             };
@@ -213,7 +204,7 @@ class Rabbit extends Operation {
             addPart((X[0] >>> 16) ^ (X[3] & 0xffff));
             addPart((X[0] & 0xffff) ^ (X[5] >>> 16));
             if (littleEndian) {
-                for (let i = 0, j = S.length - 1; i < j; ) {
+                for (let i = 0, j = S.length - 1; i < j;) {
                     const temp = S[i];
                     S[i] = S[j];
                     S[j] = temp;
@@ -232,7 +223,7 @@ class Rabbit extends Operation {
             }
         }
         if (data.length % 16 !== 0) {
-            const offset = data.length - (data.length % 16);
+            const offset = data.length - data.length % 16;
             const length = data.length - offset;
             extract();
             if (littleEndian) {
@@ -241,8 +232,7 @@ class Rabbit extends Operation {
                 }
             } else {
                 for (let j = 0; j < length; j++) {
-                    result[offset + j] =
-                        data.charCodeAt(offset + j) ^ S[16 - length + j];
+                    result[offset + j] = data.charCodeAt(offset + j) ^ S[16 - length + j];
                 }
             }
         }
@@ -251,6 +241,7 @@ class Rabbit extends Operation {
         }
         return Utils.byteArrayToChars(result);
     }
+
 }
 
 export default Rabbit;

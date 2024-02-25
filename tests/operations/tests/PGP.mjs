@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 import TestRegister from "../../lib/TestRegister.mjs";
-import { ASCII_TEXT, UTF8_TEXT, ALL_BYTES } from "../../samples/Ciphers.mjs";
+import {ASCII_TEXT, UTF8_TEXT, ALL_BYTES} from "../../samples/Ciphers.mjs";
 
 // RSA-1024
 const ALICE_PRIVATE = `-----BEGIN PGP PRIVATE KEY BLOCK-----
@@ -151,14 +151,14 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                op: "PGP Encrypt",
-                args: [ALICE_PUBLIC],
+                "op": "PGP Encrypt",
+                "args": [ALICE_PUBLIC]
             },
             {
-                op: "PGP Decrypt",
-                args: [ALICE_PRIVATE, ""],
-            },
-        ],
+                "op": "PGP Decrypt",
+                "args": [ALICE_PRIVATE, ""]
+            }
+        ]
     },
     {
         name: "PGP Encrypt/Decrypt: RSA, All bytes",
@@ -166,14 +166,14 @@ TestRegister.addTests([
         expectedOutput: ALL_BYTES,
         recipeConfig: [
             {
-                op: "PGP Encrypt",
-                args: [ALICE_PUBLIC],
+                "op": "PGP Encrypt",
+                "args": [ALICE_PUBLIC]
             },
             {
-                op: "PGP Decrypt",
-                args: [ALICE_PRIVATE, ""],
-            },
-        ],
+                "op": "PGP Decrypt",
+                "args": [ALICE_PRIVATE, ""]
+            }
+        ]
     },
     {
         name: "PGP Encrypt/Decrypt: ECC, nothing",
@@ -181,14 +181,14 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                op: "PGP Encrypt",
-                args: [BOB_PUBLIC],
+                "op": "PGP Encrypt",
+                "args": [BOB_PUBLIC]
             },
             {
-                op: "PGP Decrypt",
-                args: [BOB_PRIVATE, ""],
-            },
-        ],
+                "op": "PGP Decrypt",
+                "args": [BOB_PRIVATE, ""]
+            }
+        ]
     },
     {
         name: "PGP Encrypt/Decrypt: ECC, All bytes",
@@ -196,14 +196,14 @@ TestRegister.addTests([
         expectedOutput: ALL_BYTES,
         recipeConfig: [
             {
-                op: "PGP Encrypt",
-                args: [BOB_PUBLIC],
+                "op": "PGP Encrypt",
+                "args": [BOB_PUBLIC]
             },
             {
-                op: "PGP Decrypt",
-                args: [BOB_PRIVATE, ""],
-            },
-        ],
+                "op": "PGP Decrypt",
+                "args": [BOB_PRIVATE, ""]
+            }
+        ]
     },
     {
         name: "PGP Decrypt and Verify: UTF8, Alice -> Bob",
@@ -232,10 +232,10 @@ Signed on Tue, 29 May 2018 15:44:52 GMT
 ${UTF8_TEXT}`,
         recipeConfig: [
             {
-                op: "PGP Decrypt and Verify",
-                args: [ALICE_PUBLIC, BOB_PRIVATE, ""],
-            },
-        ],
+                "op": "PGP Decrypt and Verify",
+                "args": [ALICE_PUBLIC, BOB_PRIVATE, ""]
+            }
+        ]
     },
     {
         name: "PGP Decrypt: ASCII, Alice -> Bob",
@@ -255,10 +255,10 @@ H2qMY1O7hezH3fp+EZzCAccJMtK7VPk13WAgMRH22HirG4aK1i75IVOtjBgObzDh
         expectedOutput: ASCII_TEXT,
         recipeConfig: [
             {
-                op: "PGP Decrypt",
-                args: [ALICE_PRIVATE, ""],
-            },
-        ],
+                "op": "PGP Decrypt",
+                "args": [ALICE_PRIVATE, ""]
+            }
+        ]
     },
     {
         name: "PGP Verify: ASCII, Alice",
@@ -281,9 +281,9 @@ Signed on Thu, 27 Jun 2019 16:20:15 GMT
 A common mistake that people make when trying to design something completely foolproof is to underestimate the ingenuity of complete fools.`,
         recipeConfig: [
             {
-                op: "PGP Verify",
-                args: [ALICE_PUBLIC],
-            },
-        ],
-    },
+                "op": "PGP Verify",
+                "args": [ALICE_PUBLIC]
+            }
+        ]
+    }
 ]);

@@ -18,6 +18,7 @@ export function caseInsensitiveSort(a, b) {
     return a.toLowerCase().localeCompare(b.toLowerCase());
 }
 
+
 /**
  * Comparison operation for sorting of IPv4 addresses.
  *
@@ -58,8 +59,7 @@ export function numericSort(a, b) {
             const ret = a_[i].localeCompare(b_[i]); // Compare strings
             if (ret !== 0) return ret;
         }
-        if (!isNaN(a_[i]) && !isNaN(b_[i])) {
-            // Compare numbers
+        if (!isNaN(a_[i]) && !isNaN(b_[i])) { // Compare numbers
             if (a_[i] - b_[i] !== 0) return a_[i] - b_[i];
         }
     }
@@ -79,12 +79,12 @@ export function hexadecimalSort(a, b) {
     let a_ = a.split(/([^\da-f]+)/i),
         b_ = b.split(/([^\da-f]+)/i);
 
-    a_ = a_.map((v) => {
+    a_ = a_.map(v => {
         const t = parseInt(v, 16);
         return isNaN(t) ? v : t;
     });
 
-    b_ = b_.map((v) => {
+    b_ = b_.map(v => {
         const t = parseInt(v, 16);
         return isNaN(t) ? v : t;
     });
@@ -96,8 +96,7 @@ export function hexadecimalSort(a, b) {
             const ret = a_[i].localeCompare(b_[i]); // Compare strings
             if (ret !== 0) return ret;
         }
-        if (!isNaN(a_[i]) && !isNaN(b_[i])) {
-            // Compare numbers
+        if (!isNaN(a_[i]) && !isNaN(b_[i])) { // Compare numbers
             if (a_[i] - b_[i] !== 0) return a_[i] - b_[i];
         }
     }
@@ -115,3 +114,4 @@ export function hexadecimalSort(a, b) {
 export function lengthSort(a, b) {
     return a.length - b.length;
 }
+

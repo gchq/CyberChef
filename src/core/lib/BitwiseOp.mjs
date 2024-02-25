@@ -16,7 +16,7 @@
  * @param {string} scheme
  * @returns {byteArray}
  */
-export function bitOp(input, key, func, nullPreserving, scheme) {
+export function bitOp (input, key, func, nullPreserving, scheme) {
     if (!key || !key.length) key = [0];
     const result = [];
     let x = null,
@@ -29,11 +29,9 @@ export function bitOp(input, key, func, nullPreserving, scheme) {
         o = input[i];
         x = nullPreserving && (o === 0 || o === k) ? o : func(o, k);
         result.push(x);
-        if (
-            scheme &&
+        if (scheme &&
             scheme !== "Standard" &&
-            !(nullPreserving && (o === 0 || o === k))
-        ) {
+            !(nullPreserving && (o === 0 || o === k))) {
             switch (scheme) {
                 case "Input differential":
                     key[i % key.length] = o;
@@ -59,6 +57,7 @@ export function xor(operand, key) {
     return operand ^ key;
 }
 
+
 /**
  * NOT bitwise calculation.
  *
@@ -68,6 +67,7 @@ export function xor(operand, key) {
 export function not(operand, _) {
     return ~operand & 0xff;
 }
+
 
 /**
  * AND bitwise calculation.
@@ -80,6 +80,7 @@ export function and(operand, key) {
     return operand & key;
 }
 
+
 /**
  * OR bitwise calculation.
  *
@@ -90,6 +91,7 @@ export function and(operand, key) {
 export function or(operand, key) {
     return operand | key;
 }
+
 
 /**
  * ADD bitwise calculation.
@@ -102,6 +104,7 @@ export function add(operand, key) {
     return (operand + key) % 256;
 }
 
+
 /**
  * SUB bitwise calculation.
  *
@@ -111,17 +114,11 @@ export function add(operand, key) {
  */
 export function sub(operand, key) {
     const result = operand - key;
-    return result < 0 ? 256 + result : result;
+    return (result < 0) ? 256 + result : result;
 }
+
 
 /**
  * Delimiter options for bitwise operations
  */
-export const BITWISE_OP_DELIMS = [
-    "Hex",
-    "Decimal",
-    "Binary",
-    "Base64",
-    "UTF8",
-    "Latin1",
-];
+export const BITWISE_OP_DELIMS = ["Hex", "Decimal", "Binary", "Base64", "UTF8", "Latin1"];

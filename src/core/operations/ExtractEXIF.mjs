@@ -12,6 +12,7 @@ import OperationError from "../errors/OperationError.mjs";
  * Extract EXIF operation
  */
 class ExtractEXIF extends Operation {
+
     /**
      * ExtractEXIF constructor
      */
@@ -53,11 +54,10 @@ class ExtractEXIF extends Operation {
             lines.unshift(`Found ${numTags} tags.\n`);
             return lines.join("\n");
         } catch (err) {
-            throw new OperationError(
-                `Could not extract EXIF data from image: ${err}`,
-            );
+            throw new OperationError(`Could not extract EXIF data from image: ${err}`);
         }
     }
+
 }
 
 export default ExtractEXIF;

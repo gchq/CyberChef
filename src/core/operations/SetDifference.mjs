@@ -11,6 +11,7 @@ import OperationError from "../errors/OperationError.mjs";
  * Set Difference operation
  */
 class SetDifference extends Operation {
+
     /**
      * Set Difference constructor
      */
@@ -19,22 +20,20 @@ class SetDifference extends Operation {
 
         this.name = "Set Difference";
         this.module = "Default";
-        this.description =
-            "Calculates the difference, or relative complement, of two sets.";
-        this.infoURL =
-            "https://wikipedia.org/wiki/Complement_(set_theory)#Relative_complement";
+        this.description = "Calculates the difference, or relative complement, of two sets.";
+        this.infoURL = "https://wikipedia.org/wiki/Complement_(set_theory)#Relative_complement";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "Sample delimiter",
                 type: "binaryString",
-                value: "\\n\\n",
+                value: "\\n\\n"
             },
             {
                 name: "Item delimiter",
                 type: "binaryString",
-                value: ",",
+                value: ","
             },
         ];
     }
@@ -46,10 +45,8 @@ class SetDifference extends Operation {
      * @throws {Error} if not two sets
      */
     validateSampleNumbers(sets) {
-        if (!sets || sets.length !== 2) {
-            throw new OperationError(
-                "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?",
-            );
+        if (!sets || (sets.length !== 2)) {
+            throw new OperationError("Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?");
         }
     }
 
@@ -67,9 +64,7 @@ class SetDifference extends Operation {
 
         this.validateSampleNumbers(sets);
 
-        return this.runSetDifference(
-            ...sets.map((s) => s.split(this.itemDelimiter)),
-        );
+        return this.runSetDifference(...sets.map(s => s.split(this.itemDelimiter)));
     }
 
     /**
@@ -86,6 +81,7 @@ class SetDifference extends Operation {
             })
             .join(this.itemDelimiter);
     }
+
 }
 
 export default SetDifference;

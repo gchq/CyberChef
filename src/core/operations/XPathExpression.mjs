@@ -13,6 +13,7 @@ import xpath from "xpath";
  * XPath expression operation
  */
 class XPathExpression extends Operation {
+
     /**
      * XPathExpression constructor
      */
@@ -21,22 +22,21 @@ class XPathExpression extends Operation {
 
         this.name = "XPath expression";
         this.module = "Code";
-        this.description =
-            "Extract information from an XML document with an XPath query";
+        this.description = "Extract information from an XML document with an XPath query";
         this.infoURL = "https://wikipedia.org/wiki/XPath";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "XPath",
-                type: "string",
-                value: "",
+                "name": "XPath",
+                "type": "string",
+                "value": ""
             },
             {
-                name: "Result delimiter",
-                type: "binaryShortString",
-                value: "\\n",
-            },
+                "name": "Result delimiter",
+                "type": "binaryShortString",
+                "value": "\\n"
+            }
         ];
     }
 
@@ -60,8 +60,8 @@ class XPathExpression extends Operation {
                     },
                     fatalError(e) {
                         throw e;
-                    },
-                },
+                    }
+                }
             }).parseFromString(input, "application/xml");
         } catch (err) {
             throw new OperationError("Invalid input XML.");
@@ -69,21 +69,18 @@ class XPathExpression extends Operation {
 
         let nodes;
         try {
-            nodes = xpath
-                .parse(query)
-                .select({ node: doc, allowAnyNamespaceForNoPrefix: true });
+            nodes = xpath.parse(query).select({ node: doc, allowAnyNamespaceForNoPrefix: true });
         } catch (err) {
-            throw new OperationError(
-                `Invalid XPath. Details:\n${err.message}.`,
-            );
+            throw new OperationError(`Invalid XPath. Details:\n${err.message}.`);
         }
 
-        const nodeToString = function (node) {
+        const nodeToString = function(node) {
             return node.toString();
         };
 
         return nodes.map(nodeToString).join(delimiter);
     }
+
 }
 
 export default XPathExpression;

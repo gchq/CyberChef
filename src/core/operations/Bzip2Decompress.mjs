@@ -13,6 +13,7 @@ import { isWorkerEnvironment } from "../Utils.mjs";
  * Bzip2 Decompress operation
  */
 class Bzip2Decompress extends Operation {
+
     /**
      * Bzip2Decompress constructor
      */
@@ -29,15 +30,15 @@ class Bzip2Decompress extends Operation {
             {
                 name: "Use low-memory, slower decompression algorithm",
                 type: "boolean",
-                value: false,
-            },
+                value: false
+            }
         ];
         this.checks = [
             {
-                pattern: "^\\x42\\x5a\\x68",
-                flags: "",
-                args: [],
-            },
+                "pattern": "^\\x42\\x5a\\x68",
+                "flags": "",
+                "args": []
+            }
         ];
     }
 
@@ -53,25 +54,20 @@ class Bzip2Decompress extends Operation {
         }
         if (isWorkerEnvironment()) self.sendStatusMessage("Loading Bzip2...");
         return new Promise((resolve, reject) => {
-            Bzip2().then((bzip2) => {
-                if (isWorkerEnvironment())
-                    self.sendStatusMessage("Decompressing data...");
+            Bzip2().then(bzip2 => {
+                if (isWorkerEnvironment()) self.sendStatusMessage("Decompressing data...");
                 const inpArray = new Uint8Array(input);
                 const bzip2cc = bzip2.decompressBZ2(inpArray, small ? 1 : 0);
                 if (bzip2cc.error !== 0) {
                     reject(new OperationError(bzip2cc.error_msg));
                 } else {
                     const output = bzip2cc.output;
-                    resolve(
-                        output.buffer.slice(
-                            output.byteOffset,
-                            output.byteLength + output.byteOffset,
-                        ),
-                    );
+                    resolve(output.buffer.slice(output.byteOffset, output.byteLength + output.byteOffset));
                 }
             });
         });
     }
+
 }
 
 export default Bzip2Decompress;

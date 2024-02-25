@@ -11,6 +11,7 @@ import Cbor from "cbor";
  * CBOR Encode operation
  */
 class CBOREncode extends Operation {
+
     /**
      * CBOREncode constructor
      */
@@ -19,8 +20,7 @@ class CBOREncode extends Operation {
 
         this.name = "CBOR Encode";
         this.module = "Serialise";
-        this.description =
-            "Concise Binary Object Representation (CBOR) is a binary data serialization format loosely based on JSON. Like JSON it allows the transmission of data objects that contain name–value pairs, but in a more concise manner. This increases processing and transfer speeds at the cost of human readability. It is defined in IETF RFC 8949.";
+        this.description = "Concise Binary Object Representation (CBOR) is a binary data serialization format loosely based on JSON. Like JSON it allows the transmission of data objects that contain name–value pairs, but in a more concise manner. This increases processing and transfer speeds at the cost of human readability. It is defined in IETF RFC 8949.";
         this.infoURL = "https://wikipedia.org/wiki/CBOR";
         this.inputType = "JSON";
         this.outputType = "ArrayBuffer";
@@ -35,6 +35,7 @@ class CBOREncode extends Operation {
     run(input, args) {
         return new Uint8Array(Cbor.encodeCanonical(input)).buffer;
     }
+
 }
 
 export default CBOREncode;

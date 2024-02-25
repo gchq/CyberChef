@@ -11,6 +11,7 @@ import Operation from "../Operation.mjs";
  * JSON Minify operation
  */
 class JSONMinify extends Operation {
+
     /**
      * JSONMinify constructor
      */
@@ -34,6 +35,7 @@ class JSONMinify extends Operation {
         if (!input) return "";
         return vkbeautify.jsonmin(input);
     }
+
 }
 
 export default JSONMinify;

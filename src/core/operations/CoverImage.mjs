@@ -15,6 +15,7 @@ import jimp from "jimp";
  * Cover Image operation
  */
 class CoverImage extends Operation {
+
     /**
      * CoverImage constructor
      */
@@ -23,8 +24,7 @@ class CoverImage extends Operation {
 
         this.name = "Cover Image";
         this.module = "Image";
-        this.description =
-            "Scales the image to the given width and height, keeping the aspect ratio. The image may be clipped.";
+        this.description = "Scales the image to the given width and height, keeping the aspect ratio. The image may be clipped.";
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -34,25 +34,33 @@ class CoverImage extends Operation {
                 name: "Width",
                 type: "number",
                 value: 100,
-                min: 1,
+                min: 1
             },
             {
                 name: "Height",
                 type: "number",
                 value: 100,
-                min: 1,
+                min: 1
             },
             {
                 name: "Horizontal align",
                 type: "option",
-                value: ["Left", "Center", "Right"],
-                defaultIndex: 1,
+                value: [
+                    "Left",
+                    "Center",
+                    "Right"
+                ],
+                defaultIndex: 1
             },
             {
                 name: "Vertical align",
                 type: "option",
-                value: ["Top", "Middle", "Bottom"],
-                defaultIndex: 1,
+                value: [
+                    "Top",
+                    "Middle",
+                    "Bottom"
+                ],
+                defaultIndex: 1
             },
             {
                 name: "Resizing algorithm",
@@ -62,10 +70,10 @@ class CoverImage extends Operation {
                     "Bilinear",
                     "Bicubic",
                     "Hermite",
-                    "Bezier",
+                    "Bezier"
                 ],
-                defaultIndex: 1,
-            },
+                defaultIndex: 1
+            }
         ];
     }
 
@@ -79,19 +87,19 @@ class CoverImage extends Operation {
 
         const resizeMap = {
             "Nearest Neighbour": jimp.RESIZE_NEAREST_NEIGHBOR,
-            Bilinear: jimp.RESIZE_BILINEAR,
-            Bicubic: jimp.RESIZE_BICUBIC,
-            Hermite: jimp.RESIZE_HERMITE,
-            Bezier: jimp.RESIZE_BEZIER,
+            "Bilinear": jimp.RESIZE_BILINEAR,
+            "Bicubic": jimp.RESIZE_BICUBIC,
+            "Hermite": jimp.RESIZE_HERMITE,
+            "Bezier": jimp.RESIZE_BEZIER
         };
 
         const alignMap = {
-            Left: jimp.HORIZONTAL_ALIGN_LEFT,
-            Center: jimp.HORIZONTAL_ALIGN_CENTER,
-            Right: jimp.HORIZONTAL_ALIGN_RIGHT,
-            Top: jimp.VERTICAL_ALIGN_TOP,
-            Middle: jimp.VERTICAL_ALIGN_MIDDLE,
-            Bottom: jimp.VERTICAL_ALIGN_BOTTOM,
+            "Left": jimp.HORIZONTAL_ALIGN_LEFT,
+            "Center": jimp.HORIZONTAL_ALIGN_CENTER,
+            "Right": jimp.HORIZONTAL_ALIGN_RIGHT,
+            "Top": jimp.VERTICAL_ALIGN_TOP,
+            "Middle": jimp.VERTICAL_ALIGN_MIDDLE,
+            "Bottom": jimp.VERTICAL_ALIGN_BOTTOM
         };
 
         if (!isImage(input)) {
@@ -107,12 +115,7 @@ class CoverImage extends Operation {
         try {
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Covering image...");
-            image.cover(
-                width,
-                height,
-                alignMap[hAlign] | alignMap[vAlign],
-                resizeMap[alg],
-            );
+            image.cover(width, height, alignMap[hAlign] | alignMap[vAlign], resizeMap[alg]);
             let imageBuffer;
             if (image.getMIME() === "image/gif") {
                 imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
@@ -141,6 +144,7 @@ class CoverImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
+
 }
 
 export default CoverImage;

@@ -15,47 +15,28 @@ import Utils from "../Utils.mjs";
  * randomised.
  */
 export const ROTORS = [
-    { name: "Example 1", value: "MCYLPQUVRXGSAOWNBJEZDTFKHI<BFHNQUW" },
-    { name: "Example 2", value: "KHWENRCBISXJQGOFMAPVYZDLTU<BFHNQUW" },
-    { name: "Example 3", value: "BYPDZMGIKQCUSATREHOJNLFWXV<BFHNQUW" },
-    { name: "Example 4", value: "ZANJCGDLVHIXOBRPMSWQUKFYET<BFHNQUW" },
-    { name: "Example 5", value: "QXBGUTOVFCZPJIHSWERYNDAMLK<BFHNQUW" },
-    { name: "Example 6", value: "BDCNWUEIQVFTSXALOGZJYMHKPR<BFHNQUW" },
-    { name: "Example 7", value: "WJUKEIABMSGFTQZVCNPHORDXYL<BFHNQUW" },
-    { name: "Example 8", value: "TNVCZXDIPFWQKHSJMAOYLEURGB<BFHNQUW" },
+    {name: "Example 1", value: "MCYLPQUVRXGSAOWNBJEZDTFKHI<BFHNQUW"},
+    {name: "Example 2", value: "KHWENRCBISXJQGOFMAPVYZDLTU<BFHNQUW"},
+    {name: "Example 3", value: "BYPDZMGIKQCUSATREHOJNLFWXV<BFHNQUW"},
+    {name: "Example 4", value: "ZANJCGDLVHIXOBRPMSWQUKFYET<BFHNQUW"},
+    {name: "Example 5", value: "QXBGUTOVFCZPJIHSWERYNDAMLK<BFHNQUW"},
+    {name: "Example 6", value: "BDCNWUEIQVFTSXALOGZJYMHKPR<BFHNQUW"},
+    {name: "Example 7", value: "WJUKEIABMSGFTQZVCNPHORDXYL<BFHNQUW"},
+    {name: "Example 8", value: "TNVCZXDIPFWQKHSJMAOYLEURGB<BFHNQUW"},
 ];
 
 /**
  * An example Typex reflector. Again, randomised.
  */
 export const REFLECTORS = [
-    { name: "Example", value: "AN BC FG IE KD LU MH OR TS VZ WQ XJ YP" },
+    {name: "Example", value: "AN BC FG IE KD LU MH OR TS VZ WQ XJ YP"},
 ];
 
 // Special character handling on Typex keyboard
 const KEYBOARD = {
-    Q: "1",
-    W: "2",
-    E: "3",
-    R: "4",
-    T: "5",
-    Y: "6",
-    U: "7",
-    I: "8",
-    O: "9",
-    P: "0",
-    A: "-",
-    S: "/",
-    D: "Z",
-    F: "%",
-    G: "X",
-    H: "£",
-    K: "(",
-    L: ")",
-    C: "V",
-    B: "'",
-    N: ",",
-    M: ".",
+    "Q": "1", "W": "2", "E": "3", "R": "4", "T": "5", "Y": "6", "U": "7", "I": "8", "O": "9", "P": "0",
+    "A": "-", "S": "/", "D": "Z", "F": "%", "G": "X", "H": "£", "K": "(", "L": ")",
+    "C": "V", "B": "'", "N": ",", "M": "."
 };
 const KEYBOARD_REV = {};
 for (const i of Object.keys(KEYBOARD)) {
@@ -175,13 +156,11 @@ export class Rotor extends Enigma.Rotor {
         let wiringMod = wiring;
         if (reversed) {
             const outMap = new Array(26);
-            for (let i = 0; i < 26; i++) {
+            for (let i=0; i<26; i++) {
                 // wiring[i] is the original output
                 // Enigma.LETTERS[i] is the original input
                 const input = Utils.mod(26 - Enigma.a2i(wiring[i]), 26);
-                const output = Enigma.i2a(
-                    Utils.mod(26 - Enigma.a2i(Enigma.LETTERS[i]), 26),
-                );
+                const output = Enigma.i2a(Utils.mod(26 - Enigma.a2i(Enigma.LETTERS[i]), 26));
                 outMap[input] = output;
             }
             wiringMod = outMap.join("");
@@ -213,12 +192,10 @@ export class Plugboard extends Enigma.Rotor {
         // We're going to achieve this by mapping the plugboard settings through an additional
         // transform that mirrors the alphabet before we pass it to the superclass.
         if (!/^[A-Z]{26}$/.test(wiring)) {
-            throw new OperationError(
-                "Plugboard wiring must be 26 unique uppercase letters",
-            );
+            throw new OperationError("Plugboard wiring must be 26 unique uppercase letters");
         }
         const reversed = "AZYXWVUTSRQPONMLKJIHGFEDCB";
-        wiring = wiring.replace(/./g, (x) => {
+        wiring = wiring.replace(/./g, x => {
             return reversed[Enigma.a2i(x)];
         });
         try {
@@ -245,9 +222,6 @@ export class Plugboard extends Enigma.Rotor {
      * @returns {number}
      */
     revTransform(c) {
-        return Utils.mod(
-            this.revMap[Utils.mod(c + this.pos, 26)] - this.pos,
-            26,
-        );
+        return Utils.mod(this.revMap[Utils.mod(c + this.pos, 26)] - this.pos, 26);
     }
 }

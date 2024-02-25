@@ -11,6 +11,7 @@ import OperationError from "../errors/OperationError.mjs";
  * Generate De Bruijn Sequence operation
  */
 class GenerateDeBruijnSequence extends Operation {
+
     /**
      * GenerateDeBruijnSequence constructor
      */
@@ -19,8 +20,7 @@ class GenerateDeBruijnSequence extends Operation {
 
         this.name = "Generate De Bruijn Sequence";
         this.module = "Default";
-        this.description =
-            "Generates rolling keycode combinations given a certain alphabet size and key length.";
+        this.description = "Generates rolling keycode combinations given a certain alphabet size and key length.";
         this.infoURL = "https://wikipedia.org/wiki/De_Bruijn_sequence";
         this.inputType = "string";
         this.outputType = "string";
@@ -28,13 +28,13 @@ class GenerateDeBruijnSequence extends Operation {
             {
                 name: "Alphabet size (k)",
                 type: "number",
-                value: 2,
+                value: 2
             },
             {
                 name: "Key length (n)",
                 type: "number",
-                value: 3,
-            },
+                value: 3
+            }
         ];
     }
 
@@ -47,21 +47,15 @@ class GenerateDeBruijnSequence extends Operation {
         const [k, n] = args;
 
         if (k < 2 || k > 9) {
-            throw new OperationError(
-                "Invalid alphabet size, required to be between 2 and 9 (inclusive).",
-            );
+            throw new OperationError("Invalid alphabet size, required to be between 2 and 9 (inclusive).");
         }
 
         if (n < 2) {
-            throw new OperationError(
-                "Invalid key length, required to be at least 2.",
-            );
+            throw new OperationError("Invalid key length, required to be at least 2.");
         }
 
         if (Math.pow(k, n) > 50000) {
-            throw new OperationError(
-                "Too many permutations, please reduce k^n to under 50,000.",
-            );
+            throw new OperationError("Too many permutations, please reduce k^n to under 50,000.");
         }
 
         const a = new Array(k * n).fill(0);

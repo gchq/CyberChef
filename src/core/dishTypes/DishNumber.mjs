@@ -4,6 +4,7 @@
  * @license Apache-2.0
  */
 
+
 import DishType from "./DishType.mjs";
 import Utils from "../Utils.mjs";
 
@@ -11,15 +12,13 @@ import Utils from "../Utils.mjs";
  * Translation methods for number dishes
  */
 class DishNumber extends DishType {
+
     /**
      * convert the given value to a ArrayBuffer
      */
     static toArrayBuffer() {
         DishNumber.checkForValue(this.value);
-        this.value =
-            typeof this.value === "number"
-                ? Utils.strToArrayBuffer(this.value.toString())
-                : new ArrayBuffer();
+        this.value = typeof this.value === "number" ? Utils.strToArrayBuffer(this.value.toString()) : new ArrayBuffer;
     }
 
     /**
@@ -27,9 +26,7 @@ class DishNumber extends DishType {
      */
     static fromArrayBuffer() {
         DishNumber.checkForValue(this.value);
-        this.value = this.value
-            ? parseFloat(Utils.arrayBufferToStr(this.value))
-            : 0;
+        this.value = this.value ? parseFloat(Utils.arrayBufferToStr(this.value)) : 0;
     }
 }
 

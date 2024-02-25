@@ -11,12 +11,11 @@ TestRegister.addTests([
     {
         name: "Index of Coincidence",
         input: "Hello world, this is a test to determine the correct IC value.",
-        expectedMatch:
-            /^Index of Coincidence: 0\.07142857142857142\nNormalized: 1\.857142857142857/,
+        expectedMatch: /^Index of Coincidence: 0\.07142857142857142\nNormalized: 1\.857142857142857/,
         recipeConfig: [
             {
-                op: "Index of Coincidence",
-                args: [],
+                "op": "Index of Coincidence",
+                "args": []
             },
         ],
     },

@@ -7,13 +7,14 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
-import { scanForFileTypes, extractFile } from "../lib/FileType.mjs";
-import { FILE_SIGNATURES } from "../lib/FileSignatures.mjs";
+import {scanForFileTypes, extractFile} from "../lib/FileType.mjs";
+import {FILE_SIGNATURES} from "../lib/FileSignatures.mjs";
 
 /**
  * Extract Files operation
  */
 class ExtractFiles extends Operation {
+
     /**
      * ExtractFiles constructor
      */
@@ -21,10 +22,10 @@ class ExtractFiles extends Operation {
         super();
 
         // Get the first extension for each signature that can be extracted
-        let supportedExts = Object.keys(FILE_SIGNATURES).map((cat) => {
+        let supportedExts = Object.keys(FILE_SIGNATURES).map(cat => {
             return FILE_SIGNATURES[cat]
-                .filter((sig) => sig.extractor)
-                .map((sig) => sig.extension.toUpperCase());
+                .filter(sig => sig.extractor)
+                .map(sig => sig.extension.toUpperCase());
         });
 
         // Flatten categories and remove duplicates
@@ -42,26 +43,24 @@ class ExtractFiles extends Operation {
         this.inputType = "ArrayBuffer";
         this.outputType = "List<File>";
         this.presentType = "html";
-        this.args = Object.keys(FILE_SIGNATURES)
-            .map((cat) => {
-                return {
-                    name: cat,
-                    type: "boolean",
-                    value: cat === "Miscellaneous" ? false : true,
-                };
-            })
-            .concat([
-                {
-                    name: "Ignore failed extractions",
-                    type: "boolean",
-                    value: true,
-                },
-                {
-                    name: "Minimum File Size",
-                    type: "number",
-                    value: 100,
-                },
-            ]);
+        this.args = Object.keys(FILE_SIGNATURES).map(cat => {
+            return {
+                name: cat,
+                type: "boolean",
+                value: cat === "Miscellaneous" ? false : true
+            };
+        }).concat([
+            {
+                name: "Ignore failed extractions",
+                type: "boolean",
+                value: true
+            },
+            {
+                name: "Minimum File Size",
+                type: "number",
+                value: 100
+            }
+        ]);
     }
 
     /**
@@ -85,23 +84,17 @@ class ExtractFiles extends Operation {
         // Extract each file that we support
         const files = [];
         const errors = [];
-        detectedFiles.forEach((detectedFile) => {
+        detectedFiles.forEach(detectedFile => {
             try {
-                const file = extractFile(
-                    bytes,
-                    detectedFile.fileDetails,
-                    detectedFile.offset,
-                );
-                if (file.size >= minSize) files.push(file);
+                const file = extractFile(bytes, detectedFile.fileDetails, detectedFile.offset);
+                if (file.size >= minSize)
+                    files.push(file);
             } catch (err) {
-                if (
-                    !ignoreFailedExtractions &&
-                    err.message.indexOf("No extraction algorithm available") < 0
-                ) {
+                if (!ignoreFailedExtractions && err.message.indexOf("No extraction algorithm available") < 0) {
                     errors.push(
                         `Error while attempting to extract ${detectedFile.fileDetails.name} ` +
-                            `at offset ${detectedFile.offset}:\n` +
-                            `${err.message}`,
+                        `at offset ${detectedFile.offset}:\n` +
+                        `${err.message}`
                     );
                 }
             }
@@ -114,6 +107,7 @@ class ExtractFiles extends Operation {
         return files;
     }
 
+
     /**
      * Displays the files in HTML for web apps.
      *
@@ -123,6 +117,7 @@ class ExtractFiles extends Operation {
     async present(files) {
         return await Utils.displayFilesAsHTML(files);
     }
+
 }
 
 export default ExtractFiles;

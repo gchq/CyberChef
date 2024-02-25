@@ -12,6 +12,7 @@ import avro from "avsc";
  * Avro to JSON operation
  */
 class AvroToJSON extends Operation {
+
     /**
      * AvroToJSON constructor
      */
@@ -28,8 +29,8 @@ class AvroToJSON extends Operation {
             {
                 name: "Force Valid JSON",
                 type: "boolean",
-                value: true,
-            },
+                value: true
+            }
         ];
     }
 
@@ -59,17 +60,9 @@ class AvroToJSON extends Operation {
                 })
                 .on("end", function () {
                     if (forceJSON) {
-                        resolve(
-                            result.length === 1
-                                ? JSON.stringify(result[0], null, 4)
-                                : JSON.stringify(result, null, 4),
-                        );
+                        resolve(result.length === 1 ? JSON.stringify(result[0], null, 4) : JSON.stringify(result, null, 4));
                     } else {
-                        const data = result.reduce(
-                            (result, current) =>
-                                result + JSON.stringify(current) + "\n",
-                            "",
-                        );
+                        const data = result.reduce((result, current) => result + JSON.stringify(current) + "\n", "");
                         resolve(data);
                     }
                 });

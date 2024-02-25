@@ -12,6 +12,7 @@ import Protobuf from "../lib/Protobuf.mjs";
  * Protobuf Encode operation
  */
 class ProtobufEncode extends Operation {
+
     /**
      * ProtobufEncode constructor
      */
@@ -20,10 +21,8 @@ class ProtobufEncode extends Operation {
 
         this.name = "Protobuf Encode";
         this.module = "Protobuf";
-        this.description =
-            "Encodes a valid JSON object into a protobuf byte array using the input .proto schema.";
-        this.infoURL =
-            "https://developers.google.com/protocol-buffers/docs/encoding";
+        this.description = "Encodes a valid JSON object into a protobuf byte array using the input .proto schema.";
+        this.infoURL = "https://developers.google.com/protocol-buffers/docs/encoding";
         this.inputType = "JSON";
         this.outputType = "ArrayBuffer";
         this.args = [
@@ -32,8 +31,8 @@ class ProtobufEncode extends Operation {
                 type: "text",
                 value: "",
                 rows: 8,
-                hint: "Drag and drop is enabled on this ingredient",
-            },
+                hint: "Drag and drop is enabled on this ingredient"
+            }
         ];
     }
 
@@ -49,6 +48,7 @@ class ProtobufEncode extends Operation {
             throw new OperationError(error);
         }
     }
+
 }
 
 export default ProtobufEncode;

@@ -10,6 +10,7 @@ import Operation from "../Operation.mjs";
  * Bit shift right operation
  */
 class BitShiftRight extends Operation {
+
     /**
      * BitShiftRight constructor
      */
@@ -18,23 +19,21 @@ class BitShiftRight extends Operation {
 
         this.name = "Bit shift right";
         this.module = "Default";
-        this.description =
-            "Shifts the bits in each byte towards the right by the specified amount.<br><br><i>Logical shifts</i> replace the leftmost bits with zeros.<br><i>Arithmetic shifts</i> preserve the most significant bit (MSB) of the original byte keeping the sign the same (positive or negative).";
-        this.infoURL =
-            "https://wikipedia.org/wiki/Bitwise_operation#Bit_shifts";
+        this.description = "Shifts the bits in each byte towards the right by the specified amount.<br><br><i>Logical shifts</i> replace the leftmost bits with zeros.<br><i>Arithmetic shifts</i> preserve the most significant bit (MSB) of the original byte keeping the sign the same (positive or negative).";
+        this.infoURL = "https://wikipedia.org/wiki/Bitwise_operation#Bit_shifts";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.args = [
             {
-                name: "Amount",
-                type: "number",
-                value: 1,
+                "name": "Amount",
+                "type": "number",
+                "value": 1
             },
             {
-                name: "Type",
-                type: "option",
-                value: ["Logical shift", "Arithmetic shift"],
-            },
+                "name": "Type",
+                "type": "option",
+                "value": ["Logical shift", "Arithmetic shift"]
+            }
         ];
     }
 
@@ -49,7 +48,7 @@ class BitShiftRight extends Operation {
             mask = type === "Logical shift" ? 0 : 0x80;
         input = new Uint8Array(input);
 
-        return input.map((b) => {
+        return input.map(b => {
             return (b >>> amount) ^ (b & mask);
         }).buffer;
     }
@@ -79,6 +78,7 @@ class BitShiftRight extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
+
 }
 
 export default BitShiftRight;

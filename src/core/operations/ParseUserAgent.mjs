@@ -11,6 +11,7 @@ import UAParser from "ua-parser-js";
  * Parse User Agent operation
  */
 class ParseUserAgent extends Operation {
+
     /**
      * ParseUserAgent constructor
      */
@@ -19,18 +20,17 @@ class ParseUserAgent extends Operation {
 
         this.name = "Parse User Agent";
         this.module = "UserAgent";
-        this.description =
-            "Attempts to identify and categorise information contained in a user-agent string.";
+        this.description = "Attempts to identify and categorise information contained in a user-agent string.";
         this.infoURL = "https://wikipedia.org/wiki/User_agent";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
         this.checks = [
             {
-                pattern: "^(User-Agent:|Mozilla\\/)[^\\n\\r]+\\s*$",
-                flags: "i",
-                args: [],
-            },
+                pattern:  "^(User-Agent:|Mozilla\\/)[^\\n\\r]+\\s*$",
+                flags:  "i",
+                args:   []
+            }
         ];
     }
 
@@ -57,6 +57,7 @@ OS
 CPU
     Architecture: ${ua.cpu.architecture || "unknown"}`;
     }
+
 }
 
 export default ParseUserAgent;

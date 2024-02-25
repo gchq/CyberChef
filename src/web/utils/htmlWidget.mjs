@@ -4,15 +4,17 @@
  * @license Apache-2.0
  */
 
-import { WidgetType, Decoration, ViewPlugin } from "@codemirror/view";
-import { escapeControlChars } from "./editorUtils.mjs";
-import { htmlCopyOverride } from "./copyOverride.mjs";
+import {WidgetType, Decoration, ViewPlugin} from "@codemirror/view";
+import {escapeControlChars} from "./editorUtils.mjs";
+import {htmlCopyOverride} from "./copyOverride.mjs";
 import Utils from "../../core/Utils.mjs";
+
 
 /**
  * Adds an HTML widget to the Code Mirror editor
  */
 class HTMLWidget extends WidgetType {
+
     /**
      * HTMLWidget consructor
      */
@@ -50,7 +52,8 @@ class HTMLWidget extends WidgetType {
                     this.replaceControlChars(node);
                     break;
                 default:
-                    if (node.nodeName !== "SCRIPT" && node.nodeName !== "STYLE")
+                    if (node.nodeName !== "SCRIPT" &&
+                        node.nodeName !== "STYLE")
                         this.walkTextNodes(node);
                     break;
             }
@@ -66,17 +69,14 @@ class HTMLWidget extends WidgetType {
         // We must remember to escape any potential HTML in TextNodes as we do not
         // want to render it.
         const textValue = Utils.escapeHtml(textNode.nodeValue);
-        const val = escapeControlChars(
-            textValue,
-            true,
-            this.view.state.lineBreak,
-        );
+        const val = escapeControlChars(textValue, true, this.view.state.lineBreak);
         if (val.length !== textNode.nodeValue.length) {
             const node = document.createElement("span");
             node.innerHTML = val;
             textNode.parentNode.replaceChild(node, textNode);
         }
     }
+
 }
 
 /**
@@ -90,12 +90,13 @@ function decorateHTML(view, html) {
     if (html.length) {
         const deco = Decoration.widget({
             widget: new HTMLWidget(html, view),
-            side: 1,
+            side: 1
         });
         widgets.push(deco.range(0));
     }
     return Decoration.set(widgets);
 }
+
 
 /**
  * An HTML Plugin builder
@@ -120,17 +121,13 @@ export function htmlPlugin(htmlOutput) {
              */
             update(update) {
                 if (this.htmlOutput.changed) {
-                    this.decorations = decorateHTML(
-                        update.view,
-                        this.htmlOutput.html,
-                    );
+                    this.decorations = decorateHTML(update.view, this.htmlOutput.html);
                     this.htmlOutput.changed = false;
                 }
             }
-        },
-        {
-            decorations: (v) => v.decorations,
-        },
+        }, {
+            decorations: v => v.decorations
+        }
     );
 
     return plugin;

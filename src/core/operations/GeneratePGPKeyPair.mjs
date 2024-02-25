@@ -11,14 +11,14 @@ import kbpgp from "kbpgp";
 import { getSubkeySize, ASP } from "../lib/PGP.mjs";
 import { cryptNotice } from "../lib/Crypt.mjs";
 import * as es6promisify from "es6-promisify";
-const promisify = es6promisify.default
-    ? es6promisify.default.promisify
-    : es6promisify.promisify;
+const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
+
 
 /**
  * Generate PGP Key Pair operation
  */
 class GeneratePGPKeyPair extends Operation {
+
     /**
      * GeneratePGPKeyPair constructor
      */
@@ -33,32 +33,25 @@ class GeneratePGPKeyPair extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                name: "Key type",
-                type: "option",
-                value: [
-                    "RSA-1024",
-                    "RSA-2048",
-                    "RSA-4096",
-                    "ECC-256",
-                    "ECC-384",
-                    "ECC-521",
-                ],
+                "name": "Key type",
+                "type": "option",
+                "value": ["RSA-1024", "RSA-2048", "RSA-4096", "ECC-256", "ECC-384", "ECC-521"]
             },
             {
-                name: "Password (optional)",
-                type: "string",
-                value: "",
+                "name": "Password (optional)",
+                "type": "string",
+                "value": ""
             },
             {
-                name: "Name (optional)",
-                type: "string",
-                value: "",
+                "name": "Name (optional)",
+                "type": "string",
+                "value": ""
             },
             {
-                name: "Email (optional)",
-                type: "string",
-                value: "",
-            },
+                "name": "Email (optional)",
+                "type": "string",
+                "value": ""
+            }
         ];
     }
 
@@ -90,50 +83,40 @@ class GeneratePGPKeyPair extends Operation {
             userid: userIdentifier,
             ecc: keyType === "ecc",
             primary: {
-                nbits: keySize,
-                flags: flags,
-                expire_in: 0,
+                "nbits": keySize,
+                "flags": flags,
+                "expire_in": 0
             },
-            subkeys: [
-                {
-                    nbits: getSubkeySize(keySize),
-                    flags: kbpgp.const.openpgp.sign_data,
-                    expire_in: 86400 * 365 * 8,
-                },
-                {
-                    nbits: getSubkeySize(keySize),
-                    flags:
-                        kbpgp.const.openpgp.encrypt_comm |
-                        kbpgp.const.openpgp.encrypt_storage,
-                    expire_in: 86400 * 365 * 2,
-                },
-            ],
-            asp: ASP,
+            subkeys: [{
+                "nbits": getSubkeySize(keySize),
+                "flags": kbpgp.const.openpgp.sign_data,
+                "expire_in": 86400 * 365 * 8
+            }, {
+                "nbits": getSubkeySize(keySize),
+                "flags": kbpgp.const.openpgp.encrypt_comm | kbpgp.const.openpgp.encrypt_storage,
+                "expire_in": 86400 * 365 * 2
+            }],
+            asp: ASP
         };
 
         return new Promise(async (resolve, reject) => {
             try {
-                const unsignedKey = await promisify(kbpgp.KeyManager.generate)(
-                    keyGenerationOptions,
-                );
+                const unsignedKey = await promisify(kbpgp.KeyManager.generate)(keyGenerationOptions);
                 await promisify(unsignedKey.sign.bind(unsignedKey))({});
 
                 const signedKey = unsignedKey,
                     privateKeyExportOptions = {};
 
                 if (password) privateKeyExportOptions.passphrase = password;
-                const privateKey = await promisify(
-                    signedKey.export_pgp_private.bind(signedKey),
-                )(privateKeyExportOptions);
-                const publicKey = await promisify(
-                    signedKey.export_pgp_public.bind(signedKey),
-                )({});
+                const privateKey = await promisify(signedKey.export_pgp_private.bind(signedKey))(privateKeyExportOptions);
+                const publicKey = await promisify(signedKey.export_pgp_public.bind(signedKey))({});
                 resolve(privateKey + "\n" + publicKey.trim());
             } catch (err) {
                 reject(`Error whilst generating key pair: ${err}`);
             }
         });
     }
+
 }
 
 export default GeneratePGPKeyPair;

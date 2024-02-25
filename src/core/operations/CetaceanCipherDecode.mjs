@@ -10,6 +10,7 @@ import Operation from "../Operation.mjs";
  * Cetacean Cipher Decode operation
  */
 class CetaceanCipherDecode extends Operation {
+
     /**
      * CetaceanCipherDecode constructor
      */
@@ -18,8 +19,7 @@ class CetaceanCipherDecode extends Operation {
 
         this.name = "Cetacean Cipher Decode";
         this.module = "Ciphers";
-        this.description =
-            "Decode Cetacean Cipher input. <br/><br/>e.g. <code>EEEEEEEEEeeEeEEEEEEEEEEEEeeEeEEe</code> becomes <code>hi</code>";
+        this.description = "Decode Cetacean Cipher input. <br/><br/>e.g. <code>EEEEEEEEEeeEeEEEEEEEEEEEEeeEeEEe</code> becomes <code>hi</code>";
         this.infoURL = "https://hitchhikers.fandom.com/wiki/Dolphins";
         this.inputType = "string";
         this.outputType = "string";
@@ -28,8 +28,8 @@ class CetaceanCipherDecode extends Operation {
             {
                 pattern: "^(?:[eE]{16,})(?: [eE]{16,})*$",
                 flags: "",
-                args: [],
-            },
+                args: []
+            }
         ];
     }
 
@@ -42,9 +42,7 @@ class CetaceanCipherDecode extends Operation {
         const binaryArray = [];
         for (const char of input) {
             if (char === " ") {
-                binaryArray.push(
-                    ...[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-                );
+                binaryArray.push(...[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]);
             } else {
                 binaryArray.push(char === "e" ? 1 : 0);
             }
@@ -52,13 +50,13 @@ class CetaceanCipherDecode extends Operation {
 
         const byteArray = [];
 
-        for (let i = 0; i < binaryArray.length; i += 16) {
+        for (let i = 0;  i < binaryArray.length; i += 16) {
             byteArray.push(binaryArray.slice(i, i + 16).join(""));
         }
 
-        return byteArray
-            .map((byte) => String.fromCharCode(parseInt(byte, 2)))
-            .join("");
+        return byteArray.map(byte =>
+            String.fromCharCode(parseInt(byte, 2))
+        ).join("");
     }
 }
 

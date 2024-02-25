@@ -34,8 +34,7 @@ TestRegister.addTests([
     {
         name: "Set Union: invalid sample number",
         input: "1 2 3 4 5\n\n3 4 5 6 7\n\n1",
-        expectedOutput:
-            "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?",
+        expectedOutput: "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?",
         recipeConfig: [
             {
                 op: "Set Union",

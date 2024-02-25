@@ -10,6 +10,7 @@
 import Utils from "../Utils.mjs";
 import CryptoApi from "crypto-api/src/crypto-api.mjs";
 
+
 /**
  * Generic hash function.
  *
@@ -18,9 +19,10 @@ import CryptoApi from "crypto-api/src/crypto-api.mjs";
  * @param {Object} [options={}]
  * @returns {string}
  */
-export function runHash(name, input, options = {}) {
+export function runHash(name, input, options={}) {
     const msg = Utils.arrayBufferToStr(input, false),
         hasher = CryptoApi.getHasher(name, options);
     hasher.update(msg);
     return CryptoApi.encoder.toHex(hasher.finalize());
 }
+

@@ -11,8 +11,12 @@ import TestRegister from "../../lib/TestRegister.mjs";
 TestRegister.addTests([
     {
         name: "Jump: Empty Label",
-        input: ["should be changed"].join("\n"),
-        expectedOutput: ["c2hvdWxkIGJlIGNoYW5nZWQ="].join("\n"),
+        input: [
+            "should be changed",
+        ].join("\n"),
+        expectedOutput: [
+            "c2hvdWxkIGJlIGNoYW5nZWQ=",
+        ].join("\n"),
         recipeConfig: [
             {
                 op: "Jump",
@@ -26,8 +30,12 @@ TestRegister.addTests([
     },
     {
         name: "Jump: skips 1",
-        input: ["shouldnt be changed"].join("\n"),
-        expectedOutput: ["shouldnt be changed"].join("\n"),
+        input: [
+            "shouldnt be changed",
+        ].join("\n"),
+        expectedOutput: [
+            "shouldnt be changed",
+        ].join("\n"),
         recipeConfig: [
             {
                 op: "Jump",
@@ -39,8 +47,8 @@ TestRegister.addTests([
             },
             {
                 op: "Label",
-                args: ["skipReplace"],
+                args: ["skipReplace"]
             },
         ],
-    },
+    }
 ]);

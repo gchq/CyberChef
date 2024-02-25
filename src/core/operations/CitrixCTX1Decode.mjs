@@ -12,6 +12,7 @@ import cptable from "codepage";
  * Citrix CTX1 Decode operation
  */
 class CitrixCTX1Decode extends Operation {
+
     /**
      * CitrixCTX1Decode constructor
      */
@@ -20,10 +21,8 @@ class CitrixCTX1Decode extends Operation {
 
         this.name = "Citrix CTX1 Decode";
         this.module = "Encodings";
-        this.description =
-            "Decodes strings in a Citrix CTX1 password format to plaintext.";
-        this.infoURL =
-            "https://www.reddit.com/r/AskNetsec/comments/1s3r6y/citrix_ctx1_hash_decoding/";
+        this.description = "Decodes strings in a Citrix CTX1 password format to plaintext.";
+        this.infoURL = "https://www.reddit.com/r/AskNetsec/comments/1s3r6y/citrix_ctx1_hash_decoding/";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [];
@@ -46,20 +45,15 @@ class CitrixCTX1Decode extends Operation {
             if (i + 2 >= revinput.length) {
                 temp = 0;
             } else {
-                temp =
-                    ((revinput[i + 2] - 0x41) & 0xf) ^
-                    (((revinput[i + 3] - 0x41) << 4) & 0xf0);
+                temp = ((revinput[i + 2] - 0x41) & 0xf) ^ (((revinput[i + 3]- 0x41) << 4) & 0xf0);
             }
-            temp =
-                ((revinput[i] - 0x41) & 0xf) ^
-                (((revinput[i + 1] - 0x41) << 4) & 0xf0) ^
-                0xa5 ^
-                temp;
+            temp = (((revinput[i] - 0x41) & 0xf) ^ (((revinput[i + 1] - 0x41) << 4) & 0xf0)) ^ 0xa5 ^ temp;
             result.push(temp);
         }
         // Decodes a utf-16le string
         return cptable.utils.decode(1200, result.reverse());
     }
+
 }
 
 export default CitrixCTX1Decode;

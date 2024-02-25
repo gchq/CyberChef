@@ -14,15 +14,13 @@ import OperationError from "../errors/OperationError.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
 import kbpgp from "kbpgp";
 import * as es6promisify from "es6-promisify";
-const promisify = es6promisify.default
-    ? es6promisify.default.promisify
-    : es6promisify.promisify;
+const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
 
 /**
  * Progress callback
  */
 export const ASP = kbpgp.ASP({
-    progress_hook: (info) => {
+    "progress_hook": info => {
         let msg = "";
 
         switch (info.what) {
@@ -48,8 +46,9 @@ export const ASP = kbpgp.ASP({
                 msg = `Stage: ${info.what}`;
         }
 
-        if (isWorkerEnvironment()) self.sendStatusMessage(msg);
-    },
+        if (isWorkerEnvironment())
+            self.sendStatusMessage(msg);
+    }
 });
 
 /**
@@ -63,35 +62,33 @@ export function getSubkeySize(keySize) {
         1024: 1024,
         2048: 1024,
         4096: 2048,
-        256: 256,
-        384: 256,
+        256:   256,
+        384:   256,
     }[keySize];
 }
 
 /**
- * Import private key and unlock if necessary
- *
- * @param {string} privateKey
- * @param {string} [passphrase]
- * @returns {Object}
- */
+* Import private key and unlock if necessary
+*
+* @param {string} privateKey
+* @param {string} [passphrase]
+* @returns {Object}
+*/
 export async function importPrivateKey(privateKey, passphrase) {
     try {
         const key = await promisify(kbpgp.KeyManager.import_from_armored_pgp)({
             armored: privateKey,
             opts: {
-                no_check_keys: true,
-            },
+                "no_check_keys": true
+            }
         });
         if (key.is_pgp_locked()) {
             if (passphrase) {
                 await promisify(key.unlock_pgp.bind(key))({
-                    passphrase,
+                    passphrase
                 });
             } else {
-                throw new OperationError(
-                    "Did not provide passphrase with locked private key.",
-                );
+                throw new OperationError("Did not provide passphrase with locked private key.");
             }
         }
         return key;
@@ -106,13 +103,13 @@ export async function importPrivateKey(privateKey, passphrase) {
  * @param {string} publicKey
  * @returns {Object}
  */
-export async function importPublicKey(publicKey) {
+export async function importPublicKey (publicKey) {
     try {
         const key = await promisify(kbpgp.KeyManager.import_from_armored_pgp)({
             armored: publicKey,
             opts: {
-                no_check_keys: true,
-            },
+                "no_check_keys": true
+            }
         });
         return key;
     } catch (err) {

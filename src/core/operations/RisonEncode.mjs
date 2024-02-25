@@ -12,6 +12,7 @@ import rison from "rison";
  * Rison Encode operation
  */
 class RisonEncode extends Operation {
+
     /**
      * RisonEncode constructor
      */
@@ -20,8 +21,7 @@ class RisonEncode extends Operation {
 
         this.name = "Rison Encode";
         this.module = "Default";
-        this.description =
-            "Rison, a data serialization format optimized for compactness in URIs. Rison is a slight variation of JSON that looks vastly superior after URI encoding. Rison still expresses exactly the same set of data structures as JSON, so data can be translated back and forth without loss or guesswork.";
+        this.description = "Rison, a data serialization format optimized for compactness in URIs. Rison is a slight variation of JSON that looks vastly superior after URI encoding. Rison still expresses exactly the same set of data structures as JSON, so data can be translated back and forth without loss or guesswork.";
         this.infoURL = "https://github.com/Nanonid/rison";
         this.inputType = "Object";
         this.outputType = "string";
@@ -30,11 +30,11 @@ class RisonEncode extends Operation {
                 name: "Encode Option",
                 type: "editableOption",
                 value: [
-                    { name: "Encode", value: "Encode" },
-                    { name: "Encode Object", value: "Encode Object" },
-                    { name: "Encode Array", value: "Encode Array" },
-                    { name: "Encode URI", value: "Encode URI" },
-                ],
+                    { name: "Encode", value: "Encode", },
+                    { name: "Encode Object", value: "Encode Object", },
+                    { name: "Encode Array", value: "Encode Array", },
+                    { name: "Encode URI", value: "Encode URI", }
+                ]
             },
         ];
     }

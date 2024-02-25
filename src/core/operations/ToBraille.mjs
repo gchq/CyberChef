@@ -5,12 +5,13 @@
  */
 
 import Operation from "../Operation.mjs";
-import { BRAILLE_LOOKUP } from "../lib/Braille.mjs";
+import {BRAILLE_LOOKUP} from "../lib/Braille.mjs";
 
 /**
  * To Braille operation
  */
 class ToBraille extends Operation {
+
     /**
      * ToBraille constructor
      */
@@ -32,13 +33,10 @@ class ToBraille extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        return input
-            .split("")
-            .map((c) => {
-                const idx = BRAILLE_LOOKUP.ascii.indexOf(c.toUpperCase());
-                return idx < 0 ? c : BRAILLE_LOOKUP.dot6[idx];
-            })
-            .join("");
+        return input.split("").map(c => {
+            const idx = BRAILLE_LOOKUP.ascii.indexOf(c.toUpperCase());
+            return idx < 0 ? c : BRAILLE_LOOKUP.dot6[idx];
+        }).join("");
     }
 
     /**
@@ -66,6 +64,7 @@ class ToBraille extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
+
 }
 
 export default ToBraille;

@@ -11,6 +11,7 @@ import { affineEncode } from "../lib/Ciphers.mjs";
  * Atbash Cipher operation
  */
 class AtbashCipher extends Operation {
+
     /**
      * AtbashCipher constructor
      */
@@ -19,8 +20,7 @@ class AtbashCipher extends Operation {
 
         this.name = "Atbash Cipher";
         this.module = "Ciphers";
-        this.description =
-            "Atbash is a mono-alphabetic substitution cipher originally used to encode the Hebrew alphabet. It has been modified here for use with the Latin alphabet.";
+        this.description = "Atbash is a mono-alphabetic substitution cipher originally used to encode the Hebrew alphabet. It has been modified here for use with the Latin alphabet.";
         this.infoURL = "https://wikipedia.org/wiki/Atbash";
         this.inputType = "string";
         this.outputType = "string";
@@ -61,6 +61,7 @@ class AtbashCipher extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
+
 }
 
 export default AtbashCipher;

@@ -19,8 +19,7 @@ class ToBase92 extends Operation {
 
         this.name = "To Base92";
         this.module = "Default";
-        this.description =
-            "Base92 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.";
+        this.description = "Base92 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.";
         this.infoURL = "https://wikipedia.org/wiki/List_of_numeral_systems";
         this.inputType = "string";
         this.outputType = "byteArray";
@@ -37,13 +36,11 @@ class ToBase92 extends Operation {
 
         while (input.length > 0) {
             while (bitString.length < 13 && input.length > 0) {
-                bitString += input[0]
-                    .charCodeAt(0)
-                    .toString(2)
-                    .padStart(8, "0");
+                bitString += input[0].charCodeAt(0).toString(2).padStart(8, "0");
                 input = input.slice(1);
             }
-            if (bitString.length < 13) break;
+            if (bitString.length < 13)
+                break;
             const i = parseInt(bitString.slice(0, 13), 2);
             res.push(base92Chr(Math.floor(i / 91)));
             res.push(base92Chr(i % 91));
@@ -63,6 +60,7 @@ class ToBase92 extends Operation {
         }
 
         return res;
+
     }
 }
 

@@ -12,29 +12,26 @@ TestRegister.addTests([
     {
         name: "Register: RC4 key",
         input: "http://malwarez.biz/beacon.php?key=0e932a5c&data=8db7d5ebe38663a54ecbb334e3db11",
-        expectedOutput:
-            "zNu5y53uBoU2rm7qhq9ijjnVHSlJ9PJ/zpp+xL/to8qIBzkDwKzUNQ==",
+        expectedOutput: "zNu5y53uBoU2rm7qhq9ijjnVHSlJ9PJ/zpp+xL/to8qIBzkDwKzUNQ==",
         recipeConfig: [
             {
                 op: "Register",
-                args: ["key=([\\da-f]*)", true, false],
+                args: ["key=([\\da-f]*)", true, false]
             },
             {
                 op: "RC4",
                 args: [
                     {
-                        option: "Hex",
-                        string: "$R0",
-                    },
-                    "Hex",
-                    "Latin1",
-                ],
+                        "option": "Hex",
+                        "string": "$R0"
+                    }, "Hex", "Latin1"
+                ]
             },
             {
                 op: "To Base64",
-                args: ["A-Za-z0-9+/="],
-            },
-        ],
+                args: ["A-Za-z0-9+/="]
+            }
+        ]
     },
     {
         name: "Register: AES key",
@@ -45,36 +42,34 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Register",
-                args: ["(.{32})", true, false],
+                args: ["(.{32})", true, false]
             },
             {
                 op: "Drop bytes",
-                args: [0, 32, false],
+                args: [0, 32, false]
             },
             {
                 op: "AES Decrypt",
                 args: [
                     {
-                        option: "Hex",
-                        string: "1748e7179bd56570d51fa4ba287cc3e5",
+                        "option": "Hex",
+                        "string": "1748e7179bd56570d51fa4ba287cc3e5"
                     },
                     {
-                        option: "Hex",
-                        string: "$R0",
+                        "option": "Hex",
+                        "string": "$R0"
                     },
-                    "CTR",
-                    "Hex",
-                    "Raw",
+                    "CTR", "Hex", "Raw",
                     {
-                        option: "Hex",
-                        string: "",
+                        "option": "Hex",
+                        "string": ""
                     },
                     {
-                        option: "Hex",
-                        string: "",
-                    },
-                ],
-            },
-        ],
-    },
+                        "option": "Hex",
+                        "string": ""
+                    }
+                ]
+            }
+        ]
+    }
 ]);

@@ -6,10 +6,12 @@
 
 import Operation from "../Operation.mjs";
 
+
 /**
  * ROT47 operation.
  */
 class ROT47 extends Operation {
+
     /**
      * ROT47 constructor
      */
@@ -18,8 +20,7 @@ class ROT47 extends Operation {
 
         this.name = "ROT47";
         this.module = "Default";
-        this.description =
-            "A slightly more complex variation of a caesar cipher, which includes ASCII characters from 33 '!' to 126 '~'. Default rotation: 47.";
+        this.description = "A slightly more complex variation of a caesar cipher, which includes ASCII characters from 33 '!' to 126 '~'. Default rotation: 47.";
         this.infoURL = "https://wikipedia.org/wiki/ROT13#Variants";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
@@ -27,7 +28,7 @@ class ROT47 extends Operation {
             {
                 name: "Amount",
                 type: "number",
-                value: 47,
+                value: 47
             },
         ];
     }

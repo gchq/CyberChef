@@ -9,14 +9,13 @@ import kbpgp from "kbpgp";
 import { ASP, importPublicKey } from "../lib/PGP.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import * as es6promisify from "es6-promisify";
-const promisify = es6promisify.default
-    ? es6promisify.default.promisify
-    : es6promisify.promisify;
+const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
 
 /**
  * PGP Encrypt operation
  */
 class PGPEncrypt extends Operation {
+
     /**
      * PGPEncrypt constructor
      */
@@ -39,10 +38,10 @@ class PGPEncrypt extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                name: "Public key of recipient",
-                type: "text",
-                value: "",
-            },
+                "name": "Public key of recipient",
+                "type": "text",
+                "value": ""
+            }
         ];
     }
 
@@ -58,25 +57,23 @@ class PGPEncrypt extends Operation {
             plainPubKey = args[0];
         let encryptedMessage;
 
-        if (!plainPubKey)
-            throw new OperationError("Enter the public key of the recipient.");
+        if (!plainPubKey) throw new OperationError("Enter the public key of the recipient.");
 
         const key = await importPublicKey(plainPubKey);
 
         try {
             encryptedMessage = await promisify(kbpgp.box)({
-                msg: plaintextMessage,
-                encrypt_for: key,
-                asp: ASP,
+                "msg": plaintextMessage,
+                "encrypt_for": key,
+                "asp": ASP
             });
         } catch (err) {
-            throw new OperationError(
-                `Couldn't encrypt message with provided public key: ${err}`,
-            );
+            throw new OperationError(`Couldn't encrypt message with provided public key: ${err}`);
         }
 
         return encryptedMessage.toString();
     }
+
 }
 
 export default PGPEncrypt;

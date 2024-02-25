@@ -17,9 +17,9 @@ Modulus: 0x00e2259ffd5bd231fc393d6fe2b813e4460ae83502d9065da27dbcd218d181c51cba5
         recipeConfig: [
             {
                 op: "Parse SSH Host Key",
-                args: ["Base64"],
-            },
-        ],
+                args: ["Base64"]
+            }
+        ]
     },
     {
         name: "SSH Host Key: DSA",
@@ -32,9 +32,9 @@ y: 0x3772df58441ea2502bce0f8e6c64cd42f684c2db84ed99aa2ed067295b1de1d3f899f266e29
         recipeConfig: [
             {
                 op: "Parse SSH Host Key",
-                args: ["Base64"],
-            },
-        ],
+                args: ["Base64"]
+            }
+        ]
     },
     {
         name: "SSH Host Key: ECDSA",
@@ -45,9 +45,9 @@ Point: 0x046c59592006272250a15070142a6be36d1e45464313f930d985a6e6f0eba3cd39d0367
         recipeConfig: [
             {
                 op: "Parse SSH Host Key",
-                args: ["Base64"],
-            },
-        ],
+                args: ["Base64"]
+            }
+        ]
     },
     {
         name: "SSH Host Key: Ed25519",
@@ -57,9 +57,9 @@ x: 0x1385eabf7d224bea1aed64c19ac71c8aa3a53079c3bf5ba6febb07f030dfe589`,
         recipeConfig: [
             {
                 op: "Parse SSH Host Key",
-                args: ["Base64"],
-            },
-        ],
+                args: ["Base64"]
+            }
+        ]
     },
     {
         name: "SSH Host Key: Extract key",
@@ -70,8 +70,8 @@ Modulus: 0x00e2259ffd5bd231fc393d6fe2b813e4460ae83502d9065da27dbcd218d181c51cba5
         recipeConfig: [
             {
                 op: "Parse SSH Host Key",
-                args: ["Base64"],
-            },
-        ],
-    },
+                args: ["Base64"]
+            }
+        ]
+    }
 ]);

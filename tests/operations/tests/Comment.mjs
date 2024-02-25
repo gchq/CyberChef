@@ -34,10 +34,10 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                op: "Comment",
-                args: [""],
-            },
-        ],
+                "op": "Comment",
+                "args": [""]
+            }
+        ]
     },
     {
         name: "Fork, Comment, Base64",
@@ -45,18 +45,18 @@ TestRegister.addTests([
         expectedOutput: "Y2F0\nc2F0\nbWF0",
         recipeConfig: [
             {
-                op: "Fork",
-                args: ["\\n", "\\n", false],
+                "op": "Fork",
+                "args": ["\\n", "\\n", false]
             },
             {
-                op: "Comment",
-                args: ["Testing 123"],
+                "op": "Comment",
+                "args": ["Testing 123"]
             },
             {
-                op: "To Base64",
-                args: ["A-Za-z0-9+/="],
-            },
-        ],
+                "op": "To Base64",
+                "args": ["A-Za-z0-9+/="]
+            }
+        ]
     },
     {
         name: "Label, Comment: Complex content",
@@ -65,12 +65,12 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Label",
-                args: [""],
+                args: [""]
             },
             {
                 op: "Comment",
-                args: [""],
-            },
-        ],
-    },
+                args: [""]
+            }
+        ]
+    }
 ]);

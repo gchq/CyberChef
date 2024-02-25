@@ -8,10 +8,12 @@ import Operation from "../Operation.mjs";
 import BigNumber from "bignumber.js";
 import Utils from "../Utils.mjs";
 
+
 /**
  * From Base62 operation
  */
 class FromBase62 extends Operation {
+
     /**
      * FromBase62 constructor
      */
@@ -20,8 +22,7 @@ class FromBase62 extends Operation {
 
         this.name = "From Base62";
         this.module = "Default";
-        this.description =
-            "Base62 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system.";
+        this.description = "Base62 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system.";
         this.infoURL = "https://wikipedia.org/wiki/List_of_numeral_systems";
         this.inputType = "string";
         this.outputType = "byteArray";
@@ -29,8 +30,8 @@ class FromBase62 extends Operation {
             {
                 name: "Alphabet",
                 type: "string",
-                value: "0-9A-Za-z",
-            },
+                value: "0-9A-Za-z"
+            }
         ];
     }
 
@@ -44,10 +45,7 @@ class FromBase62 extends Operation {
         const alphabet = Utils.expandAlphRange(args[0]).join("");
         const BN62 = BigNumber.clone({ ALPHABET: alphabet });
 
-        const re = new RegExp(
-            "[^" + alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]",
-            "g",
-        );
+        const re = new RegExp("[^" + alphabet.replace(/[[\]\\\-^$]/g, "\\$&") + "]", "g");
         input = input.replace(re, "");
 
         // Read number in using Base62 alphabet
@@ -61,6 +59,7 @@ class FromBase62 extends Operation {
 
         return Utils.convertToByteArray(hex, "Hex");
     }
+
 }
 
 export default FromBase62;

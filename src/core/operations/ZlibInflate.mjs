@@ -5,20 +5,21 @@
  */
 
 import Operation from "../Operation.mjs";
-import { INFLATE_BUFFER_TYPE } from "../lib/Zlib.mjs";
+import {INFLATE_BUFFER_TYPE} from "../lib/Zlib.mjs";
 import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
 
 const Zlib = zlibAndGzip.Zlib;
 
 const ZLIB_BUFFER_TYPE_LOOKUP = {
-    Adaptive: Zlib.Inflate.BufferType.ADAPTIVE,
-    Block: Zlib.Inflate.BufferType.BLOCK,
+    "Adaptive": Zlib.Inflate.BufferType.ADAPTIVE,
+    "Block":    Zlib.Inflate.BufferType.BLOCK,
 };
 
 /**
  * Zlib Inflate operation
  */
 class ZlibInflate extends Operation {
+
     /**
      * ZlibInflate constructor
      */
@@ -27,8 +28,7 @@ class ZlibInflate extends Operation {
 
         this.name = "Zlib Inflate";
         this.module = "Compression";
-        this.description =
-            "Decompresses data which has been compressed using the deflate algorithm with zlib headers.";
+        this.description = "Decompresses data which has been compressed using the deflate algorithm with zlib headers.";
         this.infoURL = "https://wikipedia.org/wiki/Zlib";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -36,34 +36,34 @@ class ZlibInflate extends Operation {
             {
                 name: "Start index",
                 type: "number",
-                value: 0,
+                value: 0
             },
             {
                 name: "Initial output buffer size",
                 type: "number",
-                value: 0,
+                value: 0
             },
             {
                 name: "Buffer expansion type",
                 type: "option",
-                value: INFLATE_BUFFER_TYPE,
+                value: INFLATE_BUFFER_TYPE
             },
             {
                 name: "Resize buffer after decompression",
                 type: "boolean",
-                value: false,
+                value: false
             },
             {
                 name: "Verify result",
                 type: "boolean",
-                value: false,
-            },
+                value: false
+            }
         ];
         this.checks = [
             {
                 pattern: "^\\x78(\\x01|\\x9c|\\xda|\\x5e)",
                 flags: "",
-                args: [0, 0, "Adaptive", false, false],
+                args: [0, 0, "Adaptive", false, false]
             },
         ];
     }
@@ -79,10 +79,11 @@ class ZlibInflate extends Operation {
             bufferSize: args[1],
             bufferType: ZLIB_BUFFER_TYPE_LOOKUP[args[2]],
             resize: args[3],
-            verify: args[4],
+            verify: args[4]
         });
         return new Uint8Array(inflate.decompress()).buffer;
     }
+
 }
 
 export default ZlibInflate;

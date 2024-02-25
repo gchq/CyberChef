@@ -6,17 +6,13 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import {
-    GenerateParagraphs,
-    GenerateSentences,
-    GenerateWords,
-    GenerateBytes,
-} from "../lib/LoremIpsum.mjs";
+import { GenerateParagraphs, GenerateSentences, GenerateWords, GenerateBytes } from "../lib/LoremIpsum.mjs";
 
 /**
  * Generate Lorem Ipsum operation
  */
 class GenerateLoremIpsum extends Operation {
+
     /**
      * GenerateLoremIpsum constructor
      */
@@ -25,22 +21,22 @@ class GenerateLoremIpsum extends Operation {
 
         this.name = "Generate Lorem Ipsum";
         this.module = "Default";
-        this.description =
-            "Generate varying length lorem ipsum placeholder text.";
+        this.description = "Generate varying length lorem ipsum placeholder text.";
         this.infoURL = "https://wikipedia.org/wiki/Lorem_ipsum";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Length",
-                type: "number",
-                value: "3",
+                "name": "Length",
+                "type": "number",
+                "value": "3"
             },
             {
-                name: "Length in",
-                type: "option",
-                value: ["Paragraphs", "Sentences", "Words", "Bytes"],
-            },
+                "name": "Length in",
+                "type": "option",
+                "value": ["Paragraphs", "Sentences", "Words", "Bytes"]
+            }
+
         ];
     }
 
@@ -65,8 +61,10 @@ class GenerateLoremIpsum extends Operation {
                 return GenerateBytes(length);
             default:
                 throw new OperationError("Invalid length type");
+
         }
     }
+
 }
 
 export default GenerateLoremIpsum;

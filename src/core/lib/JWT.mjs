@@ -6,6 +6,7 @@
  * @license Apache-2.0
  */
 
+
 /**
  * List of the JWT algorithms that can be used
  */
@@ -19,5 +20,5 @@ export const JWT_ALGORITHMS = [
     "ES256",
     "ES384",
     "ES512",
-    "None",
+    "None"
 ];

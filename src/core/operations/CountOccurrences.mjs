@@ -11,6 +11,7 @@ import Utils from "../Utils.mjs";
  * Count occurrences operation
  */
 class CountOccurrences extends Operation {
+
     /**
      * CountOccurrences constructor
      */
@@ -19,21 +20,16 @@ class CountOccurrences extends Operation {
 
         this.name = "Count occurrences";
         this.module = "Default";
-        this.description =
-            "Counts the number of times the provided string occurs in the input.";
+        this.description = "Counts the number of times the provided string occurs in the input.";
         this.inputType = "string";
         this.outputType = "number";
         this.args = [
             {
-                name: "Search string",
-                type: "toggleString",
-                value: "",
-                toggleValues: [
-                    "Regex",
-                    "Extended (\\n, \\t, \\x...)",
-                    "Simple string",
-                ],
-            },
+                "name": "Search string",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["Regex", "Extended (\\n, \\t, \\x...)", "Simple string"]
+            }
         ];
     }
 
@@ -63,6 +59,7 @@ class CountOccurrences extends Operation {
             return 0;
         }
     }
+
 }
 
 export default CountOccurrences;

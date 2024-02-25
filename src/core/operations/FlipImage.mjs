@@ -15,6 +15,7 @@ import jimp from "jimp";
  * Flip Image operation
  */
 class FlipImage extends Operation {
+
     /**
      * FlipImage constructor
      */
@@ -32,8 +33,8 @@ class FlipImage extends Operation {
             {
                 name: "Axis",
                 type: "option",
-                value: ["Horizontal", "Vertical"],
-            },
+                value: ["Horizontal", "Vertical"]
+            }
         ];
     }
 
@@ -94,6 +95,7 @@ class FlipImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
+
 }
 
 export default FlipImage;

@@ -137,10 +137,10 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                op: "PEM to Hex",
-                args: [],
-            },
-        ],
+                "op": "PEM to Hex",
+                "args": []
+            }
+        ]
     },
     {
         name: "PEMtoHex: No footer",
@@ -148,10 +148,10 @@ TestRegister.addTests([
         expectedOutput: "PEM footer '-----END RSA PRIVATE KEY-----' not found",
         recipeConfig: [
             {
-                op: "PEM to Hex",
-                args: [],
-            },
-        ],
+                "op": "PEM to Hex",
+                "args": []
+            }
+        ]
     },
     {
         name: "PEMtoHex: Multiple PEMs",
@@ -159,14 +159,14 @@ TestRegister.addTests([
         expectedOutput: "FOOBAR",
         recipeConfig: [
             {
-                op: "PEM to Hex",
-                args: [],
+                "op": "PEM to Hex",
+                "args": []
             },
             {
-                op: "From Hex",
-                args: ["Auto"],
-            },
-        ],
+                "op": "From Hex",
+                "args": ["Auto"]
+            }
+        ]
     },
     {
         name: "PEMtoHex: Single line PEM",
@@ -174,50 +174,47 @@ TestRegister.addTests([
         expectedOutput: "FOO",
         recipeConfig: [
             {
-                op: "PEM to Hex",
-                args: [],
+                "op": "PEM to Hex",
+                "args": []
             },
             {
-                op: "From Hex",
-                args: ["None"],
-            },
-        ],
+                "op": "From Hex",
+                "args": ["None"]
+            }
+        ]
     },
     {
         name: "PEMtoHex: EC P-256 Private Key",
         input: PEMS_EC_P256_PRIVATE_KEY,
-        expectedOutput:
-            "30770201010420885d43140870c9c21c3dd7e16a8dbfe560c9c5a6168119a5197d5f4f9d4fdb87a00a06082a8648ce3d030107a1440342000414b41c05bcc3c1ea3a69fe24de4d2029630d58e6559fcfbd847dabbf80ca29867b135cfae0b06d3e707580ccfef870cac92af6a330f7ff8e9d21b40c5d464aa7",
+        expectedOutput: "30770201010420885d43140870c9c21c3dd7e16a8dbfe560c9c5a6168119a5197d5f4f9d4fdb87a00a06082a8648ce3d030107a1440342000414b41c05bcc3c1ea3a69fe24de4d2029630d58e6559fcfbd847dabbf80ca29867b135cfae0b06d3e707580ccfef870cac92af6a330f7ff8e9d21b40c5d464aa7",
         recipeConfig: [
             {
-                op: "PEM to Hex",
-                args: [],
-            },
-        ],
+                "op": "PEM to Hex",
+                "args": []
+            }
+        ]
     },
     {
         name: "PEMtoHex: EC P-256 Private Key PKCS8",
         input: PEMS_EC_P256_PRIVATE_KEY_PKCS8,
-        expectedOutput:
-            "308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b0201010420885d43140870c9c21c3dd7e16a8dbfe560c9c5a6168119a5197d5f4f9d4fdb87a1440342000414b41c05bcc3c1ea3a69fe24de4d2029630d58e6559fcfbd847dabbf80ca29867b135cfae0b06d3e707580ccfef870cac92af6a330f7ff8e9d21b40c5d464aa7",
+        expectedOutput: "308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b0201010420885d43140870c9c21c3dd7e16a8dbfe560c9c5a6168119a5197d5f4f9d4fdb87a1440342000414b41c05bcc3c1ea3a69fe24de4d2029630d58e6559fcfbd847dabbf80ca29867b135cfae0b06d3e707580ccfef870cac92af6a330f7ff8e9d21b40c5d464aa7",
         recipeConfig: [
             {
-                op: "PEM to Hex",
-                args: [],
-            },
-        ],
+                "op": "PEM to Hex",
+                "args": []
+            }
+        ]
     },
     {
         name: "PEMtoHex: EC P-256 Public Key",
         input: PEMS_EC_P256_PUBLIC_KEY,
-        expectedOutput:
-            "3059301306072a8648ce3d020106082a8648ce3d0301070342000414b41c05bcc3c1ea3a69fe24de4d2029630d58e6559fcfbd847dabbf80ca29867b135cfae0b06d3e707580ccfef870cac92af6a330f7ff8e9d21b40c5d464aa7",
+        expectedOutput: "3059301306072a8648ce3d020106082a8648ce3d0301070342000414b41c05bcc3c1ea3a69fe24de4d2029630d58e6559fcfbd847dabbf80ca29867b135cfae0b06d3e707580ccfef870cac92af6a330f7ff8e9d21b40c5d464aa7",
         recipeConfig: [
             {
-                op: "PEM to Hex",
-                args: [],
-            },
-        ],
+                "op": "PEM to Hex",
+                "args": []
+            }
+        ]
     },
     {
         name: "PEMtoHex: RSA Private Key PKCS1",
@@ -225,14 +222,14 @@ TestRegister.addTests([
         expectedOutput: "fb49bd96ffc5d1351a35d773921fac03",
         recipeConfig: [
             {
-                op: "PEM to Hex",
-                args: [],
+                "op": "PEM to Hex",
+                "args": []
             },
             {
-                op: "MD5",
-                args: [],
-            },
-        ],
+                "op": "MD5",
+                "args": []
+            }
+        ]
     },
     {
         name: "PEMtoHex: RSA Private Key PKCS8",
@@ -240,14 +237,14 @@ TestRegister.addTests([
         expectedOutput: "23086d03633689fee64680c3c24409eb",
         recipeConfig: [
             {
-                op: "PEM to Hex",
-                args: [],
+                "op": "PEM to Hex",
+                "args": []
             },
             {
-                op: "MD5",
-                args: [],
-            },
-        ],
+                "op": "MD5",
+                "args": []
+            }
+        ]
     },
     {
         name: "PEMtoHex: RSA Public Key PKCS1",
@@ -255,14 +252,14 @@ TestRegister.addTests([
         expectedOutput: "5fc3f1f6c5d5806760b12eaad0c0292c",
         recipeConfig: [
             {
-                op: "PEM to Hex",
-                args: [],
+                "op": "PEM to Hex",
+                "args": []
             },
             {
-                op: "MD5",
-                args: [],
-            },
-        ],
+                "op": "MD5",
+                "args": []
+            }
+        ]
     },
     {
         name: "PEMtoHex: RSA Public Key PKCS8",
@@ -270,14 +267,14 @@ TestRegister.addTests([
         expectedOutput: "30fbe8e9495d591232affebdd6206ea6",
         recipeConfig: [
             {
-                op: "PEM to Hex",
-                args: [],
+                "op": "PEM to Hex",
+                "args": []
             },
             {
-                op: "MD5",
-                args: [],
-            },
-        ],
+                "op": "MD5",
+                "args": []
+            }
+        ]
     },
     {
         name: "PEMtoHex: Certificate",
@@ -285,13 +282,13 @@ TestRegister.addTests([
         expectedOutput: "6694d8ca4a0ceb84c3951d25dc05ec6e",
         recipeConfig: [
             {
-                op: "PEM to Hex",
-                args: [],
+                "op": "PEM to Hex",
+                "args": []
             },
             {
-                op: "MD5",
-                args: [],
-            },
-        ],
-    },
+                "op": "MD5",
+                "args": []
+            }
+        ]
+    }
 ]);

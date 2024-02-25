@@ -41,5 +41,5 @@ TestRegister.addTests([
                 args: ["Helloworld", 0, "test"],
             },
         ],
-    },
+    }
 ]);

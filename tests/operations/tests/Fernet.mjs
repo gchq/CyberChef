@@ -15,20 +15,19 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Fernet Decrypt",
-                args: ["MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="],
-            },
+                args: ["MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="]
+            }
         ],
     },
     {
         name: "Fernet Decrypt: no secret",
         input: "gAAAAABce-Tycae8klRxhDX2uenJ-uwV8-A1XZ2HRnfOXlNzkKKfRxviNLlgtemhT_fd1Fw5P_zFUAjd69zaJBQyWppAxVV00SExe77ql8c5n62HYJOnoIU=",
-        expectedOutput:
-            "Error: Secret must be 32 url-safe base64-encoded bytes.",
+        expectedOutput: "Error: Secret must be 32 url-safe base64-encoded bytes.",
         recipeConfig: [
             {
                 op: "Fernet Decrypt",
-                args: [""],
-            },
+                args: [""]
+            }
         ],
     },
     {
@@ -38,10 +37,10 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Fernet Decrypt",
-                args: ["VGhpc0lzVGhpcnR5VHdvQ2hhcmFjdGVyc0xvbmdLZXk="],
-            },
+                args: ["VGhpc0lzVGhpcnR5VHdvQ2hhcmFjdGVyc0xvbmdLZXk="]
+            }
         ],
-    },
+    }
 ]);
 
 TestRegister.addTests([
@@ -52,20 +51,19 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Fernet Encrypt",
-                args: ["MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="],
-            },
+                args: ["MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="]
+            }
         ],
     },
     {
         name: "Fernet Encrypt: no secret",
         input: "This is a secret message.\n",
-        expectedOutput:
-            "Error: Secret must be 32 url-safe base64-encoded bytes.",
+        expectedOutput: "Error: Secret must be 32 url-safe base64-encoded bytes.",
         recipeConfig: [
             {
                 op: "Fernet Encrypt",
-                args: [""],
-            },
+                args: [""]
+            }
         ],
     },
     {
@@ -75,8 +73,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Fernet Encrypt",
-                args: ["MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="],
-            },
+                args: ["MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="]
+            }
         ],
-    },
+    }
 ]);

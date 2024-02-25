@@ -39,10 +39,7 @@ export function decompress(compressed) {
     while (coffset + 2 <= compressed.length) {
         const doffset = decompressed.length;
 
-        const blockHeader = Utils.byteArrayToInt(
-            compressed.slice(coffset, coffset + 2),
-            "little",
-        );
+        const blockHeader = Utils.byteArrayToInt(compressed.slice(coffset, coffset + 2), "little");
         coffset += 2;
 
         const size = blockHeader & SIZE_MASK;
@@ -51,9 +48,7 @@ export function decompress(compressed) {
         if (size === 0) {
             break;
         } else if (compressed.length < coffset + size) {
-            throw new OperationError(
-                "Malformed LZNT1 stream: Block too small! Has the stream been truncated?",
-            );
+            throw new OperationError("Malformed LZNT1 stream: Block too small! Has the stream been truncated?");
         }
 
         if ((blockHeader & COMPRESSED_MASK) !== 0) {
@@ -64,31 +59,18 @@ export function decompress(compressed) {
                     if ((header & 1) === 0) {
                         decompressed.push(compressed[coffset++]);
                     } else {
-                        const pointer = Utils.byteArrayToInt(
-                            compressed.slice(coffset, coffset + 2),
-                            "little",
-                        );
+                        const pointer = Utils.byteArrayToInt(compressed.slice(coffset, coffset + 2), "little");
                         coffset += 2;
 
-                        const displacement = getDisplacement(
-                            decompressed.length - doffset - 1,
-                        );
-                        const symbolOffset =
-                            (pointer >> (12 - displacement)) + 1;
-                        const symbolLength =
-                            (pointer & (0xfff >> displacement)) + 2;
+                        const displacement = getDisplacement(decompressed.length - doffset - 1);
+                        const symbolOffset = (pointer >> (12 - displacement)) + 1;
+                        const symbolLength = (pointer & (0xFFF >> displacement)) + 2;
                         const shiftOffset = decompressed.length - symbolOffset;
 
-                        for (
-                            let shiftDelta = 0;
-                            shiftDelta < symbolLength + 1;
-                            shiftDelta++
-                        ) {
+                        for (let shiftDelta = 0; shiftDelta < symbolLength + 1; shiftDelta++) {
                             const shift = shiftOffset + shiftDelta;
                             if (shift < 0 || decompressed.length <= shift) {
-                                throw new OperationError(
-                                    "Malformed LZNT1 stream: Invalid shift!",
-                                );
+                                throw new OperationError("Malformed LZNT1 stream: Invalid shift!");
                             }
                             decompressed.push(decompressed[shift]);
                         }

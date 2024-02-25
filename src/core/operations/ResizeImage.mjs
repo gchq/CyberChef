@@ -15,6 +15,7 @@ import jimp from "jimp";
  * Resize Image operation
  */
 class ResizeImage extends Operation {
+
     /**
      * ResizeImage constructor
      */
@@ -23,8 +24,7 @@ class ResizeImage extends Operation {
 
         this.name = "Resize Image";
         this.module = "Image";
-        this.description =
-            "Resizes an image to the specified width and height values.";
+        this.description = "Resizes an image to the specified width and height values.";
         this.infoURL = "https://wikipedia.org/wiki/Image_scaling";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -34,23 +34,23 @@ class ResizeImage extends Operation {
                 name: "Width",
                 type: "number",
                 value: 100,
-                min: 1,
+                min: 1
             },
             {
                 name: "Height",
                 type: "number",
                 value: 100,
-                min: 1,
+                min: 1
             },
             {
                 name: "Unit type",
                 type: "option",
-                value: ["Pixels", "Percent"],
+                value: ["Pixels", "Percent"]
             },
             {
                 name: "Maintain aspect ratio",
                 type: "boolean",
-                value: false,
+                value: false
             },
             {
                 name: "Resizing algorithm",
@@ -60,10 +60,10 @@ class ResizeImage extends Operation {
                     "Bilinear",
                     "Bicubic",
                     "Hermite",
-                    "Bezier",
+                    "Bezier"
                 ],
-                defaultIndex: 1,
-            },
+                defaultIndex: 1
+            }
         ];
     }
 
@@ -81,10 +81,10 @@ class ResizeImage extends Operation {
 
         const resizeMap = {
             "Nearest Neighbour": jimp.RESIZE_NEAREST_NEIGHBOR,
-            Bilinear: jimp.RESIZE_BILINEAR,
-            Bicubic: jimp.RESIZE_BICUBIC,
-            Hermite: jimp.RESIZE_HERMITE,
-            Bezier: jimp.RESIZE_BEZIER,
+            "Bilinear": jimp.RESIZE_BILINEAR,
+            "Bicubic": jimp.RESIZE_BICUBIC,
+            "Hermite": jimp.RESIZE_HERMITE,
+            "Bezier": jimp.RESIZE_BEZIER
         };
 
         if (!isImage(input)) {
@@ -139,6 +139,7 @@ class ResizeImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
+
 }
 
 export default ResizeImage;

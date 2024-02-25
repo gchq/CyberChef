@@ -12,6 +12,7 @@ import { bitOp, and, BITWISE_OP_DELIMS } from "../lib/BitwiseOp.mjs";
  * AND operation
  */
 class AND extends Operation {
+
     /**
      * AND constructor
      */
@@ -20,18 +21,17 @@ class AND extends Operation {
 
         this.name = "AND";
         this.module = "Default";
-        this.description =
-            "AND the input with the given key.<br>e.g. <code>fe023da5</code>";
+        this.description = "AND the input with the given key.<br>e.g. <code>fe023da5</code>";
         this.infoURL = "https://wikipedia.org/wiki/Bitwise_operation#AND";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
         this.args = [
             {
-                name: "Key",
-                type: "toggleString",
-                value: "",
-                toggleValues: BITWISE_OP_DELIMS,
-            },
+                "name": "Key",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": BITWISE_OP_DELIMS
+            }
         ];
     }
 
@@ -41,10 +41,7 @@ class AND extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        const key = Utils.convertToByteArray(
-            args[0].string || "",
-            args[0].option,
-        );
+        const key = Utils.convertToByteArray(args[0].string || "", args[0].option);
 
         return bitOp(input, key, and);
     }
@@ -74,6 +71,7 @@ class AND extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
+
 }
 
 export default AND;

@@ -21,9 +21,6 @@ jobs:
         npm install
         npm run setheapsize
 
-    - name: Format
-      run: npx @biomejs/biome format . --write
-
     - name: Lint
       run: npx grunt lint
 

@@ -10,10 +10,12 @@ import Operation from "../Operation.mjs";
 import { div, createNumArray } from "../lib/Arithmetic.mjs";
 import { ARITHMETIC_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
+
 /**
  * Divide operation
  */
 class Divide extends Operation {
+
     /**
      * Divide constructor
      */
@@ -22,16 +24,15 @@ class Divide extends Operation {
 
         this.name = "Divide";
         this.module = "Default";
-        this.description =
-            "Divides a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>2.5</code>";
+        this.description = "Divides a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>2.5</code>";
         this.inputType = "string";
         this.outputType = "BigNumber";
         this.args = [
             {
-                name: "Delimiter",
-                type: "option",
-                value: ARITHMETIC_DELIM_OPTIONS,
-            },
+                "name": "Delimiter",
+                "type": "option",
+                "value": ARITHMETIC_DELIM_OPTIONS,
+            }
         ];
     }
 
@@ -44,6 +45,7 @@ class Divide extends Operation {
         const val = div(createNumArray(input, args[0]));
         return BigNumber.isBigNumber(val) ? val : new BigNumber(NaN);
     }
+
 }
 
 export default Divide;

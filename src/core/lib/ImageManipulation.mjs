@@ -16,7 +16,7 @@ import OperationError from "../errors/OperationError.mjs";
  * @param {boolean} fast
  * @returns {jimp}
  */
-export function gaussianBlur(input, radius) {
+export function gaussianBlur (input, radius) {
     try {
         // From http://blog.ivank.net/fastest-gaussian-blur.html
         const boxes = boxesForGauss(radius, 3);
@@ -37,7 +37,7 @@ export function gaussianBlur(input, radius) {
  * @returns {Array}
  */
 function boxesForGauss(radius, numBoxes) {
-    const idealWidth = Math.sqrt((12 * radius * radius) / numBoxes + 1);
+    const idealWidth = Math.sqrt((12 * radius * radius / numBoxes) + 1);
 
     let wl = Math.floor(idealWidth);
 
@@ -47,12 +47,7 @@ function boxesForGauss(radius, numBoxes) {
 
     const wu = wl + 2;
 
-    const mIdeal =
-        (12 * radius * radius -
-            numBoxes * wl * wl -
-            4 * numBoxes * wl -
-            3 * numBoxes) /
-        (-4 * wl - 4);
+    const mIdeal = (12 * radius * radius - numBoxes * wl * wl - 4 * numBoxes * wl - 3 * numBoxes) / (-4 * wl - 4);
     const m = Math.round(mIdeal);
 
     const sizes = [];
@@ -69,7 +64,7 @@ function boxesForGauss(radius, numBoxes) {
  * @param {number} radius
  * @returns {jimp}
  */
-function boxBlur(source, radius) {
+function boxBlur (source, radius) {
     const width = source.bitmap.width;
     const height = source.bitmap.height;
     let output = source.clone();
@@ -89,7 +84,7 @@ function boxBlur(source, radius) {
  * @param {number} radius
  * @returns {jimp}
  */
-function boxBlurH(source, output, width, height, radius) {
+function boxBlurH (source, output, width, height, radius) {
     const iarr = 1 / (radius + radius + 1);
     for (let i = 0; i < height; i++) {
         let ti = 0,
@@ -138,12 +133,9 @@ function boxBlurH(source, output, width, height, radius) {
             const riIdx = source.getPixelIndex(ri++, i);
             const liIdx = source.getPixelIndex(li++, i);
             red += source.bitmap.data[riIdx] - source.bitmap.data[liIdx];
-            green +=
-                source.bitmap.data[riIdx + 1] - source.bitmap.data[liIdx + 1];
-            blue +=
-                source.bitmap.data[riIdx + 2] - source.bitmap.data[liIdx + 2];
-            alpha +=
-                source.bitmap.data[riIdx + 3] - source.bitmap.data[liIdx + 3];
+            green += source.bitmap.data[riIdx + 1] - source.bitmap.data[liIdx + 1];
+            blue += source.bitmap.data[riIdx + 2] - source.bitmap.data[liIdx + 2];
+            alpha += source.bitmap.data[riIdx + 3] - source.bitmap.data[liIdx + 3];
 
             const tiIdx = source.getPixelIndex(ti++, i);
             output.bitmap.data[tiIdx] = Math.round(red * iarr);
@@ -179,7 +171,7 @@ function boxBlurH(source, output, width, height, radius) {
  * @param {number} radius
  * @returns {jimp}
  */
-function boxBlurV(source, output, width, height, radius) {
+function boxBlurV (source, output, width, height, radius) {
     const iarr = 1 / (radius + radius + 1);
     for (let i = 0; i < width; i++) {
         let ti = 0,
@@ -230,12 +222,9 @@ function boxBlurV(source, output, width, height, radius) {
             const riIdx = source.getPixelIndex(i, ri++);
             const liIdx = source.getPixelIndex(i, li++);
             red += source.bitmap.data[riIdx] - source.bitmap.data[liIdx];
-            green +=
-                source.bitmap.data[riIdx + 1] - source.bitmap.data[liIdx + 1];
-            blue +=
-                source.bitmap.data[riIdx + 2] - source.bitmap.data[liIdx + 2];
-            alpha +=
-                source.bitmap.data[riIdx + 3] - source.bitmap.data[liIdx + 3];
+            green += source.bitmap.data[riIdx + 1] - source.bitmap.data[liIdx + 1];
+            blue += source.bitmap.data[riIdx + 2] - source.bitmap.data[liIdx + 2];
+            alpha += source.bitmap.data[riIdx + 3] - source.bitmap.data[liIdx + 3];
 
             const tiIdx = source.getPixelIndex(i, ti++);
             output.bitmap.data[tiIdx] = Math.round(red * iarr);

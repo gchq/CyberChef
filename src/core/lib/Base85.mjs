@@ -23,8 +23,9 @@ export const ALPHABET_OPTIONS = [
     {
         name: "IPv6",
         value: "0-9A-Za-z!#$%&()*+\\-;<=>?@^_`{|}~",
-    },
+    }
 ];
+
 
 /**
  * Returns the name of the alphabet, when given the alphabet.
@@ -36,7 +37,7 @@ export function alphabetName(alphabet) {
     alphabet = escape(alphabet);
     let name;
 
-    ALPHABET_OPTIONS.forEach(function (a) {
+    ALPHABET_OPTIONS.forEach(function(a) {
         const expanded = Utils.expandAlphRange(a.value).join("");
         if (alphabet === escape(expanded)) name = a.name;
     });

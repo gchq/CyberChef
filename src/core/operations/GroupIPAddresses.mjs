@@ -7,21 +7,14 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import { IP_DELIM_OPTIONS } from "../lib/Delim.mjs";
-import {
-    ipv6ToStr,
-    genIpv6Mask,
-    IPV4_REGEX,
-    strToIpv6,
-    ipv4ToStr,
-    IPV6_REGEX,
-    strToIpv4,
-} from "../lib/IP.mjs";
+import {IP_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import {ipv6ToStr, genIpv6Mask, IPV4_REGEX, strToIpv6,  ipv4ToStr, IPV6_REGEX, strToIpv4} from "../lib/IP.mjs";
 
 /**
  * Group IP addresses operation
  */
 class GroupIPAddresses extends Operation {
+
     /**
      * GroupIPAddresses constructor
      */
@@ -30,27 +23,26 @@ class GroupIPAddresses extends Operation {
 
         this.name = "Group IP addresses";
         this.module = "Default";
-        this.description =
-            "Groups a list of IP addresses into subnets. Supports both IPv4 and IPv6 addresses.";
+        this.description = "Groups a list of IP addresses into subnets. Supports both IPv4 and IPv6 addresses.";
         this.infoURL = "https://wikipedia.org/wiki/Subnetwork";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Delimiter",
-                type: "option",
-                value: IP_DELIM_OPTIONS,
+                "name": "Delimiter",
+                "type": "option",
+                "value": IP_DELIM_OPTIONS
             },
             {
-                name: "Subnet (CIDR)",
-                type: "number",
-                value: 24,
+                "name": "Subnet (CIDR)",
+                "type": "number",
+                "value": 24
             },
             {
-                name: "Only show the subnets",
-                type: "boolean",
-                value: false,
-            },
+                "name": "Only show the subnets",
+                "type": "boolean",
+                "value": false,
+            }
         ];
     }
 
@@ -63,7 +55,7 @@ class GroupIPAddresses extends Operation {
         const delim = Utils.charRep(args[0]),
             cidr = args[1],
             onlySubnets = args[2],
-            ipv4Mask = cidr < 32 ? ~(0xffffffff >>> cidr) : 0xffffffff,
+            ipv4Mask = cidr < 32 ? ~(0xFFFFFFFF >>> cidr) : 0xFFFFFFFF,
             ipv6Mask = genIpv6Mask(cidr),
             ips = input.split(delim),
             ipv4Networks = {},
@@ -76,9 +68,7 @@ class GroupIPAddresses extends Operation {
             i;
 
         if (cidr < 0 || cidr > 127) {
-            throw new OperationError(
-                "CIDR must be less than 32 for IPv4 or 128 for IPv6",
-            );
+            throw new OperationError("CIDR must be less than 32 for IPv4 or 128 for IPv6");
         }
 
         // Parse all IPs and add to network dictionary
@@ -133,10 +123,7 @@ class GroupIPAddresses extends Operation {
 
             if (!onlySubnets) {
                 for (i = 0; i < ipv6Networks[networkStr].length; i++) {
-                    output +=
-                        "  " +
-                        ipv6ToStr(ipv6Networks[networkStr][i], true) +
-                        "\n";
+                    output += "  " + ipv6ToStr(ipv6Networks[networkStr][i], true) + "\n";
                 }
                 output += "\n";
             }
@@ -144,6 +131,7 @@ class GroupIPAddresses extends Operation {
 
         return output;
     }
+
 }
 
 export default GroupIPAddresses;

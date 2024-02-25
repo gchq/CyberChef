@@ -30,7 +30,7 @@ export async function parseQrCode(input, normalise) {
     try {
         if (normalise) {
             image.rgba(false);
-            image.background(0xffffffff);
+            image.background(0xFFFFFFFF);
             image.normalize();
             image.greyscale();
             image = await image.getBufferAsync(jimp.MIME_JPEG);
@@ -58,13 +58,7 @@ export async function parseQrCode(input, normalise) {
  * @param {string} errorCorrection
  * @returns {ArrayBuffer}
  */
-export function generateQrCode(
-    input,
-    format,
-    moduleSize,
-    margin,
-    errorCorrection,
-) {
+export function generateQrCode(input, format, moduleSize, margin, errorCorrection) {
     const formats = ["SVG", "EPS", "PDF", "PNG"];
     if (!formats.includes(format.toUpperCase())) {
         throw new OperationError("Unsupported QR code format.");
@@ -76,7 +70,7 @@ export function generateQrCode(
             type: format,
             size: moduleSize,
             margin: margin,
-            ec_level: errorCorrection.charAt(0).toUpperCase(),
+            "ec_level": errorCorrection.charAt(0).toUpperCase()
         });
     } catch (err) {
         throw new OperationError(`Error generating QR code. (${err})`);

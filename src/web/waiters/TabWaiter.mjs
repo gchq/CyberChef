@@ -8,6 +8,7 @@
  * Waiter to handle events related to the input and output tabs
  */
 class TabWaiter {
+
     /**
      * TabWaiter constructor.
      *
@@ -25,10 +26,8 @@ class TabWaiter {
      * @returns {number}
      */
     calcMaxTabs() {
-        let numTabs = Math.floor(
-            (document.getElementById("IO").offsetWidth - 75) / 120,
-        );
-        numTabs = numTabs > 1 ? numTabs : 2;
+        let numTabs = Math.floor((document.getElementById("IO").offsetWidth - 75)  / 120);
+        numTabs = (numTabs > 1) ? numTabs : 2;
 
         return numTabs;
     }
@@ -59,9 +58,7 @@ class TabWaiter {
     getTabItem(inputNum, io) {
         const tabs = document.getElementById(`${io}-tabs`).children;
         for (let i = 0; i < tabs.length; i++) {
-            if (
-                parseInt(tabs.item(i).getAttribute("inputNum"), 10) === inputNum
-            ) {
+            if (parseInt(tabs.item(i).getAttribute("inputNum"), 10) === inputNum) {
                 return tabs.item(i);
             }
         }
@@ -102,26 +99,18 @@ class TabWaiter {
         const newTabContent = document.createElement("div");
         newTabContent.classList.add(`${io}-tab-content`);
         newTabContent.innerText = `Tab ${inputNum.toString()}`;
-        newTabContent.addEventListener(
-            "wheel",
-            this.manager[io].scrollTab.bind(this.manager[io]),
-            { passive: false },
-        );
+        newTabContent.addEventListener("wheel", this.manager[io].scrollTab.bind(this.manager[io]), {passive: false});
         newTab.appendChild(newTabContent);
 
         if (io === "input") {
             const newTabButton = document.createElement("button"),
                 newTabButtonIcon = document.createElement("i");
             newTabButton.type = "button";
-            newTabButton.className =
-                "btn btn-primary bmd-btn-icon btn-close-tab";
+            newTabButton.className = "btn btn-primary bmd-btn-icon btn-close-tab";
             newTabButtonIcon.classList.add("material-icons");
             newTabButtonIcon.innerText = "clear";
             newTabButton.appendChild(newTabButtonIcon);
-            newTabButton.addEventListener(
-                "click",
-                this.manager.input.removeTabClick.bind(this.manager.input),
-            );
+            newTabButton.addEventListener("click", this.manager.input.removeTabClick.bind(this.manager.input));
             newTab.appendChild(newTabButton);
         }
 
@@ -136,8 +125,7 @@ class TabWaiter {
         document.getElementById("output-tabs-wrapper").style.display = "block";
         document.getElementById("input-wrapper").classList.add("show-tabs");
         document.getElementById("output-wrapper").classList.add("show-tabs");
-        document.getElementById("save-all-to-file").style.display =
-            "inline-block";
+        document.getElementById("save-all-to-file").style.display = "inline-block";
     }
 
     /**
@@ -170,7 +158,7 @@ class TabWaiter {
 
         // Create and add new tab elements
         for (let i = 0; i < nums.length; i++) {
-            const active = nums[i] === activeTab;
+            const active = (nums[i] === activeTab);
             tabsList.appendChild(this.createTabElement(nums[i], active, io));
         }
 
@@ -206,10 +194,7 @@ class TabWaiter {
 
         let found = false;
         for (let i = 0; i < tabsList.children.length; i++) {
-            const tabNum = parseInt(
-                tabsList.children.item(i).getAttribute("inputNum"),
-                10,
-            );
+            const tabNum = parseInt(tabsList.children.item(i).getAttribute("inputNum"), 10);
             if (tabNum === inputNum) {
                 tabsList.children.item(i).classList.add(`active-${io}-tab`);
                 found = true;
@@ -259,6 +244,7 @@ class TabWaiter {
             tabItem.style.background = `linear-gradient(to right, var(--title-background-colour) ${percentComplete}%, var(--primary-background-colour) ${percentComplete}%)`;
         }
     }
+
 }
 
 export default TabWaiter;

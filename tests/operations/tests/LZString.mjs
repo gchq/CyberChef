@@ -14,9 +14,9 @@ TestRegister.addTests([
         expectedOutput: "BYUwNmD2AEDukCcwBMg=",
         recipeConfig: [
             {
-                op: "LZString Compress",
-                args: ["Base64"],
-            },
+                "op": "LZString Compress",
+                "args": ["Base64"]
+            }
         ],
     },
     {
@@ -25,9 +25,9 @@ TestRegister.addTests([
         expectedOutput: "hello world",
         recipeConfig: [
             {
-                op: "LZString Decompress",
-                args: ["Base64"],
-            },
+                "op": "LZString Decompress",
+                "args": ["Base64"]
+            }
         ],
-    },
+    }
 ]);

@@ -10,6 +10,7 @@ import Operation from "../Operation.mjs";
  * To Lower case operation
  */
 class ToLowerCase extends Operation {
+
     /**
      * ToLowerCase constructor
      */
@@ -18,8 +19,7 @@ class ToLowerCase extends Operation {
 
         this.name = "To Lower case";
         this.module = "Default";
-        this.description =
-            "Converts every character in the input to lower case.";
+        this.description = "Converts every character in the input to lower case.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
@@ -59,6 +59,7 @@ class ToLowerCase extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
+
 }
 
 export default ToLowerCase;

@@ -15,6 +15,7 @@ import Utils from "../Utils.mjs";
  * Generate QR Code operation
  */
 class GenerateQRCode extends Operation {
+
     /**
      * GenerateQRCode constructor
      */
@@ -23,36 +24,35 @@ class GenerateQRCode extends Operation {
 
         this.name = "Generate QR Code";
         this.module = "Image";
-        this.description =
-            "Generates a Quick Response (QR) code from the input text.<br><br>A QR code is a type of matrix barcode (or two-dimensional barcode) first designed in 1994 for the automotive industry in Japan. A barcode is a machine-readable optical label that contains information about the item to which it is attached.";
+        this.description = "Generates a Quick Response (QR) code from the input text.<br><br>A QR code is a type of matrix barcode (or two-dimensional barcode) first designed in 1994 for the automotive industry in Japan. A barcode is a machine-readable optical label that contains information about the item to which it is attached.";
         this.infoURL = "https://wikipedia.org/wiki/QR_code";
         this.inputType = "string";
         this.outputType = "ArrayBuffer";
         this.presentType = "html";
         this.args = [
             {
-                name: "Image Format",
-                type: "option",
-                value: ["PNG", "SVG", "EPS", "PDF"],
+                "name": "Image Format",
+                "type": "option",
+                "value": ["PNG", "SVG", "EPS", "PDF"]
             },
             {
-                name: "Module size (px)",
-                type: "number",
-                value: 5,
-                min: 1,
+                "name": "Module size (px)",
+                "type": "number",
+                "value": 5,
+                "min": 1
             },
             {
-                name: "Margin (num modules)",
-                type: "number",
-                value: 4,
-                min: 0,
+                "name": "Margin (num modules)",
+                "type": "number",
+                "value": 4,
+                "min": 0
             },
             {
-                name: "Error correction",
-                type: "option",
-                value: ["Low", "Medium", "Quartile", "High"],
-                defaultIndex: 1,
-            },
+                "name": "Error correction",
+                "type": "option",
+                "value": ["Low", "Medium", "Quartile", "High"],
+                "defaultIndex": 1
+            }
         ];
     }
 
@@ -88,6 +88,7 @@ class GenerateQRCode extends Operation {
 
         return Utils.arrayBufferToStr(data);
     }
+
 }
 
 export default GenerateQRCode;

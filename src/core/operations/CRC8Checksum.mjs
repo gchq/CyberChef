@@ -13,6 +13,7 @@ import { toHexFast } from "../lib/Hex.mjs";
  * CRC-8 Checksum operation
  */
 class CRC8Checksum extends Operation {
+
     /**
      * CRC8Checksum constructor
      */
@@ -21,16 +22,15 @@ class CRC8Checksum extends Operation {
 
         this.name = "CRC-8 Checksum";
         this.module = "Crypto";
-        this.description =
-            "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961.";
+        this.description = "A cyclic redundancy check (CRC) is an error-detecting code commonly used in digital networks and storage devices to detect accidental changes to raw data.<br><br>The CRC was invented by W. Wesley Peterson in 1961.";
         this.infoURL = "https://wikipedia.org/wiki/Cyclic_redundancy_check";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
-                name: "Algorithm",
-                type: "option",
-                value: [
+                "name": "Algorithm",
+                "type": "option",
+                "value": [
                     "CRC-8",
                     "CRC-8/CDMA2000",
                     "CRC-8/DARC",
@@ -40,9 +40,9 @@ class CRC8Checksum extends Operation {
                     "CRC-8/ITU",
                     "CRC-8/MAXIM",
                     "CRC-8/ROHC",
-                    "CRC-8/WCDMA",
-                ],
-            },
+                    "CRC-8/WCDMA"
+                ]
+            }
         ];
     }
 
@@ -82,14 +82,7 @@ class CRC8Checksum extends Operation {
      * @param {boolean} outputReflection
      * @param {number} xorOut
      */
-    calculateCRC8(
-        input,
-        polynomial,
-        initializationValue,
-        inputReflection,
-        outputReflection,
-        xorOut,
-    ) {
+    calculateCRC8(input, polynomial, initializationValue, inputReflection, outputReflection, xorOut) {
         const crcSize = 8;
         const crcTable = this.calculateCRC8LookupTable(polynomial);
 
@@ -98,9 +91,7 @@ class CRC8Checksum extends Operation {
 
         input = new Uint8Array(input);
         for (const inputByte of input) {
-            currentByte = inputReflection
-                ? this.reverseBits(inputByte, crcSize)
-                : inputByte;
+            currentByte = inputReflection ? this.reverseBits(inputByte, crcSize) : inputByte;
 
             position = (currentByte ^ crc) & 255;
             crc = crcTable[position];
@@ -121,7 +112,7 @@ class CRC8Checksum extends Operation {
     reverseBits(input, hashSize) {
         let reversedByte = 0;
         for (let i = hashSize - 1; i >= 0; i--) {
-            reversedByte |= (input & 1) << i;
+            reversedByte |= ((input & 1) << i);
             input >>= 1;
         }
 
@@ -140,23 +131,23 @@ class CRC8Checksum extends Operation {
             case "CRC-8":
                 return this.calculateCRC8(input, 0x7, 0x0, false, false, 0x0);
             case "CRC-8/CDMA2000":
-                return this.calculateCRC8(input, 0x9b, 0xff, false, false, 0x0);
+                return this.calculateCRC8(input, 0x9B, 0xFF, false, false, 0x0);
             case "CRC-8/DARC":
                 return this.calculateCRC8(input, 0x39, 0x0, true, true, 0x0);
             case "CRC-8/DVB-S2":
-                return this.calculateCRC8(input, 0xd5, 0x0, false, false, 0x0);
+                return this.calculateCRC8(input, 0xD5, 0x0, false, false, 0x0);
             case "CRC-8/EBU":
-                return this.calculateCRC8(input, 0x1d, 0xff, true, true, 0x0);
+                return this.calculateCRC8(input, 0x1D, 0xFF, true, true, 0x0);
             case "CRC-8/I-CODE":
-                return this.calculateCRC8(input, 0x1d, 0xfd, false, false, 0x0);
+                return this.calculateCRC8(input, 0x1D, 0xFD, false, false, 0x0);
             case "CRC-8/ITU":
                 return this.calculateCRC8(input, 0x7, 0x0, false, false, 0x55);
             case "CRC-8/MAXIM":
                 return this.calculateCRC8(input, 0x31, 0x0, true, true, 0x0);
             case "CRC-8/ROHC":
-                return this.calculateCRC8(input, 0x7, 0xff, true, true, 0x0);
+                return this.calculateCRC8(input, 0x7, 0xFF, true, true, 0x0);
             case "CRC-8/WCDMA":
-                return this.calculateCRC8(input, 0x9b, 0x0, true, true, 0x0);
+                return this.calculateCRC8(input, 0x9B, 0x0, true, true, 0x0);
             default:
                 throw new OperationError("Unknown checksum algorithm");
         }

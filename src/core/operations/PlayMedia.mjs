@@ -15,6 +15,7 @@ import { isType, detectFileType } from "../lib/FileType.mjs";
  * PlayMedia operation
  */
 class PlayMedia extends Operation {
+
     /**
      * PlayMedia constructor
      */
@@ -23,18 +24,17 @@ class PlayMedia extends Operation {
 
         this.name = "Play Media";
         this.module = "Default";
-        this.description =
-            "Plays the input as audio or video depending on the type.<br><br>Tags: sound, movie, mp3, mp4, mov, webm, wav, ogg";
+        this.description = "Plays the input as audio or video depending on the type.<br><br>Tags: sound, movie, mp3, mp4, mov, webm, wav, ogg";
         this.infoURL = "";
         this.inputType = "string";
         this.outputType = "byteArray";
         this.presentType = "html";
         this.args = [
             {
-                name: "Input format",
-                type: "option",
-                value: ["Raw", "Base64", "Hex"],
-            },
+                "name": "Input format",
+                "type": "option",
+                "value": ["Raw", "Base64", "Hex"]
+            }
         ];
     }
 
@@ -63,6 +63,7 @@ class PlayMedia extends Operation {
                 input = Utils.strToByteArray(input);
                 break;
         }
+
 
         // Determine file type
         if (!isType(/^(audio|video)/, input)) {

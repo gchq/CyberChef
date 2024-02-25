@@ -12,6 +12,7 @@ import Dish from "../Dish.mjs";
  * Subsection operation
  */
 class Subsection extends Operation {
+
     /**
      * Subsection constructor
      */
@@ -21,32 +22,31 @@ class Subsection extends Operation {
         this.name = "Subsection";
         this.flowControl = true;
         this.module = "Default";
-        this.description =
-            "Select a part of the input data using a regular expression (regex), and run all subsequent operations on each match separately.<br><br>You can use up to one capture group, where the recipe will only be run on the data in the capture group. If there's more than one capture group, only the first one will be operated on.<br><br>Use the Merge operation to reset the effects of subsection.";
+        this.description = "Select a part of the input data using a regular expression (regex), and run all subsequent operations on each match separately.<br><br>You can use up to one capture group, where the recipe will only be run on the data in the capture group. If there's more than one capture group, only the first one will be operated on.<br><br>Use the Merge operation to reset the effects of subsection.";
         this.infoURL = "";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Section (regex)",
-                type: "string",
-                value: "",
+                "name": "Section (regex)",
+                "type": "string",
+                "value": ""
             },
             {
-                name: "Case sensitive matching",
-                type: "boolean",
-                value: true,
+                "name": "Case sensitive matching",
+                "type": "boolean",
+                "value": true
             },
             {
-                name: "Global matching",
-                type: "boolean",
-                value: true,
+                "name": "Global matching",
+                "type": "boolean",
+                "value": true
             },
             {
-                name: "Ignore errors",
-                type: "boolean",
-                value: false,
-            },
+                "name": "Ignore errors",
+                "type": "boolean",
+                "value": false
+            }
         ];
     }
 
@@ -58,13 +58,13 @@ class Subsection extends Operation {
      * @returns {Object} - The updated state of the recipe
      */
     async run(state) {
-        const opList = state.opList,
-            inputType = opList[state.progress].inputType,
-            outputType = opList[state.progress].outputType,
-            input = await state.dish.get(inputType),
-            ings = opList[state.progress].ingValues,
+        const opList    = state.opList,
+            inputType   = opList[state.progress].inputType,
+            outputType  = opList[state.progress].outputType,
+            input       = await state.dish.get(inputType),
+            ings        = opList[state.progress].ingValues,
             [section, caseSensitive, global, ignoreErrors] = ings,
-            subOpList = [];
+            subOpList   = [];
 
         if (input && section !== "") {
             // Set to 1 as if we are here, then there is one, the current one.
@@ -74,14 +74,13 @@ class Subsection extends Operation {
             for (let i = state.progress + 1; i < opList.length; i++) {
                 if (opList[i].name === "Merge" && !opList[i].disabled) {
                     numOp--;
-                    if (numOp === 0 || opList[i].ingValues[0]) break;
-                    // Not this subsection's Merge.
-                    else subOpList.push(opList[i]);
+                    if (numOp === 0 || opList[i].ingValues[0])
+                        break;
+                    else
+                        // Not this subsection's Merge.
+                        subOpList.push(opList[i]);
                 } else {
-                    if (
-                        opList[i].name === "Fork" ||
-                        opList[i].name === "Subsection"
-                    )
+                    if (opList[i].name === "Fork" || opList[i].name === "Subsection")
                         numOp++;
                     subOpList.push(opList[i]);
                 }
@@ -103,9 +102,7 @@ class Subsection extends Operation {
             state.forkOffset += state.progress + 1;
 
             // Take a deep(ish) copy of the ingredient values
-            const ingValues = subOpList.map((op) =>
-                JSON.parse(JSON.stringify(op.ingValues)),
-            );
+            const ingValues = subOpList.map(op => JSON.parse(JSON.stringify(op.ingValues)));
             let matched = false;
 
             // Run recipe over each match
@@ -114,18 +111,14 @@ class Subsection extends Operation {
                 // Add up to match
                 let matchStr = m[0];
 
-                if (m.length === 1) {
-                    // No capture groups
+                if (m.length === 1) { // No capture groups
                     output += input.slice(inOffset, m.index);
                     inOffset = m.index + m[0].length;
                 } else if (m.length >= 2) {
                     matchStr = m[1];
 
                     // Need to add some of the matched string that isn't in the capture group
-                    output += input.slice(
-                        inOffset,
-                        m.index + m[0].indexOf(m[1]),
-                    );
+                    output += input.slice(inOffset, m.index + m[0].indexOf(m[1]));
                     // Set i to be after the end of the first capture group
                     inOffset = m.index + m[0].indexOf(m[1]) + m[1].length;
                 }
@@ -162,6 +155,7 @@ class Subsection extends Operation {
         }
         return state;
     }
+
 }
 
 export default Subsection;

@@ -17,19 +17,13 @@ import * as operations from "../../../core/operations/index.mjs";
 import { decapitalise } from "../../apiUtils.mjs";
 import excludedOperations from "../excludedOperations.mjs";
 
-const includedOperations = Object.keys(operations).filter(
-    (op) => excludedOperations.indexOf(op) === -1,
-);
+const includedOperations = Object.keys(operations).filter((op => excludedOperations.indexOf(op) === -1));
 
 const dir = path.join(`${process.cwd()}/src/node`);
 if (!fs.existsSync(dir)) {
     console.log("\nCWD: " + process.cwd());
-    console.log(
-        "Error: generateNodeIndex.mjs should be run from the project root",
-    );
-    console.log(
-        "Example> node --experimental-modules src/core/config/scripts/generateNodeIndex.mjs",
-    );
+    console.log("Error: generateNodeIndex.mjs should be run from the project root");
+    console.log("Example> node --experimental-modules src/core/config/scripts/generateNodeIndex.mjs");
     process.exit(1);
 }
 
@@ -57,7 +51,7 @@ includedOperations.forEach((op) => {
     code += `    ${op} as core_${op},\n`;
 });
 
-code += `
+code +=`
 } from "../core/operations/index.mjs";
 
 global.File = File;
@@ -76,9 +70,7 @@ includedOperations.forEach((op) => {
 });
 
 excludedOperations.forEach((op) => {
-    code += `        "${decapitalise(
-        op,
-    )}": _explainExcludedFunction("${op}"),\n`;
+    code += `        "${decapitalise(op)}": _explainExcludedFunction("${op}"),\n`;
 });
 
 code += `    };
@@ -97,7 +89,7 @@ Object.keys(operations).forEach((op) => {
     code += `const ${decapitalise(op)} = chef.${decapitalise(op)};\n`;
 });
 
-code += `
+code +=`
 
 // Define array of all operations to create register for bake.
 const operations = [\n`;
@@ -128,4 +120,8 @@ code += "    ExcludedOperationError,\n";
 code += "    DishError,\n";
 code += "};\n";
 
-fs.writeFileSync(path.join(dir, "./index.mjs"), code);
+
+fs.writeFileSync(
+    path.join(dir, "./index.mjs"),
+    code
+);

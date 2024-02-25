@@ -11,6 +11,7 @@ import { search } from "../lib/Extract.mjs";
  * Extract dates operation
  */
 class ExtractDates extends Operation {
+
     /**
      * ExtractDates constructor
      */
@@ -19,16 +20,15 @@ class ExtractDates extends Operation {
 
         this.name = "Extract dates";
         this.module = "Regex";
-        this.description =
-            "Extracts dates in the following formats<ul><li><code>yyyy-mm-dd</code></li><li><code>dd/mm/yyyy</code></li><li><code>mm/dd/yyyy</code></li></ul>Dividers can be any of /, -, . or space";
+        this.description = "Extracts dates in the following formats<ul><li><code>yyyy-mm-dd</code></li><li><code>dd/mm/yyyy</code></li><li><code>mm/dd/yyyy</code></li></ul>Dividers can be any of /, -, . or space";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
-                name: "Display total",
-                type: "boolean",
-                value: false,
-            },
+                "name": "Display total",
+                "type": "boolean",
+                "value": false
+            }
         ];
     }
 
@@ -39,12 +39,9 @@ class ExtractDates extends Operation {
      */
     run(input, args) {
         const displayTotal = args[0],
-            date1 =
-                "(?:19|20)\\d\\d[- /.](?:0[1-9]|1[012])[- /.](?:0[1-9]|[12][0-9]|3[01])", // yyyy-mm-dd
-            date2 =
-                "(?:0[1-9]|[12][0-9]|3[01])[- /.](?:0[1-9]|1[012])[- /.](?:19|20)\\d\\d", // dd/mm/yyyy
-            date3 =
-                "(?:0[1-9]|1[012])[- /.](?:0[1-9]|[12][0-9]|3[01])[- /.](?:19|20)\\d\\d", // mm/dd/yyyy
+            date1 = "(?:19|20)\\d\\d[- /.](?:0[1-9]|1[012])[- /.](?:0[1-9]|[12][0-9]|3[01])", // yyyy-mm-dd
+            date2 = "(?:0[1-9]|[12][0-9]|3[01])[- /.](?:0[1-9]|1[012])[- /.](?:19|20)\\d\\d", // dd/mm/yyyy
+            date3 = "(?:0[1-9]|1[012])[- /.](?:0[1-9]|[12][0-9]|3[01])[- /.](?:19|20)\\d\\d", // mm/dd/yyyy
             regex = new RegExp(date1 + "|" + date2 + "|" + date3, "ig");
 
         const results = search(input, regex);
@@ -55,6 +52,7 @@ class ExtractDates extends Operation {
             return results.join("\n");
         }
     }
+
 }
 
 export default ExtractDates;

@@ -14,6 +14,7 @@ import Operation from "../Operation.mjs";
  * From Quoted Printable operation
  */
 class FromQuotedPrintable extends Operation {
+
     /**
      * FromQuotedPrintable constructor
      */
@@ -22,18 +23,16 @@ class FromQuotedPrintable extends Operation {
 
         this.name = "From Quoted Printable";
         this.module = "Default";
-        this.description =
-            "Converts QP-encoded text back to standard text.<br><br>e.g. The quoted-printable encoded string <code>hello=20world</code> becomes <code>hello world</code>";
+        this.description = "Converts QP-encoded text back to standard text.<br><br>e.g. The quoted-printable encoded string <code>hello=20world</code> becomes <code>hello world</code>";
         this.infoURL = "https://wikipedia.org/wiki/Quoted-printable";
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];
         this.checks = [
             {
-                pattern:
-                    "^[\\x21-\\x3d\\x3f-\\x7e \\t]{0,76}(?:=[\\da-f]{2}|=\\r?\\n)(?:[\\x21-\\x3d\\x3f-\\x7e \\t]|=[\\da-f]{2}|=\\r?\\n)*$",
+                pattern: "^[\\x21-\\x3d\\x3f-\\x7e \\t]{0,76}(?:=[\\da-f]{2}|=\\r?\\n)(?:[\\x21-\\x3d\\x3f-\\x7e \\t]|=[\\da-f]{2}|=\\r?\\n)*$",
                 flags: "i",
-                args: [],
+                args: []
             },
         ];
     }
@@ -49,17 +48,12 @@ class FromQuotedPrintable extends Operation {
         const encodedBytesCount = (str.match(/=[\da-fA-F]{2}/g) || []).length,
             bufferLength = str.length - encodedBytesCount * 2,
             buffer = new Array(bufferLength);
-        let chr,
-            hex,
+        let chr, hex,
             bufferPos = 0;
 
         for (let i = 0, len = str.length; i < len; i++) {
             chr = str.charAt(i);
-            if (
-                chr === "=" &&
-                (hex = str.substr(i + 1, 2)) &&
-                /[\da-fA-F]{2}/.test(hex)
-            ) {
+            if (chr === "=" && (hex = str.substr(i + 1, 2)) && /[\da-fA-F]{2}/.test(hex)) {
                 buffer[bufferPos++] = parseInt(hex, 16);
                 i += 2;
                 continue;
@@ -69,6 +63,7 @@ class FromQuotedPrintable extends Operation {
 
         return buffer;
     }
+
 }
 
 export default FromQuotedPrintable;
