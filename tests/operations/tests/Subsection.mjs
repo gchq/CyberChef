@@ -15,9 +15,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Subsection",
-                "args": ["", true, true, false],
-            },
-        ],
+                "args": ["", true, true, false]
+            }
+        ]
     },
     {
         name: "Subsection, Full Merge: nothing",
@@ -26,13 +26,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Subsection",
-                "args": ["", true, true, false],
+                "args": ["", true, true, false]
             },
             {
                 "op": "Merge",
-                "args": [true],
-            },
-        ],
+                "args": [true]
+            }
+        ]
     },
     {
         name: "Subsection, Partial Merge: nothing",
@@ -41,13 +41,13 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Subsection",
-                "args": ["", true, true, false],
+                "args": ["", true, true, false]
             },
             {
                 "op": "Merge",
-                "args": [false],
-            },
-        ],
+                "args": [false]
+            }
+        ]
     },
     {
         name: "Subsection, Full Merge: Base64 with Hex",
@@ -56,21 +56,21 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Subsection",
-                "args": ["386756", true, true, false],
+                "args": ["386756", true, true, false]
             },
             {
                 "op": "From Hex",
-                "args": ["Auto"],
+                "args": ["Auto"]
             },
             {
                 "op": "Merge",
-                "args": [true],
+                "args": [true]
             },
             {
                 "op": "From Base64",
-                "args": ["A-Za-z0-9+/=", true, false],
-            },
-        ],
+                "args": ["A-Za-z0-9+/=", true, false]
+            }
+        ]
     },
     {
         name: "Subsection, Partial Merge: Base64 with Hex surrounded by binary data.",
@@ -79,24 +79,24 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Subsection",
-                "args": ["SGVsbG38675629ybGQ=", true, true, false],
+                "args": ["SGVsbG38675629ybGQ=", true, true, false]
             },
             {
                 "op": "Subsection",
-                "args": ["386756", true, true, false],
+                "args": ["386756", true, true, false]
             },
             {
                 "op": "From Hex",
-                "args": ["Auto"],
+                "args": ["Auto"]
             },
             {
                 "op": "Merge",
-                "args": [false],
+                "args": [false]
             },
             {
                 "op": "From Base64",
-                "args": ["A-Za-z0-9+/=", true, false],
-            },
-        ],
-    },
+                "args": ["A-Za-z0-9+/=", true, false]
+            }
+        ]
+    }
 ]);

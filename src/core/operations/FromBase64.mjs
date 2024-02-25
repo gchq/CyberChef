@@ -5,13 +5,12 @@
  */
 
 import Operation from "../Operation.mjs";
-import {fromBase64, ALPHABET_OPTIONS} from "../lib/Base64.mjs";
+import { fromBase64, ALPHABET_OPTIONS } from "../lib/Base64.mjs";
 
 /**
  * From Base64 operation
  */
 class FromBase64 extends Operation {
-
     /**
      * FromBase64 constructor
      */
@@ -20,7 +19,8 @@ class FromBase64 extends Operation {
 
         this.name = "From Base64";
         this.module = "Default";
-        this.description = "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation decodes data from an ASCII Base64 string back into its raw format.<br><br>e.g. <code>aGVsbG8=</code> becomes <code>hello</code>";
+        this.description
+            = "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation decodes data from an ASCII Base64 string back into its raw format.<br><br>e.g. <code>aGVsbG8=</code> becomes <code>hello</code>";
         this.infoURL = "https://wikipedia.org/wiki/Base64";
         this.inputType = "string";
         this.outputType = "byteArray";
@@ -151,8 +151,8 @@ class FromBase64 extends Operation {
      * @returns {Object[]} pos
      */
     highlight(pos, args) {
-        pos[0].start = Math.ceil(pos[0].start / 4 * 3);
-        pos[0].end = Math.floor(pos[0].end / 4 * 3);
+        pos[0].start = Math.ceil((pos[0].start / 4) * 3);
+        pos[0].end = Math.floor((pos[0].end / 4) * 3);
         return pos;
     }
 
@@ -166,8 +166,8 @@ class FromBase64 extends Operation {
      * @returns {Object[]} pos
      */
     highlightReverse(pos, args) {
-        pos[0].start = Math.floor(pos[0].start / 3 * 4);
-        pos[0].end = Math.ceil(pos[0].end / 3 * 4);
+        pos[0].start = Math.floor((pos[0].start / 3) * 4);
+        pos[0].end = Math.ceil((pos[0].end / 3) * 4);
         return pos;
     }
 }

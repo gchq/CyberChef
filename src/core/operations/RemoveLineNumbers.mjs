@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Remove line numbers operation
  */
 class RemoveLineNumbers extends Operation {
-
     /**
      * RemoveLineNumbers constructor
      */
@@ -33,7 +32,6 @@ class RemoveLineNumbers extends Operation {
     run(input, args) {
         return input.replace(/^[ \t]{0,5}\d+[\s:|\-,.)\]]/gm, "");
     }
-
 }
 
 export default RemoveLineNumbers;

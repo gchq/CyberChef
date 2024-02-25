@@ -13,7 +13,6 @@ import { cryptNotice } from "../lib/Crypt.mjs";
  * Generate RSA Key Pair operation
  */
 class GenerateRSAKeyPair extends Operation {
-
     /**
      * GenerateRSAKeyPair constructor
      */
@@ -30,20 +29,12 @@ class GenerateRSAKeyPair extends Operation {
             {
                 name: "RSA Key Length",
                 type: "option",
-                value: [
-                    "1024",
-                    "2048",
-                    "4096"
-                ]
+                value: ["1024", "2048", "4096"]
             },
             {
                 name: "Output Format",
                 type: "option",
-                value: [
-                    "PEM",
-                    "JSON",
-                    "DER"
-                ]
+                value: ["PEM", "JSON", "DER"]
             }
         ];
     }
@@ -57,32 +48,37 @@ class GenerateRSAKeyPair extends Operation {
         const [keyLength, outputFormat] = args;
 
         return new Promise((resolve, reject) => {
-            forge.pki.rsa.generateKeyPair({
-                bits: Number(keyLength),
-                workers: -1,
-                workerScript: "assets/forge/prime.worker.min.js"
-            }, (err, keypair) => {
-                if (err) return reject(err);
+            forge.pki.rsa.generateKeyPair(
+                {
+                    bits: Number(keyLength),
+                    workers: -1,
+                    workerScript: "assets/forge/prime.worker.min.js"
+                },
+                (err, keypair) => {
+                    if (err) return reject(err);
 
-                let result;
+                    let result;
 
-                switch (outputFormat) {
-                    case "PEM":
-                        result = forge.pki.publicKeyToPem(keypair.publicKey) + "\n" + forge.pki.privateKeyToPem(keypair.privateKey);
-                        break;
-                    case "JSON":
-                        result = JSON.stringify(keypair);
-                        break;
-                    case "DER":
-                        result = forge.asn1.toDer(forge.pki.privateKeyToAsn1(keypair.privateKey)).getBytes();
-                        break;
+                    switch (outputFormat) {
+                        case "PEM":
+                            result
+                                = forge.pki.publicKeyToPem(keypair.publicKey)
+                                + "\n"
+                                + forge.pki.privateKeyToPem(keypair.privateKey);
+                            break;
+                        case "JSON":
+                            result = JSON.stringify(keypair);
+                            break;
+                        case "DER":
+                            result = forge.asn1.toDer(forge.pki.privateKeyToAsn1(keypair.privateKey)).getBytes();
+                            break;
+                    }
+
+                    resolve(result);
                 }
-
-                resolve(result);
-            });
+            );
         });
     }
-
 }
 
 export default GenerateRSAKeyPair;

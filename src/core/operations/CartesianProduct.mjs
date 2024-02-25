@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Set cartesian product operation
  */
 class CartesianProduct extends Operation {
-
     /**
      * Cartesian Product constructor
      */
@@ -20,7 +19,8 @@ class CartesianProduct extends Operation {
 
         this.name = "Cartesian Product";
         this.module = "Default";
-        this.description = "Calculates the cartesian product of multiple sets of data, returning all possible combinations.";
+        this.description
+            = "Calculates the cartesian product of multiple sets of data, returning all possible combinations.";
         this.infoURL = "https://wikipedia.org/wiki/Cartesian_product";
         this.inputType = "string";
         this.outputType = "string";
@@ -34,7 +34,7 @@ class CartesianProduct extends Operation {
                 name: "Item delimiter",
                 type: "binaryString",
                 value: ","
-            },
+            }
         ];
     }
 
@@ -46,8 +46,9 @@ class CartesianProduct extends Operation {
      */
     validateSampleNumbers(sets) {
         if (!sets || sets.length < 2) {
-            throw new OperationError("Incorrect number of sets, perhaps you" +
-                " need to modify the sample delimiter or add more samples?");
+            throw new OperationError(
+                "Incorrect number of sets, perhaps you" + " need to modify the sample delimiter or add more samples?"
+            );
         }
     }
 
@@ -65,23 +66,23 @@ class CartesianProduct extends Operation {
 
         this.validateSampleNumbers(sets);
 
-        return this.runCartesianProduct(...sets.map(s => s.split(this.itemDelimiter)));
+        return this.runCartesianProduct(...sets.map((s) => s.split(this.itemDelimiter)));
     }
 
     /**
-    * Return the cartesian product of the two inputted sets.
-    *
-    * @param {Object[]} a
-    * @param {Object[]} b
-    * @param {Object[]} c
-    * @returns {string}
-    */
+     * Return the cartesian product of the two inputted sets.
+     *
+     * @param {Object[]} a
+     * @param {Object[]} b
+     * @param {Object[]} c
+     * @returns {string}
+     */
     runCartesianProduct(a, b, ...c) {
         /**
          * https://stackoverflow.com/a/43053803/7200497
          * @returns {Object[]}
          */
-        const f = (a, b) => [].concat(...a.map(d => b.map(e => [].concat(d, e))));
+        const f = (a, b) => [].concat(...a.map((d) => b.map((e) => [].concat(d, e))));
         /**
          * https://stackoverflow.com/a/43053803/7200497
          * @returns {Object[][]}
@@ -89,7 +90,7 @@ class CartesianProduct extends Operation {
         const cartesian = (a, b, ...c) => (b ? cartesian(f(a, b), ...c) : a);
 
         return cartesian(a, b, ...c)
-            .map(set => `(${set.join(",")})`)
+            .map((set) => `(${set.join(",")})`)
             .join(this.itemDelimiter);
     }
 }

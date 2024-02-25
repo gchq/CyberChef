@@ -24,7 +24,7 @@ const ALL_BYTES = [
     "\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf",
     "\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf",
     "\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef",
-    "\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff",
+    "\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff"
 ].join("");
 
 TestRegister.addTests([
@@ -41,7 +41,7 @@ TestRegister.addTests([
                 op: "From Hexdump",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "Hexdump: Hello, World!",
@@ -56,7 +56,7 @@ TestRegister.addTests([
                 op: "From Hexdump",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "Hexdump: UTF-8",
@@ -71,7 +71,7 @@ TestRegister.addTests([
                 op: "From Hexdump",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "Hexdump: All bytes",
@@ -86,7 +86,7 @@ TestRegister.addTests([
                 op: "From Hexdump",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "To Hexdump: UTF-8",
@@ -98,7 +98,7 @@ TestRegister.addTests([
                 op: "To Hexdump",
                 args: [16, false, false]
             }
-        ],
+        ]
     },
     {
         name: "To Hexdump: All bytes",
@@ -124,7 +124,7 @@ TestRegister.addTests([
                 op: "To Hexdump",
                 args: [16, false, false]
             }
-        ],
+        ]
     },
     {
         name: "From Hexdump: xxd",
@@ -150,7 +150,7 @@ TestRegister.addTests([
                 op: "From Hexdump",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "From Hexdump: Wireshark",
@@ -177,7 +177,7 @@ TestRegister.addTests([
                 op: "From Hexdump",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "From Hexdump: Wireshark alt",
@@ -203,7 +203,7 @@ TestRegister.addTests([
                 op: "From Hexdump",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "From Hexdump: 010",
@@ -229,7 +229,7 @@ TestRegister.addTests([
                 op: "From Hexdump",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "From Hexdump: Linux hexdump",
@@ -256,6 +256,6 @@ TestRegister.addTests([
                 op: "From Hexdump",
                 args: []
             }
-        ],
-    },
+        ]
+    }
 ]);

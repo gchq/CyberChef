@@ -13,7 +13,6 @@ import OperationError from "../errors/OperationError.mjs";
  * ELF Info operation
  */
 class ELFInfo extends Operation {
-
     /**
      * ELFInfo constructor
      */
@@ -22,7 +21,8 @@ class ELFInfo extends Operation {
 
         this.name = "ELF Info";
         this.module = "Default";
-        this.description = "Implements readelf-like functionality. This operation will extract the ELF Header, Program Headers, Section Headers and Symbol Table for an ELF file.";
+        this.description
+            = "Implements readelf-like functionality. This operation will extract the ELF Header, Program Headers, Section Headers and Symbol Table for an ELF file.";
         this.infoURL = "https://www.wikipedia.org/wiki/Executable_and_Linkable_Format";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -113,8 +113,7 @@ class ELFInfo extends Operation {
             const ehResult = [];
 
             const magic = stream.getBytes(4);
-            if (magic.join("") !== [0x7f, 0x45, 0x4c, 0x46].join(""))
-                throw new OperationError("Invalid ELF");
+            if (magic.join("") !== [0x7f, 0x45, 0x4c, 0x46].join("")) throw new OperationError("Invalid ELF");
 
             ehResult.push("Magic:".padEnd(align) + `${Utils.byteArrayToChars(magic)}`);
 
@@ -155,22 +154,22 @@ class ELFInfo extends Operation {
                 case 0x09:
                     ABI = "FreeBSD";
                     break;
-                case 0x0A:
+                case 0x0a:
                     ABI = "Tru64";
                     break;
-                case 0x0B:
+                case 0x0b:
                     ABI = "Novell Modesto";
                     break;
-                case 0x0C:
+                case 0x0c:
                     ABI = "OpenBSD";
                     break;
-                case 0x0D:
+                case 0x0d:
                     ABI = "OpenVMS";
                     break;
-                case 0x0E:
+                case 0x0e:
                     ABI = "NonStop Kernel";
                     break;
-                case 0x0F:
+                case 0x0f:
                     ABI = "AROS";
                     break;
                 case 0x10:
@@ -189,8 +188,7 @@ class ELFInfo extends Operation {
 
             // Linux Kernel does not use ABI Version.
             const abiVersion = stream.readInt(1).toString();
-            if (ABI !== "Linux")
-                ehResult.push("ABI Version:".padEnd(align) + abiVersion);
+            if (ABI !== "Linux") ehResult.push("ABI Version:".padEnd(align) + abiVersion);
 
             stream.moveForwardsBy(7);
 
@@ -211,16 +209,16 @@ class ELFInfo extends Operation {
                 case 0x0004:
                     eType = "Core File";
                     break;
-                case 0xFE00:
+                case 0xfe00:
                     eType = "LOOS";
                     break;
-                case 0xFEFF:
+                case 0xfeff:
                     eType = "HIOS";
                     break;
-                case 0xFF00:
+                case 0xff00:
                     eType = "LOPROC";
                     break;
-                case 0xFFFF:
+                case 0xffff:
                     eType = "HIPROC";
                     break;
                 default:
@@ -260,28 +258,28 @@ class ELFInfo extends Operation {
                 case 0x0009:
                     ISA = "IBM System/370";
                     break;
-                case 0x000A:
+                case 0x000a:
                     ISA = "MIPS RS3000 Little-endian";
                     break;
-                case 0x000B:
-                case 0x000C:
-                case 0x000D:
-                case 0x000E:
+                case 0x000b:
+                case 0x000c:
+                case 0x000d:
+                case 0x000e:
                 case 0x0018:
                 case 0x0019:
-                case 0x001A:
-                case 0x001B:
-                case 0x001C:
-                case 0x001D:
-                case 0x001E:
-                case 0x001F:
+                case 0x001a:
+                case 0x001b:
+                case 0x001c:
+                case 0x001d:
+                case 0x001e:
+                case 0x001f:
                 case 0x0020:
                 case 0x0021:
                 case 0x0022:
                 case 0x0023:
                     ISA = "Reserved for future use";
                     break;
-                case 0x000F:
+                case 0x000f:
                     ISA = "Hewlett-Packard PA-RISC";
                     break;
                 case 0x0011:
@@ -323,22 +321,22 @@ class ELFInfo extends Operation {
                 case 0x0029:
                     ISA = "Digital Alpha";
                     break;
-                case 0x002A:
+                case 0x002a:
                     ISA = "SuperH";
                     break;
-                case 0x002B:
+                case 0x002b:
                     ISA = "SPARC Version 9";
                     break;
-                case 0x002C:
+                case 0x002c:
                     ISA = "Siemens TriCore embedded processor";
                     break;
-                case 0x002D:
+                case 0x002d:
                     ISA = "Argonaut RISC Core";
                     break;
-                case 0x002E:
+                case 0x002e:
                     ISA = "Hitachi H8/300";
                     break;
-                case 0x002F:
+                case 0x002f:
                     ISA = "Hitachi H8/300H";
                     break;
                 case 0x0030:
@@ -371,22 +369,22 @@ class ELFInfo extends Operation {
                 case 0x0039:
                     ISA = "Denso NDR1 microprocessor";
                     break;
-                case 0x003A:
+                case 0x003a:
                     ISA = "Motorola Star*Core processor";
                     break;
-                case 0x003B:
+                case 0x003b:
                     ISA = "Toyota ME16 processor";
                     break;
-                case 0x003C:
+                case 0x003c:
                     ISA = "STMicroelectronics ST100 processor";
                     break;
-                case 0x003D:
+                case 0x003d:
                     ISA = "Advanced Logic Corp. TinyJ embedded processor family";
                     break;
-                case 0x003E:
+                case 0x003e:
                     ISA = "AMD x86-64";
                     break;
-                case 0x003F:
+                case 0x003f:
                     ISA = "Sony DSP Processor";
                     break;
                 case 0x0040:
@@ -419,22 +417,22 @@ class ELFInfo extends Operation {
                 case 0x0049:
                     ISA = "Silicon Graphics SVx";
                     break;
-                case 0x004A:
+                case 0x004a:
                     ISA = "STMicroelectronics ST19 8-bit microcontroller";
                     break;
-                case 0x004B:
+                case 0x004b:
                     ISA = "Digital VAX";
                     break;
-                case 0x004C:
+                case 0x004c:
                     ISA = "Axis Communications 32-bit embedded processor";
                     break;
-                case 0x004D:
+                case 0x004d:
                     ISA = "Infineon Technologies 32-bit embedded processor";
                     break;
-                case 0x004E:
+                case 0x004e:
                     ISA = "Element 14 64-bit DSP Processor";
                     break;
-                case 0x004F:
+                case 0x004f:
                     ISA = "LSI Logic 16-bit DSP Processor";
                     break;
                 case 0x0050:
@@ -467,22 +465,22 @@ class ELFInfo extends Operation {
                 case 0x0059:
                     ISA = "Matsushita MN10300";
                     break;
-                case 0x005A:
+                case 0x005a:
                     ISA = "Matsushita MN10200";
                     break;
-                case 0x005B:
+                case 0x005b:
                     ISA = "picoJava";
                     break;
-                case 0x005C:
+                case 0x005c:
                     ISA = "OpenRISC 32-bit embedded processor";
                     break;
-                case 0x005D:
+                case 0x005d:
                     ISA = "ARC Cores Tangent-A5";
                     break;
-                case 0x005E:
+                case 0x005e:
                     ISA = "Tensilica Xtensa Architecture";
                     break;
-                case 0x005F:
+                case 0x005f:
                     ISA = "Alphamosaic VideoCore processor";
                     break;
                 case 0x0060:
@@ -500,19 +498,19 @@ class ELFInfo extends Operation {
                 case 0x0064:
                     ISA = "STMicroelectronics (www.st.com) ST200 microcontroller";
                     break;
-                case 0x008C:
+                case 0x008c:
                     ISA = "TMS320C6000 Family";
                     break;
-                case 0x00AF:
+                case 0x00af:
                     ISA = "MCST Elbrus e2k";
                     break;
-                case 0x00B7:
+                case 0x00b7:
                     ISA = "ARM 64-bits (ARMv8/Aarch64)";
                     break;
-                case 0x00F3:
+                case 0x00f3:
                     ISA = "RISC-V";
                     break;
-                case 0x00F7:
+                case 0x00f7:
                     ISA = "Berkeley Packet Filter";
                     break;
                 case 0x0101:
@@ -590,14 +588,10 @@ class ELFInfo extends Operation {
              */
             function readFlags(flags) {
                 const result = [];
-                if (flags & 0x1)
-                    result.push("Execute");
-                if (flags & 0x2)
-                    result.push("Write");
-                if (flags & 0x4)
-                    result.push("Read");
-                if (flags &  0xf0000000)
-                    result.push("Unspecified");
+                if (flags & 0x1) result.push("Execute");
+                if (flags & 0x2) result.push("Write");
+                if (flags & 0x4) result.push("Read");
+                if (flags & 0xf0000000) result.push("Unspecified");
                 return result.join(",");
             }
 
@@ -606,54 +600,51 @@ class ELFInfo extends Operation {
             let pType = "";
             const programHeaderType = stream.readInt(4, endianness);
             switch (true) {
-                case (programHeaderType === 0x00000000):
+                case programHeaderType === 0x00000000:
                     pType = "Unused";
                     break;
-                case (programHeaderType === 0x00000001):
+                case programHeaderType === 0x00000001:
                     pType = "Loadable Segment";
                     break;
-                case (programHeaderType === 0x00000002):
+                case programHeaderType === 0x00000002:
                     pType = "Dynamic linking information";
                     break;
-                case (programHeaderType === 0x00000003):
+                case programHeaderType === 0x00000003:
                     pType = "Interpreter Information";
                     break;
-                case (programHeaderType === 0x00000004):
+                case programHeaderType === 0x00000004:
                     pType = "Auxiliary Information";
                     break;
-                case (programHeaderType === 0x00000005):
+                case programHeaderType === 0x00000005:
                     pType = "Reserved";
                     break;
-                case (programHeaderType === 0x00000006):
+                case programHeaderType === 0x00000006:
                     pType = "Program Header Table";
                     break;
-                case (programHeaderType === 0x00000007):
+                case programHeaderType === 0x00000007:
                     pType = "Thread-Local Storage Template";
                     break;
-                case (programHeaderType >= 0x60000000 && programHeaderType <= 0x6FFFFFFF):
+                case programHeaderType >= 0x60000000 && programHeaderType <= 0x6fffffff:
                     pType = "Reserved Inclusive Range. OS Specific";
                     break;
-                case (programHeaderType >= 0x70000000 && programHeaderType <= 0x7FFFFFFF):
+                case programHeaderType >= 0x70000000 && programHeaderType <= 0x7fffffff:
                     pType = "Reserved Inclusive Range. Processor Specific";
                     break;
                 default:
                     break;
-
             }
             phResult.push("Program Header Type:".padEnd(align) + pType);
 
-            if (format === 2)
-                phResult.push("Flags:".padEnd(align) + readFlags(stream.readInt(4, endianness)));
+            if (format === 2) phResult.push("Flags:".padEnd(align) + readFlags(stream.readInt(4, endianness)));
 
-            const readSize = format === 1? 4 : 8;
+            const readSize = format === 1 ? 4 : 8;
             phResult.push("Offset Of Segment:".padEnd(align) + `${stream.readInt(readSize, endianness)}`);
             phResult.push("Virtual Address of Segment:".padEnd(align) + `${stream.readInt(readSize, endianness)}`);
             phResult.push("Physical Address of Segment:".padEnd(align) + `${stream.readInt(readSize, endianness)}`);
             phResult.push("Size of Segment:".padEnd(align) + `${stream.readInt(readSize, endianness)} bytes`);
             phResult.push("Size of Segment in Memory:".padEnd(align) + `${stream.readInt(readSize, endianness)} bytes`);
 
-            if (format === 1)
-                phResult.push("Flags:".padEnd(align) + readFlags(stream.readInt(4, endianness)));
+            if (format === 1) phResult.push("Flags:".padEnd(align) + readFlags(stream.readInt(4, endianness)));
 
             stream.moveForwardsBy(readSize);
 
@@ -699,64 +690,64 @@ class ELFInfo extends Operation {
             let type = "";
             const shType = stream.readInt(4, endianness);
             switch (true) {
-                case (shType === 0x00000001):
+                case shType === 0x00000001:
                     type = "Program Data";
                     break;
-                case (shType === 0x00000002):
+                case shType === 0x00000002:
                     type = "Symbol Table";
                     break;
-                case (shType === 0x00000003):
+                case shType === 0x00000003:
                     type = "String Table";
                     break;
-                case (shType === 0x00000004):
+                case shType === 0x00000004:
                     type = "Relocation Entries with Addens";
                     break;
-                case (shType === 0x00000005):
+                case shType === 0x00000005:
                     type = "Symbol Hash Table";
                     break;
-                case (shType === 0x00000006):
+                case shType === 0x00000006:
                     type = "Dynamic Linking Information";
                     break;
-                case (shType === 0x00000007):
+                case shType === 0x00000007:
                     type = "Notes";
                     break;
-                case (shType === 0x00000008):
+                case shType === 0x00000008:
                     type = "Program Space with No Data";
                     break;
-                case (shType === 0x00000009):
+                case shType === 0x00000009:
                     type = "Relocation Entries with no Addens";
                     break;
-                case (shType === 0x0000000A):
+                case shType === 0x0000000a:
                     type = "Reserved";
                     break;
-                case (shType === 0x0000000B):
+                case shType === 0x0000000b:
                     type = "Dynamic Linker Symbol Table";
                     break;
-                case (shType === 0x0000000E):
+                case shType === 0x0000000e:
                     type = "Array of Constructors";
                     break;
-                case (shType === 0x0000000F):
+                case shType === 0x0000000f:
                     type = "Array of Destructors";
                     break;
-                case (shType === 0x00000010):
+                case shType === 0x00000010:
                     type = "Array of pre-constructors";
                     break;
-                case (shType === 0x00000011):
+                case shType === 0x00000011:
                     type = "Section group";
                     break;
-                case (shType === 0x00000012):
+                case shType === 0x00000012:
                     type = "Extended section indices";
                     break;
-                case (shType === 0x00000013):
+                case shType === 0x00000013:
                     type = "Number of defined types";
                     break;
-                case (shType >= 0x60000000 && shType <= 0x6fffffff):
+                case shType >= 0x60000000 && shType <= 0x6fffffff:
                     type = "OS-specific";
                     break;
-                case (shType >= 0x70000000 && shType <= 0x7fffffff):
+                case shType >= 0x70000000 && shType <= 0x7fffffff:
                     type = "Processor-specific";
                     break;
-                case (shType >= 0x80000000 && shType <= 0x8fffffff):
+                case shType >= 0x80000000 && shType <= 0x8fffffff:
                     type = "Application-specific";
                     break;
                 default:
@@ -772,7 +763,7 @@ class ELFInfo extends Operation {
                 shResult.push("Section Name: ".padEnd(align) + nameResult);
             }
 
-            const readSize = (format === 1) ? 4 : 8;
+            const readSize = format === 1 ? 4 : 8;
 
             const flags = stream.readInt(readSize, endianness);
             const shFlags = [];
@@ -787,14 +778,13 @@ class ELFInfo extends Operation {
                 [0x00000100, "OS Specific Handling"],
                 [0x00000200, "Group"],
                 [0x00000400, "Thread Local Data"],
-                [0x0FF00000, "OS-Specific"],
-                [0xF0000000, "Processor Specific"],
+                [0x0ff00000, "OS-Specific"],
+                [0xf0000000, "Processor Specific"],
                 [0x04000000, "Special Ordering (Solaris)"],
                 [0x08000000, "Excluded (Solaris)"]
             ];
-            bitMasks.forEach(elem => {
-                if (flags & elem[0])
-                    shFlags.push(elem[1]);
+            bitMasks.forEach((elem) => {
+                if (flags & elem[0]) shFlags.push(elem[1]);
             });
             shResult.push("Flags:".padEnd(align) + shFlags);
 
@@ -838,7 +828,7 @@ class ELFInfo extends Operation {
          */
         function getNamesOffset(stream) {
             const preMove = stream.position;
-            stream.moveTo(shoff + (shentSize * shstrtab));
+            stream.moveTo(shoff + shentSize * shstrtab);
             if (format === 1) {
                 stream.moveForwardsBy(0x10);
                 namesOffset = stream.readInt(4, endianness);
@@ -889,25 +879,21 @@ class ELFInfo extends Operation {
 
         result.push("=".repeat(align) + " Program Header " + "=".repeat(align));
         stream.moveTo(phoff);
-        for (let i = 0; i < phEntries; i++)
-            result.push(programHeader(stream) + "\n");
+        for (let i = 0; i < phEntries; i++) result.push(programHeader(stream) + "\n");
 
         result.push("=".repeat(align) + " Section Header " + "=".repeat(align));
         stream.moveTo(shoff);
-        for (let i = 0; i < shEntries; i++)
-            result.push(sectionHeader(stream) + "\n");
+        for (let i = 0; i < shEntries; i++) result.push(sectionHeader(stream) + "\n");
 
         result.push("=".repeat(align) + " Symbol Table " + "=".repeat(align));
 
         stream.moveTo(symtabOffset);
         let elem = "";
-        for (let i = 0; i < (symtabSize / symtabEntSize); i++)
-            if ((elem = getSymbols(stream)) !== "")
-                result.push("Symbol Name:".padEnd(align) + elem);
+        for (let i = 0; i < symtabSize / symtabEntSize; i++)
+            if ((elem = getSymbols(stream)) !== "") result.push("Symbol Name:".padEnd(align) + elem);
 
         return result.join("\n");
     }
-
 }
 
 export default ELFInfo;

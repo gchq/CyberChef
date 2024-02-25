@@ -12,7 +12,6 @@ import { GenerateParagraphs, GenerateSentences, GenerateWords, GenerateBytes } f
  * Generate Lorem Ipsum operation
  */
 class GenerateLoremIpsum extends Operation {
-
     /**
      * GenerateLoremIpsum constructor
      */
@@ -36,7 +35,6 @@ class GenerateLoremIpsum extends Operation {
                 "type": "option",
                 "value": ["Paragraphs", "Sentences", "Words", "Bytes"]
             }
-
         ];
     }
 
@@ -61,10 +59,8 @@ class GenerateLoremIpsum extends Operation {
                 return GenerateBytes(length);
             default:
                 throw new OperationError("Invalid length type");
-
         }
     }
-
 }
 
 export default GenerateLoremIpsum;

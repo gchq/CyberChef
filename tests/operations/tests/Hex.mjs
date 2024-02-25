@@ -8,11 +8,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Hex",
-                "args": [
-                    "None",
-                    0
-                ]
-            },
+                "args": ["None", 0]
+            }
         ]
     },
     {
@@ -22,10 +19,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Hex",
-                "args": [
-                    "Colon",
-                    0
-                ]
+                "args": ["Colon", 0]
             }
         ]
     },
@@ -36,10 +30,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Hex",
-                "args": [
-                    "0x with comma",
-                    0
-                ]
+                "args": ["0x with comma", 0]
             }
         ]
     },
@@ -50,10 +41,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Hex",
-                "args": [
-                    "0x with comma",
-                    4
-                ]
+                "args": ["0x with comma", 4]
             }
         ]
     },
@@ -64,12 +52,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "From Hex",
-                "args": [
-                    "Auto"
-                ]
+                "args": ["Auto"]
             }
         ]
-
     },
     {
         name: "Multiline 0x hex to ASCII",
@@ -83,13 +68,12 @@ TestRegister.addTests([
 0x75,0x70,0x20,0x6d,0x79,0x20,0x6d,0x69,0x6e,0x64,0x20,0x77,0x68,0x69,0x63,\
 0x68,0x20,0x6f,0x66,0x20,0x74,0x68,0x65,0x20,0x66,0x69,0x67,0x73,0x20,0x49,\
 0x20,0x77,0x6f,0x75,0x6c,0x64,0x20,0x63,0x68,0x6f,0x6f,0x73,0x65,0x2e",
-        expectedOutput: "I saw myself sitting in the crotch of the this fig tree, starving to death, just because I couldn't make up my mind which of the figs I would choose.",
+        expectedOutput:
+            "I saw myself sitting in the crotch of the this fig tree, starving to death, just because I couldn't make up my mind which of the figs I would choose.",
         recipeConfig: [
             {
                 "op": "From Hex",
-                "args": [
-                    "Auto"
-                ]
+                "args": ["Auto"]
             }
         ]
     },
@@ -100,11 +84,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "From Hex",
-                "args": [
-                    "0x with comma"
-                ]
+                "args": ["0x with comma"]
             }
         ]
-
-    },
+    }
 ]);

@@ -10,14 +10,14 @@
 
 /* fallback */
 @font-face {
-    font-family: 'Material Icons';
+    font-family: "Material Icons";
     font-style: normal;
     font-weight: 400;
-    src: url("../static/fonts/MaterialIcons-Regular.ttf") format('truetype');
+    src: url("../static/fonts/MaterialIcons-Regular.ttf") format("truetype");
 }
 
 .material-icons {
-    font-family: 'Material Icons';
+    font-family: "Material Icons";
     font-weight: normal;
     font-style: normal;
     font-size: 24px;
@@ -28,14 +28,13 @@
     white-space: nowrap;
     word-wrap: normal;
     direction: ltr;
-    font-feature-settings: 'liga';
+    font-feature-settings: "liga";
     -webkit-font-smoothing: antialiased;
 }
 
 .form-group {
     margin-bottom: 0;
 }
-
 
 button,
 a:focus {
@@ -108,8 +107,7 @@ select.custom-file-control:not([size]):not([multiple]) {
 
 .form-control,
 .is-focused .form-control {
-    background-image:
-        linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(0, 0, 0, 0) 2px),
+    background-image: linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(0, 0, 0, 0) 2px),
         linear-gradient(to top, var(--primary-border-colour) 1px, rgba(0, 0, 0, 0) 1px);
 }
 
@@ -171,11 +169,11 @@ optgroup {
     color: var(--primary-font-colour);
 }
 
-.bs-popover-right>.arrow {
+.bs-popover-right > .arrow {
     border-right-color: var(--popover-border-colour);
 }
 
-.bs-popover-right>.arrow:after {
+.bs-popover-right > .arrow:after {
     border-right-color: var(--popover-background);
 }
 
@@ -183,9 +181,9 @@ optgroup {
     color: var(--subtext-font-colour);
 }
 
-.nav-tabs>li>a.nav-link.active,
-.nav-tabs>li>a.nav-link.active:focus,
-.nav-tabs>li>a.nav-link.active:hover {
+.nav-tabs > li > a.nav-link.active,
+.nav-tabs > li > a.nav-link.active:focus,
+.nav-tabs > li > a.nav-link.active:hover {
     background-color: var(--secondary-background-colour);
     border-color: var(--secondary-border-colour);
     border-bottom-color: transparent;
@@ -224,17 +222,15 @@ optgroup {
     border-right: 0;
 }
 
-.input-group-btn:first-child>.btn {
+.input-group-btn:first-child > .btn {
     border-right: 0;
 }
-
 
 /* Sortable */
 
 .sortable-ghost {
     opacity: 0.6;
 }
-
 
 /* Bootstrap Colorpicker */
 
@@ -247,7 +243,6 @@ optgroup {
 .colorpicker-color div {
     height: 100px;
 }
-
 
 /* CodeMirror */
 

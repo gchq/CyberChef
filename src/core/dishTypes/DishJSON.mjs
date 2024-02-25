@@ -11,13 +11,13 @@ import Utils from "../Utils.mjs";
  * Translation methods for JSON dishes
  */
 class DishJSON extends DishType {
-
     /**
      * convert the given value to a ArrayBuffer
      */
     static toArrayBuffer() {
         DishJSON.checkForValue(this.value);
-        this.value = this.value !== undefined ? Utils.strToArrayBuffer(JSON.stringify(this.value, null, 4)) : new ArrayBuffer;
+        this.value
+            = this.value !== undefined ? Utils.strToArrayBuffer(JSON.stringify(this.value, null, 4)) : new ArrayBuffer();
     }
 
     /**

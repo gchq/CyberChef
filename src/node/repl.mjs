@@ -10,7 +10,6 @@
 import chef from "./index.mjs";
 import repl from "repl";
 
-
 /* eslint no-console: ["off"] */
 
 console.log(`
@@ -23,7 +22,7 @@ console.log(`
      
 `);
 const replServer = repl.start({
-    prompt: "chef > ",
+    prompt: "chef > "
 });
 
 global.File = chef.File;
@@ -33,4 +32,3 @@ Object.keys(chef).forEach((key) => {
         replServer.context[key] = chef[key];
     }
 });
-

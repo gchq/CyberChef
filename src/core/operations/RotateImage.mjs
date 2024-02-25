@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Rotate Image operation
  */
 class RotateImage extends Operation {
-
     /**
      * RotateImage constructor
      */
@@ -57,8 +56,7 @@ class RotateImage extends Operation {
             throw new OperationError(`Error loading image. (${err})`);
         }
         try {
-            if (isWorkerEnvironment())
-                self.sendStatusMessage("Rotating image...");
+            if (isWorkerEnvironment()) self.sendStatusMessage("Rotating image...");
             image.rotate(degrees);
 
             let imageBuffer;
@@ -89,7 +87,6 @@ class RotateImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default RotateImage;

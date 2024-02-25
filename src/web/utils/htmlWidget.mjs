@@ -4,17 +4,15 @@
  * @license Apache-2.0
  */
 
-import {WidgetType, Decoration, ViewPlugin} from "@codemirror/view";
-import {escapeControlChars} from "./editorUtils.mjs";
-import {htmlCopyOverride} from "./copyOverride.mjs";
+import { WidgetType, Decoration, ViewPlugin } from "@codemirror/view";
+import { escapeControlChars } from "./editorUtils.mjs";
+import { htmlCopyOverride } from "./copyOverride.mjs";
 import Utils from "../../core/Utils.mjs";
-
 
 /**
  * Adds an HTML widget to the Code Mirror editor
  */
 class HTMLWidget extends WidgetType {
-
     /**
      * HTMLWidget consructor
      */
@@ -52,9 +50,7 @@ class HTMLWidget extends WidgetType {
                     this.replaceControlChars(node);
                     break;
                 default:
-                    if (node.nodeName !== "SCRIPT" &&
-                        node.nodeName !== "STYLE")
-                        this.walkTextNodes(node);
+                    if (node.nodeName !== "SCRIPT" && node.nodeName !== "STYLE") this.walkTextNodes(node);
                     break;
             }
         }
@@ -76,7 +72,6 @@ class HTMLWidget extends WidgetType {
             textNode.parentNode.replaceChild(node, textNode);
         }
     }
-
 }
 
 /**
@@ -96,7 +91,6 @@ function decorateHTML(view, html) {
     }
     return Decoration.set(widgets);
 }
-
 
 /**
  * An HTML Plugin builder
@@ -125,8 +119,9 @@ export function htmlPlugin(htmlOutput) {
                     this.htmlOutput.changed = false;
                 }
             }
-        }, {
-            decorations: v => v.decorations
+        },
+        {
+            decorations: (v) => v.decorations
         }
     );
 

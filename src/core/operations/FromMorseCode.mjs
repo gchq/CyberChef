@@ -6,13 +6,12 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {LETTER_DELIM_OPTIONS, WORD_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import { LETTER_DELIM_OPTIONS, WORD_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 /**
  * From Morse Code operation
  */
 class FromMorseCode extends Operation {
-
     /**
      * FromMorseCode constructor
      */
@@ -59,15 +58,15 @@ class FromMorseCode extends Operation {
         const letterDelim = Utils.charRep(args[0]);
         const wordDelim = Utils.charRep(args[1]);
 
-        input = input.replace(/-|‐|−|_|–|—|dash/ig, "<dash>"); // hyphen-minus|hyphen|minus-sign|undersore|en-dash|em-dash
-        input = input.replace(/\.|·|dot/ig, "<dot>");
+        input = input.replace(/-|‐|−|_|–|—|dash/gi, "<dash>"); // hyphen-minus|hyphen|minus-sign|undersore|en-dash|em-dash
+        input = input.replace(/\.|·|dot/gi, "<dot>");
 
         let words = input.split(wordDelim);
         const self = this;
-        words = Array.prototype.map.call(words, function(word) {
+        words = Array.prototype.map.call(words, function (word) {
             const signals = word.split(letterDelim);
 
-            const letters = signals.map(function(signal) {
+            const letters = signals.map(function (signal) {
                 return self.reversedTable[signal];
             });
 
@@ -77,7 +76,6 @@ class FromMorseCode extends Operation {
 
         return words;
     }
-
 
     /**
      * Reverses the Morse Code lookup table
@@ -90,7 +88,6 @@ class FromMorseCode extends Operation {
             this.reversedTable[signal] = letter;
         }
     }
-
 }
 
 const MORSE_TABLE = {
@@ -137,7 +134,7 @@ const MORSE_TABLE = {
     "!": "<dash><dot><dash><dot><dash><dash>",
     "?": "<dot><dot><dash><dash><dot><dot>",
     "'": "<dot><dash><dash><dash><dash><dot>",
-    "\"": "<dot><dash><dot><dot><dash><dot>",
+    '"': "<dot><dash><dot><dot><dash><dot>",
     "/": "<dash><dot><dot><dash><dot>",
     "-": "<dash><dot><dot><dot><dot><dash>",
     "+": "<dot><dash><dot><dash><dot>",

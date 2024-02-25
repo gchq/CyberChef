@@ -20,12 +20,10 @@ import DishListFile from "./dishTypes/DishListFile.mjs";
 import DishNumber from "./dishTypes/DishNumber.mjs";
 import DishString from "./dishTypes/DishString.mjs";
 
-
 /**
  * The data being operated on by each operation.
  */
 class Dish {
-
     /**
      * Dish constructor
      *
@@ -34,25 +32,26 @@ class Dish {
      * @param {Enum} [type=null] (optional) - A type to accompany object
      * literal input
      */
-    constructor(dishOrInput=null, type = null) {
+    constructor(dishOrInput = null, type = null) {
         this.value = new ArrayBuffer(0);
         this.type = Dish.ARRAY_BUFFER;
 
         // Case: dishOrInput is dish object
-        if (dishOrInput &&
-            Object.prototype.hasOwnProperty.call(dishOrInput, "value") &&
-            Object.prototype.hasOwnProperty.call(dishOrInput, "type")) {
+        if (
+            dishOrInput
+            && Object.prototype.hasOwnProperty.call(dishOrInput, "value")
+            && Object.prototype.hasOwnProperty.call(dishOrInput, "type")
+        ) {
             this.set(dishOrInput.value, dishOrInput.type);
-        // input and type defined separately
+            // input and type defined separately
         } else if (dishOrInput && type !== null) {
             this.set(dishOrInput, type);
-        // No type declared, so infer it.
+            // No type declared, so infer it.
         } else if (dishOrInput) {
             const inferredType = Dish.typeEnum(dishOrInput.constructor.name);
             this.set(dishOrInput, inferredType);
         }
     }
-
 
     /**
      * Returns the data type enum for the given type string.
@@ -89,7 +88,6 @@ class Dish {
         }
     }
 
-
     /**
      * Returns the data type string for the given type enum.
      *
@@ -121,7 +119,6 @@ class Dish {
         }
     }
 
-
     /**
      * Returns the value of the data in the type format specified.
      *
@@ -136,13 +133,12 @@ class Dish {
         }
 
         if (this.type !== type) {
-
             // Node environment => _translate is sync
             if (isNodeEnvironment()) {
                 this._translate(type);
                 return this.value;
 
-            // Browser environment => _translate is async
+                // Browser environment => _translate is async
             } else {
                 return new Promise((resolve, reject) => {
                     this._translate(type)
@@ -156,7 +152,6 @@ class Dish {
 
         return this.value;
     }
-
 
     /**
      * Sets the data value and type and then validates them.
@@ -196,7 +191,6 @@ class Dish {
         return clone.get(type);
     }
 
-
     /**
      * Detects the MIME type of the current dish
      * @returns {string}
@@ -211,7 +205,6 @@ class Dish {
             return types[0].mime;
         }
     }
-
 
     /**
      * Returns the title of the data up to the specified length
@@ -241,7 +234,7 @@ class Dish {
             case Dish.BYTE_ARRAY:
                 title = this.detectDishType();
                 if (title !== null) break;
-                // fall through if no mime type was detected
+            // fall through if no mime type was detected
             default:
                 try {
                     cloned = this.clone();
@@ -260,7 +253,7 @@ class Dish {
      * May have to disable parts of BYTE_ARRAY validation if it effects performance.
      *
      * @returns {boolean} Whether the data is valid or not.
-    */
+     */
     valid() {
         switch (this.type) {
             case Dish.BYTE_ARRAY:
@@ -270,9 +263,7 @@ class Dish {
 
                 // Check that every value is a number between 0 - 255
                 for (let i = 0; i < this.value.length; i++) {
-                    if (typeof this.value[i] !== "number" ||
-                        this.value[i] < 0 ||
-                        this.value[i] > 255) {
+                    if (typeof this.value[i] !== "number" || this.value[i] < 0 || this.value[i] > 255) {
                         return false;
                     }
                 }
@@ -306,13 +297,13 @@ class Dish {
             case Dish.FILE:
                 return this.value instanceof File;
             case Dish.LIST_FILE:
-                return this.value instanceof Array &&
-                    this.value.reduce((acc, curr) => acc && curr instanceof File, true);
+                return (
+                    this.value instanceof Array && this.value.reduce((acc, curr) => acc && curr instanceof File, true)
+                );
             default:
                 return false;
         }
     }
-
 
     /**
      * Determines how much space the Dish takes up.
@@ -320,7 +311,7 @@ class Dish {
      * we measure how many bytes are taken up when the number is written as a string.
      *
      * @returns {number}
-    */
+     */
     get size() {
         switch (this.type) {
             case Dish.BYTE_ARRAY:
@@ -343,7 +334,6 @@ class Dish {
         }
     }
 
-
     /**
      * Returns a deep clone of the current Dish.
      *
@@ -358,25 +348,16 @@ class Dish {
             case Dish.NUMBER:
             case Dish.BIG_NUMBER:
                 // These data types are immutable so it is acceptable to copy them by reference
-                newDish.set(
-                    this.value,
-                    this.type
-                );
+                newDish.set(this.value, this.type);
                 break;
             case Dish.BYTE_ARRAY:
             case Dish.JSON:
                 // These data types are mutable so they need to be copied by value
-                newDish.set(
-                    JSON.parse(JSON.stringify(this.value)),
-                    this.type
-                );
+                newDish.set(JSON.parse(JSON.stringify(this.value)), this.type);
                 break;
             case Dish.ARRAY_BUFFER:
                 // Slicing an ArrayBuffer returns a new ArrayBuffer with a copy its contents
-                newDish.set(
-                    this.value.slice(0),
-                    this.type
-                );
+                newDish.set(this.value.slice(0), this.type);
                 break;
             case Dish.FILE:
                 // A new file can be created by copying over all the values from the original
@@ -390,11 +371,12 @@ class Dish {
                 break;
             case Dish.LIST_FILE:
                 newDish.set(
-                    this.value.map(f =>
-                        new File([f], f.name, {
-                            "type": f.type,
-                            "lastModified": f.lastModified
-                        })
+                    this.value.map(
+                        (f) =>
+                            new File([f], f.name, {
+                                "type": f.type,
+                                "lastModified": f.lastModified
+                            })
                     ),
                     this.type
                 );
@@ -423,11 +405,11 @@ class Dish {
             this.type = Dish.ARRAY_BUFFER;
             this._fromArrayBuffer(toType);
 
-        // Browser environment => translate is async
+            // Browser environment => translate is async
         } else {
             return new Promise((resolve, reject) => {
                 this._toArrayBuffer()
-                    .then(() => this.type = Dish.ARRAY_BUFFER)
+                    .then(() => (this.type = Dish.ARRAY_BUFFER))
                     .then(() => {
                         this._fromArrayBuffer(toType);
                         resolve();
@@ -435,7 +417,6 @@ class Dish {
                     .catch(reject);
             });
         }
-
     }
 
     /**
@@ -449,31 +430,31 @@ class Dish {
         // Using 'bind' here to allow this.value to be mutated within translation functions
         const toByteArrayFuncs = {
             browser: {
-                [Dish.STRING]:          () => Promise.resolve(DishString.toArrayBuffer.bind(this)()),
-                [Dish.NUMBER]:          () => Promise.resolve(DishNumber.toArrayBuffer.bind(this)()),
-                [Dish.HTML]:            () => Promise.resolve(DishHTML.toArrayBuffer.bind(this)()),
-                [Dish.ARRAY_BUFFER]:    () => Promise.resolve(),
-                [Dish.BIG_NUMBER]:      () => Promise.resolve(DishBigNumber.toArrayBuffer.bind(this)()),
-                [Dish.JSON]:            () => Promise.resolve(DishJSON.toArrayBuffer.bind(this)()),
-                [Dish.FILE]:            () => DishFile.toArrayBuffer.bind(this)(),
-                [Dish.LIST_FILE]:       () => Promise.resolve(DishListFile.toArrayBuffer.bind(this)()),
-                [Dish.BYTE_ARRAY]:      () => Promise.resolve(DishByteArray.toArrayBuffer.bind(this)()),
+                [Dish.STRING]: () => Promise.resolve(DishString.toArrayBuffer.bind(this)()),
+                [Dish.NUMBER]: () => Promise.resolve(DishNumber.toArrayBuffer.bind(this)()),
+                [Dish.HTML]: () => Promise.resolve(DishHTML.toArrayBuffer.bind(this)()),
+                [Dish.ARRAY_BUFFER]: () => Promise.resolve(),
+                [Dish.BIG_NUMBER]: () => Promise.resolve(DishBigNumber.toArrayBuffer.bind(this)()),
+                [Dish.JSON]: () => Promise.resolve(DishJSON.toArrayBuffer.bind(this)()),
+                [Dish.FILE]: () => DishFile.toArrayBuffer.bind(this)(),
+                [Dish.LIST_FILE]: () => Promise.resolve(DishListFile.toArrayBuffer.bind(this)()),
+                [Dish.BYTE_ARRAY]: () => Promise.resolve(DishByteArray.toArrayBuffer.bind(this)())
             },
             node: {
-                [Dish.STRING]:          () => DishString.toArrayBuffer.bind(this)(),
-                [Dish.NUMBER]:          () => DishNumber.toArrayBuffer.bind(this)(),
-                [Dish.HTML]:            () => DishHTML.toArrayBuffer.bind(this)(),
-                [Dish.ARRAY_BUFFER]:    () => {},
-                [Dish.BIG_NUMBER]:      () => DishBigNumber.toArrayBuffer.bind(this)(),
-                [Dish.JSON]:            () => DishJSON.toArrayBuffer.bind(this)(),
-                [Dish.FILE]:            () => DishFile.toArrayBuffer.bind(this)(),
-                [Dish.LIST_FILE]:       () => DishListFile.toArrayBuffer.bind(this)(),
-                [Dish.BYTE_ARRAY]:      () => DishByteArray.toArrayBuffer.bind(this)(),
+                [Dish.STRING]: () => DishString.toArrayBuffer.bind(this)(),
+                [Dish.NUMBER]: () => DishNumber.toArrayBuffer.bind(this)(),
+                [Dish.HTML]: () => DishHTML.toArrayBuffer.bind(this)(),
+                [Dish.ARRAY_BUFFER]: () => {},
+                [Dish.BIG_NUMBER]: () => DishBigNumber.toArrayBuffer.bind(this)(),
+                [Dish.JSON]: () => DishJSON.toArrayBuffer.bind(this)(),
+                [Dish.FILE]: () => DishFile.toArrayBuffer.bind(this)(),
+                [Dish.LIST_FILE]: () => DishListFile.toArrayBuffer.bind(this)(),
+                [Dish.BYTE_ARRAY]: () => DishByteArray.toArrayBuffer.bind(this)()
             }
         };
 
         try {
-            return toByteArrayFuncs[isNodeEnvironment() && "node" || "browser"][this.type]();
+            return toByteArrayFuncs[(isNodeEnvironment() && "node") || "browser"][this.type]();
         } catch (err) {
             throw new DishError(`Error translating from ${Dish.enumLookup(this.type)} to ArrayBuffer: ${err}`);
         }
@@ -483,20 +464,19 @@ class Dish {
      * Convert this.value to the given type from ArrayBuffer
      *
      * @param {number} toType - the Dish enum to convert to
-    */
+     */
     _fromArrayBuffer(toType) {
-
         // Using 'bind' here to allow this.value to be mutated within translation functions
         const toTypeFunctions = {
-            [Dish.STRING]:          () => DishString.fromArrayBuffer.bind(this)(),
-            [Dish.NUMBER]:          () => DishNumber.fromArrayBuffer.bind(this)(),
-            [Dish.HTML]:            () => DishHTML.fromArrayBuffer.bind(this)(),
-            [Dish.ARRAY_BUFFER]:    () => {},
-            [Dish.BIG_NUMBER]:      () => DishBigNumber.fromArrayBuffer.bind(this)(),
-            [Dish.JSON]:            () => DishJSON.fromArrayBuffer.bind(this)(),
-            [Dish.FILE]:            () => DishFile.fromArrayBuffer.bind(this)(),
-            [Dish.LIST_FILE]:       () => DishListFile.fromArrayBuffer.bind(this)(),
-            [Dish.BYTE_ARRAY]:      () => DishByteArray.fromArrayBuffer.bind(this)(),
+            [Dish.STRING]: () => DishString.fromArrayBuffer.bind(this)(),
+            [Dish.NUMBER]: () => DishNumber.fromArrayBuffer.bind(this)(),
+            [Dish.HTML]: () => DishHTML.fromArrayBuffer.bind(this)(),
+            [Dish.ARRAY_BUFFER]: () => {},
+            [Dish.BIG_NUMBER]: () => DishBigNumber.fromArrayBuffer.bind(this)(),
+            [Dish.JSON]: () => DishJSON.fromArrayBuffer.bind(this)(),
+            [Dish.FILE]: () => DishFile.fromArrayBuffer.bind(this)(),
+            [Dish.LIST_FILE]: () => DishListFile.fromArrayBuffer.bind(this)(),
+            [Dish.BYTE_ARRAY]: () => DishByteArray.fromArrayBuffer.bind(this)()
         };
 
         try {
@@ -506,9 +486,7 @@ class Dish {
             throw new DishError(`Error translating from ArrayBuffer to ${Dish.enumLookup(toType)}: ${err}`);
         }
     }
-
 }
-
 
 /**
  * Dish data type enum for byte arrays.
@@ -559,11 +537,10 @@ Dish.JSON = 6;
  */
 Dish.FILE = 7;
 /**
-* Dish data type enum for lists of files.
-* @readonly
-* @enum
-*/
+ * Dish data type enum for lists of files.
+ * @readonly
+ * @enum
+ */
 Dish.LIST_FILE = 8;
-
 
 export default Dish;

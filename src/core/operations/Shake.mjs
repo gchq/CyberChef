@@ -12,7 +12,6 @@ import JSSHA3 from "js-sha3";
  * Shake operation
  */
 class Shake extends Operation {
-
     /**
      * Shake constructor
      */
@@ -21,7 +20,8 @@ class Shake extends Operation {
 
         this.name = "Shake";
         this.module = "Crypto";
-        this.description = "Shake is an Extendable Output Function (XOF) of the SHA-3 hash algorithm, part of the Keccak family, allowing for variable output length/size.";
+        this.description
+            = "Shake is an Extendable Output Function (XOF) of the SHA-3 hash algorithm, part of the Keccak family, allowing for variable output length/size.";
         this.infoURL = "https://wikipedia.org/wiki/SHA-3#Instances";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -49,8 +49,7 @@ class Shake extends Operation {
             size = args[1];
         let algo;
 
-        if (size < 0)
-            throw new OperationError("Size must be greater than 0");
+        if (size < 0) throw new OperationError("Size must be greater than 0");
 
         switch (capacity) {
             case 128:
@@ -65,7 +64,6 @@ class Shake extends Operation {
 
         return algo(input, size);
     }
-
 }
 
 export default Shake;

@@ -16,9 +16,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Morse Code",
-                args: ["-/.", "Space", "Line feed"],
-            },
-        ],
+                args: ["-/.", "Space", "Line feed"]
+            }
+        ]
     },
     {
         name: "From Morse Code '... --- ...'",
@@ -27,8 +27,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Morse Code",
-                args: ["Space", "Line feed"],
-            },
-        ],
-    },
+                args: ["Space", "Line feed"]
+            }
+        ]
+    }
 ]);

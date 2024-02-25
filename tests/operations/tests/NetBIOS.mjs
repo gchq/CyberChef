@@ -16,9 +16,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Encode NetBIOS Name",
-                args: [65],
-            },
-        ],
+                args: [65]
+            }
+        ]
     },
     {
         name: "Decode NetBIOS Name",
@@ -27,8 +27,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Decode NetBIOS Name",
-                args: [65],
-            },
-        ],
-    },
+                args: [65]
+            }
+        ]
+    }
 ]);

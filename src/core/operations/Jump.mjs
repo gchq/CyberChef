@@ -11,7 +11,6 @@ import { getLabelIndex } from "../lib/FlowControl.mjs";
  * Jump operation
  */
 class Jump extends Operation {
-
     /**
      * Jump constructor
      */
@@ -60,7 +59,6 @@ class Jump extends Operation {
         state.numJumps++;
         return state;
     }
-
 }
 
 export default Jump;

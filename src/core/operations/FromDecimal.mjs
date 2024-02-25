@@ -5,14 +5,13 @@
  */
 
 import Operation from "../Operation.mjs";
-import {DELIM_OPTIONS} from "../lib/Delim.mjs";
-import {fromDecimal} from "../lib/Decimal.mjs";
+import { DELIM_OPTIONS } from "../lib/Delim.mjs";
+import { fromDecimal } from "../lib/Decimal.mjs";
 
 /**
  * From Decimal operation
  */
 class FromDecimal extends Operation {
-
     /**
      * FromDecimal constructor
      */
@@ -21,7 +20,8 @@ class FromDecimal extends Operation {
 
         this.name = "From Decimal";
         this.module = "Default";
-        this.description = "Converts the data from an ordinal integer array back into its raw form.<br><br>e.g. <code>72 101 108 108 111</code> becomes <code>Hello</code>";
+        this.description
+            = "Converts the data from an ordinal integer array back into its raw form.<br><br>e.g. <code>72 101 108 108 111</code> becomes <code>Hello</code>";
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [
@@ -77,12 +77,12 @@ class FromDecimal extends Operation {
      */
     run(input, args) {
         let data = fromDecimal(input, args[0]);
-        if (args[1]) { // Convert negatives
-            data = data.map(v => v < 0 ? 0xFF + v + 1 : v);
+        if (args[1]) {
+            // Convert negatives
+            data = data.map((v) => (v < 0 ? 0xff + v + 1 : v));
         }
         return data;
     }
-
 }
 
 export default FromDecimal;

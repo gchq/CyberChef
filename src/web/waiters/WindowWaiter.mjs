@@ -10,7 +10,6 @@ import { debounce } from "../../core/Utils.mjs";
  * Waiter to handle events related to the window object.
  */
 class WindowWaiter {
-
     /**
      * WindowWaiter constructor.
      *
@@ -19,7 +18,6 @@ class WindowWaiter {
     constructor(app) {
         this.app = app;
     }
-
 
     /**
      * Handler for window resize events.
@@ -30,7 +28,6 @@ class WindowWaiter {
         debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();
     }
 
-
     /**
      * Handler for window blur events.
      * Saves the current time so that we can calculate how long the window was unfocused for when
@@ -39,7 +36,6 @@ class WindowWaiter {
     windowBlur() {
         this.windowBlurTime = Date.now();
     }
-
 
     /**
      * Handler for window focus events.
@@ -57,7 +53,6 @@ class WindowWaiter {
             this.app.silentBake();
         }
     }
-
 }
 
 export default WindowWaiter;

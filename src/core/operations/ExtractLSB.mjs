@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Extract LSB operation
  */
 class ExtractLSB extends Operation {
-
     /**
      * ExtractLSB constructor
      */
@@ -24,7 +23,8 @@ class ExtractLSB extends Operation {
 
         this.name = "Extract LSB";
         this.module = "Image";
-        this.description = "Extracts the Least Significant Bit data from each pixel in an image. This is a common way to hide data in Steganography.";
+        this.description
+            = "Extracts the Least Significant Bit data from each pixel in an image. This is a common way to hide data in Steganography.";
         this.infoURL = "https://wikipedia.org/wiki/Bit_numbering#Least_significant_bit_in_digital_steganography";
         this.inputType = "ArrayBuffer";
         this.outputType = "byteArray";
@@ -32,27 +32,27 @@ class ExtractLSB extends Operation {
             {
                 name: "Colour Pattern #1",
                 type: "option",
-                value: COLOUR_OPTIONS,
+                value: COLOUR_OPTIONS
             },
             {
                 name: "Colour Pattern #2",
                 type: "option",
-                value: ["", ...COLOUR_OPTIONS],
+                value: ["", ...COLOUR_OPTIONS]
             },
             {
                 name: "Colour Pattern #3",
                 type: "option",
-                value: ["", ...COLOUR_OPTIONS],
+                value: ["", ...COLOUR_OPTIONS]
             },
             {
                 name: "Colour Pattern #4",
                 type: "option",
-                value: ["", ...COLOUR_OPTIONS],
+                value: ["", ...COLOUR_OPTIONS]
             },
             {
                 name: "Pixel Order",
                 type: "option",
-                value: ["Row", "Column"],
+                value: ["Row", "Column"]
             },
             {
                 name: "Bit",
@@ -72,7 +72,7 @@ class ExtractLSB extends Operation {
 
         const bit = 7 - args.pop(),
             pixelOrder = args.pop(),
-            colours = args.filter(option => option !== "").map(option => COLOUR_OPTIONS.indexOf(option)),
+            colours = args.filter((option) => option !== "").map((option) => COLOUR_OPTIONS.indexOf(option)),
             parsedImage = await jimp.read(input),
             width = parsedImage.bitmap.width,
             height = parsedImage.bitmap.height,
@@ -82,7 +82,8 @@ class ExtractLSB extends Operation {
             throw new OperationError("Error: Bit argument must be between 0 and 7");
         }
 
-        let i, combinedBinary = "";
+        let i,
+            combinedBinary = "";
 
         if (pixelOrder === "Row") {
             for (i = 0; i < rgba.length; i += 4) {
@@ -106,7 +107,6 @@ class ExtractLSB extends Operation {
 
         return fromBinary(combinedBinary);
     }
-
 }
 
 const COLOUR_OPTIONS = ["R", "G", "B", "A"];

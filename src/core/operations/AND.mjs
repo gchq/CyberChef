@@ -12,7 +12,6 @@ import { bitOp, and, BITWISE_OP_DELIMS } from "../lib/BitwiseOp.mjs";
  * AND operation
  */
 class AND extends Operation {
-
     /**
      * AND constructor
      */
@@ -71,7 +70,6 @@ class AND extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default AND;

@@ -11,7 +11,6 @@ import Utils from "../Utils.mjs";
  * To HTML Entity operation
  */
 class ToHTMLEntity extends Operation {
-
     /**
      * ToHTMLEntity constructor
      */
@@ -20,7 +19,8 @@ class ToHTMLEntity extends Operation {
 
         this.name = "To HTML Entity";
         this.module = "Encodings";
-        this.description = "Converts characters to HTML entities<br><br>e.g. <code>&amp;</code> becomes <code>&amp;<span>amp;</span></code>";
+        this.description
+            = "Converts characters to HTML entities<br><br>e.g. <code>&amp;</code> becomes <code>&amp;<span>amp;</span></code>";
         this.infoURL = "https://wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references";
         this.inputType = "string";
         this.outputType = "string";
@@ -71,16 +71,13 @@ class ToHTMLEntity extends Operation {
                     output += Utils.chr(charcodes[i]);
                 }
             } else {
-                output += byteToEntity[charcodes[i]] || (
-                    charcodes[i] > 255 ?
-                        "&#" + charcodes[i] + ";" :
-                        Utils.chr(charcodes[i])
-                );
+                output
+                    += byteToEntity[charcodes[i]]
+                    || (charcodes[i] > 255 ? "&#" + charcodes[i] + ";" : Utils.chr(charcodes[i]));
             }
         }
         return output;
     }
-
 }
 
 /**

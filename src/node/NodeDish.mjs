@@ -13,14 +13,12 @@ import Dish from "../core/Dish.mjs";
  * Adds some helper functions and improves coercion for Node.js logging.
  */
 class NodeDish extends Dish {
-
     /**
-    * Create a Dish
-    * @param {any} inputOrDish - The dish input
-    * @param {String|Number} - The dish type, as enum or string
-    */
-    constructor(inputOrDish=null, type=null) {
-
+     * Create a Dish
+     * @param {any} inputOrDish - The dish input
+     * @param {String|Number} - The dish type, as enum or string
+     */
+    constructor(inputOrDish = null, type = null) {
         // Allow `fs` file input:
         // Any node fs Buffers transformed to array buffer
         // Use Array.from as Uint8Array doesnt pass instanceof Array test
@@ -38,7 +36,7 @@ class NodeDish extends Dish {
      * @param {*} args - any arguments for the operation
      * @returns {Dish} a new dish with the result of the operation.
      */
-    apply(operation, args=null) {
+    apply(operation, args = null) {
         return operation(this, args);
     }
 
@@ -78,7 +76,6 @@ class NodeDish extends Dish {
     valueOf() {
         return this.presentAs(Dish.typeEnum("number"));
     }
-
 }
 
 export default NodeDish;

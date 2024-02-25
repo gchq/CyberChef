@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Image Filter operation
  */
 class ImageFilter extends Operation {
-
     /**
      * ImageFilter constructor
      */
@@ -33,10 +32,7 @@ class ImageFilter extends Operation {
             {
                 name: "Filter type",
                 type: "option",
-                value: [
-                    "Greyscale",
-                    "Sepia"
-                ]
+                value: ["Greyscale", "Sepia"]
             }
         ];
     }
@@ -95,7 +91,6 @@ class ImageFilter extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default ImageFilter;

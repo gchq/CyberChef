@@ -12,7 +12,6 @@ import XRegExp from "xregexp";
  * Find / Replace operation
  */
 class FindReplace extends Operation {
-
     /**
      * FindReplace constructor
      */
@@ -21,7 +20,8 @@ class FindReplace extends Operation {
 
         this.name = "Find / Replace";
         this.module = "Regex";
-        this.description = "Replaces all occurrences of the first string with the second.<br><br>Includes support for regular expressions (regex), simple strings and extended strings (which support \\n, \\r, \\t, \\b, \\f and escaped hex bytes using \\x notation, e.g. \\x00 for a null byte).";
+        this.description
+            = "Replaces all occurrences of the first string with the second.<br><br>Includes support for regular expressions (regex), simple strings and extended strings (which support \\n, \\r, \\t, \\b, \\f and escaped hex bytes using \\x notation, e.g. \\x00 for a null byte).";
         this.infoURL = "https://wikipedia.org/wiki/Regular_expression";
         this.inputType = "string";
         this.outputType = "string";
@@ -66,7 +66,7 @@ class FindReplace extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [{option: type}, replace, g, i, m, s] = args;
+        const [{ option: type }, replace, g, i, m, s] = args;
         let find = args[0].string,
             modifiers = "";
 
@@ -88,7 +88,6 @@ class FindReplace extends Operation {
 
         return input.replace(find, replace);
     }
-
 }
 
 export default FindReplace;

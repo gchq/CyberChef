@@ -13,7 +13,6 @@ import { debounce } from "../../core/Utils.mjs";
  * Waiter to handle conversations with the ChefWorker
  */
 class WorkerWaiter {
-
     /**
      * WorkerWaiter constructor
      *
@@ -35,8 +34,7 @@ class WorkerWaiter {
         this.callbackID = 0;
 
         this.maxWorkers = 1;
-        if (navigator.hardwareConcurrency !== undefined &&
-            navigator.hardwareConcurrency > 1) {
+        if (navigator.hardwareConcurrency !== undefined && navigator.hardwareConcurrency > 1) {
             this.maxWorkers = navigator.hardwareConcurrency - 1;
         }
 
@@ -112,8 +110,7 @@ class WorkerWaiter {
         if (index > 0) {
             docURL = docURL.substring(0, index);
         }
-        newWorker.postMessage({"action": "docURL", "data": docURL});
-
+        newWorker.postMessage({ "action": "docURL", "data": docURL });
 
         // Store the worker, whether or not it's active, and the inputNum as an object
         const newWorkerObj = {
@@ -132,7 +129,7 @@ class WorkerWaiter {
      * @param {boolean} [setActive=true] - If true, set the worker status to active
      * @returns {number} - The index of the ChefWorker
      */
-    getInactiveChefWorker(setActive=true) {
+    getInactiveChefWorker(setActive = true) {
         for (let i = 0; i < this.chefWorkers.length; i++) {
             if (!this.chefWorkers[i].active) {
                 this.chefWorkers[i].active = setActive;
@@ -280,7 +277,6 @@ class WorkerWaiter {
             if (inputNum === this.manager.tabs.getActiveTab("input")) {
                 this.manager.recipe.updateBreakpointIndicator(progress);
             }
-
         } else {
             this.manager.output.updateOutputStatus("baked", inputNum);
         }
@@ -293,7 +289,9 @@ class WorkerWaiter {
      */
     setBakingStatus(bakingStatus) {
         this.app.baking = bakingStatus;
-        debounce(this.manager.controls.toggleBakeButtonFunction, 20, "toggleBakeButton", this, [bakingStatus ? "cancel" : "bake"])();
+        debounce(this.manager.controls.toggleBakeButtonFunction, 20, "toggleBakeButton", this, [
+            bakingStatus ? "cancel" : "bake"
+        ])();
 
         if (bakingStatus) this.manager.output.hideMagicButton();
     }
@@ -328,7 +326,7 @@ class WorkerWaiter {
      * @param {boolean} [silent=false] - If true, don't set the output
      * @param {boolean} [killAll=false] - If true, kills all chefWorkers regardless of status
      */
-    cancelBake(silent=false, killAll=false) {
+    cancelBake(silent = false, killAll = false) {
         const deactiveOutputs = new Set();
 
         for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
@@ -340,20 +338,20 @@ class WorkerWaiter {
         }
         this.setBakingStatus(false);
 
-        this.inputs.forEach(input => {
+        this.inputs.forEach((input) => {
             deactiveOutputs.add(input.inputNum);
         });
 
-        this.inputNums.forEach(inputNum => {
+        this.inputNums.forEach((inputNum) => {
             deactiveOutputs.add(inputNum);
         });
 
-        deactiveOutputs.forEach(num => {
+        deactiveOutputs.forEach((num) => {
             this.manager.output.updateOutputStatus("inactive", num);
         });
 
         const tabList = this.manager.tabs.getTabList("output");
-        tabList.forEach(tab => {
+        tabList.forEach((tab) => {
             this.manager.tabs.getTabItem(tab, "output").style.background = "";
         });
 
@@ -473,16 +471,19 @@ class WorkerWaiter {
             transferable = [input];
         }
         this.manager.timing.recordTime("chefWorkerTasked", nextInput.inputNum);
-        this.chefWorkers[workerIdx].worker.postMessage({
-            action: "bake",
-            data: {
-                input: input,
-                recipeConfig: recipeConfig,
-                options: this.options,
-                inputNum: nextInput.inputNum,
-                bakeId: this.bakeId
-            }
-        }, transferable);
+        this.chefWorkers[workerIdx].worker.postMessage(
+            {
+                action: "bake",
+                data: {
+                    input: input,
+                    recipeConfig: recipeConfig,
+                    options: this.options,
+                    inputNum: nextInput.inputNum,
+                    bakeId: this.bakeId
+                }
+            },
+            transferable
+        );
 
         if (this.inputNums.length > 0) {
             this.manager.input.inputWorker.postMessage({
@@ -556,7 +557,6 @@ class WorkerWaiter {
                 }
             });
             this.loadingOutputs++;
-
         }
     }
 
@@ -571,9 +571,9 @@ class WorkerWaiter {
     async bakeInputs(inputData) {
         log.debug(`Baking input list [${inputData.nums.join(",")}]`);
 
-        return await new Promise(resolve => {
+        return await new Promise((resolve) => {
             if (this.app.baking) return;
-            const inputNums = inputData.nums.filter(n => n > 0);
+            const inputNums = inputData.nums.filter((n) => n > 0);
             const step = inputData.step;
 
             // Use cancelBake to clear out the inputs
@@ -597,7 +597,11 @@ class WorkerWaiter {
             this.app.bake(step);
 
             for (let i = 0; i < this.inputNums.length; i++) {
-                this.manager.output.updateOutputMessage(`Input ${inputNums[i]} has not been baked yet.`, inputNums[i], false);
+                this.manager.output.updateOutputMessage(
+                    `Input ${inputNums[i]} has not been baked yet.`,
+                    inputNums[i],
+                    false
+                );
                 this.manager.output.updateOutputStatus("pending", inputNums[i]);
             }
 
@@ -771,7 +775,7 @@ class WorkerWaiter {
      * Sets the console log level in the workers.
      */
     setLogLevel() {
-        this.chefWorkers.forEach(cw => {
+        this.chefWorkers.forEach((cw) => {
             cw.worker.postMessage({
                 action: "setLogLevel",
                 data: log.getLevel()
@@ -830,11 +834,13 @@ class WorkerWaiter {
         }
 
         if (progress.total !== progress.baked) {
-            setTimeout(function() {
-                this.displayProgress();
-            }.bind(this), 100);
+            setTimeout(
+                function () {
+                    this.displayProgress();
+                }.bind(this),
+                100
+            );
         }
-
     }
 
     /**

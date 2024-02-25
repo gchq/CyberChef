@@ -11,7 +11,6 @@ import * as LS47 from "../lib/LS47.mjs";
  * LS47 Encrypt operation
  */
 class LS47Encrypt extends Operation {
-
     /**
      * LS47Encrypt constructor
      */
@@ -20,7 +19,8 @@ class LS47Encrypt extends Operation {
 
         this.name = "LS47 Encrypt";
         this.module = "Crypto";
-        this.description = "This is a slight improvement of the ElsieFour cipher as described by Alan Kaminsky. We use 7x7 characters instead of original (barely fitting) 6x6, to be able to encrypt some structured information. We also describe a simple key-expansion algorithm, because remembering passwords is popular. Similar security considerations as with ElsieFour hold.<br>The LS47 alphabet consists of following characters: <code>_abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'()</code><br>A LS47 key is a permutation of the alphabet that is then represented in a 7x7 grid used for the encryption or decryption.";
+        this.description
+            = "This is a slight improvement of the ElsieFour cipher as described by Alan Kaminsky. We use 7x7 characters instead of original (barely fitting) 6x6, to be able to encrypt some structured information. We also describe a simple key-expansion algorithm, because remembering passwords is popular. Similar security considerations as with ElsieFour hold.<br>The LS47 alphabet consists of following characters: <code>_abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'()</code><br>A LS47 key is a permutation of the alphabet that is then represented in a 7x7 grid used for the encryption or decryption.";
         this.infoURL = "https://github.com/exaexa/ls47";
         this.inputType = "string";
         this.outputType = "string";
@@ -56,7 +56,6 @@ class LS47Encrypt extends Operation {
         const key = LS47.deriveKey(args[0]);
         return LS47.encryptPad(key, input, args[2], this.paddingSize);
     }
-
 }
 
 export default LS47Encrypt;

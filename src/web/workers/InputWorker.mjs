@@ -50,7 +50,7 @@ self.loadingInputs = 0;
  *
  * @param {MessageEvent} e
  */
-self.addEventListener("message", function(e) {
+self.addEventListener("message", function (e) {
     const r = e.data;
     if (!("action" in r)) {
         log.error("No action");
@@ -140,7 +140,7 @@ self.addEventListener("message", function(e) {
  *
  * @param {number} inputNum - The input to get the file loading progress for
  */
-self.getLoadProgress = function(inputNum) {
+self.getLoadProgress = function (inputNum) {
     const total = self.numInputs;
     const pending = self.pendingFiles.length;
     const loading = self.loadingInputs;
@@ -170,7 +170,7 @@ self.getLoadProgress = function(inputNum) {
  * @param {boolean} [step=false] - Set to true if we should only execute one operation instead of the
  * whole recipe
  */
-self.autoBake = function(inputNum, progress, step=false) {
+self.autoBake = function (inputNum, progress, step = false) {
     const input = self.inputs[inputNum];
     if (input) {
         self.postMessage({
@@ -188,12 +188,10 @@ self.autoBake = function(inputNum, progress, step=false) {
  * Fired when we want to bake all inputs (bake button clicked)
  * Sends a list of inputNums to the workerwaiter
  */
-self.bakeAllInputs = function() {
+self.bakeAllInputs = function () {
     const inputNums = Object.keys(self.inputs);
 
-    const nums = inputNums
-        .filter(n => self.inputs[n].status === "loaded")
-        .map(n => parseInt(n, 10));
+    const nums = inputNums.filter((n) => self.inputs[n].status === "loaded").map((n) => parseInt(n, 10));
 
     self.postMessage({
         action: "bakeInputs",
@@ -211,12 +209,9 @@ self.bakeAllInputs = function() {
  * @param {number} inputNum
  * @param {number} bakeId
  */
-self.bakeInput = function(inputNum, bakeId) {
+self.bakeInput = function (inputNum, bakeId) {
     const inputObj = self.inputs[inputNum];
-    if (inputObj === null ||
-        inputObj === undefined ||
-        inputObj.status !== "loaded") {
-
+    if (inputObj === null || inputObj === undefined || inputObj.status !== "loaded") {
         self.postMessage({
             action: "queueInputError",
             data: {
@@ -245,7 +240,7 @@ self.bakeInput = function(inputNum, bakeId) {
  * @param {boolean} inputData.getObj - If true, returns the entire input object instead of just the value
  * @param {number} inputData.id - The callback ID for the callback to run when returned to the inputWaiter
  */
-self.getInput = function(inputData) {
+self.getInput = function (inputData) {
     const input = self.inputs[inputData.inputNum];
     self.postMessage({
         action: "getInput",
@@ -261,7 +256,7 @@ self.getInput = function(inputData) {
  *
  * @param {number} id - The callback ID to be executed when returned to the inputWaiter
  */
-self.getInputNums = function(id) {
+self.getInputNums = function (id) {
     const inputNums = Object.keys(self.inputs),
         min = self.getSmallestInputNum(inputNums),
         max = self.getLargestInputNum(inputNums);
@@ -283,7 +278,7 @@ self.getInputNums = function(id) {
  * @param {number} inputNum - The input we want to get the progress of
  * @returns {number | string} - Returns "error" if there was a load error
  */
-self.getInputProgress = function(inputNum) {
+self.getInputProgress = function (inputNum) {
     const inputObj = self.inputs[inputNum];
     if (!inputObj) return;
     if (inputObj.status === "error") {
@@ -298,7 +293,7 @@ self.getInputProgress = function(inputNum) {
  * @param {string[]} inputNums - The numbers to find the largest of
  * @returns {number}
  */
-self.getLargestInputNum = function(inputNums) {
+self.getLargestInputNum = function (inputNums) {
     return inputNums.reduce((acc, val) => {
         val = parseInt(val, 10);
         return val > acc ? val : acc;
@@ -311,7 +306,7 @@ self.getLargestInputNum = function(inputNums) {
  * @param {string[]} inputNums - The numbers to find the smallest of
  * @returns {number}
  */
-self.getSmallestInputNum = function(inputNums) {
+self.getSmallestInputNum = function (inputNums) {
     const min = inputNums.reduce((acc, val) => {
         val = parseInt(val, 10);
         return val < acc ? val : acc;
@@ -329,13 +324,13 @@ self.getSmallestInputNum = function(inputNums) {
  * @param {number} inputNum - The current input number
  * @returns {number}
  */
-self.getPreviousInputNum = function(inputNum) {
+self.getPreviousInputNum = function (inputNum) {
     const inputNums = Object.keys(self.inputs);
     if (inputNums.length === 0) return -1;
 
     return inputNums.reduce((acc, val) => {
         val = parseInt(val, 10);
-        return (val < inputNum && val > acc) ? val : acc;
+        return val < inputNum && val > acc ? val : acc;
     }, self.getSmallestInputNum(inputNums));
 };
 
@@ -345,12 +340,12 @@ self.getPreviousInputNum = function(inputNum) {
  * @param {number} inputNum - The current input number
  * @returns {number}
  */
-self.getNextInputNum = function(inputNum) {
+self.getNextInputNum = function (inputNum) {
     const inputNums = Object.keys(self.inputs);
 
     return inputNums.reduce((acc, val) => {
         val = parseInt(val, 10);
-        return (val > inputNum && val < acc) ? val : acc;
+        return val > inputNum && val < acc ? val : acc;
     }, self.getLargestInputNum(inputNums));
 };
 
@@ -362,7 +357,7 @@ self.getNextInputNum = function(inputNum) {
  * @param {string} direction - Either "left" or "right". Determines which direction we search for nearby numbers in
  * @returns {number[]}
  */
-self.getNearbyNums = function(inputNum, direction) {
+self.getNearbyNums = function (inputNum, direction) {
     const nums = [];
     for (let i = 0; i < self.maxTabs; i++) {
         let newNum;
@@ -385,11 +380,11 @@ self.getNearbyNums = function(inputNum, direction) {
                     }
             }
         }
-        if (!nums.includes(newNum) && (newNum > 0)) {
+        if (!nums.includes(newNum) && newNum > 0) {
             nums.push(newNum);
         }
     }
-    nums.sort(function(a, b) {
+    nums.sort(function (a, b) {
         return a - b;
     });
     return nums;
@@ -401,7 +396,7 @@ self.getNearbyNums = function(inputNum, direction) {
  *
  * @param {number} inputNum - The inputNum of the tab header
  */
-self.updateTabHeader = function(inputNum) {
+self.updateTabHeader = function (inputNum) {
     const input = self.inputs[inputNum];
     if (!input) return;
 
@@ -425,8 +420,8 @@ self.updateTabHeader = function(inputNum) {
  * @param {number} inputData.inputNum - The input to get the data for
  * @param {boolean} inputData.silent - If false, the manager statechange event will be fired
  */
-self.setInput = function(inputData) {
-    const {inputNum, silent} = inputData;
+self.setInput = function (inputData) {
+    const { inputNum, silent } = inputData;
     const input = self.inputs[inputNum];
     if (!input) return;
 
@@ -449,17 +444,17 @@ self.setInput = function(inputData) {
  * @param {number} inputNum - The inputNum to find the nearby numbers for
  * @param {string} direction - The direction to search for inputNums in. Either "left" or "right"
  */
-self.refreshTabs = function(inputNum, direction) {
+self.refreshTabs = function (inputNum, direction) {
     const nums = self.getNearbyNums(inputNum, direction),
         inputNums = Object.keys(self.inputs),
-        tabsLeft = (self.getSmallestInputNum(inputNums) !== nums[0] && nums.length > 0),
-        tabsRight = (self.getLargestInputNum(inputNums) !== nums[nums.length - 1] && nums.length > 0);
+        tabsLeft = self.getSmallestInputNum(inputNums) !== nums[0] && nums.length > 0,
+        tabsRight = self.getLargestInputNum(inputNums) !== nums[nums.length - 1] && nums.length > 0;
 
     self.postMessage({
         action: "refreshTabs",
         data: {
             nums: nums,
-            activeTab: (nums.includes(inputNum)) ? inputNum : self.getNextInputNum(inputNum),
+            activeTab: nums.includes(inputNum) ? inputNum : self.getNextInputNum(inputNum),
             tabsLeft: tabsLeft,
             tabsRight: tabsRight
         }
@@ -477,7 +472,7 @@ self.refreshTabs = function(inputNum, direction) {
  * @param {number} inputNum - The input that's having its status changed
  * @param {string} status - The status of the input
  */
-self.updateInputStatus = function(inputNum, status) {
+self.updateInputStatus = function (inputNum, status) {
     if (self.inputs[inputNum] !== undefined) {
         self.inputs[inputNum].status = status;
     }
@@ -490,8 +485,8 @@ self.updateInputStatus = function(inputNum, status) {
  * @param {number} inputData.inputNum - The input that's having its progress updated
  * @param {number} inputData.progress - The load progress of the input
  */
-self.updateInputProgress = function(inputData) {
-    const {inputNum, progress} = inputData;
+self.updateInputProgress = function (inputData) {
+    const { inputNum, progress } = inputData;
 
     if (self.inputs[inputNum] !== undefined) {
         self.inputs[inputNum].progress = progress;
@@ -508,7 +503,7 @@ self.updateInputProgress = function(inputData) {
  * @param {string} [inputData.eolSequence] - The end of line sequence of the input data
  * @param {string} [inputData.stringSample] - A sample of the value as a string (truncated to 4096 chars)
  */
-self.updateInputValue = function(inputData) {
+self.updateInputValue = function (inputData) {
     const inputNum = parseInt(inputData.inputNum, 10);
     if (inputNum < 1) return;
 
@@ -537,7 +532,7 @@ self.updateInputValue = function(inputData) {
  * @param {number} workerId - The ID of the worker we're searching for
  * @returns {number}
  */
-self.getLoaderWorkerIdx = function(workerId) {
+self.getLoaderWorkerIdx = function (workerId) {
     for (let i = 0; i < self.loaderWorkers.length; i++) {
         if (self.loaderWorkers[i].id === workerId) {
             return i;
@@ -554,7 +549,7 @@ self.getLoaderWorkerIdx = function(workerId) {
  * @param {object} workerData
  * @param {number} workerData.id - The ID of the new loaderWorker
  */
-self.loaderWorkerReady = function(workerData) {
+self.loaderWorkerReady = function (workerData) {
     const newWorkerObj = {
         id: workerData.id,
         inputNum: -1,
@@ -573,7 +568,7 @@ self.loaderWorkerReady = function(workerData) {
  * @param {string} r.error - Present if an error is fired by the loaderWorker. Contains the error message string.
  * @param {ArrayBuffer} r.fileBuffer - Present if a file has finished loading. Contains the loaded file buffer.
  */
-self.handleLoaderMessage = function(r) {
+self.handleLoaderMessage = function (r) {
     let inputNum = 0;
 
     if ("inputNum" in r) {
@@ -590,7 +585,7 @@ self.handleLoaderMessage = function(r) {
         self.terminateLoaderWorker(r.id);
         self.activateLoaderWorker();
 
-        self.setInput({inputNum: inputNum, silent: true});
+        self.setInput({ inputNum: inputNum, silent: true });
         return;
     }
 
@@ -622,7 +617,7 @@ self.handleLoaderMessage = function(r) {
  *
  * @param {number} - The loaderWorker which will load the file
  */
-self.loadNextFile = function(workerIdx) {
+self.loadNextFile = function (workerIdx) {
     if (workerIdx === -1) return;
     const id = self.loaderWorkers[workerIdx].id;
     if (self.pendingFiles.length === 0) {
@@ -648,7 +643,7 @@ self.loadNextFile = function(workerIdx) {
  * Sends a message to the inputWaiter to create a new loaderWorker.
  * If there's an inactive loaderWorker that already exists, use that instead.
  */
-self.activateLoaderWorker = function() {
+self.activateLoaderWorker = function () {
     for (let i = 0; i < self.loaderWorkers.length; i++) {
         if (!self.loaderWorkers[i].active) {
             self.loaderWorkers[i].active = true;
@@ -666,7 +661,7 @@ self.activateLoaderWorker = function() {
  *
  * @param {number} id - The ID of the worker to be terminated
  */
-self.terminateLoaderWorker = function(id) {
+self.terminateLoaderWorker = function (id) {
     self.postMessage({
         action: "terminateLoaderWorker",
         data: id
@@ -684,8 +679,8 @@ self.terminateLoaderWorker = function(id) {
  * @param {FileList} filesData.files - The list of files to be loaded
  * @param {number} filesData.activeTab - The active tab in the UI
  */
-self.loadFiles = function(filesData) {
-    const {files, activeTab} = filesData;
+self.loadFiles = function (filesData) {
+    const { files, activeTab } = filesData;
     let lastInputNum = -1;
     const inputNums = [];
     for (let i = 0; i < files.length; i++) {
@@ -696,11 +691,16 @@ self.loadFiles = function(filesData) {
                 refreshTabs: false,
                 removeChefWorker: false
             });
-            lastInputNum = self.addInput(false, "file", {
-                name: files[i].name,
-                size: files[i].size.toLocaleString(),
-                type: files[i].type || "unknown"
-            }, activeTab);
+            lastInputNum = self.addInput(
+                false,
+                "file",
+                {
+                    name: files[i].name,
+                    size: files[i].size.toLocaleString(),
+                    type: files[i].type || "unknown"
+                },
+                activeTab
+            );
         } else {
             lastInputNum = self.addInput(false, "file", {
                 name: files[i].name,
@@ -724,7 +724,7 @@ self.loadFiles = function(filesData) {
     }
 
     self.getLoadProgress();
-    self.setInput({inputNum: lastInputNum, silent: true});
+    self.setInput({ inputNum: lastInputNum, silent: true });
 };
 
 /**
@@ -738,7 +738,7 @@ self.loadFiles = function(filesData) {
  * @param {string} fileData.type - The MIME type of the input being added
  * @param {number} inputNum - Defaults to auto-incrementing self.currentInputNum
  */
-self.addInput = function(
+self.addInput = function (
     changeTab = false,
     type,
     fileData = {
@@ -802,7 +802,7 @@ self.addInput = function(
  * @param {boolean} removeInputData.refreshTabs - If true, refresh the tabs after removing the input
  * @param {boolean} removeInputData.removeChefWorker - If true, remove a chefWorker from the WorkerWaiter
  */
-self.removeInput = function(removeInputData) {
+self.removeInput = function (removeInputData) {
     const inputNum = removeInputData.inputNum;
     const refreshTabs = removeInputData.refreshTabs;
     self.numInputs--;
@@ -842,7 +842,7 @@ self.removeInput = function(removeInputData) {
  *
  * @param {number} inputNum - The inputNum of the tab to change to
  */
-self.changeTabRight = function(inputNum) {
+self.changeTabRight = function (inputNum) {
     const newInput = self.getNextInputNum(inputNum);
     self.postMessage({
         action: "changeTab",
@@ -855,7 +855,7 @@ self.changeTabRight = function(inputNum) {
  *
  * @param {number} inputNum - The inputNum of the tab to change to
  */
-self.changeTabLeft = function(inputNum) {
+self.changeTabLeft = function (inputNum) {
     const newInput = self.getPreviousInputNum(inputNum);
     self.postMessage({
         action: "changeTab",
@@ -869,7 +869,7 @@ self.changeTabLeft = function(inputNum) {
  * @param {number} maxTabs - The new max number of tabs
  * @param {number} activeTab - The currently selected tab
  */
-self.updateMaxTabs = function(maxTabs, activeTab) {
+self.updateMaxTabs = function (maxTabs, activeTab) {
     if (self.maxTabs !== maxTabs) {
         self.maxTabs = maxTabs;
         self.refreshTabs(activeTab, "right");
@@ -888,7 +888,7 @@ self.updateMaxTabs = function(maxTabs, activeTab) {
  * @param {string} searchData.filterType - Either "CONTENT" or "FILENAME". Determines what should be matched with filter
  * @param {number} searchData.numResults - The maximum number of results to be returned
  */
-self.filterTabs = function(searchData) {
+self.filterTabs = function (searchData) {
     const showPending = searchData.showPending,
         showLoading = searchData.showLoading,
         showLoaded = searchData.showLoaded,
@@ -912,21 +912,22 @@ self.filterTabs = function(searchData) {
         const iNum = inputNums[i];
         let textDisplay = "";
         let addInput = false;
-        if (self.inputs[iNum].status === "pending" && showPending ||
-            self.inputs[iNum].status === "loading" && showLoading ||
-            self.inputs[iNum].status === "loaded" && showLoaded) {
+        if (
+            (self.inputs[iNum].status === "pending" && showPending)
+            || (self.inputs[iNum].status === "loading" && showLoading)
+            || (self.inputs[iNum].status === "loaded" && showLoaded)
+        ) {
             try {
                 if (self.inputs[iNum].type === "userinput") {
-                    if (filterType.toLowerCase() === "content" &&
-                        filterExp.test(self.inputs[iNum].stringSample)) {
+                    if (filterType.toLowerCase() === "content" && filterExp.test(self.inputs[iNum].stringSample)) {
                         textDisplay = self.inputs[iNum].stringSample;
                         addInput = true;
                     }
                 } else {
-                    if ((filterType.toLowerCase() === "filename" &&
-                        filterExp.test(self.inputs[iNum].file.name)) ||
-                        (filterType.toLowerCase() === "content" &&
-                        filterExp.test(self.inputs[iNum].stringSample))) {
+                    if (
+                        (filterType.toLowerCase() === "filename" && filterExp.test(self.inputs[iNum].file.name))
+                        || (filterType.toLowerCase() === "content" && filterExp.test(self.inputs[iNum].stringSample))
+                    ) {
                         textDisplay = self.inputs[iNum].file.name;
                         addInput = true;
                     }

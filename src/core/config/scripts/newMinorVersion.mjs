@@ -11,7 +11,7 @@
 import prompt from "prompt";
 import colors from "colors";
 import path from "path";
-import fs  from "fs";
+import fs from "fs";
 import process from "process";
 
 const dir = path.join(process.cwd() + "/src/core/config/");
@@ -24,16 +24,12 @@ if (!fs.existsSync(dir)) {
 
 let changelogData = fs.readFileSync(path.join(process.cwd(), "CHANGELOG.md"), "utf8");
 const lastVersion = changelogData.match(/## Details\s+### \[(\d+)\.(\d+)\.(\d+)\]/);
-const newVersion = [
-    parseInt(lastVersion[1], 10),
-    parseInt(lastVersion[2], 10) + 1,
-    0
-];
+const newVersion = [parseInt(lastVersion[1], 10), parseInt(lastVersion[2], 10) + 1, 0];
 
 let knownContributors = changelogData.match(/^\[@([^\]]+)\]/gm);
-knownContributors = knownContributors.map(c => c.slice(2, -1));
+knownContributors = knownContributors.map((c) => c.slice(2, -1));
 
-const date = (new Date()).toISOString().split("T")[0];
+const date = new Date().toISOString().split("T")[0];
 
 const schema = {
     properties: {
@@ -42,7 +38,7 @@ const schema = {
             example: "Added 'Op name' operation",
             prompt: "Feature description",
             type: "string",
-            required: true,
+            required: true
         },
         author: {
             description: "The author of the feature (only one supported, edit manually to add more)",
@@ -62,7 +58,7 @@ const schema = {
             example: "y",
             prompt: "Add another feature?",
             type: "string",
-            pattern: /^[yn]$/,
+            pattern: /^[yn]$/
         }
     }
 };
@@ -70,7 +66,8 @@ const schema = {
 // Build schema
 for (const prop in schema.properties) {
     const p = schema.properties[prop];
-    p.description = "\n" + colors.white(p.description) + colors.cyan("\nExample: " + p.example) + "\n" + colors.green(p.prompt);
+    p.description
+        = "\n" + colors.white(p.description) + colors.cyan("\nExample: " + p.example) + "\n" + colors.green(p.prompt);
 }
 
 prompt.message = "";
@@ -83,7 +80,7 @@ const commitIDs = [];
 
 prompt.start();
 
-const getFeature = function() {
+const getFeature = function () {
     prompt.get(schema, (err, result) => {
         if (err) {
             console.log("\nExiting script.");
@@ -97,7 +94,7 @@ const getFeature = function() {
         } else {
             let message = `### [${newVersion[0]}.${newVersion[1]}.${newVersion[2]}] - ${date}\n`;
 
-            features.forEach(feature => {
+            features.forEach((feature) => {
                 const id = feature.id.length > 10 ? feature.id.slice(0, 7) : "#" + feature.id;
                 message += `- ${feature.message} [@${feature.author}] | [${id}]\n`;
 
@@ -120,18 +117,27 @@ const getFeature = function() {
             changelogData = changelogData.replace(/\n\n(\[\d+\.\d+\.\d+\]: https)/, "\n\n" + newTag + "$1");
 
             // Author
-            authors.forEach(author => {
-                changelogData = changelogData.replace(/(\n\[@[^\]]+\]: https:\/\/github\.com\/[^\n]+\n)\n/, "$1" + author + "\n\n");
+            authors.forEach((author) => {
+                changelogData = changelogData.replace(
+                    /(\n\[@[^\]]+\]: https:\/\/github\.com\/[^\n]+\n)\n/,
+                    "$1" + author + "\n\n"
+                );
             });
 
             // Commit IDs
-            commitIDs.forEach(commitID => {
-                changelogData = changelogData.replace(/(\n\[[^\].]+\]: https:\/\/github.com\/gchq\/CyberChef\/commit\/[^\n]+\n)\n/, "$1" + commitID + "\n\n");
+            commitIDs.forEach((commitID) => {
+                changelogData = changelogData.replace(
+                    /(\n\[[^\].]+\]: https:\/\/github.com\/gchq\/CyberChef\/commit\/[^\n]+\n)\n/,
+                    "$1" + commitID + "\n\n"
+                );
             });
 
             // PR IDs
-            prIDs.forEach(prID => {
-                changelogData = changelogData.replace(/(\n\[#[^\]]+\]: https:\/\/github.com\/gchq\/CyberChef\/pull\/[^\n]+\n)\n*$/, "$1" + prID + "\n\n");
+            prIDs.forEach((prID) => {
+                changelogData = changelogData.replace(
+                    /(\n\[#[^\]]+\]: https:\/\/github.com\/gchq\/CyberChef\/pull\/[^\n]+\n)\n*$/,
+                    "$1" + prID + "\n\n"
+                );
             });
 
             fs.writeFileSync(path.join(process.cwd(), "CHANGELOG.md"), changelogData);

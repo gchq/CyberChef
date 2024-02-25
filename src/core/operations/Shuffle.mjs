@@ -6,13 +6,12 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {INPUT_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import { INPUT_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 /**
  * Shuffle operation
  */
 class Shuffle extends Operation {
-
     /**
      * Shuffle constructor
      */
@@ -44,18 +43,21 @@ class Shuffle extends Operation {
         if (input.length === 0) return input;
 
         // return a random number in [0, 1)
-        const rng = (typeof crypto) !== "undefined" && crypto.getRandomValues ? (function() {
-            const buf = new Uint32Array(2);
-            return function() {
-                // generate 53-bit random integer: 21 + 32 bits
-                crypto.getRandomValues(buf);
-                const value = (buf[0] >>> (32 - 21)) * ((1 << 30) * 4) + buf[1];
-                return value / ((1 << 23) * (1 << 30));
-            };
-        })() : Math.random;
+        const rng
+            = typeof crypto !== "undefined" && crypto.getRandomValues
+                ? (function () {
+                    const buf = new Uint32Array(2);
+                    return function () {
+                          // generate 53-bit random integer: 21 + 32 bits
+                        crypto.getRandomValues(buf);
+                        const value = (buf[0] >>> (32 - 21)) * ((1 << 30) * 4) + buf[1];
+                        return value / ((1 << 23) * (1 << 30));
+                    };
+                })()
+                : Math.random;
 
         // return a random integer in [0, max)
-        const randint = function(max) {
+        const randint = function (max) {
             return Math.floor(rng() * max);
         };
 
@@ -72,7 +74,6 @@ class Shuffle extends Operation {
 
         return toShuffle.join(delim);
     }
-
 }
 
 export default Shuffle;

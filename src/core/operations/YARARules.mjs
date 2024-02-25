@@ -13,7 +13,6 @@ import { isWorkerEnvironment } from "../Utils.mjs";
  * YARA Rules operation
  */
 class YARARules extends Operation {
-
     /**
      * YARARules constructor
      */
@@ -22,7 +21,8 @@ class YARARules extends Operation {
 
         this.name = "YARA Rules";
         this.module = "Yara";
-        this.description = "YARA is a tool developed at VirusTotal, primarily aimed at helping malware researchers to identify and classify malware samples. It matches based on rules specified by the user containing textual or binary patterns and a boolean expression. For help on writing rules, see the <a href='https://yara.readthedocs.io/en/latest/writingrules.html'>YARA documentation.</a>";
+        this.description
+            = "YARA is a tool developed at VirusTotal, primarily aimed at helping malware researchers to identify and classify malware samples. It matches based on rules specified by the user containing textual or binary patterns and a boolean expression. For help on writing rules, see the <a href='https://yara.readthedocs.io/en/latest/writingrules.html'>YARA documentation.</a>";
         this.infoURL = "https://wikipedia.org/wiki/YARA";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -62,7 +62,7 @@ class YARARules extends Operation {
                 name: "Show console module messages",
                 type: "boolean",
                 value: true
-            },
+            }
         ];
     }
 
@@ -72,11 +72,10 @@ class YARARules extends Operation {
      * @returns {string}
      */
     async run(input, args) {
-        if (isWorkerEnvironment())
-            self.sendStatusMessage("Instantiating YARA...");
+        if (isWorkerEnvironment()) self.sendStatusMessage("Instantiating YARA...");
         const [rules, showStrings, showLengths, showMeta, showCounts, showRuleWarns, showConsole] = args;
         return new Promise((resolve, reject) => {
-            Yara().then(yara => {
+            Yara().then((yara) => {
                 if (isWorkerEnvironment()) self.sendStatusMessage("Converting data for YARA.");
                 let matchString = "";
 
@@ -92,7 +91,9 @@ class YARARules extends Operation {
                     for (let i = 0; i < resp.compileErrors.size(); i++) {
                         const compileError = resp.compileErrors.get(i);
                         if (!compileError.warning) {
-                            reject(new OperationError(`Error on line ${compileError.lineNumber}: ${compileError.message}`));
+                            reject(
+                                new OperationError(`Error on line ${compileError.lineNumber}: ${compileError.message}`)
+                            );
                         } else if (showRuleWarns) {
                             matchString += `Warning on line ${compileError.lineNumber}: ${compileError.message}\n`;
                         }
@@ -118,9 +119,14 @@ class YARARules extends Operation {
                         }
                         meta = meta.slice(0, -2) + "]";
                     }
-                    const countString = matches.size() === 0 ? "" : (showCounts ? ` (${matches.size()} time${matches.size() > 1 ? "s" : ""})` : "");
+                    const countString
+                        = matches.size() === 0
+                            ? ""
+                            : showCounts
+                                ? ` (${matches.size()} time${matches.size() > 1 ? "s" : ""})`
+                                : "";
                     if (matches.size() === 0 || !(showStrings || showLengths)) {
-                        matchString += `Input matches rule "${rule.ruleName}"${meta}${countString.length > 0 ? ` ${countString}`: ""}.\n`;
+                        matchString += `Input matches rule "${rule.ruleName}"${meta}${countString.length > 0 ? ` ${countString}` : ""}.\n`;
                     } else {
                         matchString += `Rule "${rule.ruleName}"${meta} matches${countString}:\n`;
                         for (let j = 0; j < matches.size(); j++) {
@@ -135,7 +141,6 @@ class YARARules extends Operation {
             });
         });
     }
-
 }
 
 export default YARARules;

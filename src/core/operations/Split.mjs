@@ -5,13 +5,12 @@
  */
 
 import Operation from "../Operation.mjs";
-import {SPLIT_DELIM_OPTIONS, JOIN_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import { SPLIT_DELIM_OPTIONS, JOIN_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 /**
  * Split operation
  */
 class Split extends Operation {
-
     /**
      * Split constructor
      */
@@ -49,7 +48,6 @@ class Split extends Operation {
 
         return sections.join(joinDelim);
     }
-
 }
 
 export default Split;

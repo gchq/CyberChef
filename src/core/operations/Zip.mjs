@@ -6,19 +6,19 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {COMPRESSION_TYPE, ZLIB_COMPRESSION_TYPE_LOOKUP} from "../lib/Zlib.mjs";
+import { COMPRESSION_TYPE, ZLIB_COMPRESSION_TYPE_LOOKUP } from "../lib/Zlib.mjs";
 import zip from "zlibjs/bin/zip.min.js";
 
 const Zlib = zip.Zlib;
 
 const ZIP_COMPRESSION_METHOD_LOOKUP = {
-    "Deflate":      Zlib.Zip.CompressionMethod.DEFLATE,
+    "Deflate": Zlib.Zip.CompressionMethod.DEFLATE,
     "None (Store)": Zlib.Zip.CompressionMethod.STORE
 };
 
 const ZIP_OS_LOOKUP = {
-    "MSDOS":     Zlib.Zip.OperatingSystem.MSDOS,
-    "Unix":      Zlib.Zip.OperatingSystem.UNIX,
+    "MSDOS": Zlib.Zip.OperatingSystem.MSDOS,
+    "Unix": Zlib.Zip.OperatingSystem.UNIX,
     "Macintosh": Zlib.Zip.OperatingSystem.MACINTOSH
 };
 
@@ -26,7 +26,6 @@ const ZIP_OS_LOOKUP = {
  * Zip operation
  */
 class Zip extends Operation {
-
     /**
      * Zip constructor
      */
@@ -35,7 +34,8 @@ class Zip extends Operation {
 
         this.name = "Zip";
         this.module = "Compression";
-        this.description = "Compresses data using the PKZIP algorithm with the given filename.<br><br>No support for multiple files at this time.";
+        this.description
+            = "Compresses data using the PKZIP algorithm with the given filename.<br><br>No support for multiple files at this time.";
         this.infoURL = "https://wikipedia.org/wiki/Zip_(file_format)";
         this.inputType = "ArrayBuffer";
         this.outputType = "File";
@@ -88,16 +88,14 @@ class Zip extends Operation {
                 os: ZIP_OS_LOOKUP[args[4]],
                 deflateOption: {
                     compressionType: ZLIB_COMPRESSION_TYPE_LOOKUP[args[5]]
-                },
+                }
             },
             zip = new Zlib.Zip();
 
-        if (password.length)
-            zip.setPassword(password);
+        if (password.length) zip.setPassword(password);
         zip.addFile(new Uint8Array(input), options);
         return new File([zip.compress()], filename);
     }
-
 }
 
 export default Zip;

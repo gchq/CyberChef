@@ -12,7 +12,6 @@ import Protobuf from "../lib/Protobuf.mjs";
  * VarInt Decode operation
  */
 class VarIntDecode extends Operation {
-
     /**
      * VarIntDecode constructor
      */
@@ -21,7 +20,8 @@ class VarIntDecode extends Operation {
 
         this.name = "VarInt Decode";
         this.module = "Default";
-        this.description = "Decodes a VarInt encoded integer. VarInt is an efficient way of encoding variable length integers and is commonly used with Protobuf.";
+        this.description
+            = "Decodes a VarInt encoded integer. VarInt is an efficient way of encoding variable length integers and is commonly used with Protobuf.";
         this.infoURL = "https://developers.google.com/protocol-buffers/docs/encoding#varints";
         this.inputType = "byteArray";
         this.outputType = "number";
@@ -40,7 +40,6 @@ class VarIntDecode extends Operation {
             throw new OperationError(err);
         }
     }
-
 }
 
 export default VarIntDecode;

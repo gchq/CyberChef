@@ -15,9 +15,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Parse TCP",
-                args: ["Hex"],
+                args: ["Hex"]
             }
-        ],
+        ]
     },
     {
         name: "Parse TCP: Options",
@@ -26,9 +26,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Parse TCP",
-                args: ["Hex"],
+                args: ["Hex"]
             }
-        ],
+        ]
     },
     {
         name: "Parse TCP: Timestamps",
@@ -37,8 +37,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Parse TCP",
-                args: ["Hex"],
+                args: ["Hex"]
             }
-        ],
+        ]
     }
 ]);

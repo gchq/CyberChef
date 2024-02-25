@@ -12,7 +12,6 @@ import Operation from "../Operation.mjs";
  * https://gist.githubusercontent.com/JaHIY/3c91bbf7bea5661e6abfbd1349ee81a2/raw/c7b480e9ff24bcb8f5287a8a8a2dcb9bf5628506/decode_m_notation.cpp
  */
 class CaretMdecode extends Operation {
-
     /**
      * CaretMdecode constructor
      */
@@ -21,7 +20,8 @@ class CaretMdecode extends Operation {
 
         this.name = "Caret/M-decode";
         this.module = "Default";
-        this.description = "Decodes caret or M-encoded strings, i.e. ^M turns into a newline, M-^] turns into 0x9d. Sources such as `cat -v`.\n\nPlease be aware that when using `cat -v` ^_ (caret-underscore) will not be encoded, but represents a valid encoding (namely that of 0x1f).";
+        this.description
+            = "Decodes caret or M-encoded strings, i.e. ^M turns into a newline, M-^] turns into 0x9d. Sources such as `cat -v`.\n\nPlease be aware that when using `cat -v` ^_ (caret-underscore) will not be encoded, but represents a valid encoding (namely that of 0x1f).";
         this.infoURL = "https://en.wikipedia.org/wiki/Caret_notation";
         this.inputType = "string";
         this.outputType = "byteArray";
@@ -34,13 +34,11 @@ class CaretMdecode extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-
         const bytes = [];
 
         let prev = "";
 
         for (let i = 0; i < input.length; i++) {
-
             const charCode = input.charCodeAt(i);
             const curChar = input.charAt(i);
 
@@ -88,11 +86,9 @@ class CaretMdecode extends Operation {
                     bytes.push(charCode);
                 }
             }
-
         }
         return bytes;
     }
-
 }
 
 export default CaretMdecode;

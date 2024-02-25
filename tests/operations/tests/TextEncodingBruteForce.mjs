@@ -16,9 +16,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Text Encoding Brute Force",
-                args: ["Encode"],
-            },
-        ],
+                args: ["Encode"]
+            }
+        ]
     },
     {
         name: "Text Encoding Brute Force - Decode",
@@ -27,9 +27,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Text Encoding Brute Force",
-                args: ["Decode"],
-            },
-        ],
+                args: ["Decode"]
+            }
+        ]
     }
 ]);
-

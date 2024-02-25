@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Bit shift right operation
  */
 class BitShiftRight extends Operation {
-
     /**
      * BitShiftRight constructor
      */
@@ -19,7 +18,8 @@ class BitShiftRight extends Operation {
 
         this.name = "Bit shift right";
         this.module = "Default";
-        this.description = "Shifts the bits in each byte towards the right by the specified amount.<br><br><i>Logical shifts</i> replace the leftmost bits with zeros.<br><i>Arithmetic shifts</i> preserve the most significant bit (MSB) of the original byte keeping the sign the same (positive or negative).";
+        this.description
+            = "Shifts the bits in each byte towards the right by the specified amount.<br><br><i>Logical shifts</i> replace the leftmost bits with zeros.<br><i>Arithmetic shifts</i> preserve the most significant bit (MSB) of the original byte keeping the sign the same (positive or negative).";
         this.infoURL = "https://wikipedia.org/wiki/Bitwise_operation#Bit_shifts";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -48,7 +48,7 @@ class BitShiftRight extends Operation {
             mask = type === "Logical shift" ? 0 : 0x80;
         input = new Uint8Array(input);
 
-        return input.map(b => {
+        return input.map((b) => {
             return (b >>> amount) ^ (b & mask);
         }).buffer;
     }
@@ -78,7 +78,6 @@ class BitShiftRight extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default BitShiftRight;

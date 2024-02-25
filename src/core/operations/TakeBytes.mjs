@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Take bytes operation
  */
 class TakeBytes extends Operation {
-
     /**
      * TakeBytes constructor
      */
@@ -54,11 +53,13 @@ class TakeBytes extends Operation {
         const applyToEachLine = args[2];
 
         if (!applyToEachLine) {
-            if (start < 0) { // Take from the end
+            if (start < 0) {
+                // Take from the end
                 start = input.byteLength + start;
             }
 
-            if (length < 0) { // Flip start point
+            if (length < 0) {
+                // Flip start point
                 start = start + length;
                 if (start < 0) {
                     start = input.byteLength + start;
@@ -68,7 +69,7 @@ class TakeBytes extends Operation {
                 }
             }
 
-            return input.slice(start, start+length);
+            return input.slice(start, start + length);
         }
 
         // Split input into lines
@@ -91,11 +92,13 @@ class TakeBytes extends Operation {
         let s = start,
             l = length;
         for (i = 0; i < lines.length; i++) {
-            if (s < 0) { // Take from the end
+            if (s < 0) {
+                // Take from the end
                 s = lines[i].length + s;
             }
 
-            if (l < 0) { // Flip start point
+            if (l < 0) {
+                // Flip start point
                 s = s + l;
                 if (s < 0) {
                     s = lines[i].length + s;
@@ -104,14 +107,13 @@ class TakeBytes extends Operation {
                     l = -l;
                 }
             }
-            output = output.concat(lines[i].slice(s, s+l));
+            output = output.concat(lines[i].slice(s, s + l));
             output.push(0x0a);
             s = start;
             l = length;
         }
-        return new Uint8Array(output.slice(0, output.length-1)).buffer;
+        return new Uint8Array(output.slice(0, output.length - 1)).buffer;
     }
-
 }
 
 export default TakeBytes;

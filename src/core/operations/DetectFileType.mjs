@@ -5,21 +5,28 @@
  */
 
 import Operation from "../Operation.mjs";
-import {detectFileType} from "../lib/FileType.mjs";
-import {FILE_SIGNATURES} from "../lib/FileSignatures.mjs";
+import { detectFileType } from "../lib/FileType.mjs";
+import { FILE_SIGNATURES } from "../lib/FileSignatures.mjs";
 
 // Concat all supported extensions into a single flat list
-const exts = [].concat.apply([], Object.keys(FILE_SIGNATURES).map(cat =>
-    [].concat.apply([], FILE_SIGNATURES[cat].map(sig =>
-        sig.extension.split(",")
-    ))
-)).unique().sort().join(", ");
+const exts = [].concat
+    .apply(
+        [],
+        Object.keys(FILE_SIGNATURES).map((cat) =>
+            [].concat.apply(
+                [],
+                FILE_SIGNATURES[cat].map((sig) => sig.extension.split(","))
+            )
+        )
+    )
+    .unique()
+    .sort()
+    .join(", ");
 
 /**
  * Detect File Type operation
  */
 class DetectFileType extends Operation {
-
     /**
      * DetectFileType constructor
      */
@@ -28,12 +35,14 @@ class DetectFileType extends Operation {
 
         this.name = "Detect File Type";
         this.module = "Default";
-        this.description = "Attempts to guess the MIME (Multipurpose Internet Mail Extensions) type of the data based on 'magic bytes'.<br><br>Currently supports the following file types: " +
-            exts + ".";
+        this.description
+            = "Attempts to guess the MIME (Multipurpose Internet Mail Extensions) type of the data based on 'magic bytes'.<br><br>Currently supports the following file types: "
+            + exts
+            + ".";
         this.infoURL = "https://wikipedia.org/wiki/List_of_file_signatures";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
-        this.args = Object.keys(FILE_SIGNATURES).map(cat => {
+        this.args = Object.keys(FILE_SIGNATURES).map((cat) => {
             return {
                 name: cat,
                 type: "boolean",
@@ -60,7 +69,7 @@ class DetectFileType extends Operation {
         if (!types.length) {
             return "Unknown file type. Have you tried checking the entropy of this data to determine whether it might be encrypted or compressed?";
         } else {
-            const results = types.map(type => {
+            const results = types.map((type) => {
                 let output = `File type:   ${type.name}
 Extension:   ${type.extension}
 MIME type:   ${type.mime}\n`;
@@ -75,7 +84,6 @@ MIME type:   ${type.mime}\n`;
             return results.join("\n");
         }
     }
-
 }
 
 export default DetectFileType;

@@ -20,11 +20,11 @@
     font-weight: var(--title-weight);
 }
 
-.category-title[href='#catFavourites'] {
+.category-title[href="#catFavourites"] {
     border-bottom-color: var(--primary-border-colour);
 }
 
-.category-title[aria-expanded=true] {
+.category-title[aria-expanded="true"] {
     border-bottom-color: var(--primary-border-colour);
 }
 

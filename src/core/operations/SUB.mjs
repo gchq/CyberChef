@@ -12,7 +12,6 @@ import { bitOp, sub, BITWISE_OP_DELIMS } from "../lib/BitwiseOp.mjs";
  * SUB operation
  */
 class SUB extends Operation {
-
     /**
      * SUB constructor
      */
@@ -71,7 +70,6 @@ class SUB extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default SUB;

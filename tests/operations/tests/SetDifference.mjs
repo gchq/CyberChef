@@ -16,20 +16,21 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Set Difference",
-                args: ["\n\n", " "],
-            },
-        ],
+                args: ["\n\n", " "]
+            }
+        ]
     },
     {
         name: "Set Difference: wrong sample count",
         input: "1 2 3 4 5_3_4 5 6 7",
-        expectedOutput: "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?",
+        expectedOutput:
+            "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?",
         recipeConfig: [
             {
                 op: "Set Difference",
-                args: [" ", "_"],
-            },
-        ],
+                args: [" ", "_"]
+            }
+        ]
     },
     {
         name: "Set Difference: item delimiter",
@@ -38,9 +39,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Set Difference",
-                args: ["\n\n", ";"],
-            },
-        ],
+                args: ["\n\n", ";"]
+            }
+        ]
     },
     {
         name: "Set Difference: sample delimiter",
@@ -49,8 +50,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Set Difference",
-                args: ["===", ";"],
-            },
-        ],
-    },
+                args: ["===", ";"]
+            }
+        ]
+    }
 ]);

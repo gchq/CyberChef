@@ -14,19 +14,19 @@ import Utils from "../Utils.mjs";
  * followed by < and a list of letters at which the rotor steps.
  */
 export const ROTORS = [
-    {name: "I", value: "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R"},
-    {name: "II", value: "AJDKSIRUXBLHWTMCQGZNPYFVOE<F"},
-    {name: "III", value: "BDFHJLCPRTXVZNYEIWGAKMUSQO<W"},
-    {name: "IV", value: "ESOVPZJAYQUIRHXLNFTGKDCMWB<K"},
-    {name: "V", value: "VZBRGITYUPSDNHLXAWMJQOFECK<A"},
-    {name: "VI", value: "JPGVOUMFYQBENHZRDKASXLICTW<AN"},
-    {name: "VII", value: "NZJHGRCXMYSWBOUFAIVLPEKQDT<AN"},
-    {name: "VIII", value: "FKQHTLXOCBJSPDZRAMEWNIUYGV<AN"},
+    { name: "I", value: "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R" },
+    { name: "II", value: "AJDKSIRUXBLHWTMCQGZNPYFVOE<F" },
+    { name: "III", value: "BDFHJLCPRTXVZNYEIWGAKMUSQO<W" },
+    { name: "IV", value: "ESOVPZJAYQUIRHXLNFTGKDCMWB<K" },
+    { name: "V", value: "VZBRGITYUPSDNHLXAWMJQOFECK<A" },
+    { name: "VI", value: "JPGVOUMFYQBENHZRDKASXLICTW<AN" },
+    { name: "VII", value: "NZJHGRCXMYSWBOUFAIVLPEKQDT<AN" },
+    { name: "VIII", value: "FKQHTLXOCBJSPDZRAMEWNIUYGV<AN" }
 ];
 
 export const ROTORS_FOURTH = [
-    {name: "Beta", value: "LEYJVCNIXWPBQMDRTAKZGFUHOS"},
-    {name: "Gamma", value: "FSOKANUERHMBTIYCWLQPZXVGJD"},
+    { name: "Beta", value: "LEYJVCNIXWPBQMDRTAKZGFUHOS" },
+    { name: "Gamma", value: "FSOKANUERHMBTIYCWLQPZXVGJD" }
 ];
 
 /**
@@ -34,10 +34,10 @@ export const ROTORS_FOURTH = [
  * These are specified as 13 space-separated transposed pairs covering every letter.
  */
 export const REFLECTORS = [
-    {name: "B", value: "AY BR CU DH EQ FS GL IP JX KN MO TZ VW"},
-    {name: "C", value: "AF BV CP DJ EI GO HY KR LZ MX NW TQ SU"},
-    {name: "B Thin", value: "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV"},
-    {name: "C Thin", value: "AR BD CO EJ FN GT HK IV LM PW QZ SX UY"},
+    { name: "B", value: "AY BR CU DH EQ FS GL IP JX KN MO TZ VW" },
+    { name: "C", value: "AF BV CP DJ EI GO HY KR LZ MX NW TQ SU" },
+    { name: "B Thin", value: "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV" },
+    { name: "C Thin", value: "AR BD CO EJ FN GT HK IV LM PW QZ SX UY" }
 ];
 
 export const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -49,7 +49,7 @@ export const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
  * @param {boolean} permissive - Case insensitive; don't throw errors on other chars.
  * @returns {number}
  */
-export function a2i(c, permissive=false) {
+export function a2i(c, permissive = false) {
     const i = Utils.ord(c);
     if (i >= 65 && i <= 90) {
         return i - 65;
@@ -72,7 +72,7 @@ export function a2i(c, permissive=false) {
  */
 export function i2a(i) {
     if (i >= 0 && i < 26) {
-        return Utils.chr(i+65);
+        return Utils.chr(i + 65);
     }
     throw new OperationError("i2a called on value outside 0..25");
 }
@@ -105,7 +105,7 @@ export class Rotor {
         this.map = new Array(26);
         this.revMap = new Array(26);
         const uniq = {};
-        for (let i=0; i<LETTERS.length; i++) {
+        for (let i = 0; i < LETTERS.length; i++) {
             const a = a2i(LETTERS[i]);
             const b = a2i(wiring[i]);
             this.map[a] = b;
@@ -167,7 +167,7 @@ class PairMapBase {
      * @param {string} pairs - A whitespace separated string of letter pairs to swap.
      * @param {string} [name='PairMapBase'] - For errors, the name of this object.
      */
-    constructor(pairs, name="PairMapBase") {
+    constructor(pairs, name = "PairMapBase") {
         // I've chosen to make whitespace significant here to make a) code and
         // b) inputs easier to read
         this.pairs = pairs;
@@ -175,11 +175,12 @@ class PairMapBase {
         if (pairs === "") {
             return;
         }
-        pairs.split(/\s+/).forEach(pair => {
+        pairs.split(/\s+/).forEach((pair) => {
             if (!/^[A-Z]{2}$/.test(pair)) {
                 throw new OperationError(name + " must be a whitespace-separated list of uppercase letter pairs");
             }
-            const a = a2i(pair[0]), b = a2i(pair[1]);
+            const a = a2i(pair[0]),
+                b = a2i(pair[1]);
             if (a === b) {
                 // self-stecker
                 return;

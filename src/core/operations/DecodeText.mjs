@@ -6,13 +6,12 @@
 
 import Operation from "../Operation.mjs";
 import cptable from "codepage";
-import {CHR_ENC_CODE_PAGES} from "../lib/ChrEnc.mjs";
+import { CHR_ENC_CODE_PAGES } from "../lib/ChrEnc.mjs";
 
 /**
  * Decode text operation
  */
 class DecodeText extends Operation {
-
     /**
      * DecodeText constructor
      */
@@ -26,8 +25,10 @@ class DecodeText extends Operation {
             "<br><br>",
             "Supported charsets are:",
             "<ul>",
-            Object.keys(CHR_ENC_CODE_PAGES).map(e => `<li>${e}</li>`).join("\n"),
-            "</ul>",
+            Object.keys(CHR_ENC_CODE_PAGES)
+                .map((e) => `<li>${e}</li>`)
+                .join("\n"),
+            "</ul>"
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Character_encoding";
         this.inputType = "ArrayBuffer";
@@ -50,7 +51,6 @@ class DecodeText extends Operation {
         const format = CHR_ENC_CODE_PAGES[args[0]];
         return cptable.utils.decode(format, new Uint8Array(input));
     }
-
 }
 
 export default DecodeText;

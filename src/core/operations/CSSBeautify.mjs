@@ -11,7 +11,6 @@ import Operation from "../Operation.mjs";
  * CSS Beautify operation
  */
 class CSSBeautify extends Operation {
-
     /**
      * CSSBeautify constructor
      */
@@ -41,7 +40,6 @@ class CSSBeautify extends Operation {
         const indentStr = args[0];
         return vkbeautify.css(input, indentStr);
     }
-
 }
 
 export default CSSBeautify;

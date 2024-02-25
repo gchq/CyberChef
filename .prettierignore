@@ -1,0 +1,11 @@
+.github
+.devcontainer
+node_modules
+**/*.md
+.dockerignore
+.gitignore
+.editorconfig
+.gitattributes
+.npmignore
+package-lock.json
+package.json

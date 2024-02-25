@@ -5,22 +5,21 @@
  */
 
 import Operation from "../Operation.mjs";
-import {COMPRESSION_TYPE} from "../lib/Zlib.mjs";
+import { COMPRESSION_TYPE } from "../lib/Zlib.mjs";
 import rawdeflate from "zlibjs/bin/rawdeflate.min.js";
 
 const Zlib = rawdeflate.Zlib;
 
 const RAW_COMPRESSION_TYPE_LOOKUP = {
-    "Fixed Huffman Coding":   Zlib.RawDeflate.CompressionType.FIXED,
+    "Fixed Huffman Coding": Zlib.RawDeflate.CompressionType.FIXED,
     "Dynamic Huffman Coding": Zlib.RawDeflate.CompressionType.DYNAMIC,
-    "None (Store)":           Zlib.RawDeflate.CompressionType.NONE,
+    "None (Store)": Zlib.RawDeflate.CompressionType.NONE
 };
 
 /**
  * Raw Deflate operation
  */
 class RawDeflate extends Operation {
-
     /**
      * RawDeflate constructor
      */
@@ -53,7 +52,6 @@ class RawDeflate extends Operation {
         });
         return new Uint8Array(deflate.compress()).buffer;
     }
-
 }
 
 export default RawDeflate;

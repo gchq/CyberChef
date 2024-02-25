@@ -7,13 +7,12 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import moment from "moment-timezone";
-import {DATETIME_FORMATS, FORMAT_EXAMPLES} from "../lib/DateTime.mjs";
+import { DATETIME_FORMATS, FORMAT_EXAMPLES } from "../lib/DateTime.mjs";
 
 /**
  * Translate DateTime Format operation
  */
 class TranslateDateTimeFormat extends Operation {
-
     /**
      * TranslateDateTimeFormat constructor
      */
@@ -22,7 +21,8 @@ class TranslateDateTimeFormat extends Operation {
 
         this.name = "Translate DateTime Format";
         this.module = "Default";
-        this.description = "Parses a datetime string in one format and re-writes it in another.<br><br>Run with no input to see the relevant format string examples.";
+        this.description
+            = "Parses a datetime string in one format and re-writes it in another.<br><br>Run with no input to see the relevant format string examples.";
         this.infoURL = "https://momentjs.com/docs/#/parsing/string-format/";
         this.inputType = "string";
         this.outputType = "string";

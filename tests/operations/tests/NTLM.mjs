@@ -15,9 +15,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "NT Hash",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "LM Hash",
@@ -26,9 +26,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "LM Hash",
-                args: [],
-            },
-        ],
-    },
-
+                args: []
+            }
+        ]
+    }
 ]);

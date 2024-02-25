@@ -4,15 +4,14 @@
  * @license Apache-2.0
  */
 
-import {showSidePanel} from "./sidePanel.mjs";
+import { showSidePanel } from "./sidePanel.mjs";
 import Utils from "../../core/Utils.mjs";
-import {isImage, detectFileType} from "../../core/lib/FileType.mjs";
+import { isImage, detectFileType } from "../../core/lib/FileType.mjs";
 
 /**
  * A File Details extension for CodeMirror
  */
 class FileDetailsPanel {
-
     /**
      * FileDetailsPanel constructor
      * @param {Object} opts
@@ -74,8 +73,11 @@ class FileDetailsPanel {
             </table>
         `;
 
-        dom.querySelector(".file-details-toggle-shown,.file-details-toggle-hidden")
-            .addEventListener("click", this.toggleHandler, false);
+        dom.querySelector(".file-details-toggle-shown,.file-details-toggle-hidden").addEventListener(
+            "click",
+            this.toggleHandler,
+            false
+        );
 
         return dom;
     }
@@ -96,7 +98,7 @@ class FileDetailsPanel {
         if (type && type !== "image/tiff" && fileBuffer.byteLength <= 512000) {
             // Most browsers don't support displaying TIFFs, so ignore them
             // Don't render images over 512,000 bytes
-            const blob = new Blob([fileBuffer], {type: type}),
+            const blob = new Blob([fileBuffer], { type: type }),
                 url = URL.createObjectURL(blob);
             fileThumb.src = url;
         } else {
@@ -112,7 +114,6 @@ class FileDetailsPanel {
         const fileThumb = this.dom.querySelector(".file-details-thumbnail");
         fileThumb.src = require("../static/images/file-128x128.png");
     }
-
 }
 
 /**
@@ -127,8 +128,7 @@ function makePanel(opts) {
         return {
             dom: fdPanel.dom,
             width: opts?.hidden ? 1 : 200,
-            update(update) {
-            },
+            update(update) {},
             mount() {
                 $("[data-toggle='tooltip']").tooltip();
             }

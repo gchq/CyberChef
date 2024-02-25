@@ -13,7 +13,6 @@ import { caseInsensitiveSort } from "../lib/Sort.mjs";
  * Strings operation
  */
 class Strings extends Operation {
-
     /**
      * Strings constructor
      */
@@ -41,8 +40,14 @@ class Strings extends Operation {
                 name: "Match",
                 type: "option",
                 value: [
-                    "[ASCII]", "Alphanumeric + punctuation (A)", "All printable chars (A)", "Null-terminated strings (A)",
-                    "[Unicode]", "Alphanumeric + punctuation (U)", "All printable chars (U)", "Null-terminated strings (U)"
+                    "[ASCII]",
+                    "Alphanumeric + punctuation (A)",
+                    "All printable chars (A)",
+                    "Null-terminated strings (A)",
+                    "[Unicode]",
+                    "Alphanumeric + punctuation (U)",
+                    "All printable chars (U)",
+                    "Null-terminated strings (U)"
                 ]
             },
             {
@@ -119,13 +124,7 @@ class Strings extends Operation {
         }
 
         const regex = new XRegExp(strings, "ig");
-        const results = search(
-            input,
-            regex,
-            null,
-            sort ? caseInsensitiveSort : null,
-            unique
-        );
+        const results = search(input, regex, null, sort ? caseInsensitiveSort : null, unique);
 
         if (displayTotal) {
             return `Total found: ${results.length}\n\n${results.join("\n")}`;
@@ -133,7 +132,6 @@ class Strings extends Operation {
             return results.join("\n");
         }
     }
-
 }
 
 export default Strings;

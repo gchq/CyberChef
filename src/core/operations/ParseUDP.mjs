@@ -6,8 +6,8 @@
 
 import Operation from "../Operation.mjs";
 import Stream from "../lib/Stream.mjs";
-import {toHexFast, fromHex} from "../lib/Hex.mjs";
-import {objToTable} from "../lib/Protocol.mjs";
+import { toHexFast, fromHex } from "../lib/Hex.mjs";
+import { objToTable } from "../lib/Protocol.mjs";
 import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
@@ -15,7 +15,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Parse UDP operation
  */
 class ParseUDP extends Operation {
-
     /**
      * ParseUDP constructor
      */
@@ -82,8 +81,6 @@ class ParseUDP extends Operation {
     present(data) {
         return objToTable(data);
     }
-
 }
-
 
 export default ParseUDP;

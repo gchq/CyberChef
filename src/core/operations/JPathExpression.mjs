@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import {JSONPath} from "jsonpath-plus";
+import { JSONPath } from "jsonpath-plus";
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
@@ -12,7 +12,6 @@ import OperationError from "../errors/OperationError.mjs";
  * JPath expression operation
  */
 class JPathExpression extends Operation {
-
     /**
      * JPathExpression constructor
      */
@@ -70,9 +69,8 @@ class JPathExpression extends Operation {
             throw new OperationError(`Invalid JPath expression: ${err.message}`);
         }
 
-        return results.map(result => JSON.stringify(result)).join(delimiter);
+        return results.map((result) => JSON.stringify(result)).join(delimiter);
     }
-
 }
 
 export default JPathExpression;

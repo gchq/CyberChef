@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import {COMPRESSION_TYPE, ZLIB_COMPRESSION_TYPE_LOOKUP} from "../lib/Zlib.mjs";
+import { COMPRESSION_TYPE, ZLIB_COMPRESSION_TYPE_LOOKUP } from "../lib/Zlib.mjs";
 import gzip from "zlibjs/bin/gzip.min.js";
 
 const Zlib = gzip.Zlib;
@@ -14,7 +14,6 @@ const Zlib = gzip.Zlib;
  * Gzip operation
  */
 class Gzip extends Operation {
-
     /**
      * Gzip constructor
      */
@@ -83,7 +82,6 @@ class Gzip extends Operation {
         }
         return compressed.buffer;
     }
-
 }
 
 export default Gzip;

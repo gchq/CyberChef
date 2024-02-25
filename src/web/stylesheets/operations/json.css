@@ -13,11 +13,12 @@
 
 /* Root element */
 .json-document {
-    padding: .5em 1.5em;
+    padding: 0.5em 1.5em;
 }
 
 /* Syntax highlighting for JSON objects */
-ul.json-dict, ol.json-array {
+ul.json-dict,
+ol.json-array {
     list-style-type: none;
     margin: 0 0 0 1px;
     border-left: 1px dotted #ccc;
@@ -51,14 +52,14 @@ ul.json-dict, ol.json-array {
 /* Display object and array brackets when closed */
 .json-summary.json-obj::after {
     color: gray;
-    content: "{ ... }"
+    content: "{ ... }";
 }
 .json-summary.json-arr::after {
     color: gray;
-    content: "[ ... ]"
+    content: "[ ... ]";
 }
 .json-details[open] > .json-summary.json-obj::after,
-.json-details[open] > .json-summary.json-arr::after  {
+.json-details[open] > .json-summary.json-arr::after {
     content: "";
 }
 

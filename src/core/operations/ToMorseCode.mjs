@@ -6,13 +6,12 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {LETTER_DELIM_OPTIONS, WORD_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import { LETTER_DELIM_OPTIONS, WORD_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
 /**
  * To Morse Code operation
  */
 class ToMorseCode extends Operation {
-
     /**
      * ToMorseCode constructor
      */
@@ -21,7 +20,8 @@ class ToMorseCode extends Operation {
 
         this.name = "To Morse Code";
         this.module = "Default";
-        this.description = "Translates alphanumeric characters into International Morse Code.<br><br>Ignores non-Morse characters.<br><br>e.g. <code>SOS</code> becomes <code>... --- ...</code>";
+        this.description
+            = "Translates alphanumeric characters into International Morse Code.<br><br>Ignores non-Morse characters.<br><br>e.g. <code>SOS</code> becomes <code>... --- ...</code>";
         this.infoURL = "https://wikipedia.org/wiki/Morse_code";
         this.inputType = "string";
         this.outputType = "string";
@@ -58,10 +58,10 @@ class ToMorseCode extends Operation {
         const wordDelim = Utils.charRep(args[2]);
 
         input = input.split(/\r?\n/);
-        input = Array.prototype.map.call(input, function(line) {
+        input = Array.prototype.map.call(input, function (line) {
             let words = line.split(/ +/);
-            words = Array.prototype.map.call(words, function(word) {
-                const letters = Array.prototype.map.call(word, function(character) {
+            words = Array.prototype.map.call(words, function (word) {
+                const letters = Array.prototype.map.call(word, function (character) {
                     const letter = character.toUpperCase();
                     if (typeof MORSE_TABLE[letter] == "undefined") {
                         return "";
@@ -77,21 +77,21 @@ class ToMorseCode extends Operation {
         });
         input = input.join("\n");
 
-        input = input.replace(
-            /<dash>|<dot>|<ld>|<wd>/g,
-            function(match) {
-                switch (match) {
-                    case "<dash>": return dash;
-                    case "<dot>": return dot;
-                    case "<ld>": return letterDelim;
-                    case "<wd>": return wordDelim;
-                }
+        input = input.replace(/<dash>|<dot>|<ld>|<wd>/g, function (match) {
+            switch (match) {
+                case "<dash>":
+                    return dash;
+                case "<dot>":
+                    return dot;
+                case "<ld>":
+                    return letterDelim;
+                case "<wd>":
+                    return wordDelim;
             }
-        );
+        });
 
         return input;
     }
-
 }
 
 const MORSE_TABLE = {
@@ -138,7 +138,7 @@ const MORSE_TABLE = {
     "!": "<dash><dot><dash><dot><dash><dash>",
     "?": "<dot><dot><dash><dash><dot><dot>",
     "'": "<dot><dash><dash><dash><dash><dot>",
-    "\"": "<dot><dash><dot><dot><dash><dot>",
+    '"': "<dot><dash><dot><dot><dash><dot>",
     "/": "<dash><dot><dot><dash><dot>",
     "-": "<dash><dot><dot><dot><dot><dash>",
     "+": "<dot><dash><dot><dash><dot>",

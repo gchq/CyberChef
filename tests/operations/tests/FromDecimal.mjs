@@ -16,8 +16,8 @@ TestRegister.addTests([
             {
                 op: "From Decimal",
                 args: ["Space", false]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "From Decimal with negatives",
@@ -27,7 +27,7 @@ TestRegister.addTests([
             {
                 op: "From Decimal",
                 args: ["Comma", true]
-            },
-        ],
-    },
+            }
+        ]
+    }
 ]);

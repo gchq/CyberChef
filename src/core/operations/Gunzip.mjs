@@ -13,7 +13,6 @@ const Zlib = gunzip.Zlib;
  * Gunzip operation
  */
 class Gunzip extends Operation {
-
     /**
      * Gunzip constructor
      */
@@ -45,7 +44,6 @@ class Gunzip extends Operation {
         const gzipObj = new Zlib.Gunzip(new Uint8Array(input));
         return new Uint8Array(gzipObj.decompress()).buffer;
     }
-
 }
 
 export default Gunzip;

@@ -25,7 +25,7 @@
     user-select: auto;
 }
 #output-text.html-output .cm-line .cm-widgetBuffer,
-#output-text.html-output .cm-line>br {
+#output-text.html-output .cm-line > br {
     display: none;
 }
 
@@ -81,14 +81,14 @@
     background-color: var(--primary-background-colour);
 }
 
-.input-tab-content+.btn-close-tab {
+.input-tab-content + .btn-close-tab {
     display: block;
     margin-top: auto;
     margin-bottom: auto;
     margin-right: 2px;
 }
 
-.input-tab-content+.btn-close-tab i {
+.input-tab-content + .btn-close-tab i {
     font-size: 0.8em;
 }
 
@@ -109,7 +109,6 @@
     cursor: pointer;
     background-color: var(--primary-background-colour);
 }
-
 
 #btn-next-input-tab,
 #btn-input-tab-dropdown,
@@ -224,7 +223,9 @@
 #stale-indicator {
     opacity: 1;
     visibility: visible;
-    transition: margin 0s, opacity 0.3s;
+    transition:
+        margin 0s,
+        opacity 0.3s;
     margin-left: 5px;
     cursor: help;
 }
@@ -237,7 +238,10 @@
 #magic {
     opacity: 1;
     visibility: visible;
-    transition: margin 0s 0.3s, opacity 0.3s 0.3s, visibility 0.3s 0.3s;
+    transition:
+        margin 0s 0.3s,
+        opacity 0.3s 0.3s,
+        visibility 0.3s 0.3s;
     margin-left: 5px;
     margin-bottom: 5px;
 }
@@ -245,7 +249,10 @@
 #magic.hidden,
 #stale-indicator.hidden {
     visibility: hidden;
-    transition: opacity 0.3s, margin 0.3s 0.3s, visibility 0.3s;
+    transition:
+        opacity 0.3s,
+        margin 0.3s 0.3s,
+        visibility 0.3s;
     opacity: 0;
 }
 
@@ -258,7 +265,7 @@
 }
 
 .pulse {
-    box-shadow: 0 0 0 0 rgba(90, 153, 212, .3);
+    box-shadow: 0 0 0 0 rgba(90, 153, 212, 0.3);
     animation: pulse 1.5s 1;
 }
 
@@ -343,7 +350,6 @@
     text-align: center;
 }
 
-
 #input-search-results,
 #output-search-results {
     list-style: none;
@@ -402,7 +408,6 @@
     border-color: var(--subtext-font-colour);
 }
 
-
 /* Status bar */
 
 .cm-panel input::placeholder {
@@ -432,7 +437,7 @@
     vertical-align: middle;
     margin-left: 8px;
 }
-.cm-status-bar>div>span:first-child i {
+.cm-status-bar > div > span:first-child i {
     margin-left: 0;
 }
 
@@ -461,7 +466,7 @@
     right: 0;
     background-color: #f1f1f1;
     min-width: 200px;
-    box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
 
@@ -475,7 +480,7 @@
 
 /* Change color of dropup links on hover */
 .cm-status-bar-select-content a:hover {
-    background-color: #ddd
+    background-color: #ddd;
 }
 
 /* Change the background color of the dropup button when the dropup content is shown */
@@ -513,7 +518,6 @@
     white-space: nowrap;
     vertical-align: middle;
 }
-
 
 /* File details panel */
 

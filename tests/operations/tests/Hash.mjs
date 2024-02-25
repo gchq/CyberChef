@@ -88,7 +88,8 @@ TestRegister.addTests([
     {
         name: "SHA2 384",
         input: "Hello, World!",
-        expectedOutput: "5485cc9b3365b4305dfb4e8337e0a598a574f8242bf17289e0dd6c20a3cd44a089de16ab4ab308f63e44b1170eb5f515",
+        expectedOutput:
+            "5485cc9b3365b4305dfb4e8337e0a598a574f8242bf17289e0dd6c20a3cd44a089de16ab4ab308f63e44b1170eb5f515",
         recipeConfig: [
             {
                 "op": "SHA2",
@@ -110,7 +111,8 @@ TestRegister.addTests([
     {
         name: "SHA2 512",
         input: "Hello, World!",
-        expectedOutput: "374d794a95cdcfd8b35993185fef9ba368f160d8daf432d08ba9f1ed1e5abe6cc69291e0fa2fe0006a52570ef18c19def4e617c33ce52ef0a6e5fbe318cb0387",
+        expectedOutput:
+            "374d794a95cdcfd8b35993185fef9ba368f160d8daf432d08ba9f1ed1e5abe6cc69291e0fa2fe0006a52570ef18c19def4e617c33ce52ef0a6e5fbe318cb0387",
         recipeConfig: [
             {
                 "op": "SHA2",
@@ -154,7 +156,8 @@ TestRegister.addTests([
     {
         name: "SHA3 384",
         input: "Hello, World!",
-        expectedOutput: "aa9ad8a49f31d2ddcabbb7010a1566417cff803fef50eba239558826f872e468c5743e7f026b0a8e5b2d7a1cc465cdbe",
+        expectedOutput:
+            "aa9ad8a49f31d2ddcabbb7010a1566417cff803fef50eba239558826f872e468c5743e7f026b0a8e5b2d7a1cc465cdbe",
         recipeConfig: [
             {
                 "op": "SHA3",
@@ -176,7 +179,8 @@ TestRegister.addTests([
     {
         name: "SHA3 512",
         input: "Hello, World!",
-        expectedOutput: "38e05c33d7b067127f217d8c856e554fcff09c9320b8a5979ce2ff5d95dd27ba35d1fba50c562dfd1d6cc48bc9c5baa4390894418cc942d968f97bcb659419ed",
+        expectedOutput:
+            "38e05c33d7b067127f217d8c856e554fcff09c9320b8a5979ce2ff5d95dd27ba35d1fba50c562dfd1d6cc48bc9c5baa4390894418cc942d968f97bcb659419ed",
         recipeConfig: [
             {
                 "op": "SHA3",
@@ -198,7 +202,8 @@ TestRegister.addTests([
     {
         name: "Keccak 384",
         input: "Hello, World!",
-        expectedOutput: "4d60892fde7f967bcabdc47c73122ae6311fa1f9be90d721da32030f7467a2e3db3f9ccb3c746483f9d2b876e39def17",
+        expectedOutput:
+            "4d60892fde7f967bcabdc47c73122ae6311fa1f9be90d721da32030f7467a2e3db3f9ccb3c746483f9d2b876e39def17",
         recipeConfig: [
             {
                 "op": "Keccak",
@@ -220,7 +225,8 @@ TestRegister.addTests([
     {
         name: "Keccak 512",
         input: "Hello, World!",
-        expectedOutput: "eda765576c84c600ed7f5d97510e92703b61f5215def2a161037fd9dd1f5b6ed4f86ce46073c0e3f34b52de0289e9c618798fff9dd4b1bfe035bdb8645fc6e37",
+        expectedOutput:
+            "eda765576c84c600ed7f5d97510e92703b61f5215def2a161037fd9dd1f5b6ed4f86ce46073c0e3f34b52de0289e9c618798fff9dd4b1bfe035bdb8645fc6e37",
         recipeConfig: [
             {
                 "op": "Keccak",
@@ -242,7 +248,8 @@ TestRegister.addTests([
     {
         name: "Shake 256",
         input: "Hello, World!",
-        expectedOutput: "b3be97bfd978833a65588ceae8a34cf59e95585af62063e6b89d0789f372424e8b0d1be4f21b40ce5a83a438473271e0661854f02d431db74e6904d6c347d757",
+        expectedOutput:
+            "b3be97bfd978833a65588ceae8a34cf59e95585af62063e6b89d0789f372424e8b0d1be4f21b40ce5a83a438473271e0661854f02d431db74e6904d6c347d757",
         recipeConfig: [
             {
                 "op": "Shake",
@@ -308,7 +315,8 @@ TestRegister.addTests([
     {
         name: "Whirlpool-0",
         input: "Hello, World!",
-        expectedOutput: "1c327026f565a0105a827efbfb3d3635cdb042c0aabb8416e96deb128e6c5c8684b13541cf31c26c1488949df050311c6999a12eb0e7002ad716350f5c7700ca",
+        expectedOutput:
+            "1c327026f565a0105a827efbfb3d3635cdb042c0aabb8416e96deb128e6c5c8684b13541cf31c26c1488949df050311c6999a12eb0e7002ad716350f5c7700ca",
         recipeConfig: [
             {
                 "op": "Whirlpool",
@@ -319,7 +327,8 @@ TestRegister.addTests([
     {
         name: "Whirlpool-T",
         input: "Hello, World!",
-        expectedOutput: "16c581089b6a6f356ae56e16a63a4c613eecd82a2a894b293f5ee45c37a31d09d7a8b60bfa7e414bd4a7166662cea882b5cf8c96b7d583fc610ad202591bcdb1",
+        expectedOutput:
+            "16c581089b6a6f356ae56e16a63a4c613eecd82a2a894b293f5ee45c37a31d09d7a8b60bfa7e414bd4a7166662cea882b5cf8c96b7d583fc610ad202591bcdb1",
         recipeConfig: [
             {
                 "op": "Whirlpool",
@@ -330,7 +339,8 @@ TestRegister.addTests([
     {
         name: "Whirlpool",
         input: "Hello, World!",
-        expectedOutput: "3d837c9ef7bb291bd1dcfc05d3004af2eeb8c631dd6a6c4ba35159b8889de4b1ec44076ce7a8f7bfa497e4d9dcb7c29337173f78d06791f3c3d9e00cc6017f0b",
+        expectedOutput:
+            "3d837c9ef7bb291bd1dcfc05d3004af2eeb8c631dd6a6c4ba35159b8889de4b1ec44076ce7a8f7bfa497e4d9dcb7c29337173f78d06791f3c3d9e00cc6017f0b",
         recipeConfig: [
             {
                 "op": "Whirlpool",
@@ -422,7 +432,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Latin1", "string": "test"}, "SHA256"]
+                "args": [{ "option": "Latin1", "string": "test" }, "SHA256"]
             }
         ]
     },
@@ -433,7 +443,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b"}, "SHA224"]
+                "args": [{ "option": "Hex", "string": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b" }, "SHA224"]
             }
         ]
     },
@@ -444,29 +454,31 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b"}, "SHA256"]
+                "args": [{ "option": "Hex", "string": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b" }, "SHA256"]
             }
         ]
     },
     {
         name: "HMAC: RFC4231 Test Case 1 SHA-384",
         input: "Hi There",
-        expectedOutput: "afd03944d84895626b0825f4ab46907f15f9dadbe4101ec682aa034c7cebc59cfaea9ea9076ede7f4af152e8b2fa9cb6",
+        expectedOutput:
+            "afd03944d84895626b0825f4ab46907f15f9dadbe4101ec682aa034c7cebc59cfaea9ea9076ede7f4af152e8b2fa9cb6",
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b"}, "SHA384"]
+                "args": [{ "option": "Hex", "string": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b" }, "SHA384"]
             }
         ]
     },
     {
         name: "HMAC: RFC4231 Test Case 1 SHA-512",
         input: "Hi There",
-        expectedOutput: "87aa7cdea5ef619d4ff0b4241a1d6cb02379f4e2ce4ec2787ad0b30545e17cdedaa833b7d6b8a702038b274eaea3f4e4be9d914eeb61f1702e696c203a126854",
+        expectedOutput:
+            "87aa7cdea5ef619d4ff0b4241a1d6cb02379f4e2ce4ec2787ad0b30545e17cdedaa833b7d6b8a702038b274eaea3f4e4be9d914eeb61f1702e696c203a126854",
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b"}, "SHA512"]
+                "args": [{ "option": "Hex", "string": "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b" }, "SHA512"]
             }
         ]
     },
@@ -477,7 +489,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "4a656665"}, "SHA224"]
+                "args": [{ "option": "Hex", "string": "4a656665" }, "SHA224"]
             }
         ]
     },
@@ -488,29 +500,31 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "4a656665"}, "SHA256"]
+                "args": [{ "option": "Hex", "string": "4a656665" }, "SHA256"]
             }
         ]
     },
     {
         name: "HMAC: RFC4231 Test Case 2 SHA-384",
         input: "what do ya want for nothing?",
-        expectedOutput: "af45d2e376484031617f78d2b58a6b1b9c7ef464f5a01b47e42ec3736322445e8e2240ca5e69e2c78b3239ecfab21649",
+        expectedOutput:
+            "af45d2e376484031617f78d2b58a6b1b9c7ef464f5a01b47e42ec3736322445e8e2240ca5e69e2c78b3239ecfab21649",
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "4a656665"}, "SHA384"]
+                "args": [{ "option": "Hex", "string": "4a656665" }, "SHA384"]
             }
         ]
     },
     {
         name: "HMAC: RFC4231 Test Case 2 SHA-512",
         input: "what do ya want for nothing?",
-        expectedOutput: "164b7a7bfcf819e2e395fbe73b56e0a387bd64222e831fd610270cd7ea2505549758bf75c05a994a6d034f65f8f0e6fdcaeab1a34d4a6b4b636e070a38bce737",
+        expectedOutput:
+            "164b7a7bfcf819e2e395fbe73b56e0a387bd64222e831fd610270cd7ea2505549758bf75c05a994a6d034f65f8f0e6fdcaeab1a34d4a6b4b636e070a38bce737",
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "4a656665"}, "SHA512"]
+                "args": [{ "option": "Hex", "string": "4a656665" }, "SHA512"]
             }
         ]
     },
@@ -525,7 +539,7 @@ TestRegister.addTests([
             },
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "SHA224"]
+                "args": [{ "option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" }, "SHA224"]
             }
         ]
     },
@@ -540,14 +554,15 @@ TestRegister.addTests([
             },
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "SHA256"]
+                "args": [{ "option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" }, "SHA256"]
             }
         ]
     },
     {
         name: "HMAC: RFC4231 Test Case 3 SHA-384",
         input: "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-        expectedOutput: "88062608d3e6ad8a0aa2ace014c8a86f0aa635d947ac9febe83ef4e55966144b2a5ab39dc13814b94e3ab6e101a34f27",
+        expectedOutput:
+            "88062608d3e6ad8a0aa2ace014c8a86f0aa635d947ac9febe83ef4e55966144b2a5ab39dc13814b94e3ab6e101a34f27",
         recipeConfig: [
             {
                 "op": "From Hex",
@@ -555,14 +570,15 @@ TestRegister.addTests([
             },
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "SHA384"]
+                "args": [{ "option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" }, "SHA384"]
             }
         ]
     },
     {
         name: "HMAC: RFC4231 Test Case 3 SHA-512",
         input: "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-        expectedOutput: "fa73b0089d56a284efb0f0756c890be9b1b5dbdd8ee81a3655f83e33b2279d39bf3e848279a722c806b485a47e67c807b946a337bee8942674278859e13292fb",
+        expectedOutput:
+            "fa73b0089d56a284efb0f0756c890be9b1b5dbdd8ee81a3655f83e33b2279d39bf3e848279a722c806b485a47e67c807b946a337bee8942674278859e13292fb",
         recipeConfig: [
             {
                 "op": "From Hex",
@@ -570,7 +586,7 @@ TestRegister.addTests([
             },
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "SHA512"]
+                "args": [{ "option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" }, "SHA512"]
             }
         ]
     },
@@ -585,7 +601,7 @@ TestRegister.addTests([
             },
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "0102030405060708090a0b0c0d0e0f10111213141516171819"}, "SHA224"]
+                "args": [{ "option": "Hex", "string": "0102030405060708090a0b0c0d0e0f10111213141516171819" }, "SHA224"]
             }
         ]
     },
@@ -600,14 +616,15 @@ TestRegister.addTests([
             },
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "0102030405060708090a0b0c0d0e0f10111213141516171819"}, "SHA256"]
+                "args": [{ "option": "Hex", "string": "0102030405060708090a0b0c0d0e0f10111213141516171819" }, "SHA256"]
             }
         ]
     },
     {
         name: "HMAC: RFC4231 Test Case 4 SHA-384",
         input: "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
-        expectedOutput: "3e8a69b7783c25851933ab6290af6ca77a9981480850009cc5577c6e1f573b4e6801dd23c4a7d679ccf8a386c674cffb",
+        expectedOutput:
+            "3e8a69b7783c25851933ab6290af6ca77a9981480850009cc5577c6e1f573b4e6801dd23c4a7d679ccf8a386c674cffb",
         recipeConfig: [
             {
                 "op": "From Hex",
@@ -615,14 +632,15 @@ TestRegister.addTests([
             },
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "0102030405060708090a0b0c0d0e0f10111213141516171819"}, "SHA384"]
+                "args": [{ "option": "Hex", "string": "0102030405060708090a0b0c0d0e0f10111213141516171819" }, "SHA384"]
             }
         ]
     },
     {
         name: "HMAC: RFC4231 Test Case 4 SHA-512",
         input: "cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
-        expectedOutput: "b0ba465637458c6990e5a8c5f61d4af7e576d97ff94b872de76f8050361ee3dba91ca5c11aa25eb4d679275cc5788063a5f19741120c4f2de2adebeb10a298dd",
+        expectedOutput:
+            "b0ba465637458c6990e5a8c5f61d4af7e576d97ff94b872de76f8050361ee3dba91ca5c11aa25eb4d679275cc5788063a5f19741120c4f2de2adebeb10a298dd",
         recipeConfig: [
             {
                 "op": "From Hex",
@@ -630,7 +648,7 @@ TestRegister.addTests([
             },
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "0102030405060708090a0b0c0d0e0f10111213141516171819"}, "SHA512"]
+                "args": [{ "option": "Hex", "string": "0102030405060708090a0b0c0d0e0f10111213141516171819" }, "SHA512"]
             }
         ]
     },
@@ -641,7 +659,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "SHA224"]
+                "args": [
+                    {
+                        "option": "Hex",
+                        "string":
+                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    },
+                    "SHA224"
+                ]
             }
         ]
     },
@@ -652,29 +677,52 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "SHA256"]
+                "args": [
+                    {
+                        "option": "Hex",
+                        "string":
+                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    },
+                    "SHA256"
+                ]
             }
         ]
     },
     {
         name: "HMAC: RFC4231 Test Case 6 SHA-384",
         input: "Test Using Larger Than Block-Size Key - Hash Key First",
-        expectedOutput: "4ece084485813e9088d2c63a041bc5b44f9ef1012a2b588f3cd11f05033ac4c60c2ef6ab4030fe8296248df163f44952",
+        expectedOutput:
+            "4ece084485813e9088d2c63a041bc5b44f9ef1012a2b588f3cd11f05033ac4c60c2ef6ab4030fe8296248df163f44952",
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "SHA384"]
+                "args": [
+                    {
+                        "option": "Hex",
+                        "string":
+                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    },
+                    "SHA384"
+                ]
             }
         ]
     },
     {
         name: "HMAC: RFC4231 Test Case 6 SHA-512",
         input: "Test Using Larger Than Block-Size Key - Hash Key First",
-        expectedOutput: "80b24263c7c1a3ebb71493c1dd7be8b49b46d1f41b4aeec1121b013783f8f3526b56d037e05f2598bd0fd2215d6a1e5295e64f73f63f0aec8b915a985d786598",
+        expectedOutput:
+            "80b24263c7c1a3ebb71493c1dd7be8b49b46d1f41b4aeec1121b013783f8f3526b56d037e05f2598bd0fd2215d6a1e5295e64f73f63f0aec8b915a985d786598",
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "SHA512"]
+                "args": [
+                    {
+                        "option": "Hex",
+                        "string":
+                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    },
+                    "SHA512"
+                ]
             }
         ]
     },
@@ -685,7 +733,14 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "SHA224"]
+                "args": [
+                    {
+                        "option": "Hex",
+                        "string":
+                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    },
+                    "SHA224"
+                ]
             }
         ]
     },
@@ -696,29 +751,52 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "SHA256"]
+                "args": [
+                    {
+                        "option": "Hex",
+                        "string":
+                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    },
+                    "SHA256"
+                ]
             }
         ]
     },
     {
         name: "HMAC: RFC4231 Test Case 7 SHA-384",
         input: "This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.",
-        expectedOutput: "6617178e941f020d351e2f254e8fd32c602420feb0b8fb9adccebb82461e99c5a678cc31e799176d3860e6110c46523e",
+        expectedOutput:
+            "6617178e941f020d351e2f254e8fd32c602420feb0b8fb9adccebb82461e99c5a678cc31e799176d3860e6110c46523e",
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "SHA384"]
+                "args": [
+                    {
+                        "option": "Hex",
+                        "string":
+                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    },
+                    "SHA384"
+                ]
             }
         ]
     },
     {
         name: "HMAC: RFC4231 Test Case 7 SHA-512",
         input: "This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm.",
-        expectedOutput: "e37b6a775dc87dbaa4dfa9f96e5e3ffddebd71f8867289865df5a32d20cdc944b6022cac3c4982b10d5eeb55c3e4de15134676fb6de0446065c97440fa8c6a58",
+        expectedOutput:
+            "e37b6a775dc87dbaa4dfa9f96e5e3ffddebd71f8867289865df5a32d20cdc944b6022cac3c4982b10d5eeb55c3e4de15134676fb6de0446065c97440fa8c6a58",
         recipeConfig: [
             {
                 "op": "HMAC",
-                "args": [{"option": "Hex", "string": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}, "SHA512"]
+                "args": [
+                    {
+                        "option": "Hex",
+                        "string":
+                            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                    },
+                    "SHA512"
+                ]
             }
         ]
     },
@@ -785,7 +863,8 @@ TestRegister.addTests([
     {
         name: "SHA2 384: Complex bytes",
         input: "10dc10e32010de10d010dc10d810d910d010e12e",
-        expectedOutput: "2a6369ffec550ea0bfb810b3b8246b7d6b7f060edfae88441f0f242b98b91549aa4ff407de38c6d03b5f377434ad2f36",
+        expectedOutput:
+            "2a6369ffec550ea0bfb810b3b8246b7d6b7f060edfae88441f0f242b98b91549aa4ff407de38c6d03b5f377434ad2f36",
         recipeConfig: [
             {
                 "op": "From Hex",
@@ -800,7 +879,8 @@ TestRegister.addTests([
     {
         name: "SHA2 512: Complex bytes",
         input: "10dc10e32010de10d010dc10d810d910d010e12e",
-        expectedOutput: "544ae686522c05b70d12b460b5b39ea0a758eb4027333edbded7e2b3f467aa605804f71f54db61a7bbe50e6e7898510635efd6721fd418a9ea4d05b286d12806",
+        expectedOutput:
+            "544ae686522c05b70d12b460b5b39ea0a758eb4027333edbded7e2b3f467aa605804f71f54db61a7bbe50e6e7898510635efd6721fd418a9ea4d05b286d12806",
         recipeConfig: [
             {
                 "op": "From Hex",
@@ -845,7 +925,8 @@ TestRegister.addTests([
     {
         name: "SHA3 384: Complex bytes",
         input: "10dc10e32010de10d010dc10d810d910d010e12e",
-        expectedOutput: "39f8796dd697dc39e5a943817833793f2c29dc0d1adc7037854c0fb51e135c6bd26b113240c4fb1e3fcc16ff8690c91a",
+        expectedOutput:
+            "39f8796dd697dc39e5a943817833793f2c29dc0d1adc7037854c0fb51e135c6bd26b113240c4fb1e3fcc16ff8690c91a",
         recipeConfig: [
             {
                 "op": "From Hex",
@@ -860,7 +941,8 @@ TestRegister.addTests([
     {
         name: "SHA3 512: Complex bytes",
         input: "10dc10e32010de10d010dc10d810d910d010e12e",
-        expectedOutput: "ee9061bed83b1ad1e2fc4a4bac72a5a65a23a0fa55193b808af0a3e2013b718a5a3e40474765b4f93d1b2747401058a5b58099cc890a159db92b2ea816287add",
+        expectedOutput:
+            "ee9061bed83b1ad1e2fc4a4bac72a5a65a23a0fa55193b808af0a3e2013b718a5a3e40474765b4f93d1b2747401058a5b58099cc890a159db92b2ea816287add",
         recipeConfig: [
             {
                 "op": "From Hex",
@@ -919,7 +1001,8 @@ TestRegister.addTests([
     {
         name: "SHA2 384: UTF-8",
         input: "ნუ პანიკას",
-        expectedOutput: "140b929391a66c9a943bcd60e6964f0d19526d3bc9ba020fbb29aae51cddb8e63a78784d8770f1d36335bf4efff8c131",
+        expectedOutput:
+            "140b929391a66c9a943bcd60e6964f0d19526d3bc9ba020fbb29aae51cddb8e63a78784d8770f1d36335bf4efff8c131",
         recipeConfig: [
             {
                 "op": "SHA2",
@@ -930,7 +1013,8 @@ TestRegister.addTests([
     {
         name: "SHA2 512: UTF-8",
         input: "ნუ პანიკას",
-        expectedOutput: "04a7887c400bf647b7c67b9a0f1ada70d176348b5afdfebea184f7e62748849828669c7b5160be99455fdbf625589bd1689c003bc06ef60c39607d825a2f8838",
+        expectedOutput:
+            "04a7887c400bf647b7c67b9a0f1ada70d176348b5afdfebea184f7e62748849828669c7b5160be99455fdbf625589bd1689c003bc06ef60c39607d825a2f8838",
         recipeConfig: [
             {
                 "op": "SHA2",
@@ -963,7 +1047,8 @@ TestRegister.addTests([
     {
         name: "SHA3 384: UTF-8",
         input: "ნუ პანიკას",
-        expectedOutput: "93e87b9aa8c9c47eba146adac357c525b418b71677f6db01d1c760d87b058682e639c8d43a8bfe91529cecd9800700e3",
+        expectedOutput:
+            "93e87b9aa8c9c47eba146adac357c525b418b71677f6db01d1c760d87b058682e639c8d43a8bfe91529cecd9800700e3",
         recipeConfig: [
             {
                 "op": "SHA3",
@@ -974,7 +1059,8 @@ TestRegister.addTests([
     {
         name: "SHA3 512: UTF-8",
         input: "ნუ პანიკას",
-        expectedOutput: "1fbc484b5184982561795162757717474eebc846ca9f10029a75a54cdd897a7b48d1db42f2478fa1d5d213a0dd7de71c809cb19c60581ba57e7289d29408fb36",
+        expectedOutput:
+            "1fbc484b5184982561795162757717474eebc846ca9f10029a75a54cdd897a7b48d1db42f2478fa1d5d213a0dd7de71c809cb19c60581ba57e7289d29408fb36",
         recipeConfig: [
             {
                 "op": "SHA3",
@@ -996,7 +1082,8 @@ TestRegister.addTests([
     {
         name: "Scrypt: RFC test vector 1",
         input: "",
-        expectedOutput: "77d6576238657b203b19ca42c18a0497f16b4844e3074ae8dfdffa3fede21442fcd0069ded0948f8326a753a0fc81f17e8d3e0fb2e0d3628cf35e20c38d18906",
+        expectedOutput:
+            "77d6576238657b203b19ca42c18a0497f16b4844e3074ae8dfdffa3fede21442fcd0069ded0948f8326a753a0fc81f17e8d3e0fb2e0d3628cf35e20c38d18906",
         recipeConfig: [
             {
                 op: "Scrypt",
@@ -1005,7 +1092,10 @@ TestRegister.addTests([
                         "option": "Latin1",
                         "string": ""
                     },
-                    16, 1, 1, 64
+                    16,
+                    1,
+                    1,
+                    64
                 ]
             }
         ]
@@ -1013,7 +1103,8 @@ TestRegister.addTests([
     {
         name: "Scrypt: RFC test vector 2",
         input: "password",
-        expectedOutput: "fdbabe1c9d3472007856e7190d01e9fe7c6ad7cbc8237830e77376634b3731622eaf30d92e22a3886ff109279d9830dac727afb94a83ee6d8360cbdfa2cc0640",
+        expectedOutput:
+            "fdbabe1c9d3472007856e7190d01e9fe7c6ad7cbc8237830e77376634b3731622eaf30d92e22a3886ff109279d9830dac727afb94a83ee6d8360cbdfa2cc0640",
         recipeConfig: [
             {
                 op: "Scrypt",
@@ -1022,7 +1113,10 @@ TestRegister.addTests([
                         "option": "Latin1",
                         "string": "NaCl"
                     },
-                    1024, 8, 16, 64
+                    1024,
+                    8,
+                    16,
+                    64
                 ]
             }
         ]
@@ -1030,7 +1124,8 @@ TestRegister.addTests([
     {
         name: "Scrypt: RFC test vector 3",
         input: "pleaseletmein",
-        expectedOutput: "7023bdcb3afd7348461c06cd81fd38ebfda8fbba904f8e3ea9b543f6545da1f2d5432955613f0fcf62d49705242a9af9e61e85dc0d651e40dfcf017b45575887",
+        expectedOutput:
+            "7023bdcb3afd7348461c06cd81fd38ebfda8fbba904f8e3ea9b543f6545da1f2d5432955613f0fcf62d49705242a9af9e61e85dc0d651e40dfcf017b45575887",
         recipeConfig: [
             {
                 op: "Scrypt",
@@ -1039,7 +1134,10 @@ TestRegister.addTests([
                         "option": "Latin1",
                         "string": "SodiumChloride"
                     },
-                    16384, 8, 1, 64
+                    16384,
+                    8,
+                    1,
+                    64
                 ]
             }
         ]
@@ -1069,7 +1167,8 @@ TestRegister.addTests([
     {
         name: "Streebog-512: Test Case 1",
         input: "",
-        expectedOutput: "8e945da209aa869f0455928529bcae4679e9873ab707b55315f56ceb98bef0a7362f715528356ee83cda5f2aac4c6ad2ba3a715c1bcd81cb8e9f90bf4c1c1a8a",
+        expectedOutput:
+            "8e945da209aa869f0455928529bcae4679e9873ab707b55315f56ceb98bef0a7362f715528356ee83cda5f2aac4c6ad2ba3a715c1bcd81cb8e9f90bf4c1c1a8a",
         recipeConfig: [
             {
                 op: "Streebog",
@@ -1080,7 +1179,8 @@ TestRegister.addTests([
     {
         name: "Streebog-512: Test Case 2",
         input: "The quick brown fox jumps over the lazy dog",
-        expectedOutput: "d2b793a0bb6cb5904828b5b6dcfb443bb8f33efc06ad09368878ae4cdc8245b97e60802469bed1e7c21a64ff0b179a6a1e0bb74d92965450a0adab69162c00fe",
+        expectedOutput:
+            "d2b793a0bb6cb5904828b5b6dcfb443bb8f33efc06ad09368878ae4cdc8245b97e60802469bed1e7c21a64ff0b179a6a1e0bb74d92965450a0adab69162c00fe",
         recipeConfig: [
             {
                 op: "Streebog",
@@ -1134,15 +1234,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Argon2",
-                args: [
-                    {"option": "UTF8", "string": "somesalt"},
-                    3,
-                    4096,
-                    1,
-                    32,
-                    "Argon2i",
-                    "Encoded hash"
-                ]
+                args: [{ "option": "UTF8", "string": "somesalt" }, 3, 4096, 1, 32, "Argon2i", "Encoded hash"]
             }
         ]
     },
@@ -1153,9 +1245,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Argon2 compare",
-                args: [
-                    "$argon2i$v=19$m=4096,t=3,p=1$c29tZXNhbHQ$s43my9eBljQADuF/LWCG8vGqwAJzOorKQ0Yog8jFvbw"
-                ]
+                args: ["$argon2i$v=19$m=4096,t=3,p=1$c29tZXNhbHQ$s43my9eBljQADuF/LWCG8vGqwAJzOorKQ0Yog8jFvbw"]
             }
         ]
     }

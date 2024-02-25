@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Format MAC addresses operation
  */
 class FormatMACAddresses extends Operation {
-
     /**
      * FormatMACAddresses constructor
      */
@@ -19,7 +18,8 @@ class FormatMACAddresses extends Operation {
 
         this.name = "Format MAC addresses";
         this.module = "Default";
-        this.description = "Displays given MAC addresses in multiple different formats.<br><br>Expects addresses in a list separated by newlines, spaces or commas.<br><br>WARNING: There are no validity checks.";
+        this.description
+            = "Displays given MAC addresses in multiple different formats.<br><br>Expects addresses in a list separated by newlines, spaces or commas.<br><br>WARNING: There are no validity checks.";
         this.infoURL = "https://wikipedia.org/wiki/MAC_address#Notational_conventions";
         this.inputType = "string";
         this.outputType = "string";
@@ -65,18 +65,11 @@ class FormatMACAddresses extends Operation {
     run(input, args) {
         if (!input) return "";
 
-        const [
-                outputCase,
-                noDelim,
-                dashDelim,
-                colonDelim,
-                ciscoStyle,
-                ipv6IntID
-            ] = args,
+        const [outputCase, noDelim, dashDelim, colonDelim, ciscoStyle, ipv6IntID] = args,
             outputList = [],
             macs = input.toLowerCase().split(/[,\s\r\n]+/);
 
-        macs.forEach(function(mac) {
+        macs.forEach(function (mac) {
             const cleanMac = mac.replace(/[:.-]+/g, ""),
                 macHyphen = cleanMac.replace(/(.{2}(?=.))/g, "$1-"),
                 macColon = cleanMac.replace(/(.{2}(?=.))/g, "$1:"),
@@ -116,7 +109,6 @@ class FormatMACAddresses extends Operation {
         // Return the data as a string
         return outputList.join("\n");
     }
-
 }
 
 export default FormatMACAddresses;

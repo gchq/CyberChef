@@ -8,7 +8,6 @@
  * Waiter to handle timing of the baking process.
  */
 class TimingWaiter {
-
     /**
      * TimingWaiter constructor.
      *
@@ -37,7 +36,6 @@ class TimingWaiter {
         */
     }
 
-
     /**
      * Record the time for an input
      *
@@ -45,7 +43,7 @@ class TimingWaiter {
      * @param {number} inputNum
      * @param {number} value
      */
-    recordTime(event, inputNum, value=Date.now()) {
+    recordTime(event, inputNum, value = Date.now()) {
         inputNum = inputNum.toString();
         if (!Object.keys(this.inputs).includes(inputNum)) {
             this.inputs[inputNum] = {};
@@ -64,25 +62,24 @@ class TimingWaiter {
         const input = this.inputs[inputNum.toString()];
 
         // If this input has not been encoded yet, we cannot calculate a time
-        if (!input ||
-            !input.trigger ||
-            !input.inputEncodingEnd ||
-            !input.inputEncodingStart)
-            return 0;
+        if (!input || !input.trigger || !input.inputEncodingEnd || !input.inputEncodingStart) return 0;
 
         // input encoding can happen before a bake is triggered, so it is calculated separately
         const inputEncodingTotal = input.inputEncodingEnd - input.inputEncodingStart;
 
-        let total = 0, outputDecodingTotal = 0;
+        let total = 0,
+            outputDecodingTotal = 0;
 
-        if (input.bakeComplete && input.bakeComplete > input.trigger)
-            total = input.bakeComplete - input.trigger;
+        if (input.bakeComplete && input.bakeComplete > input.trigger) total = input.bakeComplete - input.trigger;
 
-        if (input.settingOutput && input.settingOutput > input.trigger)
-            total = input.settingOutput - input.trigger;
+        if (input.settingOutput && input.settingOutput > input.trigger) total = input.settingOutput - input.trigger;
 
-        if (input.outputDecodingStart && (input.outputDecodingStart > input.trigger) &&
-            input.outputDecodingEnd && (input.outputDecodingEnd > input.trigger)) {
+        if (
+            input.outputDecodingStart
+            && input.outputDecodingStart > input.trigger
+            && input.outputDecodingEnd
+            && input.outputDecodingEnd > input.trigger
+        ) {
             total = input.outputDecodingEnd - input.trigger;
             outputDecodingTotal = input.outputDecodingEnd - input.outputDecodingStart;
         }
@@ -103,21 +100,15 @@ class TimingWaiter {
         const input = this.inputs[inputNum.toString()];
 
         // If this input has not been encoded yet, we cannot calculate a time
-        if (!input ||
-            !input.trigger ||
-            !input.inputEncodingEnd ||
-            !input.inputEncodingStart)
-            return 0;
+        if (!input || !input.trigger || !input.inputEncodingEnd || !input.inputEncodingStart) return 0;
 
         // input encoding can happen before a bake is triggered, so it is calculated separately
         const inputEncodingTotal = input.inputEncodingEnd - input.inputEncodingStart;
 
         let total = 0;
-        if (input.bakeComplete && input.bakeComplete > input.trigger)
-            total = input.bakeComplete - input.trigger;
+        if (input.bakeComplete && input.bakeComplete > input.trigger) total = input.bakeComplete - input.trigger;
 
-        if (input.settingOutput && input.settingOutput > input.trigger)
-            total = input.settingOutput - input.trigger;
+        if (input.settingOutput && input.settingOutput > input.trigger) total = input.settingOutput - input.trigger;
 
         if (input.outputDecodingStart && input.outputDecodingStart > input.trigger)
             total = input.outputDecodingStart - input.trigger;
@@ -125,8 +116,7 @@ class TimingWaiter {
         if (input.outputDecodingEnd && input.outputDecodingEnd > input.trigger)
             total = input.outputDecodingEnd - input.trigger;
 
-        if (input.complete && input.complete > input.trigger)
-            total = input.complete - input.trigger;
+        if (input.complete && input.complete > input.trigger) total = input.complete - input.trigger;
 
         return total + inputEncodingTotal;
     }
@@ -174,9 +164,7 @@ outputDecodingEnd:   ${input.outputDecodingEnd} | ${input.outputDecodingEnd - in
 complete:            ${input.complete} | ${input.complete - input.outputDecodingEnd}ms since output decoded
 Total:                             | ${input.complete - input.trigger}ms since trigger`);
         } catch (err) {}
-
     }
-
 }
 
 export default TimingWaiter;

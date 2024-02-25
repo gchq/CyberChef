@@ -11,7 +11,6 @@ import Operation from "../Operation.mjs";
  * SQL Beautify operation
  */
 class SQLBeautify extends Operation {
-
     /**
      * SQLBeautify constructor
      */
@@ -41,7 +40,6 @@ class SQLBeautify extends Operation {
         const indentStr = args[0];
         return vkbeautify.sql(input, indentStr);
     }
-
 }
 
 export default SQLBeautify;

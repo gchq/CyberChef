@@ -16,9 +16,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "CipherSaber2 Encrypt",
-                args: [{ "option": "Latin1", "string": "test" }, 20],
-            },
-        ],
+                args: [{ "option": "Latin1", "string": "test" }, 20]
+            }
+        ]
     },
     {
         name: "CipherSaber2 Decrypt",
@@ -27,9 +27,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "CipherSaber2 Decrypt",
-                args: [{ "option": "Latin1", "string": "test" }, 20],
-            },
-        ],
+                args: [{ "option": "Latin1", "string": "test" }, 20]
+            }
+        ]
     },
     {
         name: "CipherSaber2 Encrypt",
@@ -38,8 +38,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "CipherSaber2 Encrypt",
-                args: [{ "option": "Latin1", "string": "" }, 20],
-            },
-        ],
-    },
+                args: [{ "option": "Latin1", "string": "" }, 20]
+            }
+        ]
+    }
 ]);

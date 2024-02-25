@@ -7,16 +7,15 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
-import {isImage} from "../lib/FileType.mjs";
-import {toBase64} from "../lib/Base64.mjs";
-import {isWorkerEnvironment} from "../Utils.mjs";
+import { isImage } from "../lib/FileType.mjs";
+import { toBase64 } from "../lib/Base64.mjs";
+import { isWorkerEnvironment } from "../Utils.mjs";
 import jimp from "jimp";
 
 /**
  * Generate Image operation
  */
 class GenerateImage extends Operation {
-
     /**
      * GenerateImage constructor
      */
@@ -39,12 +38,12 @@ class GenerateImage extends Operation {
             {
                 "name": "Pixel Scale Factor",
                 "type": "number",
-                "value": 8,
+                "value": 8
             },
             {
                 "name": "Pixels per row",
                 "type": "number",
-                "value": 64,
+                "value": 64
             }
         ];
     }
@@ -71,20 +70,19 @@ class GenerateImage extends Operation {
             "RG": 2,
             "RGB": 3,
             "RGBA": 4,
-            "Bits": 1/8,
+            "Bits": 1 / 8
         };
 
         const bytesPerPixel = bytePerPixelMap[mode];
 
-        if (bytesPerPixel > 0 && input.length % bytesPerPixel  !== 0) {
+        if (bytesPerPixel > 0 && input.length % bytesPerPixel !== 0) {
             throw new OperationError(`Number of bytes is not a divisor of ${bytesPerPixel}`);
         }
 
         const height = Math.ceil(input.length / bytesPerPixel / width);
         const image = await new jimp(width, height, (err, image) => {});
 
-        if (isWorkerEnvironment())
-            self.sendStatusMessage("Generating image from data...");
+        if (isWorkerEnvironment()) self.sendStatusMessage("Generating image from data...");
 
         if (mode === "Bits") {
             let index = 0;
@@ -94,8 +92,8 @@ class GenerateImage extends Operation {
                     const x = index % width;
                     const y = Math.floor(index / width);
 
-                    const value = curByte[k] === "0" ? 0xFF : 0x00;
-                    const pixel = jimp.rgbaToInt(value, value, value, 0xFF);
+                    const value = curByte[k] === "0" ? 0xff : 0x00;
+                    const pixel = jimp.rgbaToInt(value, value, value, 0xff);
                     image.setPixelColor(pixel, x, y);
                 }
             }
@@ -109,7 +107,7 @@ class GenerateImage extends Operation {
                 let red = 0x00;
                 let green = 0x00;
                 let blue = 0x00;
-                let alpha = 0xFF;
+                let alpha = 0xff;
 
                 switch (mode) {
                     case "Greyscale":
@@ -148,10 +146,9 @@ class GenerateImage extends Operation {
         }
 
         if (scale !== 1) {
-            if (isWorkerEnvironment())
-                self.sendStatusMessage("Scaling image...");
+            if (isWorkerEnvironment()) self.sendStatusMessage("Scaling image...");
 
-            image.scaleToFit(width*scale, height*scale, jimp.RESIZE_NEAREST_NEIGHBOR);
+            image.scaleToFit(width * scale, height * scale, jimp.RESIZE_NEAREST_NEIGHBOR);
         }
 
         try {
@@ -178,7 +175,6 @@ class GenerateImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default GenerateImage;

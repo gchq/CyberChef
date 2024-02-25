@@ -14,7 +14,6 @@ import { isWorkerEnvironment } from "../Utils.mjs";
  * Scrypt operation
  */
 class Scrypt extends Operation {
-
     /**
      * Scrypt constructor
      */
@@ -23,7 +22,8 @@ class Scrypt extends Operation {
 
         this.name = "Scrypt";
         this.module = "Crypto";
-        this.description = "scrypt is a password-based key derivation function (PBKDF) created by Colin Percival. The algorithm was specifically designed to make it costly to perform large-scale custom hardware attacks by requiring large amounts of memory. In 2016, the scrypt algorithm was published by IETF as RFC 7914.<br><br>Enter the password in the input to generate its hash.";
+        this.description
+            = "scrypt is a password-based key derivation function (PBKDF) created by Colin Percival. The algorithm was specifically designed to make it costly to perform large-scale custom hardware attacks by requiring large amounts of memory. In 2016, the scrypt algorithm was published by IETF as RFC 7914.<br><br>Enter the password in the input to generate its hash.";
         this.infoURL = "https://wikipedia.org/wiki/Scrypt";
         this.inputType = "string";
         this.outputType = "string";
@@ -70,21 +70,16 @@ class Scrypt extends Operation {
             keyLength = args[4];
 
         try {
-            const data = scryptsy(
-                input, salt, iterations, memFactor, parallelFactor, keyLength,
-                p => {
-                    // Progress callback
-                    if (isWorkerEnvironment())
-                        self.sendStatusMessage(`Progress: ${p.percent.toFixed(0)}%`);
-                }
-            );
+            const data = scryptsy(input, salt, iterations, memFactor, parallelFactor, keyLength, (p) => {
+                // Progress callback
+                if (isWorkerEnvironment()) self.sendStatusMessage(`Progress: ${p.percent.toFixed(0)}%`);
+            });
 
             return data.toString("hex");
         } catch (err) {
             throw new OperationError("Error: " + err.toString());
         }
     }
-
 }
 
 export default Scrypt;

@@ -16,7 +16,7 @@ import OperationError from "../errors/OperationError.mjs";
  * @param {boolean} fast
  * @returns {jimp}
  */
-export function gaussianBlur (input, radius) {
+export function gaussianBlur(input, radius) {
     try {
         // From http://blog.ivank.net/fastest-gaussian-blur.html
         const boxes = boxesForGauss(radius, 3);
@@ -37,7 +37,7 @@ export function gaussianBlur (input, radius) {
  * @returns {Array}
  */
 function boxesForGauss(radius, numBoxes) {
-    const idealWidth = Math.sqrt((12 * radius * radius / numBoxes) + 1);
+    const idealWidth = Math.sqrt((12 * radius * radius) / numBoxes + 1);
 
     let wl = Math.floor(idealWidth);
 
@@ -64,7 +64,7 @@ function boxesForGauss(radius, numBoxes) {
  * @param {number} radius
  * @returns {jimp}
  */
-function boxBlur (source, radius) {
+function boxBlur(source, radius) {
     const width = source.bitmap.width;
     const height = source.bitmap.height;
     let output = source.clone();
@@ -84,7 +84,7 @@ function boxBlur (source, radius) {
  * @param {number} radius
  * @returns {jimp}
  */
-function boxBlurH (source, output, width, height, radius) {
+function boxBlurH(source, output, width, height, radius) {
     const iarr = 1 / (radius + radius + 1);
     for (let i = 0; i < height; i++) {
         let ti = 0,
@@ -171,7 +171,7 @@ function boxBlurH (source, output, width, height, radius) {
  * @param {number} radius
  * @returns {jimp}
  */
-function boxBlurV (source, output, width, height, radius) {
+function boxBlurV(source, output, width, height, radius) {
     const iarr = 1 / (radius + radius + 1);
     for (let i = 0; i < width; i++) {
         let ti = 0,

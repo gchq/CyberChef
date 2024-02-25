@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Rail Fence Cipher Decode operation
  */
 class RailFenceCipherDecode extends Operation {
-
     /**
      * RailFenceCipherDecode constructor
      */
@@ -74,8 +73,6 @@ class RailFenceCipherDecode extends Operation {
 
         return plaintext.join("").trim();
     }
-
 }
-
 
 export default RailFenceCipherDecode;

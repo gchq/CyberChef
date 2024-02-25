@@ -12,7 +12,6 @@ import { caseInsensitiveSort } from "../lib/Sort.mjs";
  * Extract domains operation
  */
 class ExtractDomains extends Operation {
-
     /**
      * ExtractDomains constructor
      */
@@ -21,7 +20,8 @@ class ExtractDomains extends Operation {
 
         this.name = "Extract domains";
         this.module = "Regex";
-        this.description = "Extracts fully qualified domain names.<br>Note that this will not include paths. Use <strong>Extract URLs</strong> to find entire URLs.";
+        this.description
+            = "Extracts fully qualified domain names.<br>Note that this will not include paths. Use <strong>Extract URLs</strong> to find entire URLs.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -51,13 +51,7 @@ class ExtractDomains extends Operation {
     run(input, args) {
         const [displayTotal, sort, unique] = args;
 
-        const results = search(
-            input,
-            DOMAIN_REGEX,
-            null,
-            sort ? caseInsensitiveSort : null,
-            unique
-        );
+        const results = search(input, DOMAIN_REGEX, null, sort ? caseInsensitiveSort : null, unique);
 
         if (displayTotal) {
             return `Total found: ${results.length}\n\n${results.join("\n")}`;
@@ -65,7 +59,6 @@ class ExtractDomains extends Operation {
             return results.join("\n");
         }
     }
-
 }
 
 export default ExtractDomains;

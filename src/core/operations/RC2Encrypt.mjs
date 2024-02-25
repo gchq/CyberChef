@@ -8,12 +8,10 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import forge from "node-forge";
 
-
 /**
  * RC2 Encrypt operation
  */
 class RC2Encrypt extends Operation {
-
     /**
      * RC2Encrypt constructor
      */
@@ -22,7 +20,8 @@ class RC2Encrypt extends Operation {
 
         this.name = "RC2 Encrypt";
         this.module = "Ciphers";
-        this.description = "RC2 (also known as ARC2) is a symmetric-key block cipher designed by Ron Rivest in 1987. 'RC' stands for 'Rivest Cipher'.<br><br><b>Key:</b> RC2 uses a variable size key.<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> To run the cipher in CBC mode, the Initialization Vector should be 8 bytes long. If the IV is left blank, the cipher will run in ECB mode.<br><br><b>Padding:</b> In both CBC and ECB mode, PKCS#7 padding will be used.";
+        this.description
+            = "RC2 (also known as ARC2) is a symmetric-key block cipher designed by Ron Rivest in 1987. 'RC' stands for 'Rivest Cipher'.<br><br><b>Key:</b> RC2 uses a variable size key.<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> To run the cipher in CBC mode, the Initialization Vector should be 8 bytes long. If the IV is left blank, the cipher will run in ECB mode.<br><br><b>Padding:</b> In both CBC and ECB mode, PKCS#7 padding will be used.";
         this.infoURL = "https://wikipedia.org/wiki/RC2";
         this.inputType = "string";
         this.outputType = "string";
@@ -60,7 +59,7 @@ class RC2Encrypt extends Operation {
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
             iv = Utils.convertToByteString(args[1].string, args[1].option),
-            [,, inputType, outputType] = args,
+            [, , inputType, outputType] = args,
             cipher = forge.rc2.createEncryptionCipher(key);
 
         input = Utils.convertToByteString(input, inputType);
@@ -71,7 +70,6 @@ class RC2Encrypt extends Operation {
 
         return outputType === "Hex" ? cipher.output.toHex() : cipher.output.getBytes();
     }
-
 }
 
 export default RC2Encrypt;

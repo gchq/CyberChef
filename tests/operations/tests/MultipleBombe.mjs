@@ -20,11 +20,13 @@ TestRegister.addTests([
                     "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R\nAJDKSIRUXBLHWTMCQGZNPYFVOE<F\nBDFHJLCPRTXVZNYEIWGAKMUSQO<W",
                     "",
                     "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", // B
-                    "THISISATESTMESSAGE", 0, false
+                    "THISISATESTMESSAGE",
+                    0,
+                    false
                 ]
             }
         ]
-    },
+    }
     /*
      * This is too slow to run regularly
     {

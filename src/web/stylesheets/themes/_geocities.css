@@ -7,7 +7,8 @@
  */
 
 :root.geocities {
-    --primary-font-family: "Comic Sans", "Comic Sans MS", "Chalkboard", "ChalkboardSE-Regular", "Marker Felt", "Purisa", "URW Chancery L", cursive, sans-serif;
+    --primary-font-family: "Comic Sans", "Comic Sans MS", "Chalkboard", "ChalkboardSE-Regular", "Marker Felt", "Purisa",
+        "URW Chancery L", cursive, sans-serif;
     --primary-font-colour: black;
     --primary-font-size: 14px;
     --primary-line-height: 20px;
@@ -40,7 +41,6 @@
     --loader-middle-colour: red;
     --loader-inner-colour: yellow;
 
-
     /* Operation colours */
     --op-list-operation-font-colour: blue;
     --op-list-operation-bg-colour: yellow;
@@ -70,7 +70,6 @@
     --fc-breakpoint-operation-bg-colour: deeppink;
     --fc-breakpoint-operation-border-colour: yellowgreen;
 
-
     /* Operation arguments */
     --op-title-font-weight: bold;
     --arg-font-colour: white;
@@ -79,13 +78,11 @@
     --arg-disabled-background: grey;
     --arg-label-colour: red;
 
-
     /* Operation buttons */
     --disable-icon-colour: #0f0;
     --disable-icon-selected-colour: yellow;
     --breakpoint-icon-colour: #0f0;
     --breakpoint-icon-selected-colour: yellow;
-
 
     /* Buttons */
     --btn-default-font-colour: black;
@@ -104,7 +101,6 @@
     --btn-success-hover-bg-colour: lime;
     --btn-success-hover-border-colour: grey;
 
-
     /* Highlighter colours */
     --hl1: #fff000;
     --hl2: #95dfff;
@@ -112,12 +108,10 @@
     --hl4: #fcf8e3;
     --hl5: #8de768;
 
-
     /* Scrollbar */
     --scrollbar-track: lightsteelblue;
     --scrollbar-thumb: lightslategrey;
     --scrollbar-hover: grey;
-
 
     /* Misc. */
     --drop-file-border-colour: purple;

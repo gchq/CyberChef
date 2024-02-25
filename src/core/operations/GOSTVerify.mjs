@@ -14,7 +14,6 @@ import { CryptoGost, GostEngine } from "@wavesenterprise/crypto-gost-js/index.js
  * GOST Verify operation
  */
 class GOSTVerify extends Operation {
-
     /**
      * GOSTVerify constructor
      */
@@ -23,7 +22,8 @@ class GOSTVerify extends Operation {
 
         this.name = "GOST Verify";
         this.module = "Ciphers";
-        this.description = "Verify the signature of a plaintext message using one of the GOST block ciphers. Enter the signature in the MAC field.";
+        this.description
+            = "Verify the signature of a plaintext message using one of the GOST block ciphers. Enter the signature in the MAC field.";
         this.infoURL = "https://wikipedia.org/wiki/GOST_(block_cipher)";
         this.inputType = "string";
         this.outputType = "string";
@@ -117,7 +117,6 @@ class GOSTVerify extends Operation {
             throw new OperationError(err);
         }
     }
-
 }
 
 export default GOSTVerify;

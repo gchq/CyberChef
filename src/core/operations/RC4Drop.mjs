@@ -12,7 +12,6 @@ import CryptoJS from "crypto-js";
  * RC4 Drop operation
  */
 class RC4Drop extends Operation {
-
     /**
      * RC4Drop constructor
      */
@@ -21,7 +20,8 @@ class RC4Drop extends Operation {
 
         this.name = "RC4 Drop";
         this.module = "Ciphers";
-        this.description = "It was discovered that the first few bytes of the RC4 keystream are strongly non-random and leak information about the key. We can defend against this attack by discarding the initial portion of the keystream. This modified algorithm is traditionally called RC4-drop.";
+        this.description
+            = "It was discovered that the first few bytes of the RC4 keystream are strongly non-random and leak information about the key. We can defend against this attack by discarding the initial portion of the keystream. This modified algorithm is traditionally called RC4-drop.";
         this.infoURL = "https://wikipedia.org/wiki/RC4#Fluhrer,_Mantin_and_Shamir_attack";
         this.inputType = "string";
         this.outputType = "string";
@@ -89,7 +89,6 @@ class RC4Drop extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default RC4Drop;

@@ -17,9 +17,8 @@ import * as CanvasComponents from "../core/lib/CanvasComponents.mjs";
 
 // CyberChef
 import App from "./App.mjs";
-import Categories from "../core/config/Categories.json" assert {type: "json"};
-import OperationConfig from "../core/config/OperationConfig.json" assert {type: "json"};
-
+import Categories from "../core/config/Categories.json" assert { type: "json" };
+import OperationConfig from "../core/config/OperationConfig.json" assert { type: "json" };
 
 /**
  * Main function used to build the CyberChef web app.
@@ -40,18 +39,18 @@ function main() {
     ];
 
     const defaultOptions = {
-        updateUrl:           true,
-        showHighlighter:     true,
-        wordWrap:            true,
-        showErrors:          true,
-        errorTimeout:        4000,
-        attemptHighlight:    true,
-        theme:               "classic",
-        useMetaKey:          false,
-        logLevel:            "info",
-        autoMagic:           true,
-        imagePreview:        true,
-        syncTabs:            true
+        updateUrl: true,
+        showHighlighter: true,
+        wordWrap: true,
+        showErrors: true,
+        errorTimeout: 4000,
+        attemptHighlight: true,
+        theme: "classic",
+        useMetaKey: false,
+        logLevel: "info",
+        autoMagic: true,
+        imagePreview: true,
+        syncTabs: true
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);
@@ -66,4 +65,3 @@ window.compileMessage = COMPILE_MSG;
 window.CanvasComponents = CanvasComponents;
 
 document.addEventListener("DOMContentLoaded", main, false);
-

@@ -17,18 +17,19 @@ TestRegister.addTests([
                 "op": "Sort",
                 "args": ["Line feed", false, "Numeric"]
             }
-        ],
+        ]
     },
     {
         name: "SeqUtils - Numeric sort CVE IDs",
         input: "CVE-2017-1234,CVE-2017-9999,CVE-2017-10000,CVE-2017-10001,CVE-2017-12345,CVE-2016-1234,CVE-2016-4321,CVE-2016-10000,CVE-2016-9999,CVE-2016-10001",
-        expectedOutput: "CVE-2017-12345,CVE-2017-10001,CVE-2017-10000,CVE-2017-9999,CVE-2017-1234,CVE-2016-10001,CVE-2016-10000,CVE-2016-9999,CVE-2016-4321,CVE-2016-1234",
+        expectedOutput:
+            "CVE-2017-12345,CVE-2017-10001,CVE-2017-10000,CVE-2017-9999,CVE-2017-1234,CVE-2016-10001,CVE-2016-10000,CVE-2016-9999,CVE-2016-4321,CVE-2016-1234",
         recipeConfig: [
             {
                 "op": "Sort",
                 "args": ["Comma", true, "Numeric"]
             }
-        ],
+        ]
     },
     {
         name: "SeqUtils - Hexadecimal sort",
@@ -39,6 +40,6 @@ TestRegister.addTests([
                 "op": "Sort",
                 "args": ["Comma", false, "Numeric (hexadecimal)"]
             }
-        ],
-    },
+        ]
+    }
 ]);

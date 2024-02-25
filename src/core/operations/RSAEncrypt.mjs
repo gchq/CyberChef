@@ -13,7 +13,6 @@ import { MD_ALGORITHMS } from "../lib/RSA.mjs";
  * RSA Encrypt operation
  */
 class RSAEncrypt extends Operation {
-
     /**
      * RSAEncrypt constructor
      */
@@ -47,7 +46,8 @@ class RSAEncrypt extends Operation {
                     {
                         name: "RAW",
                         off: [2]
-                    }]
+                    }
+                ]
             },
             {
                 name: "Message Digest Algorithm",
@@ -74,16 +74,17 @@ class RSAEncrypt extends Operation {
             // https://github.com/digitalbazaar/forge/issues/465#issuecomment-271097600
             const plaintextBytes = forge.util.encodeUtf8(input);
             // Encrypt message
-            const eMsg = pubKey.encrypt(plaintextBytes, scheme, {md: MD_ALGORITHMS[md].create()});
+            const eMsg = pubKey.encrypt(plaintextBytes, scheme, { md: MD_ALGORITHMS[md].create() });
             return eMsg;
         } catch (err) {
             if (err.message === "RSAES-OAEP input message length is too long.") {
-                throw new OperationError(`RSAES-OAEP input message length (${err.length}) is longer than the maximum allowed length (${err.maxLength}).`);
+                throw new OperationError(
+                    `RSAES-OAEP input message length (${err.length}) is longer than the maximum allowed length (${err.maxLength}).`
+                );
             }
             throw new OperationError(err);
         }
     }
-
 }
 
 export default RSAEncrypt;

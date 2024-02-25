@@ -10,7 +10,7 @@
 /* eslint no-console: ["off"] */
 
 import path from "path";
-import fs  from "fs";
+import fs from "fs";
 import process from "process";
 
 const dir = path.join(process.cwd() + "/src/core/config/");
@@ -23,7 +23,7 @@ if (!fs.existsSync(dir)) {
 
 // Find all operation files
 const opObjs = [];
-fs.readdirSync(path.join(dir, "../operations")).forEach(file => {
+fs.readdirSync(path.join(dir, "../operations")).forEach((file) => {
     if (!file.endsWith(".mjs") || file === "index.mjs") return;
     opObjs.push(file.split(".mjs")[0]);
 });
@@ -38,7 +38,7 @@ let code = `/**
 */
 `;
 
-opObjs.forEach(obj => {
+opObjs.forEach((obj) => {
     code += `import ${obj} from "./${obj}.mjs";\n`;
 });
 
@@ -46,15 +46,12 @@ code += `
 export {
 `;
 
-opObjs.forEach(obj => {
+opObjs.forEach((obj) => {
     code += `    ${obj},\n`;
 });
 
 code += "};\n";
 
 // Write file
-fs.writeFileSync(
-    path.join(dir, "../operations/index.mjs"),
-    code
-);
+fs.writeFileSync(path.join(dir, "../operations/index.mjs"), code);
 console.log("Written operation index.");

@@ -5,14 +5,13 @@
  */
 
 import Operation from "../Operation.mjs";
-import {FORMATS, convertCoordinates} from "../lib/ConvertCoordinates.mjs";
+import { FORMATS, convertCoordinates } from "../lib/ConvertCoordinates.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Show on map operation
  */
 class ShowOnMap extends Operation {
-
     /**
      * ShowOnMap constructor
      */
@@ -21,7 +20,8 @@ class ShowOnMap extends Operation {
 
         this.name = "Show on map";
         this.module = "Hashing";
-        this.description = "Displays co-ordinates on a slippy map.<br><br>Co-ordinates will be converted to decimal degrees before being shown on the map.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li><li>Ordnance Survey National Grid (OSNG)</li><li>Universal Transverse Mercator (UTM)</li></ul><br>This operation will not work offline.";
+        this.description
+            = "Displays co-ordinates on a slippy map.<br><br>Co-ordinates will be converted to decimal degrees before being shown on the map.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li><li>Ordnance Survey National Grid (OSNG)</li><li>Universal Transverse Mercator (UTM)</li></ul><br>This operation will not work offline.";
         this.infoURL = "https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use";
         this.inputType = "string";
         this.outputType = "string";
@@ -40,15 +40,7 @@ class ShowOnMap extends Operation {
             {
                 name: "Input Delimiter",
                 type: "option",
-                value: [
-                    "Auto",
-                    "Direction Preceding",
-                    "Direction Following",
-                    "\\n",
-                    "Comma",
-                    "Semi-colon",
-                    "Colon"
-                ]
+                value: ["Auto", "Direction Preceding", "Direction Following", "\\n", "Comma", "Semi-colon", "Colon"]
             }
         ];
     }
@@ -86,7 +78,8 @@ class ShowOnMap extends Operation {
         }
         const zoomLevel = args[0];
         const tileUrl = "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png",
-            tileAttribution = "<a href=\"https://wikimediafoundation.org/wiki/Maps_Terms_of_Use\">Wikimedia maps</a> | &copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
+            tileAttribution
+                = '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia maps</a> | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             leafletUrl = "https://unpkg.com/leaflet@1.5.0/dist/leaflet.js",
             leafletCssUrl = "https://unpkg.com/leaflet@1.5.0/dist/leaflet.css";
         return `<link rel="stylesheet" href="${leafletCssUrl}" crossorigin=""/>

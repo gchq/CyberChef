@@ -17,7 +17,7 @@ TestRegister.addTests([
                 "op": "HASSH Client Fingerprint",
                 "args": ["Hex", "Hash digest"]
             }
-        ],
+        ]
     },
     {
         name: "HASSH Server Fingerprint",
@@ -28,6 +28,6 @@ TestRegister.addTests([
                 "op": "HASSH Server Fingerprint",
                 "args": ["Hex", "Hash digest"]
             }
-        ],
+        ]
     }
 ]);

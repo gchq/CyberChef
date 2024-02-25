@@ -35,8 +35,8 @@ TestRegister.addTests([
             {
                 "op": "Parse QR Code",
                 "args": [false]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Parse QR Code : Transparent PNG",
@@ -50,8 +50,8 @@ TestRegister.addTests([
             {
                 "op": "Parse QR Code",
                 "args": [true]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Parse QR Code : Angled code",

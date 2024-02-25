@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Microsoft Script Decoder operation
  */
 class MicrosoftScriptDecoder extends Operation {
-
     /**
      * MicrosoftScriptDecoder constructor
      */
@@ -19,7 +18,8 @@ class MicrosoftScriptDecoder extends Operation {
 
         this.name = "Microsoft Script Decoder";
         this.module = "Default";
-        this.description = "Decodes Microsoft Encoded Script files that have been encoded with Microsoft's custom encoding. These are often VBS (Visual Basic Script) files that are encoded and renamed with a '.vbe' extention or JS (JScript) files renamed with a '.jse' extention.<br><br><b>Sample</b><br><br>Encoded:<br><code>#@~^RQAAAA==-mD~sX|:/TP{~J:+dYbxL~@!F@*@!+@*@!&amp;@*eEI@#@&amp;@#@&amp;.jm.raY 214Wv:zms/obI0xEAAA==^#~@</code><br><br>Decoded:<br><code>var my_msg = &#34;Testing <1><2><3>!&#34;;\n\nVScript.Echo(my_msg);</code>";
+        this.description
+            = "Decodes Microsoft Encoded Script files that have been encoded with Microsoft's custom encoding. These are often VBS (Visual Basic Script) files that are encoded and renamed with a '.vbe' extention or JS (JScript) files renamed with a '.jse' extention.<br><br><b>Sample</b><br><br>Encoded:<br><code>#@~^RQAAAA==-mD~sX|:/TP{~J:+dYbxL~@!F@*@!+@*@!&amp;@*eEI@#@&amp;@#@&amp;.jm.raY 214Wv:zms/obI0xEAAA==^#~@</code><br><br>Decoded:<br><code>var my_msg = &#34;Testing <1><2><3>!&#34;;\n\nVScript.Echo(my_msg);</code>";
         this.infoURL = "https://wikipedia.org/wiki/JScript.Encode";
         this.inputType = "string";
         this.outputType = "string";
@@ -60,7 +60,8 @@ class MicrosoftScriptDecoder extends Operation {
     static _decode(data) {
         const result = [];
         let index = -1;
-        data = data.replace(/@&/g, String.fromCharCode(10))
+        data = data
+            .replace(/@&/g, String.fromCharCode(10))
             .replace(/@#/g, String.fromCharCode(13))
             .replace(/@\*/g, ">")
             .replace(/@!/g, "<")
@@ -73,17 +74,13 @@ class MicrosoftScriptDecoder extends Operation {
                 index++;
             }
 
-            if ((byte === 9 || byte > 31 && byte < 128) &&
-                byte !== 60 &&
-                byte !== 62 &&
-                byte !== 64) {
+            if ((byte === 9 || (byte > 31 && byte < 128)) && byte !== 60 && byte !== 62 && byte !== 64) {
                 char = D_DECODE[byte].charAt(D_COMBINATION[index % 64]);
             }
             result.push(char);
         }
         return result.join("");
     }
-
 }
 
 const D_DECODE = [
@@ -218,8 +215,8 @@ const D_DECODE = [
 ];
 
 const D_COMBINATION = [
-    0, 1, 2, 0, 1, 2, 1, 2, 2, 1, 2, 1, 0, 2, 1, 2, 0, 2, 1, 2, 0, 0, 1, 2, 2, 1, 0, 2, 1, 2, 2, 1,
-    0, 0, 2, 1, 2, 1, 2, 0, 2, 0, 0, 1, 2, 0, 2, 1, 0, 2, 1, 2, 0, 0, 1, 2, 2, 0, 0, 1, 2, 0, 2, 1
+    0, 1, 2, 0, 1, 2, 1, 2, 2, 1, 2, 1, 0, 2, 1, 2, 0, 2, 1, 2, 0, 0, 1, 2, 2, 1, 0, 2, 1, 2, 2, 1, 0, 0, 2, 1, 2, 1, 2,
+    0, 2, 0, 0, 1, 2, 0, 2, 1, 0, 2, 1, 2, 0, 0, 1, 2, 2, 0, 0, 1, 2, 0, 2, 1
 ];
 
 export default MicrosoftScriptDecoder;

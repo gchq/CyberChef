@@ -16,7 +16,7 @@ TestRegister.addTests([
             {
                 "op": "Index of Coincidence",
                 "args": []
-            },
-        ],
-    },
+            }
+        ]
+    }
 ]);

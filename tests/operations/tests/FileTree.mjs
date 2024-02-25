@@ -15,8 +15,8 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "File Tree",
-                "args": ["/", "Line feed"],
-            },
-        ],
+                "args": ["/", "Line feed"]
+            }
+        ]
     }
 ]);

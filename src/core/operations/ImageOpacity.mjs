@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Image Opacity operation
  */
 class ImageOpacity extends Operation {
-
     /**
      * ImageOpacity constructor
      */
@@ -58,8 +57,7 @@ class ImageOpacity extends Operation {
             throw new OperationError(`Error loading image. (${err})`);
         }
         try {
-            if (isWorkerEnvironment())
-                self.sendStatusMessage("Changing image opacity...");
+            if (isWorkerEnvironment()) self.sendStatusMessage("Changing image opacity...");
             image.opacity(opacity / 100);
 
             let imageBuffer;
@@ -90,7 +88,6 @@ class ImageOpacity extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default ImageOpacity;

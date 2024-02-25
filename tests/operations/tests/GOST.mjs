@@ -33,7 +33,7 @@ TestRegister.addTests([
                     "ZERO"
                 ]
             }
-        ],
+        ]
     },
     {
         name: "GOST Encrypt: Kuznyechik",
@@ -55,7 +55,7 @@ TestRegister.addTests([
                     "PKCS5"
                 ]
             }
-        ],
+        ]
     },
     {
         name: "GOST Decrypt: Magma",
@@ -77,7 +77,7 @@ TestRegister.addTests([
                     "ZERO"
                 ]
             }
-        ],
+        ]
     },
     {
         name: "GOST Decrypt: Kuznyechik",
@@ -99,7 +99,7 @@ TestRegister.addTests([
                     "PKCS5"
                 ]
             }
-        ],
+        ]
     },
     {
         name: "GOST Sign",
@@ -119,7 +119,7 @@ TestRegister.addTests([
                     48
                 ]
             }
-        ],
+        ]
     },
     {
         name: "GOST Verify",
@@ -138,7 +138,7 @@ TestRegister.addTests([
                     "E-TEST"
                 ]
             }
-        ],
+        ]
     },
     {
         name: "GOST Key Wrap",
@@ -158,7 +158,7 @@ TestRegister.addTests([
                     "CP"
                 ]
             }
-        ],
+        ]
     },
     {
         name: "GOST Key Unwrap",
@@ -178,6 +178,6 @@ TestRegister.addTests([
                     "CP"
                 ]
             }
-        ],
-    },
+        ]
+    }
 ]);

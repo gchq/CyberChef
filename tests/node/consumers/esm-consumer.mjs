@@ -15,13 +15,13 @@ const a = bake("Testing, 1 2 3", [
     {
         op: unique,
         args: {
-            delimiter: "Space",
+            delimiter: "Space"
         }
     },
     {
         op: multiply,
         args: {
-            delimiter: "Space",
+            delimiter: "Space"
         }
     }
 ]);
@@ -34,13 +34,13 @@ const b = chef.bake("Testing, 1 2 3", [
     {
         op: chef.unique,
         args: {
-            delimiter: "Space",
+            delimiter: "Space"
         }
     },
     {
         op: chef.multiply,
         args: {
-            delimiter: "Space",
+            delimiter: "Space"
         }
     }
 ]);

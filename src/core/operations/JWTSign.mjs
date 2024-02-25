@@ -6,14 +6,12 @@
 import Operation from "../Operation.mjs";
 import jwt from "jsonwebtoken";
 import OperationError from "../errors/OperationError.mjs";
-import {JWT_ALGORITHMS} from "../lib/JWT.mjs";
-
+import { JWT_ALGORITHMS } from "../lib/JWT.mjs";
 
 /**
  * JWT Sign operation
  */
 class JWTSign extends Operation {
-
     /**
      * JWTSign constructor
      */
@@ -22,7 +20,8 @@ class JWTSign extends Operation {
 
         this.name = "JWT Sign";
         this.module = "Crypto";
-        this.description = "Signs a JSON object as a JSON Web Token using a provided secret / private key.<br><br>The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.";
+        this.description
+            = "Signs a JSON object as a JSON Web Token using a provided secret / private key.<br><br>The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.";
         this.infoURL = "https://wikipedia.org/wiki/JSON_Web_Token";
         this.inputType = "JSON";
         this.outputType = "string";
@@ -58,7 +57,6 @@ class JWTSign extends Operation {
 ${err}`);
         }
     }
-
 }
 
 export default JWTSign;

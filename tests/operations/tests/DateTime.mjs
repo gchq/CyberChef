@@ -16,9 +16,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Windows Filetime to UNIX Timestamp",
-                args: ["Nanoseconds (ns)", "Decimal"],
-            },
-        ],
+                args: ["Nanoseconds (ns)", "Decimal"]
+            }
+        ]
     },
     {
         name: "Unix to Filetime",
@@ -27,8 +27,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "UNIX Timestamp to Windows Filetime",
-                args: ["Nanoseconds (ns)", "Decimal"],
-            },
-        ],
-    },
+                args: ["Nanoseconds (ns)", "Decimal"]
+            }
+        ]
+    }
 ]);

@@ -6,14 +6,13 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {toHex, fromHex} from "../lib/Hex.mjs";
+import { toHex, fromHex } from "../lib/Hex.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Swap endianness operation
  */
 class SwapEndianness extends Operation {
-
     /**
      * SwapEndianness constructor
      */
@@ -22,7 +21,8 @@ class SwapEndianness extends Operation {
 
         this.name = "Swap endianness";
         this.module = "Default";
-        this.description = "Switches the data from big-endian to little-endian or vice-versa. Data can be read in as hexadecimal or raw bytes. It will be returned in the same format as it is entered.";
+        this.description
+            = "Switches the data from big-endian to little-endian or vice-versa. Data can be read in as hexadecimal or raw bytes. It will be returned in the same format as it is entered.";
         this.infoURL = "https://wikipedia.org/wiki/Endianness";
         this.inputType = "string";
         this.outputType = "string";
@@ -132,7 +132,6 @@ class SwapEndianness extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default SwapEndianness;

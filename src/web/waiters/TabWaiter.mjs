@@ -8,7 +8,6 @@
  * Waiter to handle events related to the input and output tabs
  */
 class TabWaiter {
-
     /**
      * TabWaiter constructor.
      *
@@ -26,8 +25,8 @@ class TabWaiter {
      * @returns {number}
      */
     calcMaxTabs() {
-        let numTabs = Math.floor((document.getElementById("IO").offsetWidth - 75)  / 120);
-        numTabs = (numTabs > 1) ? numTabs : 2;
+        let numTabs = Math.floor((document.getElementById("IO").offsetWidth - 75) / 120);
+        numTabs = numTabs > 1 ? numTabs : 2;
 
         return numTabs;
     }
@@ -99,7 +98,7 @@ class TabWaiter {
         const newTabContent = document.createElement("div");
         newTabContent.classList.add(`${io}-tab-content`);
         newTabContent.innerText = `Tab ${inputNum.toString()}`;
-        newTabContent.addEventListener("wheel", this.manager[io].scrollTab.bind(this.manager[io]), {passive: false});
+        newTabContent.addEventListener("wheel", this.manager[io].scrollTab.bind(this.manager[io]), { passive: false });
         newTab.appendChild(newTabContent);
 
         if (io === "input") {
@@ -158,7 +157,7 @@ class TabWaiter {
 
         // Create and add new tab elements
         for (let i = 0; i < nums.length; i++) {
-            const active = (nums[i] === activeTab);
+            const active = nums[i] === activeTab;
             tabsList.appendChild(this.createTabElement(nums[i], active, io));
         }
 
@@ -244,7 +243,6 @@ class TabWaiter {
             tabItem.style.background = `linear-gradient(to right, var(--title-background-colour) ${percentComplete}%, var(--primary-background-colour) ${percentComplete}%)`;
         }
     }
-
 }
 
 export default TabWaiter;

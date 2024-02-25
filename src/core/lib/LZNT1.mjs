@@ -64,7 +64,7 @@ export function decompress(compressed) {
 
                         const displacement = getDisplacement(decompressed.length - doffset - 1);
                         const symbolOffset = (pointer >> (12 - displacement)) + 1;
-                        const symbolLength = (pointer & (0xFFF >> displacement)) + 2;
+                        const symbolLength = (pointer & (0xfff >> displacement)) + 2;
                         const shiftOffset = decompressed.length - symbolOffset;
 
                         for (let shiftDelta = 0; shiftDelta < symbolLength + 1; shiftDelta++) {

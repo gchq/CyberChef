@@ -6,14 +6,13 @@
 
 import Operation from "../Operation.mjs";
 import moment from "moment-timezone";
-import {UNITS} from "../lib/DateTime.mjs";
+import { UNITS } from "../lib/DateTime.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
  * From UNIX Timestamp operation
  */
 class FromUNIXTimestamp extends Operation {
-
     /**
      * FromUNIXTimestamp constructor
      */
@@ -22,7 +21,8 @@ class FromUNIXTimestamp extends Operation {
 
         this.name = "From UNIX Timestamp";
         this.module = "Default";
-        this.description = "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).";
+        this.description
+            = "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).";
         this.infoURL = "https://wikipedia.org/wiki/Unix_time";
         this.inputType = "number";
         this.outputType = "string";
@@ -86,7 +86,6 @@ class FromUNIXTimestamp extends Operation {
             throw new OperationError("Unrecognised unit");
         }
     }
-
 }
 
 export default FromUNIXTimestamp;

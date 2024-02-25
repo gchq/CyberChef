@@ -6,14 +6,12 @@
 
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
-import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
-
+import { fuzzyMatch, calcMatchRanges } from "../../core/lib/FuzzyMatch.mjs";
 
 /**
  * Waiter to handle events related to the operations.
  */
 class OperationsWaiter {
-
     /**
      * OperationsWaiter constructor.
      *
@@ -28,7 +26,6 @@ class OperationsWaiter {
         this.removeIntent = false;
     }
 
-
     /**
      * Handler for search events.
      * Finds operations which match the given search term and displays them under the search box.
@@ -38,7 +35,8 @@ class OperationsWaiter {
     searchOperations(e) {
         let ops, selected;
 
-        if (e.type === "search" || e.keyCode === 13) { // Search or Return
+        if (e.type === "search" || e.keyCode === 13) {
+            // Search or Return
             e.preventDefault();
             ops = document.querySelectorAll("#search-results li");
             if (ops.length) {
@@ -49,7 +47,8 @@ class OperationsWaiter {
             }
         }
 
-        if (e.keyCode === 40) { // Down
+        if (e.keyCode === 40) {
+            // Down
             e.preventDefault();
             ops = document.querySelectorAll("#search-results li");
             if (ops.length) {
@@ -57,10 +56,11 @@ class OperationsWaiter {
                 if (selected > -1) {
                     ops[selected].classList.remove("selected-op");
                 }
-                if (selected === ops.length-1) selected = -1;
-                ops[selected+1].classList.add("selected-op");
+                if (selected === ops.length - 1) selected = -1;
+                ops[selected + 1].classList.add("selected-op");
             }
-        } else if (e.keyCode === 38) { // Up
+        } else if (e.keyCode === 38) {
+            // Up
             e.preventDefault();
             ops = document.querySelectorAll("#search-results li");
             if (ops.length) {
@@ -69,7 +69,7 @@ class OperationsWaiter {
                     ops[selected].classList.remove("selected-op");
                 }
                 if (selected === 0) selected = ops.length;
-                ops[selected-1].classList.add("selected-op");
+                ops[selected - 1].classList.add("selected-op");
             }
         } else {
             const searchResultsEl = document.getElementById("search-results");
@@ -86,16 +86,13 @@ class OperationsWaiter {
             $("#categories .show").collapse("hide");
             if (str) {
                 const matchedOps = this.filterOperations(str, true);
-                const matchedOpsHtml = matchedOps
-                    .map(v => v.toStubHtml())
-                    .join("");
+                const matchedOpsHtml = matchedOps.map((v) => v.toStubHtml()).join("");
 
                 searchResultsEl.innerHTML = matchedOpsHtml;
                 searchResultsEl.dispatchEvent(this.manager.oplistcreate);
             }
         }
     }
-
 
     /**
      * Filters operations based on the search string and returns the matching ones.
@@ -139,9 +136,8 @@ class OperationsWaiter {
         // Sort matched operations based on fuzzy score
         matchedOps.sort((a, b) => b[1] - a[1]);
 
-        return matchedOps.map(a => a[0]).concat(matchedDescs);
+        return matchedOps.map((a) => a[0]).concat(matchedDescs);
     }
-
 
     /**
      * Finds the operation which has been selected using keyboard shortcuts. This will have the class
@@ -159,7 +155,6 @@ class OperationsWaiter {
         return -1;
     }
 
-
     /**
      * Handler for oplistcreate events.
      *
@@ -171,7 +166,6 @@ class OperationsWaiter {
         this.enableOpsListPopovers(e.target);
     }
 
-
     /**
      * Sets up popovers, allowing the popover itself to gain focus which enables scrolling
      * and other interactions.
@@ -179,27 +173,32 @@ class OperationsWaiter {
      * @param {Element} el - The element to start selecting from
      */
     enableOpsListPopovers(el) {
-        $(el).find("[data-toggle=popover]").addBack("[data-toggle=popover]")
-            .popover({trigger: "manual"})
-            .on("mouseenter", function(e) {
+        $(el)
+            .find("[data-toggle=popover]")
+            .addBack("[data-toggle=popover]")
+            .popover({ trigger: "manual" })
+            .on("mouseenter", function (e) {
                 if (e.buttons > 0) return; // Mouse button held down - likely dragging an operation
                 const _this = this;
                 $(this).popover("show");
                 $(".popover").on("mouseleave", function () {
                     $(_this).popover("hide");
                 });
-            }).on("mouseleave", function () {
+            })
+            .on("mouseleave", function () {
                 const _this = this;
-                setTimeout(function() {
+                setTimeout(function () {
                     // Determine if the popover associated with this element is being hovered over
-                    if ($(_this).data("bs.popover") &&
-                        ($(_this).data("bs.popover").tip && !$($(_this).data("bs.popover").tip).is(":hover"))) {
+                    if (
+                        $(_this).data("bs.popover")
+                        && $(_this).data("bs.popover").tip
+                        && !$($(_this).data("bs.popover").tip).is(":hover")
+                    ) {
                         $(_this).popover("hide");
                     }
                 }, 50);
             });
     }
-
 
     /**
      * Handler for operation doubleclick events.
@@ -213,7 +212,6 @@ class OperationsWaiter {
         this.manager.recipe.addOperation(li.textContent);
     }
 
-
     /**
      * Handler for edit favourites click events.
      * Sets up the 'Edit favourites' pane and displays it.
@@ -225,7 +223,7 @@ class OperationsWaiter {
         e.stopPropagation();
 
         // Add favourites to modal
-        const favCat = this.app.categories.filter(function(c) {
+        const favCat = this.app.categories.filter(function (c) {
             return c.name === "Favourites";
         })[0];
 
@@ -249,26 +247,33 @@ class OperationsWaiter {
                     el.parentNode.removeChild(el);
                 }
             },
-            onEnd: function(evt) {
+            onEnd: function (evt) {
                 if (this.removeIntent) {
                     $(evt.item).popover("dispose");
                     evt.item.remove();
                 }
-            }.bind(this),
+            }.bind(this)
         });
 
-        Sortable.utils.on(editFavouritesList, "dragleave", function() {
-            this.removeIntent = true;
-        }.bind(this));
+        Sortable.utils.on(
+            editFavouritesList,
+            "dragleave",
+            function () {
+                this.removeIntent = true;
+            }.bind(this)
+        );
 
-        Sortable.utils.on(editFavouritesList, "dragover", function() {
-            this.removeIntent = false;
-        }.bind(this));
+        Sortable.utils.on(
+            editFavouritesList,
+            "dragover",
+            function () {
+                this.removeIntent = false;
+            }.bind(this)
+        );
 
         $("#edit-favourites-list [data-toggle=popover]").popover();
         $("#favourites-modal").modal();
     }
-
 
     /**
      * Handler for save favourites click events.
@@ -276,14 +281,13 @@ class OperationsWaiter {
      */
     saveFavouritesClick() {
         const favs = document.querySelectorAll("#edit-favourites-list li");
-        const favouritesList = Array.from(favs, e => e.childNodes[0].textContent);
+        const favouritesList = Array.from(favs, (e) => e.childNodes[0].textContent);
 
         this.app.saveFavourites(favouritesList);
         this.app.loadFavourites();
         this.app.populateOperationsList();
         this.manager.recipe.initialiseOperationDragNDrop();
     }
-
 
     /**
      * Handler for reset favourites click events.
@@ -292,7 +296,6 @@ class OperationsWaiter {
     resetFavouritesClick() {
         this.app.resetFavourites();
     }
-
 }
 
 export default OperationsWaiter;

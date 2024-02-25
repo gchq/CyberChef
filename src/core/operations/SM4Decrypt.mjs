@@ -14,7 +14,6 @@ import { decryptSM4 } from "../lib/SM4.mjs";
  * SM4 Decrypt operation
  */
 class SM4Decrypt extends Operation {
-
     /**
      * SM4Encrypt constructor
      */
@@ -23,7 +22,8 @@ class SM4Decrypt extends Operation {
 
         this.name = "SM4 Decrypt";
         this.module = "Ciphers";
-        this.description = "SM4 is a 128-bit block cipher, currently established as a national standard (GB/T 32907-2016) of China.";
+        this.description
+            = "SM4 is a 128-bit block cipher, currently established as a national standard (GB/T 32907-2016) of China.";
         this.infoURL = "https://wikipedia.org/wiki/SM4_(cipher)";
         this.inputType = "string";
         this.outputType = "string";
@@ -66,7 +66,7 @@ class SM4Decrypt extends Operation {
     run(input, args) {
         const key = Utils.convertToByteArray(args[0].string, args[0].option),
             iv = Utils.convertToByteArray(args[1].string, args[1].option),
-            [,, mode, inputType, outputType] = args;
+            [, , mode, inputType, outputType] = args;
 
         if (key.length !== 16)
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -82,7 +82,6 @@ Make sure you have specified the type correctly (e.g. Hex vs UTF8).`);
         const output = decryptSM4(input, key, iv, mode.substring(0, 3), mode.endsWith("NoPadding"));
         return outputType === "Hex" ? toHex(output) : Utils.byteArrayToUtf8(output);
     }
-
 }
 
 export default SM4Decrypt;

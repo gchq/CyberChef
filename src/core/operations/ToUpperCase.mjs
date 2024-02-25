@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * To Upper case operation
  */
 class ToUpperCase extends Operation {
-
     /**
      * ToUpperCase constructor
      */
@@ -20,7 +19,8 @@ class ToUpperCase extends Operation {
 
         this.name = "To Upper case";
         this.module = "Default";
-        this.description = "Converts the input string to upper case, optionally limiting scope to only the first character in each word, sentence or paragraph.";
+        this.description
+            = "Converts the input string to upper case, optionally limiting scope to only the first character in each word, sentence or paragraph.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -59,7 +59,7 @@ class ToUpperCase extends Operation {
         }
 
         // Use the regex to capitalize the input
-        return input.replace(scopeRegex, function(m) {
+        return input.replace(scopeRegex, function (m) {
             return m.toUpperCase();
         });
     }
@@ -89,7 +89,6 @@ class ToUpperCase extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default ToUpperCase;

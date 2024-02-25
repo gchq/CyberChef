@@ -17,7 +17,7 @@ TestRegister.addTests([
                 "op": "JA3S Fingerprint",
                 "args": ["Hex", "Hash digest"]
             }
-        ],
+        ]
     },
     {
         name: "JA3S Fingerprint: TLS 1.1",
@@ -28,7 +28,7 @@ TestRegister.addTests([
                 "op": "JA3S Fingerprint",
                 "args": ["Hex", "Hash digest"]
             }
-        ],
+        ]
     },
     {
         name: "JA3S Fingerprint: TLS 1.2",
@@ -39,8 +39,8 @@ TestRegister.addTests([
                 "op": "JA3S Fingerprint",
                 "args": ["Hex", "Hash digest"]
             }
-        ],
-    },
+        ]
+    }
     // This Server Hello was based on draft 18 of the TLS1.3 spec which does not include a Session ID field, leading it to fail.
     // The published version of TLS1.3 does require a legacy Session ID field (even if it is empty).
     // {

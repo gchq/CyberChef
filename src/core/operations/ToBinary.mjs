@@ -6,14 +6,13 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import {BIN_DELIM_OPTIONS} from "../lib/Delim.mjs";
-import {toBinary} from "../lib/Binary.mjs";
+import { BIN_DELIM_OPTIONS } from "../lib/Delim.mjs";
+import { toBinary } from "../lib/Binary.mjs";
 
 /**
  * To Binary operation
  */
 class ToBinary extends Operation {
-
     /**
      * ToBinary constructor
      */
@@ -22,7 +21,8 @@ class ToBinary extends Operation {
 
         this.name = "To Binary";
         this.module = "Default";
-        this.description = "Displays the input data as a binary string.<br><br>e.g. <code>Hi</code> becomes <code>01001000 01101001</code>";
+        this.description
+            = "Displays the input data as a binary string.<br><br>e.g. <code>Hi</code> becomes <code>01001000 01101001</code>";
         this.infoURL = "https://wikipedia.org/wiki/Binary_code";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -82,7 +82,6 @@ class ToBinary extends Operation {
         pos[0].end = pos[0].end === 0 ? 0 : Math.ceil(pos[0].end / (8 + delim.length));
         return pos;
     }
-
 }
 
 export default ToBinary;

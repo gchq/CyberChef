@@ -7,6 +7,5 @@ TestRegister.addApiTests([
     it("Dish - presentAs: should exist", () => {
         const dish = new Dish();
         assert(dish.presentAs);
-    }),
-
+    })
 ]);

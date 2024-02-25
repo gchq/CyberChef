@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Remove whitespace operation
  */
 class RemoveWhitespace extends Operation {
-
     /**
      * RemoveWhitespace constructor
      */
@@ -19,7 +18,8 @@ class RemoveWhitespace extends Operation {
 
         this.name = "Remove whitespace";
         this.module = "Default";
-        this.description = "Optionally removes all spaces, carriage returns, line feeds, tabs and form feeds from the input data.<br><br>This operation also supports the removal of full stops which are sometimes used to represent non-printable bytes in ASCII output.";
+        this.description
+            = "Optionally removes all spaces, carriage returns, line feeds, tabs and form feeds from the input data.<br><br>This operation also supports the removal of full stops which are sometimes used to represent non-printable bytes in ASCII output.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -62,14 +62,8 @@ class RemoveWhitespace extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [
-            removeSpaces,
-            removeCarriageReturns,
-            removeLineFeeds,
-            removeTabs,
-            removeFormFeeds,
-            removeFullStops
-        ] = args;
+        const [removeSpaces, removeCarriageReturns, removeLineFeeds, removeTabs, removeFormFeeds, removeFullStops]
+            = args;
         let data = input;
 
         if (removeSpaces) data = data.replace(/ /g, "");
@@ -80,7 +74,6 @@ class RemoveWhitespace extends Operation {
         if (removeFullStops) data = data.replace(/\./g, "");
         return data;
     }
-
 }
 
 export default RemoveWhitespace;

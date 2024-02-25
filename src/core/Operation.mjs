@@ -11,28 +11,26 @@ import Ingredient from "./Ingredient.mjs";
  * The Operation specified by the user to be run.
  */
 class Operation {
-
     /**
      * Operation constructor
      */
     constructor() {
         // Private fields
-        this._inputType       = -1;
-        this._outputType      = -1;
-        this._presentType     = -1;
-        this._breakpoint      = false;
-        this._disabled        = false;
-        this._flowControl     = false;
-        this._manualBake      = false;
-        this._ingList         = [];
+        this._inputType = -1;
+        this._outputType = -1;
+        this._presentType = -1;
+        this._breakpoint = false;
+        this._disabled = false;
+        this._flowControl = false;
+        this._manualBake = false;
+        this._ingList = [];
 
         // Public fields
-        this.name             = "";
-        this.module           = "";
-        this.description      = "";
-        this.infoURL          = null;
+        this.name = "";
+        this.module = "";
+        this.description = "";
+        this.infoURL = null;
     }
-
 
     /**
      * Interface for operation runner
@@ -44,7 +42,6 @@ class Operation {
     run(input, args) {
         return input;
     }
-
 
     /**
      * Interface for forward highlighter
@@ -59,7 +56,6 @@ class Operation {
         return false;
     }
 
-
     /**
      * Interface for reverse highlighter
      *
@@ -72,7 +68,6 @@ class Operation {
     highlightReverse(pos, args) {
         return false;
     }
-
 
     /**
      * Method to be called when displaying the result of an operation in a human-readable
@@ -90,7 +85,6 @@ class Operation {
         return data;
     }
 
-
     /**
      * Sets the input type as a Dish enum.
      *
@@ -100,7 +94,6 @@ class Operation {
         this._inputType = Dish.typeEnum(typeStr);
     }
 
-
     /**
      * Gets the input type as a readable string.
      *
@@ -109,7 +102,6 @@ class Operation {
     get inputType() {
         return Dish.enumLookup(this._inputType);
     }
-
 
     /**
      * Sets the output type as a Dish enum.
@@ -121,7 +113,6 @@ class Operation {
         if (this._presentType < 0) this._presentType = this._outputType;
     }
 
-
     /**
      * Gets the output type as a readable string.
      *
@@ -130,7 +121,6 @@ class Operation {
     get outputType() {
         return Dish.enumLookup(this._outputType);
     }
-
 
     /**
      * Sets the presentation type as a Dish enum.
@@ -141,7 +131,6 @@ class Operation {
         this._presentType = Dish.typeEnum(typeStr);
     }
 
-
     /**
      * Gets the presentation type as a readable string.
      *
@@ -151,19 +140,17 @@ class Operation {
         return Dish.enumLookup(this._presentType);
     }
 
-
     /**
      * Sets the args for the current operation.
      *
      * @param {Object[]} conf
      */
     set args(conf) {
-        conf.forEach(arg => {
+        conf.forEach((arg) => {
             const ingredient = new Ingredient(arg);
             this.addIngredient(ingredient);
         });
     }
-
 
     /**
      * Gets the args for the current operation.
@@ -171,7 +158,7 @@ class Operation {
      * @param {Object[]} conf
      */
     get args() {
-        return this._ingList.map(ing => {
+        return this._ingList.map((ing) => {
             const conf = {
                 name: ing.name,
                 type: ing.type,
@@ -192,7 +179,6 @@ class Operation {
         });
     }
 
-
     /**
      * Returns the value of the Operation as it should be displayed in a recipe config.
      *
@@ -201,10 +187,9 @@ class Operation {
     get config() {
         return {
             "op": this.name,
-            "args": this._ingList.map(ing => ing.config)
+            "args": this._ingList.map((ing) => ing.config)
         };
     }
-
 
     /**
      * Adds a new Ingredient to this Operation.
@@ -214,7 +199,6 @@ class Operation {
     addIngredient(ingredient) {
         this._ingList.push(ingredient);
     }
-
 
     /**
      * Set the Ingredient values for this Operation.
@@ -227,16 +211,14 @@ class Operation {
         });
     }
 
-
     /**
      * Get the Ingredient values for this Operation.
      *
      * @returns {Object[]}
      */
     get ingValues() {
-        return this._ingList.map(ing => ing.value);
+        return this._ingList.map((ing) => ing.value);
     }
-
 
     /**
      * Set whether this Operation has a breakpoint.
@@ -247,7 +229,6 @@ class Operation {
         this._breakpoint = !!value;
     }
 
-
     /**
      * Returns true if this Operation has a breakpoint set.
      *
@@ -256,7 +237,6 @@ class Operation {
     get breakpoint() {
         return this._breakpoint;
     }
-
 
     /**
      * Set whether this Operation is disabled.
@@ -267,7 +247,6 @@ class Operation {
         this._disabled = !!value;
     }
 
-
     /**
      * Returns true if this Operation is disabled.
      *
@@ -276,7 +255,6 @@ class Operation {
     get disabled() {
         return this._disabled;
     }
-
 
     /**
      * Returns true if this Operation is a flow control.
@@ -287,7 +265,6 @@ class Operation {
         return this._flowControl;
     }
 
-
     /**
      * Set whether this Operation is a flowcontrol op.
      *
@@ -296,7 +273,6 @@ class Operation {
     set flowControl(value) {
         this._flowControl = !!value;
     }
-
 
     /**
      * Returns true if this Operation should not trigger AutoBake.
@@ -307,7 +283,6 @@ class Operation {
         return this._manualBake;
     }
 
-
     /**
      * Set whether this Operation should trigger AutoBake.
      *
@@ -316,7 +291,6 @@ class Operation {
     set manualBake(value) {
         this._manualBake = !!value;
     }
-
 }
 
 export default Operation;

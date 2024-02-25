@@ -13,13 +13,12 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 
 const d3 = d3temp.default ? d3temp.default : d3temp;
-const nodom = nodomtemp.default ? nodomtemp.default: nodomtemp;
+const nodom = nodomtemp.default ? nodomtemp.default : nodomtemp;
 
 /**
  * Series chart operation
  */
 class SeriesChart extends Operation {
-
     /**
      * SeriesChart constructor
      */
@@ -28,35 +27,36 @@ class SeriesChart extends Operation {
 
         this.name = "Series chart";
         this.module = "Charts";
-        this.description = "A time series graph is a line graph of repeated measurements taken over regular time intervals.";
+        this.description
+            = "A time series graph is a line graph of repeated measurements taken over regular time intervals.";
         this.inputType = "string";
         this.outputType = "html";
         this.args = [
             {
                 name: "Record delimiter",
                 type: "option",
-                value: RECORD_DELIMITER_OPTIONS,
+                value: RECORD_DELIMITER_OPTIONS
             },
             {
                 name: "Field delimiter",
                 type: "option",
-                value: FIELD_DELIMITER_OPTIONS,
+                value: FIELD_DELIMITER_OPTIONS
             },
             {
                 name: "X label",
                 type: "string",
-                value: "",
+                value: ""
             },
             {
                 name: "Point radius",
                 type: "number",
-                value: 1,
+                value: 1
             },
             {
                 name: "Series colours",
                 type: "string",
-                value: "mediumseagreen, dodgerblue, tomato",
-            },
+                value: "mediumseagreen, dodgerblue, tomato"
+            }
         ];
     }
 
@@ -89,22 +89,23 @@ class SeriesChart extends Operation {
 
         const document = new nodom.Document();
         let svg = document.createElement("svg");
-        svg = d3.select(svg)
+        svg = d3
+            .select(svg)
             .attr("width", "100%")
             .attr("height", "100%")
             .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
 
-        const xAxis = d3.scalePoint()
-            .domain(xValues)
-            .range([0, seriesWidth]);
+        const xAxis = d3.scalePoint().domain(xValues).range([0, seriesWidth]);
 
         svg.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", `translate(${seriesLabelWidth}, ${xAxisHeight})`)
             .call(
-                d3.axisTop(xAxis).tickValues(xValues.filter((x, i) => {
-                    return [0, Math.round(xValues.length / 2), xValues.length -1].indexOf(i) >= 0;
-                }))
+                d3.axisTop(xAxis).tickValues(
+                    xValues.filter((x, i) => {
+                        return [0, Math.round(xValues.length / 2), xValues.length - 1].indexOf(i) >= 0;
+                    })
+                )
             );
 
         svg.append("text")
@@ -116,10 +117,10 @@ class SeriesChart extends Operation {
         const tooltipText = {},
             tooltipAreaWidth = seriesWidth / xValues.length;
 
-        xValues.forEach(x => {
+        xValues.forEach((x) => {
             const tooltip = [];
 
-            series.forEach(serie => {
+            series.forEach((serie) => {
                 const y = serie.data[x];
                 if (typeof y === "undefined") return;
 
@@ -129,8 +130,7 @@ class SeriesChart extends Operation {
             tooltipText[x] = tooltip.join("\n");
         });
 
-        const chartArea = svg.append("g")
-            .attr("transform", `translate(${seriesLabelWidth}, ${xAxisHeight})`);
+        const chartArea = svg.append("g").attr("transform", `translate(${seriesLabelWidth}, ${xAxisHeight})`);
 
         chartArea
             .append("g")
@@ -138,8 +138,8 @@ class SeriesChart extends Operation {
             .data(xValues)
             .enter()
             .append("rect")
-            .attr("x", x => {
-                return xAxis(x) - (tooltipAreaWidth / 2);
+            .attr("x", (x) => {
+                return xAxis(x) - tooltipAreaWidth / 2;
             })
             .attr("y", 0)
             .attr("width", tooltipAreaWidth)
@@ -147,36 +147,38 @@ class SeriesChart extends Operation {
             .attr("stroke", "none")
             .attr("fill", "transparent")
             .append("title")
-            .text(x => {
+            .text((x) => {
                 return `${x}\n
                     --\n
                     ${tooltipText[x]}\n
                 `.replace(/\s{2,}/g, "\n");
             });
 
-        const yAxesArea = svg.append("g")
-            .attr("transform", `translate(0, ${xAxisHeight})`);
+        const yAxesArea = svg.append("g").attr("transform", `translate(0, ${xAxisHeight})`);
 
         series.forEach((serie, seriesIndex) => {
             const yExtent = d3.extent(Object.values(serie.data)),
-                yAxis = d3.scaleLinear()
-                    .domain(yExtent)
-                    .range([seriesHeight, 0]);
+                yAxis = d3.scaleLinear().domain(yExtent).range([seriesHeight, 0]);
 
             const seriesGroup = chartArea
                 .append("g")
-                .attr("transform", `translate(0, ${seriesHeight * seriesIndex + interSeriesPadding * (seriesIndex + 1)})`);
+                .attr(
+                    "transform",
+                    `translate(0, ${seriesHeight * seriesIndex + interSeriesPadding * (seriesIndex + 1)})`
+                );
 
             let path = "";
             xValues.forEach((x, xIndex) => {
                 let nextX = xValues[xIndex + 1],
                     y = serie.data[x],
-                    nextY= serie.data[nextX];
+                    nextY = serie.data[nextX];
 
                 if (typeof y === "undefined" || typeof nextY === "undefined") return;
 
-                x = xAxis(x); nextX = xAxis(nextX);
-                y = yAxis(y); nextY = yAxis(nextY);
+                x = xAxis(x);
+                nextX = xAxis(nextX);
+                y = yAxis(y);
+                nextY = yAxis(nextY);
 
                 path += `M ${x} ${y} L ${nextX} ${nextY} z `;
             });
@@ -188,7 +190,7 @@ class SeriesChart extends Operation {
                 .attr("stroke", seriesColours[seriesIndex % seriesColours.length])
                 .attr("stroke-width", "1");
 
-            xValues.forEach(x => {
+            xValues.forEach((x) => {
                 const y = serie.data[x];
                 if (typeof y === "undefined") return;
 
@@ -199,7 +201,7 @@ class SeriesChart extends Operation {
                     .attr("r", pipRadius)
                     .attr("fill", seriesColours[seriesIndex % seriesColours.length])
                     .append("title")
-                    .text(d => {
+                    .text((d) => {
                         return `${x}\n
                             --\n
                             ${tooltipText[x]}\n
@@ -209,13 +211,19 @@ class SeriesChart extends Operation {
 
             yAxesArea
                 .append("g")
-                .attr("transform", `translate(${seriesLabelWidth - interSeriesPadding}, ${seriesHeight * seriesIndex + interSeriesPadding * (seriesIndex + 1)})`)
+                .attr(
+                    "transform",
+                    `translate(${seriesLabelWidth - interSeriesPadding}, ${seriesHeight * seriesIndex + interSeriesPadding * (seriesIndex + 1)})`
+                )
                 .attr("class", "axis axis--y")
                 .call(d3.axisLeft(yAxis).ticks(5));
 
             yAxesArea
                 .append("g")
-                .attr("transform", `translate(0, ${seriesHeight / 2 + seriesHeight * seriesIndex + interSeriesPadding * (seriesIndex + 1)})`)
+                .attr(
+                    "transform",
+                    `translate(0, ${seriesHeight / 2 + seriesHeight * seriesIndex + interSeriesPadding * (seriesIndex + 1)})`
+                )
                 .append("text")
                 .style("text-anchor", "middle")
                 .attr("transform", "rotate(-90)")
@@ -224,7 +232,6 @@ class SeriesChart extends Operation {
 
         return svg._groups[0][0].outerHTML;
     }
-
 }
 
 export default SeriesChart;

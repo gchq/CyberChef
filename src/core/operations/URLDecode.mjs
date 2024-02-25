@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * URL Decode operation
  */
 class URLDecode extends Operation {
-
     /**
      * URLDecode constructor
      */
@@ -19,7 +18,8 @@ class URLDecode extends Operation {
 
         this.name = "URL Decode";
         this.module = "URL";
-        this.description = "Converts URI/URL percent-encoded characters back to their raw values.<br><br>e.g. <code>%3d</code> becomes <code>=</code>";
+        this.description
+            = "Converts URI/URL percent-encoded characters back to their raw values.<br><br>e.g. <code>%3d</code> becomes <code>=</code>";
         this.infoURL = "https://wikipedia.org/wiki/Percent-encoding";
         this.inputType = "string";
         this.outputType = "string";
@@ -29,7 +29,7 @@ class URLDecode extends Operation {
                 pattern: ".*(?:%[\\da-f]{2}.*){4}",
                 flags: "i",
                 args: []
-            },
+            }
         ];
     }
 
@@ -46,7 +46,6 @@ class URLDecode extends Operation {
             return unescape(data);
         }
     }
-
 }
 
 export default URLDecode;

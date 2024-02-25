@@ -11,7 +11,6 @@ import Utils from "../Utils.mjs";
  * Reverse operation
  */
 class Reverse extends Operation {
-
     /**
      * Reverse constructor
      */
@@ -81,7 +80,6 @@ class Reverse extends Operation {
             return input.reverse();
         }
     }
-
 }
 
 export default Reverse;

@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Invert Image operation
  */
 class InvertImage extends Operation {
-
     /**
      * InvertImage constructor
      */
@@ -49,8 +48,7 @@ class InvertImage extends Operation {
             throw new OperationError(`Error loading image. (${err})`);
         }
         try {
-            if (isWorkerEnvironment())
-                self.sendStatusMessage("Inverting image...");
+            if (isWorkerEnvironment()) self.sendStatusMessage("Inverting image...");
             image.invert();
 
             let imageBuffer;
@@ -81,7 +79,6 @@ class InvertImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default InvertImage;

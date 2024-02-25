@@ -9,7 +9,6 @@
  */
 import TestRegister from "../../lib/TestRegister.mjs";
 
-
 TestRegister.addTests([
     {
         name: "Affine Encode: no input",
@@ -20,7 +19,7 @@ TestRegister.addTests([
                 op: "Affine Cipher Encode",
                 args: [1, 0]
             }
-        ],
+        ]
     },
     {
         name: "Affine Encode: invalid a & b (non-integer)",
@@ -31,7 +30,7 @@ TestRegister.addTests([
                 op: "Affine Cipher Encode",
                 args: [0.1, 0.00001]
             }
-        ],
+        ]
     },
     {
         name: "Affine Encode: no effect",
@@ -42,7 +41,7 @@ TestRegister.addTests([
                 op: "Affine Cipher Encode",
                 args: [1, 0]
             }
-        ],
+        ]
     },
     {
         name: "Affine Encode: normal",
@@ -53,7 +52,7 @@ TestRegister.addTests([
                 op: "Affine Cipher Encode",
                 args: [23, 23]
             }
-        ],
+        ]
     },
     {
         name: "Affine Decode: no input",
@@ -64,7 +63,7 @@ TestRegister.addTests([
                 op: "Affine Cipher Decode",
                 args: [1, 0]
             }
-        ],
+        ]
     },
     {
         name: "Affine Decode: invalid a & b (non-integer)",
@@ -75,7 +74,7 @@ TestRegister.addTests([
                 op: "Affine Cipher Decode",
                 args: [0.1, 0.00001]
             }
-        ],
+        ]
     },
     {
         name: "Affine Decode: invalid a (coprime)",
@@ -86,7 +85,7 @@ TestRegister.addTests([
                 op: "Affine Cipher Decode",
                 args: [8, 23]
             }
-        ],
+        ]
     },
     {
         name: "Affine Decode: no effect",
@@ -97,7 +96,7 @@ TestRegister.addTests([
                 op: "Affine Cipher Decode",
                 args: [1, 0]
             }
-        ],
+        ]
     },
     {
         name: "Affine Decode: normal",
@@ -108,7 +107,7 @@ TestRegister.addTests([
                 op: "Affine Cipher Decode",
                 args: [23, 23]
             }
-        ],
+        ]
     },
     {
         name: "A1Z26 Encode: normal",
@@ -119,7 +118,7 @@ TestRegister.addTests([
                 op: "A1Z26 Cipher Encode",
                 args: ["Space"]
             }
-        ],
+        ]
     },
     {
         name: "A1Z26 Decode: normal",
@@ -130,7 +129,7 @@ TestRegister.addTests([
                 op: "A1Z26 Cipher Decode",
                 args: ["Space"]
             }
-        ],
+        ]
     },
     {
         name: "A1Z26 Decode: error",
@@ -141,7 +140,7 @@ TestRegister.addTests([
                 op: "A1Z26 Cipher Decode",
                 args: ["Space"]
             }
-        ],
+        ]
     },
     {
         name: "Atbash: no input",
@@ -152,7 +151,7 @@ TestRegister.addTests([
                 op: "Atbash Cipher",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "Atbash: normal",
@@ -163,7 +162,7 @@ TestRegister.addTests([
                 op: "Atbash Cipher",
                 args: []
             }
-        ],
+        ]
     },
     {
         name: "Bifid Cipher Encode: no input",
@@ -174,7 +173,7 @@ TestRegister.addTests([
                 "op": "Bifid Cipher Encode",
                 "args": ["nothing"]
             }
-        ],
+        ]
     },
     {
         name: "Bifid Cipher Encode: no key",
@@ -185,7 +184,7 @@ TestRegister.addTests([
                 "op": "Bifid Cipher Encode",
                 "args": [""]
             }
-        ],
+        ]
     },
     {
         name: "Bifid Cipher Encode: invalid key (non-alphabetic)",
@@ -196,7 +195,7 @@ TestRegister.addTests([
                 "op": "Bifid Cipher Encode",
                 "args": ["abc123"]
             }
-        ],
+        ]
     },
     {
         name: "Bifid Cipher Encode: normal",
@@ -207,7 +206,7 @@ TestRegister.addTests([
                 "op": "Bifid Cipher Encode",
                 "args": ["Schrodinger"]
             }
-        ],
+        ]
     },
     {
         name: "Bifid Cipher Decode: no input",
@@ -218,7 +217,7 @@ TestRegister.addTests([
                 "op": "Bifid Cipher Decode",
                 "args": ["nothing"]
             }
-        ],
+        ]
     },
     {
         name: "Bifid Cipher Decode: no key",
@@ -229,7 +228,7 @@ TestRegister.addTests([
                 "op": "Bifid Cipher Decode",
                 "args": [""]
             }
-        ],
+        ]
     },
     {
         name: "Bifid Cipher Decode: invalid key (non-alphabetic)",
@@ -240,7 +239,7 @@ TestRegister.addTests([
                 "op": "Bifid Cipher Decode",
                 "args": ["abc123"]
             }
-        ],
+        ]
     },
     {
         name: "Bifid Cipher Decode: normal",
@@ -251,7 +250,7 @@ TestRegister.addTests([
                 "op": "Bifid Cipher Decode",
                 "args": ["Schrodinger"]
             }
-        ],
+        ]
     },
     {
         name: "Citrix CTX1 Encode",
@@ -262,7 +261,7 @@ TestRegister.addTests([
                 "op": "Citrix CTX1 Encode",
                 "args": []
             }
-        ],
+        ]
     },
     {
         name: "Citrix CTX1 Decode: normal",
@@ -273,7 +272,7 @@ TestRegister.addTests([
                 "op": "Citrix CTX1 Decode",
                 "args": []
             }
-        ],
+        ]
     },
     {
         name: "Citrix CTX1 Decode: invalid length",
@@ -284,7 +283,7 @@ TestRegister.addTests([
                 "op": "Citrix CTX1 Decode",
                 "args": []
             }
-        ],
+        ]
     },
     {
         name: "Vigenère Encode: no input",
@@ -295,7 +294,7 @@ TestRegister.addTests([
                 "op": "Vigenère Encode",
                 "args": ["nothing"]
             }
-        ],
+        ]
     },
     {
         name: "Vigenère Encode: no key",
@@ -306,7 +305,7 @@ TestRegister.addTests([
                 "op": "Vigenère Encode",
                 "args": [""]
             }
-        ],
+        ]
     },
     {
         name: "Vigenère Encode: invalid key",
@@ -317,7 +316,7 @@ TestRegister.addTests([
                 "op": "Vigenère Encode",
                 "args": ["abc123"]
             }
-        ],
+        ]
     },
     {
         name: "Vigenère Encode: normal",
@@ -328,7 +327,7 @@ TestRegister.addTests([
                 "op": "Vigenère Encode",
                 "args": ["Edward"]
             }
-        ],
+        ]
     },
     {
         name: "Vigenère Decode: no input",
@@ -339,7 +338,7 @@ TestRegister.addTests([
                 "op": "Vigenère Decode",
                 "args": ["nothing"]
             }
-        ],
+        ]
     },
     {
         name: "Vigenère Decode: no key",
@@ -350,7 +349,7 @@ TestRegister.addTests([
                 "op": "Vigenère Decode",
                 "args": [""]
             }
-        ],
+        ]
     },
     {
         name: "Vigenère Decode: invalid key",
@@ -361,7 +360,7 @@ TestRegister.addTests([
                 "op": "Vigenère Decode",
                 "args": ["abc123"]
             }
-        ],
+        ]
     },
     {
         name: "Vigenère Decode: normal",
@@ -372,7 +371,7 @@ TestRegister.addTests([
                 "op": "Vigenère Decode",
                 "args": ["Edward"]
             }
-        ],
+        ]
     },
     {
         name: "Substitute: no pt/ct",
@@ -383,7 +382,7 @@ TestRegister.addTests([
                 "op": "Substitute",
                 "args": ["", ""]
             }
-        ],
+        ]
     },
     {
         name: "Substitute: no input",
@@ -394,7 +393,7 @@ TestRegister.addTests([
                 "op": "Substitute",
                 "args": ["abcdefghijklmnopqrstuvwxyz", "zebrascdfghijklmnopqtuvwxy"]
             }
-        ],
+        ]
     },
     {
         name: "Substitute: uneven pt/ct",
@@ -405,7 +404,7 @@ TestRegister.addTests([
                 "op": "Substitute",
                 "args": ["abcdefghijklmnopqrstuvwxyz", "zebrascdfghijklmnopqtuvwx"]
             }
-        ],
+        ]
     },
     {
         name: "Substitute: normal",
@@ -416,7 +415,7 @@ TestRegister.addTests([
                 "op": "Substitute",
                 "args": ["abcdefghijklmnopqrstuvwxyz", "zebrascdfghijklmnopqtuvwxy"]
             }
-        ],
+        ]
     },
     {
         name: "Rail Fence Cipher Decode: normal",
@@ -427,7 +426,7 @@ TestRegister.addTests([
                 "op": "Rail Fence Cipher Decode",
                 "args": [2, 0]
             }
-        ],
+        ]
     },
     {
         name: "Rail Fence Cipher Decode: key has to be bigger than 2",
@@ -438,7 +437,7 @@ TestRegister.addTests([
                 "op": "Rail Fence Cipher Decode",
                 "args": [1, 0]
             }
-        ],
+        ]
     },
     {
         name: "Rail Fence Cipher Decode: key has to be smaller than input's length",
@@ -449,7 +448,7 @@ TestRegister.addTests([
                 "op": "Rail Fence Cipher Decode",
                 "args": [22, 0]
             }
-        ],
+        ]
     },
     {
         name: "Rail Fence Cipher Decode: offset should be positive",
@@ -460,7 +459,7 @@ TestRegister.addTests([
                 "op": "Rail Fence Cipher Decode",
                 "args": [2, -1]
             }
-        ],
+        ]
     },
     {
         name: "Rail Fence Cipher Decode: Normal with Offset non-null",
@@ -471,7 +470,7 @@ TestRegister.addTests([
                 "op": "Rail Fence Cipher Decode",
                 "args": [4, 2]
             }
-        ],
+        ]
     },
     {
         name: "Rail Fence Cipher Encode: normal",
@@ -482,7 +481,7 @@ TestRegister.addTests([
                 "op": "Rail Fence Cipher Encode",
                 "args": [2, 0]
             }
-        ],
+        ]
     },
     {
         name: "Rail Fence Cipher Encode: key has to be bigger than 2",
@@ -493,7 +492,7 @@ TestRegister.addTests([
                 "op": "Rail Fence Cipher Encode",
                 "args": [1, 0]
             }
-        ],
+        ]
     },
     {
         name: "Rail Fence Cipher Encode: key has to be smaller than input's length",
@@ -504,7 +503,7 @@ TestRegister.addTests([
                 "op": "Rail Fence Cipher Encode",
                 "args": [22, 0]
             }
-        ],
+        ]
     },
     {
         name: "Rail Fence Cipher Encode: offset should be positive",
@@ -515,7 +514,7 @@ TestRegister.addTests([
                 "op": "Rail Fence Cipher Encode",
                 "args": [2, -1]
             }
-        ],
+        ]
     },
     {
         name: "Rail Fence Cipher Encode: Normal with Offset non-null",
@@ -526,6 +525,6 @@ TestRegister.addTests([
                 "op": "Rail Fence Cipher Encode",
                 "args": [4, 2]
             }
-        ],
-    },
+        ]
+    }
 ]);

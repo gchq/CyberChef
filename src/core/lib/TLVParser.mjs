@@ -17,7 +17,6 @@ const defaults = {
  * TLVParser library
  */
 export default class TLVParser {
-
     /**
      * TLVParser constructor
      *

@@ -40,7 +40,6 @@
     --loader-middle-colour: #e74c3c;
     --loader-inner-colour: #f9c922;
 
-
     /* Operation colours */
     --op-list-operation-font-colour: #c5c5c5;
     --op-list-operation-bg-colour: #333;
@@ -70,7 +69,6 @@
     --fc-breakpoint-operation-bg-colour: #072b49;
     --fc-breakpoint-operation-border-colour: #444;
 
-
     /* Operation arguments */
     --op-title-font-weight: bold;
     --arg-font-colour: #bbb;
@@ -79,13 +77,11 @@
     --arg-disabled-background: #4f4f4f;
     --arg-label-colour: rgb(25, 118, 210);
 
-
     /* Operation buttons */
     --disable-icon-colour: #9e9e9e;
     --disable-icon-selected-colour: #f44336;
     --breakpoint-icon-colour: #9e9e9e;
     --breakpoint-icon-selected-colour: #f44336;
-
 
     /* Buttons */
     --btn-default-font-colour: #c5c5c5;
@@ -104,7 +100,6 @@
     --btn-success-hover-bg-colour: #0e639c;
     --btn-success-hover-border-colour: #0e639c;
 
-
     /* Highlighter colours */
     --hl1: #264f78;
     --hl2: #675351;
@@ -112,12 +107,10 @@
     --hl4: #fcf8e3;
     --hl5: #38811b;
 
-
     /* Scrollbar */
     --scrollbar-track: #1e1e1e;
     --scrollbar-thumb: #424242;
     --scrollbar-hover: #4e4e4e;
-
 
     /* Misc. */
     --drop-file-border-colour: #0e639c;

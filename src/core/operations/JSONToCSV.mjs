@@ -13,7 +13,6 @@ const flatten = flat.default ? flat.default.flatten : flat.flatten;
  * JSON to CSV operation
  */
 class JSONToCSV extends Operation {
-
     /**
      * JSONToCSV constructor
      */
@@ -46,33 +45,32 @@ class JSONToCSV extends Operation {
      * @param {boolean} force - Whether to force conversion of data to fit in a cell
      * @returns {string}
      */
-    toCSV(force=false) {
+    toCSV(force = false) {
         const self = this;
         // If the JSON is an array of arrays, this is easy
         if (this.flattened[0] instanceof Array) {
-            return this.flattened
-                .map(row => row
-                    .map(d => self.escapeCellContents(d, force))
-                    .join(this.cellDelim)
-                )
-                .join(this.rowDelim) +
-                this.rowDelim;
+            return (
+                this.flattened
+                    .map((row) => row.map((d) => self.escapeCellContents(d, force)).join(this.cellDelim))
+                    .join(this.rowDelim) + this.rowDelim
+            );
         }
 
         // If it's an array of dictionaries...
         const header = Object.keys(this.flattened[0]);
-        return header
-            .map(d => self.escapeCellContents(d, force))
-            .join(this.cellDelim) +
-            this.rowDelim +
-            this.flattened
-                .map(row => header
-                    .map(h => row[h])
-                    .map(d => self.escapeCellContents(d, force))
-                    .join(this.cellDelim)
+        return (
+            header.map((d) => self.escapeCellContents(d, force)).join(this.cellDelim)
+            + this.rowDelim
+            + this.flattened
+                .map((row) =>
+                    header
+                        .map((h) => row[h])
+                        .map((d) => self.escapeCellContents(d, force))
+                        .join(this.cellDelim)
                 )
-                .join(this.rowDelim) +
-                this.rowDelim;
+                .join(this.rowDelim)
+            + this.rowDelim
+        );
     }
 
     /**
@@ -113,7 +111,7 @@ class JSONToCSV extends Operation {
      * @param {boolean} force - Whether to force conversion of data to fit in a cell
      * @returns {string}
      */
-    escapeCellContents(data, force=false) {
+    escapeCellContents(data, force = false) {
         if (data !== "string") {
             const isPrimitive = data == null || typeof data !== "object";
             if (isPrimitive) data = `${data}`;
@@ -125,18 +123,17 @@ class JSONToCSV extends Operation {
 
         // If the cell contains a cell or row delimiter or a double quote, it must be enclosed in double quotes
         if (
-            data.indexOf(this.cellDelim) >= 0 ||
-            data.indexOf(this.rowDelim) >= 0 ||
-            data.indexOf("\n") >= 0 ||
-            data.indexOf("\r") >= 0 ||
-            data.indexOf('"') >= 0
+            data.indexOf(this.cellDelim) >= 0
+            || data.indexOf(this.rowDelim) >= 0
+            || data.indexOf("\n") >= 0
+            || data.indexOf("\r") >= 0
+            || data.indexOf('"') >= 0
         ) {
             data = `"${data}"`;
         }
 
         return data;
     }
-
 }
 
 export default JSONToCSV;

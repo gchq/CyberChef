@@ -11,7 +11,8 @@ TestRegister.addTests([
     {
         name: "All casings of test",
         input: "test",
-        expectedOutput: "test\nTest\ntEst\nTEst\nteSt\nTeSt\ntESt\nTESt\ntesT\nTesT\ntEsT\nTEsT\nteST\nTeST\ntEST\nTEST",
+        expectedOutput:
+            "test\nTest\ntEst\nTEst\nteSt\nTeSt\ntESt\nTESt\ntesT\nTesT\ntEsT\nTEsT\nteST\nTeST\ntEST\nTEST",
         recipeConfig: [
             {
                 "op": "Get All Casings",

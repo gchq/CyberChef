@@ -21,8 +21,8 @@ jobs:
         npm install
         npm run setheapsize
 
-    - name: Lint
-      run: npx grunt lint
+    - name: Format & Lint
+      run: (npm run style || npm run lint) && git diff --exit-code
 
     - name: Unit Tests
       run: |

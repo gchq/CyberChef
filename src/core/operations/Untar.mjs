@@ -12,7 +12,6 @@ import Stream from "../lib/Stream.mjs";
  * Untar operation
  */
 class Untar extends Operation {
-
     /**
      * Untar constructor
      */
@@ -59,7 +58,7 @@ class Untar extends Operation {
                 checksum: stream.readString(8),
                 type: stream.readString(1),
                 linkedFileName: stream.readString(100),
-                USTARFormat: stream.readString(6).indexOf("ustar") >= 0,
+                USTARFormat: stream.readString(6).indexOf("ustar") >= 0
             };
 
             if (file.USTARFormat) {
@@ -103,7 +102,6 @@ class Untar extends Operation {
     async present(files) {
         return await Utils.displayFilesAsHTML(files);
     }
-
 }
 
 export default Untar;

@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Power Set operation
  */
 class PowerSet extends Operation {
-
     /**
      * Power set constructor
      */
@@ -28,7 +27,7 @@ class PowerSet extends Operation {
                 name: "Item delimiter",
                 type: "binaryString",
                 value: ","
-            },
+            }
         ];
     }
 
@@ -42,7 +41,7 @@ class PowerSet extends Operation {
     run(input, args) {
         [this.itemDelimiter] = args;
         // Split and filter empty strings
-        const inputArray = input.split(this.itemDelimiter).filter(a => a);
+        const inputArray = input.split(this.itemDelimiter).filter((a) => a);
 
         if (inputArray.length) {
             return this.runPowerSet(inputArray);
@@ -59,7 +58,7 @@ class PowerSet extends Operation {
      */
     runPowerSet(a) {
         // empty array items getting picked up
-        a = a.filter(i => i.length);
+        a = a.filter((i) => i.length);
         if (!a.length) {
             return [];
         }
@@ -71,11 +70,11 @@ class PowerSet extends Operation {
         const toBinary = (dec) => (dec >>> 0).toString(2);
         const result = new Set();
         // Get the decimal number to make a binary as long as the input
-        const maxBinaryValue = parseInt(Number(a.map(i => "1").reduce((p, c) => p + c)), 2);
+        const maxBinaryValue = parseInt(Number(a.map((i) => "1").reduce((p, c) => p + c)), 2);
         // Make an array of each binary number from 0 to maximum
         const binaries = [...Array(maxBinaryValue + 1).keys()]
             .map(toBinary)
-            .map(i => i.padStart(toBinary(maxBinaryValue).length, "0"));
+            .map((i) => i.padStart(toBinary(maxBinaryValue).length, "0"));
 
         // XOR the input with each binary to get each unique permutation
         binaries.forEach((binary) => {
@@ -85,8 +84,10 @@ class PowerSet extends Operation {
 
         // map for formatting & put in length order.
         return [...result]
-            .map(r => r.join(this.itemDelimiter)).sort((a, b) => a.length - b.length)
-            .map(i => `${i}\n`).join("");
+            .map((r) => r.join(this.itemDelimiter))
+            .sort((a, b) => a.length - b.length)
+            .map((i) => `${i}\n`)
+            .join("");
     }
 }
 

@@ -11,10 +11,7 @@
  * @license Apache-2.0
  */
 
-import {
-    setLongTestFailure,
-    logTestReport,
-} from "../lib/utils.mjs";
+import { setLongTestFailure, logTestReport } from "../lib/utils.mjs";
 
 import TestRegister from "../lib/TestRegister.mjs";
 import "./tests/AESKeyWrap.mjs";
@@ -147,7 +144,7 @@ import "./tests/YARA.mjs";
 const testStatus = {
     allTestsPassing: true,
     counts: {
-        total: 0,
+        total: 0
     }
 };
 
@@ -155,7 +152,7 @@ setLongTestFailure();
 
 const logOpsTestReport = logTestReport.bind(null, testStatus);
 
-(async function() {
+(async function () {
     const results = await TestRegister.runTests();
     logOpsTestReport(results);
 })();

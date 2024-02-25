@@ -11,7 +11,6 @@ import Utils from "../Utils.mjs";
  * Tar operation
  */
 class Tar extends Operation {
-
     /**
      * Tar constructor
      */
@@ -41,25 +40,25 @@ class Tar extends Operation {
     run(input, args) {
         input = new Uint8Array(input);
 
-        const Tarball = function() {
+        const Tarball = function () {
             this.bytes = new Array(512);
             this.position = 0;
         };
 
-        Tarball.prototype.addEmptyBlock = function() {
+        Tarball.prototype.addEmptyBlock = function () {
             const filler = new Array(512);
             filler.fill(0);
             this.bytes = this.bytes.concat(filler);
         };
 
-        Tarball.prototype.writeBytes = function(bytes) {
+        Tarball.prototype.writeBytes = function (bytes) {
             const self = this;
 
             if (this.position + bytes.length > this.bytes.length) {
                 this.addEmptyBlock();
             }
 
-            Array.prototype.forEach.call(bytes, function(b, i) {
+            Array.prototype.forEach.call(bytes, function (b, i) {
                 if (typeof b.charCodeAt !== "undefined") {
                     b = b.charCodeAt();
                 }
@@ -69,7 +68,7 @@ class Tar extends Operation {
             });
         };
 
-        Tarball.prototype.writeEndBlocks = function() {
+        Tarball.prototype.writeEndBlocks = function () {
             const numEmptyBlocks = 2;
             for (let i = 0; i < numEmptyBlocks; i++) {
                 this.addEmptyBlock();
@@ -96,13 +95,13 @@ class Tar extends Operation {
             ownerGroupName: Utils.padBytesRight("", 32),
             deviceMajor: Utils.padBytesRight("", 8),
             deviceMinor: Utils.padBytesRight("", 8),
-            fileNamePrefix: Utils.padBytesRight("", 155),
+            fileNamePrefix: Utils.padBytesRight("", 155)
         };
 
         let checksum = 0;
         for (const key in file) {
             const bytes = file[key];
-            Array.prototype.forEach.call(bytes, function(b) {
+            Array.prototype.forEach.call(bytes, function (b) {
                 if (typeof b.charCodeAt !== "undefined") {
                     checksum += b.charCodeAt();
                 } else {
@@ -136,7 +135,6 @@ class Tar extends Operation {
 
         return new File([new Uint8Array(tarball.bytes)], args[0]);
     }
-
 }
 
 export default Tar;

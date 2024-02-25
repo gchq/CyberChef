@@ -13,9 +13,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Fletcher-16 Checksum",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "Fletcher-16 Checksum: abcdef",
@@ -24,9 +24,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Fletcher-16 Checksum",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "Fletcher-16 Checksum: abcdefgh",
@@ -35,9 +35,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Fletcher-16 Checksum",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "Fletcher-32 Checksum: abcde",
@@ -46,9 +46,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Fletcher-32 Checksum",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "Fletcher-32 Checksum: abcdef",
@@ -57,9 +57,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Fletcher-32 Checksum",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "Fletcher-32 Checksum: abcdefgh",
@@ -68,9 +68,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Fletcher-32 Checksum",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "Fletcher-64 Checksum: abcde",
@@ -79,9 +79,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Fletcher-64 Checksum",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "Fletcher-64 Checksum: abcdef",
@@ -90,9 +90,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Fletcher-64 Checksum",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "Fletcher-64 Checksum: abcdefgh",
@@ -101,8 +101,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Fletcher-64 Checksum",
-                args: [],
-            },
-        ],
-    },
+                args: []
+            }
+        ]
+    }
 ]);

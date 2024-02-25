@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Permutate String operation
  */
 class GetAllCasings extends Operation {
-
     /**
      * GetAllCasings constructor
      */

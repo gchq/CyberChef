@@ -24,7 +24,7 @@ const ALL_BYTES = [
     "\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf",
     "\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf",
     "\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef",
-    "\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff",
+    "\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff"
 ].join("");
 
 TestRegister.addTests([
@@ -35,9 +35,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base64",
-                args: ["A-Za-z0-9+/="],
-            },
-        ],
+                args: ["A-Za-z0-9+/="]
+            }
+        ]
     },
     {
         name: "To Base64: Hello, World!",
@@ -46,9 +46,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base64",
-                args: ["A-Za-z0-9+/="],
-            },
-        ],
+                args: ["A-Za-z0-9+/="]
+            }
+        ]
     },
     {
         name: "To Base64: UTF-8",
@@ -57,20 +57,21 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base64",
-                args: ["A-Za-z0-9+/="],
-            },
-        ],
+                args: ["A-Za-z0-9+/="]
+            }
+        ]
     },
     {
         name: "To Base64: All bytes",
         input: ALL_BYTES,
-        expectedOutput: "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w==",
+        expectedOutput:
+            "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w==",
         recipeConfig: [
             {
                 op: "To Base64",
-                args: ["A-Za-z0-9+/="],
-            },
-        ],
+                args: ["A-Za-z0-9+/="]
+            }
+        ]
     },
     {
         name: "From Base64: nothing",
@@ -79,9 +80,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base64",
-                args: ["A-Za-z0-9+/=", true],
-            },
-        ],
+                args: ["A-Za-z0-9+/=", true]
+            }
+        ]
     },
     {
         name: "From Base64: Hello, World!",
@@ -90,9 +91,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base64",
-                args: ["A-Za-z0-9+/=", true],
-            },
-        ],
+                args: ["A-Za-z0-9+/=", true]
+            }
+        ]
     },
     {
         name: "From Base64: UTF-8",
@@ -101,9 +102,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base64",
-                args: ["A-Za-z0-9+/=", true],
-            },
-        ],
+                args: ["A-Za-z0-9+/=", true]
+            }
+        ]
     },
     {
         name: "From Base64: All bytes",
@@ -112,8 +113,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base64",
-                args: ["A-Za-z0-9+/=", true],
-            },
-        ],
-    },
+                args: ["A-Za-z0-9+/=", true]
+            }
+        ]
+    }
 ]);

@@ -19,9 +19,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base45",
-                args: [defaultB45Alph],
-            },
-        ],
+                args: [defaultB45Alph]
+            }
+        ]
     },
     {
         name: "To Base45: Spec encoding example 1",
@@ -30,9 +30,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base45",
-                args: [defaultB45Alph],
-            },
-        ],
+                args: [defaultB45Alph]
+            }
+        ]
     },
     {
         name: "To Base45: Spec encoding example 2",
@@ -41,9 +41,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base45",
-                args: [defaultB45Alph],
-            },
-        ],
+                args: [defaultB45Alph]
+            }
+        ]
     },
     {
         name: "To Base45: Spec encoding example 3",
@@ -52,9 +52,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base45",
-                args: [defaultB45Alph],
-            },
-        ],
+                args: [defaultB45Alph]
+            }
+        ]
     },
     {
         name: "From Base45: nothing",
@@ -63,9 +63,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base45",
-                args: [defaultB45Alph],
-            },
-        ],
+                args: [defaultB45Alph]
+            }
+        ]
     },
     {
         name: "From Base45: Spec decoding example 1",
@@ -74,9 +74,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base45",
-                args: [defaultB45Alph],
-            },
-        ],
+                args: [defaultB45Alph]
+            }
+        ]
     },
     {
         name: "From Base45: Invalid character",
@@ -85,9 +85,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base45",
-                args: [defaultB45Alph],
-            },
-        ],
+                args: [defaultB45Alph]
+            }
+        ]
     },
     {
         name: "From Base45: Invalid triplet value",
@@ -96,8 +96,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base45",
-                args: [defaultB45Alph],
-            },
-        ],
-    },
+                args: [defaultB45Alph]
+            }
+        ]
+    }
 ]);

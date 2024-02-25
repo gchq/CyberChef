@@ -8,13 +8,12 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import cptable from "codepage";
-import {CHR_ENC_CODE_PAGES} from "../lib/ChrEnc.mjs";
+import { CHR_ENC_CODE_PAGES } from "../lib/ChrEnc.mjs";
 
 /**
  * Text Encoding Brute Force operation
  */
 class TextEncodingBruteForce extends Operation {
-
     /**
      * TextEncodingBruteForce constructor
      */
@@ -28,7 +27,9 @@ class TextEncodingBruteForce extends Operation {
             "<br><br>",
             "Supported charsets are:",
             "<ul>",
-            Object.keys(CHR_ENC_CODE_PAGES).map(e => `<li>${e}</li>`).join("\n"),
+            Object.keys(CHR_ENC_CODE_PAGES)
+                .map((e) => `<li>${e}</li>`)
+                .join("\n"),
             "</ul>"
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Character_encoding";
@@ -54,7 +55,7 @@ class TextEncodingBruteForce extends Operation {
             charsets = Object.keys(CHR_ENC_CODE_PAGES),
             mode = args[0];
 
-        charsets.forEach(charset => {
+        charsets.forEach((charset) => {
             try {
                 if (mode === "Decode") {
                     output[charset] = cptable.utils.decode(CHR_ENC_CODE_PAGES[charset], input);
@@ -76,7 +77,8 @@ class TextEncodingBruteForce extends Operation {
      * @returns {html}
      */
     present(encodings) {
-        let table = "<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Encoding</th><th>Value</th></tr>";
+        let table
+            = "<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Encoding</th><th>Value</th></tr>";
 
         for (const enc in encodings) {
             const value = Utils.escapeHtml(Utils.escapeWhitespace(encodings[enc]));
@@ -86,7 +88,6 @@ class TextEncodingBruteForce extends Operation {
         table += "<table>";
         return table;
     }
-
 }
 
 export default TextEncodingBruteForce;

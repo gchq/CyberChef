@@ -14,7 +14,6 @@ import { MD_ALGORITHMS } from "../lib/RSA.mjs";
  * RSA Sign operation
  */
 class RSASign extends Operation {
-
     /**
      * RSASign constructor
      */
@@ -68,7 +67,6 @@ class RSASign extends Operation {
             throw new OperationError(err);
         }
     }
-
 }
 
 export default RSASign;

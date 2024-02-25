@@ -6,12 +6,10 @@
 
 import Utils from "../../core/Utils.mjs";
 
-
 /**
  * Waiter to handle events related to the CyberChef controls (i.e. Bake, Step, Save, Load etc.)
  */
 class ControlsWaiter {
-
     /**
      * ControlsWaiter constructor.
      *
@@ -22,7 +20,6 @@ class ControlsWaiter {
         this.app = app;
         this.manager = manager;
     }
-
 
     /**
      * Initialise Bootstrap components
@@ -37,7 +34,6 @@ class ControlsWaiter {
         });
     }
 
-
     /**
      * Checks or unchecks the Auto Bake checkbox based on the given value.
      *
@@ -51,7 +47,6 @@ class ControlsWaiter {
         }
     }
 
-
     /**
      * Handler to trigger baking.
      */
@@ -64,14 +59,12 @@ class ControlsWaiter {
         }
     }
 
-
     /**
      * Handler for the 'Step through' command. Executes the next step of the recipe.
      */
     stepClick() {
         this.app.step();
     }
-
 
     /**
      * Handler for changes made to the Auto Bake checkbox.
@@ -80,14 +73,12 @@ class ControlsWaiter {
         this.app.autoBake_ = document.getElementById("auto-bake").checked;
     }
 
-
     /**
      * Handler for the 'Clear recipe' command. Removes all operations from the recipe.
      */
     clearRecipeClick() {
         this.manager.recipe.clearRecipe();
     }
-
 
     /**
      * Populates the save dialog box with a URL incorporating the recipe and input.
@@ -106,7 +97,6 @@ class ControlsWaiter {
         saveLinkEl.setAttribute("href", saveLink);
     }
 
-
     /**
      * Generates a URL containing the current recipe and input state.
      *
@@ -120,12 +110,10 @@ class ControlsWaiter {
     generateStateUrl(includeRecipe, includeInput, input, recipeConfig, baseURL) {
         recipeConfig = recipeConfig || this.app.getRecipeConfig();
 
-        const link = baseURL || window.location.protocol + "//" +
-            window.location.host +
-            window.location.pathname;
+        const link = baseURL || window.location.protocol + "//" + window.location.host + window.location.pathname;
         const recipeStr = Utils.generatePrettyRecipe(recipeConfig);
 
-        includeRecipe = includeRecipe && (recipeConfig.length > 0);
+        includeRecipe = includeRecipe && recipeConfig.length > 0;
 
         // If we don't get passed an input, get it from the current URI
         if (input === null && includeInput) {
@@ -153,7 +141,7 @@ class ControlsWaiter {
         ];
 
         const hash = params
-            .filter(v => v)
+            .filter((v) => v)
             .map(([key, value]) => `${key}=${Utils.encodeURIFragment(value)}`)
             .join("&");
 
@@ -163,7 +151,6 @@ class ControlsWaiter {
 
         return link;
     }
-
 
     /**
      * Handler for changes made to the save dialog text area. Re-initialises the save link.
@@ -175,7 +162,6 @@ class ControlsWaiter {
         } catch (err) {}
     }
 
-
     /**
      * Handler for the 'Save' command. Pops up the save dialog box.
      */
@@ -185,7 +171,7 @@ class ControlsWaiter {
 
         document.getElementById("save-text-chef").value = Utils.generatePrettyRecipe(recipeConfig, true);
         document.getElementById("save-text-clean").value = JSON.stringify(recipeConfig, null, 2)
-            .replace(/{\n\s+"/g, "{ \"")
+            .replace(/{\n\s+"/g, '{ "')
             .replace(/\[\n\s{3,}/g, "[")
             .replace(/\n\s{3,}]/g, "]")
             .replace(/\s*\n\s*}/g, " }")
@@ -196,14 +182,12 @@ class ControlsWaiter {
         $("#save-modal").modal();
     }
 
-
     /**
      * Handler for the save link recipe checkbox change event.
      */
     slrCheckChange() {
         this.initialiseSaveLink();
     }
-
 
     /**
      * Handler for the save link input checkbox change event.
@@ -212,7 +196,6 @@ class ControlsWaiter {
         this.initialiseSaveLink();
     }
 
-
     /**
      * Handler for the 'Load' command. Pops up the load dialog box.
      */
@@ -220,7 +203,6 @@ class ControlsWaiter {
         this.populateLoadRecipesList();
         $("#load-modal").modal();
     }
-
 
     /**
      * Saves the recipe specified in the save textarea to local storage.
@@ -235,15 +217,14 @@ class ControlsWaiter {
         }
 
         const recipeName = Utils.escapeHtml(document.getElementById("save-name").value);
-        const recipeStr  = document.querySelector("#save-texts .tab-pane.active textarea").value;
+        const recipeStr = document.querySelector("#save-texts .tab-pane.active textarea").value;
 
         if (!recipeName) {
             this.app.alert("Please enter a recipe name", 3000);
             return;
         }
 
-        const savedRecipes = localStorage.savedRecipes ?
-            JSON.parse(localStorage.savedRecipes) : [];
+        const savedRecipes = localStorage.savedRecipes ? JSON.parse(localStorage.savedRecipes) : [];
         let recipeId = localStorage.recipeId || 0;
 
         savedRecipes.push({
@@ -257,7 +238,6 @@ class ControlsWaiter {
 
         this.app.alert(`Recipe saved as "${recipeName}".`, 3000);
     }
-
 
     /**
      * Populates the list of saved recipes in the load dialog box from local storage.
@@ -274,8 +254,7 @@ class ControlsWaiter {
         }
 
         // Add recipes to select
-        const savedRecipes = localStorage.savedRecipes ?
-            JSON.parse(localStorage.savedRecipes) : [];
+        const savedRecipes = localStorage.savedRecipes ? JSON.parse(localStorage.savedRecipes) : [];
 
         for (i = 0; i < savedRecipes.length; i++) {
             const opt = document.createElement("option");
@@ -293,7 +272,6 @@ class ControlsWaiter {
         loadText.dispatchEvent(evt);
     }
 
-
     /**
      * Removes the currently selected recipe from local storage.
      */
@@ -301,15 +279,13 @@ class ControlsWaiter {
         if (!this.app.isLocalStorageAvailable()) return false;
 
         const id = parseInt(document.getElementById("load-name").value, 10);
-        const rawSavedRecipes = localStorage.savedRecipes ?
-            JSON.parse(localStorage.savedRecipes) : [];
+        const rawSavedRecipes = localStorage.savedRecipes ? JSON.parse(localStorage.savedRecipes) : [];
 
-        const savedRecipes = rawSavedRecipes.filter(r => r.id !== id);
+        const savedRecipes = rawSavedRecipes.filter((r) => r.id !== id);
 
         localStorage.savedRecipes = JSON.stringify(savedRecipes);
         this.populateLoadRecipesList();
     }
-
 
     /**
      * Displays the selected recipe in the load text box.
@@ -318,15 +294,13 @@ class ControlsWaiter {
         if (!this.app.isLocalStorageAvailable()) return false;
 
         const el = e.target;
-        const savedRecipes = localStorage.savedRecipes ?
-            JSON.parse(localStorage.savedRecipes) : [];
+        const savedRecipes = localStorage.savedRecipes ? JSON.parse(localStorage.savedRecipes) : [];
         const id = parseInt(el.value, 10);
 
-        const recipe = savedRecipes.find(r => r.id === id);
+        const recipe = savedRecipes.find((r) => r.id === id);
 
         document.getElementById("load-text").value = recipe.recipe;
     }
-
 
     /**
      * Loads the selected recipe and populates the Recipe with its operations.
@@ -342,7 +316,6 @@ class ControlsWaiter {
             this.app.alert("Invalid recipe", 2000);
         }
     }
-
 
     /**
      * Populates the bug report information box with useful technical info.
@@ -366,7 +339,6 @@ ${navigator.userAgent}
         }
     }
 
-
     /**
      * Shows the stale indicator to show that the input or recipe has changed
      * since the last bake.
@@ -376,7 +348,6 @@ ${navigator.userAgent}
         staleIndicator.classList.remove("hidden");
     }
 
-
     /**
      * Hides the stale indicator to show that the input or recipe has not changed
      * since the last bake.
@@ -385,7 +356,6 @@ ${navigator.userAgent}
         const staleIndicator = document.getElementById("stale-indicator");
         staleIndicator.classList.add("hidden");
     }
-
 
     /**
      * Switches the Bake button between 'Bake', 'Cancel' and 'Loading' functions.
@@ -429,7 +399,6 @@ ${navigator.userAgent}
 
         recList.style.bottom = controls.clientHeight + "px";
     }
-
 }
 
 export default ControlsWaiter;

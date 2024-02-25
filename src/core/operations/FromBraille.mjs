@@ -5,13 +5,12 @@
  */
 
 import Operation from "../Operation.mjs";
-import {BRAILLE_LOOKUP} from "../lib/Braille.mjs";
+import { BRAILLE_LOOKUP } from "../lib/Braille.mjs";
 
 /**
  * From Braille operation
  */
 class FromBraille extends Operation {
-
     /**
      * FromBraille constructor
      */
@@ -33,10 +32,13 @@ class FromBraille extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        return input.split("").map(b => {
-            const idx = BRAILLE_LOOKUP.dot6.indexOf(b);
-            return idx < 0 ? b : BRAILLE_LOOKUP.ascii[idx];
-        }).join("");
+        return input
+            .split("")
+            .map((b) => {
+                const idx = BRAILLE_LOOKUP.dot6.indexOf(b);
+                return idx < 0 ? b : BRAILLE_LOOKUP.ascii[idx];
+            })
+            .join("");
     }
 
     /**
@@ -64,7 +66,6 @@ class FromBraille extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default FromBraille;

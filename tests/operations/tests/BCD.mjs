@@ -22,7 +22,8 @@ TestRegister.addTests([
     {
         name: "To BCD: unpacked nibbles",
         input: "1234567890",
-        expectedOutput: "0000 0001 0000 0010 0000 0011 0000 0100 0000 0101 0000 0110 0000 0111 0000 1000 0000 1001 0000 0000",
+        expectedOutput:
+            "0000 0001 0000 0010 0000 0011 0000 0100 0000 0101 0000 0110 0000 0111 0000 1000 0000 1001 0000 0000",
         recipeConfig: [
             {
                 "op": "To BCD",
@@ -99,5 +100,5 @@ TestRegister.addTests([
                 "args": ["4 2 2 1", true, true, "Raw"]
             }
         ]
-    },
+    }
 ]);

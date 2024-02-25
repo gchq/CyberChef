@@ -16,9 +16,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base92",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Base92: Spec encoding example 1",
@@ -27,9 +27,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base92",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Base92: Spec encoding example 2",
@@ -38,9 +38,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base92",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "To Base92: Spec encoding example 3",
@@ -49,9 +49,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "To Base92",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "From Base92: nothing",
@@ -60,9 +60,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base92",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "From Base92: Spec decoding example 1",
@@ -71,9 +71,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base92",
-                args: [],
-            },
-        ],
+                args: []
+            }
+        ]
     },
     {
         name: "From Base92: Invalid character",
@@ -82,8 +82,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "From Base92",
-                args: [],
-            },
-        ],
-    },
+                args: []
+            }
+        ]
+    }
 ]);

@@ -10,7 +10,6 @@ import Utils from "../Utils.mjs";
  * ROT47 Brute Force operation.
  */
 class ROT47BruteForce extends Operation {
-
     /**
      * ROT47BruteForce constructor
      */
@@ -19,7 +18,8 @@ class ROT47BruteForce extends Operation {
 
         this.name = "ROT47 Brute Force";
         this.module = "Default";
-        this.description = "Try all meaningful amounts for ROT47.<br><br>Optionally you can enter your known plaintext (crib) to filter the result.";
+        this.description
+            = "Try all meaningful amounts for ROT47.<br><br>Optionally you can enter your known plaintext (crib) to filter the result.";
         this.infoURL = "https://wikipedia.org/wiki/ROT13#Variants";
         this.inputType = "byteArray";
         this.outputType = "string";
@@ -61,7 +61,7 @@ class ROT47BruteForce extends Operation {
             const rotated = sample.slice();
             for (let i = 0; i < rotated.length; i++) {
                 if (33 <= rotated[i] && rotated[i] <= 126) {
-                    rotated[i] = (rotated[i] - 33 + amount) % 94 + 33;
+                    rotated[i] = ((rotated[i] - 33 + amount) % 94) + 33;
                 }
             }
             const rotatedString = Utils.byteArrayToUtf8(rotated);

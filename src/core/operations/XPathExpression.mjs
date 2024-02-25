@@ -13,7 +13,6 @@ import xpath from "xpath";
  * XPath expression operation
  */
 class XPathExpression extends Operation {
-
     /**
      * XPathExpression constructor
      */
@@ -74,13 +73,12 @@ class XPathExpression extends Operation {
             throw new OperationError(`Invalid XPath. Details:\n${err.message}.`);
         }
 
-        const nodeToString = function(node) {
+        const nodeToString = function (node) {
             return node.toString();
         };
 
         return nodes.map(nodeToString).join(delimiter);
     }
-
 }
 
 export default XPathExpression;

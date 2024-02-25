@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Contain Image operation
  */
 class ContainImage extends Operation {
-
     /**
      * ContainImage constructor
      */
@@ -24,7 +23,8 @@ class ContainImage extends Operation {
 
         this.name = "Contain Image";
         this.module = "Image";
-        this.description = "Scales an image to the specified width and height, maintaining the aspect ratio. The image may be letterboxed.";
+        this.description
+            = "Scales an image to the specified width and height, maintaining the aspect ratio. The image may be letterboxed.";
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -45,33 +45,19 @@ class ContainImage extends Operation {
             {
                 name: "Horizontal align",
                 type: "option",
-                value: [
-                    "Left",
-                    "Center",
-                    "Right"
-                ],
+                value: ["Left", "Center", "Right"],
                 defaultIndex: 1
             },
             {
                 name: "Vertical align",
                 type: "option",
-                value: [
-                    "Top",
-                    "Middle",
-                    "Bottom"
-                ],
+                value: ["Top", "Middle", "Bottom"],
                 defaultIndex: 1
             },
             {
                 name: "Resizing algorithm",
                 type: "option",
-                value: [
-                    "Nearest Neighbour",
-                    "Bilinear",
-                    "Bicubic",
-                    "Hermite",
-                    "Bezier"
-                ],
+                value: ["Nearest Neighbour", "Bilinear", "Bicubic", "Hermite", "Bezier"],
                 defaultIndex: 1
             },
             {
@@ -118,12 +104,11 @@ class ContainImage extends Operation {
             throw new OperationError(`Error loading image. (${err})`);
         }
         try {
-            if (isWorkerEnvironment())
-                self.sendStatusMessage("Containing image...");
+            if (isWorkerEnvironment()) self.sendStatusMessage("Containing image...");
             image.contain(width, height, alignMap[hAlign] | alignMap[vAlign], resizeMap[alg]);
 
             if (opaqueBg) {
-                const newImage = await jimp.read(width, height, 0x000000FF);
+                const newImage = await jimp.read(width, height, 0x000000ff);
                 newImage.blit(image, 0, 0);
                 image = newImage;
             }
@@ -156,7 +141,6 @@ class ContainImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default ContainImage;

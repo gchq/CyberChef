@@ -24,14 +24,12 @@
     --sol-cyan: #2aa198;
     --sol-green: #859900;
 
-    --primary-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, "Helvetica Neue", Arial, sans-serif;
+    --primary-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --primary-font-colour: var(--base00);
     --primary-font-size: 14px;
     --primary-line-height: 20px;
 
-    --fixed-width-font-family: SFMono-Regular, Menlo, Monaco, Consolas,
-        "Liberation Mono", "Courier New", monospace;
+    --fixed-width-font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --fixed-width-font-colour: inherit;
     --fixed-width-font-size: inherit;
 
@@ -58,7 +56,6 @@
     --loader-outer-colour: var(--base01);
     --loader-middle-colour: var(--base00);
     --loader-inner-colour: var(--base0);
-
 
     /* Operation colours */
     --op-list-operation-font-colour: var(--base00);
@@ -89,7 +86,6 @@
     --fc-breakpoint-operation-bg-colour: var(--base1);
     --fc-breakpoint-operation-border-colour: var(--base0);
 
-
     /* Operation arguments */
     --op-title-font-weight: bold;
     --arg-font-colour: var(--base00);
@@ -98,13 +94,11 @@
     --arg-disabled-background: var(--base3);
     --arg-label-colour: var(--base01);
 
-
     /* Operation buttons */
     --disable-icon-colour: #9e9e9e;
     --disable-icon-selected-colour: #f44336;
     --breakpoint-icon-colour: #9e9e9e;
     --breakpoint-icon-selected-colour: #f44336;
-
 
     /* Buttons */
     --btn-default-font-colour: var(--base00);
@@ -123,7 +117,6 @@
     --btn-success-hover-bg-colour: var(--base1);
     --btn-success-hover-border-colour: var(--base0);
 
-
     /* Highlighter colours */
     --hl1: var(--base1);
     --hl2: var(--sol-blue);
@@ -131,12 +124,10 @@
     --hl4: var(--sol-yellow);
     --hl5: var(--sol-magenta);
 
-
     /* Scrollbar */
     --scrollbar-track: var(--base3);
     --scrollbar-thumb: var(--base1);
     --scrollbar-hover: var(--base0);
-
 
     /* Misc. */
     --drop-file-border-colour: var(--base1);

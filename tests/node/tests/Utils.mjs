@@ -18,6 +18,5 @@ TestRegister.addApiTests([
 
     it("Utils: should parse escaped quotes and escaped backslashes correctly", () => {
         assert.equal(Utils.parseEscapedChars("\\\\\\'"), "\\'");
-    }),
-
+    })
 ]);

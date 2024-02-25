@@ -35,8 +35,10 @@ const Names = {
 
 // Regex for Special Characters to be replaced
 const UnicodeRegexpSupport = /x/.unicode != null ? "gu" : "g";
-const Specials = new RegExp("[\u0000-\u0008\u000a-\u001f\u007f-\u009f\u00ad\u061c\u200b\u200e\u200f\u2028\u2029\u202d\u202e\u2066\u2067\u2069\ufeff\ufff9-\ufffc\ue000-\uf8ff]", UnicodeRegexpSupport);
-
+const Specials = new RegExp(
+    "[\u0000-\u0008\u000a-\u001f\u007f-\u009f\u00ad\u061c\u200b\u200e\u200f\u2028\u2029\u202d\u202e\u2066\u2067\u2069\ufeff\ufff9-\ufffc\ue000-\uf8ff]",
+    UnicodeRegexpSupport
+);
 
 /**
  * Override for rendering special characters.
@@ -72,7 +74,6 @@ export function renderSpecialChar(code, desc, placeholder) {
     return s;
 }
 
-
 /**
  * Given a string, returns that string with any control characters replaced with HTML
  * renderings of control pictures.
@@ -82,11 +83,10 @@ export function renderSpecialChar(code, desc, placeholder) {
  * @param {string} [lineBreak="\n"]
  * @returns {html}
  */
-export function escapeControlChars(str, preserveWs=false, lineBreak="\n") {
-    if (!preserveWs)
-        str = Utils.escapeWhitespace(str);
+export function escapeControlChars(str, preserveWs = false, lineBreak = "\n") {
+    if (!preserveWs) str = Utils.escapeWhitespace(str);
 
-    return str.replace(Specials, function(c) {
+    return str.replace(Specials, function (c) {
         if (lineBreak.includes(c)) return c;
         const code = c.charCodeAt(0);
         const desc = "Control character " + (Names[code] || "0x" + code.toString(16));

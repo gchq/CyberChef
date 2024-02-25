@@ -15,7 +15,6 @@ import jimp from "jimp";
  * Resize Image operation
  */
 class ResizeImage extends Operation {
-
     /**
      * ResizeImage constructor
      */
@@ -55,13 +54,7 @@ class ResizeImage extends Operation {
             {
                 name: "Resizing algorithm",
                 type: "option",
-                value: [
-                    "Nearest Neighbour",
-                    "Bilinear",
-                    "Bicubic",
-                    "Hermite",
-                    "Bezier"
-                ],
+                value: ["Nearest Neighbour", "Bilinear", "Bicubic", "Hermite", "Bezier"],
                 defaultIndex: 1
             }
         ];
@@ -103,8 +96,7 @@ class ResizeImage extends Operation {
                 height = image.getHeight() * (height / 100);
             }
 
-            if (isWorkerEnvironment())
-                self.sendStatusMessage("Resizing image...");
+            if (isWorkerEnvironment()) self.sendStatusMessage("Resizing image...");
             if (aspect) {
                 image.scaleToFit(width, height, resizeMap[resizeAlg]);
             } else {
@@ -139,7 +131,6 @@ class ResizeImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default ResizeImage;

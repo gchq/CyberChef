@@ -17,7 +17,7 @@ TestRegister.addTests([
                 "op": "Scatter chart",
                 "args": ["Line feed", "Space", false, "time", "stress", "black", 5, false]
             }
-        ],
+        ]
     },
     {
         name: "Hex density chart",
@@ -28,7 +28,7 @@ TestRegister.addTests([
                 "op": "Hex Density chart",
                 "args": ["Line feed", "Space", 25, 15, true, "", "", true, "white", "black", true]
             }
-        ],
+        ]
     },
     {
         name: "Series chart",
@@ -39,7 +39,7 @@ TestRegister.addTests([
                 "op": "Series chart",
                 "args": ["Line feed", "Space", "", 1, "mediumseagreen, dodgerblue, tomato"]
             }
-        ],
+        ]
     },
     {
         name: "Heatmap chart",
@@ -50,6 +50,6 @@ TestRegister.addTests([
                 "op": "Heatmap chart",
                 "args": ["Line feed", "Space", 25, 25, true, "", "", false, "white", "black"]
             }
-        ],
-    },
+        ]
+    }
 ]);

@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import {COMPRESSION_TYPE, ZLIB_COMPRESSION_TYPE_LOOKUP} from "../lib/Zlib.mjs";
+import { COMPRESSION_TYPE, ZLIB_COMPRESSION_TYPE_LOOKUP } from "../lib/Zlib.mjs";
 import zlibAndGzip from "zlibjs/bin/zlib_and_gzip.min.js";
 
 const Zlib = zlibAndGzip.Zlib;
@@ -14,7 +14,6 @@ const Zlib = zlibAndGzip.Zlib;
  * Zlib Deflate operation
  */
 class ZlibDeflate extends Operation {
-
     /**
      * ZlibDeflate constructor
      */
@@ -47,7 +46,6 @@ class ZlibDeflate extends Operation {
         });
         return new Uint8Array(deflate.compress()).buffer;
     }
-
 }
 
 export default ZlibDeflate;

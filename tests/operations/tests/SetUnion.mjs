@@ -16,9 +16,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Set Union",
-                args: ["\n\n", " "],
-            },
-        ],
+                args: ["\n\n", " "]
+            }
+        ]
     },
     {
         name: "Set Union",
@@ -27,20 +27,21 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Set Union",
-                args: ["\n\n", " "],
-            },
-        ],
+                args: ["\n\n", " "]
+            }
+        ]
     },
     {
         name: "Set Union: invalid sample number",
         input: "1 2 3 4 5\n\n3 4 5 6 7\n\n1",
-        expectedOutput: "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?",
+        expectedOutput:
+            "Incorrect number of sets, perhaps you need to modify the sample delimiter or add more samples?",
         recipeConfig: [
             {
                 op: "Set Union",
-                args: ["\n\n", " "],
-            },
-        ],
+                args: ["\n\n", " "]
+            }
+        ]
     },
     {
         name: "Set Union: item delimiter",
@@ -49,9 +50,9 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Set Union",
-                args: ["\n\n", ","],
-            },
-        ],
+                args: ["\n\n", ","]
+            }
+        ]
     },
     {
         name: "Set Union: sample delimiter",
@@ -60,8 +61,8 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Set Union",
-                args: ["whatever", " "],
-            },
-        ],
-    },
+                args: ["whatever", " "]
+            }
+        ]
+    }
 ]);

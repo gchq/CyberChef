@@ -10,7 +10,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Vigenère Decode operation
  */
 class VigenèreDecode extends Operation {
-
     /**
      * VigenèreDecode constructor
      */
@@ -19,7 +18,8 @@ class VigenèreDecode extends Operation {
 
         this.name = "Vigenère Decode";
         this.module = "Ciphers";
-        this.description = "The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.";
+        this.description
+            = "The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.";
         this.infoURL = "https://wikipedia.org/wiki/Vigenère_cipher";
         this.inputType = "string";
         this.outputType = "string";
@@ -96,7 +96,6 @@ class VigenèreDecode extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default VigenèreDecode;

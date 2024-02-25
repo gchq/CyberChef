@@ -16,8 +16,8 @@ TestRegister.addTests([
             {
                 op: "Luhn Checksum",
                 args: []
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Luhn Checksum on standard data 2",
@@ -27,8 +27,8 @@ TestRegister.addTests([
             {
                 op: "Luhn Checksum",
                 args: []
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Luhn Checksum on standard data 3",
@@ -38,8 +38,8 @@ TestRegister.addTests([
             {
                 op: "Luhn Checksum",
                 args: []
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Luhn Checksum on invalid data",
@@ -49,8 +49,8 @@ TestRegister.addTests([
             {
                 op: "Luhn Checksum",
                 args: []
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Luhn Checksum on empty data",
@@ -60,7 +60,7 @@ TestRegister.addTests([
             {
                 op: "Luhn Checksum",
                 args: []
-            },
-        ],
+            }
+        ]
     }
 ]);

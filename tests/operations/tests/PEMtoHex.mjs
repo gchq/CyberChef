@@ -186,7 +186,8 @@ TestRegister.addTests([
     {
         name: "PEMtoHex: EC P-256 Private Key",
         input: PEMS_EC_P256_PRIVATE_KEY,
-        expectedOutput: "30770201010420885d43140870c9c21c3dd7e16a8dbfe560c9c5a6168119a5197d5f4f9d4fdb87a00a06082a8648ce3d030107a1440342000414b41c05bcc3c1ea3a69fe24de4d2029630d58e6559fcfbd847dabbf80ca29867b135cfae0b06d3e707580ccfef870cac92af6a330f7ff8e9d21b40c5d464aa7",
+        expectedOutput:
+            "30770201010420885d43140870c9c21c3dd7e16a8dbfe560c9c5a6168119a5197d5f4f9d4fdb87a00a06082a8648ce3d030107a1440342000414b41c05bcc3c1ea3a69fe24de4d2029630d58e6559fcfbd847dabbf80ca29867b135cfae0b06d3e707580ccfef870cac92af6a330f7ff8e9d21b40c5d464aa7",
         recipeConfig: [
             {
                 "op": "PEM to Hex",
@@ -197,7 +198,8 @@ TestRegister.addTests([
     {
         name: "PEMtoHex: EC P-256 Private Key PKCS8",
         input: PEMS_EC_P256_PRIVATE_KEY_PKCS8,
-        expectedOutput: "308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b0201010420885d43140870c9c21c3dd7e16a8dbfe560c9c5a6168119a5197d5f4f9d4fdb87a1440342000414b41c05bcc3c1ea3a69fe24de4d2029630d58e6559fcfbd847dabbf80ca29867b135cfae0b06d3e707580ccfef870cac92af6a330f7ff8e9d21b40c5d464aa7",
+        expectedOutput:
+            "308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b0201010420885d43140870c9c21c3dd7e16a8dbfe560c9c5a6168119a5197d5f4f9d4fdb87a1440342000414b41c05bcc3c1ea3a69fe24de4d2029630d58e6559fcfbd847dabbf80ca29867b135cfae0b06d3e707580ccfef870cac92af6a330f7ff8e9d21b40c5d464aa7",
         recipeConfig: [
             {
                 "op": "PEM to Hex",
@@ -208,7 +210,8 @@ TestRegister.addTests([
     {
         name: "PEMtoHex: EC P-256 Public Key",
         input: PEMS_EC_P256_PUBLIC_KEY,
-        expectedOutput: "3059301306072a8648ce3d020106082a8648ce3d0301070342000414b41c05bcc3c1ea3a69fe24de4d2029630d58e6559fcfbd847dabbf80ca29867b135cfae0b06d3e707580ccfef870cac92af6a330f7ff8e9d21b40c5d464aa7",
+        expectedOutput:
+            "3059301306072a8648ce3d020106082a8648ce3d0301070342000414b41c05bcc3c1ea3a69fe24de4d2029630d58e6559fcfbd847dabbf80ca29867b135cfae0b06d3e707580ccfef870cac92af6a330f7ff8e9d21b40c5d464aa7",
         recipeConfig: [
             {
                 "op": "PEM to Hex",

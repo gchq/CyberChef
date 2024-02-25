@@ -11,7 +11,6 @@ import Operation from "../Operation.mjs";
  * ROT8000 operation.
  */
 class ROT8000 extends Operation {
-
     /**
      * ROT8000 constructor
      */
@@ -19,7 +18,8 @@ class ROT8000 extends Operation {
         super();
         this.name = "ROT8000";
         this.module = "Default";
-        this.description = "The simple Caesar-cypher encryption that replaces each Unicode character with the one 0x8000 places forward or back along the alphabet.";
+        this.description
+            = "The simple Caesar-cypher encryption that replaces each Unicode character with the one 0x8000 places forward or back along the alphabet.";
         this.infoURL = "https://rot8000.com/info";
         this.inputType = "string";
         this.outputType = "string";
@@ -60,10 +60,8 @@ class ROT8000 extends Operation {
         let startBlock = 0;
         for (const key in validCodePoints) {
             if (Object.prototype.hasOwnProperty.call(validCodePoints, key)) {
-                if (validCodePoints[key] === true)
-                    hiddenBlocks.push({ start: startBlock, end: parseInt(key, 10) - 1 });
-                else
-                    startBlock = parseInt(key, 10);
+                if (validCodePoints[key] === true) hiddenBlocks.push({ start: startBlock, end: parseInt(key, 10) - 1 });
+                else startBlock = parseInt(key, 10);
             }
         }
         const validIntList = []; // list of all valid chars
@@ -77,8 +75,9 @@ class ROT8000 extends Operation {
         const rotateNum = Object.keys(validIntList).length / 2;
         // go through every valid char and find its match
         for (let i = 0; i < validIntList.length; i++) {
-            rotList[String.fromCharCode(validIntList[i])] =
-                String.fromCharCode(validIntList[(i + rotateNum) % (rotateNum * 2)]);
+            rotList[String.fromCharCode(validIntList[i])] = String.fromCharCode(
+                validIntList[(i + rotateNum) % (rotateNum * 2)]
+            );
         }
         let output = "";
         for (let count = 0; count < input.length; count++) {

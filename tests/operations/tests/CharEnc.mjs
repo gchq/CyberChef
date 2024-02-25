@@ -20,8 +20,8 @@ TestRegister.addTests([
             {
                 "op": "Decode text",
                 "args": ["UTF-8 (65001)"]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Encode text, Decode text: hello",
@@ -35,8 +35,8 @@ TestRegister.addTests([
             {
                 "op": "Decode text",
                 "args": ["UTF-8 (65001)"]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Encode text (EBCDIC): hello",
@@ -50,8 +50,8 @@ TestRegister.addTests([
             {
                 "op": "To Hex",
                 "args": ["Space"]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Decode text (EBCDIC): 88 85 93 93 96",
@@ -65,13 +65,13 @@ TestRegister.addTests([
             {
                 "op": "Decode text",
                 "args": ["IBM EBCDIC International (500)"]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "Generate Base64 Windows PowerShell",
         input: "ZABpAHIAIAAiAGMAOgBcAHAAcgBvAGcAcgBhAG0AIABmAGkAbABlAHMAIgAgAA==",
-        expectedOutput: "dir \"c:\\program files\" ",
+        expectedOutput: 'dir "c:\\program files" ',
         recipeConfig: [
             {
                 "op": "From Base64",
@@ -84,7 +84,7 @@ TestRegister.addTests([
             {
                 "op": "Encode text",
                 "args": ["UTF-8 (65001)"]
-            },
-        ],
-    },
+            }
+        ]
+    }
 ]);

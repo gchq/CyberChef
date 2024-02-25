@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 import TestRegister from "../../lib/TestRegister.mjs";
-import {ASCII_TEXT, UTF8_TEXT, ALL_BYTES} from "../../samples/Ciphers.mjs";
+import { ASCII_TEXT, UTF8_TEXT, ALL_BYTES } from "../../samples/Ciphers.mjs";
 
 const PEM_PRIV_2048 = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEAwfaUOpUEutKyU3wkCv6kYunz4MqxzSuTSckRz1IxwZtwIiqq
@@ -346,5 +346,5 @@ TestRegister.addTests([
                 "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-512"]
             }
         ]
-    },
+    }
 ]);

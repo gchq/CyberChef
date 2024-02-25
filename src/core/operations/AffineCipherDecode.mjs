@@ -12,7 +12,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Affine Cipher Decode operation
  */
 class AffineCipherDecode extends Operation {
-
     /**
      * AffineCipherDecode constructor
      */
@@ -21,7 +20,8 @@ class AffineCipherDecode extends Operation {
 
         this.name = "Affine Cipher Decode";
         this.module = "Ciphers";
-        this.description = "The Affine cipher is a type of monoalphabetic substitution cipher. To decrypt, each letter in an alphabet is mapped to its numeric equivalent, decrypted by a mathematical function, and converted back to a letter.";
+        this.description
+            = "The Affine cipher is a type of monoalphabetic substitution cipher. To decrypt, each letter in an alphabet is mapped to its numeric equivalent, decrypted by a mathematical function, and converted back to a letter.";
         this.infoURL = "https://wikipedia.org/wiki/Affine_cipher";
         this.inputType = "string";
         this.outputType = "string";
@@ -66,7 +66,8 @@ class AffineCipherDecode extends Operation {
                 output += alphabet[Utils.mod((alphabet.indexOf(input[i]) - b) * aModInv, 26)];
             } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
                 // Same as above, accounting for uppercase
-                output += alphabet[Utils.mod((alphabet.indexOf(input[i].toLowerCase()) - b) * aModInv, 26)].toUpperCase();
+                output
+                    += alphabet[Utils.mod((alphabet.indexOf(input[i].toLowerCase()) - b) * aModInv, 26)].toUpperCase();
             } else {
                 // Non-alphabetic characters
                 output += input[i];
@@ -100,7 +101,6 @@ class AffineCipherDecode extends Operation {
     highlightReverse(pos, args) {
         return pos;
     }
-
 }
 
 export default AffineCipherDecode;

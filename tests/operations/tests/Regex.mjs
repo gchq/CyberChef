@@ -21,7 +21,7 @@ TestRegister.addTests([
                 "op": "Remove whitespace",
                 "args": [true, true, true, true, true, false]
             }
-        ],
+        ]
     },
     {
         name: "Regex: Dot matches all",
@@ -32,7 +32,7 @@ TestRegister.addTests([
                 "op": "Regular expression",
                 "args": ["User defined", ".+", true, true, true, false, false, false, "List matches"]
             }
-        ],
+        ]
     },
     {
         name: "Regex: Astral off",
@@ -43,7 +43,7 @@ TestRegister.addTests([
                 "op": "Regular expression",
                 "args": ["User defined", "\\pS", true, true, false, false, false, false, "List matches"]
             }
-        ],
+        ]
     },
     {
         name: "Regex: Astral on",
@@ -54,6 +54,6 @@ TestRegister.addTests([
                 "op": "Regular expression",
                 "args": ["User defined", "\\pS", true, true, false, false, true, false, "List matches"]
             }
-        ],
+        ]
     }
 ]);

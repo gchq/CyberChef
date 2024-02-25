@@ -12,7 +12,6 @@ import { caseInsensitiveSort } from "../lib/Sort.mjs";
  * Extract file paths operation
  */
 class ExtractFilePaths extends Operation {
-
     /**
      * ExtractFilePaths constructor
      */
@@ -21,7 +20,8 @@ class ExtractFilePaths extends Operation {
 
         this.name = "Extract file paths";
         this.module = "Regex";
-        this.description = "Extracts anything that looks like a Windows or UNIX file path.<br><br>Note that if UNIX is selected, there will likely be a lot of false positives.";
+        this.description
+            = "Extracts anything that looks like a Windows or UNIX file path.<br><br>Note that if UNIX is selected, there will likely be a lot of false positives.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -63,8 +63,7 @@ class ExtractFilePaths extends Operation {
             winDrive = "[A-Z]:\\\\",
             winName = "[A-Z\\d][A-Z\\d\\- '_\\(\\)~]{0,61}",
             winExt = "[A-Z\\d]{1,6}",
-            winPath = winDrive + "(?:" + winName + "\\\\?)*" + winName +
-                "(?:\\." + winExt + ")?",
+            winPath = winDrive + "(?:" + winName + "\\\\?)*" + winName + "(?:\\." + winExt + ")?",
             unixPath = "(?:/[A-Z\\d.][A-Z\\d\\-.]{0,61})+";
         let filePaths = "";
 
@@ -81,22 +80,14 @@ class ExtractFilePaths extends Operation {
         }
 
         const regex = new RegExp(filePaths, "ig");
-        const results = search(
-            input,
-            regex,
-            null,
-            sort ? caseInsensitiveSort : null,
-            unique
-        );
+        const results = search(input, regex, null, sort ? caseInsensitiveSort : null, unique);
 
         if (displayTotal) {
             return `Total found: ${results.length}\n\n${results.join("\n")}`;
         } else {
             return results.join("\n");
         }
-
     }
-
 }
 
 export default ExtractFilePaths;

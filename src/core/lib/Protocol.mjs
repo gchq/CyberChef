@@ -7,7 +7,7 @@
  */
 
 import BigNumber from "bignumber.js";
-import {toHexFast} from "../lib/Hex.mjs";
+import { toHexFast } from "../lib/Hex.mjs";
 
 /**
  * Recursively displays a JSON object as an HTML table
@@ -15,7 +15,7 @@ import {toHexFast} from "../lib/Hex.mjs";
  * @param {Object} obj
  * @returns string
  */
-export function objToTable(obj, nested=false) {
+export function objToTable(obj, nested = false) {
     let html = `<table
         class='table table-sm table-nonfluid ${nested ? "mb-0 table-borderless" : "table-bordered"}'
         style='table-layout: fixed; ${nested ? "margin: -1px !important;" : ""}'>`;
@@ -27,10 +27,8 @@ export function objToTable(obj, nested=false) {
 
     for (const key in obj) {
         html += `<tr><td style='word-wrap: break-word'>${key}</td>`;
-        if (typeof obj[key] === "object")
-            html += `<td style='padding: 0'>${objToTable(obj[key], true)}</td>`;
-        else
-            html += `<td>${obj[key]}</td>`;
+        if (typeof obj[key] === "object") html += `<td style='padding: 0'>${objToTable(obj[key], true)}</td>`;
+        else html += `<td>${obj[key]}</td>`;
         html += "</tr>";
     }
     html += "</table>";

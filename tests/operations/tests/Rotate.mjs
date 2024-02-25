@@ -8,7 +8,6 @@
  */
 import TestRegister from "../../lib/TestRegister.mjs";
 
-
 TestRegister.addTests([
     {
         name: "Rotate left: nothing",
@@ -21,13 +20,13 @@ TestRegister.addTests([
             },
             {
                 op: "Rotate left",
-                args: [1, false],
+                args: [1, false]
             },
             {
                 op: "To Hex",
                 args: ["Space"]
             }
-        ],
+        ]
     },
     {
         name: "Rotate left: normal",
@@ -40,13 +39,13 @@ TestRegister.addTests([
             },
             {
                 op: "Rotate left",
-                args: [1, false],
+                args: [1, false]
             },
             {
                 op: "To Hex",
                 args: ["Space"]
             }
-        ],
+        ]
     },
     {
         name: "Rotate left: carry",
@@ -59,13 +58,13 @@ TestRegister.addTests([
             },
             {
                 op: "Rotate left",
-                args: [2, true],
+                args: [2, true]
             },
             {
                 op: "To Hex",
                 args: ["Space"]
             }
-        ],
+        ]
     },
     {
         name: "Rotate right: nothing",
@@ -78,13 +77,13 @@ TestRegister.addTests([
             },
             {
                 op: "Rotate right",
-                args: [1, false],
+                args: [1, false]
             },
             {
                 op: "To Hex",
                 args: ["Space"]
             }
-        ],
+        ]
     },
     {
         name: "Rotate right: normal",
@@ -97,13 +96,13 @@ TestRegister.addTests([
             },
             {
                 op: "Rotate right",
-                args: [1, false],
+                args: [1, false]
             },
             {
                 op: "To Hex",
                 args: ["Space"]
             }
-        ],
+        ]
     },
     {
         name: "Rotate right: carry",
@@ -116,13 +115,13 @@ TestRegister.addTests([
             },
             {
                 op: "Rotate right",
-                args: [2, true],
+                args: [2, true]
             },
             {
                 op: "To Hex",
                 args: ["Space"]
             }
-        ],
+        ]
     },
     {
         name: "ROT13: nothing",
@@ -132,8 +131,8 @@ TestRegister.addTests([
             {
                 op: "ROT13",
                 args: [true, true, true, 13]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "ROT13: normal",
@@ -143,8 +142,8 @@ TestRegister.addTests([
             {
                 op: "ROT13",
                 args: [true, true, true, 13]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "ROT13: full loop",
@@ -154,8 +153,8 @@ TestRegister.addTests([
             {
                 op: "ROT13",
                 args: [true, true, true, 26]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "ROT13: lowercase only",
@@ -165,8 +164,8 @@ TestRegister.addTests([
             {
                 op: "ROT13",
                 args: [true, false, false, 13]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "ROT13: uppercase only",
@@ -176,8 +175,8 @@ TestRegister.addTests([
             {
                 op: "ROT13",
                 args: [false, true, false, 13]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "ROT47: nothing",
@@ -187,19 +186,19 @@ TestRegister.addTests([
             {
                 op: "ROT47",
                 args: [47]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "ROT47: normal",
         input: "The Quick Brown Fox Jumped Over The Lazy Dog.",
-        expectedOutput: "%96 \"F:4< qC@H? u@I yF>A65 ~G6C %96 {2KJ s@8]",
+        expectedOutput: '%96 "F:4< qC@H? u@I yF>A65 ~G6C %96 {2KJ s@8]',
         recipeConfig: [
             {
                 op: "ROT47",
                 args: [47]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "ROT47: full loop",
@@ -209,8 +208,8 @@ TestRegister.addTests([
             {
                 op: "ROT47",
                 args: [94]
-            },
-        ],
+            }
+        ]
     },
     {
         name: "ROT8000: nothing",
@@ -220,8 +219,8 @@ TestRegister.addTests([
             {
                 op: "ROT8000",
                 args: []
-            },
-        ],
+            }
+        ]
     },
     {
         name: "ROT8000: normal",
@@ -231,8 +230,8 @@ TestRegister.addTests([
             {
                 op: "ROT8000",
                 args: []
-            },
-        ],
+            }
+        ]
     },
     {
         name: "ROT8000: backward",
@@ -242,7 +241,7 @@ TestRegister.addTests([
             {
                 op: "ROT8000",
                 args: []
-            },
-        ],
-    },
+            }
+        ]
+    }
 ]);

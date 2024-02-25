@@ -42,7 +42,7 @@ export const DATETIME_FORMATS = [
     {
         name: "Automatic",
         value: ""
-    },
+    }
 ];
 
 /**
@@ -310,4 +310,3 @@ export const FORMAT_EXAMPLES = `Format string tokens:
     </tr>
   </tbody>
 </table>`;
-

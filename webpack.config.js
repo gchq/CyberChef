@@ -33,7 +33,6 @@ const banner = `/**
  * limitations under the License.
  */`;
 
-
 module.exports = {
     output: {
         publicPath: "",
@@ -69,15 +68,18 @@ module.exports = {
                     context: "src/core/vendor/",
                     from: "tesseract/**/*",
                     to: "assets/"
-                }, {
+                },
+                {
                     context: "node_modules/tesseract.js/",
                     from: "dist/worker.min.js",
                     to: "assets/tesseract"
-                }, {
+                },
+                {
                     context: "node_modules/tesseract.js-core/",
                     from: "tesseract-core.wasm.js",
                     to: "assets/tesseract"
-                }, {
+                },
+                {
                     context: "node_modules/node-forge/dist",
                     from: "prime.worker.min.js",
                     to: "assets/forge/"
@@ -89,8 +91,7 @@ module.exports = {
                 {
                     // Fix toSpare(0) bug in Split.js by avoiding gutter accomodation
                     test: /split\.es\.js$/,
-                    modify: (src, path) =>
-                        src.replace("if (pixelSize < elementMinSize)", "if (false)")
+                    modify: (src, path) => src.replace("if (pixelSize < elementMinSize)", "if (false)")
                 }
             ]
         })
@@ -98,7 +99,7 @@ module.exports = {
     resolve: {
         extensions: [".mjs", ".js", ".json"], // Allows importing files without extensions
         alias: {
-            jquery: "jquery/src/jquery",
+            jquery: "jquery/src/jquery"
         },
         fallback: {
             "fs": false,
@@ -170,25 +171,27 @@ module.exports = {
                         }
                     },
                     "css-loader",
-                    "postcss-loader",
+                    "postcss-loader"
                 ]
             },
             {
                 test: /\.(ico|eot|ttf|woff|woff2)$/,
-                type: "asset/resource",
+                type: "asset/resource"
             },
             {
                 test: /\.svg$/,
-                type: "asset/inline",
+                type: "asset/inline"
             },
-            { // Store font .fnt and .png files in a separate fonts folder
+            {
+                // Store font .fnt and .png files in a separate fonts folder
                 test: /(\.fnt$|bmfonts\/.+\.png$)/,
                 type: "asset/resource",
                 generator: {
                     filename: "assets/fonts/[name][ext]"
                 }
             },
-            { // First party images are saved as files to be cached
+            {
+                // First party images are saved as files to be cached
                 test: /\.(png|jpg|gif)$/,
                 exclude: /(node_modules|bmfonts)/,
                 type: "asset/resource",
@@ -196,11 +199,12 @@ module.exports = {
                     filename: "images/[name][ext]"
                 }
             },
-            { // Third party images are inlined
+            {
+                // Third party images are inlined
                 test: /\.(png|jpg|gif)$/,
                 exclude: /web\/static/,
-                type: "asset/inline",
-            },
+                type: "asset/inline"
+            }
         ]
     },
     stats: {

@@ -15,7 +15,6 @@ const promisify = es6promisify.default ? es6promisify.default.promisify : es6pro
  * PGP Encrypt operation
  */
 class PGPEncrypt extends Operation {
-
     /**
      * PGPEncrypt constructor
      */
@@ -31,7 +30,7 @@ class PGPEncrypt extends Operation {
             "<br><br>",
             "Pretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.",
             "<br><br>",
-            "This function uses the Keybase implementation of PGP.",
+            "This function uses the Keybase implementation of PGP."
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Pretty_Good_Privacy";
         this.inputType = "string";
@@ -73,7 +72,6 @@ class PGPEncrypt extends Operation {
 
         return encryptedMessage.toString();
     }
-
 }
 
 export default PGPEncrypt;

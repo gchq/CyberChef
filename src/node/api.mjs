@@ -10,10 +10,9 @@
 
 import NodeDish from "./NodeDish.mjs";
 import NodeRecipe from "./NodeRecipe.mjs";
-import OperationConfig from "../core/config/OperationConfig.json" assert {type: "json"};
+import OperationConfig from "../core/config/OperationConfig.json" assert { type: "json" };
 import { sanitise, removeSubheadingsFromArray, sentenceToCamelCase } from "./apiUtils.mjs";
 import ExcludedOperationError from "../core/errors/ExcludedOperationError.mjs";
-
 
 /**
  * transformArgs
@@ -29,7 +28,6 @@ import ExcludedOperationError from "../core/errors/ExcludedOperationError.mjs";
  * @param {Object} newArgs - any inputted args
  */
 function transformArgs(opArgsList, newArgs) {
-
     if (newArgs && Array.isArray(newArgs)) {
         return newArgs;
     }
@@ -47,8 +45,7 @@ function transformArgs(opArgsList, newArgs) {
     if (newArgs) {
         Object.keys(newArgs).map((key) => {
             const index = opArgs.findIndex((arg) => {
-                return arg.name.toLowerCase().replace(/ /g, "") ===
-                    key.toLowerCase().replace(/ /g, "");
+                return arg.name.toLowerCase().replace(/ /g, "") === key.toLowerCase().replace(/ /g, "");
             });
 
             if (index > -1) {
@@ -62,7 +59,7 @@ function transformArgs(opArgsList, newArgs) {
                     }
                 } else if (argument.type === "editableOption") {
                     // takes key: "option", key: {name, val: "string"}, key: {name, val: [...]}
-                    argument.value = typeof newArgs[key] === "string" ? newArgs[key]: newArgs[key].value;
+                    argument.value = typeof newArgs[key] === "string" ? newArgs[key] : newArgs[key].value;
                 } else {
                     argument.value = newArgs[key];
                 }
@@ -92,7 +89,6 @@ function transformArgs(opArgsList, newArgs) {
     });
 }
 
-
 /**
  * Ensure an input is a SyncDish object.
  * @param input
@@ -109,7 +105,6 @@ function ensureIsDish(input) {
     }
 }
 
-
 /**
  * prepareOp: transform args, make input the right type.
  * Also convert any Buffers to ArrayBuffers.
@@ -122,9 +117,8 @@ function prepareOp(opInstance, input, args) {
     // Transform object-style args to original args array
     const transformedArgs = transformArgs(opInstance.args, args);
     const transformedInput = dish.get(opInstance.inputType);
-    return {transformedInput, transformedArgs};
+    return { transformedInput, transformedArgs };
 }
-
 
 /**
  * createArgInfo
@@ -135,7 +129,7 @@ function prepareOp(opInstance, input, args) {
  *
  * @param {Operation} op - the operation to extract args from
  * @returns {{}} - arrays of options for args.
-*/
+ */
 function createArgInfo(op) {
     const result = {};
     op.args.forEach((a) => {
@@ -148,19 +142,18 @@ function createArgInfo(op) {
             result[sentenceToCamelCase(a.name)] = {
                 type: a.type,
                 value: a.value,
-                toggleValues: removeSubheadingsFromArray(a.toggleValues),
+                toggleValues: removeSubheadingsFromArray(a.toggleValues)
             };
         } else {
             result[sentenceToCamelCase(a.name)] = {
                 type: a.type,
-                value: a.value,
+                value: a.value
             };
         }
     });
 
     return result;
 }
-
 
 /**
  * Wrap an operation to be consumed by node API.
@@ -173,7 +166,6 @@ function createArgInfo(op) {
  * some type conversion logic
  */
 export function _wrap(OpClass) {
-
     // Check to see if class's run function is async.
     const opInstance = new OpClass();
     const isAsync = opInstance.run.constructor.name === "AsyncFunction";
@@ -190,8 +182,8 @@ export function _wrap(OpClass) {
          * @returns {Promise<SyncDish>} operation's output, on a Dish.
          * @throws {OperationError} if the operation throws one.
          */
-        wrapped = async (input, args=null) => {
-            const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
+        wrapped = async (input, args = null) => {
+            const { transformedInput, transformedArgs } = prepareOp(opInstance, input, args);
 
             // SPECIAL CASE for Magic. Other flowControl operations will
             // not work because the opList is not passed in.
@@ -201,14 +193,14 @@ export function _wrap(OpClass) {
                 const state = {
                     progress: 0,
                     dish: ensureIsDish(transformedInput),
-                    opList: [opInstance],
+                    opList: [opInstance]
                 };
 
                 const updatedState = await opInstance.run(state);
 
                 return new NodeDish({
                     value: updatedState.dish.value,
-                    type: opInstance.outputType,
+                    type: opInstance.outputType
                 });
             }
 
@@ -216,7 +208,7 @@ export function _wrap(OpClass) {
 
             return new NodeDish({
                 value: result,
-                type: opInstance.outputType,
+                type: opInstance.outputType
             });
         };
     } else {
@@ -227,12 +219,12 @@ export function _wrap(OpClass) {
          * @returns {SyncDish} operation's output, on a Dish.
          * @throws {OperationError} if the operation throws one.
          */
-        wrapped = (input, args=null) => {
-            const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
+        wrapped = (input, args = null) => {
+            const { transformedInput, transformedArgs } = prepareOp(opInstance, input, args);
             const result = opInstance.run(transformedInput, transformedArgs);
             return new NodeDish({
                 value: result,
-                type: opInstance.outputType,
+                type: opInstance.outputType
             });
         };
     }
@@ -245,7 +237,6 @@ export function _wrap(OpClass) {
 
     return wrapped;
 }
-
 
 /**
  * help: Give information about operations matching the given search term,
@@ -299,11 +290,11 @@ export function help(input) {
         // sort results with name match first
         .sort((a, b) => {
             const aInt = a.nameMatch ? 1 : 0;
-            const bInt = b.nameMatch ? 1  : 0;
+            const bInt = b.nameMatch ? 1 : 0;
             return bInt - aInt;
         })
         // extract just the hydrated config
-        .map(result => result.hydrated);
+        .map((result) => result.hydrated);
 
     if (matches && matches.length) {
         // console.log(`${matches.length} result${matches.length > 1 ? "s" : ""} found.`);
@@ -313,7 +304,6 @@ export function help(input) {
     // console.log("No results found.");
     return null;
 }
-
 
 /**
  * bake
@@ -325,11 +315,10 @@ export function help(input) {
  * @throws {TypeError} if invalid recipe given.
  */
 export function bake(input, recipeConfig) {
-    const recipe =  new NodeRecipe(recipeConfig);
+    const recipe = new NodeRecipe(recipeConfig);
     const dish = ensureIsDish(input);
     return recipe.execute(dish);
 }
-
 
 /**
  * explainExcludedFunction
@@ -340,9 +329,11 @@ export function bake(input, recipeConfig) {
 export function _explainExcludedFunction(name) {
     /**
      * Throw new error type with useful message.
-    */
+     */
     const func = () => {
-        throw new ExcludedOperationError(`Sorry, the ${name} operation is not available in the Node.js version of CyberChef.`);
+        throw new ExcludedOperationError(
+            `Sorry, the ${name} operation is not available in the Node.js version of CyberChef.`
+        );
     };
     // Add opName prop so NodeRecipe can handle it, just like wrap does.
     func.opName = name;

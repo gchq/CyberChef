@@ -12,14 +12,15 @@ import BigNumber from "bignumber.js";
  * translation methods for BigNumber Dishes
  */
 class DishBigNumber extends DishType {
-
     /**
      * convert the given value to a ArrayBuffer
      * @param {BigNumber} value
      */
     static toArrayBuffer() {
         DishBigNumber.checkForValue(this.value);
-        this.value = BigNumber.isBigNumber(this.value) ? Utils.strToArrayBuffer(this.value.toFixed()) : new ArrayBuffer;
+        this.value = BigNumber.isBigNumber(this.value)
+            ? Utils.strToArrayBuffer(this.value.toFixed())
+            : new ArrayBuffer();
     }
 
     /**

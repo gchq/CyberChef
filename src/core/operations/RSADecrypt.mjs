@@ -13,7 +13,6 @@ import { MD_ALGORITHMS } from "../lib/RSA.mjs";
  * RSA Decrypt operation
  */
 class RSADecrypt extends Operation {
-
     /**
      * RSADecrypt constructor
      */
@@ -52,7 +51,8 @@ class RSADecrypt extends Operation {
                     {
                         name: "RAW",
                         off: [3]
-                    }]
+                    }
+                ]
             },
             {
                 name: "Message Digest Algorithm",
@@ -74,13 +74,12 @@ class RSADecrypt extends Operation {
         }
         try {
             const privKey = forge.pki.decryptRsaPrivateKey(pemKey, password);
-            const dMsg = privKey.decrypt(input, scheme, {md: MD_ALGORITHMS[md].create()});
+            const dMsg = privKey.decrypt(input, scheme, { md: MD_ALGORITHMS[md].create() });
             return forge.util.decodeUtf8(dMsg);
         } catch (err) {
             throw new OperationError(err);
         }
     }
-
 }
 
 export default RSADecrypt;

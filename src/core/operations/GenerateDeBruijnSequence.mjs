@@ -11,7 +11,6 @@ import OperationError from "../errors/OperationError.mjs";
  * Generate De Bruijn Sequence operation
  */
 class GenerateDeBruijnSequence extends Operation {
-
     /**
      * GenerateDeBruijnSequence constructor
      */

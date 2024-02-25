@@ -17,6 +17,6 @@ TestRegister.addTests([
                 op: "LZNT1 Decompress",
                 args: []
             }
-        ],
+        ]
     }
 ]);

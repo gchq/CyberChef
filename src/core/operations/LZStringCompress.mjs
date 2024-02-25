@@ -7,13 +7,12 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
-import {COMPRESSION_OUTPUT_FORMATS, COMPRESSION_FUNCTIONS} from "../lib/LZString.mjs";
+import { COMPRESSION_OUTPUT_FORMATS, COMPRESSION_FUNCTIONS } from "../lib/LZString.mjs";
 
 /**
  * LZString Compress operation
  */
 class LZStringCompress extends Operation {
-
     /**
      * LZStringCompress constructor
      */
@@ -49,7 +48,6 @@ class LZStringCompress extends Operation {
             throw new OperationError("Unable to find compression function");
         }
     }
-
 }
 
 export default LZStringCompress;

@@ -10,7 +10,6 @@ import Operation from "../Operation.mjs";
  * Comment operation
  */
 class Comment extends Operation {
-
     /**
      * Comment constructor
      */
@@ -20,7 +19,8 @@ class Comment extends Operation {
         this.name = "Comment";
         this.flowControl = true;
         this.module = "Default";
-        this.description = "Provides a place to write comments within the flow of the recipe. This operation has no computational effect.";
+        this.description
+            = "Provides a place to write comments within the flow of the recipe. This operation has no computational effect.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -42,7 +42,6 @@ class Comment extends Operation {
     run(state) {
         return state;
     }
-
 }
 
 export default Comment;
