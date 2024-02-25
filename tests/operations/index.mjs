@@ -57,6 +57,7 @@ import "./tests/ConvertCoordinateFormat.mjs";
 import "./tests/ConvertToNATOAlphabet.mjs";
 import "./tests/Crypt.mjs";
 import "./tests/CSV.mjs";
+import "./tests/Cut.mjs";
 import "./tests/DateTime.mjs";
 import "./tests/DefangIP.mjs";
 import "./tests/ELFInfo.mjs";
