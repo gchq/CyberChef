@@ -148,6 +148,8 @@
             "Enigma",
             "Bombe",
             "Multiple Bombe",
+            "Multi Tap Cipher Encode",
+            "Multi Tap Cipher Decode",
             "Typex",
             "Lorenz",
             "Colossus",
