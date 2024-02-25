@@ -1,24 +1,25 @@
+const path = require("path");
+
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { ModifySourcePlugin } = require("modify-source-webpack-plugin");
-const path = require("path");
 
 /**
  * Webpack configuration details for use with Grunt.
  *
  * @author n1474335 [n1474335@gmail.com]
- * @copyright Crown Copyright 2017
+ * @copyright Crown Copyright 2023
  * @license Apache-2.0
  */
 
 const banner = `/**
  * CyberChef - The Cyber Swiss Army Knife
  *
- * @copyright Crown Copyright 2016
+ * @copyright Crown Copyright 2023
  * @license Apache-2.0
  *
- *   Copyright 2016 Crown Copyright
+ *   Copyright 2023 Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
