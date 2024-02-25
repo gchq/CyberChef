@@ -67,15 +67,12 @@ class DeriveEVPKey extends Operation {
             iterations = args[2],
             hasher = args[3],
             salt = Utils.convertToByteString(args[4].string, args[4].option),
-            key = CryptoJS.EvpKDF(
-                passphrase, // lgtm [js/insufficient-password-hash]
-                salt,
-                {
-                    keySize: keySize,
-                    hasher: CryptoJS.algo[hasher],
-                    iterations: iterations
-                }
-            );
+            // prettier-ignore
+            key = CryptoJS.EvpKDF(passphrase, salt, { // lgtm [js/insufficient-password-hash]
+                keySize: keySize,
+                hasher: CryptoJS.algo[hasher],
+                iterations: iterations
+            });
 
         return key.toString(CryptoJS.enc.Hex);
     }
