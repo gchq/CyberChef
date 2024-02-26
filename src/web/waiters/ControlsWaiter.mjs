@@ -351,6 +351,12 @@ class ControlsWaiter {
      */
     supportButtonClick(e) {
         e.preventDefault();
+        const faqs = document.getElementById("faqs");
+        const faqsAElement = faqs.getElementsByTagName("a");
+        for (let i = 0; i < faqsAElement.length; i++) {
+            faqsAElement[i].setAttribute("tabindex", "0");
+            faqsAElement[i].addEventListener("keydown", this.ArrowNavFAQS, false);
+        }
 
         const reportBugInfo = document.getElementById("report-bug-info");
         const saveLink = this.generateStateUrl(true, true, null, null, "https://gchq.github.io/CyberChef/");
@@ -366,6 +372,32 @@ ${navigator.userAgent}
         }
     }
 
+
+    /**
+    * @param {Event} ev
+    */
+    ArrowNavFAQS(ev) {
+
+        const currentElement = ev.target;
+        ev.preventDefault();
+        ev.stopPropagation();
+        if (ev.key === "ArrowDown") {
+            const nextElement = currentElement.nextElementSibling;
+            if (nextElement.nextElementSibling === null) {
+                currentElement.parentElement.firstElementChild.nextElementSibling.focus();
+            } else {
+                nextElement.nextElementSibling.nextElementSibling.focus();
+            }
+        } else if (ev.key === "ArrowUp") {
+            const prevElement = currentElement.previousElementSibling;
+            if (prevElement.previousElementSibling === null) {
+                currentElement.parentElement.lastElementChild.previousElementSibling.focus();
+            } else {
+                prevElement.previousElementSibling.previousElementSibling.focus();
+            }
+        }
+
+    }
 
     /**
      * Shows the stale indicator to show that the input or recipe has changed
