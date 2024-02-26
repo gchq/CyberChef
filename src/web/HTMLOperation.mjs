@@ -52,14 +52,14 @@ class HTMLOperation {
             const infoLink = this.infoURL ? `<hr>${titleFromWikiLink(this.infoURL)}` : "";
 
             html += ` data-container='body' data-toggle='popover' data-placement='right'
-                data-content="${this.description}${infoLink}" data-html='true' data-trigger='hover'
+                data-content="${this.description}${infoLink}" data-html='true' data-trigger='hover focus'
                 data-boundary='viewport'`;
         }
 
         html += ">" + this.name;
 
         if (removeIcon) {
-            html += "<i class='material-icons remove-icon op-icon'>delete</i>";
+            html += "<i class='material-icons remove-icon op-icon' tabindex='0'>delete</i>";
         }
 
         html += "</li>";
