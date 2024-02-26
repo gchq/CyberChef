@@ -324,11 +324,11 @@ class OperationsWaiter {
     }
 
     /**
-     * Handler for save favourites click events.
-     * Saves the selected favourites and reloads them.
+     * Handler for delete favourites keydown events.
+     * delete the selected favourite from the list.
      */
     deleteFavourite(event) {
-        if (event.key === "Enter") {
+        if (event.key === "Enter" || event.key === " ") {
             const el = event.target;
             if (el && el.parentNode) {
                 el.parentNode.remove();
