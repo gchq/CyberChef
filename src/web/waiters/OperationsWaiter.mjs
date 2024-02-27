@@ -280,7 +280,7 @@ class OperationsWaiter {
     /**
      * Handler for navigation key press events.
      * Navigates through the favourites list and corresponding delete buttons.
-     * Move favourites elements up and down with Ctrl + Arrow keys to imite drag and drop mouse functionality.
+     * Move favourites elements up and down with Ctrl + Arrow keys to imitate drag and drop mouse functionality.
      */
     ArrowNavFavourites(event) {
         const currentElement = event.target;
