@@ -1,6 +1,6 @@
 {
   "name": "cyberchef",
-  "version": "10.8.0",
+  "version": "10.8.2",
   "description": "The Cyber Swiss Army Knife for encryption, encoding, compression and data analysis.",
   "author": "n1474335 <n1474335@gmail.com>",
   "homepage": "https://gchq.github.io/CyberChef",
@@ -122,6 +122,7 @@
     "escodegen": "^2.1.0",
     "esprima": "^4.0.1",
     "exif-parser": "^0.1.12",
+    "fernet": "^0.3.2",
     "file-saver": "^2.0.5",
     "flat": "^6.0.1",
     "geodesy": "1.1.3",
