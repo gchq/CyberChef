@@ -91,7 +91,7 @@ class InputWaiter {
             lineWrapping: new Compartment,
             fileDetailsPanel: new Compartment
         };
-
+        localStorage.setItem("alerted", "no");
         const initialState = EditorState.create({
             doc: null,
             extensions: [
@@ -141,7 +141,7 @@ class InputWaiter {
                     if (e.docChanged && !this.silentInputChange)
                         this.inputChange(e);
                     this.silentInputChange = false;
-                })
+                }),
             ]
         });
 
@@ -186,7 +186,20 @@ class InputWaiter {
         this.inputChrEnc = chrEncVal;
         this.inputChange();
     }
+    /**
+     * Handler for Tab key events within input
+     * Notifies keyboard/screen reader users how to navigate out of input field
+     * @param {event} event
+     */
+    tabNotification(event) {
+        const alerted = localStorage.getItem("alerted") || "";
 
+        if (event.key === "Tab" && alerted !== "yes") {
+            this.app.alert("Press Escape then Tab to exit the input field.", 7000);
+            localStorage.setItem("alerted", "yes");
+            return $("#snackbar-container").append("<p role='alert' id='input-alert'>Press Escape then Tab to exit the input field.</p>");
+        }
+    }
     /**
      * Getter for the input character encoding
      * @returns {number}

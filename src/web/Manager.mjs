@@ -176,6 +176,7 @@ class Manager {
         document.getElementById("btn-new-tab").addEventListener("click", this.input.addInputClick.bind(this.input));
         document.getElementById("btn-previous-input-tab").addEventListener("mousedown", this.input.previousTabClick.bind(this.input));
         document.getElementById("btn-next-input-tab").addEventListener("mousedown", this.input.nextTabClick.bind(this.input));
+        document.getElementById("input-text").addEventListener("keydown", this.input.tabNotification.bind(this.input), false);
         this.addListeners("#btn-next-input-tab,#btn-previous-input-tab", "mouseup", this.input.tabMouseUp, this.input);
         this.addListeners("#btn-next-input-tab,#btn-previous-input-tab", "mouseout", this.input.tabMouseUp, this.input);
         document.getElementById("btn-go-to-input-tab").addEventListener("click", this.input.goToTab.bind(this.input));

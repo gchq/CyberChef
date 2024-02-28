@@ -380,6 +380,16 @@
     filter: brightness(98%);
 }
 
+#input-alert {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
 /* Highlighting */
 .ͼ2.cm-focused .cm-selectionBackground {
     background-color: var(--hl5);
