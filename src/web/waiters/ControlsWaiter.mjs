@@ -4,6 +4,7 @@
  * @license Apache-2.0
  */
 
+import { log } from "loglevel";
 import Utils from "../../core/Utils.mjs";
 
 
@@ -358,6 +359,17 @@ class ControlsWaiter {
             faqsAElement[i].addEventListener("keydown", this.ArrowNavFAQS, false);
         }
 
+        const tabs = document.querySelectorAll('[role="tab"]');
+        const tabPanel = document.querySelector('[role="tabpanel"]')
+
+        for (let i = 0; i < tabs.length; i++) {
+            tabs[i].addEventListener("keydown", this.changeTabs, false);
+        }
+
+        for (let i = 0; i < tabPanel.length; i++) {
+            tabPanel[i].addEventListener("keydown", this.changeTabs, false);
+        }
+
         const reportBugInfo = document.getElementById("report-bug-info");
         const saveLink = this.generateStateUrl(true, true, null, null, "https://gchq.github.io/CyberChef/");
 
@@ -377,7 +389,6 @@ ${navigator.userAgent}
     * @param {Event} ev
     */
     ArrowNavFAQS(ev) {
-
         const currentElement = ev.target;
         ev.preventDefault();
         ev.stopPropagation();
@@ -395,10 +406,61 @@ ${navigator.userAgent}
             } else {
                 prevElement.previousElementSibling.previousElementSibling.focus();
             }
-        }
+        } else if(ev.key === "Tab"){
+            ev.preventDefault();
+            ev.stopPropagation();
+            currentElement.parentElement.parentElement.parentElement.nextElementSibling.firstElementChild.focus();
+            
+        } 
 
     }
 
+    /**
+    * @param {Event} ev
+    */
+    changeTabs(ev) {
+        const tab = ev.target;
+        console.log("tab" , tab);
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        if (ev.key === "ArrowRight") {
+            const nextTab = tab.parentElement;
+            console.log("nextTab" , nextTab);
+            if (nextTab.nextElementSibling === null) {
+                tab.parentElement.parentElement.firstElementChild.firstElementChild.focus();
+            } else {
+                nextTab.nextElementSibling.firstElementChild.focus();
+            }
+            
+            console.log("nextTab", nextTab);
+
+        } else if(ev.key === "ArrowLeft"){
+            const prevTab = tab.parentElement;
+            
+            if (prevTab.previousElementSibling === null) {
+                tab.parentElement.parentElement.lastElementChild.firstElementChild.focus();
+            } else {
+                prevTab.previousElementSibling.firstElementChild.focus();
+            }
+        }else if (ev.key === "ArrowDown") {
+            const downPanel = tab.parentElement.parentElement;
+            console.log("downpanel", downPanel);
+            if (downPanel.parentElement.nextElementSibling === null) {
+                tab.parentElement.firstElementChild.nextElementSibling.focus();
+            } else {
+                downPanel.nextElementSibling.firstElementChild.querySelector("[class='btn btn-primary']").focus();
+                console.log("Arrowdown focus 2", downPanel.nextElementSibling.firstElementChild.querySelector("[class='btn btn-primary']"));
+            }
+        } else if(ev.key === "Tab"){
+            ev.preventDefault();
+            ev.stopPropagation();
+            tab.parentElement.parentElement.parentElement.nextElementSibling.firstElementChild.focus();
+            
+        }
+
+    }
+    
     /**
      * Shows the stale indicator to show that the input or recipe has changed
      * since the last bake.
