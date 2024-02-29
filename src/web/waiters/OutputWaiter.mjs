@@ -1415,10 +1415,12 @@ class OutputWaiter {
             this.app.ioSplitter.collapse(0);
 
             $(el).attr("data-original-title", "Restore output pane");
+            $(el).attr("aria-label", "Restore output pane");
             el.querySelector("i").innerHTML = "fullscreen_exit";
         } else {
             document.body.classList.remove("output-maximised");
             $(el).attr("data-original-title", "Maximise output pane");
+            $(el).attr("aria-label", "Maximise output pane");
             el.querySelector("i").innerHTML = "fullscreen";
             this.app.initialiseSplitter(false);
             this.app.resetLayout();
