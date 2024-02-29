@@ -406,12 +406,15 @@ ${navigator.userAgent}
             } else {
                 prevElement.previousElementSibling.previousElementSibling.focus();
             }
-        } else if(ev.key === "Tab"){
+        } else if(ev.key === "Tab" && !ev.shiftKey){
             ev.preventDefault();
             ev.stopPropagation();
             currentElement.parentElement.parentElement.parentElement.nextElementSibling.firstElementChild.focus();
             
-        } 
+        } else if(ev.shiftKey && ev.key === "Tab"){
+            currentElement.parentElement.parentElement.previousElementSibling.firstElementChild.firstElementChild.focus();
+            console.log("shift tab", currentElement.parentElement.parentElement.previousElementSibling.firstElementChild.firstElementChild);
+        }
 
     }
 
@@ -452,12 +455,12 @@ ${navigator.userAgent}
                 downPanel.nextElementSibling.firstElementChild.querySelector("[class='btn btn-primary']").focus();
                 console.log("Arrowdown focus 2", downPanel.nextElementSibling.firstElementChild.querySelector("[class='btn btn-primary']"));
             }
-        } else if(ev.key === "Tab"){
+        } else if(ev.key === "Tab" && !ev.shiftKey){
             ev.preventDefault();
             ev.stopPropagation();
             tab.parentElement.parentElement.parentElement.nextElementSibling.firstElementChild.focus();
             
-        }
+        } 
 
     }
     
