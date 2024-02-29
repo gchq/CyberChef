@@ -197,7 +197,7 @@ class InputWaiter {
         if (event.key === "Tab" && alerted !== "yes") {
             this.app.alert("Press Escape then Tab to exit the input field.", 7000);
             localStorage.setItem("alerted", "yes");
-            return $("#snackbar-container").append("<p role='alert' id='input-alert'>Press Escape then Tab to exit the input field.</p>");
+            return $("#snackbar-container").append("<p role='alert' id='visually-hidden-input-alert'>Press Escape then Tab to exit the input field.</p>");
         }
     }
     /**
