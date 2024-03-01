@@ -379,8 +379,15 @@ class OperationsWaiter {
             }
 
             const editFavouritesList = document.getElementById("edit-favourites-list");
+            const editFavouritesListElements = editFavouritesList.getElementsByTagName("li");
             editFavouritesList.innerHTML = html;
             this.removeIntent = false;
+
+            for (let i = 0; i < editFavouritesListElements.length; i++) {
+                editFavouritesListElements[i].setAttribute("tabindex", "0");
+                editFavouritesListElements[i].addEventListener("keydown", this.ArrowNavFavourites.bind(this), false);
+                editFavouritesListElements[i].firstElementChild.addEventListener("keydown", this.deleteFavourite.bind(this), false);
+            }
 
             const editableList = Sortable.create(editFavouritesList, {
                 filter: ".remove-icon",
