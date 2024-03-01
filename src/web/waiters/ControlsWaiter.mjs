@@ -356,18 +356,13 @@ class ControlsWaiter {
         const faqsAElement = faqs.getElementsByTagName("a");
         for (let i = 0; i < faqsAElement.length; i++) {
             faqsAElement[i].setAttribute("tabindex", "0");
-            faqsAElement[i].addEventListener("keydown", this.ArrowNavFAQS, false);
         }
 
         const tabs = document.querySelectorAll('[role="tab"]');
-        const tabPanel = document.querySelector('[role="tabpanel"]')
-
+       
         for (let i = 0; i < tabs.length; i++) {
             tabs[i].addEventListener("keydown", this.changeTabs, false);
-        }
-
-        for (let i = 0; i < tabPanel.length; i++) {
-            tabPanel[i].addEventListener("keydown", this.changeTabs, false);
+            tabs[i].addEventListener("keydown", this.navigateTabsList, false);
         }
 
         const reportBugInfo = document.getElementById("report-bug-info");
@@ -384,39 +379,6 @@ ${navigator.userAgent}
         }
     }
 
-
-    /**
-    * @param {Event} ev
-    */
-    ArrowNavFAQS(ev) {
-        const currentElement = ev.target;
-        ev.preventDefault();
-        ev.stopPropagation();
-        if (ev.key === "ArrowDown") {
-            const nextElement = currentElement.nextElementSibling;
-            if (nextElement.nextElementSibling === null) {
-                currentElement.parentElement.firstElementChild.nextElementSibling.focus();
-            } else {
-                nextElement.nextElementSibling.nextElementSibling.focus();
-            }
-        } else if (ev.key === "ArrowUp") {
-            const prevElement = currentElement.previousElementSibling;
-            if (prevElement.previousElementSibling === null) {
-                currentElement.parentElement.lastElementChild.previousElementSibling.focus();
-            } else {
-                prevElement.previousElementSibling.previousElementSibling.focus();
-            }
-        } else if(ev.key === "Tab" && !ev.shiftKey){
-            ev.preventDefault();
-            ev.stopPropagation();
-            currentElement.parentElement.parentElement.parentElement.nextElementSibling.firstElementChild.focus();
-            
-        } else if(ev.shiftKey && ev.key === "Tab"){
-            currentElement.parentElement.parentElement.previousElementSibling.firstElementChild.firstElementChild.focus();
-            console.log("shift tab", currentElement.parentElement.parentElement.previousElementSibling.firstElementChild.firstElementChild);
-        }
-
-    }
 
     /**
     * @param {Event} ev
@@ -446,22 +408,33 @@ ${navigator.userAgent}
             } else {
                 prevTab.previousElementSibling.firstElementChild.focus();
             }
-        }else if (ev.key === "ArrowDown") {
-            const downPanel = tab.parentElement.parentElement;
-            console.log("downpanel", downPanel);
-            if (downPanel.parentElement.nextElementSibling === null) {
-                tab.parentElement.firstElementChild.nextElementSibling.focus();
-            } else {
-                downPanel.nextElementSibling.firstElementChild.querySelector("[class='btn btn-primary']").focus();
-                console.log("Arrowdown focus 2", downPanel.nextElementSibling.firstElementChild.querySelector("[class='btn btn-primary']"));
-            }
         } else if(ev.key === "Tab" && !ev.shiftKey){
-            ev.preventDefault();
-            ev.stopPropagation();
-            tab.parentElement.parentElement.parentElement.nextElementSibling.firstElementChild.focus();
-            
-        } 
+            tab.parentElement.parentElement.nextElementSibling.firstElementChild.querySelector("[class='btn btn-primary']").focus();
+            console.log("tab to questions", tab.parentElement.parentElement.nextElementSibling.firstElementChild.querySelector("[class='btn btn-primary']"))
+        }
+    }
 
+     /**
+    * @param {Event} ev
+    */
+    navigateTabsList(ev){
+        ev.preventDefault();
+        if (ev.key === "Enter" || ev.key === "Space" ||ev.key === " ") {
+            const el = ev.target;
+            const targetElement = el.parentElement.parentElement;
+            ev.preventDefault();
+            for (let i = 0; i < targetElement.children.length; i++){
+                const targetChild = targetElement.children[i];
+                console.log("targetChild", targetChild)
+                if (targetChild.children !== undefined && targetChild.children.classList.querySelectorAll("nav-link")){
+                    console.log("includes", targetChild.children.classList.value.querySelectorAll("nav-link"))
+                    if (!targetChild.contains("active")) {
+                        targetChild.add("active");
+                    } 
+
+                }
+            }
+        }
     }
     
     /**
