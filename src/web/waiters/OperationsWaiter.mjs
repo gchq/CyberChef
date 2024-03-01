@@ -236,8 +236,15 @@ class OperationsWaiter {
         }
 
         const editFavouritesList = document.getElementById("edit-favourites-list");
+        const editFavouritesListElements = editFavouritesList.getElementsByTagName("li");
         editFavouritesList.innerHTML = html;
         this.removeIntent = false;
+
+        for (let i = 0; i < editFavouritesListElements.length; i++) {
+            editFavouritesListElements[i].setAttribute("tabindex", "0");
+            editFavouritesListElements[i].addEventListener("keydown", this.ArrowNavFavourites.bind(this), false);
+            editFavouritesListElements[i].firstElementChild.addEventListener("keydown", this.deleteFavourite.bind(this), false);
+        }
 
         const editableList = Sortable.create(editFavouritesList, {
             filter: ".remove-icon",
@@ -266,6 +273,66 @@ class OperationsWaiter {
 
         $("#edit-favourites-list [data-toggle=popover]").popover();
         $("#favourites-modal").modal();
+    }
+
+
+    /**
+     * Handler for navigation key press events.
+     * Navigates through the favourites list and corresponding delete buttons.
+     * Move favourites elements up and down with Ctrl + Arrow keys to imitate drag and drop mouse functionality.
+     */
+    ArrowNavFavourites(event) {
+        const currentElement = event.target;
+        const nextElement = currentElement.nextElementSibling;
+        const prevElement = currentElement.previousElementSibling;
+        const favouritesList = currentElement.parentNode;
+
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.key === "ArrowDown" && !event.ctrlKey) {
+            if (nextElement === null) {
+                currentElement.parentElement.firstElementChild.focus();
+            } else {
+                nextElement.focus();
+            }
+        } else if (event.key === "ArrowUp" && !event.ctrlKey) {
+            if (prevElement === null) {
+                currentElement.parentElement.lastElementChild.focus();
+            } else {
+                prevElement.focus();
+            }
+        } else if (event.key === "Tab") {
+            currentElement.parentElement.closest(".modal-body").nextElementSibling.getElementsByTagName("Button")[0].focus();
+        } else if (event.key === "ArrowRight") {
+            if (currentElement.firstElementChild !== null) {
+                currentElement.firstElementChild.focus();
+            }
+        } else if (event.key === "ArrowLeft" && (currentElement.classList.contains("remove-icon"))) {
+            currentElement.parentElement.focus();
+        } else if (event.ctrlKey && event.key === "ArrowDown") {
+            if (nextElement === null) {
+                favouritesList.insertBefore(currentElement, currentElement.parentElement.firstElementChild);
+            } else {
+                favouritesList.insertBefore(currentElement, nextElement.nextElementSibling);
+            }
+            currentElement.focus();
+        } else if (event.ctrlKey && event.key === "ArrowUp") {
+            favouritesList.insertBefore(currentElement, prevElement);
+            currentElement.focus();
+        }
+    }
+
+    /**
+     * Handler for delete favourites keydown events.
+     * delete the selected favourite from the list.
+     */
+    deleteFavourite(event) {
+        if (event.key === "Enter" || event.key === " ") {
+            const el = event.target;
+            if (el && el.parentNode) {
+                el.parentNode.remove();
+            }
+        }
     }
 
 
