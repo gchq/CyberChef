@@ -4,7 +4,6 @@
  * @license Apache-2.0
  */
 
-import { log } from "loglevel";
 import Utils from "../../core/Utils.mjs";
 
 
@@ -359,7 +358,7 @@ class ControlsWaiter {
         }
 
         const tabs = document.querySelectorAll('[role="tab"]');
-       
+
         for (let i = 0; i < tabs.length; i++) {
             tabs[i].addEventListener("keydown", this.changeTabs, false);
             tabs[i].addEventListener("keydown", this.navigateTabsList, false);
@@ -385,58 +384,50 @@ ${navigator.userAgent}
     */
     changeTabs(ev) {
         const tab = ev.target;
-        console.log("tab" , tab);
         ev.preventDefault();
         ev.stopPropagation();
 
         if (ev.key === "ArrowRight") {
             const nextTab = tab.parentElement;
-            console.log("nextTab" , nextTab);
             if (nextTab.nextElementSibling === null) {
                 tab.parentElement.parentElement.firstElementChild.firstElementChild.focus();
             } else {
                 nextTab.nextElementSibling.firstElementChild.focus();
             }
-            
-            console.log("nextTab", nextTab);
 
-        } else if(ev.key === "ArrowLeft"){
+        } else if (ev.key === "ArrowLeft") {
             const prevTab = tab.parentElement;
-            
+
             if (prevTab.previousElementSibling === null) {
                 tab.parentElement.parentElement.lastElementChild.firstElementChild.focus();
             } else {
                 prevTab.previousElementSibling.firstElementChild.focus();
             }
-        } else if(ev.key === "Tab" && !ev.shiftKey){
+        } else if (ev.key === "Tab" && !ev.shiftKey) {
             tab.parentElement.parentElement.nextElementSibling.firstElementChild.querySelector("[class='btn btn-primary']").focus();
-            console.log("tab to questions", tab.parentElement.parentElement.nextElementSibling.firstElementChild.querySelector("[class='btn btn-primary']"))
         }
     }
 
      /**
     * @param {Event} ev
     */
-    navigateTabsList(ev){
+    navigateTabsList(ev) {
         ev.preventDefault();
         if (ev.key === "Enter" || ev.key === "Space" ||ev.key === " ") {
             const el = ev.target;
             const targetElement = el.parentElement.parentElement;
             ev.preventDefault();
-            for (let i = 0; i < targetElement.children.length; i++){
+            for (let i = 0; i < targetElement.children.length; i++) {
                 const targetChild = targetElement.children[i];
-                console.log("targetChild", targetChild)
-                if (targetChild.children !== undefined && targetChild.children.classList.querySelectorAll("nav-link")){
-                    console.log("includes", targetChild.children.classList.value.querySelectorAll("nav-link"))
+                if (targetChild.children !== undefined && targetChild.children.classList.querySelectorAll("nav-link")) {
                     if (!targetChild.contains("active")) {
                         targetChild.add("active");
-                    } 
-
+                    }
                 }
             }
         }
     }
-    
+
     /**
      * Shows the stale indicator to show that the input or recipe has changed
      * since the last bake.
