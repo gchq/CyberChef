@@ -355,13 +355,14 @@ class ControlsWaiter {
         const faqsAElement = faqs.getElementsByTagName("a");
         for (let i = 0; i < faqsAElement.length; i++) {
             faqsAElement[i].setAttribute("tabindex", "0");
+            faqsAElement[i].addEventListener("keydown", this.navigateFAQList, false);
         }
 
         const tabs = document.querySelectorAll('[role="tab"]');
 
         for (let i = 0; i < tabs.length; i++) {
             tabs[i].addEventListener("keydown", this.changeTabs, false);
-            tabs[i].addEventListener("keydown", this.navigateTabsList, false);
+            // tabs[i].addEventListener("keydown", this.navigateFAQList, false);
         }
 
         const reportBugInfo = document.getElementById("report-bug-info");
@@ -403,29 +404,38 @@ ${navigator.userAgent}
             } else {
                 prevTab.previousElementSibling.firstElementChild.focus();
             }
-        } else if (ev.key === "Tab" && !ev.shiftKey) {
-            tab.parentElement.parentElement.nextElementSibling.firstElementChild.querySelector("[class='btn btn-primary']").focus();
-        }
+        } else if (ev.key === "Tab" && !ev.shiftKey && ev.target === document.getElementById("tab-1")) {
+            document.getElementById("faqs").querySelector("[class='btn btn-primary']").focus();
+        }  else if (ev.key === "Tab" && !ev.shiftKey && ev.target === document.getElementById("tab-2")) {
+            document.getElementById("report-bug").querySelector("[class='btn btn-primary']").focus();
+        }  else if (ev.key === "Tab" && !ev.shiftKey && ev.target === document.getElementById("tab-3")) {
+            document.getElementById("about").querySelector("[href]").focus();
+        }  else if (ev.key === "Tab" && !ev.shiftKey && ev.target === document.getElementById("tab-4")) {
+            const button = document.getElementById("support-modal").getElementsByClassName("modal-footer");
+            const close = button[0].firstElementChild;
+            close.focus();
+        } else if (ev.key === "Enter" || ev.key === "Space" ||ev.key === " ") {
+            tab.click();
+        }  
     }
 
      /**
     * @param {Event} ev
     */
-    navigateTabsList(ev) {
-        ev.preventDefault();
-        if (ev.key === "Enter" || ev.key === "Space" ||ev.key === " ") {
-            const el = ev.target;
-            const targetElement = el.parentElement.parentElement;
+    navigateFAQList(ev) {
+       
+        const el = ev.target.nextElementSibling;
+        if (ev.key === "Enter" || ev.key === "Space"|| ev.key === " "){
             ev.preventDefault();
-            for (let i = 0; i < targetElement.children.length; i++) {
-                const targetChild = targetElement.children[i];
-                if (targetChild.children !== undefined && targetChild.children.classList.querySelectorAll("nav-link")) {
-                    if (!targetChild.contains("active")) {
-                        targetChild.add("active");
-                    }
+            const question = el.classList;
+            if(question !== undefined && question.value){
+                if (!question.value.includes("show")) {
+                    question.add("show");
+                } else if (question.contains("show")) {
+                    question.remove("show");
                 }
             }
-        }
+        } 
     }
 
     /**
