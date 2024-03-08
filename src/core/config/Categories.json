@@ -29,6 +29,8 @@
             "To Base64",
             "From Base64",
             "Show Base64 offsets",
+            "To Base92",
+            "From Base92",
             "To Base85",
             "From Base85",
             "To Base",
@@ -67,7 +69,10 @@
             "JSON to CSV",
             "Avro to JSON",
             "CBOR Encode",
-            "CBOR Decode"
+            "CBOR Decode",
+            "Caret/M-decode",
+            "Rison Encode",
+            "Rison Decode"
         ]
     },
     {
@@ -81,6 +86,8 @@
             "DES Decrypt",
             "Triple DES Encrypt",
             "Triple DES Decrypt",
+            "Fernet Encrypt",
+            "Fernet Decrypt",
             "LS47 Encrypt",
             "LS47 Decrypt",
             "RC2 Encrypt",
@@ -294,7 +301,8 @@
             "Escape string",
             "Unescape string",
             "Pseudo-Random Number Generator",
-            "Sleep"
+            "Sleep",
+            "File Tree"
         ]
     },
     {
@@ -328,7 +336,8 @@
             "CSS selector",
             "Extract EXIF",
             "Extract ID3",
-            "Extract Files"
+            "Extract Files",
+            "RAKE"
         ]
     },
     {
@@ -351,7 +360,8 @@
             "LZMA Decompress",
             "LZMA Compress",
             "LZ4 Decompress",
-            "LZ4 Compress"
+            "LZ4 Compress",
+            "LZNT1 Decompress"
         ]
     },
     {
@@ -368,6 +378,7 @@
             "SHA2",
             "SHA3",
             "SM3",
+            "MurmurHash3",
             "Keccak",
             "Shake",
             "RIPEMD",
