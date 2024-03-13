@@ -108,7 +108,7 @@ class ParseIPv4Header extends Operation {
 
         const data = input.slice(ihl * 4);
 
-        if (outputFormat == "Table") {
+        if (outputFormat === "Table") {
             output = `<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Field</th><th>Value</th></tr>
 <tr><td>Version</td><td>${version}</td></tr>
 <tr><td>Internet Header Length (IHL)</td><td>${ihl} (${ihl * 4} bytes)</td></tr>
@@ -137,7 +137,7 @@ class ParseIPv4Header extends Operation {
             return output + "</table>";
         } else if (outputFormat === "Data (hex)") {
             return toHex(data);
-        } else if (outputFormat == "Data (raw)") {
+        } else if (outputFormat === "Data (raw)") {
             return Utils.byteArrayToChars(data);
         }
     }
