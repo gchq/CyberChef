@@ -232,7 +232,6 @@ module.exports = {
         browser
             .waitForElementNotVisible("#snackbar-container")
             .click("#copy-output")
-            .waitForElementVisible("#snackbar-container")
             .waitForElementVisible("#snackbar-container .snackbar-content")
             .expect.element("#snackbar-container .snackbar-content").text.to.equal("Copied raw output successfully.");
 
