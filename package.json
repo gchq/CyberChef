@@ -55,7 +55,7 @@
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "babel-plugin-transform-builtin-extend": "1.1.2",
     "base64-loader": "^1.0.0",
-    "chromedriver": "^123.0.0",
+    "chromedriver": "^122.0.0",
     "cli-progress": "^3.12.0",
     "colors": "^1.4.0",
     "copy-webpack-plugin": "^12.0.2",
