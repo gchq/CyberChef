@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.9.0] - 2024-03-26
+- Line ending sequences and UTF-8 character encoding are now detected automatically [@n1474335] | [65ffd8d]
+
 ### [10.8.0] - 2024-02-13
 - Add official Docker images [@AshCorr] | [#1699]
 
@@ -386,6 +389,7 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[10.9.0]: https://github.com/gchq/CyberChef/releases/tag/v10.9.0
 [10.8.0]: https://github.com/gchq/CyberChef/releases/tag/v10.7.0
 [10.7.0]: https://github.com/gchq/CyberChef/releases/tag/v10.7.0
 [10.6.0]: https://github.com/gchq/CyberChef/releases/tag/v10.6.0
@@ -561,6 +565,7 @@ All major and minor version changes will be documented in this file. Details of 
 [a895d1d]: https://github.com/gchq/CyberChef/commit/a895d1d82a2f92d440a0c5eca2bc7c898107b737
 [31a7f83]: https://github.com/gchq/CyberChef/commit/31a7f83b82e78927f89689f323fcb9185144d6ff
 [760eff4]: https://github.com/gchq/CyberChef/commit/760eff49b5307aaa3104c5e5b437ffe62299acd1
+[65ffd8d]: https://github.com/gchq/CyberChef/commit/65ffd8d65d88eb369f6f61a5d1d0f807179bffb7
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
