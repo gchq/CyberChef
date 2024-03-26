@@ -232,7 +232,7 @@ module.exports = {
         browser
             .waitForElementNotVisible("#snackbar-container")
             .click("#copy-output")
-            .waitForElementVisible("#snackbar-container .snackbar-content", 5000, 100)
+            .waitForElementVisible("#snackbar-container .snackbar-content", 5000, 100, false)
             .expect.element("#snackbar-container .snackbar-content").text.to.equal("Copied raw output successfully.");
 
         // Alert bar disappears after the correct amount of time
