@@ -24,6 +24,8 @@ class StatusBarPanel {
         this.eolHandler = opts.eolHandler;
         this.chrEncHandler = opts.chrEncHandler;
         this.chrEncGetter = opts.chrEncGetter;
+        this.getEncodingState = opts.getEncodingState;
+        this.getEOLState = opts.getEOLState;
         this.htmlOutput = opts.htmlOutput;
 
         this.eolVal = null;
@@ -115,7 +117,7 @@ class StatusBarPanel {
 
         if (isNaN(chrEncVal)) return;
 
-        this.chrEncHandler(chrEncVal);
+        this.chrEncHandler(chrEncVal, true);
         this.updateCharEnc(chrEncVal);
         hideElement(e.target.closest(".cm-status-bar-select-content"));
     }
@@ -212,12 +214,31 @@ class StatusBarPanel {
      * @param {EditorState} state
      */
     updateEOL(state) {
-        if (state.lineBreak === this.eolVal) return;
+        if (this.getEOLState() < 2 && state.lineBreak === this.eolVal) return;
 
         const val = this.dom.querySelector(".eol-value");
         const button = val.closest(".cm-status-bar-select-btn");
-        const eolCode = eolSeqToCode[state.lineBreak];
-        const eolName = eolCodeToName[eolCode];
+        let eolCode = eolSeqToCode[state.lineBreak];
+        let eolName = eolCodeToName[eolCode];
+
+        switch (this.getEOLState()) {
+            case 1: // Detected
+                val.classList.add("font-italic");
+                eolCode += " (detected)";
+                eolName += " (detected)";
+                // Pulse
+                val.classList.add("pulse");
+                setTimeout(() => {
+                    val.classList.remove("pulse");
+                }, 2000);
+                break;
+            case 0: // Unset
+            case 2: // Manually set
+            default:
+                val.classList.remove("font-italic");
+                break;
+        }
+
         val.textContent = eolCode;
         button.setAttribute("title", `End of line sequence:<br>${eolName}`);
         button.setAttribute("data-original-title", `End of line sequence:<br>${eolName}`);
@@ -230,12 +251,30 @@ class StatusBarPanel {
      */
     updateCharEnc() {
         const chrEncVal = this.chrEncGetter();
-        if (chrEncVal === this.chrEncVal) return;
+        if (this.getEncodingState() < 2 && chrEncVal === this.chrEncVal) return;
 
-        const name = CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] ? CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] : "Raw Bytes";
+        let name = CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] ? CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] : "Raw Bytes";
 
         const val = this.dom.querySelector(".chr-enc-value");
         const button = val.closest(".cm-status-bar-select-btn");
+
+        switch (this.getEncodingState()) {
+            case 1: // Detected
+                val.classList.add("font-italic");
+                name += " (detected)";
+                // Pulse
+                val.classList.add("pulse");
+                setTimeout(() => {
+                    val.classList.remove("pulse");
+                }, 2000);
+                break;
+            case 0: // Unset
+            case 2: // Manually set
+            default:
+                val.classList.remove("font-italic");
+                break;
+        }
+
         val.textContent = name;
         button.setAttribute("title", `${this.label} character encoding:<br>${name}`);
         button.setAttribute("data-original-title", `${this.label} character encoding:<br>${name}`);
