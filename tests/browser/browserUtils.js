@@ -65,6 +65,7 @@ function setChrEnc(browser, io, enc) {
     io = `#${io}-text`;
     browser
         .useCss()
+        .waitForElementNotVisible("#snackbar-container", 6000)
         .click(io + " .chr-enc-value")
         .waitForElementVisible(io + " .chr-enc-select .cm-status-bar-select-scroll")
         .click("link text", enc)
@@ -83,6 +84,7 @@ function setEOLSeq(browser, io, eol) {
     io = `#${io}-text`;
     browser
         .useCss()
+        .waitForElementNotVisible("#snackbar-container", 6000)
         .click(io + " .eol-value")
         .waitForElementVisible(io + " .eol-select .cm-status-bar-select-content")
         .click(`${io} .cm-status-bar-select-content a[data-val=${eol}]`)

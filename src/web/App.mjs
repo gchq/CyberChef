@@ -46,6 +46,8 @@ class App {
         this.appLoaded     = false;
         this.workerLoaded  = false;
         this.waitersLoaded = false;
+
+        this.snackbars     = [];
     }
 
 
@@ -708,14 +710,14 @@ class App {
         log.info("[" + time.toLocaleString() + "] " + str);
         if (silent) return;
 
-        this.currentSnackbar = $.snackbar({
+        this.snackbars.push($.snackbar({
             content: str,
             timeout: timeout,
             htmlAllowed: true,
             onClose: () => {
-                this.currentSnackbar.remove();
+                this.snackbars.shift().remove();
             }
-        });
+        }));
     }
 
 
