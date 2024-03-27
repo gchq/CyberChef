@@ -73,6 +73,27 @@ export const FILE_SIGNATURES = {
             extractor: extractWEBP
         },
         {
+            name: "High Efficiency Image File Format",
+            extension: "heic,heif",
+            mime: "image/heif",
+            description: "",
+            signature: {
+                0: 0x00,
+                1: 0x00,
+                2: 0x00,
+                // 3 could be 0x24 or 0x18, so skip it
+                4: 0x66, // ftypheic
+                5: 0x74,
+                6: 0x79,
+                7: 0x70,
+                8: 0x68,
+                9: 0x65,
+                10: 0x69,
+                11: 0x63
+            },
+            extractor: null
+        },
+        {
             name: "Camera Image File Format",
             extension: "crw",
             mime: "image/x-canon-crw",
