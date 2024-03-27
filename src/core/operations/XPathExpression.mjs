@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import xmldom from "xmldom";
+import xmldom from "@xmldom/xmldom";
 import xpath from "xpath";
 
 /**

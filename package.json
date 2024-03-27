@@ -174,7 +174,7 @@
     "unorm": "^1.6.0",
     "utf8": "^3.0.0",
     "vkbeautify": "^0.99.3",
-    "xmldom": "^0.6.0",
+    "@xmldom/xmldom": "^0.8.0",
     "xpath": "0.0.34",
     "xregexp": "^5.1.1",
     "zlibjs": "^0.3.1"
