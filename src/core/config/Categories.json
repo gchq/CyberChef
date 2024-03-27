@@ -231,6 +231,7 @@
             "VarInt Decode",
             "JA3 Fingerprint",
             "JA3S Fingerprint",
+            "JA4 Fingerprint",
             "HASSH Client Fingerprint",
             "HASSH Server Fingerprint",
             "Format MAC addresses",
