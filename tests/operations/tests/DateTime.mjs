@@ -31,4 +31,26 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "DateTime Delta Positive",
+        input: "20/02/2024 13:36:00",
+        expectedOutput: "20/02/2024 13:37:00",
+        recipeConfig: [
+            {
+                op: "DateTime Delta",
+                args: ["Standard date and time", "DD/MM/YYYY HH:mm:ss", "+0.0:01:0"],
+            },
+        ],
+    },
+    {
+        name: "DateTime Delta Negative",
+        input: "20/02/2024 14:37:00",
+        expectedOutput: "20/02/2024 13:37:00",
+        recipeConfig: [
+            {
+                op: "DateTime Delta",
+                args: ["Standard date and time", "DD/MM/YYYY HH:mm:ss", "-0.1:00:0"],
+            },
+        ],
+    },
 ]);
