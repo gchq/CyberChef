@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.10.0] - 2024-03-27
+- Added 'JA4 Fingerprint' operation [@n1474335] | [#1759]
+
 ### [10.9.0] - 2024-03-26
 - Line ending sequences and UTF-8 character encoding are now detected automatically [@n1474335] | [65ffd8d]
 
@@ -389,6 +392,7 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[10.10.0]: https://github.com/gchq/CyberChef/releases/tag/v10.10.0
 [10.9.0]: https://github.com/gchq/CyberChef/releases/tag/v10.9.0
 [10.8.0]: https://github.com/gchq/CyberChef/releases/tag/v10.7.0
 [10.7.0]: https://github.com/gchq/CyberChef/releases/tag/v10.7.0
