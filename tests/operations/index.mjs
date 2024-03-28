@@ -125,6 +125,8 @@ import "./tests/Register.mjs";
 import "./tests/RisonEncodeDecode.mjs";
 import "./tests/Rotate.mjs";
 import "./tests/RSA.mjs";
+import "./tests/Salsa20.mjs";
+import "./tests/XSalsa20.mjs";
 import "./tests/SeqUtils.mjs";
 import "./tests/SetDifference.mjs";
 import "./tests/SetIntersection.mjs";
