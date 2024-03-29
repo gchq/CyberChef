@@ -95,6 +95,8 @@
             "RC4",
             "RC4 Drop",
             "ChaCha",
+            "Salsa20",
+            "XSalsa20",
             "Rabbit",
             "SM4 Encrypt",
             "SM4 Decrypt",
