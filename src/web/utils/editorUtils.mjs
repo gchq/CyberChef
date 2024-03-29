@@ -95,3 +95,42 @@ export function escapeControlChars(str, preserveWs=false, lineBreak="\n") {
         return n.outerHTML;
     });
 }
+
+/**
+ * Convert and EOL sequence to its name
+ */
+export const eolSeqToCode = {
+    "\u000a": "LF",
+    "\u000b": "VT",
+    "\u000c": "FF",
+    "\u000d": "CR",
+    "\u000d\u000a": "CRLF",
+    "\u0085": "NEL",
+    "\u2028": "LS",
+    "\u2029": "PS"
+};
+
+/**
+ * Convert an EOL name to its sequence
+ */
+export const eolCodeToSeq = {
+    "LF": "\u000a",
+    "VT": "\u000b",
+    "FF": "\u000c",
+    "CR": "\u000d",
+    "CRLF": "\u000d\u000a",
+    "NEL": "\u0085",
+    "LS": "\u2028",
+    "PS": "\u2029"
+};
+
+export const eolCodeToName = {
+    "LF": "Line Feed",
+    "VT": "Vertical Tab",
+    "FF": "Form Feed",
+    "CR": "Carriage Return",
+    "CRLF": "Carriage Return + Line Feed",
+    "NEL": "Next Line",
+    "LS": "Line Separator",
+    "PS": "Paragraph Separator"
+};
