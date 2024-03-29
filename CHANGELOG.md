@@ -14,9 +14,9 @@ All major and minor version changes will be documented in this file. Details of 
 ## Details
 
 ### [10.11.0] - 2024-03-29
-- Add HEIC/HEIF file signatures [simonw] | [#1757]
-- Update xmldom to fix medium security vulnerability [chriswhite199] | [#1752]
-- Update JSONWebToken to fix medium security vulnerability [chriswhite199] | [#1753]
+- Add HEIC/HEIF file signatures [@simonw] | [#1757]
+- Update xmldom to fix medium security vulnerability [@chriswhite199] | [#1752]
+- Update JSONWebToken to fix medium security vulnerability [@chriswhite199] | [#1753]
 
 ### [10.10.0] - 2024-03-27
 - Added 'JA4 Fingerprint' operation [@n1474335] | [#1759]
