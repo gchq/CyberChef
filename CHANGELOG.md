@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.13.0] - 2024-03-30
+- Added 'FangURL' operation [@breakersall] [@arnydo] | [#1591] [#654]
+
 ### [10.12.0] - 2024-03-29
 - Added 'Salsa20' and 'XSalsa20' operation [@joostrijneveld] | [#1750]
 
@@ -400,6 +403,7 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[10.13.0]: https://github.com/gchq/CyberChef/releases/tag/v10.13.0
 [10.12.0]: https://github.com/gchq/CyberChef/releases/tag/v10.12.0
 [10.11.0]: https://github.com/gchq/CyberChef/releases/tag/v10.11.0
 [10.10.0]: https://github.com/gchq/CyberChef/releases/tag/v10.10.0
@@ -571,6 +575,7 @@ All major and minor version changes will be documented in this file. Details of 
 [@AshCorr]: https://github.com/AshCorr
 [@simonw]: https://github.com/simonw
 [@chriswhite199]: https://github.com/chriswhite199
+[@breakersall]: https://github.com/breakersall
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
@@ -703,3 +708,5 @@ All major and minor version changes will be documented in this file. Details of 
 [#1752]: https://github.com/gchq/CyberChef/issues/1752
 [#1753]: https://github.com/gchq/CyberChef/issues/1753
 [#1750]: https://github.com/gchq/CyberChef/issues/1750
+[#1591]: https://github.com/gchq/CyberChef/issues/1591
+[#654]: https://github.com/gchq/CyberChef/issues/654
