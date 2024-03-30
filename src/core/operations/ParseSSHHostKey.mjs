@@ -4,11 +4,11 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import Utils from "../Utils";
-import { fromBase64 } from "../lib/Base64";
-import { fromHex, toHexFast } from "../lib/Hex";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
+import { fromBase64 } from "../lib/Base64.mjs";
+import { fromHex, toHexFast } from "../lib/Hex.mjs";
 
 /**
  * Parse SSH Host Key operation
@@ -23,7 +23,7 @@ class ParseSSHHostKey extends Operation {
 
         this.name = "Parse SSH Host Key";
         this.module = "Default";
-        this.description = "Parses a SSH host key and extracts fields from it.<br>The key type can be:<ul><li>ssh-rsa</li><li>ssh-dss</li><li>ecdsa-sha2</li></ul>The key format can be either Hex or Base64.";
+        this.description = "Parses a SSH host key and extracts fields from it.<br>The key type can be:<ul><li>ssh-rsa</li><li>ssh-dss</li><li>ecdsa-sha2</li><li>ssh-ed25519</li></ul>The key format can be either Hex or Base64.";
         this.infoURL = "https://wikipedia.org/wiki/Secure_Shell";
         this.inputType = "string";
         this.outputType = "string";
@@ -36,6 +36,13 @@ class ParseSSHHostKey extends Operation {
                     "Base64",
                     "Hex"
                 ]
+            }
+        ];
+        this.checks = [
+            {
+                pattern:  "^\\s*([A-F\\d]{2}[,;:]){15,}[A-F\\d]{2}\\s*$",
+                flags:  "i",
+                args:   ["Hex"]
             }
         ];
     }
@@ -64,6 +71,8 @@ class ParseSSHHostKey extends Operation {
         } else if (keyType.startsWith("ecdsa-sha2")) {
             output += `\nCurve: ${Utils.byteArrayToChars(fromHex(fields[1]))}`;
             output += `\nPoint: 0x${fields.slice(2)}`;
+        } else if (keyType === "ssh-ed25519") {
+            output += `\nx: 0x${fields[1]}`;
         } else {
             output += "\nUnsupported key type.";
             output += `\nParameters: ${fields.slice(1)}`;
@@ -80,7 +89,7 @@ class ParseSSHHostKey extends Operation {
      * @returns {byteArray}
      */
     convertKeyToBinary(inputKey, inputFormat) {
-        const keyPattern = new RegExp(/^(?:[ssh]|[ecdsa-sha2])\S+\s+(\S*)/),
+        const keyPattern = new RegExp(/^(?:ssh|ecdsa-sha2)\S+\s+(\S*)/),
             keyMatch = inputKey.match(keyPattern);
 
         if (keyMatch) {

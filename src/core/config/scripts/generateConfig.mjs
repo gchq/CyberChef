@@ -9,7 +9,7 @@
  * @license Apache-2.0
  */
 
-/*eslint no-console: ["off"] */
+/* eslint no-console: ["off"] */
 
 import path from "path";
 import fs  from "fs";
@@ -42,12 +42,9 @@ for (const opObj in Ops) {
         outputType:  op.presentType,
         flowControl: op.flowControl,
         manualBake:  op.manualBake,
-        args:        op.args
+        args:        op.args,
+        checks:      op.checks
     };
-
-    if ("patterns" in op) {
-        operationConfig[op.name].patterns = op.patterns;
-    }
 
     if (!(op.module in modules))
         modules[op.module] = {};

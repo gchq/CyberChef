@@ -111,7 +111,7 @@ class PHPDeserialize extends Operation {
                     } else {
                         const numberCheck = lastItem.match(/[0-9]+/);
                         if (args[0] && numberCheck && numberCheck[0].length === lastItem.length) {
-                            result.push("\"" + lastItem + "\": " + item);
+                            result.push('"' + lastItem + '": ' + item);
                         } else {
                             result.push(lastItem + ": " + item);
                         }
@@ -128,8 +128,7 @@ class PHPDeserialize extends Operation {
             switch (kind) {
                 case "n":
                     expect(";");
-                    return "";
-
+                    return "null";
                 case "i":
                 case "d":
                 case "b": {
@@ -150,11 +149,11 @@ class PHPDeserialize extends Operation {
                     const length = readUntil(":");
                     expect("\"");
                     const value = read(length);
-                    expect("\";");
+                    expect('";');
                     if (args[0]) {
-                        return "\"" + value.replace(/"/g, "\\\"") + "\"";
+                        return '"' + value.replace(/"/g, '\\"') + '"'; // lgtm [js/incomplete-sanitization]
                     } else {
-                        return "\"" + value + "\"";
+                        return '"' + value + '"';
                     }
                 }
 

@@ -57,7 +57,7 @@ class HammingDistance extends Operation {
             samples = input.split(delim);
 
         if (samples.length !== 2) {
-            throw new OperationError("Error: You can only calculae the edit distance between 2 strings. Please ensure exactly two inputs are provided, separated by the specified delimiter.");
+            throw new OperationError("Error: You can only calculate the edit distance between 2 strings. Please ensure exactly two inputs are provided, separated by the specified delimiter.");
         }
 
         if (samples[0].length !== samples[1].length) {
@@ -68,8 +68,8 @@ class HammingDistance extends Operation {
             samples[0] = fromHex(samples[0]);
             samples[1] = fromHex(samples[1]);
         } else {
-            samples[0] = Utils.strToByteArray(samples[0]);
-            samples[1] = Utils.strToByteArray(samples[1]);
+            samples[0] = new Uint8Array(Utils.strToArrayBuffer(samples[0]));
+            samples[1] = new Uint8Array(Utils.strToArrayBuffer(samples[1]));
         }
 
         let dist = 0;

@@ -8,10 +8,9 @@
 
 /* Libraries */
 import "highlight.js/styles/vs.css";
-import "../static/clippy_assets/clippy.css";
 
 /* Frameworks */
-import "./vendors/bootstrap.scss";
+import "bootstrap-material-design/dist/css/bootstrap-material-design.css";
 import "bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css";
 
 /* CyberChef styles */

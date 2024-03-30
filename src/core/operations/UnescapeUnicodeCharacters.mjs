@@ -47,7 +47,6 @@ class UnescapeUnicodeCharacters extends Operation {
         while ((m = regex.exec(input))) {
             // Add up to match
             output += input.slice(i, m.index);
-            i = m.index;
 
             // Add match
             output += Utils.chr(parseInt(m[1], 16));

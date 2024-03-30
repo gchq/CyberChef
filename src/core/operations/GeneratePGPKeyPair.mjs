@@ -9,8 +9,10 @@
 import Operation from "../Operation.mjs";
 import kbpgp from "kbpgp";
 import { getSubkeySize, ASP } from "../lib/PGP.mjs";
+import { cryptNotice } from "../lib/Crypt.mjs";
 import * as es6promisify from "es6-promisify";
 const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
+
 
 /**
  * Generate PGP Key Pair operation
@@ -25,7 +27,7 @@ class GeneratePGPKeyPair extends Operation {
 
         this.name = "Generate PGP Key Pair";
         this.module = "PGP";
-        this.description = "Generates a new public/private PGP key pair. Supports RSA and Eliptic Curve (EC) keys.";
+        this.description = `Generates a new public/private PGP key pair. Supports RSA and Eliptic Curve (EC) keys.<br><br>${cryptNotice}`;
         this.infoURL = "https://wikipedia.org/wiki/Pretty_Good_Privacy";
         this.inputType = "string";
         this.outputType = "string";
@@ -33,7 +35,7 @@ class GeneratePGPKeyPair extends Operation {
             {
                 "name": "Key type",
                 "type": "option",
-                "value": ["RSA-1024", "RSA-2048", "RSA-4096", "ECC-256", "ECC-384"]
+                "value": ["RSA-1024", "RSA-2048", "RSA-4096", "ECC-256", "ECC-384", "ECC-521"]
             },
             {
                 "name": "Password (optional)",
@@ -58,12 +60,15 @@ class GeneratePGPKeyPair extends Operation {
      * @param {Object[]} args
      * @returns {string}
      */
-    run(input, args) {
-        const [keyType, keySize] = args[0].split("-"),
-            password = args[1],
+    async run(input, args) {
+        let [keyType, keySize] = args[0].split("-");
+        const password = args[1],
             name = args[2],
             email = args[3];
         let userIdentifier = "";
+
+        keyType = keyType.toLowerCase();
+        keySize = parseInt(keySize, 10);
 
         if (name) userIdentifier += name;
         if (email) userIdentifier += ` <${email}>`;

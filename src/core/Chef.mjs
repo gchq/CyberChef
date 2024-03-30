@@ -27,8 +27,8 @@ class Chef {
      *
      * @param {string|ArrayBuffer} input - The input data as a string or ArrayBuffer
      * @param {Object[]} recipeConfig - The recipe configuration object
-     * @param {Object} options - The options object storing various user choices
-     * @param {boolean} options.attempHighlight - Whether or not to attempt highlighting
+     * @param {Object} [options={}] - The options object storing various user choices
+     * @param {string} [options.returnType] - What type to return the result as
      *
      * @returns {Object} response
      * @returns {string} response.result - The output of the recipe
@@ -37,12 +37,11 @@ class Chef {
      * @returns {number} response.duration - The number of ms it took to execute the recipe
      * @returns {number} response.error - The error object thrown by a failed operation (false if no error)
     */
-    async bake(input, recipeConfig, options) {
+    async bake(input, recipeConfig, options={}) {
         log.debug("Chef baking");
-        const startTime = new Date().getTime(),
+        const startTime = Date.now(),
             recipe      = new Recipe(recipeConfig),
-            containsFc  = recipe.containsFlowControl(),
-            notUTF8     = options && "treatAsUtf8" in options && !options.treatAsUtf8;
+            containsFc  = recipe.containsFlowControl();
         let error = false,
             progress = 0;
 
@@ -68,23 +67,16 @@ class Chef {
         // Present the raw result
         await recipe.present(this.dish);
 
-        // Depending on the size of the output, we may send it back as a string or an ArrayBuffer.
-        // This can prevent unnecessary casting as an ArrayBuffer can be easily downloaded as a file.
-        // The threshold is specified in KiB.
-        const threshold = (options.ioDisplayThreshold || 1024) * 1024;
         const returnType =
-            this.dish.size > threshold ?
-                Dish.ARRAY_BUFFER :
-                this.dish.type === Dish.HTML ?
-                    Dish.HTML :
-                    Dish.STRING;
+            this.dish.type === Dish.HTML ? Dish.HTML :
+                options?.returnType ? options.returnType : Dish.ARRAY_BUFFER;
 
         return {
             dish: rawDish,
-            result: await this.dish.get(returnType, notUTF8),
+            result: await this.dish.get(returnType),
             type: Dish.enumLookup(this.dish.type),
             progress: progress,
-            duration: new Date().getTime() - startTime,
+            duration: Date.now() - startTime,
             error: error
         };
     }
@@ -110,7 +102,7 @@ class Chef {
     silentBake(recipeConfig) {
         log.debug("Running silent bake");
 
-        const startTime = new Date().getTime(),
+        const startTime = Date.now(),
             recipe = new Recipe(recipeConfig),
             dish = new Dish();
 
@@ -119,7 +111,7 @@ class Chef {
         } catch (err) {
             // Suppress all errors
         }
-        return new Date().getTime() - startTime;
+        return Date.now() - startTime;
     }
 
 
@@ -146,7 +138,12 @@ class Chef {
             const func = direction === "forward" ? highlights[i].f : highlights[i].b;
 
             if (typeof func == "function") {
-                pos = func(pos, highlights[i].args);
+                try {
+                    pos = func(pos, highlights[i].args);
+                } catch (err) {
+                    // Throw away highlighting errors
+                    pos = [];
+                }
             }
         }
 
