@@ -62,6 +62,7 @@ import "./tests/DefangIP.mjs";
 import "./tests/ELFInfo.mjs";
 import "./tests/Enigma.mjs";
 import "./tests/ExtractEmailAddresses.mjs";
+import "./tests/Float.mjs";
 import "./tests/FileTree.mjs";
 import "./tests/FletcherChecksum.mjs";
 import "./tests/Fork.mjs";
