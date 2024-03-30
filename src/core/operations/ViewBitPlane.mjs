@@ -89,7 +89,7 @@ class ViewBitPlane extends Operation {
      * @returns {html}
      */
     present(data) {
-        if (!data.length) return "";
+        if (!data.byteLength) return "";
         const type = isImage(data);
 
         return `<img src="data:${type};base64,${toBase64(data)}">`;

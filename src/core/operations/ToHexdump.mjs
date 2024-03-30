@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * To Hexdump operation
@@ -20,7 +21,7 @@ class ToHexdump extends Operation {
 
         this.name = "To Hexdump";
         this.module = "Default";
-        this.description = "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.";
+        this.description = "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.<br><br>The 'UNIX format' argument defines which subset of printable characters are displayed in the preview column.";
         this.infoURL = "https://wikipedia.org/wiki/Hex_dump";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -28,7 +29,8 @@ class ToHexdump extends Operation {
             {
                 "name": "Width",
                 "type": "number",
-                "value": 16
+                "value": 16,
+                "min": 1
             },
             {
                 "name": "Upper case hex",
@@ -37,6 +39,11 @@ class ToHexdump extends Operation {
             },
             {
                 "name": "Include final length",
+                "type": "boolean",
+                "value": false
+            },
+            {
+                "name": "UNIX format",
                 "type": "boolean",
                 "value": false
             }
@@ -50,34 +57,38 @@ class ToHexdump extends Operation {
      */
     run(input, args) {
         const data = new Uint8Array(input);
-        const [length, upperCase, includeFinalLength] = args;
+        const [length, upperCase, includeFinalLength, unixFormat] = args;
         const padding = 2;
 
-        let output = "";
-        for (let i = 0; i < data.length; i += length) {
-            const buff = data.slice(i, i+length);
-            let hexa = "";
-            for (let j = 0; j < buff.length; j++) {
-                hexa += Utils.hex(buff[j], padding) + " ";
-            }
+        if (length < 1 || Math.round(length) !== length)
+            throw new OperationError("Width must be a positive integer");
 
+        const lines = [];
+        for (let i = 0; i < data.length; i += length) {
             let lineNo = Utils.hex(i, 8);
 
+            const buff = data.slice(i, i+length);
+            const hex = [];
+            buff.forEach(b => hex.push(Utils.hex(b, padding)));
+            let hexStr = hex.join(" ").padEnd(length*(padding+1), " ");
+
+            const ascii = Utils.printable(Utils.byteArrayToChars(buff), false, unixFormat);
+            const asciiStr = ascii.padEnd(buff.length, " ");
+
             if (upperCase) {
-                hexa = hexa.toUpperCase();
+                hexStr = hexStr.toUpperCase();
                 lineNo = lineNo.toUpperCase();
             }
 
-            output += lineNo + "  " +
-                hexa.padEnd(length*(padding+1), " ") +
-                " |" + Utils.printable(Utils.byteArrayToChars(buff)).padEnd(buff.length, " ") + "|\n";
+            lines.push(`${lineNo}  ${hexStr} |${asciiStr}|`);
+
 
             if (includeFinalLength && i+buff.length === data.length) {
-                output += Utils.hex(i+buff.length, 8) + "\n";
+                lines.push(Utils.hex(i+buff.length, 8));
             }
         }
 
-        return output.slice(0, -1);
+        return lines.join("\n");
     }
 
     /**

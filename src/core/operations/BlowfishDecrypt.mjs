@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import forge from "node-forge/dist/forge.min.js";
+import forge from "node-forge";
 import OperationError from "../errors/OperationError.mjs";
 import { Blowfish } from "../lib/Blowfish.mjs";
 

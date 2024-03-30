@@ -121,7 +121,7 @@ prompt.get(schema, (err, result) => {
 
     const moduleName = result.opName.replace(/\w\S*/g, txt => {
         return txt.charAt(0).toUpperCase() + txt.substr(1);
-    }).replace(/[\s-()/./]/g, "");
+    }).replace(/[\s-()./]/g, "");
 
 
     const template = `/**

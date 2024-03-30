@@ -10,7 +10,7 @@
 
 import NodeDish from "./NodeDish.mjs";
 import NodeRecipe from "./NodeRecipe.mjs";
-import OperationConfig from "../core/config/OperationConfig.json";
+import OperationConfig from "../core/config/OperationConfig.json" assert {type: "json"};
 import { sanitise, removeSubheadingsFromArray, sentenceToCamelCase } from "./apiUtils.mjs";
 import ExcludedOperationError from "../core/errors/ExcludedOperationError.mjs";
 
@@ -177,6 +177,7 @@ export function _wrap(OpClass) {
     // Check to see if class's run function is async.
     const opInstance = new OpClass();
     const isAsync = opInstance.run.constructor.name === "AsyncFunction";
+    const isFlowControl = opInstance.flowControl;
 
     let wrapped;
 
@@ -191,7 +192,28 @@ export function _wrap(OpClass) {
          */
         wrapped = async (input, args=null) => {
             const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
+
+            // SPECIAL CASE for Magic. Other flowControl operations will
+            // not work because the opList is not passed in.
+            if (isFlowControl) {
+                opInstance.ingValues = transformedArgs;
+
+                const state = {
+                    progress: 0,
+                    dish: ensureIsDish(transformedInput),
+                    opList: [opInstance],
+                };
+
+                const updatedState = await opInstance.run(state);
+
+                return new NodeDish({
+                    value: updatedState.dish.value,
+                    type: opInstance.outputType,
+                });
+            }
+
             const result = await opInstance.run(transformedInput, transformedArgs);
+
             return new NodeDish({
                 value: result,
                 type: opInstance.outputType,
@@ -218,6 +240,8 @@ export function _wrap(OpClass) {
     // used in chef.help
     wrapped.opName = OpClass.name;
     wrapped.args = createArgInfo(opInstance);
+    // Used in NodeRecipe to check for flowControl ops
+    wrapped.flowControl = isFlowControl;
 
     return wrapped;
 }
@@ -292,25 +316,18 @@ export function help(input) {
 
 
 /**
- * bake [Wrapped] - Perform an array of operations on some input.
- * @returns {Function}
+ * bake
+ *
+ * @param {*} input - some input for a recipe.
+ * @param {String | Function | String[] | Function[] | [String | Function]} recipeConfig -
+ * An operation, operation name, or an array of either.
+ * @returns {NodeDish} of the result
+ * @throws {TypeError} if invalid recipe given.
  */
-export function bake() {
-
-    /**
-     * bake
-     *
-     * @param {*} input - some input for a recipe.
-     * @param {String | Function | String[] | Function[] | [String | Function]} recipeConfig -
-     * An operation, operation name, or an array of either.
-     * @returns {SyncDish} of the result
-     * @throws {TypeError} if invalid recipe given.
-     */
-    return function(input, recipeConfig) {
-        const recipe =  new NodeRecipe(recipeConfig);
-        const dish = ensureIsDish(input);
-        return recipe.execute(dish);
-    };
+export function bake(input, recipeConfig) {
+    const recipe =  new NodeRecipe(recipeConfig);
+    const dish = ensureIsDish(input);
+    return recipe.execute(dish);
 }
 
 

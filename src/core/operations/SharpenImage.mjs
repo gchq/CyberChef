@@ -80,7 +80,7 @@ class SharpenImage extends Operation {
 
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Sharpening image... (Blurring cloned image)");
-            const blurImage = gaussianBlur(image.clone(), radius, 3);
+            const blurImage = gaussianBlur(image.clone(), radius);
 
 
             if (isWorkerEnvironment())

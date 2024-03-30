@@ -1,7 +1,7 @@
 {
-    "parser": "babel-eslint",
+    "parser": "@babel/eslint-parser",
     "parserOptions": {
-        "ecmaVersion": 9,
+        "ecmaVersion": 2022,
         "ecmaFeatures": {
             "impliedStrict": true
         },
@@ -63,7 +63,8 @@
         }],
         "linebreak-style": ["error", "unix"],
         "quotes": ["error", "double", {
-            "avoidEscape": true
+            "avoidEscape": true,
+            "allowTemplateLiterals": true
         }],
         "camelcase": ["error", {
             "properties": "always"

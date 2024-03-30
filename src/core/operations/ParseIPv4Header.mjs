@@ -49,7 +49,7 @@ class ParseIPv4Header extends Operation {
         if (format === "Hex") {
             input = fromHex(input);
         } else if (format === "Raw") {
-            input = Utils.strToByteArray(input);
+            input = new Uint8Array(Utils.strToArrayBuffer(input));
         } else {
             throw new OperationError("Unrecognised input format.");
         }
