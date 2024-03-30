@@ -24,17 +24,17 @@ class FangURL extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                name: "Escape [.]",
+                name: "Restore [.]",
                 type: "boolean",
                 value: true
             },
             {
-                name: "Escape hxxp",
+                name: "Restore hxxp",
                 type: "boolean",
                 value: true
             },
             {
-                name: "Escape ://",
+                name: "Restore ://",
                 type: "boolean",
                 value: true
             }
@@ -69,7 +69,7 @@ class FangURL extends Operation {
 function fangURL(url, dots, http, slashes) {
     if (dots) url = url.replace(/\[\.\]/g, ".");
     if (http) url = url.replace(/hxxp/g, "http");
-    if (slashes) url = url.replace(/[://]/g, "://");
+    if (slashes) url = url.replace(/\[:\/\/\]/g, "://");
 
     return url;
 }
