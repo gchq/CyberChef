@@ -36,6 +36,11 @@ class ROT13 extends Operation {
                 value: true
             },
             {
+                name: "Rotate numbers",
+                type: "boolean",
+                value: false
+            },
+            {
                 name: "Amount",
                 type: "number",
                 value: 13
@@ -51,8 +56,9 @@ class ROT13 extends Operation {
     run(input, args) {
         const output = input,
             rot13Lowercase = args[0],
-            rot13Upperacse = args[1];
-        let amount = args[2],
+            rot13Upperacse = args[1],
+            rotNumbers = args[2];
+        let amount = args[3],
             chr;
 
         if (amount) {
@@ -68,6 +74,9 @@ class ROT13 extends Operation {
                 } else if (rot13Lowercase && chr >= 97 && chr <= 122) { // Lower case
                     chr = (chr - 97 + amount) % 26;
                     output[i] = chr + 97;
+                } else if (rotNumbers && chr >= 48 && chr <= 57) { // Numbers
+                    chr = (chr - 48 + amount) % 10;
+                    output[i] = chr + 48;
                 }
             }
         }

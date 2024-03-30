@@ -27,6 +27,7 @@ class Ingredient {
         this.toggleValues = [];
         this.target = null;
         this.defaultIndex = 0;
+        this.maxLength = null;
         this.min = null;
         this.max = null;
         this.step = 1;
@@ -53,6 +54,7 @@ class Ingredient {
         this.toggleValues = ingredientConfig.toggleValues;
         this.target = typeof ingredientConfig.target !== "undefined" ? ingredientConfig.target : null;
         this.defaultIndex = typeof ingredientConfig.defaultIndex !== "undefined" ? ingredientConfig.defaultIndex : 0;
+        this.maxLength = ingredientConfig.maxLength || null;
         this.min = ingredientConfig.min;
         this.max = ingredientConfig.max;
         this.step = ingredientConfig.step;
@@ -113,6 +115,7 @@ class Ingredient {
                     return data;
                 }
             case "number":
+                if (data === null) return data;
                 number = parseFloat(data);
                 if (isNaN(number)) {
                     const sample = Utils.truncate(data.toString(), 10);

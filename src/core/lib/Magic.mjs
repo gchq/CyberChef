@@ -1,8 +1,9 @@
-import OperationConfig from "../config/OperationConfig.json";
+import OperationConfig from "../config/OperationConfig.json" assert {type: "json"};
 import Utils, { isWorkerEnvironment } from "../Utils.mjs";
 import Recipe from "../Recipe.mjs";
 import Dish from "../Dish.mjs";
-import {detectFileType} from "./FileType.mjs";
+import {detectFileType, isType} from "./FileType.mjs";
+import {isUTF8} from "./ChrEnc.mjs";
 import chiSquared from "chi-squared";
 
 /**
@@ -19,31 +20,38 @@ class Magic {
      * Magic constructor.
      *
      * @param {ArrayBuffer} buf
-     * @param {Object[]} [opPatterns]
+     * @param {Object[]} [opCriteria]
+     * @param {Object} [prevOp]
      */
-    constructor(buf, opPatterns) {
+    constructor(buf, opCriteria=Magic._generateOpCriteria(), prevOp=null) {
         this.inputBuffer = new Uint8Array(buf);
         this.inputStr = Utils.arrayBufferToStr(buf);
-        this.opPatterns = opPatterns || Magic._generateOpPatterns();
+        this.opCriteria = opCriteria;
+        this.prevOp = prevOp;
     }
 
     /**
-     * Finds operations that claim to be able to decode the input based on regular
-     * expression matches.
+     * Finds operations that claim to be able to decode the input based on various criteria.
      *
      * @returns {Object[]}
      */
-    findMatchingOps() {
-        const matches = [];
+    findMatchingInputOps() {
+        const matches = [],
+            inputEntropy = this.calcEntropy();
 
-        for (let i = 0; i < this.opPatterns.length; i++) {
-            const pattern = this.opPatterns[i],
-                regex = new RegExp(pattern.match, pattern.flags);
+        this.opCriteria.forEach(check => {
+            // If the input doesn't lie in the required entropy range, move on
+            if (check.entropyRange &&
+                (inputEntropy < check.entropyRange[0] ||
+                inputEntropy > check.entropyRange[1]))
+                return;
+            // If the input doesn't match the pattern, move on
+            if (check.pattern &&
+                !check.pattern.test(this.inputStr))
+                return;
 
-            if (regex.test(this.inputStr)) {
-                matches.push(pattern);
-            }
-        }
+            matches.push(check);
+        });
 
         return matches;
     }
@@ -105,88 +113,14 @@ class Magic {
     }
 
     /**
-     * Detects whether the input buffer is valid UTF8.
-     *
-     * @returns {boolean}
-     */
-    isUTF8() {
-        const bytes = new Uint8Array(this.inputBuffer);
-        let i = 0;
-        while (i < bytes.length) {
-            if (( // ASCII
-                bytes[i] === 0x09 ||
-                bytes[i] === 0x0A ||
-                bytes[i] === 0x0D ||
-                (0x20 <= bytes[i] && bytes[i] <= 0x7E)
-            )) {
-                i += 1;
-                continue;
-            }
-
-            if (( // non-overlong 2-byte
-                (0xC2 <= bytes[i] && bytes[i] <= 0xDF) &&
-                (0x80 <= bytes[i+1] && bytes[i+1] <= 0xBF)
-            )) {
-                i += 2;
-                continue;
-            }
-
-            if (( // excluding overlongs
-                bytes[i] === 0xE0 &&
-                (0xA0 <= bytes[i + 1] && bytes[i + 1] <= 0xBF) &&
-                (0x80 <= bytes[i + 2] && bytes[i + 2] <= 0xBF)
-            ) ||
-            ( // straight 3-byte
-                ((0xE1 <= bytes[i] && bytes[i] <= 0xEC) ||
-                bytes[i] === 0xEE ||
-                bytes[i] === 0xEF) &&
-                (0x80 <= bytes[i + 1] && bytes[i+1] <= 0xBF) &&
-                (0x80 <= bytes[i+2] && bytes[i+2] <= 0xBF)
-            ) ||
-            ( // excluding surrogates
-                bytes[i] === 0xED &&
-                (0x80 <= bytes[i+1] && bytes[i+1] <= 0x9F) &&
-                (0x80 <= bytes[i+2] && bytes[i+2] <= 0xBF)
-            )) {
-                i += 3;
-                continue;
-            }
-
-            if (( // planes 1-3
-                bytes[i] === 0xF0 &&
-                (0x90 <= bytes[i + 1] && bytes[i + 1] <= 0xBF) &&
-                (0x80 <= bytes[i + 2] && bytes[i + 2] <= 0xBF) &&
-                (0x80 <= bytes[i + 3] && bytes[i + 3] <= 0xBF)
-            ) ||
-            ( // planes 4-15
-                (0xF1 <= bytes[i] && bytes[i] <= 0xF3) &&
-                (0x80 <= bytes[i + 1] && bytes[i + 1] <= 0xBF) &&
-                (0x80 <= bytes[i + 2] && bytes[i + 2] <= 0xBF) &&
-                (0x80 <= bytes[i + 3] && bytes[i + 3] <= 0xBF)
-            ) ||
-            ( // plane 16
-                bytes[i] === 0xF4 &&
-                (0x80 <= bytes[i + 1] && bytes[i + 1] <= 0x8F) &&
-                (0x80 <= bytes[i + 2] && bytes[i + 2] <= 0xBF) &&
-                (0x80 <= bytes[i + 3] && bytes[i + 3] <= 0xBF)
-            )) {
-                i += 4;
-                continue;
-            }
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Calculates the Shannon entropy of the input data.
      *
      * @returns {number}
      */
-    calcEntropy() {
-        const prob = this._freqDist();
+    calcEntropy(data=this.inputBuffer, standalone=false) {
+        if (!standalone && this.inputEntropy) return this.inputEntropy;
+
+        const prob = this._freqDist(data, standalone);
         let entropy = 0,
             p;
 
@@ -195,6 +129,8 @@ class Magic {
             if (p === 0) continue;
             entropy += p * Math.log(p) / Math.log(2);
         }
+
+        if (!standalone) this.inputEntropy = -entropy;
         return -entropy;
     }
 
@@ -265,24 +201,58 @@ class Magic {
     }
 
     /**
+     * Checks whether the data passes output criteria for an operation check
+     *
+     * @param {ArrayBuffer} data
+     * @param {Object} criteria
+     * @returns {boolean}
+     */
+    outputCheckPasses(data, criteria) {
+        if (criteria.pattern) {
+            const dataStr = Utils.arrayBufferToStr(data),
+                regex = new RegExp(criteria.pattern, criteria.flags);
+            if (!regex.test(dataStr))
+                return false;
+        }
+        if (criteria.entropyRange) {
+            const dataEntropy = this.calcEntropy(data, true);
+            if (dataEntropy < criteria.entropyRange[0] || dataEntropy > criteria.entropyRange[1])
+                return false;
+        }
+        if (criteria.mime &&
+            !isType(criteria.mime, data))
+            return false;
+
+        return true;
+    }
+
+    /**
      * Speculatively executes matching operations, recording metadata of each result.
      *
      * @param {number} [depth=0] - How many levels to try to execute
      * @param {boolean} [extLang=false] - Extensive language support (false = only check the most
-     *                                    common Internet languages)
+     *     common Internet languages)
      * @param {boolean} [intensive=false] - Run brute-forcing on each branch (significantly affects
-     *                                      performance)
+     *     performance)
      * @param {Object[]} [recipeConfig=[]] - The recipe configuration up to this point
      * @param {boolean} [useful=false] - Whether the current recipe should be scored highly
-     * @param {string} [crib=null] - The regex crib provided by the user, for filtering the operation output
+     * @param {string} [crib=null] - The regex crib provided by the user, for filtering the operation
+     *     output
      * @returns {Object[]} - A sorted list of the recipes most likely to result in correct decoding
      */
-    async speculativeExecution(depth=0, extLang=false, intensive=false, recipeConfig=[], useful=false, crib=null) {
+    async speculativeExecution(
+        depth=0,
+        extLang=false,
+        intensive=false,
+        recipeConfig=[],
+        useful=false,
+        crib=null) {
+
+        // If we have reached the recursion depth, return
         if (depth < 0) return [];
 
         // Find any operations that can be run on this data
-        const matchingOps = this.findMatchingOps();
-
+        const matchingOps = this.findMatchingInputOps();
         let results = [];
 
         // Record the properties of the current data
@@ -291,7 +261,7 @@ class Magic {
             data: this.inputStr.slice(0, 100),
             languageScores: this.detectLanguage(extLang),
             fileType: this.detectFileType(),
-            isUTF8: this.isUTF8(),
+            isUTF8: !!isUTF8(this.inputBuffer),
             entropy: this.calcEntropy(),
             matchingOps: matchingOps,
             useful: useful,
@@ -308,17 +278,21 @@ class Magic {
                 },
                 output = await this._runRecipe([opConfig]);
 
-            // If the recipe is repeating and returning the same data, do not continue
-            if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
-                return;
-            }
-
             // If the recipe returned an empty buffer, do not continue
             if (_buffersEqual(output, new ArrayBuffer())) {
                 return;
             }
 
-            const magic = new Magic(output, this.opPatterns),
+            // If the recipe is repeating and returning the same data, do not continue
+            if (prevOp && op.op === prevOp.op && _buffersEqual(output, this.inputBuffer)) {
+                return;
+            }
+
+            // If the output criteria for this op doesn't match the output, do not continue
+            if (op.output && !this.outputCheckPasses(output, op.output))
+                return;
+
+            const magic = new Magic(output, this.opCriteria, OperationConfig[op.op]),
                 speculativeResults = await magic.speculativeExecution(
                     depth-1, extLang, intensive, [...recipeConfig, opConfig], op.useful, crib);
 
@@ -330,7 +304,7 @@ class Magic {
             const bfEncodings = await this.bruteForce();
 
             await Promise.all(bfEncodings.map(async enc => {
-                const magic = new Magic(enc.data, this.opPatterns),
+                const magic = new Magic(enc.data, this.opCriteria, undefined),
                     bfResults = await magic.speculativeExecution(
                         depth-1, extLang, false, [...recipeConfig, enc.conf], false, crib);
 
@@ -345,7 +319,8 @@ class Magic {
                 r.languageScores[0].probability > 0 ||    // Some kind of language was found
                 r.fileType ||                             // A file was found
                 r.isUTF8 ||                               // UTF-8 was found
-                r.matchingOps.length                      // A matching op was found
+                r.matchingOps.length ||                   // A matching op was found
+                r.matchesCrib                             // The crib matches
             )
         );
 
@@ -355,17 +330,17 @@ class Magic {
             let aScore = a.languageScores[0].score,
                 bScore = b.languageScores[0].score;
 
-            // If a recipe results in a file being detected, it receives a relatively good score
-            if (a.fileType) aScore = 500;
-            if (b.fileType) bScore = 500;
-
             // If the result is valid UTF8, its score gets boosted (lower being better)
             if (a.isUTF8) aScore -= 100;
             if (b.isUTF8) bScore -= 100;
 
+            // If a recipe results in a file being detected, it receives a relatively good score
+            if (a.fileType && aScore > 500) aScore = 500;
+            if (b.fileType && bScore > 500) bScore = 500;
+
             // If the option is marked useful, give it a good score
-            if (a.useful) aScore = 100;
-            if (b.useful) bScore = 100;
+            if (a.useful && aScore > 100) aScore = 100;
+            if (b.useful && bScore > 100) bScore = 100;
 
             // Shorter recipes are better, so we add the length of the recipe to the score
             aScore += a.recipe.length;
@@ -376,9 +351,10 @@ class Magic {
             bScore += b.entropy;
 
             // A result with no recipe but matching ops suggests there are better options
-            if ((!a.recipe.length && a.matchingOps.length) &&
-                b.recipe.length)
+            if ((!a.recipe.length && a.matchingOps.length) && b.recipe.length)
                 return 1;
+            if ((!b.recipe.length && b.matchingOps.length) && a.recipe.length)
+                return -1;
 
             return aScore - bScore;
         });
@@ -403,7 +379,7 @@ class Magic {
             await recipe.execute(dish);
             // Return an empty buffer if the recipe did not run to completion
             if (recipe.lastRunOp === recipe.opList[recipe.opList.length - 1]) {
-                return dish.get(Dish.ARRAY_BUFFER);
+                return await dish.get(Dish.ARRAY_BUFFER);
             } else {
                 return new ArrayBuffer();
             }
@@ -417,14 +393,16 @@ class Magic {
      * Calculates the number of times each byte appears in the input as a percentage
      *
      * @private
+     * @param {ArrayBuffer} [data]
+     * @param {boolean} [standalone]
      * @returns {number[]}
      */
-    _freqDist() {
-        if (this.freqDist) return this.freqDist;
+    _freqDist(data=this.inputBuffer, standalone=false) {
+        if (!standalone && this.freqDist) return this.freqDist;
 
-        const len = this.inputBuffer.length;
+        const len = data.length,
+            counts = new Array(256).fill(0);
         let i = len;
-        const counts = new Array(256).fill(0);
 
         if (!len) {
             this.freqDist = counts;
@@ -432,13 +410,15 @@ class Magic {
         }
 
         while (i--) {
-            counts[this.inputBuffer[i]]++;
+            counts[data[i]]++;
         }
 
-        this.freqDist = counts.map(c => {
+        const result = counts.map(c => {
             return c / len * 100;
         });
-        return this.freqDist;
+
+        if (!standalone) this.freqDist = result;
+        return result;
     }
 
     /**
@@ -447,24 +427,29 @@ class Magic {
      * @private
      * @returns {Object[]}
      */
-    static _generateOpPatterns() {
-        const opPatterns = [];
+    static _generateOpCriteria() {
+        const opCriteria = [];
 
         for (const op in OperationConfig) {
-            if (!("patterns" in OperationConfig[op])) continue;
+            if (!("checks" in OperationConfig[op]))
+                continue;
 
-            OperationConfig[op].patterns.forEach(pattern => {
-                opPatterns.push({
+            OperationConfig[op].checks.forEach(check => {
+                // Add to the opCriteria list.
+                // Compile the regex here and cache the compiled version so we
+                // don't have to keep calculating it.
+                opCriteria.push({
                     op: op,
-                    match: pattern.match,
-                    flags: pattern.flags,
-                    args: pattern.args,
-                    useful: pattern.useful || false
+                    pattern: check.pattern ? new RegExp(check.pattern, check.flags) : null,
+                    args: check.args,
+                    useful: check.useful,
+                    entropyRange: check.entropyRange,
+                    output: check.output
                 });
             });
         }
 
-        return opPatterns;
+        return opCriteria;
     }
 
     /**
@@ -498,7 +483,7 @@ class Magic {
      * Taken from http://wikistats.wmflabs.org/display.php?t=wp
      *
      * @param {string} code - ISO 639 code
-     * @returns {string} The full name of the languge
+     * @returns {string} The full name of the language
      */
     static codeToLanguage(code) {
         return {

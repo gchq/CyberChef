@@ -31,8 +31,8 @@ import {
     cartesianProduct,
     CSSMinify,
     toBase64,
-    toHex,
-} from "../../../src/node/index";
+    toHex
+} from "../../../src/node/index.mjs";
 import chef from "../../../src/node/index.mjs";
 import TestRegister from "../../lib/TestRegister.mjs";
 import File from "../../../src/node/File.mjs";
@@ -45,10 +45,10 @@ TestRegister.addApiTests([
         const result = chef.ADD("sample input", {
             key: {
                 string: "some key",
-                option: "Hex"
+                option: "utf8"
             }
         });
-        assert.equal(result.toString(), "aO[^ZS\u000eW\\^cb");
+        assert.equal(result.toString(), "\xe6\xd0\xda\xd5\x8c\xd0\x85\xe2\xe1\xdf\xe2\xd9");
     }),
 
 
@@ -121,20 +121,23 @@ Tiger-128`;
         const result = chef.AND("Scot-free", {
             key: {
                 string: "Raining Cats and Dogs",
-                option: "Hex",
+                option: "utf8",
             }
         });
-        assert.strictEqual(result.toString(), "\u0000\"M$(D  E");
+        assert.strictEqual(result.toString(), "Raid)fb A");
     }),
 
     it("atBash Cipher", () => {
         const result = chef.atbashCipher("Happy as a Clam");
         assert.strictEqual(result.toString(), "Szkkb zh z Xozn");
+
     }),
 
     it("Bcrypt", async () => {
         const result = await chef.bcrypt("Put a Sock In It");
-        assert.strictEqual(result.toString(), "$2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6");
+        const strResult = result.toString();
+        assert.equal(strResult.length, 60);
+        assert.equal(strResult.slice(0, 7), "$2a$10$");
     }),
 
     it("bcryptCompare", async() => {
@@ -183,27 +186,29 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
     it("Blowfish encrypt", () => {
         const result = chef.blowfishEncrypt("Fool's Gold", {
             key: {
-                string: "One",
+                string: "0011223344556677",
                 option: "hex",
             },
             iv: {
-                string: "Two",
+                string: "exparrot",
                 option: "utf8"
-            }
+            },
+            mode: "CBC"
         });
-        assert.strictEqual(result.toString(), "8999b513bf2ff064b2977dea7e05f1b5");
+        assert.strictEqual(result.toString(), "55a2838980078ffe1722b08d5fa1d481");
     }),
 
     it("Blowfish decrypt", () => {
-        const result = chef.blowfishDecrypt("8999b513bf2ff064b2977dea7e05f1b5", {
+        const result = chef.blowfishDecrypt("55a2838980078ffe1722b08d5fa1d481", {
             key: {
-                string: "One",
+                string: "0011223344556677",
                 option: "hex",
             },
             iv: {
-                string: "Two",
+                string: "exparrot",
                 option: "utf8",
-            }
+            },
+            mode: "CBC"
         });
         assert.strictEqual(result.toString(), "Fool's Gold");
     }),
@@ -350,10 +355,10 @@ color: white;
 
     it("Decode text", () => {
         const encoded = chef.encodeText("Ugly Duckling", {
-            encoding: "UTF16LE (1200)",
+            encoding: "UTF-16LE (1200)",
         });
         const result = chef.decodeText(encoded, {
-            encoding: "UTF16LE (1200)",
+            encoding: "UTF-16LE (1200)",
         });
         assert.strictEqual(result.toString(), "Ugly Duckling");
     }),
@@ -366,10 +371,10 @@ color: white;
             },
             salt: {
                 string: "Market",
-                option: "Hex",
+                option: "utf8",
             },
         });
-        assert.strictEqual(result.toString(), "7c21a9f5063a4d62fb1050068245c181");
+        assert.strictEqual(result.toString(), "4930d5d200e80f18c96b5550d13c6af8");
     }),
 
     it("Derive PBKDF2 Key", () => {
@@ -397,7 +402,7 @@ color: white;
             },
             iv: {
                 string: "threetwo",
-                option: "Hex",
+                option: "utf8",
             },
             mode: "ECB",
         });
@@ -412,7 +417,7 @@ color: white;
             },
             iv: {
                 string: "threetwo",
-                option: "Hex",
+                option: "utf8",
             },
             mode: "ECB",
         });
@@ -466,7 +471,7 @@ color: white;
     }),
 
     it("Extract dates", () => {
-        assert.strictEqual(chef.extractDates("Don't Look a Gift Horse In The Mouth 01/02/1992").toString(), "01/02/1992\n");
+        assert.strictEqual(chef.extractDates("Don't Look a Gift Horse In The Mouth 01/02/1992").toString(), "01/02/1992");
     }),
 
     it("Filter", () => {
@@ -583,47 +588,7 @@ Password: 034148`;
         const result = await chef.generatePGPKeyPair("Back To the Drawing Board", {
             keyType: "ECC-256",
         });
-        const expected = `-----BEGIN PGP PRIVATE KEY BLOCK-----
-Version: Keybase OpenPGP v2.0.77
-Comment: https://keybase.io/crypto
-
-xYgEW3KciQEBAK96Lx9G0WZiw1yhC35IogdumoxEJXsLdAVIjmskXeAfABEBAAEA
-AP4wK+OZu3AqojwtRoyIK1pHKU93OAuam1iaLCOGCwCckQCA5PjU0aLNZqy/eKyX
-T3rpKQCAxDDT5hHGAUfFPUu73KWABwB/WKpeUp7KwurMSbYVhgr1TijszQDCVAQT
-AQoAHgUCW3KciQIbLwMLCQcDFQoIAh4BAheAAxYCAQIZAQAKCRD0VeyUMgmpz3OE
-AP9qsnhhoK85Tnu6VKwKm1iMiJAssDQnFztDaMmmVdrN/MeIBFtynIkBAQDDhjIw
-fxOprqVMYLk6aC45JyPAA2POzu0Zb/rx0tKeBwARAQABAAD/XAr66oiP9ZORHiT0
-XZH4m7vwZt7AHuq4pYtVlMQXk60AgPw2Mno/wStvE/SBa9R7AtsAgMZ2BkJjvNPZ
-9YA6cl4lW0UAgI1+kJVLZ5VR9fPENfJR80EtncKDBBgBCgAPBQJbcpyJBQkPCZwA
-AhsuAEgJEPRV7JQyCanPPSAEGQEKAAYFAltynIkACgkQrewgWMQZ/b2blwD/dbwh
-/3F9xv+YGAwq8i1mzzswg4qBct6LoSIjGglULT9RIQD/cYd31YfKrEnbSBWD5PLi
-zcSsxtBGKphwXiPAlQJ1Q5DHiARbcpyJAQEAs8V418lf1T74PpAwdBTiViEUX9jB
-e+ZrAEVaq5nu1C8AEQEAAQAA/iPWhS23hnRTllealR4/H5OofZRwxvIQrxAJp6z1
-ICRxAIDayRpCAbK5EC3DzRU2z4VpAIDSWYSs9inI1VTfamJPMWHXAIC3aaukzCP4
-GEGeFobX/thnKhnCgwQYAQoADwUCW3KciQUJA8JnAAIbLgBICRD0VeyUMgmpzz0g
-BBkBCgAGBQJbcpyJAAoJEB4jzL1hmQIXamUA/0c1M6BSqVtxNowPcOAXKYIxMca1
-VFcRWolHnZqdZQ7k/J8A/3HvNLRS3p1HvjQEfXl/qKoRRn843Py09ptDHh+xpGKh
-=d+Vp
------END PGP PRIVATE KEY BLOCK-----
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-Version: Keybase OpenPGP v2.0.77
-Comment: https://keybase.io/crypto
-
-xi0EW3KciQEBAK96Lx9G0WZiw1yhC35IogdumoxEJXsLdAVIjmskXeAfABEBAAHN
-AMJUBBMBCgAeBQJbcpyJAhsvAwsJBwMVCggCHgECF4ADFgIBAhkBAAoJEPRV7JQy
-CanPc4QA/2qyeGGgrzlOe7pUrAqbWIyIkCywNCcXO0NoyaZV2s38zi0EW3KciQEB
-AMOGMjB/E6mupUxguTpoLjknI8ADY87O7Rlv+vHS0p4HABEBAAHCgwQYAQoADwUC
-W3KciQUJDwmcAAIbLgBICRD0VeyUMgmpzz0gBBkBCgAGBQJbcpyJAAoJEK3sIFjE
-Gf29m5cA/3W8If9xfcb/mBgMKvItZs87MIOKgXLei6EiIxoJVC0/USEA/3GHd9WH
-yqxJ20gVg+Ty4s3ErMbQRiqYcF4jwJUCdUOQzi0EW3KciQEBALPFeNfJX9U++D6Q
-MHQU4lYhFF/YwXvmawBFWquZ7tQvABEBAAHCgwQYAQoADwUCW3KciQUJA8JnAAIb
-LgBICRD0VeyUMgmpzz0gBBkBCgAGBQJbcpyJAAoJEB4jzL1hmQIXamUA/0c1M6BS
-qVtxNowPcOAXKYIxMca1VFcRWolHnZqdZQ7k/J8A/3HvNLRS3p1HvjQEfXl/qKoR
-Rn843Py09ptDHh+xpGKh
-=ySwG
------END PGP PUBLIC KEY BLOCK-----`;
-        assert.strictEqual(result.toString(), expected);
+        assert.strictEqual(result.toString().substr(0, 37), "-----BEGIN PGP PRIVATE KEY BLOCK-----");
     }),
 
     it("Generate UUID", () => {
@@ -670,12 +635,16 @@ WWFkYSBZYWRh\r
         assert.strictEqual(chef.keccak("Flea Market").toString(), "c2a06880b19e453ee5440e8bd4c2024bedc15a6630096aa3f609acfd2b8f15f27cd293e1cc73933e81432269129ce954a6138889ce87831179d55dcff1cc7587");
     }),
 
+    it("LZNT1 Decompress", () => {
+        assert.strictEqual(chef.LZNT1Decompress("\x1a\xb0\x00compress\x00edtestda\x04ta\x07\x88alot").toString(), "compressedtestdatacompressedalot");
+    }),
+
     it("MD6", () => {
         assert.strictEqual(chef.MD6("Head Over Heels", {key: "arty"}).toString(), "d8f7fe4931fbaa37316f76283d5f615f50ddd54afdc794b61da522556aee99ad");
     }),
 
     it("Parse ASN.1 Hex string", () => {
-        assert.strictEqual(chef.parseASN1HexString(chef.toHex("Mouth-watering")).toString(), "UNKNOWN(4d) 7574682d7761746572696e67\n");
+        assert.strictEqual(chef.parseASN1HexString(chef.toHex("Mouth-watering")).toString(), "UNKNOWN(77) 7574682d7761746572696e67\n");
     }),
 
     it("Parse DateTime", () => {
@@ -691,7 +660,7 @@ Leap year: false
 Days in this month: 31
 
 Day of year: 187
-Week number: 2001
+Week number: 27
 Quarter: 3`;
         assert.strictEqual(result.toString(), expected);
     }),
@@ -720,8 +689,8 @@ Arguments:
     it("Parse user agent", () => {
         const result = chef.parseUserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 ");
         const expected = `Browser
-    Name: Mozilla
-    Version: 5.0
+    Name: Firefox
+    Version: 47.0
 Device
     Model: unknown
     Type: unknown
@@ -737,43 +706,105 @@ CPU
         assert.strictEqual(result.toString(), expected);
     }),
 
-    it("PGP Encrypt", async () => {
+    it("PGP Encrypt and decrypt", async () => {
         const pbkey = `-----BEGIN PGP PUBLIC KEY BLOCK-----
-Version: GnuPG v1
-
-mI0EVWOihAEEALzwFAVWTrD0KiWCH5tX6q6QsGjlRn4IP2uj/xWsJZDNbCKm+JAe
-1RvIootpW1+PNNMJlIInwUgtCjtJ9gZbGBpXeqwdSn0oYuj9X86ekXOUnZsRoPCj
-RwS8kpbrvRVfhWN8hYuXFcXK2J2Ld0ZpVyJzkncpFdpAgzTPMfrO1HS5ABEBAAG0
-GmdwZyBuYW1lIChjb21tZW50KSA8ZW1AaWw+iLgEEwECACIFAlVjooQCGwMGCwkI
-BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEBg8dTRwi4g5I40D/2+uUuQxa3uMrAeI
-dXLaJWz3V0cl1rotfBP47apDUGbkm1HVgULJUo8Bo15Ii83ST8TUsyja3XcLutHb
-IwYSWo41gEV48+NKoN6Oy3HwqBoHfH06bu0If75vdSjnZpB2dO/Ph7L9kz78gc4y
-tZx4bE64MTlL2AYghZxyYpFyydjXuI0EVWOihAEEANE4UU+4iB2hMAXq93hiBzIh
-AMtn/DlWbJkpdUgrjKOG6tILs28mrw9rI4PivmT7grkyNW8sa3ATsmWC1xChxGTN
-T1guyh0Hhbc3Otfng2BFSWcBkPwUoNaOdrVFpP9J51IYrsQHsjbZlY45ghDBzM6t
-sISfkmmFCsp0l7w/XAcvABEBAAGInwQYAQIACQUCVWOihAIbDAAKCRAYPHU0cIuI
-OQ2BA/9KWqOhXZW75ac7CuJMfileZR7vRy9CkKyNG21cZtAlqftAX+m8FGdG0duU
-jKHiPvjXhSfP3lmrQ7brja9LgSzkiBqQzvPW55G67nGQdUC+mqZNJNlRh+8atf9I
-5nxg2i8zn6F5cLaNWz7cl27m1/mXKcH3gult1PLR4PiYLiC9aw==
-=xw3e
------END PGP PUBLIC KEY BLOCK-----`;
-
-        const result = await chef.PGPEncrypt("A Fool and His Money are Soon Parted", {
-            publicKeyOfRecipient: pbkey,
-        });
-        const expected = `-----BEGIN PGP MESSAGE-----
-Version: Keybase OpenPGP v2.0.77
+Version: Keybase OpenPGP v2.1.3
 Comment: https://keybase.io/crypto
 
-wYwDv1kIXPPNwmABA/4syW+oO+S/mfpjdp83/MZJiKh6XNQoPr/N5/1Is/QXYu9V
-/v8/b+eReOpUVC6cVrJ8U5cB19y1Az3NQWHXLEC0jND2wL3cUM4sv87hlvv2PLhc
-okv8OHNCitRiweo7NZHVygHGdFvY082G47e1PkyPAuVynvzdD450ta/s/KOxZdJg
-ARbZIrC6WmjYNLwhbpRYawKD+3N4I5qliRpU2POKRi9UROAW9dth6egy60TTCvyO
-jmPGsv1elXxVzqs58UZLD2c3vBhGkU2BV6kRKh+lj/EcVrzsFhGCz/7DKxPoDHLS
-=IBYt
------END PGP MESSAGE-----
-`;
-        assert.strictEqual(result.toString(), expected);
+xo0EXZtlowEEAKUqTFownTmqgXWu2KDrtyNYtFck7a16WM5QD95bFoAFFdnlwZ45
+6Vw8G8LCzHdyRXYp/JF1GknDrAd7nIRE+SuSz2yVK5nlOCfO1HFcg2Ov7e7/pBwd
+qawx9GUIsCKd/6NxwDuT4YqarLFsuwljRC/eQiibO+ejnhoiKcU69sTNABEBAAHN
+AMK0BBMBCgAeBQJdm2WjAhsvAwsJBwMVCggCHgECF4ADFgIBAhkBAAoJEGS79V2S
+7D0owtMD/RT+o4BQJ8NSQBDgkYf42uOOu1Ud6GuN89nX6n20yAZbmqQ8CHnHY+Qc
+l6ft4HnbIaNrI3arp/C2C+cwFypmt1BKyFEJUXO7ft3i/IxnjpCorDyAMCDckDvq
+uma1LWtUHLb5s/ZuGMSHnhuji74IRWuIofNPdf7bCZW1GMbW9jNUzo0EXZtlowEE
+AL38zaNkPmUVQaowP696fayBo18Nxs0yOzC4+0TYv1B/k5aUb0Air2h+o/Xw4E42
+Jh9gVdPSvhOAEqdV0UDe71wxa4cfAVMDY9v8ta81MWunChj3ISUk1oIQylTJNsY/
+b4KWOrLaOtBD9dyFGCzss5vLVdqdMjVIW2Cz0hb6IYG7ABEBAAHCwIMEGAEKAA8F
+Al2bZaMFCQ8JnAACGy4AqAkQZLv1XZLsPSidIAQZAQoABgUCXZtlowAKCRA16MU2
+u2hFTX+JBACZ27xk0Afny2jjSoRzqLMrhzE7DBGcg2QqecMdNre12hVompAWcS4l
+NFmPShKRi6UT8Zb38nD43vwfqwZImn60dOPqqAep3YF/Axm1u5HJb0aMEsb8O9jV
+sVmNJv9jVTzPdlTGFQjuaeJfk5lwxB+5/O9NcgDhPgRAk9xb4FrT+xzmA/4tD11C
+AdcITUkTZT4ZOo2418DGeaiaEqWcIkZeQG4Vh5TMj4QtZDwsYQhXPl5Zj1zKIN/1
+gRrKC+ztaQoDG8pJXTTtc9inRU++dhMqnRGrPcz0VfVXFaiH7PUCy+4WpP6r5Bs5
+YQ9ESHo+FsmIvDzU3e/PD0SfXfO4vqBrFYN8986NBF2bZaMBBADJafe0w9diaCNx
+3A7e8MqjbNrhrLkD2cPxXspCATX3SuI19d2+hMiHZfKTyadBTIa+ICxvqoxwxyZD
+raHSY3CWVZd1V4KB5mqf+3Zj5riLeGU0dtXwi/5c0bdUhBUgHiAMhi75p05jYih5
+KsNxPcK9hEwPu7B+QeHURMiIgojTGQARAQABwsCDBBgBCgAPBQJdm2WjBQkDwmcA
+AhsuAKgJEGS79V2S7D0onSAEGQEKAAYFAl2bZaMACgkQzdkMJSM5Bqg2rwP/Ue28
+m3Fdfgh5JxouZ3Dm2KUDhZL95B+vdMk72acdoU7SRjlyDT8cApRqYx+MIXb8WrPN
+1xCZnOM4zXeWIM0CAPQ1e/sCrK58L+P+eVngNmrW9epKtZ4L6hx+dqqja9vPZGQK
+CsFAhA6A1gWB++OLk9Y6H23tWIdKEXMeAX7492zDYgP+OSPS79EWAqXL8SvmDrbl
+WI5eiM6X5hAMrOjQqzXhatD7eP41N/FC3SfhyhX7hFbagO7MJG2AS5bmSvcuCdcN
+wDwXd94B+7bfYgJIRKbr272yDwkyzGn+zmxzvMUt6ak5PNzfmadvhMZvIfDftswp
+GYpXIUU0GObOgP2tpCGTErs=
+=m++F
+-----END PGP PUBLIC KEY BLOCK-----`;
+        const privateKey = `-----BEGIN PGP PRIVATE KEY BLOCK-----
+Version: Keybase OpenPGP v2.1.3
+Comment: https://keybase.io/crypto
+
+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
+pCGTErs=
+=Ya+/
+-----END PGP PRIVATE KEY BLOCK-----`;
+
+        const message = "A Fool and His Money are Soon Parted";
+
+        const encrypted = await chef.PGPEncrypt(message, {
+            publicKeyOfRecipient: pbkey,
+        });
+        const result = await chef.PGPDecrypt(encrypted, {
+            privateKeyOfRecipient: privateKey,
+        });
+
+        assert.strictEqual(result.toString(), message);
     }),
 
     it("Raw deflate", () => {
@@ -789,7 +820,7 @@ jmPGsv1elXxVzqs58UZLD2c3vBhGkU2BV6kRKh+lj/EcVrzsFhGCz/7DKxPoDHLS
     it("RC4 Drop", () => {
         assert.strictEqual(
             chef.RC4Drop("Go Out On a Limb", {passphrase: {string: "Under Your Nose", option: "UTF8"}, inputFormat: "UTF8", outputFormat: "Hex"}).toString(),
-            "8fa5f2751d34476a0c857439f43816cf");
+            "b85cb1c4ed6bed8f260ab92829bba942");
     }),
 
     it("Regular Expression", () => {
@@ -827,12 +858,12 @@ jmPGsv1elXxVzqs58UZLD2c3vBhGkU2BV6kRKh+lj/EcVrzsFhGCz/7DKxPoDHLS
 
     it("Snefru", () => {
         assert.strictEqual(
-            chef.snefru("demeaning milestone").toString(),
+            chef.snefru("demeaning milestone", {size: 256, rounds: 8}).toString(),
             "a671b48770fe073ce49e9259cc2f47d345a53712639f8ae23c5ad3fec19540a5");
     }),
 
     it("SQL Beautify", () => {
-        const result = chef.SQLBeautify(`SELECT MONTH, ID, RAIN_I, TEMP_F 
+        const result = chef.SQLBeautify(`SELECT MONTH, ID, RAIN_I, TEMP_F
 FROM STATS;`);
         const expected = `SELECT MONTH,
          ID,
@@ -852,25 +883,24 @@ FROM STATS;`;
         const result = chef.strings("smothering ampersand abreast", {displayTotal: true});
         const expected = `Total found: 1
 
-smothering ampersand abreast
-`;
+smothering ampersand abreast`;
         assert.strictEqual(result.toString(), expected);
     }),
 
     it("toBase64: editableOption", () => {
         const result = toBase64("some input", {
             alphabet: {
-                value: "0-9A-W"
+                value: "0-9A-W+/a-zXYZ="
             },
         });
-        assert.strictEqual(result.toString(), "SPI1R1T0");
+        assert.strictEqual(result.toString(), "StXkPI1gRe1sT0==");
     }),
 
     it("toBase64: editableOptions key is value", () => {
         const result = toBase64("some input", {
-            alphabet: "0-9A-W",
+            alphabet: "0-9A-W+/a-zXYZ=",
         });
-        assert.strictEqual(result.toString(), "SPI1R1T0");
+        assert.strictEqual(result.toString(), "StXkPI1gRe1sT0==");
     }),
 
     it("toBase64: editableOptions default", () => {
@@ -918,10 +948,10 @@ smothering ampersand abreast
             chef.tripleDESDecrypt(
                 chef.tripleDESEncrypt("Destroy Money", {
                     key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"},
-                    iv: {string: "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0000 00 00 00 00", option: "Hex"}}),
+                    iv: {string: "00 00 00 00 00 00 00 00", option: "Hex"}}),
                 {
                     key: {string: "30 31 2f 30 34 2f 31 39 39 39 20 32 32 3a 33 33 3a 30 3130 31 2f 30 34", option: "Hex"},
-                    iv: {string: "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 0000 00 00 00 00", option: "Hex"}
+                    iv: {string: "00 00 00 00 00 00 00 00", option: "Hex"}
                 }).toString(),
             "Destroy Money");
     }),
@@ -1003,7 +1033,7 @@ ExifImageHeight: 57`);
         const zipped = chef.zip("some file content", {
             filename: "sample.zip",
             comment: "added",
-            operaringSystem: "Unix",
+            operatingSystem: "Unix",
         });
 
         assert.strictEqual(zipped.type, 7);
@@ -1033,6 +1063,75 @@ ExifImageHeight: 57`);
 
         assert.equal(unzipped.value[0].data, "some content");
     }),
+
+    it("YARA Rule Matching", async () => {
+        const input = "foobar foobar bar foo foobar";
+        const output = "Rule \"foo\" matches (4 times):\nPos 0, length 3, identifier $re1, data: \"foo\"\nPos 7, length 3, identifier $re1, data: \"foo\"\nPos 18, length 3, identifier $re1, data: \"foo\"\nPos 22, length 3, identifier $re1, data: \"foo\"\nRule \"bar\" matches (4 times):\nPos 3, length 3, identifier $re1, data: \"bar\"\nPos 10, length 3, identifier $re1, data: \"bar\"\nPos 14, length 3, identifier $re1, data: \"bar\"\nPos 25, length 3, identifier $re1, data: \"bar\"\n";
+
+        const res = await chef.YARARules(input, {
+            rules: "rule foo {strings: $re1 = /foo/ condition: $re1} rule bar {strings: $re1 = /bar/ condition: $re1}",
+            showStrings: true,
+            showStringLengths: true,
+            showMetadata: true
+        });
+
+        assert.equal(output, res.value);
+    }),
+
+    it("performs MAGIC", async () => {
+        const input = "WUagwsiae6mP8gNtCCLUFpCpCB26RmBDoDD8PacdAmzAzBVjkK2QstFXaKhpC6iUS7RHqXrJtFisoRSgoJ4whjm1arm864qaNq4RcfUmLHrcsAaZc5TXCYifNdgS83gDeejGX46gaiMyuBV6EskHt1scgJ88x2tNSotQDwbGY1mmCob2ARGFvCKYNqiN9ipMq1ZU1mgkdbNuGcb76aRtYWhCGUc8g93UJudhb8htsheZnwTpgqhx83SVJSZXMXUjJT2zmpC7uXWtumqokbdSi88YtkWDAc1Toouh2oH4D4ddmNKJWUDpMwmngUmK14xwmomccPQE9hM172APnSqwxdKQ172RkcAsysnmj5gGtRmVNNh2s359wr6mS2QRP";
+        const depth = 1;
+
+        const res = await chef.magic(input, {
+            depth,
+        });
+
+        // assert against the structure of the output, rather than the values.
+        assert.strictEqual(res.value.length, depth + 1);
+        res.value.forEach(row => {
+            assert.ok(row.recipe);
+            assert.ok(row.data);
+            assert.ok(row.languageScores);
+            assert.ok(Object.prototype.hasOwnProperty.call(row, "fileType")); // Can be null, so cannot just use ok
+            assert.ok(row.entropy);
+            assert.ok(row.matchingOps);
+            assert.ok(Object.prototype.hasOwnProperty.call(row, "useful"));
+            assert.ok(Object.prototype.hasOwnProperty.call(row, "matchesCrib"));
+
+            row.recipe.forEach(item => {
+                assert.ok(Object.prototype.hasOwnProperty.call(item, "op"),  `No 'op' property in item ${item}`);
+                assert.strictEqual(typeof item.op, "string");
+                assert.ok(Object.prototype.hasOwnProperty.call(item, "args"),  `No 'args' property in item ${item}`);
+                assert.ok(Array.isArray(item.args));
+            });
+
+            row.languageScores.forEach(score => {
+                assert.ok(Object.prototype.hasOwnProperty.call(score, "lang"), `No 'lang' property in languageScore ${score}`);
+                assert.strictEqual(typeof score.lang, "string");
+                assert.ok(Object.prototype.hasOwnProperty.call(score, "score"),  `No 'score' property in languageScore ${score}`);
+                assert.strictEqual(typeof score.score, "number");
+                assert.ok(Object.prototype.hasOwnProperty.call(score, "probability"),  `No 'probability' property in languageScore ${score}`);
+                assert.strictEqual(typeof score.probability, "number");
+            });
+
+            row.matchingOps.forEach(op => {
+                assert.ok(Object.prototype.hasOwnProperty.call(op, "op"), `No 'op' property in matchingOp ${JSON.stringify(op)}`);
+                assert.strictEqual(typeof op.op, "string");
+                assert.ok(Object.prototype.hasOwnProperty.call(op, "pattern"), `No 'pattern' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ok(op.pattern instanceof RegExp);
+                assert.ok(Object.prototype.hasOwnProperty.call(op, "args"), `No 'args' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ok(Array.isArray(op.args));
+                assert.ok(Object.prototype.hasOwnProperty.call(op, "useful"), `No 'useful' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ifError(op.useful); // Expect this to be undefined
+                assert.ok(Object.prototype.hasOwnProperty.call(op, "entropyRange"), `No 'entropyRange' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ifError(op.entropyRange); // Expect this to be undefined
+                assert.ok(Object.prototype.hasOwnProperty.call(op, "output"), `No 'output' property in matchingOp ${JSON.stringify(op)}`);
+                assert.ifError(op.output); // Expect this to be undefined
+            });
+        });
+
+    }),
+
 
 ]);
 

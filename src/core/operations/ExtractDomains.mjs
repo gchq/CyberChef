@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import { search, DOMAIN_REGEX } from "../lib/Extract.mjs";
+import { caseInsensitiveSort } from "../lib/Sort.mjs";
 
 /**
  * Extract domains operation
@@ -25,9 +26,19 @@ class ExtractDomains extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Display total",
-                "type": "boolean",
-                "value": "Extract.DISPLAY_TOTAL"
+                name: "Display total",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Sort",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Unique",
+                type: "boolean",
+                value: false
             }
         ];
     }
@@ -38,8 +49,21 @@ class ExtractDomains extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const displayTotal = args[0];
-        return search(input, DOMAIN_REGEX, null, displayTotal);
+        const [displayTotal, sort, unique] = args;
+
+        const results = search(
+            input,
+            DOMAIN_REGEX,
+            null,
+            sort ? caseInsensitiveSort : null,
+            unique
+        );
+
+        if (displayTotal) {
+            return `Total found: ${results.length}\n\n${results.join("\n")}`;
+        } else {
+            return results.join("\n");
+        }
     }
 
 }

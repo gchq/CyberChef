@@ -9,8 +9,8 @@
 import OperationError from "../errors/OperationError.mjs";
 import jsQR from "jsqr";
 import qr from "qr-image";
-import jimp from "jimp";
 import Utils from "../Utils.mjs";
+import jimp from "jimp";
 
 /**
  * Parses a QR code image from an image
@@ -37,7 +37,7 @@ export async function parseQrCode(input, normalise) {
             image = await jimp.read(image);
         }
     } catch (err) {
-        throw new OperationError(`Error normalising iamge. (${err})`);
+        throw new OperationError(`Error normalising image. (${err})`);
     }
 
     const qrData = jsQR(image.bitmap.data, image.getWidth(), image.getHeight());

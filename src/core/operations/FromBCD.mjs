@@ -49,9 +49,9 @@ class FromBCD extends Operation {
                 "value": FORMAT
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                match: "^(?:\\d{4} ){3,}\\d{4}$",
+                pattern: "^(?:\\d{4} ){3,}\\d{4}$",
                 flags: "",
                 args: ["8 4 2 1", true, false, "Nibbles"]
             },
@@ -84,7 +84,7 @@ class FromBCD extends Operation {
                 break;
             case "Raw":
             default:
-                byteArray = Utils.strToByteArray(input);
+                byteArray = new Uint8Array(Utils.strToArrayBuffer(input));
                 byteArray.forEach(b => {
                     nibbles.push(b >>> 4);
                     nibbles.push(b & 15);
@@ -95,7 +95,7 @@ class FromBCD extends Operation {
         if (!packed) {
             // Discard each high nibble
             for (let i = 0; i < nibbles.length; i++) {
-                nibbles.splice(i, 1);
+                nibbles.splice(i, 1); // lgtm [js/loop-iteration-skipped-due-to-shifting]
             }
         }
 

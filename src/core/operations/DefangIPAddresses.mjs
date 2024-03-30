@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
+import Operation from "../Operation.mjs";
 
 
 /**
@@ -25,7 +25,17 @@ class DefangIPAddresses extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
-
+        this.checks = [
+            {
+                pattern: "^\\s*(([0-9]{1,3}\\.){3}[0-9]{1,3}|([0-9a-f]{4}:){7}[0-9a-f]{4})\\s*$",
+                flags: "i",
+                args: [],
+                output: {
+                    pattern: "^\\s*(([0-9]{1,3}\\[\\.\\]){3}[0-9]{1,3}|([0-9a-f]{4}\\[\\:\\]){7}[0-9a-f]{4})\\s*$",
+                    flags: "i"
+                }
+            }
+        ];
     }
 
     /**

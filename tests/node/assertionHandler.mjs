@@ -15,9 +15,9 @@
 /**
  * Print useful stack on error
  */
-const wrapRun = (run) => () => {
+const wrapRun = (run) => async () => {
     try {
-        run();
+        await run();
     } catch (e) {
         console.dir(e);
         throw e;
