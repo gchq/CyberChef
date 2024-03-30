@@ -242,6 +242,7 @@
             "Encode NetBIOS Name",
             "Decode NetBIOS Name",
             "Defang URL",
+            "Fang URL",
             "Defang IP Addresses"
         ]
     },
