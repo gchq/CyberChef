@@ -26,14 +26,17 @@ class Snefru extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Rounds",
-                "type": "option",
-                "value": ["8", "4", "2"]
+                name: "Size",
+                type: "number",
+                value: 128,
+                min: 32,
+                max: 480,
+                step: 32
             },
             {
-                "name": "Size",
-                "type": "option",
-                "value": ["256", "128"]
+                name: "Rounds",
+                type: "option",
+                value: ["8", "4", "2"]
             }
         ];
     }
@@ -45,8 +48,8 @@ class Snefru extends Operation {
      */
     run(input, args) {
         return runHash("snefru", input, {
-            rounds: args[0],
-            length: args[1]
+            length: args[0],
+            rounds: args[1]
         });
     }
 

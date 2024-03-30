@@ -46,7 +46,7 @@ class RailFenceCipherDecode extends Operation {
     run(input, args) {
         const [key, offset] = args;
 
-        let cipher = input;
+        const cipher = input;
 
         if (key < 2) {
             throw new OperationError("Key has to be bigger than 2");
@@ -59,13 +59,6 @@ class RailFenceCipherDecode extends Operation {
         }
 
         const cycle = (key - 1) * 2;
-
-        const rest = cipher.length % key;
-
-        if (rest !== 0) {
-            cipher = cipher + (" ".repeat(key - rest));
-        }
-
         const plaintext = new Array(cipher.length);
 
         let j = 0;

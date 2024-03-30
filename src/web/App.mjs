@@ -4,13 +4,14 @@
  * @license Apache-2.0
  */
 
-import Utils, { debounce } from "../core/Utils";
-import {fromBase64} from "../core/lib/Base64";
-import Manager from "./Manager";
-import HTMLCategory from "./HTMLCategory";
-import HTMLOperation from "./HTMLOperation";
+import Utils, { debounce } from "../core/Utils.mjs";
+import {fromBase64} from "../core/lib/Base64.mjs";
+import Manager from "./Manager.mjs";
+import HTMLCategory from "./HTMLCategory.mjs";
+import HTMLOperation from "./HTMLOperation.mjs";
 import Split from "split.js";
 import moment from "moment-timezone";
+import cptable from "codepage";
 
 
 /**
@@ -41,6 +42,12 @@ class App {
         this.autoBakePause = false;
         this.progress      = 0;
         this.ingId         = 0;
+
+        this.appLoaded     = false;
+        this.workerLoaded  = false;
+        this.waitersLoaded = false;
+
+        this.snackbars     = [];
     }
 
 
@@ -57,13 +64,12 @@ class App {
         this.populateOperationsList();
         this.manager.setup();
         this.manager.output.saveBombe();
-        this.resetLayout();
+        this.adjustComponentSizes();
         this.setCompileMessage();
+        this.uriParams = this.getURIParams();
 
         log.debug("App loaded");
         this.appLoaded = true;
-
-        this.loadURIParams();
         this.loaded();
     }
 
@@ -76,8 +82,11 @@ class App {
     loaded() {
         // Check that both the app and the worker have loaded successfully, and that
         // we haven't already loaded before attempting to remove the loading screen.
-        if (!this.workerLoaded || !this.appLoaded ||
+        if (!this.workerLoaded || !this.appLoaded || !this.waitersLoaded ||
             !document.getElementById("loader-wrapper")) return;
+
+        // Load state from URI
+        this.loadURIParams(this.uriParams);
 
         // Trigger CSS animations to remove preloader
         document.body.classList.add("loaded");
@@ -153,11 +162,9 @@ class App {
 
         if (this.autoBake_ && !this.baking) {
             log.debug("Auto-baking");
-            this.manager.input.inputWorker.postMessage({
-                action: "autobake",
-                data: {
-                    activeTab: this.manager.tabs.getActiveInputTab()
-                }
+            this.manager.worker.bakeInputs({
+                nums: [this.manager.tabs.getActiveTab("input")],
+                step: false
             });
         } else {
             this.manager.controls.showStaleIndicator();
@@ -174,7 +181,7 @@ class App {
         // Reset status using cancelBake
         this.manager.worker.cancelBake(true, false);
 
-        const activeTab = this.manager.tabs.getActiveInputTab();
+        const activeTab = this.manager.tabs.getActiveTab("input");
         if (activeTab === -1) return;
 
         let progress = 0;
@@ -221,7 +228,7 @@ class App {
     setInput(input) {
         // Get the currently active tab.
         // If there isn't one, assume there are no inputs so use inputNum of 1
-        let inputNum = this.manager.tabs.getActiveInputTab();
+        let inputNum = this.manager.tabs.getActiveTab("input");
         if (inputNum === -1) inputNum = 1;
         this.manager.input.updateInputValue(inputNum, input);
 
@@ -276,7 +283,15 @@ class App {
         }
 
         // Add edit button to first category (Favourites)
-        document.querySelector("#categories a").appendChild(document.getElementById("edit-favourites"));
+        const favCat = document.querySelector("#categories a");
+        favCat.appendChild(document.getElementById("edit-favourites"));
+        favCat.setAttribute("data-help-title", "Favourite operations");
+        favCat.setAttribute("data-help", `<p>This category displays your favourite operations.</p>
+        <ul>
+            <li><b>To add:</b> drag an operation over the Favourites category</li>
+            <li><b>To reorder:</b> Click on the 'Edit favourites' button and drag operations up and down in the list provided</li>
+            <li><b>To remove:</b> Click on the 'Edit favourites' button and hit the delete button next to the operation you want to remove</li>
+        </ul>`);
     }
 
 
@@ -295,9 +310,7 @@ class App {
             gutterSize: 4,
             expandToMin: true,
             onDrag: debounce(function() {
-                this.manager.recipe.adjustWidth();
-                this.manager.input.calcMaxTabs();
-                this.manager.output.calcMaxTabs();
+                this.adjustComponentSizes();
             }, 50, "dragSplitter", this, [])
         });
 
@@ -307,7 +320,7 @@ class App {
             minSize: minimise ? [0, 0] : [100, 100]
         });
 
-        this.resetLayout();
+        this.adjustComponentSizes();
     }
 
 
@@ -337,7 +350,7 @@ class App {
         let favourites;
 
         if (this.isLocalStorageAvailable()) {
-            favourites = localStorage.favourites && localStorage.favourites.length > 2 ?
+            favourites = localStorage?.favourites?.length > 2 ?
                 JSON.parse(localStorage.favourites) :
                 this.dfavourites;
             favourites = this.validFavourites(favourites);
@@ -453,13 +466,15 @@ class App {
      * Searches the URI parameters for recipe and input parameters.
      * If recipe is present, replaces the current recipe with the recipe provided in the URI.
      * If input is present, decodes and sets the input to the one provided in the URI.
+     * If character encodings are present, sets them appropriately.
      * If theme is present, uses the theme.
      *
+     * @param {Object} params
      * @fires Manager#statechange
      */
-    loadURIParams() {
+    loadURIParams(params=this.getURIParams()) {
         this.autoBakePause = true;
-        this.uriParams = this.getURIParams();
+        this.uriParams = params;
 
         // Read in recipe from URI params
         if (this.uriParams.recipe) {
@@ -484,11 +499,39 @@ class App {
             search.dispatchEvent(new Event("search"));
         }
 
+        // Input Character Encoding
+        // Must be set before the input is loaded
+        if (this.uriParams.ienc) {
+            this.manager.input.chrEncChange(parseInt(this.uriParams.ienc, 10), true);
+        }
+
+        // Output Character Encoding
+        if (this.uriParams.oenc) {
+            this.manager.output.chrEncChange(parseInt(this.uriParams.oenc, 10), true);
+        }
+
+        // Input EOL sequence
+        if (this.uriParams.ieol) {
+            this.manager.input.eolChange(this.uriParams.ieol, true);
+        }
+
+        // Output EOL sequence
+        if (this.uriParams.oeol) {
+            this.manager.output.eolChange(this.uriParams.oeol, true);
+        }
+
         // Read in input data from URI params
         if (this.uriParams.input) {
             try {
-                const inputData = fromBase64(this.uriParams.input);
-                this.setInput(inputData);
+                let inputVal;
+                const inputChrEnc = this.manager.input.getChrEnc();
+                const inputData = fromBase64(this.uriParams.input, null, "byteArray");
+                if (inputChrEnc > 0) {
+                    inputVal = cptable.utils.decode(inputChrEnc, inputData);
+                } else {
+                    inputVal = Utils.byteArrayToChars(inputData);
+                }
+                this.setInput(inputVal);
             } catch (err) {}
         }
 
@@ -581,9 +624,17 @@ class App {
     resetLayout() {
         this.columnSplitter.setSizes([20, 30, 50]);
         this.ioSplitter.setSizes([50, 50]);
+        this.adjustComponentSizes();
+    }
+
+    /**
+     * Adjust components to fit their containers.
+     */
+    adjustComponentSizes() {
         this.manager.recipe.adjustWidth();
         this.manager.input.calcMaxTabs();
         this.manager.output.calcMaxTabs();
+        this.manager.controls.calcControlsHeight();
     }
 
 
@@ -615,6 +666,8 @@ class App {
         const notice = document.getElementById("notice");
         notice.innerHTML = compileInfo;
         notice.setAttribute("title", Utils.stripHtmlTags(window.compileMessage));
+        notice.setAttribute("data-help-title", "Last build");
+        notice.setAttribute("data-help", "This live version of CyberChef is updated whenever new commits are added to the master branch of the CyberChef repository. It represents the latest, most up-to-date build of CyberChef.");
     }
 
 
@@ -657,14 +710,14 @@ class App {
         log.info("[" + time.toLocaleString() + "] " + str);
         if (silent) return;
 
-        this.currentSnackbar = $.snackbar({
+        this.snackbars.push($.snackbar({
             content: str,
             timeout: timeout,
             htmlAllowed: true,
             onClose: () => {
-                this.currentSnackbar.remove();
+                this.snackbars.shift().remove();
             }
-        });
+        }));
     }
 
 
@@ -722,21 +775,22 @@ class App {
      * @param {event} e
      */
     stateChange(e) {
-        this.progress = 0;
-        this.autoBake();
-
-        this.updateTitle(false, null, true);
+        debounce(function() {
+            this.progress = 0;
+            this.autoBake();
+            this.updateURL(true, null, true);
+        }, 20, "stateChange", this, [])();
     }
 
 
     /**
-     * Update the page title to contain the new recipe
+     * Update the page title and URL to contain the new recipe
      *
      * @param {boolean} includeInput
-     * @param {string} input
+     * @param {string} [input=null]
      * @param {boolean} [changeUrl=true]
      */
-    updateTitle(includeInput, input, changeUrl=true) {
+    updateURL(includeInput, input=null, changeUrl=true) {
         // Set title
         const recipeConfig = this.getRecipeConfig();
         let title = "CyberChef";

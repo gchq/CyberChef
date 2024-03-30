@@ -32,7 +32,7 @@ import {
     CSSMinify,
     toBase64,
     toHex
-} from "../../../src/node/index";
+} from "../../../src/node/index.mjs";
 import chef from "../../../src/node/index.mjs";
 import TestRegister from "../../lib/TestRegister.mjs";
 import File from "../../../src/node/File.mjs";
@@ -45,10 +45,10 @@ TestRegister.addApiTests([
         const result = chef.ADD("sample input", {
             key: {
                 string: "some key",
-                option: "Hex"
+                option: "utf8"
             }
         });
-        assert.equal(result.toString(), "aO[^ZS\u000eW\\^cb");
+        assert.equal(result.toString(), "\xe6\xd0\xda\xd5\x8c\xd0\x85\xe2\xe1\xdf\xe2\xd9");
     }),
 
 
@@ -121,10 +121,10 @@ Tiger-128`;
         const result = chef.AND("Scot-free", {
             key: {
                 string: "Raining Cats and Dogs",
-                option: "Hex",
+                option: "utf8",
             }
         });
-        assert.strictEqual(result.toString(), "\u0000\"M$(D  E");
+        assert.strictEqual(result.toString(), "Raid)fb A");
     }),
 
     it("atBash Cipher", () => {
@@ -371,10 +371,10 @@ color: white;
             },
             salt: {
                 string: "Market",
-                option: "Hex",
+                option: "utf8",
             },
         });
-        assert.strictEqual(result.toString(), "7c21a9f5063a4d62fb1050068245c181");
+        assert.strictEqual(result.toString(), "4930d5d200e80f18c96b5550d13c6af8");
     }),
 
     it("Derive PBKDF2 Key", () => {
@@ -471,7 +471,7 @@ color: white;
     }),
 
     it("Extract dates", () => {
-        assert.strictEqual(chef.extractDates("Don't Look a Gift Horse In The Mouth 01/02/1992").toString(), "01/02/1992\n");
+        assert.strictEqual(chef.extractDates("Don't Look a Gift Horse In The Mouth 01/02/1992").toString(), "01/02/1992");
     }),
 
     it("Filter", () => {
@@ -588,7 +588,7 @@ Password: 034148`;
         const result = await chef.generatePGPKeyPair("Back To the Drawing Board", {
             keyType: "ECC-256",
         });
-        assert.strictEqual(result.toString().length, 2007);
+        assert.strictEqual(result.toString().substr(0, 37), "-----BEGIN PGP PRIVATE KEY BLOCK-----");
     }),
 
     it("Generate UUID", () => {
@@ -635,12 +635,16 @@ WWFkYSBZYWRh\r
         assert.strictEqual(chef.keccak("Flea Market").toString(), "c2a06880b19e453ee5440e8bd4c2024bedc15a6630096aa3f609acfd2b8f15f27cd293e1cc73933e81432269129ce954a6138889ce87831179d55dcff1cc7587");
     }),
 
+    it("LZNT1 Decompress", () => {
+        assert.strictEqual(chef.LZNT1Decompress("\x1a\xb0\x00compress\x00edtestda\x04ta\x07\x88alot").toString(), "compressedtestdatacompressedalot");
+    }),
+
     it("MD6", () => {
         assert.strictEqual(chef.MD6("Head Over Heels", {key: "arty"}).toString(), "d8f7fe4931fbaa37316f76283d5f615f50ddd54afdc794b61da522556aee99ad");
     }),
 
     it("Parse ASN.1 Hex string", () => {
-        assert.strictEqual(chef.parseASN1HexString(chef.toHex("Mouth-watering")).toString(), "UNKNOWN(4d) 7574682d7761746572696e67\n");
+        assert.strictEqual(chef.parseASN1HexString(chef.toHex("Mouth-watering")).toString(), "UNKNOWN(77) 7574682d7761746572696e67\n");
     }),
 
     it("Parse DateTime", () => {
@@ -656,7 +660,7 @@ Leap year: false
 Days in this month: 31
 
 Day of year: 187
-Week number: 2001
+Week number: 27
 Quarter: 3`;
         assert.strictEqual(result.toString(), expected);
     }),
@@ -685,8 +689,8 @@ Arguments:
     it("Parse user agent", () => {
         const result = chef.parseUserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 ");
         const expected = `Browser
-    Name: Mozilla
-    Version: 5.0
+    Name: Firefox
+    Version: 47.0
 Device
     Model: unknown
     Type: unknown
@@ -816,7 +820,7 @@ pCGTErs=
     it("RC4 Drop", () => {
         assert.strictEqual(
             chef.RC4Drop("Go Out On a Limb", {passphrase: {string: "Under Your Nose", option: "UTF8"}, inputFormat: "UTF8", outputFormat: "Hex"}).toString(),
-            "8fa5f2751d34476a0c857439f43816cf");
+            "b85cb1c4ed6bed8f260ab92829bba942");
     }),
 
     it("Regular Expression", () => {
@@ -854,12 +858,12 @@ pCGTErs=
 
     it("Snefru", () => {
         assert.strictEqual(
-            chef.snefru("demeaning milestone").toString(),
+            chef.snefru("demeaning milestone", {size: 256, rounds: 8}).toString(),
             "a671b48770fe073ce49e9259cc2f47d345a53712639f8ae23c5ad3fec19540a5");
     }),
 
     it("SQL Beautify", () => {
-        const result = chef.SQLBeautify(`SELECT MONTH, ID, RAIN_I, TEMP_F 
+        const result = chef.SQLBeautify(`SELECT MONTH, ID, RAIN_I, TEMP_F
 FROM STATS;`);
         const expected = `SELECT MONTH,
          ID,
@@ -879,8 +883,7 @@ FROM STATS;`;
         const result = chef.strings("smothering ampersand abreast", {displayTotal: true});
         const expected = `Total found: 1
 
-smothering ampersand abreast
-`;
+smothering ampersand abreast`;
         assert.strictEqual(result.toString(), expected);
     }),
 
