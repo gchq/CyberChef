@@ -20,15 +20,22 @@ class Whirlpool extends Operation {
 
         this.name = "Whirlpool";
         this.module = "Crypto";
-        this.description = "Whirlpool is a cryptographic hash function designed by Vincent Rijmen (co-creator of AES) and Paulo S. L. M. Barreto, who first described it in 2000.<br><br>Several variants exist:<ul><li>Whirlpool-0 is the original version released in 2000.</li><li>Whirlpool-T is the first revision, released in 2001, improving the generation of the s-box.</li><li>Whirlpool is the latest revision, released in 2003, fixing a flaw in the difusion matrix.</li></ul>";
+        this.description = "Whirlpool is a cryptographic hash function designed by Vincent Rijmen (co-creator of AES) and Paulo S. L. M. Barreto, who first described it in 2000.<br><br>Several variants exist:<ul><li>Whirlpool-0 is the original version released in 2000.</li><li>Whirlpool-T is the first revision, released in 2001, improving the generation of the s-box.</li><li>Whirlpool is the latest revision, released in 2003, fixing a flaw in the diffusion matrix.</li></ul>";
         this.infoURL = "https://wikipedia.org/wiki/Whirlpool_(cryptography)";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
-                "name": "Variant",
-                "type": "option",
-                "value": ["Whirlpool", "Whirlpool-T", "Whirlpool-0"]
+                name: "Variant",
+                type: "option",
+                value: ["Whirlpool", "Whirlpool-T", "Whirlpool-0"]
+            },
+            {
+                name: "Rounds",
+                type: "number",
+                value: 10,
+                min: 1,
+                max: 10
             }
         ];
     }
@@ -40,7 +47,7 @@ class Whirlpool extends Operation {
      */
     run(input, args) {
         const variant = args[0].toLowerCase();
-        return runHash(variant, input);
+        return runHash(variant, input, {rounds: args[1]});
     }
 
 }

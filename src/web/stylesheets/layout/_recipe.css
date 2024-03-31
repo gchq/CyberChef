@@ -7,7 +7,6 @@
  */
 
 #rec-list {
-    bottom: var(--controls-height);
     overflow: auto;
 }
 

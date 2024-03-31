@@ -1,0 +1,79 @@
+/**
+ * JSON styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2022
+ * @license Apache-2.0
+ *
+ * Adapted for CyberChef by @n1474335 from jQuery json-viewer
+ * @author Alexandre Bodelot <alexandre.bodelot@gmail.com>
+ * @link https://github.com/abodelot/jquery.json-viewer
+ * @license MIT
+ */
+
+/* Root element */
+.json-document {
+    padding: .5em 1.5em;
+}
+
+/* Syntax highlighting for JSON objects */
+ul.json-dict, ol.json-array {
+    list-style-type: none;
+    margin: 0 0 0 1px;
+    border-left: 1px dotted #ccc;
+    padding-left: 2em;
+}
+.json-string {
+    color: green;
+}
+.json-literal {
+    color: red;
+}
+.json-brace,
+.json-bracket,
+.json-colon,
+.json-comma {
+    color: gray;
+}
+
+/* Collapse */
+.json-details {
+    display: inline;
+}
+.json-details[open] {
+    display: contents;
+}
+.json-summary {
+    display: inline;
+    list-style: none;
+}
+
+/* Display object and array brackets when closed */
+.json-summary.json-obj::after {
+    color: gray;
+    content: "{ ... }"
+}
+.json-summary.json-arr::after {
+    color: gray;
+    content: "[ ... ]"
+}
+.json-details[open] > .json-summary.json-obj::after,
+.json-details[open] > .json-summary.json-arr::after  {
+    content: "";
+}
+
+/* Show arrows, even in inline mode */
+.json-summary::before {
+    content: "\25BC";
+    color: #c0c0c0;
+    margin-left: -12px;
+    margin-right: 5px;
+    display: inline-block;
+    transform: rotate(-90deg);
+}
+.json-summary:hover::before {
+    color: #aaa;
+}
+.json-details[open] > .json-summary::before {
+    transform: rotate(0deg);
+}

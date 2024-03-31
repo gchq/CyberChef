@@ -17,16 +17,15 @@ class DishJSON extends DishType {
      */
     static toArrayBuffer() {
         DishJSON.checkForValue(this.value);
-        this.value = this.value ? Utils.strToArrayBuffer(JSON.stringify(this.value, null, 4)) : new ArrayBuffer;
+        this.value = this.value !== undefined ? Utils.strToArrayBuffer(JSON.stringify(this.value, null, 4)) : new ArrayBuffer;
     }
 
     /**
      * convert the given value from a ArrayBuffer
-     * @param {boolean} notUTF8
      */
-    static fromArrayBuffer(notUTF8) {
+    static fromArrayBuffer() {
         DishJSON.checkForValue(this.value);
-        this.value = JSON.parse(Utils.arrayBufferToStr(this.value, !notUTF8));
+        this.value = JSON.parse(Utils.arrayBufferToStr(this.value));
     }
 }
 

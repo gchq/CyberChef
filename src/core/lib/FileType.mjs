@@ -178,7 +178,7 @@ export function scanForFileTypes(buf, categories=Object.keys(FILE_SIGNATURES)) {
  * @param {Uint8Array} buf - The buffer to search
  * @param {Object} sig - A single signature object (Not an array of signatures)
  * @param {number} offset - Where to start search from
- * @returs {number} The position of the match or -1 if one cannot be found.
+ * @returns {number} The position of the match or -1 if one cannot be found.
  */
 function locatePotentialSig(buf, sig, offset) {
     // Find values for first key and value in sig
@@ -213,7 +213,7 @@ function locatePotentialSig(buf, sig, offset) {
 export function isType(type, buf) {
     const types = detectFileType(buf);
 
-    if (!(types && types.length)) return false;
+    if (!types.length) return false;
 
     if (typeof type === "string") {
         return types.reduce((acc, t) => {

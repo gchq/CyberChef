@@ -45,7 +45,7 @@ class RegularExpression extends Operation {
                     },
                     {
                         name: "Email address",
-                        value: "\\b(\\w[-.\\w]*)@([-\\w]+(?:\\.[-\\w]+)*)\\.([A-Za-z]{2,4})\\b"
+                        value: "(?:[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9](?:[\\u00A0-\\uD7FF\\uE000-\\uFFFF-a-z0-9-]*[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9])?\\.)+[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9](?:[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9-]*[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}\\])"
                     },
                     {
                         name: "URL",
@@ -82,6 +82,10 @@ class RegularExpression extends Operation {
                     {
                         name: "Strings",
                         value: "[A-Za-z\\d/\\-:.,_$%\\x27\"()<>= !\\[\\]{}@]{4,}"
+                    },
+                    {
+                        name: "UUID (any version)",
+                        value: "[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
                     },
                 ],
                 "target": 1
@@ -163,7 +167,7 @@ class RegularExpression extends Operation {
                     case "List matches with capture groups":
                         return Utils.escapeHtml(regexList(input, regex, displayTotal, true, true));
                     default:
-                        return "Error: Invalid output format";
+                        throw new OperationError("Error: Invalid output format");
                 }
             } catch (err) {
                 throw new OperationError("Invalid regex. Details: " + err.message);
@@ -185,7 +189,7 @@ class RegularExpression extends Operation {
  * @param {boolean} captureGroups - Display each of the capture groups separately
  * @returns {string}
  */
-function regexList (input, regex, displayTotal, matches, captureGroups) {
+function regexList(input, regex, displayTotal, matches, captureGroups) {
     let output = "",
         total = 0,
         match;
@@ -225,7 +229,7 @@ function regexList (input, regex, displayTotal, matches, captureGroups) {
  * @param {boolean} displayTotal
  * @returns {string}
  */
-function regexHighlight (input, regex, displayTotal) {
+function regexHighlight(input, regex, displayTotal) {
     let output = "",
         title = "",
         hl = 1,

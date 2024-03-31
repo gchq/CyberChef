@@ -13,7 +13,7 @@
     font-family: 'Material Icons';
     font-style: normal;
     font-weight: 400;
-    src: url("../static/fonts/MaterialIcons-Regular.woff2") format('woff2');
+    src: url("../static/fonts/MaterialIcons-Regular.ttf") format('truetype');
 }
 
 .material-icons {
@@ -82,15 +82,17 @@ a:focus {
     border-color: var(--btn-success-hover-border-colour);
 }
 
-input[type="search"] {
-    appearance: searchfield;
+select.form-control,
+select.form-control:focus {
+    background-color: var(--primary-background-colour) !important;
 }
 
-input[type="search"]::-webkit-search-cancel-button {
-    appearance: searchfield-cancel-button;
+select.form-control:focus {
+    transition: none !important;
 }
 
-select.form-control:not([size]):not([multiple]), select.custom-file-control:not([size]):not([multiple]) {
+select.form-control:not([size]):not([multiple]),
+select.custom-file-control:not([size]):not([multiple]) {
     height: unset !important;
 }
 
@@ -153,7 +155,8 @@ optgroup {
     color: var(--primary-font-colour);
 }
 
-.table-bordered th, .table-bordered td {
+.table-bordered th,
+.table-bordered td {
     border: 1px solid var(--table-border-colour);
 }
 
@@ -180,7 +183,9 @@ optgroup {
     color: var(--subtext-font-colour);
 }
 
-.nav-tabs>li>a.nav-link.active, .nav-tabs>li>a.nav-link.active:focus, .nav-tabs>li>a.nav-link.active:hover {
+.nav-tabs>li>a.nav-link.active,
+.nav-tabs>li>a.nav-link.active:focus,
+.nav-tabs>li>a.nav-link.active:hover {
     background-color: var(--secondary-background-colour);
     border-color: var(--secondary-border-colour);
     border-bottom-color: transparent;
@@ -191,7 +196,8 @@ optgroup {
     border-color: var(--primary-border-colour);
 }
 
-.nav a.nav-link:focus, .nav a.nav-link:hover {
+.nav a.nav-link:focus,
+.nav a.nav-link:hover {
     background-color: var(--secondary-border-colour);
 }
 
@@ -207,7 +213,8 @@ optgroup {
     color: var(--primary-font-colour);
 }
 
-.dropdown-menu a:focus, .dropdown-menu a:hover {
+.dropdown-menu a:focus,
+.dropdown-menu a:hover {
     background-color: var(--secondary-background-colour);
     color: var(--primary-font-colour);
 }
@@ -239,4 +246,12 @@ optgroup {
 .colorpicker-color,
 .colorpicker-color div {
     height: 100px;
+}
+
+
+/* CodeMirror */
+
+.ͼ2 .cm-specialChar,
+.cm-specialChar {
+    color: red;
 }

@@ -33,9 +33,9 @@ class Bzip2Decompress extends Operation {
                 value: false
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                "match": "^\\x42\\x5a\\x68",
+                "pattern": "^\\x42\\x5a\\x68",
                 "flags": "",
                 "args": []
             }
@@ -47,7 +47,7 @@ class Bzip2Decompress extends Operation {
      * @param {Object[]} args
      * @returns {string}
      */
-    run(input, args) {
+    async run(input, args) {
         const [small] = args;
         if (input.byteLength <= 0) {
             throw new OperationError("Please provide an input.");

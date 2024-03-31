@@ -71,7 +71,7 @@ export function sanitise(str) {
 
 
 /**
- * sonething like this => somethingLikeThis
+ * something like this => somethingLikeThis
  * ABC a sentence => ABCASentence
 */
 export function sentenceToCamelCase(str) {

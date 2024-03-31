@@ -1,6 +1,9 @@
 /**
  * Emulation of the Enigma machine.
  *
+ * Tested against various genuine Enigma machines using a variety of inputs
+ * and settings to confirm correctness.
+ *
  * @author s2224834
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
@@ -21,7 +24,7 @@ class Enigma extends Operation {
         super();
 
         this.name = "Enigma";
-        this.module = "Default";
+        this.module = "Bletchley";
         this.description = "Encipher/decipher with the WW2 Enigma machine.<br><br>Enigma was used by the German military, among others, around the WW2 era as a portable cipher machine to protect sensitive military, diplomatic and commercial communications.<br><br>The standard set of German military rotors and reflectors are provided. To configure the plugboard, enter a string of connected pairs of letters, e.g. <code>AB CD EF</code> connects A to B, C to D, and E to F. This is also used to create your own reflectors. To create your own rotor, enter the letters that the rotor maps A to Z to, in order, optionally followed by <code>&lt;</code> then a list of stepping points.<br>This is deliberately fairly permissive with rotor placements etc compared to a real Enigma (on which, for example, a four-rotor Enigma uses only the thin reflectors and the beta or gamma rotor in the 4th slot).<br><br>More detailed descriptions of the Enigma, Typex and Bombe operations <a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>can be found here</a>.";
         this.infoURL = "https://wikipedia.org/wiki/Enigma_machine";
         this.inputType = "string";

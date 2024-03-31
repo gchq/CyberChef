@@ -51,10 +51,27 @@ class DNSOverHTTPS extends Operation {
                 value: [
                     "A",
                     "AAAA",
-                    "TXT",
-                    "MX",
+                    "ANAME",
+                    "CERT",
+                    "CNAME",
                     "DNSKEY",
-                    "NS"
+                    "HTTPS",
+                    "IPSECKEY",
+                    "LOC",
+                    "MX",
+                    "NS",
+                    "OPENPGPKEY",
+                    "PTR",
+                    "RRSIG",
+                    "SIG",
+                    "SOA",
+                    "SPF",
+                    "SRV",
+                    "SSHFP",
+                    "TA",
+                    "TXT",
+                    "URI",
+                    "ANY"
                 ]
             },
             {
@@ -63,9 +80,9 @@ class DNSOverHTTPS extends Operation {
                 value: false
             },
             {
-                name: "Validate DNSSEC",
+                name: "Disable DNSSEC validation",
                 type: "boolean",
-                value: true
+                value: false
             }
         ];
     }
