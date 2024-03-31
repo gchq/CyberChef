@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import { search } from "../lib/Extract";
+import Operation from "../Operation.mjs";
+import { search } from "../lib/Extract.mjs";
 
 /**
  * Extract Hash Values operation
