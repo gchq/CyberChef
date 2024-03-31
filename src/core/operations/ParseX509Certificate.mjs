@@ -71,7 +71,7 @@ class ParseX509Certificate extends Operation {
                     cert.readCertHex(toHex(fromBase64(input, null, "byteArray"), ""));
                     break;
                 case "Raw":
-                    cert.readCertHex(toHex(Utils.strToByteArray(input), ""));
+                    cert.readCertHex(toHex(Utils.strToArrayBuffer(input), ""));
                     break;
                 default:
                     undefinedInputFormat = true;

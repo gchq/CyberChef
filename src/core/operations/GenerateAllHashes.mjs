@@ -108,7 +108,7 @@ class GenerateAllHashes extends Operation {
             {name: "BLAKE2s-256", algo: (new BLAKE2s), inputType: "arrayBuffer", params: ["256", "Hex", {string: "", option: "UTF8"}]},
             {name: "Streebog-256", algo: (new Streebog), inputType: "arrayBuffer", params: ["256"]},
             {name: "Streebog-512", algo: (new Streebog), inputType: "arrayBuffer", params: ["512"]},
-            {name: "GOST", algo: (new GOSTHash), inputType: "arrayBuffer", params: ["D-A"]},
+            {name: "GOST", algo: (new GOSTHash), inputType: "arrayBuffer", params: ["GOST 28147 (1994)", "256", "D-A"]},
             {name: "LM Hash", algo: (new LMHash), inputType: "str", params: []},
             {name: "NT Hash", algo: (new NTHash), inputType: "str", params: []},
             {name: "SSDEEP", algo: (new SSDEEP()), inputType: "str"},

@@ -14,6 +14,8 @@
             "From Charcode",
             "To Decimal",
             "From Decimal",
+            "To Float",
+            "From Float",
             "To Binary",
             "From Binary",
             "To Octal",
@@ -29,6 +31,8 @@
             "To Base64",
             "From Base64",
             "Show Base64 offsets",
+            "To Base92",
+            "From Base92",
             "To Base85",
             "From Base85",
             "To Base",
@@ -46,6 +50,8 @@
             "From Quoted Printable",
             "To Punycode",
             "From Punycode",
+            "AMF Encode",
+            "AMF Decode",
             "To Hex Content",
             "From Hex Content",
             "PEM to Hex",
@@ -65,7 +71,10 @@
             "JSON to CSV",
             "Avro to JSON",
             "CBOR Encode",
-            "CBOR Decode"
+            "CBOR Decode",
+            "Caret/M-decode",
+            "Rison Encode",
+            "Rison Decode"
         ]
     },
     {
@@ -79,6 +88,8 @@
             "DES Decrypt",
             "Triple DES Encrypt",
             "Triple DES Decrypt",
+            "Fernet Encrypt",
+            "Fernet Decrypt",
             "LS47 Encrypt",
             "LS47 Decrypt",
             "RC2 Encrypt",
@@ -86,9 +97,17 @@
             "RC4",
             "RC4 Drop",
             "ChaCha",
+            "Salsa20",
+            "XSalsa20",
             "Rabbit",
             "SM4 Encrypt",
             "SM4 Decrypt",
+            "GOST Encrypt",
+            "GOST Decrypt",
+            "GOST Sign",
+            "GOST Verify",
+            "GOST Key Wrap",
+            "GOST Key Unwrap",
             "ROT13",
             "ROT13 Brute Force",
             "ROT47",
@@ -119,6 +138,7 @@
             "Substitute",
             "Derive PBKDF2 key",
             "Derive EVP key",
+            "Derive HKDF key",
             "Bcrypt",
             "Scrypt",
             "JWT Sign",
@@ -135,7 +155,8 @@
             "Typex",
             "Lorenz",
             "Colossus",
-            "SIGABA"
+            "SIGABA",
+            "XXTEA"
         ]
     },
     {
@@ -215,6 +236,7 @@
             "VarInt Decode",
             "JA3 Fingerprint",
             "JA3S Fingerprint",
+            "JA4 Fingerprint",
             "HASSH Client Fingerprint",
             "HASSH Server Fingerprint",
             "Format MAC addresses",
@@ -223,6 +245,7 @@
             "Encode NetBIOS Name",
             "Decode NetBIOS Name",
             "Defang URL",
+            "Fang URL",
             "Defang IP Addresses"
         ]
     },
@@ -245,6 +268,7 @@
             "Remove null bytes",
             "To Upper case",
             "To Lower case",
+            "Swap case",
             "To Case Insensitive Regex",
             "From Case Insensitive Regex",
             "Add line numbers",
@@ -269,6 +293,7 @@
             "Fuzzy Match",
             "Offset checker",
             "Hamming Distance",
+            "Levenshtein Distance",
             "Convert distance",
             "Convert area",
             "Convert mass",
@@ -283,7 +308,8 @@
             "Escape string",
             "Unescape string",
             "Pseudo-Random Number Generator",
-            "Sleep"
+            "Sleep",
+            "File Tree"
         ]
     },
     {
@@ -317,7 +343,8 @@
             "CSS selector",
             "Extract EXIF",
             "Extract ID3",
-            "Extract Files"
+            "Extract Files",
+            "RAKE"
         ]
     },
     {
@@ -340,7 +367,8 @@
             "LZMA Decompress",
             "LZMA Compress",
             "LZ4 Decompress",
-            "LZ4 Compress"
+            "LZ4 Compress",
+            "LZNT1 Decompress"
         ]
     },
     {
@@ -357,6 +385,7 @@
             "SHA2",
             "SHA3",
             "SM3",
+            "MurmurHash3",
             "Keccak",
             "Shake",
             "RIPEMD",
@@ -365,7 +394,7 @@
             "Snefru",
             "BLAKE2b",
             "BLAKE2s",
-            "GOST hash",
+            "GOST Hash",
             "Streebog",
             "SSDEEP",
             "CTPH",
@@ -376,6 +405,8 @@
             "Bcrypt",
             "Bcrypt compare",
             "Bcrypt parse",
+            "Argon2",
+            "Argon2 compare",
             "Scrypt",
             "NT Hash",
             "LM Hash",
@@ -483,6 +514,7 @@
             "P-list Viewer",
             "Disassemble x86",
             "Pseudo-Random Number Generator",
+            "Generate De Bruijn Sequence",
             "Generate UUID",
             "Generate TOTP",
             "Generate HOTP",

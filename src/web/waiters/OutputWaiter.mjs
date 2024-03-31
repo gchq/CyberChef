@@ -5,10 +5,42 @@
  * @license Apache-2.0
  */
 
-import Utils, { debounce } from "../../core/Utils.mjs";
+import Utils, {debounce} from "../../core/Utils.mjs";
 import Dish from "../../core/Dish.mjs";
+import {isUTF8, CHR_ENC_SIMPLE_REVERSE_LOOKUP} from "../../core/lib/ChrEnc.mjs";
+import {detectFileType} from "../../core/lib/FileType.mjs";
 import FileSaver from "file-saver";
 import ZipWorker from "worker-loader?inline=no-fallback!../workers/ZipWorker.mjs";
+
+import {
+    EditorView,
+    keymap,
+    highlightSpecialChars,
+    drawSelection,
+    rectangularSelection,
+    crosshairCursor
+} from "@codemirror/view";
+import {
+    EditorState,
+    Compartment
+} from "@codemirror/state";
+import {
+    defaultKeymap
+} from "@codemirror/commands";
+import {
+    bracketMatching
+} from "@codemirror/language";
+import {
+    search,
+    searchKeymap,
+    highlightSelectionMatches
+} from "@codemirror/search";
+
+import {statusBar} from "../utils/statusBar.mjs";
+import {htmlPlugin} from "../utils/htmlWidget.mjs";
+import {copyOverride} from "../utils/copyOverride.mjs";
+import {eolCodeToSeq, eolCodeToName, renderSpecialChar} from "../utils/editorUtils.mjs";
+
 
 /**
   * Waiter to handle events related to the output
@@ -25,10 +57,418 @@ class OutputWaiter {
         this.app = app;
         this.manager = manager;
 
+        this.outputTextEl = document.getElementById("output-text");
+        // Object to handle output HTML state - used by htmlWidget extension
+        this.htmlOutput = {
+            html: "",
+            changed: false
+        };
+        // Hold a copy of the currently displayed output so that we don't have to update it unnecessarily
+        this.currentOutputCache = null;
+        this.initEditor();
+
         this.outputs = {};
         this.zipWorker = null;
         this.maxTabs = this.manager.tabs.calcMaxTabs();
         this.tabTimeout = null;
+        this.eolState = 0; // 0 = unset, 1 = detected, 2 = manual
+        this.encodingState = 0; // 0 = unset, 1 = detected, 2 = manual
+    }
+
+    /**
+     * Sets up the CodeMirror Editor
+     */
+    initEditor() {
+        // Mutable extensions
+        this.outputEditorConf = {
+            eol: new Compartment,
+            lineWrapping: new Compartment,
+            drawSelection: new Compartment
+        };
+
+        const initialState = EditorState.create({
+            doc: null,
+            extensions: [
+                // Editor extensions
+                EditorState.readOnly.of(true),
+                highlightSpecialChars({
+                    render: renderSpecialChar, // Custom character renderer to handle special cases
+                    addSpecialChars: /[\ue000-\uf8ff]/g // Add the Unicode Private Use Area which we use for some whitespace chars
+                }),
+                rectangularSelection(),
+                crosshairCursor(),
+                bracketMatching(),
+                highlightSelectionMatches(),
+                search({top: true}),
+                EditorState.allowMultipleSelections.of(true),
+
+                // Custom extensions
+                statusBar({
+                    label: "Output",
+                    timing: this.manager.timing,
+                    tabNumGetter: function() {
+                        return this.manager.tabs.getActiveTab("output");
+                    }.bind(this),
+                    eolHandler: this.eolChange.bind(this),
+                    chrEncHandler: this.chrEncChange.bind(this),
+                    chrEncGetter: this.getChrEnc.bind(this),
+                    getEncodingState: this.getEncodingState.bind(this),
+                    getEOLState: this.getEOLState.bind(this),
+                    htmlOutput: this.htmlOutput
+                }),
+                htmlPlugin(this.htmlOutput),
+                copyOverride(),
+
+                // Mutable state
+                this.outputEditorConf.lineWrapping.of(EditorView.lineWrapping),
+                this.outputEditorConf.eol.of(EditorState.lineSeparator.of("\n")),
+                this.outputEditorConf.drawSelection.of(drawSelection()),
+
+                // Keymap
+                keymap.of([
+                    ...defaultKeymap,
+                    ...searchKeymap
+                ]),
+
+                // Event listeners
+                EditorView.updateListener.of(e => {
+                    if (e.selectionSet)
+                        this.manager.highlighter.selectionChange("output", e);
+                    if (e.docChanged || this.docChanging) {
+                        this.docChanging = false;
+                        this.toggleLoader(false);
+                    }
+                })
+            ]
+        });
+
+        if (this.outputEditorView) this.outputEditorView.destroy();
+        this.outputEditorView = new EditorView({
+            state: initialState,
+            parent: this.outputTextEl
+        });
+    }
+
+    /**
+     * Handler for EOL change events
+     * Sets the line separator
+     * @param {string} eol
+     * @param {boolean} [manual=false]
+     */
+    async eolChange(eol, manual=false) {
+        const eolVal = eolCodeToSeq[eol];
+        if (eolVal === undefined) return;
+
+        this.eolState = manual ? 2 : this.eolState;
+        if (this.eolState < 2 && eolVal === this.getEOLSeq()) return;
+
+        if (this.eolState === 1) {
+            // Alert
+            this.app.alert(`Output end of line separator has been detected and changed to ${eolCodeToName[eol]}`, 5000);
+        }
+
+        const currentTabNum = this.manager.tabs.getActiveTab("output");
+        if (currentTabNum >= 0) {
+            this.outputs[currentTabNum].eolSequence = eolVal;
+        } else {
+            throw new Error(`Cannot change output ${currentTabNum} EOL sequence to ${eolVal}`);
+        }
+
+        // Update the EOL value
+        this.outputEditorView.dispatch({
+            effects: this.outputEditorConf.eol.reconfigure(EditorState.lineSeparator.of(eolVal))
+        });
+
+        // Reset the output so that lines are recalculated, preserving the old EOL values
+        await this.setOutput(this.currentOutputCache, true);
+        // Update the URL manually since we aren't firing a statechange event
+        this.app.updateURL(true);
+    }
+
+    /**
+     * Getter for the output EOL sequence
+     * Prefer reading value from `this.outputs` since the editor may not have updated yet.
+     * @returns {string}
+     */
+    getEOLSeq() {
+        const currentTabNum = this.manager.tabs.getActiveTab("output");
+        if (currentTabNum < 0) {
+            return this.outputEditorConf.state?.lineBreak || "\n";
+        }
+        return this.outputs[currentTabNum].eolSequence;
+    }
+
+    /**
+     * Returns whether the output EOL sequence was set manually or has been detected automatically
+     * @returns {number} - 0 = unset, 1 = detected, 2 = manual
+     */
+    getEOLState() {
+        return this.eolState;
+    }
+
+    /**
+     * Handler for Chr Enc change events
+     * Sets the output character encoding
+     * @param {number} chrEncVal
+     * @param {boolean} [manual=false]
+     */
+    async chrEncChange(chrEncVal, manual=false) {
+        if (typeof chrEncVal !== "number") return;
+        const currentEnc = this.getChrEnc();
+
+        const currentTabNum = this.manager.tabs.getActiveTab("output");
+        if (currentTabNum >= 0) {
+            this.outputs[currentTabNum].encoding = chrEncVal;
+        } else {
+            throw new Error(`Cannot change output ${currentTabNum} chrEnc to ${chrEncVal}`);
+        }
+
+        this.encodingState = manual ? 2 : this.encodingState;
+
+        if (this.encodingState > 1) {
+            // Reset the output, forcing it to re-decode the data with the new character encoding
+            await this.setOutput(this.currentOutputCache, true);
+            // Update the URL manually since we aren't firing a statechange event
+            this.app.updateURL(true);
+        } else if (currentEnc !== chrEncVal) {
+            // Alert
+            this.app.alert(`Output character encoding has been detected and changed to ${CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] || "Raw Bytes"}`, 5000);
+        }
+    }
+
+    /**
+     * Getter for the output character encoding
+     * @returns {number}
+     */
+    getChrEnc() {
+        const currentTabNum = this.manager.tabs.getActiveTab("output");
+        if (currentTabNum < 0) {
+            return 0;
+        }
+        return this.outputs[currentTabNum].encoding;
+    }
+
+    /**
+     * Returns whether the output character encoding was set manually or has been detected automatically
+     * @returns {number} - 0 = unset, 1 = detected, 2 = manual
+     */
+    getEncodingState() {
+        return this.encodingState;
+    }
+
+    /**
+     * Sets word wrap on the output editor
+     * @param {boolean} wrap
+     */
+    setWordWrap(wrap) {
+        this.outputEditorView.dispatch({
+            effects: this.outputEditorConf.lineWrapping.reconfigure(
+                wrap ? EditorView.lineWrapping : []
+            )
+        });
+    }
+
+    /**
+     * Sets the value of the current output
+     * @param {string|ArrayBuffer} data
+     * @param {boolean} [force=false]
+     */
+    async setOutput(data, force=false) {
+        // Don't do anything if the output hasn't changed
+        if (!force && data === this.currentOutputCache) {
+            this.manager.controls.hideStaleIndicator();
+            this.toggleLoader(false);
+            return;
+        }
+
+        this.currentOutputCache = data;
+        this.toggleLoader(true);
+
+        // Remove class to #output-text to change display settings
+        this.outputTextEl.classList.remove("html-output");
+
+        // If data is an ArrayBuffer, convert to a string in the correct character encoding
+        const tabNum = this.manager.tabs.getActiveTab("output");
+        this.manager.timing.recordTime("outputDecodingStart", tabNum);
+        if (data instanceof ArrayBuffer) {
+            await this.detectEncoding(data);
+            data = await this.bufferToStr(data);
+        }
+        this.manager.timing.recordTime("outputDecodingEnd", tabNum);
+
+        // Turn drawSelection back on
+        this.outputEditorView.dispatch({
+            effects: this.outputEditorConf.drawSelection.reconfigure(
+                drawSelection()
+            )
+        });
+
+        // Ensure we're not exceeding the maximum line length
+        let wrap = this.app.options.wordWrap;
+        const lineLengthThreshold = 131072; // 128KB
+        if (data.length > lineLengthThreshold) {
+            const lines = data.split(this.getEOLSeq());
+            const longest = lines.reduce((a, b) =>
+                a > b.length ? a : b.length, 0
+            );
+            if (longest > lineLengthThreshold) {
+                // If we are exceeding the max line length, turn off word wrap
+                wrap = false;
+            }
+        }
+
+        // If turning word wrap off, do it before we populate the editor for performance reasons
+        if (!wrap) this.setWordWrap(wrap);
+
+        // Detect suitable EOL sequence
+        this.detectEOLSequence(data);
+
+        // We use setTimeout here to delay the editor dispatch until the next event cycle,
+        // ensuring all async actions have completed before attempting to set the contents
+        // of the editor. This is mainly with the above call to setWordWrap() in mind.
+        setTimeout(() => {
+            this.docChanging = true;
+            // Insert data into editor, overwriting any previous contents
+            this.outputEditorView.dispatch({
+                changes: {
+                    from: 0,
+                    to: this.outputEditorView.state.doc.length,
+                    insert: data
+                }
+            });
+
+            // If turning word wrap on, do it after we populate the editor
+            if (wrap)
+                setTimeout(() => {
+                    this.setWordWrap(wrap);
+                });
+        });
+    }
+
+    /**
+     * Sets the value of the current output to a rendered HTML value
+     * @param {string} html
+     */
+    async setHTMLOutput(html) {
+        this.htmlOutput.html = html;
+        this.htmlOutput.changed = true;
+        // This clears the text output, but also fires a View update which
+        // triggers the htmlWidget to render the HTML. We set the force flag
+        // to ensure the loader gets removed and HTML is rendered.
+        await this.setOutput("", true);
+
+        // Turn off drawSelection
+        this.outputEditorView.dispatch({
+            effects: this.outputEditorConf.drawSelection.reconfigure([])
+        });
+
+        // Add class to #output-text to change display settings
+        this.outputTextEl.classList.add("html-output");
+
+        // Execute script sections
+        const outputHTML = document.getElementById("output-html");
+        const scriptElements = outputHTML ? outputHTML.querySelectorAll("script") : [];
+        for (let i = 0; i < scriptElements.length; i++) {
+            try {
+                eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
+            } catch (err) {
+                log.error(err);
+            }
+        }
+    }
+
+    /**
+     * Clears the HTML output
+     */
+    clearHTMLOutput() {
+        this.htmlOutput.html = "";
+        this.htmlOutput.changed = true;
+        // Fire a blank change to force the htmlWidget to update and remove any HTML
+        this.outputEditorView.dispatch({
+            changes: {
+                from: 0,
+                insert: ""
+            }
+        });
+    }
+
+    /**
+     * Checks whether the EOL separator should be updated
+     *
+     * @param {string} data
+     */
+    detectEOLSequence(data) {
+        // If EOL has been fixed, skip this.
+        if (this.eolState > 1) return;
+        // If data is too long, skip this.
+        if (data.length > 1000000) return;
+
+        // Detect most likely EOL sequence
+        const eolCharCounts = {
+            "LF": data.count("\u000a"),
+            "VT": data.count("\u000b"),
+            "FF": data.count("\u000c"),
+            "CR": data.count("\u000d"),
+            "CRLF": data.count("\u000d\u000a"),
+            "NEL": data.count("\u0085"),
+            "LS": data.count("\u2028"),
+            "PS": data.count("\u2029")
+        };
+
+        // If all zero, leave alone
+        const total = Object.values(eolCharCounts).reduce((acc, curr) => {
+            return acc + curr;
+        }, 0);
+        if (total === 0) return;
+
+        // Find most prevalent line ending sequence
+        const highest = Object.entries(eolCharCounts).reduce((acc, curr) => {
+            return curr[1] > acc[1] ? curr : acc;
+        }, ["LF", 0]);
+        let choice = highest[0];
+
+        // If CRLF not zero and more than half the highest alternative, choose CRLF
+        if ((eolCharCounts.CRLF * 2) > highest[1]) {
+            choice = "CRLF";
+        }
+
+        const eolVal = eolCodeToSeq[choice];
+        if (eolVal === this.getEOLSeq()) return;
+
+        // Setting automatically
+        this.eolState = 1;
+        this.eolChange(choice);
+    }
+
+    /**
+     * Checks whether the character encoding should be updated.
+     *
+     * @param {ArrayBuffer} data
+     */
+    async detectEncoding(data) {
+        // If encoding has been fixed, skip this.
+        if (this.encodingState > 1) return;
+        // If data is too long, skip this.
+        if (data.byteLength > 1000000) return;
+
+        const enc = isUTF8(data); // 0 = not UTF8, 1 = ASCII, 2 = UTF8
+
+        switch (enc) {
+            case 0: // not UTF8
+                // Set to Raw Bytes
+                this.encodingState = 1;
+                await this.chrEncChange(0, false);
+                break;
+            case 2: // UTF8
+                // Set to UTF8
+                this.encodingState = 1;
+                await this.chrEncChange(65001, false);
+                break;
+            case 1: // ASCII
+            default:
+                // Ignore
+                break;
+        }
     }
 
     /**
@@ -38,7 +478,7 @@ class OutputWaiter {
         const numTabs = this.manager.tabs.calcMaxTabs();
         if (numTabs !== this.maxTabs) {
             this.maxTabs = numTabs;
-            this.refreshTabs(this.manager.tabs.getActiveOutputTab(), "right");
+            this.refreshTabs(this.manager.tabs.getActiveTab("output"), "right");
         }
     }
 
@@ -89,7 +529,9 @@ class OutputWaiter {
             error: null,
             status: "inactive",
             bakeId: -1,
-            progress: false
+            progress: false,
+            encoding: 0,
+            eolSequence: "\u000a"
         };
 
         this.outputs[inputNum] = newOutput;
@@ -116,7 +558,7 @@ class OutputWaiter {
 
         this.outputs[inputNum].data = data;
 
-        const tabItem = this.manager.tabs.getOutputTabItem(inputNum);
+        const tabItem = this.manager.tabs.getTabItem(inputNum, "output");
         if (tabItem) tabItem.style.background = "";
 
         if (set) this.set(inputNum);
@@ -196,7 +638,7 @@ class OutputWaiter {
         this.outputs[inputNum].progress = progress;
 
         if (progress !== false) {
-            this.manager.tabs.updateOutputTabProgress(inputNum, progress, total);
+            this.manager.tabs.updateTabProgress(inputNum, progress, total, "output");
         }
 
     }
@@ -209,7 +651,7 @@ class OutputWaiter {
     removeOutput(inputNum) {
         if (!this.outputExists(inputNum)) return;
 
-        delete (this.outputs[inputNum]);
+        delete this.outputs[inputNum];
     }
 
     /**
@@ -217,8 +659,6 @@ class OutputWaiter {
      */
     removeAllOutputs() {
         this.outputs = {};
-
-        this.resetSwitch();
 
         const tabsList = document.getElementById("output-tabs");
         const tabsListChildren = tabsList.children;
@@ -231,25 +671,26 @@ class OutputWaiter {
     }
 
     /**
-     * Sets the output in the output textarea.
+     * Sets the output in the output pane.
      *
      * @param {number} inputNum
      */
     async set(inputNum) {
-        if (inputNum !== this.manager.tabs.getActiveOutputTab() ||
+        inputNum = parseInt(inputNum, 10);
+        if (inputNum !== this.manager.tabs.getActiveTab("output") ||
             !this.outputExists(inputNum)) return;
         this.toggleLoader(true);
 
         return new Promise(async function(resolve, reject) {
-            const output = this.outputs[inputNum],
-                activeTab = this.manager.tabs.getActiveOutputTab();
-            if (typeof inputNum !== "number") inputNum = parseInt(inputNum, 10);
+            const output = this.outputs[inputNum];
+            this.manager.timing.recordTime("settingOutput", inputNum);
 
-            const outputText = document.getElementById("output-text");
-            const outputHtml = document.getElementById("output-html");
-            const outputFile = document.getElementById("output-file");
-            const outputHighlighter = document.getElementById("output-highlighter");
-            const inputHighlighter = document.getElementById("input-highlighter");
+            // Update the EOL value
+            this.outputEditorView.dispatch({
+                effects: this.outputEditorConf.eol.reconfigure(
+                    EditorState.lineSeparator.of(output.eolSequence)
+                )
+            });
 
             // If pending or baking, show loader and status message
             // If error, style the tab and handle the error
@@ -269,140 +710,55 @@ class OutputWaiter {
                 this.manager.recipe.updateBreakpointIndicator(false);
             }
 
-            document.getElementById("show-file-overlay").style.display = "none";
-
             if (output.status === "pending" || output.status === "baking") {
                 // show the loader and the status message if it's being shown
                 // otherwise don't do anything
                 document.querySelector("#output-loader .loading-msg").textContent = output.statusMessage;
             } else if (output.status === "error") {
-                // style the tab if it's being shown
-                this.toggleLoader(false);
-                outputText.style.display = "block";
-                outputText.classList.remove("blur");
-                outputHtml.style.display = "none";
-                outputFile.style.display = "none";
-                outputHighlighter.display = "none";
-                inputHighlighter.display = "none";
+                this.clearHTMLOutput();
 
                 if (output.error) {
-                    outputText.value = output.error;
+                    await this.setOutput(output.error);
                 } else {
-                    outputText.value = output.data.result;
+                    await this.setOutput(output.data.result);
                 }
-                outputHtml.innerHTML = "";
             } else if (output.status === "baked" || output.status === "inactive") {
                 document.querySelector("#output-loader .loading-msg").textContent = `Loading output ${inputNum}`;
-                this.closeFile();
-                let scriptElements, lines, length;
 
                 if (output.data === null) {
-                    outputText.style.display = "block";
-                    outputHtml.style.display = "none";
-                    outputFile.style.display = "none";
-                    outputHighlighter.display = "block";
-                    inputHighlighter.display = "block";
-
-                    outputText.value = "";
-                    outputHtml.innerHTML = "";
-
-                    this.toggleLoader(false);
+                    this.clearHTMLOutput();
+                    await this.setOutput("");
                     return;
                 }
 
                 switch (output.data.type) {
                     case "html":
-                        outputText.style.display = "none";
-                        outputHtml.style.display = "block";
-                        outputFile.style.display = "none";
-                        outputHighlighter.style.display = "none";
-                        inputHighlighter.style.display = "none";
-
-                        outputText.value = "";
-                        outputHtml.innerHTML = output.data.result;
-
-                        // Execute script sections
-                        scriptElements = outputHtml.querySelectorAll("script");
-                        for (let i = 0; i < scriptElements.length; i++) {
-                            try {
-                                eval(scriptElements[i].innerHTML); // eslint-disable-line no-eval
-                            } catch (err) {
-                                log.error(err);
-                            }
-                        }
+                        await this.setHTMLOutput(output.data.result);
                         break;
                     case "ArrayBuffer":
-                        outputText.style.display = "block";
-                        outputHtml.style.display = "none";
-                        outputHighlighter.display = "none";
-                        inputHighlighter.display = "none";
-
-                        outputText.value = "";
-                        outputHtml.innerHTML = "";
-
-                        length = output.data.result.byteLength;
-                        this.setFile(await this.getDishBuffer(output.data.dish), activeTab);
-                        break;
                     case "string":
                     default:
-                        outputText.style.display = "block";
-                        outputHtml.style.display = "none";
-                        outputFile.style.display = "none";
-                        outputHighlighter.display = "block";
-                        inputHighlighter.display = "block";
-
-                        outputText.value = Utils.printable(output.data.result, true);
-                        outputHtml.innerHTML = "";
-
-                        lines = output.data.result.count("\n") + 1;
-                        length = output.data.result.length;
+                        this.clearHTMLOutput();
+                        await this.setOutput(output.data.result);
                         break;
                 }
-                this.toggleLoader(false);
+                this.manager.timing.recordTime("complete", inputNum);
 
-                if (output.data.type === "html") {
-                    const dishStr = await this.getDishStr(output.data.dish);
-                    length = dishStr.length;
-                    lines = dishStr.count("\n") + 1;
-                }
+                // Trigger an update so that the status bar recalculates timings
+                this.outputEditorView.dispatch({
+                    changes: {
+                        from: 0,
+                        to: 0
+                    }
+                });
 
-                this.setOutputInfo(length, lines, output.data.duration);
                 debounce(this.backgroundMagic, 50, "backgroundMagic", this, [])();
             }
         }.bind(this));
     }
 
     /**
-     * Shows file details
-     *
-     * @param {ArrayBuffer} buf
-     * @param {number} activeTab
-     */
-    setFile(buf, activeTab) {
-        if (activeTab !== this.manager.tabs.getActiveOutputTab()) return;
-        // Display file overlay in output area with details
-        const fileOverlay = document.getElementById("output-file"),
-            fileSize = document.getElementById("output-file-size"),
-            outputText = document.getElementById("output-text"),
-            fileSlice = buf.slice(0, 4096);
-
-        fileOverlay.style.display = "block";
-        fileSize.textContent = buf.byteLength.toLocaleString() + " bytes";
-
-        outputText.classList.add("blur");
-        outputText.value = Utils.printable(Utils.arrayBufferToStr(fileSlice));
-    }
-
-    /**
-     * Clears output file details
-     */
-    closeFile() {
-        document.getElementById("output-file").style.display = "none";
-        document.getElementById("output-text").classList.remove("blur");
-    }
-
-    /**
-     * Retrieves the dish as a string, returning the cached version if possible.
+     * Retrieves the dish as a string
      *
      * @param {Dish} dish
      * @returns {string}
@@ -416,7 +772,7 @@ class OutputWaiter {
     }
 
     /**
-     * Retrieves the dish as an ArrayBuffer, returning the cached version if possible.
+     * Retrieves the dish as an ArrayBuffer
      *
      * @param {Dish} dish
      * @returns {ArrayBuffer}
@@ -445,6 +801,23 @@ class OutputWaiter {
     }
 
     /**
+     * Asks a worker to translate an ArrayBuffer into a certain character encoding
+     *
+     * @param {ArrrayBuffer} buffer
+     * @returns {string}
+     */
+    async bufferToStr(buffer) {
+        const encoding = this.getChrEnc();
+
+        if (buffer.byteLength === 0) return "";
+        return await new Promise(resolve => {
+            this.manager.worker.bufferToStr(buffer, encoding, r => {
+                resolve(r.value);
+            });
+        });
+    }
+
+    /**
      * Save bombe object then remove it from the DOM so that it does not cause performance issues.
      */
     saveBombe() {
@@ -462,39 +835,41 @@ class OutputWaiter {
      * @param {boolean} value - If true, show the loader
      */
     toggleLoader(value) {
-        clearTimeout(this.appendBombeTimeout);
-        clearTimeout(this.outputLoaderTimeout);
-
         const outputLoader = document.getElementById("output-loader"),
-            outputElement = document.getElementById("output-text"),
             animation = document.getElementById("output-loader-animation");
 
         if (value) {
             this.manager.controls.hideStaleIndicator();
+            // Don't add the bombe if it's already there or scheduled to be loaded
+            if (animation.children.length === 0 && !this.appendBombeTimeout) {
+                // Start a timer to add the Bombe to the DOM just before we make it
+                // visible so that there is no stuttering
+                this.appendBombeTimeout = setTimeout(function() {
+                    this.appendBombeTimeout = null;
+                    animation.appendChild(this.bombeEl);
+                }.bind(this), 150);
+            }
 
-            // Don't add the bombe if it's already there!
-            if (animation.children.length > 0) return;
+            if (outputLoader.style.visibility !== "visible" && !this.outputLoaderTimeout) {
+                // Show the loading screen
+                this.outputLoaderTimeout = setTimeout(function() {
+                    this.outputLoaderTimeout = null;
+                    outputLoader.style.visibility = "visible";
+                    outputLoader.style.opacity = 1;
+                }, 200);
+            }
+        } else if (outputLoader.style.visibility !== "hidden" || this.appendBombeTimeout || this.outputLoaderTimeout) {
+            clearTimeout(this.appendBombeTimeout);
+            clearTimeout(this.outputLoaderTimeout);
+            this.appendBombeTimeout = null;
+            this.outputLoaderTimeout = null;
 
-            // Start a timer to add the Bombe to the DOM just before we make it
-            // visible so that there is no stuttering
-            this.appendBombeTimeout = setTimeout(function() {
-                animation.appendChild(this.bombeEl);
-            }.bind(this), 150);
-
-            // Show the loading screen
-            this.outputLoaderTimeout = setTimeout(function() {
-                outputElement.disabled = true;
-                outputLoader.style.visibility = "visible";
-                outputLoader.style.opacity = 1;
-            }, 200);
-        } else {
             // Remove the Bombe from the DOM to save resources
             this.outputLoaderTimeout = setTimeout(function () {
-                try {
+                this.outputLoaderTimeout = null;
+                if (animation.children.length > 0)
                     animation.removeChild(this.bombeEl);
-                } catch (err) {}
             }.bind(this), 500);
-            outputElement.disabled = false;
             outputLoader.style.opacity = 0;
             outputLoader.style.visibility = "hidden";
         }
@@ -512,24 +887,33 @@ class OutputWaiter {
      * Handler for file download events.
      */
     async downloadFile() {
-        const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
+        const dish = this.getOutputDish(this.manager.tabs.getActiveTab("output"));
         if (dish === null) {
             this.app.alert("Could not find any output data to download. Has this output been baked?", 3000);
             return;
         }
-        const fileName = window.prompt("Please enter a filename: ", "download.dat");
+
+        const data = await dish.get(Dish.ARRAY_BUFFER);
+        let ext = ".dat";
+
+        // Detect file type automatically
+        const types = detectFileType(data);
+        if (types.length) {
+            ext = `.${types[0].extension.split(",", 1)[0]}`;
+        }
+
+        const fileName = window.prompt("Please enter a filename: ", `download${ext}`);
 
         // Assume if the user clicks cancel they don't want to download
         if (fileName === null) return;
 
-        const data = await dish.get(Dish.ARRAY_BUFFER),
-            file = new File([data], fileName);
-        FileSaver.saveAs(file, fileName, false);
+        const file = new File([data], fileName);
+        FileSaver.saveAs(file, fileName, {autoBom: false});
     }
 
     /**
      * Handler for save all click event
-     * Saves all outputs to a single archvie file
+     * Saves all outputs to a single archive file
      */
     async saveAllClick() {
         const downloadButton = document.getElementById("save-all-to-file");
@@ -549,7 +933,6 @@ class OutputWaiter {
             }
         }
     }
-
 
     /**
      * Spawns a new ZipWorker and sends it the outputs so that they can
@@ -606,9 +989,16 @@ class OutputWaiter {
         log.debug("Creating ZipWorker");
         this.zipWorker = new ZipWorker();
         this.zipWorker.postMessage({
-            outputs: this.outputs,
-            filename: fileName,
-            fileExtension: fileExt
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
+        this.zipWorker.postMessage({
+            action: "zipFiles",
+            data: {
+                outputs: this.outputs,
+                filename: fileName,
+                fileExtension: fileExt
+            }
         });
         this.zipWorker.addEventListener("message", this.handleZipWorkerMessage.bind(this));
     }
@@ -625,15 +1015,11 @@ class OutputWaiter {
         this.zipWorker = null;
 
         const downloadButton = document.getElementById("save-all-to-file");
-
         downloadButton.classList.remove("spin");
         downloadButton.title = "Save all outputs to a zip file";
         downloadButton.setAttribute("data-original-title", "Save all outputs to a zip file");
-
         downloadButton.firstElementChild.innerHTML = "archive";
-
     }
-
 
     /**
      * Handle messages sent back by the ZipWorker
@@ -652,7 +1038,7 @@ class OutputWaiter {
         }
 
         const file = new File([r.zippedFile], r.filename);
-        FileSaver.saveAs(file, r.filename, false);
+        FileSaver.saveAs(file, r.filename, {autoBom: false});
 
         this.terminateZipWorker();
     }
@@ -667,9 +1053,9 @@ class OutputWaiter {
         const tabsWrapper = document.getElementById("output-tabs");
         const numTabs = tabsWrapper.children.length;
 
-        if (!this.manager.tabs.getOutputTabItem(inputNum) && numTabs < this.maxTabs) {
+        if (!this.manager.tabs.getTabItem(inputNum, "output") && numTabs < this.maxTabs) {
             // Create a new tab element
-            const newTab = this.manager.tabs.createOutputTabElement(inputNum, changeTab);
+            const newTab = this.manager.tabs.createTabElement(inputNum, changeTab, "output");
             tabsWrapper.appendChild(newTab);
         } else if (numTabs === this.maxTabs) {
             // Can't create a new tab
@@ -691,14 +1077,11 @@ class OutputWaiter {
      */
     changeTab(inputNum, changeInput = false) {
         if (!this.outputExists(inputNum)) return;
-        const currentNum = this.manager.tabs.getActiveOutputTab();
+        const currentNum = this.manager.tabs.getActiveTab("output");
 
         this.hideMagicButton();
 
-        this.manager.highlighter.removeHighlights();
-        getSelection().removeAllRanges();
-
-        if (!this.manager.tabs.changeOutputTab(inputNum)) {
+        if (!this.manager.tabs.changeTab(inputNum, "output")) {
             let direction = "right";
             if (currentNum > inputNum) {
                 direction = "left";
@@ -708,17 +1091,14 @@ class OutputWaiter {
             const tabsLeft = (newOutputs[0] !== this.getSmallestInputNum());
             const tabsRight = (newOutputs[newOutputs.length - 1] !== this.getLargestInputNum());
 
-            this.manager.tabs.refreshOutputTabs(newOutputs, inputNum, tabsLeft, tabsRight);
+            this.manager.tabs.refreshTabs(newOutputs, inputNum, tabsLeft, tabsRight, "output");
 
             for (let i = 0; i < newOutputs.length; i++) {
                 this.displayTabInfo(newOutputs[i]);
             }
         }
 
-        debounce(this.set, 50, "setOutput", this, [inputNum])();
-
-        document.getElementById("output-html").scroll(0, 0);
-        document.getElementById("output-text").scroll(0, 0);
+        this.set(inputNum);
 
         if (changeInput) {
             this.manager.input.changeTab(inputNum, false);
@@ -732,6 +1112,7 @@ class OutputWaiter {
      */
     changeTabClick(mouseEvent) {
         if (!mouseEvent.target) return;
+
         const tabNum = mouseEvent.target.parentElement.getAttribute("inputNum");
         if (tabNum) {
             this.changeTab(parseInt(tabNum, 10), this.app.options.syncTabs);
@@ -801,7 +1182,7 @@ class OutputWaiter {
      * Handler for changing to the left tab
      */
     changeTabLeft() {
-        const currentTab = this.manager.tabs.getActiveOutputTab();
+        const currentTab = this.manager.tabs.getActiveTab("output");
         this.changeTab(this.getPreviousInputNum(currentTab), this.app.options.syncTabs);
     }
 
@@ -809,7 +1190,7 @@ class OutputWaiter {
      * Handler for changing to the right tab
      */
     changeTabRight() {
-        const currentTab = this.manager.tabs.getActiveOutputTab();
+        const currentTab = this.manager.tabs.getActiveTab("output");
         this.changeTab(this.getNextInputNum(currentTab), this.app.options.syncTabs);
     }
 
@@ -820,7 +1201,7 @@ class OutputWaiter {
         const min = this.getSmallestInputNum(),
             max = this.getLargestInputNum();
 
-        let tabNum = window.prompt(`Enter tab number (${min} - ${max}):`, this.manager.tabs.getActiveOutputTab().toString());
+        let tabNum = window.prompt(`Enter tab number (${min} - ${max}):`, this.manager.tabs.getActiveTab("output").toString());
         if (tabNum === null) return;
         tabNum = parseInt(tabNum, 10);
 
@@ -861,9 +1242,7 @@ class OutputWaiter {
                 nums.push(newNum);
             }
         }
-        nums.sort(function(a, b) {
-            return a - b;
-        });
+        nums.sort((a, b) => a - b); // Forces the sort function to treat a and b as numbers
         return nums;
     }
 
@@ -939,7 +1318,7 @@ class OutputWaiter {
     removeTab(inputNum) {
         if (!this.outputExists(inputNum)) return;
 
-        const tabElement = this.manager.tabs.getOutputTabItem(inputNum);
+        const tabElement = this.manager.tabs.getTabItem(inputNum, "output");
 
         this.removeOutput(inputNum);
 
@@ -950,6 +1329,7 @@ class OutputWaiter {
 
     /**
      * Redraw the entire tab bar to remove any outdated tabs
+     *
      * @param {number} activeTab
      * @param {string} direction - Either "left" or "right"
      */
@@ -958,12 +1338,11 @@ class OutputWaiter {
             tabsLeft = (newNums[0] !== this.getSmallestInputNum() && newNums.length > 0),
             tabsRight = (newNums[newNums.length - 1] !== this.getLargestInputNum() && newNums.length > 0);
 
-        this.manager.tabs.refreshOutputTabs(newNums, activeTab, tabsLeft, tabsRight);
+        this.manager.tabs.refreshTabs(newNums, activeTab, tabsLeft, tabsRight, "output");
 
         for (let i = 0; i < newNums.length; i++) {
             this.displayTabInfo(newNums[i]);
         }
-
     }
 
     /**
@@ -972,7 +1351,8 @@ class OutputWaiter {
      * @param {number} inputNum
      */
     async displayTabInfo(inputNum) {
-        if (!this.outputExists(inputNum)) return;
+        // Don't display anything if there are no, or only one, tabs
+        if (!this.outputExists(inputNum) || Object.keys(this.outputs).length <= 1) return;
 
         const dish = this.getOutputDish(inputNum);
         let tabStr = "";
@@ -981,12 +1361,12 @@ class OutputWaiter {
             tabStr = await this.getDishTitle(this.getOutputDish(inputNum), 100);
             tabStr = tabStr.replace(/[\n\r]/g, "");
         }
-        this.manager.tabs.updateOutputTabHeader(inputNum, tabStr);
+        this.manager.tabs.updateTabHeader(inputNum, tabStr, "output");
         if (this.manager.worker.recipeConfig !== undefined) {
-            this.manager.tabs.updateOutputTabProgress(inputNum, this.outputs[inputNum].progress, this.manager.worker.recipeConfig.length);
+            this.manager.tabs.updateTabProgress(inputNum, this.outputs[inputNum]?.progress, this.manager.worker.recipeConfig.length, "output");
         }
 
-        const tabItem = this.manager.tabs.getOutputTabItem(inputNum);
+        const tabItem = this.manager.tabs.getTabItem(inputNum, "output");
         if (tabItem) {
             if (this.outputs[inputNum].status === "error") {
                 tabItem.style.color = "#FF0000";
@@ -997,38 +1377,11 @@ class OutputWaiter {
     }
 
     /**
-     * Displays information about the output.
-     *
-     * @param {number} length - The length of the current output string
-     * @param {number} lines - The number of the lines in the current output string
-     * @param {number} duration - The length of time (ms) it took to generate the output
-     */
-    setOutputInfo(length, lines, duration) {
-        if (!length) return;
-        let width = length.toString().length;
-        width = width < 4 ? 4 : width;
-
-        const lengthStr = length.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
-        const timeStr = (duration.toString() + "ms").padStart(width, " ").replace(/ /g, "&nbsp;");
-
-        let msg = "time: " + timeStr + "<br>length: " + lengthStr;
-
-        if (typeof lines === "number") {
-            const linesStr = lines.toString().padStart(width, " ").replace(/ /g, "&nbsp;");
-            msg += "<br>lines: " + linesStr;
-        }
-
-        document.getElementById("output-info").innerHTML = msg;
-        document.getElementById("input-selection-info").innerHTML = "";
-        document.getElementById("output-selection-info").innerHTML = "";
-    }
-
-    /**
      * Triggers the BackgroundWorker to attempt Magic on the current output.
      */
     async backgroundMagic() {
         this.hideMagicButton();
-        const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
+        const dish = this.getOutputDish(this.manager.tabs.getActiveTab("output"));
         if (!this.app.options.autoMagic || dish === null) return;
         const buffer = await this.getDishBuffer(dish);
         const sample = buffer.slice(0, 1000) || "";
@@ -1105,92 +1458,6 @@ class OutputWaiter {
         magicButton.setAttribute("data-original-title", "Magic!");
     }
 
-
-    /**
-     * Handler for file slice display events.
-     */
-    async displayFileSlice() {
-        document.querySelector("#output-loader .loading-msg").textContent = "Loading file slice...";
-        this.toggleLoader(true);
-        const outputText = document.getElementById("output-text"),
-            outputHtml = document.getElementById("output-html"),
-            outputFile = document.getElementById("output-file"),
-            outputHighlighter = document.getElementById("output-highlighter"),
-            inputHighlighter = document.getElementById("input-highlighter"),
-            showFileOverlay = document.getElementById("show-file-overlay"),
-            sliceFromEl = document.getElementById("output-file-slice-from"),
-            sliceToEl = document.getElementById("output-file-slice-to"),
-            sliceFrom = parseInt(sliceFromEl.value, 10) * 1024,
-            sliceTo = parseInt(sliceToEl.value, 10) * 1024,
-            output = this.outputs[this.manager.tabs.getActiveOutputTab()].data;
-
-        let str;
-        if (output.type === "ArrayBuffer") {
-            str = Utils.arrayBufferToStr(output.result.slice(sliceFrom, sliceTo));
-        } else {
-            str = Utils.arrayBufferToStr(await this.getDishBuffer(output.dish).slice(sliceFrom, sliceTo));
-        }
-
-        outputText.classList.remove("blur");
-        showFileOverlay.style.display = "block";
-        outputText.value = Utils.printable(str, true);
-
-        outputText.style.display = "block";
-        outputHtml.style.display = "none";
-        outputFile.style.display = "none";
-        outputHighlighter.display = "block";
-        inputHighlighter.display = "block";
-
-        this.toggleLoader(false);
-    }
-
-    /**
-     * Handler for showing an entire file at user's discretion (even if it's way too big)
-     */
-    async showAllFile() {
-        document.querySelector("#output-loader .loading-msg").textContent = "Loading entire file at user instruction. This may cause a crash...";
-        this.toggleLoader(true);
-        const outputText = document.getElementById("output-text"),
-            outputHtml = document.getElementById("output-html"),
-            outputFile = document.getElementById("output-file"),
-            outputHighlighter = document.getElementById("output-highlighter"),
-            inputHighlighter = document.getElementById("input-highlighter"),
-            showFileOverlay = document.getElementById("show-file-overlay"),
-            output = this.outputs[this.manager.tabs.getActiveOutputTab()].data;
-
-        let str;
-        if (output.type === "ArrayBuffer") {
-            str = Utils.arrayBufferToStr(output.result);
-        } else {
-            str = Utils.arrayBufferToStr(await this.getDishBuffer(output.dish));
-        }
-
-        outputText.classList.remove("blur");
-        showFileOverlay.style.display = "none";
-        outputText.value = Utils.printable(str, true);
-
-        outputText.style.display = "block";
-        outputHtml.style.display = "none";
-        outputFile.style.display = "none";
-        outputHighlighter.display = "block";
-        inputHighlighter.display = "block";
-
-        this.toggleLoader(false);
-    }
-
-    /**
-     * Handler for show file overlay events
-     *
-     * @param {Event} e
-     */
-    showFileOverlayClick(e) {
-        const showFileOverlay = e.target;
-
-        document.getElementById("output-text").classList.add("blur");
-        showFileOverlay.style.display = "none";
-        this.set(this.manager.tabs.getActiveOutputTab());
-    }
-
     /**
      * Handler for extract file events.
      *
@@ -1214,58 +1481,20 @@ class OutputWaiter {
      * Copies the output to the clipboard
      */
     async copyClick() {
-        const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
+        const dish = this.getOutputDish(this.manager.tabs.getActiveTab("output"));
         if (dish === null) {
             this.app.alert("Could not find data to copy. Has this output been baked yet?", 3000);
             return;
         }
 
-        const output = await dish.get(Dish.STRING);
+        const output = await this.getDishStr(dish);
+        const self = this;
 
-        // Create invisible textarea to populate with the raw dish string (not the printable version that
-        // contains dots instead of the actual bytes)
-        const textarea = document.createElement("textarea");
-        textarea.style.position = "fixed";
-        textarea.style.top = 0;
-        textarea.style.left = 0;
-        textarea.style.width = 0;
-        textarea.style.height = 0;
-        textarea.style.border = "none";
-
-        textarea.value = output;
-        document.body.appendChild(textarea);
-
-        let success = false;
-        try {
-            textarea.select();
-            success = output && document.execCommand("copy");
-        } catch (err) {
-            success = false;
-        }
-
-        if (success) {
-            this.app.alert("Copied raw output successfully.", 2000);
-        } else {
-            this.app.alert("Sorry, the output could not be copied.", 3000);
-        }
-
-        // Clean up
-        document.body.removeChild(textarea);
-    }
-
-    /**
-     * Returns true if the output contains carriage returns
-     *
-     * @returns {boolean}
-     */
-    async containsCR() {
-        const dish = this.getOutputDish(this.manager.tabs.getActiveOutputTab());
-        if (dish === null) return;
-
-        if (dish.type === Dish.STRING) {
-            const data = await dish.get(Dish.STRING);
-            return data.indexOf("\r") >= 0;
-        }
+        navigator.clipboard.writeText(output).then(function() {
+            self.app.alert("Copied raw output successfully.", 2000);
+        }, function(err) {
+            self.app.alert("Sorry, the output could not be copied.", 3000);
+        });
     }
 
     /**
@@ -1273,93 +1502,25 @@ class OutputWaiter {
      * Moves the current output into the input textarea.
      */
     async switchClick() {
-        const activeTab = this.manager.tabs.getActiveOutputTab();
-        const transferable = [];
-
+        const activeTab = this.manager.tabs.getActiveTab("output");
         const switchButton = document.getElementById("switch");
+
         switchButton.classList.add("spin");
         switchButton.disabled = true;
         switchButton.firstElementChild.innerHTML = "autorenew";
         $(switchButton).tooltip("hide");
 
-        let active = await this.getDishBuffer(this.getOutputDish(activeTab));
+        const activeData = await this.getDishBuffer(this.getOutputDish(activeTab));
 
-        if (!this.outputExists(activeTab)) {
-            this.resetSwitchButton();
-            return;
+        if (this.outputExists(activeTab)) {
+            this.manager.input.set(activeTab, {
+                type: "userinput",
+                buffer: activeData,
+                encoding: this.outputs[activeTab].encoding,
+                eolSequence: this.outputs[activeTab].eolSequence
+            });
         }
 
-        if (this.outputs[activeTab].data.type === "string" &&
-            active.byteLength <= this.app.options.ioDisplayThreshold * 1024) {
-            const dishString = await this.getDishStr(this.getOutputDish(activeTab));
-            if (!await this.manager.input.preserveCarriageReturns(dishString)) {
-                active = dishString;
-            }
-        } else {
-            transferable.push(active);
-        }
-
-        this.manager.input.inputWorker.postMessage({
-            action: "inputSwitch",
-            data: {
-                inputNum: activeTab,
-                outputData: active
-            }
-        }, transferable);
-    }
-
-    /**
-     * Handler for when the inputWorker has switched the inputs.
-     * Stores the old input
-     *
-     * @param {object} switchData
-     * @param {number} switchData.inputNum
-     * @param {string | object} switchData.data
-     * @param {ArrayBuffer} switchData.data.fileBuffer
-     * @param {number} switchData.data.size
-     * @param {string} switchData.data.type
-     * @param {string} switchData.data.name
-     */
-    inputSwitch(switchData) {
-        this.switchOrigData = switchData;
-        document.getElementById("undo-switch").disabled = false;
-
-        this.resetSwitchButton();
-
-    }
-
-    /**
-     * Handler for undo switch click events.
-     * Removes the output from the input and replaces the input that was removed.
-     */
-    undoSwitchClick() {
-        this.manager.input.updateInputObj(this.switchOrigData.inputNum, this.switchOrigData.data);
-
-        this.manager.input.fileLoaded(this.switchOrigData.inputNum);
-
-        this.resetSwitch();
-    }
-
-    /**
-     * Removes the switch data and resets the switch buttons
-     */
-    resetSwitch() {
-        if (this.switchOrigData !== undefined) {
-            delete this.switchOrigData;
-        }
-
-        const undoSwitch = document.getElementById("undo-switch");
-        undoSwitch.disabled = true;
-        $(undoSwitch).tooltip("hide");
-
-        this.resetSwitchButton();
-    }
-
-    /**
-     * Resets the switch button to its usual state
-     */
-    resetSwitchButton() {
-        const switchButton = document.getElementById("switch");
         switchButton.classList.remove("spin");
         switchButton.disabled = false;
         switchButton.firstElementChild.innerHTML = "open_in_browser";
@@ -1508,6 +1669,18 @@ class OutputWaiter {
 
         $("#output-tab-modal").modal("hide");
         this.changeTab(inputNum, this.app.options.syncTabs);
+    }
+
+
+    /**
+     * Sets the console log level in the workers.
+     */
+    setLogLevel() {
+        if (!this.zipWorker) return;
+        this.zipWorker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
     }
 }
 

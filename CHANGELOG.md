@@ -13,6 +13,70 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.13.0] - 2024-03-30
+- Added 'FangURL' operation [@breakersall] [@arnydo] | [#1591] [#654]
+
+### [10.12.0] - 2024-03-29
+- Added 'Salsa20' and 'XSalsa20' operation [@joostrijneveld] | [#1750]
+
+### [10.11.0] - 2024-03-29
+- Add HEIC/HEIF file signatures [@simonw] | [#1757]
+- Update xmldom to fix medium security vulnerability [@chriswhite199] | [#1752]
+- Update JSONWebToken to fix medium security vulnerability [@chriswhite199] | [#1753]
+
+### [10.10.0] - 2024-03-27
+- Added 'JA4 Fingerprint' operation [@n1474335] | [#1759]
+
+### [10.9.0] - 2024-03-26
+- Line ending sequences and UTF-8 character encoding are now detected automatically [@n1474335] | [65ffd8d]
+
+### [10.8.0] - 2024-02-13
+- Add official Docker images [@AshCorr] | [#1699]
+
+### [10.7.0] - 2024-02-09
+- Added 'File Tree' operation [@sw5678] | [#1667]
+- Added 'RISON' operation [@sg5506844] | [#1555]
+- Added 'MurmurHash3' operation [@AliceGrey] | [#1694]
+
+### [10.6.0] -  2024-02-03
+- Updated 'Forensics Wiki' URLs to new domain [@a3957273] | [#1703]
+- Added 'LZNT1 Decompress' operation [@0xThiebaut] | [#1675]
+- Updated 'Regex Expression' UUID matcher [@cnotin] | [#1678]
+- Removed duplicate 'hover' message within baking info [@KevinSJ] | [#1541]
+
+### [10.5.0] - 2023-07-14
+- Added GOST Encrypt, Decrypt, Sign, Verify, Key Wrap, and Key Unwrap operations [@n1474335] | [#592]
+
+### [10.4.0] - 2023-03-24
+- Added 'Generate De Bruijn Sequence' operation [@gchq77703] | [#493]
+
+### [10.3.0] - 2023-03-24
+- Added 'Argon2' and 'Argon2 compare' operations [@Xenonym] | [#661]
+
+### [10.2.0] - 2023-03-23
+- Added 'Derive HKDF key' operation [@mikecat] | [#1528]
+
+### [10.1.0] - 2023-03-23
+- Added 'Levenshtein Distance' operation [@mikecat] | [#1498]
+- Added 'Swap case' operation [@mikecat] | [#1499]
+
+## [10.0.0] - 2023-03-22
+- [Full details explained here](https://github.com/gchq/CyberChef/wiki/Character-encoding,-EOL-separators,-and-editor-features)
+- Status bars added to the Input and Output [@n1474335] | [#1405]
+- Character encoding selection added to the Input and Output [@n1474335] | [#1405]
+- End of line separator selection added to the Input and Output [@n1474335] | [#1405]
+- Non-printable characters are rendered as control character pictures [@n1474335] | [#1405]
+- Loaded files can now be edited in the Input [@n1474335] | [#1405]
+- Various editor features added such as multiple selections and bracket matching [@n1474335] | [#1405]
+- Contextual help added, activated by pressing F1 while hovering over features [@n1474335] | [#1405]
+- Many, many UI tests added for I/O features and operations [@n1474335] | [#1405]
+
+<details>
+    <summary>Click to expand v9 minor versions</summary>
+
+### [9.55.0] - 2022-12-09
+- Added 'AMF Encode' and 'AMF Decode' operations [@n1474335] | [760eff4]
+
 ### [9.54.0] - 2022-11-25
 - Added 'Rabbit' operation [@mikecat] | [#1450]
 
@@ -178,6 +242,8 @@ All major and minor version changes will be documented in this file. Details of 
 - 'Parse SSH Host Key' operation added [@j433866] | [#595]
 - 'Defang IP Addresses' operation added [@h345983745] | [#556]
 
+</details>
+
 ## [9.0.0] - 2019-07-09
 - [Multiple inputs](https://github.com/gchq/CyberChef/wiki/Multiple-Inputs) are now supported in the main web UI, allowing you to upload and process multiple files at once [@j433866] | [#566]
 - A [Node.js API](https://github.com/gchq/CyberChef/wiki/Node-API) has been implemented, meaning that CyberChef can now be used as a library, either to provide specific operations, or an entire baking environment [@d98762625] | [#291]
@@ -337,8 +403,21 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
-
-
+[10.13.0]: https://github.com/gchq/CyberChef/releases/tag/v10.13.0
+[10.12.0]: https://github.com/gchq/CyberChef/releases/tag/v10.12.0
+[10.11.0]: https://github.com/gchq/CyberChef/releases/tag/v10.11.0
+[10.10.0]: https://github.com/gchq/CyberChef/releases/tag/v10.10.0
+[10.9.0]: https://github.com/gchq/CyberChef/releases/tag/v10.9.0
+[10.8.0]: https://github.com/gchq/CyberChef/releases/tag/v10.7.0
+[10.7.0]: https://github.com/gchq/CyberChef/releases/tag/v10.7.0
+[10.6.0]: https://github.com/gchq/CyberChef/releases/tag/v10.6.0
+[10.5.0]: https://github.com/gchq/CyberChef/releases/tag/v10.5.0
+[10.4.0]: https://github.com/gchq/CyberChef/releases/tag/v10.4.0
+[10.3.0]: https://github.com/gchq/CyberChef/releases/tag/v10.3.0
+[10.2.0]: https://github.com/gchq/CyberChef/releases/tag/v10.2.0
+[10.1.0]: https://github.com/gchq/CyberChef/releases/tag/v10.1.0
+[10.0.0]: https://github.com/gchq/CyberChef/releases/tag/v10.0.0
+[9.55.0]: https://github.com/gchq/CyberChef/releases/tag/v9.55.0
 [9.54.0]: https://github.com/gchq/CyberChef/releases/tag/v9.54.0
 [9.53.0]: https://github.com/gchq/CyberChef/releases/tag/v9.53.0
 [9.52.0]: https://github.com/gchq/CyberChef/releases/tag/v9.52.0
@@ -484,6 +563,20 @@ All major and minor version changes will be documented in this file. Details of 
 [@valdelaseras]: https://github.com/valdelaseras
 [@brun0ne]: https://github.com/brun0ne
 [@joostrijneveld]: https://github.com/joostrijneveld
+[@Xenonym]: https://github.com/Xenonym
+[@gchq77703]: https://github.com/gchq77703
+[@a3957273]: https://github.com/a3957273
+[@0xThiebaut]: https://github.com/0xThiebaut
+[@cnotin]: https://github.com/cnotin
+[@KevinSJ]: https://github.com/KevinSJ
+[@sw5678]: https://github.com/sw5678
+[@sg5506844]: https://github.com/sg5506844
+[@AliceGrey]: https://github.com/AliceGrey
+[@AshCorr]: https://github.com/AshCorr
+[@simonw]: https://github.com/simonw
+[@chriswhite199]: https://github.com/chriswhite199
+[@breakersall]: https://github.com/breakersall
+
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
 [9a33498]: https://github.com/gchq/CyberChef/commit/9a33498fed26a8df9c9f35f39a78a174bf50a513
@@ -492,6 +585,8 @@ All major and minor version changes will be documented in this file. Details of 
 [dd18e52]: https://github.com/gchq/CyberChef/commit/dd18e529939078b89867297b181a584e8b2cc7da
 [a895d1d]: https://github.com/gchq/CyberChef/commit/a895d1d82a2f92d440a0c5eca2bc7c898107b737
 [31a7f83]: https://github.com/gchq/CyberChef/commit/31a7f83b82e78927f89689f323fcb9185144d6ff
+[760eff4]: https://github.com/gchq/CyberChef/commit/760eff49b5307aaa3104c5e5b437ffe62299acd1
+[65ffd8d]: https://github.com/gchq/CyberChef/commit/65ffd8d65d88eb369f6f61a5d1d0f807179bffb7
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -587,6 +682,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#1266]: https://github.com/gchq/CyberChef/pull/1266
 [#1250]: https://github.com/gchq/CyberChef/pull/1250
 [#1308]: https://github.com/gchq/CyberChef/pull/1308
+[#1405]: https://github.com/gchq/CyberChef/pull/1405
 [#1421]: https://github.com/gchq/CyberChef/pull/1421
 [#1427]: https://github.com/gchq/CyberChef/pull/1427
 [#1472]: https://github.com/gchq/CyberChef/pull/1472
@@ -594,4 +690,23 @@ All major and minor version changes will be documented in this file. Details of 
 [#1466]: https://github.com/gchq/CyberChef/pull/1466
 [#1456]: https://github.com/gchq/CyberChef/pull/1456
 [#1450]: https://github.com/gchq/CyberChef/pull/1450
-
+[#1498]: https://github.com/gchq/CyberChef/pull/1498
+[#1499]: https://github.com/gchq/CyberChef/pull/1499
+[#1528]: https://github.com/gchq/CyberChef/pull/1528
+[#661]: https://github.com/gchq/CyberChef/pull/661
+[#493]: https://github.com/gchq/CyberChef/pull/493
+[#592]: https://github.com/gchq/CyberChef/issues/592
+[#1703]: https://github.com/gchq/CyberChef/issues/1703
+[#1675]: https://github.com/gchq/CyberChef/issues/1675
+[#1678]: https://github.com/gchq/CyberChef/issues/1678
+[#1541]: https://github.com/gchq/CyberChef/issues/1541
+[#1667]: https://github.com/gchq/CyberChef/issues/1667
+[#1555]: https://github.com/gchq/CyberChef/issues/1555
+[#1694]: https://github.com/gchq/CyberChef/issues/1694
+[#1699]: https://github.com/gchq/CyberChef/issues/1694
+[#1757]: https://github.com/gchq/CyberChef/issues/1757
+[#1752]: https://github.com/gchq/CyberChef/issues/1752
+[#1753]: https://github.com/gchq/CyberChef/issues/1753
+[#1750]: https://github.com/gchq/CyberChef/issues/1750
+[#1591]: https://github.com/gchq/CyberChef/issues/1591
+[#654]: https://github.com/gchq/CyberChef/issues/654

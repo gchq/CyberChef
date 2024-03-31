@@ -29,7 +29,7 @@ module.exports = function (grunt) {
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
         [
             "eslint", "clean:prod", "clean:config", "exec:generateConfig", "findModules", "webpack:web",
-            "copy:standalone", "zip:standalone", "clean:standalone", "chmod"
+            "copy:standalone", "zip:standalone", "clean:standalone", "exec:calcDownloadHash", "chmod"
         ]);
 
     grunt.registerTask("node",
@@ -197,6 +197,7 @@ module.exports = function (grunt) {
         },
         webpack: {
             options: webpackConfig,
+            myConfig: webpackConfig,
             web: webpackProdConf(),
         },
         "webpack-dev-server": {
@@ -323,6 +324,22 @@ module.exports = function (grunt) {
             }
         },
         exec: {
+            calcDownloadHash: {
+                command: function () {
+                    switch (process.platform) {
+                        case "darwin":
+                            return chainCommands([
+                                `shasum -a 256 build/prod/CyberChef_v${pkg.version}.zip | awk '{print $1;}' > build/prod/sha256digest.txt`,
+                                `sed -i '' -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`
+                            ]);
+                        default:
+                            return chainCommands([
+                                `sha256sum build/prod/CyberChef_v${pkg.version}.zip | awk '{print $1;}' > build/prod/sha256digest.txt`,
+                                `sed -i -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`
+                            ]);
+                    }
+                },
+            },
             repoSize: {
                 command: chainCommands([
                     "git ls-files | wc -l | xargs printf '\n%b\ttracked files\n'",
@@ -390,13 +407,25 @@ module.exports = function (grunt) {
                 stdout: false,
             },
             fixCryptoApiImports: {
-                command: [
-                    `[[ "$OSTYPE" == "darwin"* ]]`,
-                    "&&",
-                    `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 sed -i '' -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`,
-                    "||",
-                    `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 sed -i -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`
-                ].join(" "),
+                command: function () {
+                    switch (process.platform) {
+                        case "darwin":
+                            return `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 sed -i '' -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`;
+                        default:
+                            return `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 sed -i -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`;
+                    }
+                },
+                stdout: false
+            },
+            fixSnackbarMarkup: {
+                command: function () {
+                    switch (process.platform) {
+                        case "darwin":
+                            return `sed -i '' 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`;
+                        default:
+                            return `sed -i 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`;
+                    }
+                },
                 stdout: false
             }
         },
