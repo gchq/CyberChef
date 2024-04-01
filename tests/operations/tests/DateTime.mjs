@@ -38,7 +38,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "DateTime Delta",
-                args: ["Standard date and time", "DD/MM/YYYY HH:mm:ss", "+0.0:01:0"],
+                args: ["Standard date and time", "DD/MM/YYYY HH:mm:ss", "Add", 0, 0, 1, 0],
             },
         ],
     },
@@ -49,7 +49,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "DateTime Delta",
-                args: ["Standard date and time", "DD/MM/YYYY HH:mm:ss", "-0.1:00:0"],
+                args: ["Standard date and time", "DD/MM/YYYY HH:mm:ss", "Subtract", 0, 1, 0, 0],
             },
         ],
     },
