@@ -18,7 +18,7 @@ class ExtractHashes extends Operation {
     constructor() {
         super();
 
-        this.name = "Extract Hashes";
+        this.name = "Extract hashes";
         this.module = "Regex";
         this.description = "Extracts potential hashes based on hash character length";
         this.infoURL = "https://en.wikipedia.org/wiki/Comparison_of_cryptographic_hash_functions";
