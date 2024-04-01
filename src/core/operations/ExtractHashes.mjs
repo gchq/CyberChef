@@ -68,8 +68,8 @@ class ExtractHashes extends Operation {
             const regex = new RegExp(`(\\b|^)[a-f0-9]{${hashCharacterLength}}(\\b|$)`, "g");
             const searchResults = search(input, regex, null, false);
 
-            hashCount += searchResults.split("\n").length - 1;
-            results.push(searchResults);
+            hashCount += searchResults.length;
+            results.push(...searchResults);
         }
 
         let output = "";
@@ -77,7 +77,7 @@ class ExtractHashes extends Operation {
             output = `Total Results: ${hashCount}\n\n`;
         }
 
-        output = output + results.join("");
+        output = output + results.join("\n");
         return output;
     }
 
