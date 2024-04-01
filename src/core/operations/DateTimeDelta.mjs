@@ -9,30 +9,7 @@ import moment from "moment-timezone";
 import {DATETIME_FORMATS, FORMAT_EXAMPLES} from "../lib/DateTime.mjs";
 
 /**
-  * @param {string} timeString
-  * @returns {string} 
-*/
-function parseTimeString(timeString) {
-    // Split the string into its components
-    const parts = timeString.split(":");
-    // Extract the sign, days, hours, minutes, and seconds
-    const sign = parts[0][0] === "-" ? "-" : "+";
-    const days = parseInt(parts[0].split(".")[0].slice(1), 10);
-    const hours = parseInt(parts[0].split(".")[1], 10);
-    const minutes = parseInt(parts[1], 10);
-    const seconds = parseInt(parts[2], 10);
-
-    return {
-        sign,
-        days,
-        hours,
-        minutes,
-        seconds
-    };
-}
-
-/**
- * DateTime Delta operation 
+ * DateTime Delta operation
  */
 class DateTimeDelta extends Operation {
 
@@ -61,9 +38,29 @@ class DateTimeDelta extends Operation {
                 "value": "DD/MM/YYYY HH:mm:ss"
             },
             {
-                "name": "Time Delta",
-                "type": "binaryString",
-                "value": "+0.00:00:00"
+                "name": "Time Operation",
+                "type": "option",
+                "value": ["Add", "Subtract"]
+            },
+            {
+                "name": "Days",
+                "type": "number",
+                "value": 0
+            },
+            {
+                "name": "Hours",
+                "type": "number",
+                "value": 0
+            },
+            {
+                "name": "Minutes",
+                "type": "number",
+                "value": 0
+            },
+            {
+                "name": "Seconds",
+                "type": "number",
+                "value": 0
             }
 
         ];
@@ -76,31 +73,33 @@ class DateTimeDelta extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const inputFormat = args[1],
-            inputTimezone = "UTC";
-        const deltaStr = args[2];
-
+        const inputTimezone = "UTC";
+        const inputFormat = args[1];
+        const operationType = args[2];
+        const daysDelta = args[3];
+        const hoursDelta = args[4];
+        const minutesDelta = args[5];
+        const secondsDelta = args[6];
         let date = "";
+
         try {
             date = moment.tz(input, inputFormat, inputTimezone);
             if (!date || date.format() === "Invalid date") throw Error;
         } catch (err) {
             return `Invalid format.\n\n${FORMAT_EXAMPLES}`;
         }
-
-        const deltaDict = parseTimeString(deltaStr);
         let newDate;
-        if (deltaDict.sign === "-") {
-            newDate = date.add(-deltaDict.days, "days")
-                .add(-deltaDict.hours, "hours")
-                .add(-deltaDict.minutes, "minutes")
-                .add(-deltaDict.seconds, "seconds");
+        if (operationType === "Add") {
+            newDate = date.add(daysDelta, "days")
+                .add(hoursDelta, "hours")
+                .add(minutesDelta, "minutes")
+                .add(secondsDelta, "seconds");
 
         } else {
-            newDate = date.add(deltaDict.days, "days")
-                .add(deltaDict.hours, "hours")
-                .add(deltaDict.minutes, "minutes")
-                .add(deltaDict.seconds, "seconds");
+            newDate = date.add(-daysDelta, "days")
+                .add(-hoursDelta, "hours")
+                .add(-minutesDelta, "minutes")
+                .add(-secondsDelta, "seconds");
         }
         return newDate.tz(inputTimezone).format(inputFormat.replace(/[<>]/g, ""));
     }
