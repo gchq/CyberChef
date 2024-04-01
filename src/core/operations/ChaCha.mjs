@@ -191,7 +191,7 @@ ChaCha uses a nonce of 8 or 12 bytes (64 or 96 bits).`);
         if (outputType === "Hex") {
             return toHex(output);
         } else {
-            return Utils.arrayBufferToStr(output);
+            return Utils.arrayBufferToStr(Uint8Array.from(output).buffer);
         }
     }
 
