@@ -179,7 +179,8 @@
             "RSA Verify",
             "RSA Encrypt",
             "RSA Decrypt",
-            "Parse SSH Host Key"
+            "Parse SSH Host Key",
+            "Parse CSR"
         ]
     },
     {
@@ -321,6 +322,7 @@
             "To UNIX Timestamp",
             "Windows Filetime to UNIX Timestamp",
             "UNIX Timestamp to Windows Filetime",
+            "DateTime Delta",
             "Extract dates",
             "Get Time",
             "Sleep"
@@ -337,6 +339,7 @@
             "Extract domains",
             "Extract file paths",
             "Extract dates",
+            "Extract hashes",
             "Regular expression",
             "XPath expression",
             "JPath expression",
