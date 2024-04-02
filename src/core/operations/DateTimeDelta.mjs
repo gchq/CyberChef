@@ -24,7 +24,7 @@ class DateTimeDelta extends Operation {
         this.description = "Calculates a new DateTime value given an input DateTime value and a time difference (delta) from the input DateTime value.";
         this.infoURL = "";
         this.inputType = "string";
-        this.outputType = "string";
+        this.outputType = "html";
         this.args = [
             {
                 "name": "Built in formats",
