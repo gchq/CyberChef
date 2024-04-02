@@ -35,10 +35,18 @@ class Fletcher32Checksum extends Operation {
     run(input, args) {
         let a = 0,
             b = 0;
-        input = new Uint8Array(input);
+        if (ArrayBuffer.isView(input)) {
+            input = new DataView(input.buffer, input.byteOffset, input.byteLength);
+        } else {
+            input = new DataView(input);
+        }
 
-        for (let i = 0; i < input.length; i++) {
-            a = (a + input[i]) % 0xffff;
+        for (let i = 0; i < input.byteLength - 1; i += 2) {
+            a = (a + input.getUint16(i, true)) % 0xffff;
+            b = (b + a) % 0xffff;
+        }
+        if (input.byteLength % 2 !== 0) {
+            a = (a + input.getUint8(input.byteLength - 1)) % 0xffff;
             b = (b + a) % 0xffff;
         }
 

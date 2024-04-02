@@ -7,10 +7,10 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
-import {isImage} from "../lib/FileType";
-import {toBase64} from "../lib/Base64";
+import {isImage} from "../lib/FileType.mjs";
+import {toBase64} from "../lib/Base64.mjs";
+import {isWorkerEnvironment} from "../Utils.mjs";
 import jimp from "jimp";
-import {isWorkerEnvironment} from "../Utils";
 
 /**
  * Generate Image operation

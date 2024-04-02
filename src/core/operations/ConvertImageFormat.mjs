@@ -88,7 +88,7 @@ class ConvertImageFormat extends Operation {
             "Sub": jimp.PNG_FILTER_SUB,
             "Up": jimp.PNG_FILTER_UP,
             "Average": jimp.PNG_FILTER_AVERAGE,
-            "Paeth": jimp.PNG_FILTER_PATH // Incorrect spelling in Jimp library
+            "Paeth": jimp.PNG_FILTER_PATH
         };
 
         const mime = formatMap[format];

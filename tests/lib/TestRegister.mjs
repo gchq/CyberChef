@@ -12,6 +12,7 @@
 import Chef from "../../src/core/Chef.mjs";
 import Utils from "../../src/core/Utils.mjs";
 import cliProgress from "cli-progress";
+import log from "loglevel";
 
 /**
  * Object to store and run the list of tests.
@@ -50,6 +51,9 @@ class TestRegister {
      * Runs all the tests in the register.
      */
     async runTests () {
+        // Turn off logging to avoid messy errors
+        log.setLevel("silent", false);
+
         const progBar = new cliProgress.SingleBar({
             format: formatter,
             stopOnComplete: true
@@ -70,9 +74,7 @@ class TestRegister {
             const result = await chef.bake(
                 test.input,
                 test.recipeConfig,
-                {},
-                0,
-                false
+                { returnType: "string" }
             );
 
             const ret = {
@@ -84,7 +86,17 @@ class TestRegister {
 
             if (result.error) {
                 if (test.expectedError) {
-                    ret.status = "passing";
+                    if (result.error.displayStr === test.expectedOutput) {
+                        ret.status = "passing";
+                    } else {
+                        ret.status = "failing";
+                        ret.output = [
+                            "Expected",
+                            "\t" + test.expectedOutput.replace(/\n/g, "\n\t"),
+                            "Received",
+                            "\t" + result.error.displayStr.replace(/\n/g, "\n\t"),
+                        ].join("\n");
+                    }
                 } else {
                     ret.status = "erroring";
                     ret.output = result.error.displayStr;
@@ -117,6 +129,9 @@ class TestRegister {
             testResults.push(ret);
             progBar.increment();
         }
+
+        // Turn logging back on
+        log.setLevel("info", false);
 
         return testResults;
     }
@@ -152,7 +167,7 @@ class TestRegister {
                 result.status = "passing";
             } catch (e) {
                 result.status = "erroring";
-                result.output = e.message;
+                result.output = `${e.message}\nError: ${e.stack}`;
             }
 
             testResults.push(result);

@@ -42,7 +42,7 @@ TestRegister.addTests([
     }, {
         name: "Normalise Unicode - NFKC",
         input: "\u00c7\u0043\u0327\u2160",
-        expectedMatch: /\u00C7\u00C7\u2160/,
+        expectedMatch: /\u00C7\u00C7I/,
         recipeConfig: [
             {
                 op: "Normalise Unicode",

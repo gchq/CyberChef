@@ -25,15 +25,18 @@ TestRegister.addTests([
      *
      * from Crypto.Cipher import AES
      * import binascii
-
+     *
      * input_data = "0123456789ABCDEF"
      * key = binascii.unhexlify("00112233445566778899aabbccddeeff")
      * iv = binascii.unhexlify("ffeeddccbbaa99887766554433221100")
+     * aad = b'additional data'
      *
      * cipher = AES.new(key, AES.MODE_GCM, nonce=iv)
+     * cipher.update(aad)
      * cipher_text, tag = cipher.encrypt_and_digest(binascii.unhexlify(input_data))
      *
      * cipher = AES.new(key, AES.MODE_GCM, nonce=iv)
+     * cipher.update(aad)
      * decrypted = cipher.decrypt_and_verify(cipher_text, tag)
      *
      * key = binascii.hexlify(key).decode("UTF-8")
@@ -42,7 +45,7 @@ TestRegister.addTests([
      * tag = binascii.hexlify(tag).decode("UTF-8")
      * decrypted = binascii.hexlify(decrypted).decode("UTF-8")
      *
-     * print("Key: {}\nIV : {}\nInput data: {}\n\nEncrypted ciphertext: {}\nGCM tag: {}\n\nDecrypted plaintext : {}".format(key, iv, input_data, cipher_text, tag, decrypted))
+     * print("Key: {}\nIV : {}\nInput data: {}\nAAD: {}\n\nEncrypted ciphertext: {}\nGCM tag: {}\n\nDecrypted plaintext : {}".format(key, iv, input_data, aad, cipher_text, tag, decrypted))
      *
      *
      * Outputs:
@@ -70,7 +73,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Raw", "Hex"
+                    "CBC", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -85,7 +89,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
-                    "CBC", "Raw", "Hex"
+                    "CBC", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -100,7 +105,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
-                    "CTR", "Raw", "Hex"
+                    "CTR", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -115,7 +121,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "CBC", "Raw", "Hex"
+                    "CBC", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -130,7 +137,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "CFB", "Raw", "Hex"
+                    "CFB", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -145,7 +153,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "OFB", "Raw", "Hex"
+                    "OFB", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -160,7 +169,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "CTR", "Raw", "Hex"
+                    "CTR", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -175,7 +185,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Raw", "Hex"
+                    "ECB", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -192,7 +203,26 @@ Tag: 16a3e732a605cc9ca29108f742ca0743`,
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
-                    "GCM", "Raw", "Hex"
+                    "GCM", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Encrypt: AES-128-GCM, ASCII, AAD",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: `daa58faa056c52756aa488aeafbd265b6effcf4eca58220a97b0005b1a9b1e1c9e7a6725d35f5f79b9493de7
+
+Tag: 3b5378917f67b0aade9891fc6c291646`,
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
+                    {"option": "Hex", "string": "ffeeddccbbaa99887766554433221100"},
+                    "GCM", "Raw", "Hex",
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -207,7 +237,8 @@ Tag: 16a3e732a605cc9ca29108f742ca0743`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -222,7 +253,8 @@ Tag: 16a3e732a605cc9ca29108f742ca0743`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -237,7 +269,8 @@ Tag: 16a3e732a605cc9ca29108f742ca0743`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -252,7 +285,8 @@ Tag: 16a3e732a605cc9ca29108f742ca0743`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -269,7 +303,26 @@ Tag: 70fad2ca19412c20f40fd06918736e56`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex"
+                    "GCM", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Encrypt: AES-128-GCM, Binary, AAD",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: `5a29debb5c5f38cdf8aee421bd94dbbf3399947faddf205f88b3ad8ecb0c51214ec0e28bf78942dfa212d7eb15259bbdcac677b4c05f473eeb9331d74f31d441d97d56eb5c73b586342d72128ca528813543dc0fc7eddb7477172cc9194c18b2e1383e4e
+
+Tag: 61cc4b70809452b0b3e38f913fa0a109`,
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
+                    {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
+                    "GCM", "Hex", "Hex",
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -284,7 +337,8 @@ Tag: 70fad2ca19412c20f40fd06918736e56`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -299,7 +353,8 @@ Tag: 70fad2ca19412c20f40fd06918736e56`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -314,7 +369,8 @@ Tag: 70fad2ca19412c20f40fd06918736e56`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -329,7 +385,8 @@ Tag: 70fad2ca19412c20f40fd06918736e56`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -344,7 +401,8 @@ Tag: 70fad2ca19412c20f40fd06918736e56`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -361,7 +419,26 @@ Tag: 86db597d5302595223cadbd990f1309b`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex"
+                    "GCM", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Encrypt: AES-192-GCM, Binary, AAD",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: `318b479d919d506f0cd904f2676fab263a7921b6d7e0514f36e03ae2333b77fa66ef5600babcb2ee9718aeb71fc357412343c1f2cb351d8715bb0aedae4a6468124f9c4aaf6a721b306beddbe63a978bec8baeeba4b663be33ee5bc982746bd4aed1c38b
+
+Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
+                    {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
+                    "GCM", "Hex", "Hex",
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -376,7 +453,8 @@ Tag: 86db597d5302595223cadbd990f1309b`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -391,7 +469,8 @@ Tag: 86db597d5302595223cadbd990f1309b`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -406,7 +485,8 @@ Tag: 86db597d5302595223cadbd990f1309b`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -421,7 +501,8 @@ Tag: 86db597d5302595223cadbd990f1309b`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -436,7 +517,8 @@ Tag: 86db597d5302595223cadbd990f1309b`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -453,7 +535,26 @@ Tag: 821b1e5f32dad052e502775a523d957a`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex"
+                    "GCM", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Encrypt: AES-256-GCM, Binary, AAD",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: `1287f188ad4d7ab0d9ff69b3c29cb11f861389532d8cb9337181da2e8cfc74a84927e8c0dd7a28a32fd485afe694259a63c199b199b95edd87c7aa95329feac340f2b78b72956a85f367044d821766b1b7135815571df44900695f1518cf3ae38ecb650f
+
+Tag: a8f04c4d93bbef82bef61a103371aef9`,
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
+                    {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
+                    "GCM", "Hex", "Hex",
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -468,7 +569,8 @@ Tag: 821b1e5f32dad052e502775a523d957a`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -677,6 +779,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
                     "CBC", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -693,6 +796,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CBC", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -709,6 +813,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CTR", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -725,6 +830,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CBC", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -741,6 +847,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CFB", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -757,6 +864,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "OFB", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -773,6 +881,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CTR", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -789,6 +898,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
                     "ECB", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -805,7 +915,25 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
                     "GCM", "Hex", "Raw",
-                    {"option": "Hex", "string": "16a3e732a605cc9ca29108f742ca0743"}
+                    {"option": "Hex", "string": "16a3e732a605cc9ca29108f742ca0743"},
+                    {"option": "Hex", "string": ""}
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Decrypt: AES-128-GCM, ASCII, AAD",
+        input: "daa58faa056c52756aa488aeafbd265b6effcf4eca58220a97b0005b1a9b1e1c9e7a6725d35f5f79b9493de7",
+        expectedOutput: "The quick brown fox jumps over the lazy dog.",
+        recipeConfig: [
+            {
+                "op": "AES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
+                    {"option": "Hex", "string": "ffeeddccbbaa99887766554433221100"},
+                    "GCM", "Hex", "Raw",
+                    {"option": "Hex", "string": "3b5378917f67b0aade9891fc6c291646"},
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -821,6 +949,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -837,6 +966,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -853,6 +983,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -869,6 +1000,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -885,7 +1017,25 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "Hex", "string": "70fad2ca19412c20f40fd06918736e56"}
+                    {"option": "Hex", "string": "70fad2ca19412c20f40fd06918736e56"},
+                    {"option": "Hex", "string": ""}
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Decrypt: AES-128-GCM, Binary, AAD",
+        input: "5a29debb5c5f38cdf8aee421bd94dbbf3399947faddf205f88b3ad8ecb0c51214ec0e28bf78942dfa212d7eb15259bbdcac677b4c05f473eeb9331d74f31d441d97d56eb5c73b586342d72128ca528813543dc0fc7eddb7477172cc9194c18b2e1383e4e",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "AES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
+                    {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
+                    "GCM", "Hex", "Hex",
+                    {"option": "Hex", "string": "61cc4b70809452b0b3e38f913fa0a109"},
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -901,6 +1051,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -917,6 +1068,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -933,6 +1085,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -949,6 +1102,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -965,6 +1119,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -981,7 +1136,25 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "Hex", "string": "86db597d5302595223cadbd990f1309b"}
+                    {"option": "Hex", "string": "86db597d5302595223cadbd990f1309b"},
+                    {"option": "Hex", "string": ""}
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Decrypt: AES-192-GCM, Binary, AAD",
+        input: "318b479d919d506f0cd904f2676fab263a7921b6d7e0514f36e03ae2333b77fa66ef5600babcb2ee9718aeb71fc357412343c1f2cb351d8715bb0aedae4a6468124f9c4aaf6a721b306beddbe63a978bec8baeeba4b663be33ee5bc982746bd4aed1c38b",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "AES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
+                    {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
+                    "GCM", "Hex", "Hex",
+                    {"option": "Hex", "string": "aeedf3e6ca4201577c0cf3e9ce58159d"},
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -997,6 +1170,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1013,6 +1187,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1029,6 +1204,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1045,6 +1221,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1061,6 +1238,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1077,7 +1255,25 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "Hex", "string": "821b1e5f32dad052e502775a523d957a"}
+                    {"option": "Hex", "string": "821b1e5f32dad052e502775a523d957a"},
+                    {"option": "Hex", "string": ""}
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Decrypt: AES-256-GCM, Binary, AAD",
+        input: "1287f188ad4d7ab0d9ff69b3c29cb11f861389532d8cb9337181da2e8cfc74a84927e8c0dd7a28a32fd485afe694259a63c199b199b95edd87c7aa95329feac340f2b78b72956a85f367044d821766b1b7135815571df44900695f1518cf3ae38ecb650f",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "AES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
+                    {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
+                    "GCM", "Hex", "Hex",
+                    {"option": "Hex", "string": "a8f04c4d93bbef82bef61a103371aef9"},
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -1093,6 +1289,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1751,4 +1948,38 @@ DES uses a key length of 8 bytes (64 bits).`,
             }
         ],
     },
+    {
+        name: "Blowfish Encrypt with variable key length: CBC, ASCII, 4 bytes",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "823f337a53ecf121aa9ec1b111bd5064d1d7586abbdaaa0c8fd0c6cc43c831c88bf088ee3e07287e3f36cf2e45f9c7e6",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233"}, // Key
+                    {"option": "Hex", "string": "0000000000000000"}, // IV
+                    "CBC", // Mode
+                    "Raw", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Encrypt with variable key length: CBC, ASCII, 42 bytes",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "19f5a68145b34321cfba72226b0f33922ce44dd6e7869fe328db64faae156471216f12ed2a37fd0bdd7cebf867b3cff0",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdead"}, // Key
+                    {"option": "Hex", "string": "0000000000000000"}, // IV
+                    "CBC", // Mode
+                    "Raw", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    }
 ]);

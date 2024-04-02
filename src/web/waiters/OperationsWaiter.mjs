@@ -6,6 +6,7 @@
 
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
+import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
 
 
 /**
@@ -108,28 +109,37 @@ class OperationsWaiter {
         const matchedOps = [];
         const matchedDescs = [];
 
-        const searchStr = inStr.toLowerCase();
+        // Create version with no whitespace for the fuzzy match
+        // Helps avoid missing matches e.g. query "TCP " would not find "Parse TCP"
+        const inStrNWS = inStr.replace(/\s/g, "");
 
         for (const opName in this.app.operations) {
             const op = this.app.operations[opName];
-            const namePos = opName.toLowerCase().indexOf(searchStr);
-            const descPos = op.description.toLowerCase().indexOf(searchStr);
 
-            if (namePos >= 0 || descPos >= 0) {
+            // Match op name using fuzzy match
+            const [nameMatch, score, idxs] = fuzzyMatch(inStrNWS, opName);
+
+            // Match description based on exact match
+            const descPos = op.description.toLowerCase().indexOf(inStr.toLowerCase());
+
+            if (nameMatch || descPos >= 0) {
                 const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
                 if (highlight) {
-                    operation.highlightSearchString(searchStr, namePos, descPos);
+                    operation.highlightSearchStrings(calcMatchRanges(idxs), [[descPos, inStr.length]]);
                 }
 
-                if (namePos < 0) {
-                    matchedOps.push(operation);
+                if (nameMatch) {
+                    matchedOps.push([operation, score]);
                 } else {
                     matchedDescs.push(operation);
                 }
             }
         }
 
-        return matchedDescs.concat(matchedOps);
+        // Sort matched operations based on fuzzy score
+        matchedOps.sort((a, b) => b[1] - a[1]);
+
+        return matchedOps.map(a => a[0]).concat(matchedDescs);
     }
 
 
