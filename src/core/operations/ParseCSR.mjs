@@ -32,6 +32,11 @@ class ParseCSR extends Operation {
                 "value": ["PEM"]
             },
             {
+                "name": "Key type",
+                "type": "option",
+                "value": ["RSA"]
+            },
+            {
                 "name": "Strict ASN.1 value lengths",
                 "type": "boolean",
                 "value": true
