@@ -52,9 +52,7 @@ class ExtractHashes extends Operation {
         const results = [];
         let hashCount = 0;
 
-        const hashLength = args[0];
-        const searchAllHashes = args[1];
-        const showDisplayTotal = args[2];
+        const [hashLength, searchAllHashes, showDisplayTotal] = args;
 
         // Convert character length to bit length
         let hashBitLengths = [(hashLength / 2) * 8];
