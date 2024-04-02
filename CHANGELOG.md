@@ -418,7 +418,7 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
-[10.14.0]: https://github.com/gchq/CyberChef/releases/tag/v10.14.0
+[10.15.0]: https://github.com/gchq/CyberChef/releases/tag/v10.15.0
 [10.14.0]: https://github.com/gchq/CyberChef/releases/tag/v10.14.0
 [10.13.0]: https://github.com/gchq/CyberChef/releases/tag/v10.13.0
 [10.12.0]: https://github.com/gchq/CyberChef/releases/tag/v10.12.0
