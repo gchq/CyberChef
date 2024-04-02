@@ -13,6 +13,14 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.15.0] - 2024-04-02
+- Fix Ciphersaber2 key concatenation [@zb3] | [#1765]
+- Fix DeriveEVPKey's array parsing [@zb3] | [#1767]
+- Fix JWT operations [@a3957273] | [#1769]
+- Added 'Parse Certificate Signing Request' operation [@jkataja] | [#1504]
+- Added 'Extract Hash Values' operation [@MShwed] | [#512]
+- Added 'DateTime Delta' operation [@tomgond] | [#1732]
+
 ### [10.14.0] - 2024-03-31
 - Added 'To Float' and 'From Float' operations [@tcode2k16] | [#1762]
 - Fix ChaCha raw export option [@joostrijneveld] | [#1606]
@@ -411,6 +419,7 @@ All major and minor version changes will be documented in this file. Details of 
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
 [10.14.0]: https://github.com/gchq/CyberChef/releases/tag/v10.14.0
+[10.14.0]: https://github.com/gchq/CyberChef/releases/tag/v10.14.0
 [10.13.0]: https://github.com/gchq/CyberChef/releases/tag/v10.13.0
 [10.12.0]: https://github.com/gchq/CyberChef/releases/tag/v10.12.0
 [10.11.0]: https://github.com/gchq/CyberChef/releases/tag/v10.11.0
@@ -586,6 +595,9 @@ All major and minor version changes will be documented in this file. Details of 
 [@breakersall]: https://github.com/breakersall
 [@evanreichard]: https://github.com/evanreichard
 [@devcydo]: https://github.com/devcydo
+[@zb3]: https://github.com/zb3
+[@jkataja]: https://github.com/jkataja
+[@tomgond]: https://github.com/tomgond
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
@@ -725,3 +737,9 @@ All major and minor version changes will be documented in this file. Details of 
 [#1197]: https://github.com/gchq/CyberChef/issues/1197
 [#933]: https://github.com/gchq/CyberChef/issues/933
 [#1361]: https://github.com/gchq/CyberChef/issues/1361
+[#1765]: https://github.com/gchq/CyberChef/issues/1765
+[#1767]: https://github.com/gchq/CyberChef/issues/1767
+[#1769]: https://github.com/gchq/CyberChef/issues/1769
+[#1504]: https://github.com/gchq/CyberChef/issues/1504
+[#512]: https://github.com/gchq/CyberChef/issues/512
+[#1732]: https://github.com/gchq/CyberChef/issues/1732
