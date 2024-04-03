@@ -115,8 +115,8 @@
             "ROT8000",
             "XOR",
             "XOR Brute Force",
-            "Vigenère Encode",
-            "Vigenère Decode",
+            "VigenÃ¨re Encode",
+            "VigenÃ¨re Decode",
             "To Morse Code",
             "From Morse Code",
             "Bacon Cipher Encode",
@@ -323,6 +323,7 @@
             "Windows Filetime to UNIX Timestamp",
             "UNIX Timestamp to Windows Filetime",
             "DateTime Delta",
+            "Time Difference",
             "Extract dates",
             "Get Time",
             "Sleep"
