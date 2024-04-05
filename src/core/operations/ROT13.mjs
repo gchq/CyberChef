@@ -57,12 +57,12 @@ class ROT13 extends Operation {
         const output = input,
             rot13Lowercase = args[0],
             rot13Upperacse = args[1],
-            rotNumbers = args[2];
-        let amount = args[3],
-            chr;
+            rotNumbers = args[2],
+            amount = args[3];
+        let chr,
+            amountModified;
 
         if (amount) {
-            let amountModified;
             for (let i = 0; i < input.length; i++) {
                 amountModified = amount;
                 chr = input[i];
