@@ -502,7 +502,7 @@ class App {
         // Input Character Encoding
         // Must be set before the input is loaded
         if (this.uriParams.ienc) {
-            this.manager.input.chrEncChange(parseInt(this.uriParams.ienc, 10), true);
+            this.manager.input.chrEncChange(parseInt(this.uriParams.ienc, 10), true, true);
         }
 
         // Output Character Encoding
