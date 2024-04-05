@@ -383,12 +383,16 @@ module.exports = {
         utils.setInput(browser, CHINESE_CHARS, false);
         utils.setChrEnc(browser, "input", "UTF-8");
         utils.bake(browser);
-        utils.expectOutput(browser, "\u00E4\u00B8\u008D\u00E8\u00A6\u0081\u00E6\u0081\u0090\u00E6\u0085\u008C\u00E3\u0080\u0082");
 
-        /* Changing output to match input works as expected */
-        utils.setChrEnc(browser, "output", "UTF-8");
-        utils.bake(browser);
+        /* Output encoding should be autodetected */
+        browser
+            .waitForElementVisible("#snackbar-container .snackbar-content", 5000)
+            .expect.element("#snackbar-container .snackbar-content").text.to.equal("Output character encoding has been detected and changed to UTF-8");
+
         utils.expectOutput(browser, CHINESE_CHARS);
+
+        /* Change the output encoding manually to test for URL presence */
+        utils.setChrEnc(browser, "output", "UTF-8");
 
         /* Encodings appear in the URL */
         browser.assert.urlContains("ienc=65001");
