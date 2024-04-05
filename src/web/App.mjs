@@ -236,7 +236,7 @@ class App {
             action: "setInput",
             data: {
                 inputNum: inputNum,
-                silent: true
+                silent: false
             }
         });
     }
@@ -541,7 +541,11 @@ class App {
         }
 
         this.autoBakePause = false;
-        window.dispatchEvent(this.manager.statechange);
+
+        // Dispatch stateChange only if not done by setInput
+        if (this.uriParams.input) {
+            window.dispatchEvent(this.manager.statechange);
+        }
     }
 
 
