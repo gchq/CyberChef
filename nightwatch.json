@@ -1,5 +1,6 @@
 {
   "src_folders": ["tests/browser"],
+  "exclude": ["tests/browser/browserUtils.js"],
   "output_folder": "tests/browser/output",
 
   "test_settings": {
@@ -10,11 +11,12 @@
         "start_process": true,
         "server_path": "./node_modules/.bin/chromedriver",
         "port": 9515,
-        "log_path": false
+        "log_path": "tests/browser/output"
       },
       "desiredCapabilities": {
         "browserName": "chrome"
-      }
+      },
+      "enable_fail_fast": true
     },
 
     "dev": {

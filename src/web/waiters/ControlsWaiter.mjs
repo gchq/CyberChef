@@ -5,6 +5,7 @@
  */
 
 import Utils from "../../core/Utils.mjs";
+import { eolSeqToCode } from "../utils/editorUtils.mjs";
 
 
 /**
@@ -100,9 +101,9 @@ class ControlsWaiter {
         const includeRecipe = document.getElementById("save-link-recipe-checkbox").checked;
         const includeInput = document.getElementById("save-link-input-checkbox").checked;
         const saveLinkEl = document.getElementById("save-link");
-        const saveLink = this.generateStateUrl(includeRecipe, includeInput, recipeConfig);
+        const saveLink = this.generateStateUrl(includeRecipe, includeInput, null, recipeConfig);
 
-        saveLinkEl.innerHTML = Utils.truncate(saveLink, 120);
+        saveLinkEl.innerHTML = Utils.escapeHtml(Utils.truncate(saveLink, 120));
         saveLinkEl.setAttribute("href", saveLink);
     }
 
@@ -128,17 +129,28 @@ class ControlsWaiter {
         includeRecipe = includeRecipe && (recipeConfig.length > 0);
 
         // If we don't get passed an input, get it from the current URI
-        if (input === null) {
+        if (input === null && includeInput) {
             const params = this.app.getURIParams();
             if (params.input) {
                 includeInput = true;
                 input = params.input;
+            } else {
+                includeInput = false;
             }
         }
 
+        const inputChrEnc = this.manager.input.getChrEnc();
+        const outputChrEnc = this.manager.output.getChrEnc();
+        const inputEOL = eolSeqToCode[this.manager.input.getEOLSeq()];
+        const outputEOL = eolSeqToCode[this.manager.output.getEOLSeq()];
+
         const params = [
             includeRecipe ? ["recipe", recipeStr] : undefined,
-            includeInput ? ["input", input] : undefined,
+            includeInput && input.length ? ["input", Utils.escapeHtml(input)] : undefined,
+            inputChrEnc !== 0 ? ["ienc", inputChrEnc] : undefined,
+            outputChrEnc !== 0 ? ["oenc", outputChrEnc] : undefined,
+            inputEOL !== "LF" ? ["ieol", inputEOL] : undefined,
+            outputEOL !== "LF" ? ["oeol", outputEOL] : undefined
         ];
 
         const hash = params
@@ -436,6 +448,17 @@ ${navigator.userAgent}
                 bakeButton.classList.remove("btn-warning");
                 bakeButton.classList.add("btn-success");
         }
+    }
+
+    /**
+     * Calculates the height of the controls area and adjusts the recipe
+     * height accordingly.
+     */
+    calcControlsHeight() {
+        const controls = document.getElementById("controls"),
+            recList = document.getElementById("rec-list");
+
+        recList.style.bottom = controls.clientHeight + "px";
     }
 
 }

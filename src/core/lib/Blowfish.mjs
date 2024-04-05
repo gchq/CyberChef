@@ -38,7 +38,7 @@
 
 const crypto = {};
 
-import forge from "node-forge/dist/forge.min.js";
+import forge from "node-forge";
 
 
 /* dojo-release-1.8.1/dojo/_base/lang.js.uncompressed.js */
