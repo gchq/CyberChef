@@ -249,7 +249,7 @@ module.exports = {
         testOpHtml(browser, "Parse colour code", "#000", ".colorpicker-preview", "rgb(0, 0, 0)");
         testOpHtml(browser, "Parse DateTime", "01/12/2000 13:00:00", "", /Date: Friday 1st December 2000/);
         // testOp(browser, "Parse IP range", "test input", "test_output");
-        testOpHtml(browser, "Parse IPv4 header", "45 c0 00 c4 02 89 00 00 ff 11　1e 8c c0 a8 0c 01 c0 a8 0c 02", "tr:last-child td:last-child", "192.168.12.2");
+        testOpHtml(browser, "Parse IPv4 header", "45 c0 00 c4 02 89 00 00 ff 11　1e 8c c0 a8 0c 01 c0 a8 0c 02", "tr:nth-last-child(2) td:last-child", "192.168.12.2");
         // testOp(browser, "Parse IPv6 address", "test input", "test_output");
     // testOp(browser, "Parse ObjectID timestamp", "test input", "test_output");
     // testOp(browser, "Parse QR Code", "test input", "test_output");
