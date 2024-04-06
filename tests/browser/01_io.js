@@ -167,6 +167,32 @@ module.exports = {
         browser.expect.element("#output-text .cm-status-bar .eol-value").text.to.equal("LF");
     },
 
+    "Autobaking the latest input": browser => {
+        // Use the sleep recipe to simulate a long running task
+        utils.loadRecipe(browser, "Sleep", "input", [2000]);
+
+        browser.waitForElementVisible("#stale-indicator");
+
+        // Enable previously disabled autobake
+        browser.click("#auto-bake-label");
+
+        browser
+            .sendKeys("#input-text .cm-content", "1");
+
+        browser.pause(500);
+
+        // Make another change while the previous input is being baked
+        browser
+            .sendKeys("#input-text .cm-content", "2");
+
+        browser
+            .waitForElementNotVisible("#stale-indicator")
+            .waitForElementNotVisible("#output-loader");
+
+        // Ensure we got the latest input baked
+        utils.expectOutput(browser, "input12");
+    },
+
     "Special content": browser => {
         /* Special characters are rendered correctly */
         utils.setInput(browser, SPECIAL_CHARS, false);

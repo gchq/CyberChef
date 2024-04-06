@@ -160,7 +160,12 @@ class App {
         // has completed.
         if (this.autoBakePause) return false;
 
-        if (this.autoBake_ && !this.baking) {
+        if (this.baking) {
+            this.manager.worker.cancelBakeForAutoBake();
+            this.baking = false;
+        }
+
+        if (this.autoBake_) {
             log.debug("Auto-baking");
             this.manager.worker.bakeInputs({
                 nums: [this.manager.tabs.getActiveTab("input")],
