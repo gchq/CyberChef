@@ -725,7 +725,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#1667]: https://github.com/gchq/CyberChef/issues/1667
 [#1555]: https://github.com/gchq/CyberChef/issues/1555
 [#1694]: https://github.com/gchq/CyberChef/issues/1694
-[#1699]: https://github.com/gchq/CyberChef/issues/1694
+[#1699]: https://github.com/gchq/CyberChef/issues/1699
 [#1757]: https://github.com/gchq/CyberChef/issues/1757
 [#1752]: https://github.com/gchq/CyberChef/issues/1752
 [#1753]: https://github.com/gchq/CyberChef/issues/1753
