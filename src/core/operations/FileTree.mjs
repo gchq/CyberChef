@@ -1,6 +1,6 @@
 /**
  * @author sw5678
- * @copyright Crown Copyright 2016
+ * @copyright Crown Copyright 2023
  * @license Apache-2.0
  */
 
@@ -21,7 +21,8 @@ class FileTree extends Operation {
 
         this.name = "File Tree";
         this.module = "Default";
-        this.description = "Creates file tree from list of file paths (similar to the tree command in Linux)";
+        this.description = "Creates a file tree from a list of file paths (similar to the tree command in Linux)";
+        this.infoURL = "https://wikipedia.org/wiki/Tree_(command)";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
