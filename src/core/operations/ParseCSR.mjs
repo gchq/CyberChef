@@ -22,7 +22,7 @@ class ParseCSR extends Operation {
         this.name = "Parse CSR";
         this.module = "PublicKey";
         this.description = "Parse Certificate Signing Request (CSR) for an X.509 certificate";
-        this.infoURL = "https://en.wikipedia.org/wiki/Certificate_signing_request";
+        this.infoURL = "https://wikipedia.org/wiki/Certificate_signing_request";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
