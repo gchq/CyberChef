@@ -191,6 +191,9 @@ module.exports = {
 
         // Ensure we got the latest input baked
         utils.expectOutput(browser, "input12");
+
+        // Turn autobake off again
+        browser.click("#auto-bake-label");
     },
 
     "Special content": browser => {
