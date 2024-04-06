@@ -355,7 +355,7 @@ class ControlsWaiter {
             icon.setAttribute("hide-args", "true");
             icon.setAttribute("data-original-title", "Show arguments");
             icon.children[0].innerText = "keyboard_arrow_down";
-            Array.from(document.getElementsByClassName("hide-args-icon")).forEach(function(item){
+            Array.from(document.getElementsByClassName("hide-args-icon")).forEach(function(item) {
                 item.setAttribute("hide-args", "true");
                 item.innerText = "keyboard_arrow_down";
                 item.classList.add("hide-args-selected");
@@ -365,7 +365,7 @@ class ControlsWaiter {
             icon.setAttribute("hide-args", "false");
             icon.setAttribute("data-original-title", "Hide arguments");
             icon.children[0].innerText = "keyboard_arrow_up";
-            Array.from(document.getElementsByClassName("hide-args-icon")).forEach(function(item){
+            Array.from(document.getElementsByClassName("hide-args-icon")).forEach(function(item) {
                 item.setAttribute("hide-args", "false");
                 item.innerText = "keyboard_arrow_up";
                 item.classList.remove("hide-args-selected");
