@@ -14,6 +14,8 @@
             "From Charcode",
             "To Decimal",
             "From Decimal",
+            "To Float",
+            "From Float",
             "To Binary",
             "From Binary",
             "To Octal",
@@ -153,7 +155,8 @@
             "Typex",
             "Lorenz",
             "Colossus",
-            "SIGABA"
+            "SIGABA",
+            "XXTEA"
         ]
     },
     {
@@ -176,7 +179,8 @@
             "RSA Verify",
             "RSA Encrypt",
             "RSA Decrypt",
-            "Parse SSH Host Key"
+            "Parse SSH Host Key",
+            "Parse CSR"
         ]
     },
     {
@@ -243,6 +247,7 @@
             "Encode NetBIOS Name",
             "Decode NetBIOS Name",
             "Defang URL",
+            "Fang URL",
             "Defang IP Addresses"
         ]
     },
@@ -318,6 +323,7 @@
             "To UNIX Timestamp",
             "Windows Filetime to UNIX Timestamp",
             "UNIX Timestamp to Windows Filetime",
+            "DateTime Delta",
             "Extract dates",
             "Get Time",
             "Sleep"
@@ -334,6 +340,7 @@
             "Extract domains",
             "Extract file paths",
             "Extract dates",
+            "Extract hashes",
             "Regular expression",
             "XPath expression",
             "JPath expression",
@@ -382,7 +389,6 @@
             "SHA2",
             "SHA3",
             "SM3",
-            "MurmurHash3",
             "Keccak",
             "Shake",
             "RIPEMD",
@@ -407,6 +413,7 @@
             "Scrypt",
             "NT Hash",
             "LM Hash",
+            "MurmurHash3",
             "Fletcher-8 Checksum",
             "Fletcher-16 Checksum",
             "Fletcher-32 Checksum",

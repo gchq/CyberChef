@@ -1,10 +1,10 @@
 <!-- htmlmin:ignore --><!--
     CyberChef - The Cyber Swiss Army Knife
 
-    @copyright Crown Copyright 2016
+    @copyright Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %>
     @license Apache-2.0
 
-      Copyright 2016 Crown Copyright
+      Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %> Crown Copyright
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
         <meta charset="UTF-8">
         <title>CyberChef</title>
 
-        <meta name="copyright" content="Crown Copyright 2016" />
+        <meta name="copyright" content="Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %>" />
         <meta name="description" content="The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis" />
         <meta name="keywords" content="base64, hex, decode, encode, encrypt, decrypt, compress, decompress, regex, regular expressions, hash, crypt, hexadecimal, user agent, url, certificate, x.509, parser, JSON, gzip,  md5, sha1, aes, des, blowfish, xor" />
 
@@ -562,10 +562,10 @@
                     <div class="modal-body">
                         <img aria-hidden="true" class="about-img-left" src="<%- require('../static/images/cyberchef-128x128.png') %>" alt="CyberChef Logo"/>
                         <p class="subtext">
-                            Version <%=  htmlWebpackPlugin.options.version %><br>
+                            Version <%= htmlWebpackPlugin.options.version %><br>
                             Compile time: <%= htmlWebpackPlugin.options.compileTime %>
                         </p>
-                        <p>&copy; Crown Copyright 2016.</p>
+                        <p>&copy; Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %>.</p>
                         <p>Released under the Apache Licence, Version 2.0.</p>
                         <p><a href="https://gitter.im/gchq/CyberChef">
                             <img src="<%- require('../static/images/gitter-badge.svg') %>">
@@ -861,7 +861,7 @@
                         <ul>
                             <li>Build time: <%= htmlWebpackPlugin.options.compileTime %></li>
                             <li>The changelog for this version can be viewed <a href="https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md">here</a></li>
-                            <li>&copy; Crown Copyright 2016</li>
+                            <li>&copy; Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %></li>
                             <li>Released under the Apache Licence, Version 2.0</li>
                             <li>SHA256 hash: DOWNLOAD_HASH_PLACEHOLDER</li>
                         </ul>

@@ -13,6 +13,24 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.15.0] - 2024-04-02
+- Fix Ciphersaber2 key concatenation [@zb3] | [#1765]
+- Fix DeriveEVPKey's array parsing [@zb3] | [#1767]
+- Fix JWT operations [@a3957273] | [#1769]
+- Added 'Parse Certificate Signing Request' operation [@jkataja] | [#1504]
+- Added 'Extract Hash Values' operation [@MShwed] | [#512]
+- Added 'DateTime Delta' operation [@tomgond] | [#1732]
+
+### [10.14.0] - 2024-03-31
+- Added 'To Float' and 'From Float' operations [@tcode2k16] | [#1762]
+- Fix ChaCha raw export option [@joostrijneveld] | [#1606]
+- Update x86 disassembler vendor library [@evanreichard] | [#1197]
+- Allow variable Blowfish key sizes [@cbeuw] | [#933]
+- Added 'XXTEA' operation [@devcydo] | [#1361]
+
+### [10.13.0] - 2024-03-30
+- Added 'FangURL' operation [@breakersall] [@arnydo] | [#1591] [#654]
+
 ### [10.12.0] - 2024-03-29
 - Added 'Salsa20' and 'XSalsa20' operation [@joostrijneveld] | [#1750]
 
@@ -400,6 +418,9 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[10.15.0]: https://github.com/gchq/CyberChef/releases/tag/v10.15.0
+[10.14.0]: https://github.com/gchq/CyberChef/releases/tag/v10.14.0
+[10.13.0]: https://github.com/gchq/CyberChef/releases/tag/v10.13.0
 [10.12.0]: https://github.com/gchq/CyberChef/releases/tag/v10.12.0
 [10.11.0]: https://github.com/gchq/CyberChef/releases/tag/v10.11.0
 [10.10.0]: https://github.com/gchq/CyberChef/releases/tag/v10.10.0
@@ -571,6 +592,12 @@ All major and minor version changes will be documented in this file. Details of 
 [@AshCorr]: https://github.com/AshCorr
 [@simonw]: https://github.com/simonw
 [@chriswhite199]: https://github.com/chriswhite199
+[@breakersall]: https://github.com/breakersall
+[@evanreichard]: https://github.com/evanreichard
+[@devcydo]: https://github.com/devcydo
+[@zb3]: https://github.com/zb3
+[@jkataja]: https://github.com/jkataja
+[@tomgond]: https://github.com/tomgond
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
@@ -698,8 +725,22 @@ All major and minor version changes will be documented in this file. Details of 
 [#1667]: https://github.com/gchq/CyberChef/issues/1667
 [#1555]: https://github.com/gchq/CyberChef/issues/1555
 [#1694]: https://github.com/gchq/CyberChef/issues/1694
-[#1699]: https://github.com/gchq/CyberChef/issues/1694
+[#1699]: https://github.com/gchq/CyberChef/issues/1699
 [#1757]: https://github.com/gchq/CyberChef/issues/1757
 [#1752]: https://github.com/gchq/CyberChef/issues/1752
 [#1753]: https://github.com/gchq/CyberChef/issues/1753
 [#1750]: https://github.com/gchq/CyberChef/issues/1750
+[#1591]: https://github.com/gchq/CyberChef/issues/1591
+[#654]: https://github.com/gchq/CyberChef/issues/654
+[#1762]: https://github.com/gchq/CyberChef/issues/1762
+[#1606]: https://github.com/gchq/CyberChef/issues/1606
+[#1197]: https://github.com/gchq/CyberChef/issues/1197
+[#933]: https://github.com/gchq/CyberChef/issues/933
+[#1361]: https://github.com/gchq/CyberChef/issues/1361
+[#1765]: https://github.com/gchq/CyberChef/issues/1765
+[#1767]: https://github.com/gchq/CyberChef/issues/1767
+[#1769]: https://github.com/gchq/CyberChef/issues/1769
+[#1759]: https://github.com/gchq/CyberChef/issues/1759
+[#1504]: https://github.com/gchq/CyberChef/issues/1504
+[#512]: https://github.com/gchq/CyberChef/issues/512
+[#1732]: https://github.com/gchq/CyberChef/issues/1732

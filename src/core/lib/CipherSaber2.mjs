@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 export function encode(tempIVP, key, rounds, input) {
-    const ivp = new Uint8Array(key.concat(tempIVP));
+    const ivp = new Uint8Array([...key, ...tempIVP]);
     const state = new Array(256).fill(0);
     let j = 0, i = 0;
     const result = [];

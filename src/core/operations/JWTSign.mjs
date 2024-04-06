@@ -50,12 +50,7 @@ class JWTSign extends Operation {
 
         try {
             return jwt.sign(input, key, {
-                algorithm: algorithm === "None" ? "none" : algorithm,
-
-                // To utilize jsonwebtoken 9+ library and maintain backwards compatibility for regression tests
-                // This could be turned into operation args in a future PR
-                allowInsecureKeySizes: true,
-                allowInvalidAsymmetricKeyTypes: true
+                algorithm: algorithm === "None" ? "none" : algorithm
             });
         } catch (err) {
             throw new OperationError(`Error: Have you entered the key correctly? The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.

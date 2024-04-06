@@ -62,6 +62,8 @@ import "./tests/DefangIP.mjs";
 import "./tests/ELFInfo.mjs";
 import "./tests/Enigma.mjs";
 import "./tests/ExtractEmailAddresses.mjs";
+import "./tests/ExtractHashes.mjs";
+import "./tests/Float.mjs";
 import "./tests/FileTree.mjs";
 import "./tests/FletcherChecksum.mjs";
 import "./tests/Fork.mjs";
@@ -147,6 +149,7 @@ import "./tests/Typex.mjs";
 import "./tests/UnescapeString.mjs";
 import "./tests/Unicode.mjs";
 import "./tests/YARA.mjs";
+import "./tests/ParseCSR.mjs";
 
 const testStatus = {
     allTestsPassing: true,
