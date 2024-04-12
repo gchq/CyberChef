@@ -1,6 +1,6 @@
 /**
  * RAKE, Rapid Automatic Keyword Extraction tests.
- * 
+ *
  * @author sw5678
  * @copyright Crown Copyright 2024
  * @license Apache-2.0
