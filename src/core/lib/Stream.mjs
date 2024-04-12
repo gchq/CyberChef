@@ -18,12 +18,23 @@ export default class Stream {
      * Stream constructor.
      *
      * @param {Uint8Array} input
+     * @param {number} pos
+     * @param {number} bitPos
      */
-    constructor(input) {
+    constructor(input, pos=0, bitPos=0) {
         this.bytes = input;
         this.length = this.bytes.length;
-        this.position = 0;
-        this.bitPos = 0;
+        this.position = pos;
+        this.bitPos = bitPos;
+    }
+
+    /**
+     * Clone this Stream returning a new identical Stream.
+     *
+     * @returns {Stream}
+     */
+    clone() {
+        return new Stream(this.bytes, this.position, this.bitPos);
     }
 
     /**

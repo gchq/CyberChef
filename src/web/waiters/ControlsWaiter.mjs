@@ -5,6 +5,7 @@
  */
 
 import Utils from "../../core/Utils.mjs";
+import { eolSeqToCode } from "../utils/editorUtils.mjs";
 
 
 /**
@@ -140,16 +141,16 @@ class ControlsWaiter {
 
         const inputChrEnc = this.manager.input.getChrEnc();
         const outputChrEnc = this.manager.output.getChrEnc();
-        const inputEOLSeq = this.manager.input.getEOLSeq();
-        const outputEOLSeq = this.manager.output.getEOLSeq();
+        const inputEOL = eolSeqToCode[this.manager.input.getEOLSeq()];
+        const outputEOL = eolSeqToCode[this.manager.output.getEOLSeq()];
 
         const params = [
             includeRecipe ? ["recipe", recipeStr] : undefined,
             includeInput && input.length ? ["input", Utils.escapeHtml(input)] : undefined,
             inputChrEnc !== 0 ? ["ienc", inputChrEnc] : undefined,
             outputChrEnc !== 0 ? ["oenc", outputChrEnc] : undefined,
-            inputEOLSeq !== "\n" ? ["ieol", inputEOLSeq] : undefined,
-            outputEOLSeq !== "\n" ? ["oeol", outputEOLSeq] : undefined
+            inputEOL !== "LF" ? ["ieol", inputEOL] : undefined,
+            outputEOL !== "LF" ? ["oeol", outputEOL] : undefined
         ];
 
         const hash = params

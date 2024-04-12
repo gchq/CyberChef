@@ -86,10 +86,12 @@ module.exports = function (grunt) {
 
 
     // Project configuration
-    const compileTime = grunt.template.today("UTC:dd/mm/yyyy HH:MM:ss") + " UTC",
+    const compileYear = grunt.template.today("UTC:yyyy"),
+        compileTime = grunt.template.today("UTC:dd/mm/yyyy HH:MM:ss") + " UTC",
         pkg = grunt.file.readJSON("package.json"),
         webpackConfig = require("./webpack.config.js"),
         BUILD_CONSTANTS = {
+            COMPILE_YEAR: JSON.stringify(compileYear),
             COMPILE_TIME: JSON.stringify(compileTime),
             COMPILE_MSG: JSON.stringify(grunt.option("compile-msg") || grunt.option("msg") || ""),
             PKG_VERSION: JSON.stringify(pkg.version),
@@ -125,6 +127,7 @@ module.exports = function (grunt) {
                         filename: "index.html",
                         template: "./src/web/html/index.html",
                         chunks: ["main"],
+                        compileYear: compileYear,
                         compileTime: compileTime,
                         version: pkg.version,
                         minify: {
@@ -227,6 +230,7 @@ module.exports = function (grunt) {
                         filename: "index.html",
                         template: "./src/web/html/index.html",
                         chunks: ["main"],
+                        compileYear: compileYear,
                         compileTime: compileTime,
                         version: pkg.version,
                     })

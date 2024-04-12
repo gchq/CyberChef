@@ -65,6 +65,7 @@ function setChrEnc(browser, io, enc) {
     io = `#${io}-text`;
     browser
         .useCss()
+        .waitForElementNotVisible("#snackbar-container", 6000)
         .click(io + " .chr-enc-value")
         .waitForElementVisible(io + " .chr-enc-select .cm-status-bar-select-scroll")
         .click("link text", enc)
@@ -83,6 +84,7 @@ function setEOLSeq(browser, io, eol) {
     io = `#${io}-text`;
     browser
         .useCss()
+        .waitForElementNotVisible("#snackbar-container", 6000)
         .click(io + " .eol-value")
         .waitForElementVisible(io + " .eol-select .cm-status-bar-select-content")
         .click(`${io} .cm-status-bar-select-content a[data-val=${eol}]`)
@@ -174,13 +176,14 @@ function loadRecipe(browser, opName, input, args) {
  */
 function expectOutput(browser, expected) {
     browser.execute(expected => {
-        const output = window.app.manager.output.outputEditorView.state.doc.toString();
+        return window.app.manager.output.outputEditorView.state.doc.toString();
+    }, [expected], function({value}) {
         if (expected instanceof RegExp) {
-            return expected.test(output);
+            browser.expect(value).match(expected);
         } else {
-            return expected === output;
+            browser.expect(value).to.be.equal(expected);
         }
-    }, [expected]);
+    });
 }
 
 /** @function
