@@ -6,6 +6,7 @@
 
 import {showPanel} from "@codemirror/view";
 import {CHR_ENC_SIMPLE_LOOKUP, CHR_ENC_SIMPLE_REVERSE_LOOKUP} from "../../core/lib/ChrEnc.mjs";
+import { eolCodeToName, eolSeqToCode } from "./editorUtils.mjs";
 
 /**
  * A Status bar extension for CodeMirror
@@ -23,6 +24,8 @@ class StatusBarPanel {
         this.eolHandler = opts.eolHandler;
         this.chrEncHandler = opts.chrEncHandler;
         this.chrEncGetter = opts.chrEncGetter;
+        this.getEncodingState = opts.getEncodingState;
+        this.getEOLState = opts.getEOLState;
         this.htmlOutput = opts.htmlOutput;
 
         this.eolVal = null;
@@ -92,22 +95,12 @@ class StatusBarPanel {
         // preventDefault is required to stop the URL being modified and popState being triggered
         e.preventDefault();
 
-        const eolLookup = {
-            "LF": "\u000a",
-            "VT": "\u000b",
-            "FF": "\u000c",
-            "CR": "\u000d",
-            "CRLF": "\u000d\u000a",
-            "NEL": "\u0085",
-            "LS": "\u2028",
-            "PS": "\u2029"
-        };
-        const eolval = eolLookup[e.target.getAttribute("data-val")];
-
-        if (eolval === undefined) return;
+        const eolCode = e.target.getAttribute("data-val");
+        if (!eolCode) return;
 
         // Call relevant EOL change handler
-        this.eolHandler(eolval);
+        this.eolHandler(e.target.getAttribute("data-val"), true);
+
         hideElement(e.target.closest(".cm-status-bar-select-content"));
     }
 
@@ -124,7 +117,7 @@ class StatusBarPanel {
 
         if (isNaN(chrEncVal)) return;
 
-        this.chrEncHandler(chrEncVal);
+        this.chrEncHandler(chrEncVal, true);
         this.updateCharEnc(chrEncVal);
         hideElement(e.target.closest(".cm-status-bar-select-content"));
     }
@@ -221,25 +214,34 @@ class StatusBarPanel {
      * @param {EditorState} state
      */
     updateEOL(state) {
-        if (state.lineBreak === this.eolVal) return;
-
-        const eolLookup = {
-            "\u000a": ["LF", "Line Feed"],
-            "\u000b": ["VT", "Vertical Tab"],
-            "\u000c": ["FF", "Form Feed"],
-            "\u000d": ["CR", "Carriage Return"],
-            "\u000d\u000a": ["CRLF", "Carriage Return + Line Feed"],
-            "\u0085": ["NEL", "Next Line"],
-            "\u2028": ["LS", "Line Separator"],
-            "\u2029": ["PS", "Paragraph Separator"]
-        };
+        if (this.getEOLState() < 2 && state.lineBreak === this.eolVal) return;
 
         const val = this.dom.querySelector(".eol-value");
         const button = val.closest(".cm-status-bar-select-btn");
-        const eolName = eolLookup[state.lineBreak];
-        val.textContent = eolName[0];
-        button.setAttribute("title", `End of line sequence:<br>${eolName[1]}`);
-        button.setAttribute("data-original-title", `End of line sequence:<br>${eolName[1]}`);
+        let eolCode = eolSeqToCode[state.lineBreak];
+        let eolName = eolCodeToName[eolCode];
+
+        switch (this.getEOLState()) {
+            case 1: // Detected
+                val.classList.add("font-italic");
+                eolCode += " (detected)";
+                eolName += " (detected)";
+                // Pulse
+                val.classList.add("pulse");
+                setTimeout(() => {
+                    val.classList.remove("pulse");
+                }, 2000);
+                break;
+            case 0: // Unset
+            case 2: // Manually set
+            default:
+                val.classList.remove("font-italic");
+                break;
+        }
+
+        val.textContent = eolCode;
+        button.setAttribute("title", `End of line sequence:<br>${eolName}`);
+        button.setAttribute("data-original-title", `End of line sequence:<br>${eolName}`);
         this.eolVal = state.lineBreak;
     }
 
@@ -249,12 +251,30 @@ class StatusBarPanel {
      */
     updateCharEnc() {
         const chrEncVal = this.chrEncGetter();
-        if (chrEncVal === this.chrEncVal) return;
+        if (this.getEncodingState() < 2 && chrEncVal === this.chrEncVal) return;
 
-        const name = CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] ? CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] : "Raw Bytes";
+        let name = CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] ? CHR_ENC_SIMPLE_REVERSE_LOOKUP[chrEncVal] : "Raw Bytes";
 
         const val = this.dom.querySelector(".chr-enc-value");
         const button = val.closest(".cm-status-bar-select-btn");
+
+        switch (this.getEncodingState()) {
+            case 1: // Detected
+                val.classList.add("font-italic");
+                name += " (detected)";
+                // Pulse
+                val.classList.add("pulse");
+                setTimeout(() => {
+                    val.classList.remove("pulse");
+                }, 2000);
+                break;
+            case 0: // Unset
+            case 2: // Manually set
+            default:
+                val.classList.remove("font-italic");
+                break;
+        }
+
         val.textContent = name;
         button.setAttribute("title", `${this.label} character encoding:<br>${name}`);
         button.setAttribute("data-original-title", `${this.label} character encoding:<br>${name}`);

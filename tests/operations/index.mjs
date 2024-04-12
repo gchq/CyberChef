@@ -62,6 +62,8 @@ import "./tests/DefangIP.mjs";
 import "./tests/ELFInfo.mjs";
 import "./tests/Enigma.mjs";
 import "./tests/ExtractEmailAddresses.mjs";
+import "./tests/ExtractHashes.mjs";
+import "./tests/Float.mjs";
 import "./tests/FileTree.mjs";
 import "./tests/FletcherChecksum.mjs";
 import "./tests/Fork.mjs";
@@ -81,6 +83,7 @@ import "./tests/HKDF.mjs";
 import "./tests/Image.mjs";
 import "./tests/IndexOfCoincidence.mjs";
 import "./tests/JA3Fingerprint.mjs";
+import "./tests/JA4Fingerprint.mjs";
 import "./tests/JA3SFingerprint.mjs";
 import "./tests/JSONBeautify.mjs";
 import "./tests/JSONMinify.mjs";
@@ -124,6 +127,8 @@ import "./tests/Register.mjs";
 import "./tests/RisonEncodeDecode.mjs";
 import "./tests/Rotate.mjs";
 import "./tests/RSA.mjs";
+import "./tests/Salsa20.mjs";
+import "./tests/XSalsa20.mjs";
 import "./tests/SeqUtils.mjs";
 import "./tests/SetDifference.mjs";
 import "./tests/SetIntersection.mjs";
@@ -144,6 +149,7 @@ import "./tests/UnescapeString.mjs";
 import "./tests/Unicode.mjs";
 import "./tests/WordCount.mjs";
 import "./tests/YARA.mjs";
+import "./tests/ParseCSR.mjs";
 
 const testStatus = {
     allTestsPassing: true,

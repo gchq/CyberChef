@@ -46,6 +46,8 @@ class App {
         this.appLoaded     = false;
         this.workerLoaded  = false;
         this.waitersLoaded = false;
+
+        this.snackbars     = [];
     }
 
 
@@ -500,22 +502,22 @@ class App {
         // Input Character Encoding
         // Must be set before the input is loaded
         if (this.uriParams.ienc) {
-            this.manager.input.chrEncChange(parseInt(this.uriParams.ienc, 10));
+            this.manager.input.chrEncChange(parseInt(this.uriParams.ienc, 10), true);
         }
 
         // Output Character Encoding
         if (this.uriParams.oenc) {
-            this.manager.output.chrEncChange(parseInt(this.uriParams.oenc, 10));
+            this.manager.output.chrEncChange(parseInt(this.uriParams.oenc, 10), true);
         }
 
         // Input EOL sequence
         if (this.uriParams.ieol) {
-            this.manager.input.eolChange(this.uriParams.ieol);
+            this.manager.input.eolChange(this.uriParams.ieol, true);
         }
 
         // Output EOL sequence
         if (this.uriParams.oeol) {
-            this.manager.output.eolChange(this.uriParams.oeol);
+            this.manager.output.eolChange(this.uriParams.oeol, true);
         }
 
         // Read in input data from URI params
@@ -708,14 +710,14 @@ class App {
         log.info("[" + time.toLocaleString() + "] " + str);
         if (silent) return;
 
-        this.currentSnackbar = $.snackbar({
+        this.snackbars.push($.snackbar({
             content: str,
             timeout: timeout,
             htmlAllowed: true,
             onClose: () => {
-                this.currentSnackbar.remove();
+                this.snackbars.shift().remove();
             }
-        });
+        }));
     }
 
 

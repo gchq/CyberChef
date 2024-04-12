@@ -1,10 +1,10 @@
 <!-- htmlmin:ignore --><!--
     CyberChef - The Cyber Swiss Army Knife
 
-    @copyright Crown Copyright 2016
+    @copyright Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %>
     @license Apache-2.0
 
-      Copyright 2016 Crown Copyright
+      Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %> Crown Copyright
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
         <meta charset="UTF-8">
         <title>CyberChef</title>
 
-        <meta name="copyright" content="Crown Copyright 2016" />
+        <meta name="copyright" content="Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %>" />
         <meta name="description" content="The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis" />
         <meta name="keywords" content="base64, hex, decode, encode, encrypt, decrypt, compress, decompress, regex, regular expressions, hash, crypt, hexadecimal, user agent, url, certificate, x.509, parser, JSON, gzip,  md5, sha1, aes, des, blowfish, xor" />
 
@@ -142,8 +142,8 @@
             <div id="preloader-error" class="loading-error"></div>
         </div>
         <!-- End preloader overlay -->
-        <button type="button" class="btn btn-warning bmd-btn-icon" id="edit-favourites" data-toggle="tooltip" title="Edit favourites">
-            <i class="material-icons">star</i>
+        <button type="button" aria-label="Edit Favourites" class="btn btn-warning bmd-btn-icon" id="edit-favourites" data-toggle="tooltip" title="Edit favourites">
+            <i class="material-icons" aria-hidden="true">star</i>
         </button>
         <div id="content-wrapper">
             <div id="banner" class="row">
@@ -181,14 +181,14 @@
                     <div class="title no-select">
                         Recipe
                         <span class="pane-controls hide-on-maximised-output">
-                            <button type="button" class="btn btn-primary bmd-btn-icon" id="save" data-toggle="tooltip" title="Save recipe" data-help-title="Saving a recipe" data-help="<p>Recipes can be represented in a few different formats and saved for use at a later date. You can either copy the Recipe configuration and save it somewhere offline for later use, or use your browser's local storage.</p><ul><li><b>Deep link:</b> The easiest way to share a CyberChef Recipe is to copy the deep link, either from the address bar (which is updated as the Recipe or Input changes), or from the 'Save recipe' pane. When you visit this link, the Recipe and Input should be populated from where you left off.</li><li><b>Chef format:</b> This custom format is designed to be compact and easily readable. It is the format used in CyberChef's URL, so it largely uses characters that do not have to be escaped in URL encoding, making it a little easier to understand what a CyberChef URL contains.</li><li><b>Clean JSON:</b> This JSON format uses whitespace and indentation in a way that makes the Recipe easy to read.</li><li><b>Compact JSON:</b> This is the most compact way that the Recipe can be represented in JSON.</li><li><b>Local storage:</b> Alternatively, you can enter a name into the 'Recipe name' field and save to your browser's local storage. The Recipe will then be available to load from the 'Load Recipe' pane as long as you are using the same browser profile. Be aware that if your browser profile is cleaned, you may lose this data.</li></ul>">
-                                <i class="material-icons">save</i>
+                            <button type="button" aria-label="Save recipe" class="btn btn-primary bmd-btn-icon" id="save" data-toggle="tooltip" title="Save recipe" data-help-title="Saving a recipe" data-help="<p>Recipes can be represented in a few different formats and saved for use at a later date. You can either copy the Recipe configuration and save it somewhere offline for later use, or use your browser's local storage.</p><ul><li><b>Deep link:</b> The easiest way to share a CyberChef Recipe is to copy the deep link, either from the address bar (which is updated as the Recipe or Input changes), or from the 'Save recipe' pane. When you visit this link, the Recipe and Input should be populated from where you left off.</li><li><b>Chef format:</b> This custom format is designed to be compact and easily readable. It is the format used in CyberChef's URL, so it largely uses characters that do not have to be escaped in URL encoding, making it a little easier to understand what a CyberChef URL contains.</li><li><b>Clean JSON:</b> This JSON format uses whitespace and indentation in a way that makes the Recipe easy to read.</li><li><b>Compact JSON:</b> This is the most compact way that the Recipe can be represented in JSON.</li><li><b>Local storage:</b> Alternatively, you can enter a name into the 'Recipe name' field and save to your browser's local storage. The Recipe will then be available to load from the 'Load Recipe' pane as long as you are using the same browser profile. Be aware that if your browser profile is cleaned, you may lose this data.</li></ul>">
+                                <i class="material-icons" aria-hidden="true">save</i>
                             </button>
-                            <button type="button" class="btn btn-primary bmd-btn-icon" id="load" data-toggle="tooltip" title="Load recipe" data-help-title="Loading a recipe" data-help="<p>Saved recipes can be loaded using one of the following methods:</p><ul><li>If you have a CyberChef deep link, simply visit that link and the Recipe and Input should be populated automatically.</li><li>If you have a Recipe string in any of the accepted formats, paste it into the 'Load recipe' pane textbox and click 'Load'.</li><li>If you have saved a Recipe to your browser's local storage, it should be available in the dropdown menu in the 'Load recipe' pane. If it is not there, you may not be using the same browser profile, or your profile may have been cleared.</li></ul>">
-                                <i class="material-icons">folder</i>
+                            <button type="button" aria-label="Load recipe" class="btn btn-primary bmd-btn-icon" id="load" data-toggle="tooltip" title="Load recipe" data-help-title="Loading a recipe" data-help="<p>Saved recipes can be loaded using one of the following methods:</p><ul><li>If you have a CyberChef deep link, simply visit that link and the Recipe and Input should be populated automatically.</li><li>If you have a Recipe string in any of the accepted formats, paste it into the 'Load recipe' pane textbox and click 'Load'.</li><li>If you have saved a Recipe to your browser's local storage, it should be available in the dropdown menu in the 'Load recipe' pane. If it is not there, you may not be using the same browser profile, or your profile may have been cleared.</li></ul>">
+                                <i class="material-icons" aria-hidden="true">folder</i>
                             </button>
-                            <button type="button" class="btn btn-primary bmd-btn-icon" id="clr-recipe" data-toggle="tooltip" title="Clear recipe" data-help-title="Clearing a recipe" data-help="Clicking the 'Clear recipe' button will remove all operations from the Recipe. It will not clear the Input, but it will trigger a Bake if Auto-bake is turned on, which will change the value of the Output.">
-                                <i class="material-icons">delete</i>
+                            <button type="button" aria-label="Clear recipe" class="btn btn-primary bmd-btn-icon" id="clr-recipe" data-toggle="tooltip" title="Clear recipe" data-help-title="Clearing a recipe" data-help="Clicking the 'Clear recipe' button will remove all operations from the Recipe. It will not clear the Input, but it will trigger a Bake if Auto-bake is turned on, which will change the value of the Output.">
+                                <i class="material-icons" aria-hidden="true">delete</i>
                             </button>
                         </span>
                     </div>
@@ -223,22 +223,22 @@
                             <label for="input-text">Input</label>
                             <span class="pane-controls">
                                 <div class="io-info" id="input-files-info"></div>
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-new-tab" data-toggle="tooltip" title="Add a new input tab" data-help-title="Tabs" data-help="<p>New tabs can be created to support multiple Inputs. These tabs have their own associated character encodings and EOL separators, as defined in their status bars.</p><p>The deep link in the URL bar only contains information about the currently active tab.</p>">
-                                    <i class="material-icons">add</i>
+                                <button type="button" aria-label="Add new input tab" class="btn btn-primary bmd-btn-icon" id="btn-new-tab" data-toggle="tooltip" title="Add a new input tab" data-help-title="Tabs" data-help="<p>New tabs can be created to support multiple Inputs. These tabs have their own associated character encodings and EOL separators, as defined in their status bars.</p><p>The deep link in the URL bar only contains information about the currently active tab.</p>">
+                                    <i class="material-icons" aria-hidden="true">add</i>
                                 </button>
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-open-folder" data-toggle="tooltip" title="Open folder as input" data-help-title="Opening a folder" data-help="<p>You can open a whole folder into CyberChef, which will result in each file being loaded into a separate Input tab.</p><p>CyberChef can handle lots of Input files, but be aware that performance may suffer, especially if the files are large in size.</p><p>Folders can also be loaded by dragging them over the Input pane and dropping them.</p>">
-                                    <i class="material-icons">folder_open</i>
+                                <button type="button" aria-label="Open folder as input" class="btn btn-primary bmd-btn-icon" id="btn-open-folder" data-toggle="tooltip" title="Open folder as input" data-help-title="Opening a folder" data-help="<p>You can open a whole folder into CyberChef, which will result in each file being loaded into a separate Input tab.</p><p>CyberChef can handle lots of Input files, but be aware that performance may suffer, especially if the files are large in size.</p><p>Folders can also be loaded by dragging them over the Input pane and dropping them.</p>">
+                                    <i class="material-icons" aria-hidden="true">folder_open</i>
                                     <input type="file" id="open-folder" style="display: none" multiple directory webkitdirectory>
                                 </button>
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="btn-open-file" data-toggle="tooltip" title="Open file as input" data-help-title="Opening a file" data-help="<p>Files can be loaded into CyberChef individually or in groups, either using the 'Open file as input' button, or by dragging and dropping them over the Input pane.</p><p>CyberChef can handle reasonably large files (at least 500MB, depending on hardware), but performance may be impacted and some Operations will run very slowly over large Inputs.</p>">
-                                    <i class="material-icons">input</i>
+                                <button type="button" aria-label="Open file as input" class="btn btn-primary bmd-btn-icon" id="btn-open-file" data-toggle="tooltip" title="Open file as input" data-help-title="Opening a file" data-help="<p>Files can be loaded into CyberChef individually or in groups, either using the 'Open file as input' button, or by dragging and dropping them over the Input pane.</p><p>CyberChef can handle reasonably large files (at least 500MB, depending on hardware), but performance may be impacted and some Operations will run very slowly over large Inputs.</p>">
+                                    <i class="material-icons" aria-hidden="true">input</i>
                                     <input type="file" id="open-file" style="display: none" multiple>
                                 </button>
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="clr-io" data-toggle="tooltip" title="Clear input and output" data-help-title="Clearing the Input and Output" data-help="Clicking the 'Clear input and output' button will remove all Inputs and Outputs. It will not clear the Recipe.">
-                                    <i class="material-icons">delete</i>
+                                <button type="button" aria-label="Clear input and output" class="btn btn-primary bmd-btn-icon" id="clr-io" data-toggle="tooltip" title="Clear input and output" data-help-title="Clearing the Input and Output" data-help="Clicking the 'Clear input and output' button will remove all Inputs and Outputs. It will not clear the Recipe.">
+                                    <i class="material-icons" aria-hidden="true">delete</i>
                                 </button>
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="reset-layout" data-toggle="tooltip" title="Reset pane layout" data-help-title="Resetting the pane layout" data-help="CyberChef's panes can be resized to suit your area of focus. This button will reset the pane sizes to their default configuration.">
-                                    <i class="material-icons">view_compact</i>
+                                <button type="button" aria-label="Reset pane layout" class="btn btn-primary bmd-btn-icon" id="reset-layout" data-toggle="tooltip" title="Reset pane layout" data-help-title="Resetting the pane layout" data-help="CyberChef's panes can be resized to suit your area of focus. This button will reset the pane sizes to their default configuration.">
+                                    <i class="material-icons" aria-hidden="true">view_compact</i>
                                 </button>
                             </span>
                         </div>
@@ -280,17 +280,17 @@
                                 <button type="button" class="btn btn-primary bmd-btn-icon" id="save-all-to-file" data-toggle="tooltip" title="Save all outputs to a zip file" style="display: none" data-help-title="Saving all outputs to a zip file" data-help="<p>When operating with multiple tabbed Inputs and Outputs, you can use this button to save off all the Outputs at once in a ZIP file.</p><p>Use the 'Bake' button to bake all Inputs at once.</p><p>You will be given the choice to specify the file extension for the Outputs, or you can let CyberChef attempt to detect the filetype of each one. If an Output's type is not clear, CyberChef will use the '.dat' extension.</p>">
                                         <i class="material-icons">archive</i>
                                     </button>
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="save-to-file" data-toggle="tooltip" title="Save output to file" data-help-title="Saving output to a file" data-help="The currently active Output can be saved to a file. You will be asked to specify a filename. CyberChef will attempt to guess the correct file extension based on the data. If a file type cannot be detected, the extension defaults to '.dat' but can be changed manually.">
-                                    <i class="material-icons">save</i>
+                                <button type="button" aria-label="save" class="btn btn-primary bmd-btn-icon" id="save-to-file" data-toggle="tooltip" title="Save output to file" data-help-title="Saving output to a file" data-help="The currently active Output can be saved to a file. You will be asked to specify a filename. CyberChef will attempt to guess the correct file extension based on the data. If a file type cannot be detected, the extension defaults to '.dat' but can be changed manually.">
+                                    <i class="material-icons" aria-hidden="true">save</i>
                                 </button>
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="copy-output" data-toggle="tooltip" title="Copy raw output to the clipboard" data-help-title="Copying raw output to the clipboard" data-help="<p>Data can be copied from the Output in the normal way by selecting text and copying it. This button provides a quick way of copying the entire output to the clipboard without having to select it. It directly copies the raw data rather than selecting text in the Output editor. Each method should have the same result, but the button may be more efficient for large Outputs as it does not require any DOM interaction.</p>">
-                                    <i class="material-icons">content_copy</i>
+                                <button type="button" aria-label="copy content" class="btn btn-primary bmd-btn-icon" id="copy-output" data-toggle="tooltip" title="Copy raw output to the clipboard" data-help-title="Copying raw output to the clipboard" data-help="<p>Data can be copied from the Output in the normal way by selecting text and copying it. This button provides a quick way of copying the entire output to the clipboard without having to select it. It directly copies the raw data rather than selecting text in the Output editor. Each method should have the same result, but the button may be more efficient for large Outputs as it does not require any DOM interaction.</p>">
+                                    <i class="material-icons" aria-hidden="true">content_copy</i>
                                 </button>
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="switch" data-toggle="tooltip" title="Replace input with output" data-help-title="Replacing input with output" data-help="<p>This button moves the currently active Output data into the currently active Input tab, overwriting whatever data was already there.</p><p>The Input character encoding and EOL sequence will be changed to match the current Output values, so that the data is interpreted correctly.</p>">
-                                    <i class="material-icons">open_in_browser</i>
+                                <button type="button" aria-label="replace input with output" class="btn btn-primary bmd-btn-icon" id="switch" data-toggle="tooltip" title="Replace input with output" data-help-title="Replacing input with output" data-help="<p>This button moves the currently active Output data into the currently active Input tab, overwriting whatever data was already there.</p><p>The Input character encoding and EOL sequence will be changed to match the current Output values, so that the data is interpreted correctly.</p>">
+                                    <i class="material-icons" aria-hidden="true">open_in_browser</i>
                                 </button>
-                                <button type="button" class="btn btn-primary bmd-btn-icon" id="maximise-output" data-toggle="tooltip" title="Maximise output pane" data-help-title="Maximising the Output pane" data-help="This button allows you to view the Output pane at maximum size, hiding the Operations, Recipe and Input panes. You can restore the pane to its normal size by clicking the same button again.">
-                                    <i class="material-icons">fullscreen</i>
+                                <button type="button" aria-label="maximise output pane" class="btn btn-primary bmd-btn-icon" id="maximise-output" data-toggle="tooltip" title="Maximise output pane" data-help-title="Maximising the Output pane" data-help="This button allows you to view the Output pane at maximum size, hiding the Operations, Recipe and Input panes. You can restore the pane to its normal size by clicking the same button again.">
+                                    <i class="material-icons" aria-hidden="true">fullscreen</i>
                                 </button>
                             </span>
 
@@ -562,10 +562,10 @@
                     <div class="modal-body">
                         <img aria-hidden="true" class="about-img-left" src="<%- require('../static/images/cyberchef-128x128.png') %>" alt="CyberChef Logo"/>
                         <p class="subtext">
-                            Version <%=  htmlWebpackPlugin.options.version %><br>
+                            Version <%= htmlWebpackPlugin.options.version %><br>
                             Compile time: <%= htmlWebpackPlugin.options.compileTime %>
                         </p>
-                        <p>&copy; Crown Copyright 2016.</p>
+                        <p>&copy; Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %>.</p>
                         <p>Released under the Apache Licence, Version 2.0.</p>
                         <p><a href="https://gitter.im/gchq/CyberChef">
                             <img src="<%- require('../static/images/gitter-badge.svg') %>">
@@ -861,7 +861,7 @@
                         <ul>
                             <li>Build time: <%= htmlWebpackPlugin.options.compileTime %></li>
                             <li>The changelog for this version can be viewed <a href="https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md">here</a></li>
-                            <li>&copy; Crown Copyright 2016</li>
+                            <li>&copy; Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %></li>
                             <li>Released under the Apache Licence, Version 2.0</li>
                             <li>SHA256 hash: DOWNLOAD_HASH_PLACEHOLDER</li>
                         </ul>
