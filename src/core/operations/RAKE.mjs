@@ -105,10 +105,10 @@ class RAKE extends Operation {
         
         // Generate word_degree_matrix and populate
         const wordDegreeMatrix = Array(tokens.length).fill().map(() => Array(tokens.length).fill(0));
-        for (let p=0; p < phrases.length; p++) {
-            for (let w1=0; w1 < phrases[p].length; w1++) {
-                for (let w2=0; w2 < phrases[p].length; w2++) {
-                    wordDegreeMatrix[tokens.indexOf(phrases[p][w1])][tokens.indexOf(phrases[p][w2])]++;
+        for (const phrase of phrases) {
+            for (const word1 of phrase) {
+                for (const word2 of phrase) {
+                    wordDegreeMatrix[tokens.indexOf(word1)][tokens.indexOf(word2)]++;
                 }
             }
         }
