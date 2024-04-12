@@ -142,6 +142,7 @@ import "./tests/TranslateDateTimeFormat.mjs";
 import "./tests/Typex.mjs";
 import "./tests/UnescapeString.mjs";
 import "./tests/Unicode.mjs";
+import "./tests/WordCount.mjs";
 import "./tests/YARA.mjs";
 
 const testStatus = {

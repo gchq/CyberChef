@@ -302,7 +302,8 @@
             "Unescape string",
             "Pseudo-Random Number Generator",
             "Sleep",
-            "File Tree"
+            "File Tree",
+            "Word Count"
         ]
     },
     {
