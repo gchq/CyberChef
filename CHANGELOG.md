@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.16.0] - 2024-04-12
+- Added 'JA4Server Fingerprint' operation [@n1474335] | [#1789]
+
 ### [10.15.0] - 2024-04-02
 - Fix Ciphersaber2 key concatenation [@zb3] | [#1765]
 - Fix DeriveEVPKey's array parsing [@zb3] | [#1767]
@@ -418,6 +421,7 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[10.16.0]: https://github.com/gchq/CyberChef/releases/tag/v10.16.0
 [10.15.0]: https://github.com/gchq/CyberChef/releases/tag/v10.15.0
 [10.14.0]: https://github.com/gchq/CyberChef/releases/tag/v10.14.0
 [10.13.0]: https://github.com/gchq/CyberChef/releases/tag/v10.13.0
@@ -744,3 +748,5 @@ All major and minor version changes will be documented in this file. Details of 
 [#1504]: https://github.com/gchq/CyberChef/issues/1504
 [#512]: https://github.com/gchq/CyberChef/issues/512
 [#1732]: https://github.com/gchq/CyberChef/issues/1732
+[#1789]: https://github.com/gchq/CyberChef/issues/1789
+
