@@ -37,7 +37,7 @@ module.exports = {
         testOp(browser, ["From Hex", "Add Text To Image", "To Base64"], Images.PNG_HEX, Images.PNG_CHEF_B64, [[], ["Chef", "Center", "Middle", 0, 0, 16], []]);
         testOp(browser, "Adler-32 Checksum", "test input", "16160411");
         testOp(browser, "Affine Cipher Decode", "test input", "rcqr glnsr", [1, 2]);
-        testOp(browser, "Affine Cipher Encode", "test input", "njln rbfpn", [2, 1]);
+        testOp(browser, "Affine Cipher Encode", "test input", "gndg zoujg", [3, 1]);
         testOp(browser, "AMF Decode", "\u000A\u0013\u0001\u0003a\u0006\u0009test", /"\$value": "test"/);
         testOp(browser, "AMF Encode", '{"a": "test"}', "\u000A\u0013\u0001\u0003a\u0006\u0009test");
         testOp(browser, "Analyse hash", "0123456789abcdef", /CRC-64/);

@@ -3,6 +3,7 @@
  *
  * @author Matt C [matt@artemisbot.uk]
  * @author n1474335 [n1474335@gmail.com]
+ * @author Evie H [evie@evie.sh]
  *
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
@@ -10,6 +11,7 @@
  */
 
 import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
 import CryptoJS from "crypto-js";
 
 /**
@@ -28,6 +30,10 @@ export function affineEncode(input, args) {
 
     if (!/^\+?(0|[1-9]\d*)$/.test(a) || !/^\+?(0|[1-9]\d*)$/.test(b)) {
         throw new OperationError("The values of a and b can only be integers.");
+    }
+
+    if (Utils.gcd(a, 26) !== 1) {
+        throw new OperationError("The value of `a` must be coprime to 26.");
     }
 
     for (let i = 0; i < input.length; i++) {
