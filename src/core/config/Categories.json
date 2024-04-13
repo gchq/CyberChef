@@ -168,6 +168,8 @@
             "Hex to PEM",
             "Hex to Object Identifier",
             "Object Identifier to Hex",
+            "PEM to JWK",
+            "JWK to PEM",
             "Generate PGP Key Pair",
             "PGP Encrypt",
             "PGP Decrypt",
@@ -180,7 +182,9 @@
             "RSA Encrypt",
             "RSA Decrypt",
             "Parse SSH Host Key",
-            "Parse CSR"
+            "Parse CSR",
+            "Public Key from Certificate",
+            "Public Key from Private Key"
         ]
     },
     {
@@ -238,6 +242,7 @@
             "JA3 Fingerprint",
             "JA3S Fingerprint",
             "JA4 Fingerprint",
+            "JA4Server Fingerprint",
             "HASSH Client Fingerprint",
             "HASSH Server Fingerprint",
             "Format MAC addresses",

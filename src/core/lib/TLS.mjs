@@ -70,13 +70,11 @@ function parseHandshake(bytes) {
 
     // Handshake type
     h.handshakeType = {
-        description: "Client Hello",
+        description: "Handshake Type",
         length: 1,
         data: b.getBytes(1),
         value: s.readInt(1)
     };
-    if (h.handshakeType.value !== 0x01)
-        throw new OperationError("Not a Client Hello.");
 
     // Handshake length
     h.handshakeLength = {
@@ -86,8 +84,33 @@ function parseHandshake(bytes) {
         value: s.readInt(3)
     };
     if (s.length !== h.handshakeLength.value + 4)
-        throw new OperationError("Not enough data in Client Hello.");
+        throw new OperationError("Not enough data in Handshake message.");
 
+
+    switch (h.handshakeType.value) {
+        case 0x01:
+            h.handshakeType.description = "Client Hello";
+            parseClientHello(s, b, h);
+            break;
+        case 0x02:
+            h.handshakeType.description = "Server Hello";
+            parseServerHello(s, b, h);
+            break;
+        default:
+            throw new OperationError("Not a known handshake message.");
+    }
+
+    return h;
+}
+
+/**
+ * Parse a TLS Client Hello
+ * @param {Stream} s
+ * @param {Stream} b
+ * @param {Object} h
+ * @returns {JSON}
+ */
+function parseClientHello(s, b, h) {
     // Hello version
     h.helloVersion = {
         description: "Client Hello Version",
@@ -169,6 +192,79 @@ function parseHandshake(bytes) {
     };
 
     return h;
+}
+
+/**
+ * Parse a TLS Server Hello
+ * @param {Stream} s
+ * @param {Stream} b
+ * @param {Object} h
+ * @returns {JSON}
+ */
+function parseServerHello(s, b, h) {
+    // Hello version
+    h.helloVersion = {
+        description: "Server Hello Version",
+        length: 2,
+        data: b.getBytes(2),
+        value: s.readInt(2)
+    };
+
+    // Random
+    h.random = {
+        description: "Server Random",
+        length: 32,
+        data: b.getBytes(32),
+        value: s.getBytes(32)
+    };
+
+    // Session ID Length
+    h.sessionIDLength = {
+        description: "Session ID Length",
+        length: 1,
+        data: b.getBytes(1),
+        value: s.readInt(1)
+    };
+
+    // Session ID
+    h.sessionID = {
+        description: "Session ID",
+        length: h.sessionIDLength.value,
+        data: b.getBytes(h.sessionIDLength.value),
+        value: s.getBytes(h.sessionIDLength.value)
+    };
+
+    // Cipher Suite
+    h.cipherSuite = {
+        description: "Selected Cipher Suite",
+        length: 2,
+        data: b.getBytes(2),
+        value: CIPHER_SUITES_LOOKUP[s.readInt(2)] || "Unknown"
+    };
+
+    // Compression Method
+    h.compressionMethod = {
+        description: "Selected Compression Method",
+        length: 1,
+        data: b.getBytes(1),
+        value: s.readInt(1) // TODO: Compression method name here
+    };
+
+    // Extensions Length
+    h.extensionsLength = {
+        description: "Extensions Length",
+        length: 2,
+        data: b.getBytes(2),
+        value: s.readInt(2)
+    };
+
+    // Extensions
+    h.extensions = {
+        description: "Extensions",
+        length: h.extensionsLength.value,
+        data: b.getBytes(h.extensionsLength.value),
+        value: parseExtensions(s.getBytes(h.extensionsLength.value))
+    };
 }
 
 /**
@@ -747,6 +843,11 @@ export const GREASE_VALUES = [
  */
 export function parseHighestSupportedVersion(bytes) {
     const s = new Stream(bytes);
+
+    // The Server Hello supported_versions extension simply contains the chosen version
+    if (s.length === 2) {
+        return s.readInt(2);
+    }
 
     // Length
     let i = s.readInt(1);
