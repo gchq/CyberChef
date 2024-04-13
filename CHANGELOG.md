@@ -13,6 +13,18 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.17.0] - 2024-04-13
+- Fix unit test 'expectOutput' implementation [@zb3] | [#1783]
+- Add accessibility labels for icons [@e218736] | [#1743]
+- Add focus styling for keyboard navigation [@e218736] | [#1739]
+- Add support for operation option hiding [@TheZ3ro] | [#541]
+- Improve efficiency of RAKE implementation [@sw5678] | [#1751]
+- Require (a, 26) to be coprime in 'Affine Encode' [@EvieHarv] | [#1788]
+- Added 'JWK to PEM' operation [@cplussharp] | [#1277]
+- Added 'PEM to JWK' operation [@cplussharp] | [#1277]
+- Added 'Public Key from Certificate' operation [@cplussharp] | [#1642]
+- Added 'Public Key from Private Key' operation [@cplussharp] | [#1642]
+
 ### [10.16.0] - 2024-04-12
 - Added 'JA4Server Fingerprint' operation [@n1474335] | [#1789]
 
@@ -421,6 +433,7 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[10.17.0]: https://github.com/gchq/CyberChef/releases/tag/v10.17.0
 [10.16.0]: https://github.com/gchq/CyberChef/releases/tag/v10.16.0
 [10.15.0]: https://github.com/gchq/CyberChef/releases/tag/v10.15.0
 [10.14.0]: https://github.com/gchq/CyberChef/releases/tag/v10.14.0
@@ -602,6 +615,10 @@ All major and minor version changes will be documented in this file. Details of 
 [@zb3]: https://github.com/zb3
 [@jkataja]: https://github.com/jkataja
 [@tomgond]: https://github.com/tomgond
+[@e218736]: https://github.com/e218736
+[@TheZ3ro]: https://github.com/TheZ3ro
+[@EvieHarv]: https://github.com/EvieHarv
+[@cplussharp]: https://github.com/cplussharp
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
