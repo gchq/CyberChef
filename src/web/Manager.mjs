@@ -139,6 +139,7 @@ class Manager {
         document.getElementById("load-delete-button").addEventListener("click", this.controls.loadDeleteClick.bind(this.controls));
         document.getElementById("load-name").addEventListener("change", this.controls.loadNameChange.bind(this.controls));
         document.getElementById("load-button").addEventListener("click", this.controls.loadButtonClick.bind(this.controls));
+        document.getElementById("hide-icon").addEventListener("click", this.controls.hideRecipeArgsClick.bind(this.recipe));
         document.getElementById("support").addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
         this.addMultiEventListeners("#save-texts textarea", "keyup paste", this.controls.saveTextChange, this.controls);
 
@@ -154,6 +155,7 @@ class Manager {
         // Recipe
         this.addDynamicListener(".arg:not(select)", "input", this.recipe.ingChange, this.recipe);
         this.addDynamicListener(".arg[type=checkbox], .arg[type=radio], select.arg", "change", this.recipe.ingChange, this.recipe);
+        this.addDynamicListener(".hide-args-icon", "click", this.recipe.hideArgsClick, this.recipe);
         this.addDynamicListener(".disable-icon", "click", this.recipe.disableClick, this.recipe);
         this.addDynamicListener(".breakpoint", "click", this.recipe.breakpointClick, this.recipe);
         this.addDynamicListener("#rec-list li.operation", "dblclick", this.recipe.operationDblclick, this.recipe);
