@@ -32,7 +32,7 @@ class ECDSAVerify extends Operation {
                 value: [
                     "Auto",
                     "ASN.1 HEX",
-                    "Concat HEX",
+                    "P1363 HEX",
                     "JSON"
                 ]
             },
@@ -80,7 +80,7 @@ class ECDSAVerify extends Operation {
             } else if (input.indexOf("{") !== -1) {
                 inputFormat = "JSON";
             } else {
-                inputFormat = "Concat HEX";
+                inputFormat = "P1363 HEX";
             }
         }
 
@@ -90,7 +90,7 @@ class ECDSAVerify extends Operation {
             case "ASN.1 HEX":
                 signatureASN1Hex = input;
                 break;
-            case "Concat HEX":
+            case "P1363 HEX":
                 signatureASN1Hex = r.KJUR.crypto.ECDSA.concatSigToASN1Sig(input);
                 break;
             case "JSON": {

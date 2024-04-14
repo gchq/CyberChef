@@ -30,7 +30,7 @@ gusgcAE8H6810fkJ8ZmTNiCCa6sLgR2vD1VNh2diirWgKPH4PVMKav5e6Q==
     signature: {
         sha256: {
             asn1: "3046022100e06905608a2fa7dbda9e284c2a7959dfb68fb527a5f003b2d7975ff135145127022100b6baa253793334f8b93ea1dd622bc600124d8090babd807efe3f77b8b324388d",
-            concat: "e06905608a2fa7dbda9e284c2a7959dfb68fb527a5f003b2d7975ff135145127b6baa253793334f8b93ea1dd622bc600124d8090babd807efe3f77b8b324388d",
+            p1363: "e06905608a2fa7dbda9e284c2a7959dfb68fb527a5f003b2d7975ff135145127b6baa253793334f8b93ea1dd622bc600124d8090babd807efe3f77b8b324388d",
             json: `{"r":"00e06905608a2fa7dbda9e284c2a7959dfb68fb527a5f003b2d7975ff135145127","s":"00b6baa253793334f8b93ea1dd622bc600124d8090babd807efe3f77b8b324388d"}`
         }
     }
@@ -250,8 +250,8 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "ECDSA Verify: P-256 with SHA256 (Concat signature)",
-        input: P256.signature.sha256.concat,
+        name: "ECDSA Verify: P-256 with SHA256 (P1363 signature)",
+        input: P256.signature.sha256.p1363,
         expectedOutput: "Verified OK",
         recipeConfig: [
             {
@@ -307,13 +307,13 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "ECDSA Signature Conversion: ASN.1 To Concat",
+        name: "ECDSA Signature Conversion: ASN.1 To P1363",
         input: P256.signature.sha256.asn1,
-        expectedOutput: P256.signature.sha256.concat,
+        expectedOutput: P256.signature.sha256.p1363,
         recipeConfig: [
             {
                 "op": "ECDSA Signature Conversion",
-                "args": ["Auto", "Concat HEX"]
+                "args": ["Auto", "P1363 HEX"]
             }
         ]
     },
@@ -329,8 +329,8 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "ECDSA Signature Conversion: Concat To ASN.1",
-        input: P256.signature.sha256.concat,
+        name: "ECDSA Signature Conversion: P1363 To ASN.1",
+        input: P256.signature.sha256.p1363,
         expectedOutput: P256.signature.sha256.asn1,
         recipeConfig: [
             {
@@ -340,19 +340,19 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "ECDSA Signature Conversion: Concat To Concat",
-        input: P256.signature.sha256.concat,
-        expectedOutput: P256.signature.sha256.concat,
+        name: "ECDSA Signature Conversion: P1363 To P1363",
+        input: P256.signature.sha256.p1363,
+        expectedOutput: P256.signature.sha256.p1363,
         recipeConfig: [
             {
                 "op": "ECDSA Signature Conversion",
-                "args": ["Auto", "Concat HEX"]
+                "args": ["Auto", "P1363 HEX"]
             }
         ]
     },
     {
-        name: "ECDSA Signature Conversion: Concat To JSON",
-        input: P256.signature.sha256.concat,
+        name: "ECDSA Signature Conversion: P1363 To JSON",
+        input: P256.signature.sha256.p1363,
         expectedOutput: P256.signature.sha256.json,
         recipeConfig: [
             {
@@ -373,13 +373,13 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "ECDSA Signature Conversion: JSON To Concat",
+        name: "ECDSA Signature Conversion: JSON To P1363",
         input: P256.signature.sha256.json,
-        expectedOutput: P256.signature.sha256.concat,
+        expectedOutput: P256.signature.sha256.p1363,
         recipeConfig: [
             {
                 "op": "ECDSA Signature Conversion",
-                "args": ["Auto", "Concat HEX"]
+                "args": ["Auto", "P1363 HEX"]
             }
         ]
     },

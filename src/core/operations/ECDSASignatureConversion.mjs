@@ -31,7 +31,7 @@ class ECDSASignatureConversion extends Operation {
                 value: [
                     "Auto",
                     "ASN.1 HEX",
-                    "Concat HEX",
+                    "P1363 HEX",
                     "JSON"
                 ]
             },
@@ -40,7 +40,7 @@ class ECDSASignatureConversion extends Operation {
                 type: "option",
                 value: [
                     "ASN.1 HEX",
-                    "Concat HEX",
+                    "P1363 HEX",
                     "JSON"
                 ]
             }
@@ -63,7 +63,7 @@ class ECDSASignatureConversion extends Operation {
             } else if (input.indexOf("{") !== -1) {
                 inputFormat = "JSON";
             } else {
-                inputFormat = "Concat HEX";
+                inputFormat = "P1363 HEX";
             }
         }
 
@@ -73,7 +73,7 @@ class ECDSASignatureConversion extends Operation {
             case "ASN.1 HEX":
                 signatureASN1Hex = input;
                 break;
-            case "Concat HEX":
+            case "P1363 HEX":
                 signatureASN1Hex = r.KJUR.crypto.ECDSA.concatSigToASN1Sig(input);
                 break;
             case "JSON": {
@@ -89,7 +89,7 @@ class ECDSASignatureConversion extends Operation {
             case "ASN.1 HEX":
                 result = signatureASN1Hex;
                 break;
-            case "Concat HEX":
+            case "P1363 HEX":
                 result = r.KJUR.crypto.ECDSA.asn1SigToConcatSig(signatureASN1Hex);
                 break;
             case "JSON": {
