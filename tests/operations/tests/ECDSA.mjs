@@ -272,6 +272,28 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "ECDSA Verify: JSON signature missing r",
+        input: JSON.stringify({s: JSON.parse(P256.signature.sha256.json).s}),
+        expectedOutput: 'No "r" value in the signature JSON',
+        recipeConfig: [
+            {
+                "op": "ECDSA Verify",
+                "args": ["Auto", "SHA-256", P256.publicKey, ASCII_TEXT]
+            }
+        ]
+    },
+    {
+        name: "ECDSA Verify: JSON signature missing s",
+        input: JSON.stringify({r: JSON.parse(P256.signature.sha256.json).r}),
+        expectedOutput: 'No "s" value in the signature JSON',
+        recipeConfig: [
+            {
+                "op": "ECDSA Verify",
+                "args": ["Auto", "SHA-256", P256.publicKey, ASCII_TEXT]
+            }
+        ]
+    },
+    {
         name: "ECDSA Verify: Using private key fails",
         input: P256.signature.sha256.asn1,
         expectedOutput: "Provided key is not a public key.",
@@ -324,7 +346,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "ECDSA Signature Conversion",
-                "args": ["Auto", "JSON"]
+                "args": ["Auto", "Raw JSON"]
             }
         ]
     },
@@ -357,7 +379,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "ECDSA Signature Conversion",
-                "args": ["Auto", "JSON"]
+                "args": ["Auto", "Raw JSON"]
             }
         ]
     },
@@ -390,7 +412,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "ECDSA Signature Conversion",
-                "args": ["Auto", "JSON"]
+                "args": ["Auto", "Raw JSON"]
             }
         ]
     }

@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import r from "jsrsasign";
 
 /**
@@ -32,7 +33,7 @@ class ECDSASignatureConversion extends Operation {
                     "Auto",
                     "ASN.1 HEX",
                     "P1363 HEX",
-                    "JSON"
+                    "Raw JSON"
                 ]
             },
             {
@@ -41,7 +42,7 @@ class ECDSASignatureConversion extends Operation {
                 value: [
                     "ASN.1 HEX",
                     "P1363 HEX",
-                    "JSON"
+                    "Raw JSON"
                 ]
             }
         ];
@@ -57,11 +58,19 @@ class ECDSASignatureConversion extends Operation {
         const outputFormat = args[1];
 
         // detect input format
+        let inputJson;
         if (inputFormat === "Auto") {
-            if (input.substr(0, 2) === "30" && r.ASN1HEX.isASN1HEX(input)) {
+            try {
+                inputJson = JSON.parse(input);
+                if (typeof(inputJson) === "object") {
+                    inputFormat = "Raw JSON";
+                }
+            } catch {}
+        }
+
+        if (inputFormat === "Auto") {
+            if (input.substring(0, 2) === "30" && r.ASN1HEX.isASN1HEX(input)) {
                 inputFormat = "ASN.1 HEX";
-            } else if (input.indexOf("{") !== -1) {
-                inputFormat = "JSON";
             } else {
                 inputFormat = "P1363 HEX";
             }
@@ -76,8 +85,14 @@ class ECDSASignatureConversion extends Operation {
             case "P1363 HEX":
                 signatureASN1Hex = r.KJUR.crypto.ECDSA.concatSigToASN1Sig(input);
                 break;
-            case "JSON": {
-                const inputJson = JSON.parse(input);
+            case "Raw JSON": {
+                if (!inputJson) inputJson = JSON.parse(input);
+                if (!inputJson.r) {
+                    throw new OperationError('No "r" value in the signature JSON');
+                }
+                if (!inputJson.s) {
+                    throw new OperationError('No "s" value in the signature JSON');
+                }
                 signatureASN1Hex = r.KJUR.crypto.ECDSA.hexRSSigToASN1Sig(inputJson.r, inputJson.s);
                 break;
             }
@@ -92,7 +107,7 @@ class ECDSASignatureConversion extends Operation {
             case "P1363 HEX":
                 result = r.KJUR.crypto.ECDSA.asn1SigToConcatSig(signatureASN1Hex);
                 break;
-            case "JSON": {
+            case "Raw JSON": {
                 const signatureRS = r.KJUR.crypto.ECDSA.parseSigHexInHexRS(signatureASN1Hex);
                 result = JSON.stringify(signatureRS);
                 break;

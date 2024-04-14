@@ -48,7 +48,7 @@ class ECDSASign extends Operation {
                 value: [
                     "ASN.1 HEX",
                     "P1363 HEX",
-                    "JSON"
+                    "Raw JSON"
                 ]
             }
         ];
@@ -86,7 +86,7 @@ class ECDSASign extends Operation {
             case "P1363 HEX":
                 result = r.KJUR.crypto.ECDSA.asn1SigToConcatSig(signatureASN1Hex);
                 break;
-            case "JSON": {
+            case "Raw JSON": {
                 const signatureRS = r.KJUR.crypto.ECDSA.parseSigHexInHexRS(signatureASN1Hex);
                 result = JSON.stringify(signatureRS);
                 break;
