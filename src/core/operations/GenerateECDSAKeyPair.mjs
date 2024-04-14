@@ -75,17 +75,21 @@ class GenerateECDSAKeyPair extends Operation {
             let result;
             switch (outputFormat) {
                 case "PEM":
-                    pubKey = r.KEYUTIL.getPEM(keyPair.pubKeyObj);
-                    privKey = r.KEYUTIL.getPEM(keyPair.prvKeyObj, "PKCS8PRV");
+                    pubKey = r.KEYUTIL.getPEM(keyPair.pubKeyObj).replace(/\r/g, "");
+                    privKey = r.KEYUTIL.getPEM(keyPair.prvKeyObj, "PKCS8PRV").replace(/\r/g, "");
                     result = pubKey + "\n" + privKey;
                     break;
                 case "DER":
                     result = keyPair.prvKeyObj.prvKeyHex;
                     break;
                 case "JWK":
-                    pubKey = JSON.stringify(r.KEYUTIL.getJWKFromKey(keyPair.pubKeyObj));
-                    privKey = JSON.stringify(r.KEYUTIL.getJWKFromKey(keyPair.prvKeyObj));
-                    result = pubKey + "\n\n" + privKey;
+                    pubKey = r.KEYUTIL.getJWKFromKey(keyPair.pubKeyObj);
+                    pubKey.key_ops = ["verify"]; // eslint-disable-line camelcase
+                    pubKey.kid = "PublicKey";
+                    privKey = r.KEYUTIL.getJWKFromKey(keyPair.prvKeyObj);
+                    privKey.key_ops = ["sign"]; // eslint-disable-line camelcase
+                    privKey.kid = "PrivateKey";
+                    result = JSON.stringify({keys: [privKey, pubKey]}, null, 4);
                     break;
             }
 
