@@ -31,6 +31,7 @@ gusgcAE8H6810fkJ8ZmTNiCCa6sLgR2vD1VNh2diirWgKPH4PVMKav5e6Q==
         sha256: {
             asn1: "3046022100e06905608a2fa7dbda9e284c2a7959dfb68fb527a5f003b2d7975ff135145127022100b6baa253793334f8b93ea1dd622bc600124d8090babd807efe3f77b8b324388d",
             p1363: "e06905608a2fa7dbda9e284c2a7959dfb68fb527a5f003b2d7975ff135145127b6baa253793334f8b93ea1dd622bc600124d8090babd807efe3f77b8b324388d",
+            jws: "4GkFYIovp9vanihMKnlZ37aPtSel8AOy15df8TUUUSe2uqJTeTM0-Lk-od1iK8YAEk2AkLq9gH7-P3e4syQ4jQ",
             json: `{"r":"00e06905608a2fa7dbda9e284c2a7959dfb68fb527a5f003b2d7975ff135145127","s":"00b6baa253793334f8b93ea1dd622bc600124d8090babd807efe3f77b8b324388d"}`
         }
     }
@@ -261,6 +262,17 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "ECDSA Verify: P-256 with SHA256 (JWS signature)",
+        input: P256.signature.sha256.jws,
+        expectedOutput: "Verified OK",
+        recipeConfig: [
+            {
+                "op": "ECDSA Verify",
+                "args": ["Auto", "SHA-256", P256.publicKey, ASCII_TEXT]
+            }
+        ]
+    },
+    {
         name: "ECDSA Verify: P-256 with SHA256 (JSON signature)",
         input: P256.signature.sha256.json,
         expectedOutput: "Verified OK",
@@ -340,6 +352,17 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "ECDSA Signature Conversion: ASN.1 To JWS",
+        input: P256.signature.sha256.asn1,
+        expectedOutput: P256.signature.sha256.jws,
+        recipeConfig: [
+            {
+                "op": "ECDSA Signature Conversion",
+                "args": ["Auto", "JSON Web Signature"]
+            }
+        ]
+    },
+    {
         name: "ECDSA Signature Conversion: ASN.1 To JSON",
         input: P256.signature.sha256.asn1,
         expectedOutput: P256.signature.sha256.json,
@@ -373,6 +396,17 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "ECDSA Signature Conversion: P1363 To JWS",
+        input: P256.signature.sha256.p1363,
+        expectedOutput: P256.signature.sha256.jws,
+        recipeConfig: [
+            {
+                "op": "ECDSA Signature Conversion",
+                "args": ["Auto", "JSON Web Signature"]
+            }
+        ]
+    },
+    {
         name: "ECDSA Signature Conversion: P1363 To JSON",
         input: P256.signature.sha256.p1363,
         expectedOutput: P256.signature.sha256.json,
@@ -402,6 +436,17 @@ TestRegister.addTests([
             {
                 "op": "ECDSA Signature Conversion",
                 "args": ["Auto", "P1363 HEX"]
+            }
+        ]
+    },
+    {
+        name: "ECDSA Signature Conversion: JSON To JWS",
+        input: P256.signature.sha256.json,
+        expectedOutput: P256.signature.sha256.jws,
+        recipeConfig: [
+            {
+                "op": "ECDSA Signature Conversion",
+                "args": ["Auto", "JSON Web Signature"]
             }
         ]
     },

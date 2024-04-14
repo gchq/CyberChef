@@ -6,6 +6,8 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import { fromBase64, toBase64 } from "../lib/Base64.mjs";
+import { fromHex, toHexFast } from "../lib/Hex.mjs";
 import r from "jsrsasign";
 
 /**
@@ -33,6 +35,7 @@ class ECDSASignatureConversion extends Operation {
                     "Auto",
                     "ASN.1 HEX",
                     "P1363 HEX",
+                    "JSON Web Signature",
                     "Raw JSON"
                 ]
             },
@@ -42,6 +45,7 @@ class ECDSASignatureConversion extends Operation {
                 value: [
                     "ASN.1 HEX",
                     "P1363 HEX",
+                    "JSON Web Signature",
                     "Raw JSON"
                 ]
             }
@@ -69,21 +73,38 @@ class ECDSASignatureConversion extends Operation {
         }
 
         if (inputFormat === "Auto") {
-            if (input.substring(0, 2) === "30" && r.ASN1HEX.isASN1HEX(input)) {
-                inputFormat = "ASN.1 HEX";
-            } else {
-                inputFormat = "P1363 HEX";
+            const hexRegex = /^[a-f\d]{2,}$/gi;
+            if (hexRegex.test(input)) {
+                if (input.substring(0, 2) === "30" && r.ASN1HEX.isASN1HEX(input)) {
+                    inputFormat = "ASN.1 HEX";
+                } else {
+                    inputFormat = "P1363 HEX";
+                }
             }
+        }
+
+        let inputBase64;
+        if (inputFormat === "Auto") {
+            try {
+                inputBase64 = fromBase64(input, "A-Za-z0-9-_", false);
+                inputFormat = "JSON Web Signature";
+            } catch {}
         }
 
         // convert input to ASN.1 hex
         let signatureASN1Hex;
         switch (inputFormat) {
+            case "Auto":
+                throw new OperationError("Signature format could not be detected");
             case "ASN.1 HEX":
                 signatureASN1Hex = input;
                 break;
             case "P1363 HEX":
                 signatureASN1Hex = r.KJUR.crypto.ECDSA.concatSigToASN1Sig(input);
+                break;
+            case "JSON Web Signature":
+                if (!inputBase64) inputBase64 = fromBase64(input, "A-Za-z0-9-_");
+                signatureASN1Hex = r.KJUR.crypto.ECDSA.concatSigToASN1Sig(toHexFast(inputBase64));
                 break;
             case "Raw JSON": {
                 if (!inputJson) inputJson = JSON.parse(input);
@@ -106,6 +127,10 @@ class ECDSASignatureConversion extends Operation {
                 break;
             case "P1363 HEX":
                 result = r.KJUR.crypto.ECDSA.asn1SigToConcatSig(signatureASN1Hex);
+                break;
+            case "JSON Web Signature":
+                result = r.KJUR.crypto.ECDSA.asn1SigToConcatSig(signatureASN1Hex);
+                result = toBase64(fromHex(result), "A-Za-z0-9-_");  // base64url
                 break;
             case "Raw JSON": {
                 const signatureRS = r.KJUR.crypto.ECDSA.parseSigHexInHexRS(signatureASN1Hex);

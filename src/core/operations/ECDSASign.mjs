@@ -6,6 +6,8 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import { fromHex } from "../lib/Hex.mjs";
+import { toBase64 } from "../lib/Base64.mjs";
 import r from "jsrsasign";
 
 /**
@@ -48,6 +50,7 @@ class ECDSASign extends Operation {
                 value: [
                     "ASN.1 HEX",
                     "P1363 HEX",
+                    "JSON Web Signature",
                     "Raw JSON"
                 ]
             }
@@ -85,6 +88,10 @@ class ECDSASign extends Operation {
                 break;
             case "P1363 HEX":
                 result = r.KJUR.crypto.ECDSA.asn1SigToConcatSig(signatureASN1Hex);
+                break;
+            case "JSON Web Signature":
+                result = r.KJUR.crypto.ECDSA.asn1SigToConcatSig(signatureASN1Hex);
+                result = toBase64(fromHex(result), "A-Za-z0-9-_");  // base64url
                 break;
             case "Raw JSON": {
                 const signatureRS = r.KJUR.crypto.ECDSA.parseSigHexInHexRS(signatureASN1Hex);
