@@ -167,6 +167,33 @@ module.exports = {
         browser.expect.element("#output-text .cm-status-bar .eol-value").text.to.equal("LF");
     },
 
+    "Autobaking the latest input": browser => {
+        // Use the sleep recipe to simulate a long running task
+        utils.loadRecipe(browser, "Sleep", "input", [2000]);
+
+        browser.waitForElementVisible("#stale-indicator");
+
+        // Enable previously disabled autobake
+        browser.click("#auto-bake-label");
+
+        browser.sendKeys("#input-text .cm-content", "1");
+
+        browser.pause(500);
+
+        // Make another change while the previous input is being baked
+        browser.sendKeys("#input-text .cm-content", "2");
+
+        browser
+            .waitForElementNotVisible("#stale-indicator")
+            .waitForElementNotVisible("#output-loader");
+
+        // Ensure we got the latest input baked
+        utils.expectOutput(browser, "input12");
+
+        // Turn autobake off again
+        browser.click("#auto-bake-label");
+    },
+
     "Special content": browser => {
         /* Special characters are rendered correctly */
         utils.setInput(browser, SPECIAL_CHARS, false);
@@ -645,6 +672,20 @@ module.exports = {
     },
 
     "Loading from URL": browser => {
+        utils.clear(browser);
+
+        /* Side panel displays correct info */
+        utils.uploadFile(browser, "files/TowelDay.jpeg");
+
+        browser
+            .waitForElementVisible("#input-text .cm-file-details")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-toggle-shown")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-thumbnail")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-name")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-size")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-type")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-loaded");
+
         /* Complex deep link populates the input correctly (encoding, eol, input) */
         browser
             .urlHash("recipe=To_Base64('A-Za-z0-9%2B/%3D')&input=VGhlIHNoaXBzIGh1bmcgaW4gdGhlIHNreSBpbiBtdWNoIHRoZSBzYW1lIHdheSB0aGF0IGJyaWNrcyBkb24ndC4M&ienc=21866&oenc=1201&ieol=FF&oeol=PS")
