@@ -102,7 +102,7 @@ class RAKE extends Operation {
 
         // Remove duplicate phrases
         phrases = phrases.unique();
-        
+
         // Generate word_degree_matrix and populate
         const wordDegreeMatrix = Array(tokens.length).fill().map(() => Array(tokens.length).fill(0));
         for (const phrase of phrases) {
