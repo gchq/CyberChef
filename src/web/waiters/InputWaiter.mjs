@@ -217,11 +217,13 @@ class InputWaiter {
      * @param {number} chrEncVal
      * @param {boolean} [manual=false]
      */
-    chrEncChange(chrEncVal, manual=false) {
+    chrEncChange(chrEncVal, manual=false, internal=false) {
         if (typeof chrEncVal !== "number") return;
         this.inputChrEnc = chrEncVal;
         this.encodingState = manual ? 2 : this.encodingState;
-        this.inputChange();
+        if (!internal) {
+            this.inputChange();
+        }
     }
 
     /**
