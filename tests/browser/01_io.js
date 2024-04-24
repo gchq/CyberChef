@@ -178,6 +178,8 @@ module.exports = {
 
         browser.sendKeys("#input-text .cm-content", "1");
 
+        browser.waitForElementVisible("#output-loader");
+
         browser.pause(500);
 
         // Make another change while the previous input is being baked
