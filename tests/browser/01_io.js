@@ -173,8 +173,14 @@ module.exports = {
 
         browser.waitForElementVisible("#stale-indicator");
 
+        browser.expect.element("#auto-bake").to.not.be.selected;
+
         // Enable previously disabled autobake
         browser.click("#auto-bake-label");
+
+        browser.waitUntil(() => {
+            return browser.expect.element("#auto-bake").to.be.selected;
+        }, 1000);
 
         browser.sendKeys("#input-text .cm-content", "1");
 
