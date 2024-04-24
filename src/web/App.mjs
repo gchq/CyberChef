@@ -241,7 +241,7 @@ class App {
             action: "setInput",
             data: {
                 inputNum: inputNum,
-                silent: true
+                silent: false
             }
         });
     }
@@ -507,7 +507,7 @@ class App {
         // Input Character Encoding
         // Must be set before the input is loaded
         if (this.uriParams.ienc) {
-            this.manager.input.chrEncChange(parseInt(this.uriParams.ienc, 10), true);
+            this.manager.input.chrEncChange(parseInt(this.uriParams.ienc, 10), true, true);
         }
 
         // Output Character Encoding
@@ -546,7 +546,11 @@ class App {
         }
 
         this.autoBakePause = false;
-        window.dispatchEvent(this.manager.statechange);
+
+        // Dispatch stateChange only if not done by setInput
+        if (this.uriParams.input) {
+            window.dispatchEvent(this.manager.statechange);
+        }
     }
 
 
