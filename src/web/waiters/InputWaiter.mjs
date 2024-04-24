@@ -215,7 +215,8 @@ class InputWaiter {
      * Handler for Chr Enc change events
      * Sets the input character encoding
      * @param {number} chrEncVal
-     * @param {boolean} [manual=false]
+     * @param {boolean} [manual=false] - Flag to indicate the encoding was set by the user
+     * @param {boolean} [internal=false] - Flag to indicate this was set internally, i.e. by loading from URI
      */
     chrEncChange(chrEncVal, manual=false, internal=false) {
         if (typeof chrEncVal !== "number") return;
@@ -641,10 +642,6 @@ class InputWaiter {
                 const inputStr = toBase64(inputVal, "A-Za-z0-9+/");
                 this.app.updateURL(true, inputStr);
             }
-
-            // Trigger a state change
-            if (!silent) window.dispatchEvent(this.manager.statechange);
-
         }.bind(this));
     }
 
