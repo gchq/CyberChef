@@ -1,62 +1,42 @@
 /**
- * Base64 tests.
+ * XXTEA tests.
  *
  * @author devcydo [devcydo@gmail.com]
- *
- * @copyright Crown Copyright 2022
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2024
  * @license Apache-2.0
  */
 import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
-        name: "XXTEA",
+        name: "XXTEA Encrypt and Decrypt",
         input: "Hello World! 你好，中国！",
-        expectedOutput: "QncB1C0rHQoZ1eRiPM4dsZtRi9pNrp7sqvX76cFXvrrIHXL6",
-        reecipeConfig: [
+        expectedOutput: "Hello World! 你好，中国！",
+        recipeConfig: [
             {
-                args: "1234567890"
+                "op": "XXTEA Encrypt",
+                "args": [{ "option": "UTF8", "string": "1234567890" }]
             },
+            {
+                "op": "XXTEA Decrypt",
+                "args": [{ "option": "UTF8", "string": "1234567890" }]
+            }
         ],
     },
     {
-        name: "XXTEA",
+        name: "XXTEA Encrypt",
         input: "ნუ პანიკას",
-        expectedOutput: "PbWjnbFmP8Apu2MKOGNbjeW/72IZLlLMS/g82ozLxwE=",
-        reecipeConfig: [
+        expectedOutput: "3db5a39db1663fc029bb630a38635b8de5bfef62192e52cc4bf83cda8ccbc701",
+        recipeConfig: [
             {
-                args: "1234567890"
+                "op": "XXTEA Encrypt",
+                "args": [{ "option": "UTF8", "string": "1234567890" }]
             },
-        ],
-    },
-    {
-        name: "XXTEA",
-        input: "ნუ პანიკას",
-        expectedOutput: "dHrOJ4ClIx6gH33NPSafYR2GG7UqsazY6Xfb0iekBY4=",
-        reecipeConfig: [
             {
-                args: "ll3kj209d2"
-            },
+                "op": "To Hex",
+                "args": ["None", 0]
+            }
         ],
-    },
-    {
-        name: "XXTEA",
-        input: "",
-        expectedOutput: "Invalid input length (0)",
-        reecipeConfig: [
-            {
-                args: "1234567890"
-            },
-        ],
-    },
-    {
-        name: "XXTEA",
-        input: "",
-        expectedOutput: "Invalid input length (0)",
-        reecipeConfig: [
-            {
-                args: ""
-            },
-        ],
-    },
+    }
 ]);

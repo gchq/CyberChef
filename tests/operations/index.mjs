@@ -153,6 +153,7 @@ import "./tests/UnescapeString.mjs";
 import "./tests/Unicode.mjs";
 import "./tests/YARA.mjs";
 import "./tests/ParseCSR.mjs";
+import "./tests/XXTEA.mjs";
 
 const testStatus = {
     allTestsPassing: true,
