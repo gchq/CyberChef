@@ -173,25 +173,20 @@ module.exports = {
 
         browser.waitForElementVisible("#stale-indicator");
 
-        browser.expect.element("#auto-bake").to.not.be.selected;
-
         // Enable previously disabled autobake
+        browser.expect.element("#auto-bake").to.not.be.selected;
         browser.click("#auto-bake-label");
+        browser.expect.element("#auto-bake").to.be.selected.before(1000);
 
-        browser.waitUntil(() => {
-            return browser.expect.element("#auto-bake").to.be.selected;
-        }, 1000);
-
+        // Add content to the input
+        browser.pause(100);
         browser.sendKeys("#input-text .cm-content", "1");
-
         browser.waitForElementVisible("#output-loader");
-
         browser.pause(500);
 
         // Make another change while the previous input is being baked
-        browser.sendKeys("#input-text .cm-content", "2");
-
         browser
+            .sendKeys("#input-text .cm-content", "2")
             .waitForElementNotVisible("#stale-indicator")
             .waitForElementNotVisible("#output-loader");
 
@@ -200,6 +195,7 @@ module.exports = {
 
         // Turn autobake off again
         browser.click("#auto-bake-label");
+        browser.expect.element("#auto-bake").to.not.be.selected.before(1000);
     },
 
     "Special content": browser => {
