@@ -39,6 +39,7 @@ function setInput(browser, input, type=true) {
         browser.execute(text => {
             window.app.setInput(text);
         }, [input]);
+        browser.pause(100);
     }
 }
 
