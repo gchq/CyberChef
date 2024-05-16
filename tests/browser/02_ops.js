@@ -430,7 +430,7 @@ function bakeOp(browser, opName, input, args=[]) {
  */
 function testOp(browser, opName, input, output, args=[]) {
     bakeOp(browser, opName, input, args);
-    utils.expectOutput(browser, output);
+    utils.expectOutput(browser, output, true);
 }
 
 /** @function
