@@ -14,7 +14,7 @@ import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
-        name: "GOST Encrypt: Magma",
+        name: "GOST Encrypt: 1989",
         input: "Hello, World!",
         expectedOutput: "f124ac5c0853870906dbaf9b56",
         recipeConfig: [
@@ -25,8 +25,7 @@ TestRegister.addTests([
                     { "option": "Hex", "string": "0011223344556677" },
                     "Raw",
                     "Hex",
-                    "GOST 28147 (Magma, 1989)",
-                    "64",
+                    "GOST 28147 (1989)",
                     "E-SC",
                     "OFB",
                     "CP",
@@ -48,7 +47,6 @@ TestRegister.addTests([
                     "Raw",
                     "Hex",
                     "GOST R 34.12 (Kuznyechik, 2015)",
-                    "128",
                     "E-SC",
                     "CBC",
                     "CP",
@@ -58,7 +56,7 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "GOST Decrypt: Magma",
+        name: "GOST Decrypt: 1989",
         input: "f124ac5c0853870906dbaf9b56",
         expectedOutput: "Hello, World!",
         recipeConfig: [
@@ -69,8 +67,7 @@ TestRegister.addTests([
                     { "option": "Hex", "string": "0011223344556677" },
                     "Hex",
                     "Raw",
-                    "GOST 28147 (Magma, 1989)",
-                    "128",
+                    "GOST 28147 (1989)",
                     "E-SC",
                     "OFB",
                     "CP",
@@ -92,7 +89,6 @@ TestRegister.addTests([
                     "Hex",
                     "Raw",
                     "GOST R 34.12 (Kuznyechik, 2015)",
-                    "128",
                     "E-TEST",
                     "CBC",
                     "CP",
@@ -113,8 +109,7 @@ TestRegister.addTests([
                     { "option": "Hex", "string": "0011223344556677" },
                     "Raw",
                     "Hex",
-                    "GOST 28147 (Magma, 1989)",
-                    "64",
+                    "GOST 28147 (1989)",
                     "E-C",
                     48
                 ]
@@ -134,7 +129,6 @@ TestRegister.addTests([
                     { "option": "Hex", "string": "42b77fb3d6f6bf04" },
                     "Raw",
                     "GOST R 34.12 (Kuznyechik, 2015)",
-                    "128",
                     "E-TEST"
                 ]
             }
@@ -152,8 +146,7 @@ TestRegister.addTests([
                     { "option": "Hex", "string": "0011223344556677" },
                     "Raw",
                     "Hex",
-                    "GOST R 34.12 (Kuznyechik, 2015)",
-                    "64",
+                    "GOST R 34.12 (Magma, 2015)",
                     "E-TEST",
                     "CP"
                 ]
@@ -172,8 +165,7 @@ TestRegister.addTests([
                     { "option": "Latin1", "string": "00112233" },
                     "Hex",
                     "Raw",
-                    "GOST 28147 (Magma, 1989)",
-                    "64",
+                    "GOST 28147 (1989)",
                     "E-Z",
                     "CP"
                 ]
