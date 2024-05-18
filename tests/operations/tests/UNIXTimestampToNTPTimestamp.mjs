@@ -159,7 +159,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "UNIX Timestamp to NTP Timestamp",
-                args: ["Seconds (s)", "Floating-point", ],
+                args: ["Seconds (s)", "Floating-point"],
             },
         ],
     },

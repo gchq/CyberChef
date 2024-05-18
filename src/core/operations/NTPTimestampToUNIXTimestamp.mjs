@@ -8,7 +8,7 @@ import Operation from "../Operation.mjs";
 import BigNumber from "bignumber.js";
 import OperationError from "../errors/OperationError.mjs";
 import RemoveWhitespace from "./RemoveWhitespace.mjs";
-import SwapEndianness from "./SwapEndianness.mjs"; 
+import SwapEndianness from "./SwapEndianness.mjs";
 
 /**
  * NTP Timestamp to UNIX Timestamp operation
@@ -36,9 +36,8 @@ class NTPTimestampToUNIXTimestamp extends Operation {
             {
                 "name": "Output : Unix timestamp unit",
                 "type": "option",
-                "value": ["Seconds (s)", "Milliseconds (ms)", "Microseconds (μs)", "Nanoseconds (ns)"] 
+                "value": ["Seconds (s)", "Milliseconds (ms)", "Microseconds (μs)", "Nanoseconds (ns)"]
             }
-            
         ];
     }
 
@@ -56,36 +55,38 @@ class NTPTimestampToUNIXTimestamp extends Operation {
             input = new RemoveWhitespace().run(input, [true, true, true, true, true, false]);
         }
 
-        if (format.startsWith("Hex")) {
-            if (input.length != 16) {
-                return `Error: NTP Timestamp should be 64 bits long`; 
-            }
+        let ntpTimestampSecondsPart;
+        let ntpTimestampFractionsPart;
 
+        if (format.startsWith("Hex")) {
+            if (input.length !== 16) {
+                return `Error: NTP Timestamp should be 64 bits long`;
+            }
             if (format === "Hex (little-endian)") {
                 // Convert little-endian to big-endian
                 input = new SwapEndianness().run(input, ["Raw", input.length, false]);
             }
 
-            // Getting the 32 bits (8 first hexa values) long seconds part 
-            const hex_ntp_timestamp_seconds_part = input.substring(0, 8);
+            // Getting the 32 bits (8 first hexa values) long seconds part
+            const hexNtpTimestampSecondsPart = input.substring(0, 8);
             // Getting the 32 bits (8 last hexa values) long seconds fractions part
-            const hex_ntp_timestamp_fractions_part = input.substring(input.length - 8, input.length);
+            const hexNtpTimestampFractionsPart = input.substring(input.length - 8, input.length);
 
             // Convert hexadecimal values to decimal values
-            var ntp_timestamp_seconds_part = new BigNumber(hex_ntp_timestamp_seconds_part, 16);
-            var ntp_timestamp_fractions_part = new BigNumber(hex_ntp_timestamp_fractions_part, 16);
+            ntpTimestampSecondsPart = new BigNumber(hexNtpTimestampSecondsPart, 16);
+            ntpTimestampFractionsPart = new BigNumber(hexNtpTimestampFractionsPart, 16);
 
-        } else if (format == "Fixed-point decimal") {
+        } else if (format === "Fixed-point decimal") {
 
             // Get the seconds and the seconds fractions parts of the timestamp separated by a "."
-            const pf_ntp_timestamp_seconds_and_fractions_parts = String(input).split(".");
-            var ntp_timestamp_seconds_part = new Number(pf_ntp_timestamp_seconds_and_fractions_parts[0]);
-            var ntp_timestamp_fractions_part = pf_ntp_timestamp_seconds_and_fractions_parts[1]; 
+            const pfNtpTimestampSecondsAndFractionsParts = String(input).split(".");
+            ntpTimestampSecondsPart = new Number(pfNtpTimestampSecondsAndFractionsParts[0]);
+            ntpTimestampFractionsPart = pfNtpTimestampSecondsAndFractionsParts[1];
 
-            if (ntp_timestamp_fractions_part == null) {
-                ntp_timestamp_fractions_part = 0
+            if (ntpTimestampFractionsPart === null) {
+                ntpTimestampFractionsPart = 0;
             } else {
-                ntp_timestamp_fractions_part = new Number(pf_ntp_timestamp_seconds_and_fractions_parts[1]);
+                ntpTimestampFractionsPart = new Number(pfNtpTimestampSecondsAndFractionsParts[1]);
             }
 
         } else {
@@ -93,45 +94,40 @@ class NTPTimestampToUNIXTimestamp extends Operation {
         }
 
         // Set the maximum unsigned positive integer representable in 32 bits
-        const max_uint32=new Number(Math.pow(2, 32))
+        const maxUint32=new Number(Math.pow(2, 32));
 
         // Check whether the seconds and the seconds fractions parts values do
         // not exceeds the maximum positive integer representable in 32 bits
-        if (ntp_timestamp_seconds_part > max_uint32)
-            {
-            return `Error: Timestamp seconds part should be 32 bits long. The seconds part '${ntp_timestamp_seconds_part}' of the provided NTP timestamp exceeds the maximum positive integer representable in 32 bits '${max_uint32}'`;
-            }
-            
-        if (ntp_timestamp_fractions_part > max_uint32)
-            {
-                return `Error: Timestamp fractions seconds part should be 32 bits long. The fractions seconds part '${ntp_timestamp_fractions_part}' of the provided NTP timestamp exceeds the maximum positive integer representable in 32 bits '${max_uint32}'`;
-            }
+        if (ntpTimestampSecondsPart > maxUint32) {
+            return `Error: Timestamp seconds part should be 32 bits long. The seconds part '${ntpTimestampSecondsPart}' of the provided NTP timestamp exceeds the maximum positive integer representable in 32 bits '${maxUint32}'`;
+        }
+        if (ntpTimestampFractionsPart > maxUint32) {
+            return `Error: Timestamp fractions seconds part should be 32 bits long. The fractions seconds part '${ntpTimestampFractionsPart}' of the provided NTP timestamp exceeds the maximum positive integer representable in 32 bits '${maxUint32}'`;
+        }
 
-        // Convert the NTP timestamp seconds part value (seconds elapsed since 01 january 
+        // Convert the NTP timestamp seconds part value (seconds elapsed since 01 january
         // 1900 midnight) to UNIX timestamp (seconds elapsed since 01 january 1970 midnight)
-        const unix_timestamp_seconds_part = ntp_timestamp_seconds_part - new Number("2208988800");
+        const unixTimestampSecondsPart = ntpTimestampSecondsPart - new Number("2208988800");
         // Convert the NTP timestamp seconds fractions part value to seconds
-        const unix_timestamp_fractions_part = ntp_timestamp_fractions_part / new Number(Math.pow(2, 32));
-        
+        const unixTimestampFractionsPart = ntpTimestampFractionsPart / new Number(Math.pow(2, 32));
         // Addition the seconds part value to the seconds fractions part value
         // to form the UNIX timestamp in seconds
-        let unix_timestamp=unix_timestamp_seconds_part + unix_timestamp_fractions_part;
-        
+        let unixTimestamp=unixTimestampSecondsPart + unixTimestampFractionsPart;
+
         // Convert seconds Unix timestamp to requested result unit
         if (unit === "Seconds (s)") {
-            return String(unix_timestamp);
+            return String(unixTimestamp);
         } else if (unit === "Milliseconds (ms)") {
-            unix_timestamp = unix_timestamp * new Number("1000");
+            unixTimestamp = unixTimestamp * new Number("1000");
         } else if (unit === "Microseconds (μs)") {
-            unix_timestamp = unix_timestamp * new Number(Math.pow(10, 6));
+            unixTimestamp = unixTimestamp * new Number(Math.pow(10, 6));
         } else if (unit === "Nanoseconds (ns)") {
-            unix_timestamp = unix_timestamp * new Number(Math.pow(10, 9));
+            unixTimestamp = unixTimestamp * new Number(Math.pow(10, 9));
         } else {
             throw new OperationError("Unrecognised unit");
         }
 
-        return String(unix_timestamp);
-
+        return String(unixTimestamp);
     }
 
 }
