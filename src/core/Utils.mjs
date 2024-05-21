@@ -893,7 +893,7 @@ class Utils {
 
 
     /**
-     * Converts a string to it's title case equivalent.
+     * Converts a string to its title case equivalent.
      *
      * @param {string} str
      * @returns string

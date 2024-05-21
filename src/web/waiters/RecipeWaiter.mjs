@@ -215,6 +215,45 @@ class RecipeWaiter {
         window.dispatchEvent(this.manager.statechange);
     }
 
+    /**
+     * Handler for hide-args click events.
+     * Updates the icon status.
+     *
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    hideArgsClick(e) {
+        const icon = e.target;
+
+        if (icon.getAttribute("hide-args") === "false") {
+            icon.setAttribute("hide-args", "true");
+            icon.innerText = "keyboard_arrow_down";
+            icon.classList.add("hide-args-selected");
+            icon.parentNode.previousElementSibling.style.display = "none";
+        } else {
+            icon.setAttribute("hide-args", "false");
+            icon.innerText = "keyboard_arrow_up";
+            icon.classList.remove("hide-args-selected");
+            icon.parentNode.previousElementSibling.style.display = "grid";
+        }
+
+        const icons = Array.from(document.getElementsByClassName("hide-args-icon"));
+        if (icons.length > 1) {
+            // Check if ALL the icons are hidden/shown
+            const uniqueIcons = icons.map(function(item) {
+                return item.getAttribute("hide-args");
+            }).unique();
+
+            const controlsIconStatus = document.getElementById("hide-icon").getAttribute("hide-args");
+
+            // If all icons are in the same state and the global icon isn't, fix it
+            if (uniqueIcons.length === 1 && icon.getAttribute("hide-args") !== controlsIconStatus) {
+                this.manager.controls.hideRecipeArgsClick();
+            }
+        }
+
+        window.dispatchEvent(this.manager.statechange);
+    }
 
     /**
      * Handler for disable click events.
