@@ -59,11 +59,13 @@ class ROT13 extends Operation {
             rot13Upperacse = args[1],
             rotNumbers = args[2];
         let amount = args[3],
+            numAmount = amount,
             chr;
 
         if (amount) {
             if (amount < 0) {
                 amount = 26 - (Math.abs(amount) % 26);
+                numAmount = 10 - (Math.abs(numAmount) % 10);
             }
 
             for (let i = 0; i < input.length; i++) {
@@ -75,7 +77,7 @@ class ROT13 extends Operation {
                     chr = (chr - 97 + amount) % 26;
                     output[i] = chr + 97;
                 } else if (rotNumbers && chr >= 48 && chr <= 57) { // Numbers
-                    chr = (chr - 48 + amount) % 10;
+                    chr = (chr - 48 + numAmount) % 10;
                     output[i] = chr + 48;
                 }
             }
