@@ -160,7 +160,7 @@ export class COperationList extends HTMLElement {
             },
             onEnd: ({item, to, newIndex }) => {
                 if (item.parentNode.id === targetListId && dragOverRecList) {
-                    this.app.manager.recipe.addOperation(item.name, newIndex);
+                    this.app.manager.recipe.addOperation(item.querySelector("li").getAttribute("data-name"), newIndex);
                     item.remove();
                 } else if (!dragOverRecList && !to.classList.contains("op-list")) {
                     item.remove();

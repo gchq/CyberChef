@@ -144,7 +144,7 @@ export class CRecipeLi extends HTMLElement {
         }
 
         if (this.manualBake && this.app.autoBake_) {
-            this.manager.controls.setAutoBake(false);
+            this.app.manager.controls.setAutoBake(false);
             this.app.alert("Auto-Bake is disabled by default when using this operation.", 5000);
         }
 

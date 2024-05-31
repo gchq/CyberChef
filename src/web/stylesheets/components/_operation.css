@@ -56,6 +56,8 @@ li.operation.favourite > .op-icon.star-icon {
 .op-icon.check-icon {
     display: none;
     color: var(--checkmark-color);
+    position: relative;
+    margin-right: 5px;
 }
 
 .operation.selected {

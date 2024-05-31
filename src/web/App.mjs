@@ -26,7 +26,7 @@ class App {
      * @param {CatConf[]} categories - The list of categories and operations to be populated.
      * @param {Object.<string, OpConf>} operations - The list of operation configuration objects.
      * @param {String[]} defaultFavourites - A list of default favourite operations.
-     * @param {Object} options - Default setting for app options.
+     * @param {Object} defaultOptions - Default setting for app options.
      */
     constructor(categories, operations, defaultFavourites, defaultOptions) {
         this.categories    = categories;

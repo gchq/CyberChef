@@ -28,7 +28,7 @@ export class COperationLi extends HTMLElement {
         this.includeStarIcon = includeStarIcon;
         this.charIndicesToHighlight = charIndicesToHighlight;
 
-        this.config = this.app.operations[name];
+        this.config = this.app.operations[this.operationName];
 
         this.isFavourite = this.app.isLocalStorageAvailable() && JSON.parse(localStorage.favourites).indexOf(name) >= 0;
 
@@ -60,14 +60,9 @@ export class COperationLi extends HTMLElement {
 
     /**
      * Handle double click
-     *
-     * @param {Event} e
      */
-    handleDoubleClick(e) {
-        // this span is element holding the operation title
-        if (e.target === this.querySelector("li") || e.target === this.querySelector("span")) {
-            this.app.manager.recipe.addOperation(this.operationName);
-        }
+    handleDoubleClick() {
+        this.app.manager.recipe.addOperation(this.operationName);
     }
 
     /**
@@ -208,6 +203,7 @@ export class COperationLi extends HTMLElement {
             li.setAttribute("data-boundary", "viewport");
             li.setAttribute("data-content", dataContent);
         }
+
         return li;
     }
 

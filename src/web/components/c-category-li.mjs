@@ -106,7 +106,7 @@ export class CCategoryLi extends HTMLElement {
         a.innerText = this.label;
 
         if (this.label === "Favourites") {
-            const editFavouritesButton = this.buildEditFavouritesButton(a);
+            const editFavouritesButton = this.buildEditFavouritesButton();
 
             // Note: I'm leaving this here as it was in the code originally, but it's not doing anything and it didn't
             // do anything before my refactoring. I imagine we may want to fix that at some point though,
