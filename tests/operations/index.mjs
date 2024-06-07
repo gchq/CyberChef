@@ -117,6 +117,7 @@ import "./tests/ParseSSHHostKey.mjs";
 import "./tests/ParseTCP.mjs";
 import "./tests/ParseTLV.mjs";
 import "./tests/ParseUDP.mjs";
+import "./tests/ParseDNSMessage.mjs";
 import "./tests/PEMtoHex.mjs";
 import "./tests/PGP.mjs";
 import "./tests/PHP.mjs";
