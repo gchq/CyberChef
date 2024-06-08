@@ -4,8 +4,9 @@
  * @license Apache-2.0
  */
 
+import r from "jsrsasign";
 import Operation from "../Operation.mjs";
-import forge from "node-forge";
+import { formatDnObj } from "../lib/PublicKey.mjs";
 import Utils from "../Utils.mjs";
 
 /**
@@ -30,16 +31,6 @@ class ParseCSR extends Operation {
                 "name": "Input format",
                 "type": "option",
                 "value": ["PEM"]
-            },
-            {
-                "name": "Key type",
-                "type": "option",
-                "value": ["RSA"]
-            },
-            {
-                "name": "Strict ASN.1 value lengths",
-                "type": "boolean",
-                "value": true
             }
         ];
         this.checks = [
@@ -61,73 +52,71 @@ class ParseCSR extends Operation {
             return "No input";
         }
 
-        const csr = forge.pki.certificationRequestFromPem(input, args[1]);
+        // Parse the CSR into JSON parameters
+        const csrParam = new r.KJUR.asn1.csr.CSRUtil.getParam(input);
 
-        // RSA algorithm is the only one supported for CSR in node-forge as of 1.3.1
-        return `Version:          ${1 + csr.version} (0x${Utils.hex(csr.version)})
-Subject${formatSubject(csr.subject)}
-Subject Alternative Names${formatSubjectAlternativeNames(csr)}
-Public Key
-  Algorithm:      RSA
-  Length:         ${csr.publicKey.n.bitLength()} bits
-  Modulus:        ${formatMultiLine(chop(csr.publicKey.n.toString(16).replace(/(..)/g, "$&:")))}
-  Exponent:       ${csr.publicKey.e} (0x${Utils.hex(csr.publicKey.e)})
-Signature
-  Algorithm:      ${forge.pki.oids[csr.signatureOid]}
-  Signature:      ${formatMultiLine(Utils.strToByteArray(csr.signature).map(b => Utils.hex(b)).join(":"))}
-Extensions${formatExtensions(csr)}`;
+        return `Subject\n${formatDnObj(csrParam.subject, 2)}
+Public Key${formatSubjectPublicKey(csrParam.sbjpubkey)}
+Signature${formatSignature(csrParam.sigalg, csrParam.sighex)}
+Requested Extensions${formatRequestedExtensions(csrParam)}`;
     }
 }
 
 /**
- * Format Subject of the request as a multi-line string
- * @param {*} subject CSR Subject
- * @returns Multi-line string describing Subject
+ * Format signature of a CSR
+ * @param {*} sigAlg string
+ * @param {*} sigHex string
+ * @returns Multi-line string describing CSR Signature
  */
-function formatSubject(subject) {
-    let out = "\n";
+function formatSignature(sigAlg, sigHex) {
+    let out = `\n`;
 
-    for (const attribute of subject.attributes) {
-        out += `  ${attribute.shortName} = ${attribute.value}\n`;
+    out += `  Algorithm:      ${sigAlg}\n`;
+
+    if (new RegExp("withdsa", "i").test(sigAlg)) {
+        const d = new r.KJUR.crypto.DSA();
+        const sigParam = d.parseASN1Signature(sigHex);
+        out += `  Signature:
+      R:          ${formatHexOntoMultiLine(sigParam[0].toString(16))}
+      S:          ${formatHexOntoMultiLine(sigParam[1].toString(16))}\n`;
+    } else if (new RegExp("withrsa", "i").test(sigAlg)) {
+        out += `  Signature:      ${formatHexOntoMultiLine(sigHex, false)}\n`;
+    } else {
+        out += `  Signature:      ${formatHexOntoMultiLine(sigHex)}\n`;
     }
 
     return chop(out);
 }
 
-
 /**
- * Format Subject Alternative Names from the name `subjectAltName` extension
- * @param {*} extension CSR object
- * @returns Multi-line string describing Subject Alternative Names
+ * Format Subject Public Key from PEM encoded public key string
+ * @param {*} publicKeyPEM string
+ * @returns Multi-line string describing Subject Public Key Info
  */
-function formatSubjectAlternativeNames(csr) {
+function formatSubjectPublicKey(publicKeyPEM) {
     let out = "\n";
 
-    for (const attribute of csr.attributes) {
-        for (const extension of attribute.extensions) {
-            if (extension.name === "subjectAltName") {
-                const names = [];
-                for (const altName of extension.altNames) {
-                    switch (altName.type) {
-                        case 1:
-                            names.push(`EMAIL: ${altName.value}`);
-                            break;
-                        case 2:
-                            names.push(`DNS: ${altName.value}`);
-                            break;
-                        case 6:
-                            names.push(`URI: ${altName.value}`);
-                            break;
-                        case 7:
-                            names.push(`IP: ${altName.ip}`);
-                            break;
-                        default:
-                            names.push(`(unable to format type ${altName.type} name)\n`);
-                    }
-                }
-                out += indent(2, names);
-            }
-        }
+    const publicKey = r.KEYUTIL.getKey(publicKeyPEM);
+    if (publicKey instanceof r.RSAKey) {
+        out += `  Algorithm:      RSA
+  Length:         ${publicKey.n.bitLength()} bits
+  Modulus:        ${formatHexOntoMultiLine(publicKey.n.toString(16))}
+  Exponent:       ${publicKey.e} (0x${Utils.hex(publicKey.e)})\n`;
+    } else if (publicKey instanceof r.KJUR.crypto.ECDSA) {
+        out += `  Algorithm:      ECDSA
+  Length:         ${publicKey.ecparams.keylen} bits
+  Pub:            ${formatHexOntoMultiLine(publicKey.pubKeyHex)}
+  ASN1 OID:       ${r.KJUR.crypto.ECDSA.getName(publicKey.getShortNISTPCurveName())}
+  NIST CURVE:     ${publicKey.getShortNISTPCurveName()}\n`;
+    } else if (publicKey instanceof r.KJUR.crypto.DSA) {
+        out += `  Algorithm:      DSA
+  Length:         ${publicKey.p.toString(16).length * 4} bits
+  Pub:            ${formatHexOntoMultiLine(publicKey.y.toString(16))}
+  P:              ${formatHexOntoMultiLine(publicKey.p.toString(16))}
+  Q:              ${formatHexOntoMultiLine(publicKey.q.toString(16))}
+  G:              ${formatHexOntoMultiLine(publicKey.g.toString(16))}\n`;
+    } else {
+        out += `unsupported public key algorithm\n`;
     }
 
     return chop(out);
@@ -135,45 +124,79 @@ function formatSubjectAlternativeNames(csr) {
 
 /**
  * Format known extensions of a CSR
- * @param {*} csr CSR object
- * @returns Multi-line string describing attributes
+ * @param {*} csrParam object
+ * @returns Multi-line string describing CSR Requested Extensions
  */
-function formatExtensions(csr) {
-    let out = "\n";
+function formatRequestedExtensions(csrParam) {
+    const formattedExtensions = new Array(4).fill("");
 
-    for (const attribute of csr.attributes) {
-        for (const extension of attribute.extensions) {
-            // formatted separately
-            if (extension.name === "subjectAltName") {
-                continue;
-            }
-            out += `  ${extension.name}${(extension.critical ? " CRITICAL" : "")}:\n`;
+    if (Object.hasOwn(csrParam, "extreq")) {
+        for (const extension of csrParam.extreq) {
             let parts = [];
-            switch (extension.name) {
+            switch (extension.extname) {
                 case "basicConstraints" :
                     parts = describeBasicConstraints(extension);
+                    formattedExtensions[0] = `  Basic Constraints:${formatExtensionCriticalTag(extension)}\n${indent(4, parts)}`;
                     break;
                 case "keyUsage" :
                     parts = describeKeyUsage(extension);
+                    formattedExtensions[1] = `  Key Usage:${formatExtensionCriticalTag(extension)}\n${indent(4, parts)}`;
                     break;
                 case "extKeyUsage" :
                     parts = describeExtendedKeyUsage(extension);
+                    formattedExtensions[2] = `  Extended Key Usage:${formatExtensionCriticalTag(extension)}\n${indent(4, parts)}`;
+                    break;
+                case "subjectAltName" :
+                    parts = describeSubjectAlternativeName(extension);
+                    formattedExtensions[3] = `  Subject Alternative Name:${formatExtensionCriticalTag(extension)}\n${indent(4, parts)}`;
                     break;
                 default :
-                    parts = ["(unable to format extension)"];
+                    parts = ["(unsuported extension)"];
+                    formattedExtensions.push(`  ${extension.extname}:${formatExtensionCriticalTag(extension)}\n${indent(4, parts)}`);
             }
-            out += indent(4, parts);
         }
     }
+
+    let out = "\n";
+
+    formattedExtensions.forEach((formattedExtension) => {
+        if (formattedExtension !== undefined && formattedExtension !== null && formattedExtension.length !== 0) {
+            out += formattedExtension;
+        }
+    });
 
     return chop(out);
 }
 
+/**
+ * Format extension critical tag
+ * @param {*} extension Object
+ * @returns String describing whether the extension is critical or not
+ */
+function formatExtensionCriticalTag(extension) {
+    return Object.hasOwn(extension, "critical") && extension.critical ? " critical" : "";
+}
 
 /**
- * Format hex string onto multiple lines
+ * Format hex input on multiple lines
+ * @param {*} hex string
+ * @returns Multi-line string describing the Hex input
+ */
+function formatHexOntoMultiLine(hex, prependZero=true) {
+    let colonSeparatedHex = chop(hex.replace(/(..)/g, "$&:"));
+
+    // prepend 00 if most significant bit it 1
+    if ((parseInt(colonSeparatedHex.substring(0, 2), 16) & 128) && prependZero) {
+        colonSeparatedHex = "00:" + colonSeparatedHex;
+    }
+
+    return formatMultiLine(colonSeparatedHex);
+}
+
+/**
+ * Format string onto multiple lines
  * @param {*} longStr
- * @returns Hex string as a multi-line hex string
+ * @returns String as a multi-line string
  */
 function formatMultiLine(longStr) {
     const lines = [];
@@ -194,8 +217,8 @@ function formatMultiLine(longStr) {
 function describeBasicConstraints(extension) {
     const constraints = [];
 
-    constraints.push(`CA = ${extension.cA}`);
-    if (extension.pathLenConstraint !== undefined) constraints.push(`PathLenConstraint = ${extension.pathLenConstraint}`);
+    constraints.push(`CA = ${Object.hasOwn(extension, "cA") && extension.cA ? "true" : "false"}`);
+    if (Object.hasOwn(extension, "pathLen")) constraints.push(`PathLenConstraint = ${extension.pathLen}`);
 
     return constraints;
 }
@@ -209,15 +232,27 @@ function describeBasicConstraints(extension) {
 function describeKeyUsage(extension) {
     const usage = [];
 
-    if (extension.digitalSignature) usage.push("Digital signature");
-    if (extension.nonRepudiation) usage.push("Non-repudiation");
-    if (extension.keyEncipherment) usage.push("Key encipherment");
-    if (extension.dataEncipherment) usage.push("Data encipherment");
-    if (extension.keyAgreement) usage.push("Key agreement");
-    if (extension.keyCertSign) usage.push("Key certificate signing");
-    if (extension.cRLSign) usage.push("CRL signing");
-    if (extension.encipherOnly) usage.push("Encipher only");
-    if (extension.decipherOnly) usage.push("Decipher only");
+    const kuIdentifierToName = new Map([
+        ["digitalSignature", "Digital Signature"],
+        ["nonRepudiation", "Non-repudiation"],
+        ["keyEncipherment", "Key encipherment"],
+        ["dataEncipherment", "Data encipherment"],
+        ["keyAgreement", "Key agreement"],
+        ["keyCertSign", "Key certificate signing"],
+        ["cRLSign", "CRL signing"],
+        ["encipherOnly", "Encipher Only"],
+        ["decipherOnly", "Decipher Only"],
+    ]);
+
+    if (Object.hasOwn(extension, "names")) {
+        extension.names.forEach((ku) => {
+            if (kuIdentifierToName.has(ku)) {
+                usage.push(kuIdentifierToName.get(ku));
+            } else {
+                usage.push(`unknown key usage (${ku})`);
+            }
+        });
+    }
 
     if (usage.length === 0) usage.push("(none)");
 
@@ -233,21 +268,77 @@ function describeKeyUsage(extension) {
 function describeExtendedKeyUsage(extension) {
     const usage = [];
 
-    if (extension.serverAuth) usage.push("TLS Web Server Authentication");
-    if (extension.clientAuth) usage.push("TLS Web Client Authentication");
-    if (extension.codeSigning) usage.push("Code signing");
-    if (extension.emailProtection) usage.push("E-mail Protection (S/MIME)");
-    if (extension.timeStamping) usage.push("Trusted Timestamping");
-    if (extension.msCodeInd) usage.push("Microsoft Individual Code Signing");
-    if (extension.msCodeCom) usage.push("Microsoft Commercial Code Signing");
-    if (extension.msCTLSign) usage.push("Microsoft Trust List Signing");
-    if (extension.msSGC) usage.push("Microsoft Server Gated Crypto");
-    if (extension.msEFS) usage.push("Microsoft Encrypted File System");
-    if (extension.nsSGC) usage.push("Netscape Server Gated Crypto");
+    const ekuIdentifierToName = new Map([
+        ["serverAuth", "TLS Web Server Authentication"],
+        ["clientAuth", "TLS Web Client Authentication"],
+        ["codeSigning", "Code signing"],
+        ["emailProtection", "E-mail Protection (S/MIME)"],
+        ["timeStamping", "Trusted Timestamping"],
+        ["1.3.6.1.4.1.311.2.1.21", "Microsoft Individual Code Signing"],  // msCodeInd
+        ["1.3.6.1.4.1.311.2.1.22", "Microsoft Commercial Code Signing"],  // msCodeCom
+        ["1.3.6.1.4.1.311.10.3.1", "Microsoft Trust List Signing"],  // msCTLSign
+        ["1.3.6.1.4.1.311.10.3.3", "Microsoft Server Gated Crypto"],  // msSGC
+        ["1.3.6.1.4.1.311.10.3.4", "Microsoft Encrypted File System"],  // msEFS
+        ["1.3.6.1.4.1.311.20.2.2", "Microsoft Smartcard Login"],  // msSmartcardLogin
+        ["2.16.840.1.113730.4.1", "Netscape Server Gated Crypto"],  // nsSGC
+    ]);
+
+    if (Object.hasOwn(extension, "array")) {
+        extension.array.forEach((eku) => {
+            if (ekuIdentifierToName.has(eku)) {
+                usage.push(ekuIdentifierToName.get(eku));
+            } else {
+                usage.push(`unknown extended key usage (${eku})`);
+            }
+        });
+    }
 
     if (usage.length === 0) usage.push("(none)");
 
     return usage;
+}
+
+/**
+ * Format Subject Alternative Names from the name `subjectAltName` extension
+ * @see RFC 5280 4.2.1.6. Subject Alternative Name https://www.ietf.org/rfc/rfc5280.txt
+ * @param {*} extension object
+ * @returns Array of strings describing Subject Alternative Name extension
+ */
+function describeSubjectAlternativeName(extension) {
+    const names = [];
+
+    if (Object.hasOwn(extension, "extname") && extension.extname === "subjectAltName") {
+        if (Object.hasOwn(extension, "array")) {
+            for (const altName of extension.array) {
+                Object.keys(altName).forEach((key) => {
+                    switch (key) {
+                        case "rfc822":
+                            names.push(`EMAIL: ${altName[key]}`);
+                            break;
+                        case "dns":
+                            names.push(`DNS: ${altName[key]}`);
+                            break;
+                        case "uri":
+                            names.push(`URI: ${altName[key]}`);
+                            break;
+                        case "ip":
+                            names.push(`IP: ${altName[key]}`);
+                            break;
+                        case "dn":
+                            names.push(`DIR: ${altName[key].str}`);
+                            break;
+                        case "other" :
+                            names.push(`Other: ${altName[key].oid}::${altName[key].value.utf8str.str}`);
+                            break;
+                        default:
+                            names.push(`(unable to format type '${key}' name)\n`);
+                    }
+                });
+            }
+        }
+    }
+
+    return names;
 }
 
 /**
