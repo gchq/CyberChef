@@ -13,6 +13,24 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.18.0] - 2024-04-24
+- Added 'XXTEA Encrypt' and 'XXTEA Decrypt' operations [@n1474335] | [0a353ee]
+
+### [10.17.0] - 2024-04-13
+- Fix unit test 'expectOutput' implementation [@zb3] | [#1783]
+- Add accessibility labels for icons [@e218736] | [#1743]
+- Add focus styling for keyboard navigation [@e218736] | [#1739]
+- Add support for operation option hiding [@TheZ3ro] | [#541]
+- Improve efficiency of RAKE implementation [@sw5678] | [#1751]
+- Require (a, 26) to be coprime in 'Affine Encode' [@EvieHarv] | [#1788]
+- Added 'JWK to PEM' operation [@cplussharp] | [#1277]
+- Added 'PEM to JWK' operation [@cplussharp] | [#1277]
+- Added 'Public Key from Certificate' operation [@cplussharp] | [#1642]
+- Added 'Public Key from Private Key' operation [@cplussharp] | [#1642]
+
+### [10.16.0] - 2024-04-12
+- Added 'JA4Server Fingerprint' operation [@n1474335] | [#1789]
+
 ### [10.15.0] - 2024-04-02
 - Fix Ciphersaber2 key concatenation [@zb3] | [#1765]
 - Fix DeriveEVPKey's array parsing [@zb3] | [#1767]
@@ -418,6 +436,9 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[10.18.0]: https://github.com/gchq/CyberChef/releases/tag/v10.18.0
+[10.17.0]: https://github.com/gchq/CyberChef/releases/tag/v10.17.0
+[10.16.0]: https://github.com/gchq/CyberChef/releases/tag/v10.16.0
 [10.15.0]: https://github.com/gchq/CyberChef/releases/tag/v10.15.0
 [10.14.0]: https://github.com/gchq/CyberChef/releases/tag/v10.14.0
 [10.13.0]: https://github.com/gchq/CyberChef/releases/tag/v10.13.0
@@ -598,6 +619,10 @@ All major and minor version changes will be documented in this file. Details of 
 [@zb3]: https://github.com/zb3
 [@jkataja]: https://github.com/jkataja
 [@tomgond]: https://github.com/tomgond
+[@e218736]: https://github.com/e218736
+[@TheZ3ro]: https://github.com/TheZ3ro
+[@EvieHarv]: https://github.com/EvieHarv
+[@cplussharp]: https://github.com/cplussharp
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
@@ -609,6 +634,7 @@ All major and minor version changes will be documented in this file. Details of 
 [31a7f83]: https://github.com/gchq/CyberChef/commit/31a7f83b82e78927f89689f323fcb9185144d6ff
 [760eff4]: https://github.com/gchq/CyberChef/commit/760eff49b5307aaa3104c5e5b437ffe62299acd1
 [65ffd8d]: https://github.com/gchq/CyberChef/commit/65ffd8d65d88eb369f6f61a5d1d0f807179bffb7
+[0a353ee]: https://github.com/gchq/CyberChef/commit/0a353eeb378b9ca5d49e23c7dfc175ae07107b08
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -725,7 +751,7 @@ All major and minor version changes will be documented in this file. Details of 
 [#1667]: https://github.com/gchq/CyberChef/issues/1667
 [#1555]: https://github.com/gchq/CyberChef/issues/1555
 [#1694]: https://github.com/gchq/CyberChef/issues/1694
-[#1699]: https://github.com/gchq/CyberChef/issues/1694
+[#1699]: https://github.com/gchq/CyberChef/issues/1699
 [#1757]: https://github.com/gchq/CyberChef/issues/1757
 [#1752]: https://github.com/gchq/CyberChef/issues/1752
 [#1753]: https://github.com/gchq/CyberChef/issues/1753
@@ -740,6 +766,9 @@ All major and minor version changes will be documented in this file. Details of 
 [#1765]: https://github.com/gchq/CyberChef/issues/1765
 [#1767]: https://github.com/gchq/CyberChef/issues/1767
 [#1769]: https://github.com/gchq/CyberChef/issues/1769
+[#1759]: https://github.com/gchq/CyberChef/issues/1759
 [#1504]: https://github.com/gchq/CyberChef/issues/1504
 [#512]: https://github.com/gchq/CyberChef/issues/512
 [#1732]: https://github.com/gchq/CyberChef/issues/1732
+[#1789]: https://github.com/gchq/CyberChef/issues/1789
+
