@@ -56,7 +56,7 @@ class GOSTKeyWrap extends Operation {
                 value: [
                     {
                         name: "GOST 28147 (1989)",
-                        on: [6]
+                        on: [5]
                     },
                     {
                         name: "GOST R 34.12 (Magma, 2015)",
