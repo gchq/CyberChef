@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const { ModifySourcePlugin, ReplaceOperation } = require("modify-source-webpack-plugin");
 const path = require("path");
 
 /**
@@ -11,13 +12,14 @@ const path = require("path");
  * @license Apache-2.0
  */
 
+const d = new Date();
 const banner = `/**
  * CyberChef - The Cyber Swiss Army Knife
  *
- * @copyright Crown Copyright 2016
+ * @copyright Crown Copyright 2016-${d.getUTCFullYear()}
  * @license Apache-2.0
  *
- *   Copyright 2016 Crown Copyright
+ *   Copyright 2016-${d.getUTCFullYear()} Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +38,8 @@ const banner = `/**
 module.exports = {
     output: {
         publicPath: "",
-        globalObject: "this"
+        globalObject: "this",
+        assetModuleFilename: "assets/[hash][ext][query]"
     },
     plugins: [
         new webpack.ProvidePlugin({
@@ -81,6 +84,17 @@ module.exports = {
                     to: "assets/forge/"
                 }
             ]
+        }),
+        new ModifySourcePlugin({
+            rules: [
+                {
+                    // Fix toSpare(0) bug in Split.js by avoiding gutter accomodation
+                    test: /split\.es\.js$/,
+                    operations: [
+                        new ReplaceOperation("once", "if (pixelSize < elementMinSize)", "if (false)")
+                    ]
+                }
+            ]
         })
     ],
     resolve: {
@@ -97,10 +111,14 @@ module.exports = {
             "buffer": require.resolve("buffer/"),
             "crypto": require.resolve("crypto-browserify"),
             "stream": require.resolve("stream-browserify"),
-            "zlib": require.resolve("browserify-zlib")
+            "zlib": require.resolve("browserify-zlib"),
+            "process": false,
+            "vm": false
         }
     },
     module: {
+        // argon2-browser loads argon2.wasm by itself, so Webpack should not load it
+        noParse: /argon2\.wasm$/,
         rules: [
             {
                 test: /\.m?js$/,
@@ -121,8 +139,14 @@ module.exports = {
                 }
             },
             {
+                // Load argon2.wasm as base64-encoded binary file expected by argon2-browser
+                test: /argon2\.wasm$/,
+                loader: "base64-loader",
+                type: "javascript/auto"
+            },
+            {
                 test: /prime.worker.min.js$/,
-                use: "raw-loader"
+                type: "asset/source"
             },
             {
                 test: /bootstrap-material-design/,
@@ -153,65 +177,32 @@ module.exports = {
                 ]
             },
             {
-                test: /\.scss$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            publicPath: "../"
-                        }
-                    },
-                    "css-loader",
-                    "sass-loader",
-                ]
-            },
-            /**
-             * The limit for these files has been increased to 60,000 (60KB)
-             * to ensure the material icons font is inlined.
-             *
-             * See: https://github.com/gchq/CyberChef/issues/612
-             */
-            {
                 test: /\.(ico|eot|ttf|woff|woff2)$/,
-                loader: "url-loader",
-                options: {
-                    limit: 60000,
-                    name: "[hash].[ext]",
-                    outputPath: "assets"
-                }
+                type: "asset/resource",
             },
             {
                 test: /\.svg$/,
-                loader: "svg-url-loader",
-                options: {
-                    encoding: "base64"
-                }
+                type: "asset/inline",
             },
             { // Store font .fnt and .png files in a separate fonts folder
                 test: /(\.fnt$|bmfonts\/.+\.png$)/,
-                loader: "file-loader",
-                options: {
-                    name: "[name].[ext]",
-                    outputPath: "assets/fonts"
+                type: "asset/resource",
+                generator: {
+                    filename: "assets/fonts/[name][ext]"
                 }
             },
             { // First party images are saved as files to be cached
                 test: /\.(png|jpg|gif)$/,
                 exclude: /(node_modules|bmfonts)/,
-                loader: "file-loader",
-                options: {
-                    name: "images/[name].[ext]"
+                type: "asset/resource",
+                generator: {
+                    filename: "images/[name][ext]"
                 }
             },
             { // Third party images are inlined
                 test: /\.(png|jpg|gif)$/,
                 exclude: /web\/static/,
-                loader: "url-loader",
-                options: {
-                    limit: 10000,
-                    name: "[hash].[ext]",
-                    outputPath: "assets"
-                }
+                type: "asset/inline",
             },
         ]
     },
@@ -219,14 +210,15 @@ module.exports = {
         children: false,
         chunks: false,
         modules: false,
-        entrypoints: false,
-        warningsFilter: [
-            /source-map/,
-            /dependency is an expression/,
-            /export 'default'/,
-            /Can't resolve 'sodium'/
-        ],
+        entrypoints: false
     },
+    ignoreWarnings: [
+        /source-map/,
+        /source map/,
+        /dependency is an expression/,
+        /export 'default'/,
+        /Can't resolve 'sodium'/
+    ],
     performance: {
         hints: false
     }

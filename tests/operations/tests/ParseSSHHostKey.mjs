@@ -50,6 +50,18 @@ Point: 0x046c59592006272250a15070142a6be36d1e45464313f930d985a6e6f0eba3cd39d0367
         ]
     },
     {
+        name: "SSH Host Key: Ed25519",
+        input: "AAAAC3NzaC1lZDI1NTE5AAAAIBOF6r99IkvqGu1kwZrHHIqjpTB5w79bpv67B/Aw3+WJ",
+        expectedOutput: `Key type: ssh-ed25519
+x: 0x1385eabf7d224bea1aed64c19ac71c8aa3a53079c3bf5ba6febb07f030dfe589`,
+        recipeConfig: [
+            {
+                op: "Parse SSH Host Key",
+                args: ["Base64"]
+            }
+        ]
+    },
+    {
         name: "SSH Host Key: Extract key",
         input: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDiJZ/9W9Ix/Dk9b+K4E+RGCug1AtkGXaJ9vNIY0YHFHLpWsB8DAuh/cGEI9TLbL1gzR2wG+RJNQ2EAQVWe6ypkK63Jm4zw4re+vhEiszpnP889J0h5N9yzyTndesrl4d3cQtv861FcKDPxUJbRALdtl6gwOB7BCL8gsXJLLVLO4EesrbPXD454qpVt7CgJXEXByOFjcIm3XwkdOnXMPHHnMSD7EIN1SvQMD6PfIDrbDd6KQt5QXW/Rc/BsfX5cbUIV1QW5A/GbepXHHKmWRtLC2J/mH3hW2Zq/hITPEaJdG1CtIilQmJaZGXpfGIwFeb0Av9pSL926arZZ6vDi9ctF test@test",
         expectedOutput: `Key type: ssh-rsa
