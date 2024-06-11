@@ -38,8 +38,8 @@ class ExtractFiles extends Operation {
                 <li>
                 ${supportedExts.join("</li><li>")}
                 </li>
-            </ul>`;
-        this.infoURL = "https://forensicswiki.xyz/wiki/index.php?title=File_Carving";
+            </ul>Minimum File Size can be used to prune small false positives.`;
+        this.infoURL = "https://forensics.wiki/file_carving";
         this.inputType = "ArrayBuffer";
         this.outputType = "List<File>";
         this.presentType = "html";
@@ -54,6 +54,11 @@ class ExtractFiles extends Operation {
                 name: "Ignore failed extractions",
                 type: "boolean",
                 value: true
+            },
+            {
+                name: "Minimum File Size",
+                type: "number",
+                value: 100
             }
         ]);
     }
@@ -66,6 +71,7 @@ class ExtractFiles extends Operation {
     run(input, args) {
         const bytes = new Uint8Array(input),
             categories = [],
+            minSize = args.pop(1),
             ignoreFailedExtractions = args.pop(1);
 
         args.forEach((cat, i) => {
@@ -80,7 +86,9 @@ class ExtractFiles extends Operation {
         const errors = [];
         detectedFiles.forEach(detectedFile => {
             try {
-                files.push(extractFile(bytes, detectedFile.fileDetails, detectedFile.offset));
+                const file = extractFile(bytes, detectedFile.fileDetails, detectedFile.offset);
+                if (file.size >= minSize)
+                    files.push(file);
             } catch (err) {
                 if (!ignoreFailedExtractions && err.message.indexOf("No extraction algorithm available") < 0) {
                     errors.push(

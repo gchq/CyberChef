@@ -119,7 +119,7 @@ TestRegister.addApiTests([
         assert.strictEqual(result[0].module, "Ciphers");
         assert.strictEqual(result[0].inputType, "string");
         assert.strictEqual(result[0].outputType, "string");
-        assert.strictEqual(result[0].description, "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.");
+        assert.strictEqual(result[0].description, "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.");
         assert.strictEqual(result[0].args.length, 5);
     }),
 
@@ -136,7 +136,7 @@ TestRegister.addApiTests([
 
     it("chef.help: returns multiple results", () => {
         const result = chef.help("base 64");
-        assert.strictEqual(result.length, 11);
+        assert.strictEqual(result.length, 13);
     }),
 
     it("chef.help: looks in description for matches too", () => {

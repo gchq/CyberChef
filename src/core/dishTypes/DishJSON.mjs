@@ -22,11 +22,10 @@ class DishJSON extends DishType {
 
     /**
      * convert the given value from a ArrayBuffer
-     * @param {boolean} notUTF8
      */
-    static fromArrayBuffer(notUTF8) {
+    static fromArrayBuffer() {
         DishJSON.checkForValue(this.value);
-        this.value = JSON.parse(Utils.arrayBufferToStr(this.value, !notUTF8));
+        this.value = JSON.parse(Utils.arrayBufferToStr(this.value));
     }
 }
 
