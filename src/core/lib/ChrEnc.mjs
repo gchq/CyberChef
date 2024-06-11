@@ -6,10 +6,12 @@
  * @license Apache-2.0
  */
 
+import cptable from "codepage";
+
 /**
  * Character encoding format mappings.
  */
-export const IO_FORMAT = {
+export const CHR_ENC_CODE_PAGES = {
     "UTF-8 (65001)": 65001,
     "UTF-7 (65000)": 65000,
     "UTF-16LE (1200)": 1200,
@@ -164,6 +166,57 @@ export const IO_FORMAT = {
     "Simplified Chinese GB18030 (54936)": 54936,
 };
 
+
+export const CHR_ENC_SIMPLE_LOOKUP = {};
+export const CHR_ENC_SIMPLE_REVERSE_LOOKUP = {};
+
+for (const name in CHR_ENC_CODE_PAGES) {
+    const simpleName = name.match(/(^.+)\([\d/]+\)$/)[1];
+
+    CHR_ENC_SIMPLE_LOOKUP[simpleName] = CHR_ENC_CODE_PAGES[name];
+    CHR_ENC_SIMPLE_REVERSE_LOOKUP[CHR_ENC_CODE_PAGES[name]] = simpleName;
+}
+
+
+/**
+ * Returns the width of the character set for the given codepage.
+ * For example, UTF-8 is a Single Byte Character Set, whereas
+ * UTF-16 is a Double Byte Character Set.
+ *
+ * @param {number} page - The codepage number
+ * @returns {number}
+ */
+export function chrEncWidth(page) {
+    if (typeof page !== "number") return 0;
+
+    // Raw Bytes have a width of 1
+    if (page === 0) return 1;
+
+    const pageStr = page.toString();
+    // Confirm this page is legitimate
+    if (!Object.prototype.hasOwnProperty.call(CHR_ENC_SIMPLE_REVERSE_LOOKUP, pageStr))
+        return 0;
+
+    // Statically defined code pages
+    if (Object.prototype.hasOwnProperty.call(cptable, pageStr))
+        return cptable[pageStr].dec.length > 256 ? 2 : 1;
+
+    // Cached code pages
+    if (cptable.utils.cache.sbcs.includes(pageStr))
+        return 1;
+    if (cptable.utils.cache.dbcs.includes(pageStr))
+        return 2;
+
+    // Dynamically generated code pages
+    if (Object.prototype.hasOwnProperty.call(cptable.utils.magic, pageStr)) {
+        // Generate a single character and measure it
+        const a = cptable.utils.encode(page, "a");
+        return a.length;
+    }
+
+    return 0;
+}
+
 /**
  * Unicode Normalisation Forms
  *
@@ -171,8 +224,85 @@ export const IO_FORMAT = {
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
  */
+export const UNICODE_NORMALISATION_FORMS = ["NFD", "NFC", "NFKD", "NFKC"];
+
 
 /**
- * Character encoding format mappings.
+ * Detects whether the input buffer is valid UTF8.
+ *
+ * @param {ArrayBuffer} data
+ * @returns {number} - 0 = not UTF8, 1 = ASCII, 2 = UTF8
  */
-export const UNICODE_NORMALISATION_FORMS = ["NFD", "NFC", "NFKD", "NFKC"];
+export function isUTF8(data) {
+    const bytes = new Uint8Array(data);
+    let i = 0;
+    let onlyASCII = true;
+    while (i < bytes.length) {
+        if (( // ASCII
+            bytes[i] === 0x09 ||
+            bytes[i] === 0x0A ||
+            bytes[i] === 0x0D ||
+            (0x20 <= bytes[i] && bytes[i] <= 0x7E)
+        )) {
+            i += 1;
+            continue;
+        }
+
+        onlyASCII = false;
+
+        if (( // non-overlong 2-byte
+            (0xC2 <= bytes[i] && bytes[i] <= 0xDF) &&
+            (0x80 <= bytes[i+1] && bytes[i+1] <= 0xBF)
+        )) {
+            i += 2;
+            continue;
+        }
+
+        if (( // excluding overlongs
+            bytes[i] === 0xE0 &&
+            (0xA0 <= bytes[i + 1] && bytes[i + 1] <= 0xBF) &&
+            (0x80 <= bytes[i + 2] && bytes[i + 2] <= 0xBF)
+        ) ||
+        ( // straight 3-byte
+            ((0xE1 <= bytes[i] && bytes[i] <= 0xEC) ||
+            bytes[i] === 0xEE ||
+            bytes[i] === 0xEF) &&
+            (0x80 <= bytes[i + 1] && bytes[i+1] <= 0xBF) &&
+            (0x80 <= bytes[i+2] && bytes[i+2] <= 0xBF)
+        ) ||
+        ( // excluding surrogates
+            bytes[i] === 0xED &&
+            (0x80 <= bytes[i+1] && bytes[i+1] <= 0x9F) &&
+            (0x80 <= bytes[i+2] && bytes[i+2] <= 0xBF)
+        )) {
+            i += 3;
+            continue;
+        }
+
+        if (( // planes 1-3
+            bytes[i] === 0xF0 &&
+            (0x90 <= bytes[i + 1] && bytes[i + 1] <= 0xBF) &&
+            (0x80 <= bytes[i + 2] && bytes[i + 2] <= 0xBF) &&
+            (0x80 <= bytes[i + 3] && bytes[i + 3] <= 0xBF)
+        ) ||
+        ( // planes 4-15
+            (0xF1 <= bytes[i] && bytes[i] <= 0xF3) &&
+            (0x80 <= bytes[i + 1] && bytes[i + 1] <= 0xBF) &&
+            (0x80 <= bytes[i + 2] && bytes[i + 2] <= 0xBF) &&
+            (0x80 <= bytes[i + 3] && bytes[i + 3] <= 0xBF)
+        ) ||
+        ( // plane 16
+            bytes[i] === 0xF4 &&
+            (0x80 <= bytes[i + 1] && bytes[i + 1] <= 0x8F) &&
+            (0x80 <= bytes[i + 2] && bytes[i + 2] <= 0xBF) &&
+            (0x80 <= bytes[i + 3] && bytes[i + 3] <= 0xBF)
+        )) {
+            i += 4;
+            continue;
+        }
+
+        return 0;
+    }
+
+    return onlyASCII ? 1 : 2;
+}

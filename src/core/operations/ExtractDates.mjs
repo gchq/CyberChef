@@ -44,7 +44,13 @@ class ExtractDates extends Operation {
             date3 = "(?:0[1-9]|1[012])[- /.](?:0[1-9]|[12][0-9]|3[01])[- /.](?:19|20)\\d\\d", // mm/dd/yyyy
             regex = new RegExp(date1 + "|" + date2 + "|" + date3, "ig");
 
-        return search(input, regex, null, displayTotal);
+        const results = search(input, regex);
+
+        if (displayTotal) {
+            return `Total found: ${results.length}\n\n${results.join("\n")}`;
+        } else {
+            return results.join("\n");
+        }
     }
 
 }

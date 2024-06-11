@@ -7,17 +7,9 @@
  */
 
 import Chef from "./Chef.mjs";
-import OperationConfig from "./config/OperationConfig.json";
+import OperationConfig from "./config/OperationConfig.json" assert {type: "json"};
 import OpModules from "./config/modules/OpModules.mjs";
-
-// Add ">" to the start of all log messages in the Chef Worker
 import loglevelMessagePrefix from "loglevel-message-prefix";
-
-loglevelMessagePrefix(log, {
-    prefixes: [],
-    staticPrefixes: [">"],
-    prefixFormat: "%p"
-});
 
 
 // Set up Chef instance
@@ -56,7 +48,7 @@ self.postMessage({
 self.addEventListener("message", function(e) {
     // Handle message
     const r = e.data;
-    log.debug("ChefWorker receiving command '" + r.action + "'");
+    log.debug(`Receiving command '${r.action}'`);
 
     switch (r.action) {
         case "bake":
@@ -86,6 +78,12 @@ self.addEventListener("message", function(e) {
         case "setLogLevel":
             log.setLevel(r.data, false);
             break;
+        case "setLogPrefix":
+            loglevelMessagePrefix(log, {
+                prefixes: [],
+                staticPrefixes: [r.data]
+            });
+            break;
         default:
             break;
     }
@@ -101,14 +99,17 @@ async function bake(data) {
     // Ensure the relevant modules are loaded
     self.loadRequiredModules(data.recipeConfig);
     try {
-        self.inputNum = (data.inputNum !== undefined) ? data.inputNum : -1;
+        self.inputNum = data.inputNum === undefined ? -1 : data.inputNum;
         const response = await self.chef.bake(
             data.input,          // The user's input
             data.recipeConfig,   // The configuration of the recipe
             data.options         // Options set by the user
         );
 
-        const transferable = (data.input instanceof ArrayBuffer) ? [data.input] : undefined;
+        const transferable = (response.dish.value instanceof ArrayBuffer) ?
+            [response.dish.value] :
+            undefined;
+
         self.postMessage({
             action: "bakeComplete",
             data: Object.assign(response, {
@@ -186,7 +187,7 @@ async function getDishTitle(data) {
  *
  * @param {Object[]} recipeConfig
  * @param {string} direction
- * @param {Object} pos - The position object for the highlight.
+ * @param {Object[]} pos - The position object for the highlight.
  * @param {number} pos.start - The start offset.
  * @param {number} pos.end - The end offset.
  */

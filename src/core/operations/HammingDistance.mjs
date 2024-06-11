@@ -68,8 +68,8 @@ class HammingDistance extends Operation {
             samples[0] = fromHex(samples[0]);
             samples[1] = fromHex(samples[1]);
         } else {
-            samples[0] = Utils.strToByteArray(samples[0]);
-            samples[1] = Utils.strToByteArray(samples[1]);
+            samples[0] = new Uint8Array(Utils.strToArrayBuffer(samples[0]));
+            samples[1] = new Uint8Array(Utils.strToArrayBuffer(samples[1]));
         }
 
         let dist = 0;
