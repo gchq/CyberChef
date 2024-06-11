@@ -212,4 +212,37 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "ROT8000: nothing",
+        input: "",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                op: "ROT8000",
+                args: []
+            },
+        ],
+    },
+    {
+        name: "ROT8000: normal",
+        input: "The Quick Brown Fox Jumped Over The Lazy Dog.",
+        expectedOutput: "籝籱籮 籚籾籲籬籴 籋类籸粀籷 籏籸粁 籓籾籶籹籮籭 籘籿籮类 籝籱籮 籕籪粃粂 籍籸籰簷",
+        recipeConfig: [
+            {
+                op: "ROT8000",
+                args: []
+            },
+        ],
+    },
+    {
+        name: "ROT8000: backward",
+        input: "籝籱籮 籚籾籲籬籴 籋类籸粀籷 籏籸粁 籓籾籶籹籮籭 籘籿籮类 籝籱籮 籕籪粃粂 籍籸籰簷",
+        expectedOutput: "The Quick Brown Fox Jumped Over The Lazy Dog.",
+        recipeConfig: [
+            {
+                op: "ROT8000",
+                args: []
+            },
+        ],
+    },
 ]);

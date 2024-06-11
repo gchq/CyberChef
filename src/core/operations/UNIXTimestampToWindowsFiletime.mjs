@@ -79,6 +79,9 @@ class UNIXTimestampToWindowsFiletime extends Operation {
                 flipped += result.charAt(i);
                 flipped += result.charAt(i + 1);
             }
+            if (result.length % 2 !== 0) {
+                flipped += "0" + result.charAt(0);
+            }
             result = flipped;
         }
 

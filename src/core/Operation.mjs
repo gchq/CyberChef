@@ -184,6 +184,7 @@ class Operation {
             if (ing.disabled) conf.disabled = ing.disabled;
             if (ing.target) conf.target = ing.target;
             if (ing.defaultIndex) conf.defaultIndex = ing.defaultIndex;
+            if (ing.maxLength) conf.maxLength = ing.maxLength;
             if (typeof ing.min === "number") conf.min = ing.min;
             if (typeof ing.max === "number") conf.max = ing.max;
             if (ing.step) conf.step = ing.step;

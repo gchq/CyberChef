@@ -36,6 +36,10 @@ body {
     line-height: 0;
 }
 
+.hidden {
+    display: none;
+}
+
 .blur {
     color: transparent !important;
     text-shadow: rgba(0, 0, 0, 0.95) 0 0 10px !important;
@@ -48,6 +52,11 @@ body {
 .inline-icon {
     font-size: 12px;
     padding-left: 2px;
+}
+
+.modal-icon {
+    position: absolute;
+    right: 25px;
 }
 
 .konami {

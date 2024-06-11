@@ -26,6 +26,13 @@ class JWTDecode extends Operation {
         this.inputType = "string";
         this.outputType = "JSON";
         this.args = [];
+        this.checks = [
+            {
+                pattern: "^ey([A-Za-z0-9_-]+)\\.ey([A-Za-z0-9_-]+)\\.([A-Za-z0-9_-]+)$",
+                flags: "",
+                args: []
+            },
+        ];
     }
 
     /**

@@ -67,7 +67,7 @@ class ToHex extends Operation {
      * @returns {Object[]} pos
      */
     highlight(pos, args) {
-        let delim, commaLen;
+        let delim, commaLen = 0;
         if (args[0] === "0x with comma") {
             delim = "0x";
             commaLen = 1;
@@ -76,7 +76,7 @@ class ToHex extends Operation {
         }
 
         const lineSize = args[1],
-            len = (delim === "\r\n" ? 1 : delim.length) + commaLen;
+            len = delim.length + commaLen;
 
         const countLF = function(p) {
             // Count the number of LFs from 0 upto p
@@ -86,7 +86,7 @@ class ToHex extends Operation {
         pos[0].start = pos[0].start * (2 + len) + countLF(pos[0].start);
         pos[0].end = pos[0].end * (2 + len) + countLF(pos[0].end);
 
-        // if the deliminators are not prepended, trim the trailing deliminator
+        // if the delimiters are not prepended, trim the trailing delimiter
         if (!(delim === "0x" || delim === "\\x")) {
             pos[0].end -= delim.length;
         }
@@ -105,7 +105,7 @@ class ToHex extends Operation {
      * @returns {Object[]} pos
      */
     highlightReverse(pos, args) {
-        let delim, commaLen;
+        let delim, commaLen = 0;
         if (args[0] === "0x with comma") {
             delim = "0x";
             commaLen = 1;
@@ -114,7 +114,7 @@ class ToHex extends Operation {
         }
 
         const lineSize = args[1],
-            len = (delim === "\r\n" ? 1 : delim.length) + commaLen,
+            len = delim.length + commaLen,
             width = len + 2;
 
         const countLF = function(p) {
