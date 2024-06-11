@@ -7,6 +7,7 @@
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import Utils from "../../core/Utils.mjs";
+import {escapeControlChars} from "../utils/editorUtils.mjs";
 
 
 /**
@@ -132,7 +133,7 @@ class RecipeWaiter {
         // Reinitialise the popover on the original element in the ops list because for some reason it
         // gets destroyed and recreated. If the clone isn't in the ops list, we use the original item instead.
         let enableOpsElement;
-        if (evt.clone.parentNode && evt.clone.parentNode.classList.contains("op-list")) {
+        if (evt.clone?.parentNode?.classList?.contains("op-list")) {
             enableOpsElement = evt.clone;
         } else {
             enableOpsElement = evt.item;
@@ -162,13 +163,13 @@ class RecipeWaiter {
 
         e.stopPropagation();
         e.preventDefault();
-        if (e.target.className && e.target.className.indexOf("category-title") > -1) {
+        if (e.target?.className?.indexOf("category-title") > -1) {
             // Hovering over the a
             e.target.classList.add("favourites-hover");
-        } else if (e.target.parentNode.className && e.target.parentNode.className.indexOf("category-title") > -1) {
+        } else if (e.target?.parentNode?.className?.indexOf("category-title") > -1) {
             // Hovering over the Edit button
             e.target.parentNode.classList.add("favourites-hover");
-        } else if (e.target.parentNode.parentNode.className && e.target.parentNode.parentNode.className.indexOf("category-title") > -1) {
+        } else if (e.target?.parentNode?.parentNode?.className?.indexOf("category-title") > -1) {
             // Hovering over the image on the Edit button
             e.target.parentNode.parentNode.classList.add("favourites-hover");
         }
@@ -210,10 +211,49 @@ class RecipeWaiter {
      * @fires Manager#statechange
      */
     ingChange(e) {
-        if (e && e.target && e.target.classList.contains("no-state-change")) return;
+        if (e && e?.target?.classList?.contains("no-state-change")) return;
         window.dispatchEvent(this.manager.statechange);
     }
 
+    /**
+     * Handler for hide-args click events.
+     * Updates the icon status.
+     *
+     * @fires Manager#statechange
+     * @param {event} e
+     */
+    hideArgsClick(e) {
+        const icon = e.target;
+
+        if (icon.getAttribute("hide-args") === "false") {
+            icon.setAttribute("hide-args", "true");
+            icon.innerText = "keyboard_arrow_down";
+            icon.classList.add("hide-args-selected");
+            icon.parentNode.previousElementSibling.style.display = "none";
+        } else {
+            icon.setAttribute("hide-args", "false");
+            icon.innerText = "keyboard_arrow_up";
+            icon.classList.remove("hide-args-selected");
+            icon.parentNode.previousElementSibling.style.display = "grid";
+        }
+
+        const icons = Array.from(document.getElementsByClassName("hide-args-icon"));
+        if (icons.length > 1) {
+            // Check if ALL the icons are hidden/shown
+            const uniqueIcons = icons.map(function(item) {
+                return item.getAttribute("hide-args");
+            }).unique();
+
+            const controlsIconStatus = document.getElementById("hide-icon").getAttribute("hide-args");
+
+            // If all icons are in the same state and the global icon isn't, fix it
+            if (uniqueIcons.length === 1 && icon.getAttribute("hide-args") !== controlsIconStatus) {
+                this.manager.controls.hideRecipeArgsClick();
+            }
+        }
+
+        window.dispatchEvent(this.manager.statechange);
+    }
 
     /**
      * Handler for disable click events.
@@ -316,7 +356,7 @@ class RecipeWaiter {
                     };
                 } else if (ingList[j].getAttribute("type") === "number") {
                     // number
-                    ingredients[j] = parseFloat(ingList[j].value, 10);
+                    ingredients[j] = parseFloat(ingList[j].value);
                 } else {
                     // all others
                     ingredients[j] = ingList[j].value;
@@ -568,7 +608,7 @@ class RecipeWaiter {
 
         const registerList = [];
         for (let i = 0; i < registers.length; i++) {
-            registerList.push(`$R${numPrevRegisters + i} = ${Utils.escapeHtml(Utils.truncate(Utils.printable(registers[i]), 100))}`);
+            registerList.push(`$R${numPrevRegisters + i} = ${escapeControlChars(Utils.escapeHtml(Utils.truncate(registers[i], 100)))}`);
         }
         const registerListEl = `<div class="register-list">
                 ${registerList.join("<br>")}
@@ -583,42 +623,6 @@ class RecipeWaiter {
      */
     adjustWidth() {
         const recList = document.getElementById("rec-list");
-
-        if (!this.ingredientRuleID) {
-            this.ingredientRuleID = null;
-            this.ingredientChildRuleID = null;
-
-            // Find relevant rules in the stylesheet
-            // try/catch for chrome 64+ CORS error on cssRules.
-            try {
-                for (const i in document.styleSheets[0].cssRules) {
-                    if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients") {
-                        this.ingredientRuleID = i;
-                    }
-                    if (document.styleSheets[0].cssRules[i].selectorText === ".ingredients > div") {
-                        this.ingredientChildRuleID = i;
-                    }
-                }
-            } catch (e) {
-                // Do nothing.
-            }
-        }
-
-        if (!this.ingredientRuleID || !this.ingredientChildRuleID) return;
-
-        const ingredientRule = document.styleSheets[0].cssRules[this.ingredientRuleID];
-        const ingredientChildRule = document.styleSheets[0].cssRules[this.ingredientChildRuleID];
-
-        if (recList.clientWidth < 450) {
-            ingredientRule.style.gridTemplateColumns = "auto auto";
-            ingredientChildRule.style.gridColumn = "1 / span 2";
-        } else if (recList.clientWidth < 620) {
-            ingredientRule.style.gridTemplateColumns = "auto auto auto";
-            ingredientChildRule.style.gridColumn = "1 / span 3";
-        } else {
-            ingredientRule.style.gridTemplateColumns = "auto auto auto auto";
-            ingredientChildRule.style.gridColumn = "1 / span 4";
-        }
 
         // Hide Chef icon on Bake button if the page is compressed
         const bakeIcon = document.querySelector("#bake img");
@@ -635,7 +639,7 @@ class RecipeWaiter {
         const controlsContent = document.getElementById("controls-content");
         const scale = (controls.clientWidth - 1) / controlsContent.scrollWidth;
 
-        controlsContent.style.transform = `translate(-50%, -50%) scale(${scale})`;
+        controlsContent.style.transform = `scale(${scale})`;
     }
 
 }

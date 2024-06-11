@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import xmldom from "xmldom";
+import xmldom from "@xmldom/xmldom";
 import xpath from "xpath";
 
 /**
@@ -50,7 +50,13 @@ class XPathExpression extends Operation {
 
         let doc;
         try {
-            doc = new xmldom.DOMParser().parseFromString(input, "application/xml");
+            doc = new xmldom.DOMParser({
+                errorHandler: {
+                    fatalError(e) {
+                        throw e;
+                    }
+                }
+            }).parseFromString(input, "application/xml");
         } catch (err) {
             throw new OperationError("Invalid input XML.");
         }

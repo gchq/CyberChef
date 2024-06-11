@@ -24,6 +24,13 @@ class MicrosoftScriptDecoder extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
+        this.checks = [
+            {
+                pattern: "#@~\\^.{6}==(.+).{6}==\\^#~@",
+                flags: "i",
+                args: []
+            }
+        ];
     }
 
     /**

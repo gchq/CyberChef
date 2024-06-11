@@ -185,7 +185,7 @@ TestRegister.addTests([
     {
         name: "JPath Expression: Empty expression",
         input: JSON.stringify(JSON_TEST_DATA),
-        expectedOutput: "Invalid JPath expression: we need a path",
+        expectedOutput: "",
         recipeConfig: [
             {
                 "op": "JPath expression",
@@ -309,6 +309,20 @@ TestRegister.addTests([
                 "args": ["$..book[?(@.price<10)]", "\n"]
             }
         ],
+    },
+    {
+        name: "JPath Expression: Script-based expression",
+        input: "[{}]",
+        recipeConfig: [
+            {
+                "op": "JPath expression",
+                "args": [
+                    "$..[?(({__proto__:[].constructor}).constructor(\"self.postMessage({action:'bakeComplete',data:{bakeId:1,dish:{type:1,value:''},duration:1,error:false,id:undefined,inputNum:2,progress:1,result:'<iframe/onload=debugger>',type: 'html'}});\")();)]",
+                    "\n"
+                ]
+            }
+        ],
+        expectedMatch: /^Invalid JPath expression: jsonPath: self is not defined:/
     },
     {
         name: "CSS selector",
