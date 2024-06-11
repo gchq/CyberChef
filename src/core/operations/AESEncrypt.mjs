@@ -81,8 +81,9 @@ class AESEncrypt extends Operation {
             },
             {
                 "name": "Additional Authenticated Data",
-                "type": "binaryString",
-                "value": ""
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
             }
         ];
     }
@@ -100,7 +101,7 @@ class AESEncrypt extends Operation {
             mode = args[2],
             inputType = args[3],
             outputType = args[4],
-            aad = args[5];
+            aad = Utils.convertToByteString(args[5].string, args[5].option);
 
         if ([16, 24, 32].indexOf(key.length) < 0) {
             throw new OperationError(`Invalid key length: ${key.length} bytes

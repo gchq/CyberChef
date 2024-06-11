@@ -35,6 +35,14 @@ class BackgroundWorkerWaiter {
         log.debug("Registering new background ChefWorker");
         this.chefWorker = new ChefWorker();
         this.chefWorker.addEventListener("message", this.handleChefMessage.bind(this));
+        this.chefWorker.postMessage({
+            action: "setLogPrefix",
+            data: "BGChefWorker"
+        });
+        this.chefWorker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
 
         let docURL = document.location.href.split(/[#?]/)[0];
         const index = docURL.lastIndexOf("/");
@@ -52,7 +60,7 @@ class BackgroundWorkerWaiter {
      */
     handleChefMessage(e) {
         const r = e.data;
-        log.debug("Receiving '" + r.action + "' from ChefWorker in the background");
+        log.debug(`Receiving '${r.action}' from BGChefWorker`);
 
         switch (r.action) {
             case "bakeComplete":
@@ -150,6 +158,18 @@ class BackgroundWorkerWaiter {
         if (!response || response.error) return;
 
         this.manager.output.backgroundMagicResult(response.dish.value);
+    }
+
+
+    /**
+     * Sets the console log level in the workers.
+     */
+    setLogLevel() {
+        if (!this.chefWorker) return;
+        this.chefWorker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
     }
 
 }

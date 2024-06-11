@@ -10,8 +10,7 @@ import OperationError from "../errors/OperationError.mjs";
 import jsQR from "jsqr";
 import qr from "qr-image";
 import Utils from "../Utils.mjs";
-import jimplib from "jimp/es/index.js";
-const jimp = jimplib.default ? jimplib.default : jimplib;
+import Jimp from "jimp/es/index.js";
 
 /**
  * Parses a QR code image from an image
@@ -23,7 +22,7 @@ const jimp = jimplib.default ? jimplib.default : jimplib;
 export async function parseQrCode(input, normalise) {
     let image;
     try {
-        image = await jimp.read(input);
+        image = await Jimp.read(input);
     } catch (err) {
         throw new OperationError(`Error opening image. (${err})`);
     }
@@ -34,8 +33,8 @@ export async function parseQrCode(input, normalise) {
             image.background(0xFFFFFFFF);
             image.normalize();
             image.greyscale();
-            image = await image.getBufferAsync(jimp.MIME_JPEG);
-            image = await jimp.read(image);
+            image = await image.getBufferAsync(Jimp.MIME_JPEG);
+            image = await Jimp.read(image);
         }
     } catch (err) {
         throw new OperationError(`Error normalising image. (${err})`);

@@ -35,7 +35,8 @@ class FromBinary extends Operation {
             {
                 "name": "Byte Length",
                 "type": "number",
-                "value": 8
+                "value": 8,
+                "min": 1
             }
         ];
         this.checks = [

@@ -73,7 +73,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
-                    "CBC", "Raw", "Hex"
+                    "CBC", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -88,7 +89,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
-                    "CBC", "Raw", "Hex"
+                    "CBC", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -103,7 +105,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
-                    "CTR", "Raw", "Hex"
+                    "CTR", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -118,7 +121,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "CBC", "Raw", "Hex"
+                    "CBC", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -133,7 +137,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "CFB", "Raw", "Hex"
+                    "CFB", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -148,7 +153,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "OFB", "Raw", "Hex"
+                    "OFB", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -163,7 +169,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
-                    "CTR", "Raw", "Hex"
+                    "CTR", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -178,7 +185,8 @@ The following algorithms will be used based on the size of the key:
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Raw", "Hex"
+                    "ECB", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -195,7 +203,8 @@ Tag: 16a3e732a605cc9ca29108f742ca0743`,
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
-                    "GCM", "Raw", "Hex", ""
+                    "GCM", "Raw", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -212,7 +221,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                 "args": [
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "ffeeddccbbaa99887766554433221100"},
-                    "GCM", "Raw", "Hex", "additional data"
+                    "GCM", "Raw", "Hex",
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -227,7 +237,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -242,7 +253,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -257,7 +269,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -272,7 +285,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -289,7 +303,8 @@ Tag: 70fad2ca19412c20f40fd06918736e56`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex", ""
+                    "GCM", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -306,7 +321,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex", "additional data"
+                    "GCM", "Hex", "Hex",
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -321,7 +337,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                 "args": [
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -336,7 +353,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -351,7 +369,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -366,7 +385,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -381,7 +401,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -398,7 +419,8 @@ Tag: 86db597d5302595223cadbd990f1309b`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex", ""
+                    "GCM", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -415,7 +437,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex", "additional data"
+                    "GCM", "Hex", "Hex",
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -430,7 +453,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                 "args": [
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -445,7 +469,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CBC", "Hex", "Hex"
+                    "CBC", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -460,7 +485,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CFB", "Hex", "Hex"
+                    "CFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -475,7 +501,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "OFB", "Hex", "Hex"
+                    "OFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -490,7 +517,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "CTR", "Hex", "Hex"
+                    "CTR", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -507,7 +535,8 @@ Tag: 821b1e5f32dad052e502775a523d957a`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex", ""
+                    "GCM", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -524,7 +553,8 @@ Tag: a8f04c4d93bbef82bef61a103371aef9`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "GCM", "Hex", "Hex", "additional data"
+                    "GCM", "Hex", "Hex",
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -539,7 +569,8 @@ Tag: a8f04c4d93bbef82bef61a103371aef9`,
                 "args": [
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
-                    "ECB", "Hex", "Hex"
+                    "ECB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -748,6 +779,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
                     "CBC", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -764,6 +796,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CBC", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -780,6 +813,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CTR", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -796,6 +830,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CBC", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -812,6 +847,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CFB", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -828,6 +864,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "OFB", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -844,6 +881,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CTR", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -860,6 +898,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
                     "ECB", "Hex", "Raw",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -877,7 +916,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": ""},
                     "GCM", "Hex", "Raw",
                     {"option": "Hex", "string": "16a3e732a605cc9ca29108f742ca0743"},
-                    ""
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -894,7 +933,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "ffeeddccbbaa99887766554433221100"},
                     "GCM", "Hex", "Raw",
                     {"option": "Hex", "string": "3b5378917f67b0aade9891fc6c291646"},
-                    "additional data"
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -910,6 +949,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -926,6 +966,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -942,6 +983,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -958,6 +1000,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -975,7 +1018,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
                     {"option": "Hex", "string": "70fad2ca19412c20f40fd06918736e56"},
-                    ""
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -992,7 +1035,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
                     {"option": "Hex", "string": "61cc4b70809452b0b3e38f913fa0a109"},
-                    "additional data"
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -1008,6 +1051,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1024,6 +1068,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1040,6 +1085,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1056,6 +1102,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1072,6 +1119,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1089,7 +1137,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
                     {"option": "Hex", "string": "86db597d5302595223cadbd990f1309b"},
-                    ""
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -1106,7 +1154,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
                     {"option": "Hex", "string": "aeedf3e6ca4201577c0cf3e9ce58159d"},
-                    "additional data"
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -1122,6 +1170,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1138,6 +1187,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1154,6 +1204,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1170,6 +1221,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1186,6 +1238,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1203,7 +1256,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
                     {"option": "Hex", "string": "821b1e5f32dad052e502775a523d957a"},
-                    ""
+                    {"option": "Hex", "string": ""}
                 ]
             }
         ],
@@ -1220,7 +1273,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
                     {"option": "Hex", "string": "a8f04c4d93bbef82bef61a103371aef9"},
-                    "additional data"
+                    {"option": "UTF8", "string": "additional data"}
                 ]
             }
         ],
@@ -1236,6 +1289,7 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""}
                 ]
             }
@@ -1894,4 +1948,38 @@ DES uses a key length of 8 bytes (64 bits).`,
             }
         ],
     },
+    {
+        name: "Blowfish Encrypt with variable key length: CBC, ASCII, 4 bytes",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "823f337a53ecf121aa9ec1b111bd5064d1d7586abbdaaa0c8fd0c6cc43c831c88bf088ee3e07287e3f36cf2e45f9c7e6",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233"}, // Key
+                    {"option": "Hex", "string": "0000000000000000"}, // IV
+                    "CBC", // Mode
+                    "Raw", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    },
+    {
+        name: "Blowfish Encrypt with variable key length: CBC, ASCII, 42 bytes",
+        input: "The quick brown fox jumps over the lazy dog.",
+        expectedOutput: "19f5a68145b34321cfba72226b0f33922ce44dd6e7869fe328db64faae156471216f12ed2a37fd0bdd7cebf867b3cff0",
+        recipeConfig: [
+            {
+                "op": "Blowfish Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdead"}, // Key
+                    {"option": "Hex", "string": "0000000000000000"}, // IV
+                    "CBC", // Mode
+                    "Raw", // Input
+                    "Hex" // Output
+                ]
+            }
+        ],
+    }
 ]);
