@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import OperationConfig from "./config/OperationConfig.json";
+import OperationConfig from "./config/OperationConfig.json" assert {type: "json"};
 import OperationError from "./errors/OperationError.mjs";
 import Operation from "./Operation.mjs";
 import DishError from "./errors/DishError.mjs";
@@ -230,14 +230,12 @@ class Recipe  {
                 this.lastRunOp = op;
             } catch (err) {
                 // Return expected errors as output
-                if (err instanceof OperationError ||
-                    (err.type && err.type === "OperationError")) {
+                if (err instanceof OperationError || err?.type === "OperationError") {
                     // Cannot rely on `err instanceof OperationError` here as extending
                     // native types is not fully supported yet.
                     dish.set(err.message, "string");
                     return i;
-                } else if (err instanceof DishError ||
-                    (err.type && err.type === "DishError")) {
+                } else if (err instanceof DishError || err?.type === "DishError") {
                     dish.set(err.message, "string");
                     return i;
                 } else {
