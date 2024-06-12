@@ -8,7 +8,7 @@ const path = require("path");
  * Webpack configuration details for use with Grunt.
  *
  * @author n1474335 [n1474335@gmail.com]
- * @copyright Crown Copyright 2017
+ * @copyright Crown Copyright 2024
  * @license Apache-2.0
  */
 
