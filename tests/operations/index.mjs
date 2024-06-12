@@ -33,6 +33,7 @@ import "./tests/BLAKE2s.mjs";
 import "./tests/Bombe.mjs";
 import "./tests/BSON.mjs";
 import "./tests/ByteRepr.mjs";
+import "./tests/BytesLong.mjs";
 import "./tests/CaesarBoxCipher.mjs";
 import "./tests/CaretMdecode.mjs";
 import "./tests/CartesianProduct.mjs";
