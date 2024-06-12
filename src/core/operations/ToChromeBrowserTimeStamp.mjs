@@ -38,10 +38,10 @@ class ToChromeBrowserTimestamp extends Operation {
      * @returns {string}
      */
     run(input, args) {
-         const [showDateTime] = args, 
-	     d = moment.utc(input);
-         let result = ((d.unix()+11644473600) * 1000000);
-         return showDateTime ? `${result} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : result.toString();
+        const [showDateTime] = args,
+        d = moment.utc(input);
+        let result = ((d.unix()+11644473600) * 1000000);
+        return showDateTime ? `${result} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : result.toString();
     }
 }
 export default ToChromeBrowserTimestamp;
