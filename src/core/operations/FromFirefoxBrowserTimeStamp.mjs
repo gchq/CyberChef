@@ -31,12 +31,10 @@ class FromFirefoxBrowserTimestamp extends Operation {
     /**
      * @param {string} input
      * @returns {string}
-     * @throws {OperationError} if invalid unit
      */
     run(input, args) {
         const d = moment.unix((input /1000000));
         return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC";
     }
 }
-
 export default FromFirefoxBrowserTimestamp;
