@@ -184,7 +184,7 @@ class Protobuf {
                 bytes: String,
                 longs: Number,
                 enums: String,
-                defualts: true
+                defaults: true
             });
             const output = {};
 

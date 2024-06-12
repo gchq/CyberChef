@@ -9,8 +9,7 @@ import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
-import jimplib from "jimp/es/index.js";
-const jimp = jimplib.default ? jimplib.default : jimplib;
+import Jimp from "jimp/es/index.js";
 
 /**
  * Resize Image operation
@@ -81,11 +80,11 @@ class ResizeImage extends Operation {
             resizeAlg = args[4];
 
         const resizeMap = {
-            "Nearest Neighbour": jimp.RESIZE_NEAREST_NEIGHBOR,
-            "Bilinear": jimp.RESIZE_BILINEAR,
-            "Bicubic": jimp.RESIZE_BICUBIC,
-            "Hermite": jimp.RESIZE_HERMITE,
-            "Bezier": jimp.RESIZE_BEZIER
+            "Nearest Neighbour": Jimp.RESIZE_NEAREST_NEIGHBOR,
+            "Bilinear": Jimp.RESIZE_BILINEAR,
+            "Bicubic": Jimp.RESIZE_BICUBIC,
+            "Hermite": Jimp.RESIZE_HERMITE,
+            "Bezier": Jimp.RESIZE_BEZIER
         };
 
         if (!isImage(input)) {
@@ -94,7 +93,7 @@ class ResizeImage extends Operation {
 
         let image;
         try {
-            image = await jimp.read(input);
+            image = await Jimp.read(input);
         } catch (err) {
             throw new OperationError(`Error loading image. (${err})`);
         }
@@ -114,9 +113,9 @@ class ResizeImage extends Operation {
 
             let imageBuffer;
             if (image.getMIME() === "image/gif") {
-                imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
+                imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
             } else {
-                imageBuffer = await image.getBufferAsync(jimp.AUTO);
+                imageBuffer = await image.getBufferAsync(Jimp.AUTO);
             }
             return imageBuffer.buffer;
         } catch (err) {

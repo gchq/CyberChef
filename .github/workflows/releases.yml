@@ -1,24 +1,31 @@
 name: "Releases"
 
 on:
+  workflow_dispatch:
   push:
     tags:
     - 'v*'
+
+env:
+  REGISTRY: ghcr.io
+  REGISTRY_USER: ${{ github.actor }}
+  REGISTRY_PASSWORD: ${{ github.token }}
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Set node version
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
-        node-version: '10.x'
+        node-version: '18.x'
 
     - name: Install
       run: |
-        npm install
+        npm ci
         npm run setheapsize
 
     - name: Lint
@@ -27,18 +34,41 @@ jobs:
     - name: Unit Tests
       run: |
         npm test
-        npx grunt testnodeconsumer
+        npm run testnodeconsumer
 
     - name: Production Build
-      if: success()
       run: npx grunt prod
 
-    # - name: UI Tests
-    #   if: success()
-    #   run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+    - name: UI Tests
+      run: |
+        sudo apt-get install xvfb
+        xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+
+    - name: Image Metadata
+      id: image-metadata
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=semver,pattern={{major}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{version}}
+
+    - name: Production Image Build
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        tags: ${{ steps.image-metadata.outputs.tags }}
+        labels: ${{ steps.image-metadata.outputs.labels }}
+        containerfiles: ./Dockerfile
+        platforms: linux/amd64
+        oci: true
+        # Webpack seems to use a lot of open files, increase the max open file limit to accomodate.
+        extra-args: |
+          --ulimit nofile=10000
+
 
     - name: Upload Release Assets
-      if: success()
       id: upload-release-assets
       uses: svenstaro/upload-release-action@v2
       with:
@@ -50,7 +80,14 @@ jobs:
         body: "See the [CHANGELOG](https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md) and [commit messages](https://github.com/gchq/CyberChef/commits/master) for details."
 
     - name: Publish to NPM
-      if: success()
       uses: JS-DevTools/npm-publish@v1
       with:
         token: ${{ secrets.NPM_TOKEN }}
+
+    - name: Publish to GHCR
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        tags: ${{ steps.build-image.outputs.tags }}
+        registry: ${{ env.REGISTRY }}
+        username: ${{ env.REGISTRY_USER }}
+        password: ${{ env.REGISTRY_PASSWORD }}
