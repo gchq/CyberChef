@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation.mjs";
-import OperationError from "../errors/OperationError.mjs";
 import moment from "moment-timezone";
 
 /**
@@ -43,7 +42,7 @@ class ToChromeBrowserTimestamp extends Operation {
      */
     run(input, args) {
          const [showDateTime] = args, 
-	 d = moment.utc(input);
+	     d = moment.utc(input);
          let result = ((d.unix()+11644473600) * 1000000);
          return showDateTime ? `${result} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : result.toString();
     }
