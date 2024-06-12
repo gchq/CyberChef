@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation.mjs";
-import OperationError from "../errors/OperationError.mjs";
 import moment from "moment-timezone";
 
 /**
@@ -28,7 +27,7 @@ class ToFirefoxBrowserTimestamp extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
-         {
+            {
                 "name": "Show parsed datetime",
                 "type": "boolean",
                 "value": true
