@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation.mjs";
-import OperationError from "../errors/OperationError.mjs";
 import moment from "moment-timezone";
 
 /**
@@ -39,5 +38,4 @@ class FromWindows64bitTimestamp extends Operation {
         return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC";
     }
 }
-
 export default FromWindows64bitTimestamp;
