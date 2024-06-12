@@ -77,12 +77,12 @@ function formatSignature(sigAlg, sigHex) {
         const d = new r.KJUR.crypto.DSA();
         const sigParam = d.parseASN1Signature(sigHex);
         out += `  Signature:
-      R:          ${formatHexOntoMultiLine(sigParam[0].toString(16))}
-      S:          ${formatHexOntoMultiLine(sigParam[1].toString(16))}\n`;
+      R:          ${formatHexOntoMultiLine(absBigIntToHex(sigParam[0]))}
+      S:          ${formatHexOntoMultiLine(absBigIntToHex(sigParam[1]))}\n`;
     } else if (new RegExp("withrsa", "i").test(sigAlg)) {
-        out += `  Signature:      ${formatHexOntoMultiLine(sigHex, false)}\n`;
-    } else {
         out += `  Signature:      ${formatHexOntoMultiLine(sigHex)}\n`;
+    } else {
+        out += `  Signature:      ${formatHexOntoMultiLine(ensureHexIsPositiveInTwosComplement(sigHex))}\n`;
     }
 
     return chop(out);
@@ -100,7 +100,7 @@ function formatSubjectPublicKey(publicKeyPEM) {
     if (publicKey instanceof r.RSAKey) {
         out += `  Algorithm:      RSA
   Length:         ${publicKey.n.bitLength()} bits
-  Modulus:        ${formatHexOntoMultiLine(publicKey.n.toString(16))}
+  Modulus:        ${formatHexOntoMultiLine(absBigIntToHex(publicKey.n))}
   Exponent:       ${publicKey.e} (0x${Utils.hex(publicKey.e)})\n`;
     } else if (publicKey instanceof r.KJUR.crypto.ECDSA) {
         out += `  Algorithm:      ECDSA
@@ -111,10 +111,10 @@ function formatSubjectPublicKey(publicKeyPEM) {
     } else if (publicKey instanceof r.KJUR.crypto.DSA) {
         out += `  Algorithm:      DSA
   Length:         ${publicKey.p.toString(16).length * 4} bits
-  Pub:            ${formatHexOntoMultiLine(publicKey.y.toString(16))}
-  P:              ${formatHexOntoMultiLine(publicKey.p.toString(16))}
-  Q:              ${formatHexOntoMultiLine(publicKey.q.toString(16))}
-  G:              ${formatHexOntoMultiLine(publicKey.g.toString(16))}\n`;
+  Pub:            ${formatHexOntoMultiLine(absBigIntToHex(publicKey.y))}
+  P:              ${formatHexOntoMultiLine(absBigIntToHex(publicKey.p))}
+  Q:              ${formatHexOntoMultiLine(absBigIntToHex(publicKey.q))}
+  G:              ${formatHexOntoMultiLine(absBigIntToHex(publicKey.g))}\n`;
     } else {
         out += `unsupported public key algorithm\n`;
     }
@@ -178,19 +178,46 @@ function formatExtensionCriticalTag(extension) {
 }
 
 /**
- * Format hex input on multiple lines
- * @param {*} hex string
+ * Format string input as a comma separated hex string on multiple lines
+ * @param {*} hex String
  * @returns Multi-line string describing the Hex input
  */
-function formatHexOntoMultiLine(hex, prependZero=true) {
-    let colonSeparatedHex = chop(hex.replace(/(..)/g, "$&:"));
-
-    // prepend 00 if most significant bit it 1
-    if ((parseInt(colonSeparatedHex.substring(0, 2), 16) & 128) && prependZero) {
-        colonSeparatedHex = "00:" + colonSeparatedHex;
+function formatHexOntoMultiLine(hex) {
+    if (hex.length % 2 !== 0) {
+        hex = "0" + hex
     }
 
-    return formatMultiLine(colonSeparatedHex);
+    return formatMultiLine(chop(hex.replace(/(..)/g, "$&:")));
+}
+
+/**
+ * Convert BigInt to abs value in Hex
+ * @param {*} int BigInt
+ * @returns String representing absolute value in Hex
+ */
+function absBigIntToHex(int) {
+    int = int < 0n ? -int : int;
+    let hInt = int.toString(16);
+
+    return ensureHexIsPositiveInTwosComplement(hInt);
+}
+
+/**
+ * Ensure Hex String remains positive in 2's complement
+ * @param {*} hex String
+ * @returns Hex String ensuring value remains positive in 2's complement
+ */
+function ensureHexIsPositiveInTwosComplement(hex) {
+    if (hex.length % 2 !== 0) {
+        return "0" + hex;
+    }
+
+    // prepend 00 if most significant bit is 1 (sign bit)
+    if (hex.length >=2 && (parseInt(hex.substring(0, 2), 16) & 128)) {
+        hex = "00" + hex;
+    }
+
+    return hex
 }
 
 /**
@@ -232,22 +259,22 @@ function describeBasicConstraints(extension) {
 function describeKeyUsage(extension) {
     const usage = [];
 
-    const kuIdentifierToName = new Map([
-        ["digitalSignature", "Digital Signature"],
-        ["nonRepudiation", "Non-repudiation"],
-        ["keyEncipherment", "Key encipherment"],
-        ["dataEncipherment", "Data encipherment"],
-        ["keyAgreement", "Key agreement"],
-        ["keyCertSign", "Key certificate signing"],
-        ["cRLSign", "CRL signing"],
-        ["encipherOnly", "Encipher Only"],
-        ["decipherOnly", "Decipher Only"],
-    ]);
+    const kuIdentifierToName = {
+        digitalSignature: "Digital Signature",
+        nonRepudiation:   "Non-repudiation",
+        keyEncipherment:  "Key encipherment",
+        dataEncipherment: "Data encipherment",
+        keyAgreement:     "Key agreement",
+        keyCertSign:      "Key certificate signing",
+        cRLSign:          "CRL signing",
+        encipherOnly:     "Encipher Only",
+        decipherOnly:     "Decipher Only",
+    };
 
     if (Object.hasOwn(extension, "names")) {
         extension.names.forEach((ku) => {
-            if (kuIdentifierToName.has(ku)) {
-                usage.push(kuIdentifierToName.get(ku));
+            if (Object.hasOwn(kuIdentifierToName, ku)) {
+                usage.push(kuIdentifierToName[ku]);
             } else {
                 usage.push(`unknown key usage (${ku})`);
             }
@@ -268,27 +295,27 @@ function describeKeyUsage(extension) {
 function describeExtendedKeyUsage(extension) {
     const usage = [];
 
-    const ekuIdentifierToName = new Map([
-        ["serverAuth", "TLS Web Server Authentication"],
-        ["clientAuth", "TLS Web Client Authentication"],
-        ["codeSigning", "Code signing"],
-        ["emailProtection", "E-mail Protection (S/MIME)"],
-        ["timeStamping", "Trusted Timestamping"],
-        ["1.3.6.1.4.1.311.2.1.21", "Microsoft Individual Code Signing"],  // msCodeInd
-        ["1.3.6.1.4.1.311.2.1.22", "Microsoft Commercial Code Signing"],  // msCodeCom
-        ["1.3.6.1.4.1.311.10.3.1", "Microsoft Trust List Signing"],  // msCTLSign
-        ["1.3.6.1.4.1.311.10.3.3", "Microsoft Server Gated Crypto"],  // msSGC
-        ["1.3.6.1.4.1.311.10.3.4", "Microsoft Encrypted File System"],  // msEFS
-        ["1.3.6.1.4.1.311.20.2.2", "Microsoft Smartcard Login"],  // msSmartcardLogin
-        ["2.16.840.1.113730.4.1", "Netscape Server Gated Crypto"],  // nsSGC
-    ]);
+    const ekuIdentifierToName = {
+        "serverAuth":             "TLS Web Server Authentication",
+        "clientAuth":             "TLS Web Client Authentication",
+        "codeSigning":            "Code signing",
+        "emailProtection":        "E-mail Protection (S/MIME)",
+        "timeStamping":           "Trusted Timestamping",
+        "1.3.6.1.4.1.311.2.1.21": "Microsoft Individual Code Signing",  // msCodeInd
+        "1.3.6.1.4.1.311.2.1.22": "Microsoft Commercial Code Signing",  // msCodeCom
+        "1.3.6.1.4.1.311.10.3.1": "Microsoft Trust List Signing",  // msCTLSign
+        "1.3.6.1.4.1.311.10.3.3": "Microsoft Server Gated Crypto",  // msSGC
+        "1.3.6.1.4.1.311.10.3.4": "Microsoft Encrypted File System",  // msEFS
+        "1.3.6.1.4.1.311.20.2.2": "Microsoft Smartcard Login",  // msSmartcardLogin
+        "2.16.840.1.113730.4.1":  "Netscape Server Gated Crypto",  // nsSGC
+    };
 
     if (Object.hasOwn(extension, "array")) {
         extension.array.forEach((eku) => {
-            if (ekuIdentifierToName.has(eku)) {
-                usage.push(ekuIdentifierToName.get(eku));
+            if (Object.hasOwn(ekuIdentifierToName, eku)) {
+                usage.push(ekuIdentifierToName[eku]);
             } else {
-                usage.push(`unknown extended key usage (${eku})`);
+                usage.push(eku);
             }
         });
     }
@@ -331,7 +358,7 @@ function describeSubjectAlternativeName(extension) {
                             names.push(`Other: ${altName[key].oid}::${altName[key].value.utf8str.str}`);
                             break;
                         default:
-                            names.push(`(unable to format type '${key}' name)\n`);
+                            names.push(`(unable to format SAN '${key}':${altName[key]})\n`);
                     }
                 });
             }
