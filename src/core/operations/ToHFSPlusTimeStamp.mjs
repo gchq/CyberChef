@@ -41,8 +41,8 @@ class ToHFSPlusTimestamp extends Operation {
      * @throws {OperationError} if invalid unit
      */
     run(input, args) {
-        const [showDateTime] = args, 
-	d = moment.utc(input);
+        const [showDateTime] = args,
+	    d = moment.utc(input);
         let result = d.unix();
         const hexString = (result + 2082844800).toString(16);
         return showDateTime ? `${hexString.toUpperCase()} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)`: hexString.toUpperCase();
