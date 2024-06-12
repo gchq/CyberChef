@@ -41,7 +41,7 @@ class ToWindows64bitTimestamp extends Operation {
      * @throws {OperationError} if invalid unit
      */
     run(input, args) {
-        const [showDateTime] = args, 
+        const [showDateTime] = args,
 	d = moment.utc(input);
         let result = d.unix();
         const step1 = result + 11644473600;
