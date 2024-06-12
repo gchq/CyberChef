@@ -188,7 +188,7 @@ TestRegister.addTests([
     {
         name: "NTP Timestamp to UNIX Timestamp : NTP timestamp seconds part is greater than the greatest 32 bits value 4294967296",
         input: "4294967297.1842400034",
-        expectedOutput: "Error: Timestamp seconds part should be 32 bits long. The seconds part '4294967297' of the provided NTP timestamp is greater than the greatest 32 bits value '4294967296'",
+        expectedOutput: "Error: Timestamp seconds part should be 32 bits long. The seconds part '4294967297' of the provided NTP timestamp exceeds the maximum positive integer representable in 32 bits '4294967296'",
         recipeConfig: [
             {
                 op: "NTP Timestamp to UNIX Timestamp",
@@ -199,7 +199,7 @@ TestRegister.addTests([
     {
         name: "NTP Timestamp to UNIX Timestamp : NTP timestamp seconds fractions part is greater than the greatest 32 bits value 4294967296",
         input: "3923215437.4294967297",
-        expectedOutput: "Error: Timestamp fractions seconds part should be 32 bits long. The fractions seconds part '4294967297' of the provided NTP timestamp is greater than the greatest 32 bits value '4294967296'",
+        expectedOutput: "Error: Timestamp fractions seconds part should be 32 bits long. The fractions seconds part '4294967297' of the provided NTP timestamp exceeds the maximum positive integer representable in 32 bits '4294967296'",
         recipeConfig: [
             {
                 op: "NTP Timestamp to UNIX Timestamp",

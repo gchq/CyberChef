@@ -79,7 +79,7 @@ class NTPTimestampToUNIXTimestamp extends Operation {
 
         // Check whether the seconds value part do not exceeds the greatest seconds value
         if (unixTimestampSecondsPart > greatestSecondsValue) {
-            return `Error: The NTP Timestamp seconds part '${unixTimestampSecondsPart}' exceeds the greatest authorized seconds value ${greatestSecondsValue} due to an incorrect provided UNIX timestamp`;
+            return `Error: The NTP Timestamp seconds part '${unixTimestampSecondsPart}' exceeds the greatest authorized seconds value '${greatestSecondsValue}' due to an incorrect provided UNIX timestamp`;
         }
 
         // Convert the UNIX timestamp seconds part value (seconds elapsed since 01 january

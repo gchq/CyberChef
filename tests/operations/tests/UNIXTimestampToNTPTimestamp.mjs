@@ -166,7 +166,7 @@ TestRegister.addTests([
     {
         name: "UNIX Timestamp to NTP Timestamp : NTP timestamp seconds part is greater than the greatest authorized value 2085978496",
         input: "2085978497",
-        expectedOutput: "Error: The UNIX Timestamp seconds part '2085978497' exceeds the greatest authorized seconds value '2085978496' due to an incorrect provided UNIX timestamp",
+        expectedOutput: "Error: The NTP Timestamp seconds part '2085978497' exceeds the greatest authorized seconds value 2085978496 due to an incorrect provided UNIX timestamp",
         recipeConfig: [
             {
                 op: "UNIX Timestamp to NTP Timestamp",
