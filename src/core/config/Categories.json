@@ -334,7 +334,7 @@
             "To UNIX 32-bit Timestamp",
             "Windows Filetime to UNIX Timestamp",
             "UNIX Timestamp to Windows Filetime",
-	          "From Mac Absolute Timestamp",
+	        "From Mac Absolute Timestamp",
             "To Mac Absolute Timestamp",
             "From HFS(+) Timestamp",
             "To HFS(+) Timestamp",
