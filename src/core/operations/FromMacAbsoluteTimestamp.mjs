@@ -36,5 +36,4 @@ class FromMacAbsoluteTimestamp extends Operation {
         return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC";
     }
 }
-
 export default FromMacAbsoluteTimestamp;
