@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation.mjs";
-import OperationError from "../errors/OperationError.mjs";
 import moment from "moment-timezone";
 
 /**
@@ -26,7 +25,7 @@ class ToWindows64bitTimestamp extends Operation {
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
-         {
+            {
                 "name": "Show parsed datetime",
                 "type": "boolean",
                 "value": true
@@ -42,7 +41,7 @@ class ToWindows64bitTimestamp extends Operation {
      */
     run(input, args) {
         const [showDateTime] = args,
-	d = moment.utc(input);
+	    d = moment.utc(input);
         let result = d.unix();
         const step1 = result + 11644473600;
         const hexString = (step1 * 10000000).toString(16);
