@@ -1,5 +1,5 @@
 import sm from "sitemap";
-import OperationConfig from "../../core/config/OperationConfig.json";
+import OperationConfig from "../../core/config/OperationConfig.json" assert {type: "json"};
 
 
 /**

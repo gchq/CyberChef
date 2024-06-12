@@ -5,6 +5,8 @@
  */
 
 import HTMLIngredient from "./HTMLIngredient.mjs";
+import Utils from "../core/Utils.mjs";
+import url from "url";
 
 
 /**
@@ -72,7 +74,7 @@ class HTMLOperation {
      * @returns {string}
      */
     toFullHtml() {
-        let html = `<div class="op-title">${this.name}</div>
+        let html = `<div class="op-title">${Utils.escapeHtml(this.name)}</div>
         <div class="ingredients">`;
 
         for (let i = 0; i < this.ingList.length; i++) {
@@ -81,8 +83,9 @@ class HTMLOperation {
 
         html += `</div>
         <div class="recip-icons">
-            <i class="material-icons breakpoint" title="Set breakpoint" break="false">pause</i>
-            <i class="material-icons disable-icon" title="Disable operation" disabled="false">not_interested</i>
+            <i class="material-icons breakpoint" title="Set breakpoint" break="false" data-help-title="Setting breakpoints" data-help="Setting a breakpoint on an operation will cause execution of the Recipe to pause when it reaches that operation.">pause</i>
+            <i class="material-icons disable-icon" title="Disable operation" disabled="false" data-help-title="Disabling operations" data-help="Disabling an operation will prevent it from being executed when the Recipe is baked. Execution will skip over the disabled operation and continue with subsequent operations.">not_interested</i>
+            <i class="material-icons hide-args-icon" title="Hide operation's arguments" hide-args="false" data-help-title="Hide operation's arguments" data-help="Hiding an operation's argument will save space in the Recipe window. Execution will still take place with the selected argument options.">keyboard_arrow_up</i>
         </div>
         <div class="clearfix">&nbsp;</div>`;
 
@@ -91,32 +94,52 @@ class HTMLOperation {
 
 
     /**
-     * Highlights the searched string in the name and description of the operation.
+     * Highlights searched strings in the name and description of the operation.
      *
-     * @param {string} searchStr
-     * @param {number} namePos - The position of the search string in the operation name
-     * @param {number} descPos - The position of the search string in the operation description
+     * @param {[[number]]} nameIdxs - Indexes of the search strings in the operation name [[start, length]]
+     * @param {[[number]]} descIdxs - Indexes of the search strings in the operation description [[start, length]]
      */
-    highlightSearchString(searchStr, namePos, descPos) {
-        if (namePos >= 0) {
-            this.name = this.name.slice(0, namePos) + "<b><u>" +
-                this.name.slice(namePos, namePos + searchStr.length) + "</u></b>" +
-                this.name.slice(namePos + searchStr.length);
+    highlightSearchStrings(nameIdxs, descIdxs) {
+        if (nameIdxs.length && typeof nameIdxs[0][0] === "number") {
+            let opName = "",
+                pos = 0;
+
+            nameIdxs.forEach(idxs => {
+                const [start, length] = idxs;
+                if (typeof start !== "number") return;
+                opName += this.name.slice(pos, start) + "<b>" +
+                    this.name.slice(start, start + length) + "</b>";
+                pos = start + length;
+            });
+            opName += this.name.slice(pos, this.name.length);
+            this.name = opName;
         }
 
-        if (this.description && descPos >= 0) {
+        if (this.description && descIdxs.length && descIdxs[0][0] >= 0) {
             // Find HTML tag offsets
             const re = /<[^>]+>/g;
             let match;
             while ((match = re.exec(this.description))) {
                 // If the search string occurs within an HTML tag, return without highlighting it.
-                if (descPos >= match.index && descPos <= (match.index + match[0].length))
-                    return;
+                const inHTMLTag = descIdxs.reduce((acc, idxs) => {
+                    const start = idxs[0];
+                    return start >= match.index && start <= (match.index + match[0].length);
+                }, false);
+
+                if (inHTMLTag) return;
             }
 
-            this.description = this.description.slice(0, descPos) + "<b><u>" +
-                this.description.slice(descPos, descPos + searchStr.length) + "</u></b>" +
-                this.description.slice(descPos + searchStr.length);
+            let desc = "",
+                pos = 0;
+
+            descIdxs.forEach(idxs => {
+                const [start, length] = idxs;
+                desc += this.description.slice(pos, start) + "<b><u>" +
+                    this.description.slice(start, start + length) + "</u></b>";
+                pos = start + length;
+            });
+            desc += this.description.slice(pos, this.description.length);
+            this.description = desc;
         }
     }
 
@@ -126,21 +149,29 @@ class HTMLOperation {
 /**
  * Given a URL for a Wikipedia (or other wiki) page, this function returns a link to that page.
  *
- * @param {string} url
+ * @param {string} urlStr
  * @returns {string}
  */
-function titleFromWikiLink(url) {
-    const splitURL = url.split("/");
-    if (splitURL.indexOf("wikipedia.org") < 0 && splitURL.indexOf("forensicswiki.org") < 0) {
-        // Not a wiki link, return full URL
-        return `<a href='${url}' target='_blank'>More Information<i class='material-icons inline-icon'>open_in_new</i></a>`;
+function titleFromWikiLink(urlStr) {
+    const urlObj = url.parse(urlStr);
+    let wikiName = "",
+        pageTitle = "";
+
+    switch (urlObj.host) {
+        case "forensics.wiki":
+            wikiName = "Forensics Wiki";
+            pageTitle = Utils.toTitleCase(urlObj.path.replace(/\//g, "").replace(/_/g, " "));
+            break;
+        case "wikipedia.org":
+            wikiName = "Wikipedia";
+            pageTitle = urlObj.pathname.substr(6).replace(/_/g, " "); // Chop off '/wiki/'
+            break;
+        default:
+            // Not a wiki link, return full URL
+            return `<a href='${urlStr}' target='_blank'>More Information<i class='material-icons inline-icon'>open_in_new</i></a>`;
     }
 
-    const wikiName = splitURL.indexOf("forensicswiki.org") < 0 ? "Wikipedia" : "Forensics Wiki";
-
-    const pageTitle = decodeURIComponent(splitURL[splitURL.length - 1])
-        .replace(/_/g, " ");
-    return `<a href='${url}' target='_blank'>${pageTitle}<i class='material-icons inline-icon'>open_in_new</i></a> on ${wikiName}`;
+    return `<a href='${urlObj.href}' target='_blank'>${pageTitle}<i class='material-icons inline-icon'>open_in_new</i></a> on ${wikiName}`;
 }
 
 export default HTMLOperation;

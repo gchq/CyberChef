@@ -60,7 +60,7 @@ class FromBase58 extends Operation {
     run(input, args) {
         let alphabet = args[0] || ALPHABET_OPTIONS[0].value;
         const removeNonAlphaChars = args[1] === undefined ? true : args[1],
-            result = [0];
+            result = [];
 
         alphabet = Utils.expandAlphRange(alphabet).join("");
 
@@ -87,11 +87,9 @@ class FromBase58 extends Operation {
                 }
             }
 
-            let carry = result[0] * 58 + index;
-            result[0] = carry & 0xFF;
-            carry = carry >> 8;
+            let carry = index;
 
-            for (let i = 1; i < result.length; i++) {
+            for (let i = 0; i < result.length; i++) {
                 carry += result[i] * 58;
                 result[i] = carry & 0xFF;
                 carry = carry >> 8;

@@ -3,6 +3,7 @@ npm-debug.log
 travis.log
 build
 .vscode
+.idea
 .*.swp
 src/core/config/modules/*
 src/core/config/OperationConfig.json
@@ -11,5 +12,4 @@ src/node/config/OperationConfig.json
 src/node/index.mjs
 **/*.DS_Store
 tests/browser/output/*
-
-package-lock.json
+.node-version

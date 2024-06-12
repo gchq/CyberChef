@@ -31,6 +31,12 @@ class FromBinary extends Operation {
                 "name": "Delimiter",
                 "type": "option",
                 "value": BIN_DELIM_OPTIONS
+            },
+            {
+                "name": "Byte Length",
+                "type": "number",
+                "value": 8,
+                "min": 1
             }
         ];
         this.checks = [
@@ -78,7 +84,8 @@ class FromBinary extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        return fromBinary(input, args[0]);
+        const byteLen = args[1] ? args[1] : 8;
+        return fromBinary(input, args[0], byteLen);
     }
 
     /**

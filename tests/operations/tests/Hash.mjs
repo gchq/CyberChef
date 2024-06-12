@@ -345,7 +345,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Snefru",
-                "args": ["2", "128"]
+                "args": ["128", "2"]
             }
         ]
     },
@@ -356,7 +356,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Snefru",
-                "args": ["4", "128"]
+                "args": ["128", "4"]
             }
         ]
     },
@@ -367,7 +367,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Snefru",
-                "args": ["8", "128"]
+                "args": ["128", "8"]
             }
         ]
     },
@@ -378,7 +378,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Snefru",
-                "args": ["2", "256"]
+                "args": ["256", "2"]
             }
         ]
     },
@@ -389,7 +389,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Snefru",
-                "args": ["4", "256"]
+                "args": ["256", "4"]
             }
         ]
     },
@@ -400,7 +400,18 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Snefru",
-                "args": ["8", "256"]
+                "args": ["256", "8"]
+            }
+        ]
+    },
+    {
+        name: "SM3 256 64",
+        input: "Hello, World!",
+        expectedOutput: "7ed26cbf0bee4ca7d55c1e64714c4aa7d1f163089ef5ceb603cd102c81fbcbc5",
+        recipeConfig: [
+            {
+                "op": "SM3",
+                "args": ["256", "64"]
             }
         ]
     },
@@ -1083,8 +1094,8 @@ TestRegister.addTests([
         expectedOutput: "981e5f3ca30c841487830f84fb433e13ac1101569b9c13584ac483234cd656c0",
         recipeConfig: [
             {
-                op: "GOST hash",
-                args: ["D-A"]
+                op: "GOST Hash",
+                args: ["GOST 28147 (1994)", "256", "D-A"]
             }
         ]
     },
@@ -1094,11 +1105,11 @@ TestRegister.addTests([
         expectedOutput: "2cefc2f7b7bdc514e18ea57fa74ff357e7fa17d652c75f69cb1be7893ede48eb",
         recipeConfig: [
             {
-                op: "GOST hash",
-                args: ["D-A"]
+                op: "GOST Hash",
+                args: ["GOST 28147 (1994)", "256", "D-A"]
             }
         ]
-    }
+    },
     /* { // This takes a LONG time to run (over a minute usually).
         name: "Scrypt: RFC test vector 4",
         input: "pleaseletmein",
@@ -1116,4 +1127,36 @@ TestRegister.addTests([
             }
         ]
     }, */
+    {
+        name: "Argon2",
+        input: "argon2password",
+        expectedOutput: "$argon2i$v=19$m=4096,t=3,p=1$c29tZXNhbHQ$s43my9eBljQADuF/LWCG8vGqwAJzOorKQ0Yog8jFvbw",
+        recipeConfig: [
+            {
+                op: "Argon2",
+                args: [
+                    {"option": "UTF8", "string": "somesalt"},
+                    3,
+                    4096,
+                    1,
+                    32,
+                    "Argon2i",
+                    "Encoded hash"
+                ]
+            }
+        ]
+    },
+    {
+        name: "Argon2 compare",
+        input: "argon2password",
+        expectedOutput: "Match: argon2password",
+        recipeConfig: [
+            {
+                op: "Argon2 compare",
+                args: [
+                    "$argon2i$v=19$m=4096,t=3,p=1$c29tZXNhbHQ$s43my9eBljQADuF/LWCG8vGqwAJzOorKQ0Yog8jFvbw"
+                ]
+            }
+        ]
+    }
 ]);
