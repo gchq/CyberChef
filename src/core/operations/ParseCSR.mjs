@@ -184,7 +184,7 @@ function formatExtensionCriticalTag(extension) {
  */
 function formatHexOntoMultiLine(hex) {
     if (hex.length % 2 !== 0) {
-        hex = "0" + hex
+        hex = "0" + hex;
     }
 
     return formatMultiLine(chop(hex.replace(/(..)/g, "$&:")));
@@ -197,9 +197,8 @@ function formatHexOntoMultiLine(hex) {
  */
 function absBigIntToHex(int) {
     int = int < 0n ? -int : int;
-    let hInt = int.toString(16);
 
-    return ensureHexIsPositiveInTwosComplement(hInt);
+    return ensureHexIsPositiveInTwosComplement(int.toString(16));
 }
 
 /**
@@ -217,7 +216,7 @@ function ensureHexIsPositiveInTwosComplement(hex) {
         hex = "00" + hex;
     }
 
-    return hex
+    return hex;
 }
 
 /**
