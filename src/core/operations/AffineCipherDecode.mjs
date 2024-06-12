@@ -35,6 +35,11 @@ class AffineCipherDecode extends Operation {
                 "name": "b",
                 "type": "number",
                 "value": 0
+            },
+            {
+                "name": "Use modular inverse values",
+                "type": "boolean",
+                "value": false
             }
         ];
     }
@@ -48,7 +53,7 @@ class AffineCipherDecode extends Operation {
      */
     run(input, args) {
         const alphabet = "abcdefghijklmnopqrstuvwxyz",
-            [a, b] = args,
+            [a, b, useInv] = args,
             aModInv = Utils.modInv(a, 26); // Calculates modular inverse of a
         let output = "";
 
@@ -62,11 +67,22 @@ class AffineCipherDecode extends Operation {
 
         for (let i = 0; i < input.length; i++) {
             if (alphabet.indexOf(input[i]) >= 0) {
-                // Uses the affine decode function (y-b * A') % m = x (where m is length of the alphabet and A' is modular inverse)
-                output += alphabet[Utils.mod((alphabet.indexOf(input[i]) - b) * aModInv, 26)];
+                if (useInv) {
+                    // Uses the affine decode function (y+b)*a % m, where m is the length
+                    // of the alphabet and a,b are modular inverses of the original a,b
+                    output += alphabet[Utils.mod((alphabet.indexOf(input[i]) + b) * a, 26)];
+                } else {
+                    // Uses the affine decode function (y-b * A') % m = x (where m is length of the alphabet and A' is modular inverse)
+                    output += alphabet[Utils.mod((alphabet.indexOf(input[i]) - b) * aModInv, 26)];
+                }
             } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
-                // Same as above, accounting for uppercase
-                output += alphabet[Utils.mod((alphabet.indexOf(input[i].toLowerCase()) - b) * aModInv, 26)].toUpperCase();
+                if (useInv) {
+                    // Same as above, accounting for uppercase
+                    output += alphabet[Utils.mod((alphabet.indexOf(input[i].toLowerCase()) + b) * a, 26)].toUpperCase();
+                } else {
+                    // Same as above, accounting for uppercase
+                    output += alphabet[Utils.mod((alphabet.indexOf(input[i].toLowerCase()) - b) * aModInv, 26)].toUpperCase();
+                }
             } else {
                 // Non-alphabetic characters
                 output += input[i];
