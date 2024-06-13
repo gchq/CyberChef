@@ -52,6 +52,141 @@ export function affineEncode(input, args) {
 }
 
 /**
+ * Generic affine encrypt/decrypt operation.
+ * Allows for an expanded alphabet.
+ * 
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {string} input
+ * @param {number} a
+ * @param {number} b
+ * @param {string} alphabet
+ * @param {function} affineFn
+ * @returns {string}
+ */
+export function affineApplication(input, a, b, alphabet, affineFn) {
+    alphabet = Utils.expandAlphRange(alphabet);
+    let output = "";
+    const modulus = alphabet.length;
+
+    // If the alphabet contains letters of all the same case,
+    // the assumption will be to match case.
+    const hasLower = /[a-z]/.test(alphabet);
+    const hasUpper = /[A-Z]/.test(alphabet);
+    const matchCase = (hasLower && hasUpper) ? false : true;
+
+    // If we are matching case, convert entire alphabet to lowercase.
+    // This will simplify the encryption.
+    if (matchCase) {
+        for (let i = 0; i < alphabet.length; i++)
+            alphabet[i] = alphabet[i].toLowerCase();
+    }
+
+    if (!/^\+?(0|[1-9]\d*)$/.test(a) || !/^\+?(0|[1-9]\d*)$/.test(b)) {
+        throw new OperationError("The values of a and b can only be integers.");
+    }
+
+    if (Utils.gcd(a, modulus) !== 1) {
+        throw new OperationError("The value of `a` must be coprime to " + modulus + ".");
+    }
+
+    // Apply affine function to each character in the input
+    for (let i = 0; i < input.length; i++) {
+        let outChar = "";
+
+        let inChar = input[i];
+        if (matchCase && isUpperCase(inChar)) inChar = inChar.toLowerCase();
+
+        const inVal = alphabet.indexOf(inChar);
+
+        if (inVal >= 0) {
+            outChar = alphabet[affineFn(inVal, a, b, modulus)];
+            if (matchCase && isUpperCase(input[i])) outChar = outChar.toUpperCase();
+        } else {
+            outChar += input[i];
+        }
+
+        output += outChar;
+    }
+    return output;
+}
+
+/**
+ * Apply the affine encryption function to p.
+ *
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {integer} p - Plaintext value
+ * @param {integer} a - Multiplier coefficient
+ * @param {integer} b - Addition coefficient
+ * @param {integer} m - Modulus
+ * @returns {integer}
+ */
+const encryptFn = function(p, a, b, m) {
+    return (a * p + b) % m;
+};
+
+/**
+ * Apply the affine decryption function to c.
+ *
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {integer} c - Ciphertext value
+ * @param {integer} a - Multiplier coefficient
+ * @param {integer} b - Addition coefficient
+ * @param {integer} m - Modulus
+ * @returns {integer}
+ */
+const decryptFn = function(c, a, b, m) {
+    return ((c + b) * a) % m;
+};
+
+/**
+ * Affine encrypt operation.
+ * Allows for an expanded alphabet.
+ *
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {string} input
+ * @param {integer} a
+ * @param {integer} b
+ * @param {string} alphabet
+ * @returns {string}
+ */
+export function affineEncrypt(input, a, b, alphabet="a-z") {
+    return affineApplication(input, a, b, alphabet, encryptFn);
+}
+
+/**
+ * Affine Cipher Decrypt operation using the coefficients that were used to encrypt.
+ * The modular inverses will be calculated.
+ *
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {string} input
+ * @param {integer} a
+ * @param {integer} b
+ * @param {string} alphabet
+ * @returns {string}
+ */
+export function affineDecrypt(input, a, b, alphabet="a-z") {
+    const m = Utils.expandAlphRange(alphabet).length;
+    const aInv = Utils.modInv(a, m);
+    const bInv = (m - b) % m;
+    return affineApplication(input, aInv, bInv, alphabet, decryptFn);
+}
+
+/**
+ * Affine Cipher Decrypt operation using modular inverse coefficients
+ * supplied by the user.
+ *
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {string} input
+ * @param {number} a
+ * @param {number} b
+ * @param {string} alphabet
+ * @returns {string}
+ */
+export function affineDecryptInverse(input, a, b, alphabet="a-z") {
+    return affineApplication(input, a, b, alphabet, decryptFn);
+}
+
+/**
  * Generates a polybius square for the given keyword
  *
  * @private
@@ -86,3 +221,22 @@ export const format = {
     "UTF16BE": CryptoJS.enc.Utf16BE,
     "Latin1":  CryptoJS.enc.Latin1,
 };
+
+export const AFFINE_ALPHABETS = [
+    {name: "Letters, match case: a-z", value: "a-z"},
+    {name: "Letters, case sensitive: A-Za-z", value: "A-Za-z"},
+    {name: "Word characters: A-Za-z0-9_", value: "A-Za-z0-9_"},
+    {name: "Printable ASCII: sp-~", value: " -~"}
+];
+
+/**
+ * Returns true if the given character is uppercase
+ *
+ * @private
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {string} c - A character
+ * @returns {boolean}
+ */
+function isUpperCase(c) {
+    return c.toUpperCase() === c;
+}
