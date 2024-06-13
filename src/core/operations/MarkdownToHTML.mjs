@@ -9,7 +9,7 @@ import MarkdownIt from "markdown-it";
 import hljs from "highlight.js";
 
 /**
- * Render Markdown operation
+ * Convert Markdown to HTML operation
  */
 class MarkdownToHTML extends Operation {
 
