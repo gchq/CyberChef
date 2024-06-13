@@ -17,6 +17,7 @@ import CryptoJS from "crypto-js";
 /**
  * Affine Cipher Encode operation.
  *
+ * @deprecated Use affineEcrypt instead.
  * @author Matt C [matt@artemisbot.uk]
  * @param {string} input
  * @param {Object[]} args
@@ -54,7 +55,7 @@ export function affineEncode(input, args) {
 /**
  * Generic affine encrypt/decrypt operation.
  * Allows for an expanded alphabet.
- * 
+ *
  * @author Barry B [profbbrown@gmail.com]
  * @param {string} input
  * @param {number} a
