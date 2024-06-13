@@ -465,7 +465,8 @@
             "BSON deserialise",
             "To MessagePack",
             "From MessagePack",
-            "Render Markdown"
+            "Render Markdown",
+            "Convert Markdown to HTML"
         ]
     },
     {
