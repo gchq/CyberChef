@@ -86,7 +86,7 @@ export function affineApplication(input, a, b, alphabet, affineFn) {
     }
 
     if (Utils.gcd(a, modulus) !== 1) {
-        throw new OperationError("The value of `a` must be coprime to " + modulus + ".");
+        throw new OperationError("The value of `a` (" + a + ") must be coprime to " + modulus + ".");
     }
 
     // Apply affine function to each character in the input
@@ -168,9 +168,10 @@ export function affineDecrypt(input, a, b, alphabet="a-z") {
     const m = Utils.expandAlphRange(alphabet).length;
     if (Utils.gcd(a, m) !== 1)
         throw new OperationError("The value of `a` (" + a + ") must be coprime to " + m + ".");
+
     const aInv = Utils.modInv(a, m);
     const bInv = (m - b) % m;
-    if (aInv === undefined)
+    if (aInv === null)
         throw new OperationError("The value of `a` (" + a + ") must be coprime to " + m + ".");
     else return affineApplication(input, aInv, bInv, alphabet, decryptFn);
 }
