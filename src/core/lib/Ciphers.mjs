@@ -166,9 +166,13 @@ export function affineEncrypt(input, a, b, alphabet="a-z") {
  */
 export function affineDecrypt(input, a, b, alphabet="a-z") {
     const m = Utils.expandAlphRange(alphabet).length;
+    if (Utils.gcd(a, m) !== 1)
+        throw new OperationError("The value of `a` (" + a + ") must be coprime to " + m + ".");
     const aInv = Utils.modInv(a, m);
     const bInv = (m - b) % m;
-    return affineApplication(input, aInv, bInv, alphabet, decryptFn);
+    if (aInv === undefined)
+        throw new OperationError("The value of `a` (" + a + ") must be coprime to " + m + ".");
+    else return affineApplication(input, aInv, bInv, alphabet, decryptFn);
 }
 
 /**
@@ -226,7 +230,7 @@ export const AFFINE_ALPHABETS = [
     {name: "Letters, match case: a-z", value: "a-z"},
     {name: "Letters, case sensitive: A-Za-z", value: "A-Za-z"},
     {name: "Word characters: A-Za-z0-9_", value: "A-Za-z0-9_"},
-    {name: "Printable ASCII: sp-~", value: " -~"}
+    {name: "Printable ASCII: space-~", value: "\\u0020-~"}
 ];
 
 /**
