@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import { affineEncrypt } from "../lib/Ciphers.mjs";
+import { affineEncrypt, AFFINE_ALPHABETS } from "../lib/Ciphers.mjs";
 
 /**
  * Affine Cipher Encode operation
@@ -34,6 +34,11 @@ class AffineCipherEncode extends Operation {
                 "name": "b",
                 "type": "number",
                 "value": 0
+            },
+            {
+                "name": "Alphabet",
+                "type": "editableOption",
+                "value": AFFINE_ALPHABETS
             }
         ];
     }
@@ -45,7 +50,7 @@ class AffineCipherEncode extends Operation {
      */
     run(input, args) {
         const a = args[0], b = args[1], alphabet = args[2];
-        return affineEncrypt(input, a, b, "a-z");
+        return affineEncrypt(input, a, b, alphabet);
     }
 
     /**
