@@ -6,7 +6,7 @@
  * @license Apache-2.0
  */
 import TestRegister from "../../lib/TestRegister.mjs";
-import {ASCII_TEXT, UTF8_TEXT, ALL_BYTES} from "../samples/Ciphers.mjs";
+import {ASCII_TEXT, UTF8_TEXT, ALL_BYTES} from "../../samples/Ciphers.mjs";
 
 // RSA-1024
 const ALICE_PRIVATE = `-----BEGIN PGP PRIVATE KEY BLOCK-----
