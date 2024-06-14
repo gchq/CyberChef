@@ -4,6 +4,7 @@
  * @author Matt C [matt@artemisbot.uk]
  * @author n1474335 [n1474335@gmail.com]
  * @author Evie H [evie@evie.sh]
+ * @author Barry B [profbbrown@gmail.com]
  *
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
@@ -80,10 +81,11 @@ export function affineApplication(input, a, b, alphabet, affineFn) {
 
     // If we are matching case, convert entire alphabet to lowercase.
     // This will simplify the encryption.
-    if (matchCase) {
-        for (let i = 0; i < alphabet.length; i++)
-            alphabet[i] = alphabet[i].toLowerCase();
-    }
+    if (matchCase)
+        alphabet = alphabet.map((c) => c.toLowerCase());
+
+    if (a === undefined || a === "" || isNaN(a)) a = 1;
+    if (b === undefined || b === "" || isNaN(b)) b = 0;
 
     if (!/^\+?(0|[1-9]\d*)$/.test(a) || !/^\+?(0|[1-9]\d*)$/.test(b)) {
         throw new OperationError("The values of a and b can only be integers.");
@@ -133,8 +135,8 @@ const encryptFn = function(p, a, b, m) {
  *
  * @author Barry B [profbbrown@gmail.com]
  * @param {integer} c - Ciphertext value
- * @param {integer} a - Multiplier coefficient
- * @param {integer} b - Addition coefficient
+ * @param {integer} a - Multiplicative inverse coefficient
+ * @param {integer} b - Additive inverse coefficient
  * @param {integer} m - Modulus
  * @returns {integer}
  */
@@ -177,6 +179,9 @@ export function affineDecrypt(input, a, b, alphabet="a-z") {
     //         so that affineApplication assumes valid inputs
     if (alphabet === "")
         throw new OperationError("The alphabet cannot be empty.");
+
+    if (a === undefined || a === "" || isNaN(a)) a = 1;
+    if (b === undefined || b === "" || isNaN(b)) b = 0;
 
     if (!/^\+?(0|[1-9]\d*)$/.test(a) || !/^\+?(0|[1-9]\d*)$/.test(b)) {
         throw new OperationError("The values of a and b can only be integers.");
@@ -248,7 +253,7 @@ export const AFFINE_ALPHABETS = [
     {name: "Letters, match case: a-z", value: "a-z"},
     {name: "Letters, case sensitive: A-Za-z", value: "A-Za-z"},
     {name: "Word characters: A-Za-z0-9_", value: "A-Za-z0-9_"},
-    {name: "Printable ASCII: space-~", value: "\\u0020-~"}
+    {name: "Printable ASCII: space-~", value: "\\x20-~"}
 ];
 
 /**
