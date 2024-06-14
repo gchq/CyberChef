@@ -35,7 +35,7 @@ class FromUNIX32bitTimestamp extends Operation {
      * @throws {OperationError} if invalid unit
      */
     run(input, args) {
-        try{
+        try {
             const h = parseInt(input, 16);
             const d = moment.unix(h);
             return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC"; 

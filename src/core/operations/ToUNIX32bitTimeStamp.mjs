@@ -40,7 +40,7 @@ class ToUNIX32bitTimestamp extends Operation {
      * @throws {OperationError} if invalid unit
      */
     run(input, args) {
-        try{
+        try {
             const [showDateTime] = args,d = moment.utc(input);
             let  result = d.unix();
             const hexString = result.toString(16);

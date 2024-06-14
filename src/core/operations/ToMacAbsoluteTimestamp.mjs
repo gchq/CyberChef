@@ -40,10 +40,10 @@ class ToMacAbsoluteTimestamp extends Operation {
      * @throws {OperationError} if invalid unit
      */
     run(input, args) {
-        try{
+        try {
             const [showDateTime] = args,d = moment.utc(input);
             let  result = (d.unix()-978307200);
-            return  showDateTime ? `${result} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : result.toString(); 
+            return  showDateTime ? `${result} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : result.toString();
         } catch {
             throw new OperationError("Unrecognised format"); 
         }

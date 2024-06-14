@@ -33,11 +33,11 @@ class FromWindows64bitTimestamp extends Operation {
      * @throws {OperationError} if invalid unit
      */
     run(input, args) {
-        try{
-        const h = parseInt(input, 16);
-        const secs = h/10000000;
-        const d = moment.unix(secs - 11644473600);
-        return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC";       
+        try {
+            const h = parseInt(input, 16);
+            const secs = h/10000000;
+            const d = moment.unix(secs - 11644473600);
+            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC";       
         } catch {
             throw new OperationError("Unrecognised format");           
         }

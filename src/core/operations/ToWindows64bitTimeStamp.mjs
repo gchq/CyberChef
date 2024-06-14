@@ -40,12 +40,12 @@ class ToWindows64bitTimestamp extends Operation {
      * @throws {OperationError} if invalid unit
      */
     run(input, args) {
-        try{
+        try {
             const [showDateTime] = args,d = moment.utc(input);
             let result = d.unix();
             const step1 = result + 11644473600;
             const hexString = (step1 * 10000000).toString(16);
-            eturn showDateTime ?  `${hexString.toUpperCase()} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : hexString.toUpperCase();
+            return showDateTime ?  `${hexString.toUpperCase()} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : hexString.toUpperCase();
         } catch {
             throw new OperationError("Unrecognised format"); 
         }
