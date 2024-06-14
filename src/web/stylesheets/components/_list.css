@@ -41,3 +41,12 @@
     border-radius: 0 !important;
     border: none;
 }
+
+.op-count {
+    float: right;
+    color: var(--subtext-font-colour);
+    font-weight: normal;
+    font-size: xx-small;
+    opacity: 0.5;
+    padding-left: .5em;
+}

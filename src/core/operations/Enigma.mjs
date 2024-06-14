@@ -1,6 +1,9 @@
 /**
  * Emulation of the Enigma machine.
  *
+ * Tested against various genuine Enigma machines using a variety of inputs
+ * and settings to confirm correctness.
+ *
  * @author s2224834
  * @copyright Crown Copyright 2019
  * @license Apache-2.0
