@@ -65,6 +65,9 @@ export function affineEncode(input, args) {
  * @returns {string}
  */
 export function affineApplication(input, a, b, alphabet, affineFn) {
+    if (alphabet === "")
+        throw new OperationError("The alphabet cannot be empty.");
+
     alphabet = Utils.expandAlphRange(alphabet);
     let output = "";
     const modulus = alphabet.length;
@@ -166,6 +169,19 @@ export function affineEncrypt(input, a, b, alphabet="a-z") {
  * @returns {string}
  */
 export function affineDecrypt(input, a, b, alphabet="a-z") {
+    // Because we are calculating the modulus and inverses here, we have to perform
+    // many of the same tests that the affineApplication function does.
+    // TODO: figure out a way to avoid doing the tests twice.
+    //   Idea: make a checkInputs function.
+    //   Idea: move the tests into the affineEncrypt and affineDecryptInverse functions
+    //         so that affineApplication assumes valid inputs
+    if (alphabet === "")
+        throw new OperationError("The alphabet cannot be empty.");
+
+    if (!/^\+?(0|[1-9]\d*)$/.test(a) || !/^\+?(0|[1-9]\d*)$/.test(b)) {
+        throw new OperationError("The values of a and b can only be integers.");
+    }
+
     const m = Utils.expandAlphRange(alphabet).length;
     if (Utils.gcd(a, m) !== 1)
         throw new OperationError("The value of `a` (" + a + ") must be coprime to " + m + ".");
