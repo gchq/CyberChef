@@ -2,6 +2,7 @@
  * Cipher tests.
  *
  * @author Matt C [matt@artemisbot.uk]
+ * @author Barry B [profbbrown@gmail.com]
  * @author n1474335 [n1474335@gmail.com]
  *
  * @copyright Crown Copyright 2018
@@ -18,7 +19,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Encode",
-                args: [1, 0]
+                args: [1, 0, "a-z"]
             }
         ],
     },
@@ -29,7 +30,29 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Encode",
-                args: [0.1, 0.00001]
+                args: [0.1, 0.00001, "a-z"]
+            }
+        ],
+    },
+    {
+        name: "Affine Encode: invalid a & b, empty alphabet",
+        input: "some keys are shaped as locks. index[me]",
+        expectedOutput: "The alphabet cannot be empty.",
+        recipeConfig: [
+            {
+                op: "Affine Cipher Encode",
+                args: [0.1, 0.00001, ""]
+            }
+        ],
+    },
+    {
+        name: "Affine Encode: valid a & b, empty alphabet",
+        input: "some keys are shaped as locks. index[me]",
+        expectedOutput: "The alphabet cannot be empty.",
+        recipeConfig: [
+            {
+                op: "Affine Cipher Encode",
+                args: [7, 23, ""]
             }
         ],
     },
@@ -40,18 +63,40 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Encode",
-                args: [1, 0]
+                args: [1, 0, "a-z"]
             }
         ],
     },
     {
-        name: "Affine Encode: normal",
-        input: "some keys are shaped as locks. index[me]",
-        expectedOutput: "vhnl tldv xyl vcxelo xv qhrtv. zkolg[nl]",
+        name: "Affine Encode: normal a-z",
+        input: "Some Keys Are Shaped As Locks. index[me]",
+        expectedOutput: "Vhnl Tldv Xyl Vcxelo Xv Qhrtv. zkolg[nl]",
         recipeConfig: [
             {
                 op: "Affine Cipher Encode",
-                args: [23, 23]
+                args: [23, 23, "a-z"]
+            }
+        ],
+    },
+    {
+        name: "Affine Encode: normal A-Za-z",
+        input: "Some Keys Are Shaped As Locks. index[me]",
+        expectedOutput: "VHNl tldv XYl VCxelO Xv QHrTv. ZkOlG[Nl]",
+        recipeConfig: [
+            {
+                op: "Affine Cipher Encode",
+                args: [23, 23, "A-Za-z"]
+            }
+        ],
+    },
+    {
+        name: "Affine Encode: normal, printable ASCII",
+        input: "Some Keys Are Shaped As Locks. index[me]",
+        expectedOutput: "XCtz7^zk@76)z7X`}Zzc76@7uCLF@\\7w,czTRtz!",
+        recipeConfig: [
+            {
+                op: "Affine Cipher Encode",
+                args: [23, 23, "\\u0020-~"]
             }
         ],
     },
@@ -62,7 +107,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Decode",
-                args: [1, 0]
+                args: [1, 0, "a-z", false]
             }
         ],
     },
@@ -73,40 +118,128 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Affine Cipher Decode",
-                args: [0.1, 0.00001]
+                args: [0.1, 0.00001, "a-z", false]
             }
         ],
     },
     {
-        name: "Affine Decode: invalid a (coprime)",
+        name: "Affine Decode: valid a & b, empty alphabet",
         input: "vhnl tldv xyl vcxelo xv qhrtv. zkolg[nl]",
-        expectedOutput: "The value of `a` must be coprime to 26.",
+        expectedOutput: "The alphabet cannot be empty.",
         recipeConfig: [
             {
                 op: "Affine Cipher Decode",
-                args: [8, 23]
+                args: [23, 23, "", false]
             }
         ],
     },
     {
-        name: "Affine Decode: no effect",
+        name: "Affine Decode: invalid a & b (non-integer), empty alphabet",
         input: "vhnl tldv xyl vcxelo xv qhrtv. zkolg[nl]",
-        expectedOutput: "vhnl tldv xyl vcxelo xv qhrtv. zkolg[nl]",
+        expectedOutput: "The alphabet cannot be empty.",
         recipeConfig: [
             {
                 op: "Affine Cipher Decode",
-                args: [1, 0]
+                args: [0.1, 0.00001, "", false]
             }
         ],
     },
     {
-        name: "Affine Decode: normal",
+        name: "Affine Decode: invalid a (non-coprime)",
         input: "vhnl tldv xyl vcxelo xv qhrtv. zkolg[nl]",
-        expectedOutput: "some keys are shaped as locks. index[me]",
+        expectedOutput: "The value of `a` (8) must be coprime to 26.",
         recipeConfig: [
             {
                 op: "Affine Cipher Decode",
-                args: [23, 23]
+                args: [8, 23, "a-z", false]
+            }
+        ],
+    },
+    {
+        name: "Affine Decode: invalid a (non-coprime), printable ASCII",
+        input: "vhnl tldv xyl vcxelo xv qhrtv. zkolg[nl]",
+        expectedOutput: "The value of `a` (5) must be coprime to 95.",
+        recipeConfig: [
+            {
+                op: "Affine Cipher Decode",
+                args: [5, 23, "\\u0020-~", false]
+            }
+        ],
+    },
+    {
+        name: "Affine Decode: no effect, match case",
+        input: "Vhnl Tldv Xyl Vcxelo xv qhrtv. zkolg[nl]",
+        expectedOutput: "Vhnl Tldv Xyl Vcxelo xv qhrtv. zkolg[nl]",
+        recipeConfig: [
+            {
+                op: "Affine Cipher Decode",
+                args: [1, 0, "a-z", false]
+            }
+        ],
+    },
+    {
+        name: "Affine Decode: no effect, case sensitive",
+        input: "Vhnl Tldv Xyl Vcxelo xv qhrtv. zkolg[nl]",
+        expectedOutput: "Vhnl Tldv Xyl Vcxelo xv qhrtv. zkolg[nl]",
+        recipeConfig: [
+            {
+                op: "Affine Cipher Decode",
+                args: [1, 0, "A-Za-z", false]
+            }
+        ],
+    },
+    {
+        name: "Affine Decode: normal, case sensitive",
+        input: "Vhnl Tldv Xyl Vcxelo xv qhrtv. zkolg[nl]",
+        expectedOutput: "SOMe keys ARe SHapeD as lOcKs. InDeX[Me]",
+        recipeConfig: [
+            {
+                op: "Affine Cipher Decode",
+                args: [23, 23, "A-Za-z", false]
+            }
+        ],
+    },
+    {
+        name: "Affine Decode: normal, match case",
+        input: "Vhnl Tldv Xyl Vcxelo Xv Qhrtv. zkolg[nl]",
+        expectedOutput: "Some Keys Are Shaped As Locks. index[me]",
+        recipeConfig: [
+            {
+                op: "Affine Cipher Decode",
+                args: [23, 23, "a-z", false]
+            }
+        ],
+    },
+    {
+        name: "Affine Decode: normal, inverse",
+        input: "Vhnl Tldv Xyl Vcxelo Xv Qhrtv. zkolg[nl]",
+        expectedOutput: "Some Keys Are Shaped As Locks. index[me]",
+        recipeConfig: [
+            {
+                op: "Affine Cipher Decode",
+                args: [17, 3, "a-z", true]
+            }
+        ],
+    },
+    {
+        name: "Affine Decode: normal, printable ASCII",
+        input: "XCtz7^zk@76)z7X`}Zzc76@7uCLF@\\7w,czTRtz!",
+        expectedOutput: "Some Keys Are Shaped As Locks. index[me]",
+        recipeConfig: [
+            {
+                op: "Affine Cipher Decode",
+                args: [23, 23, "\u0020-~", false]
+            }
+        ],
+    },
+    {
+        name: "Affine Decode: normal, printable ASCII, inverse",
+        input: "XCtz7^zk@76)z7X`}Zzc76@7uCLF@\\7w,czTRtz!",
+        expectedOutput: "Some Keys Are Shaped As Locks. index[me]",
+        recipeConfig: [
+            {
+                op: "Affine Cipher Decode",
+                args: [62, 72, "\u0020-~", true]
             }
         ],
     },
