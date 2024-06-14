@@ -172,7 +172,7 @@ export function affineDecrypt(input, a, b, alphabet="a-z") {
 
     const aInv = Utils.modInv(a, m);
     const bInv = (m - b) % m;
-    if (aInv === null)
+    if (aInv === null || aInv === undefined)
         throw new OperationError("The value of `a` (" + a + ") must be coprime to " + m + ".");
     else return affineApplication(input, aInv, bInv, alphabet, decryptFn);
 }
