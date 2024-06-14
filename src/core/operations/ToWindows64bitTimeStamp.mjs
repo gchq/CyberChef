@@ -18,7 +18,6 @@ class ToWindows64bitTimestamp extends Operation {
      */
     constructor() {
         super();
-
         this.name = "To Windows 64-bit Filetime Timestamp";
         this.module = "Default";
         this.description = "Converts datetime string to Windows 64-bit Hex Filetime Timestamp<br><br>e.g. <code>14 November 2013 19:21:19 UTC</code> becomes <code></code><br>01CEE16F415343EE<br>windows 64-bit filetime timestamp is a 8 Byte Hex value representing the number of 100s of nanoseconds since January 1, 1601 UTC<br><br> Use with swap endianness recipe if required.";
@@ -41,13 +40,15 @@ class ToWindows64bitTimestamp extends Operation {
      * @throws {OperationError} if invalid unit
      */
     run(input, args) {
-        const [showDateTime] = args, 
-	d = moment.utc(input);
-        let result = d.unix();
-        const step1 = result + 11644473600;
-        const hexString = (step1 * 10000000).toString(16);
-        return showDateTime ?  `${hexString.toUpperCase()} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : hexString.toUpperCase() ;
+        try{
+            const [showDateTime] = args,d = moment.utc(input);
+            let result = d.unix();
+            const step1 = result + 11644473600;
+            const hexString = (step1 * 10000000).toString(16);
+            eturn showDateTime ?  `${hexString.toUpperCase()} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : hexString.toUpperCase();
+        } catch {
+            throw new OperationError("Unrecognised format"); 
+        }
     }
 }
-
 export default ToWindows64bitTimestamp;

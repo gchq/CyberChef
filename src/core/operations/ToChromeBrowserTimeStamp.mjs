@@ -18,7 +18,6 @@ class ToChromeBrowserTimestamp extends Operation {
      */
     constructor() {
         super();
-
         this.name = "To Chrome Browser Timestamp";
         this.module = "Default";
         this.description = "Converts datetime string to Chrome Browser Timestamp<br><br>e.g. <code>5 April 2009 16:45:49 UTC</code>\
@@ -42,11 +41,13 @@ class ToChromeBrowserTimestamp extends Operation {
      * @throws {OperationError} if invalid unit
      */
     run(input, args) {
-         const [showDateTime] = args, 
-	 d = moment.utc(input);
-         let result = ((d.unix()+11644473600) * 1000000);
-         return showDateTime ? `${result} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : result.toString();
+        try{
+            const [showDateTime] = args,d = moment.utc(input);
+            let result = ((d.unix()+11644473600) * 1000000);
+            return showDateTime ? `${result} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : result.toString();
+        } catch {
+            throw new OperationError("Unrecognised format"); 
+        }
     }
 }
-
 export default ToChromeBrowserTimestamp;

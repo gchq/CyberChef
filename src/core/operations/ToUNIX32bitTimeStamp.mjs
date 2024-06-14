@@ -18,7 +18,6 @@ class ToUNIX32bitTimestamp extends Operation {
      */
     constructor() {
         super();
-
         this.name = "To UNIX 32-bit Timestamp";
         this.module = "Default";
         this.description = "Converts datetime string to UNIX 32-bit Hex Timestamp<br><br>e.g. <code>21 June 2013 03:05:53 UTC</code> becomes <code>51C3C311</code><br><br>UNIX 32-bit timestamp is a 4 Byte Hex value representing the number of seconds since January 1, 1970 UTC<br><br> Use with swap endianness recipe if required.";
@@ -41,12 +40,14 @@ class ToUNIX32bitTimestamp extends Operation {
      * @throws {OperationError} if invalid unit
      */
     run(input, args) {
-        const [showDateTime] = args, 
-	d = moment.utc(input);
-        let  result = d.unix();
-        const hexString = result.toString(16);
-        return showDateTime ? `${hexString.toUpperCase()} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : hexString.toUpperCase();
+        try{
+            const [showDateTime] = args,d = moment.utc(input);
+            let  result = d.unix();
+            const hexString = result.toString(16);
+            return showDateTime ? `${hexString.toUpperCase()} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : hexString.toUpperCase();
+        } catch {
+            throw new OperationError("Unrecognised format"); 
+        }
     }
 }
-
 export default ToUNIX32bitTimestamp;

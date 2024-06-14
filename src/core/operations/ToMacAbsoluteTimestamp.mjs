@@ -18,7 +18,6 @@ class ToMacAbsoluteTimestamp extends Operation {
      */
     constructor() {
         super();
-
         this.name = "To Mac Absolute Timestamp";
         this.module = "Default";
         this.description = "Converts datetime string to Apple Mac Absolute Timestamp<br><br>e.g. <code>Tue 1 October 2019 11:15:00 UTC</code> becomes <code>591621300</code><br><br>Mac Absolute timestamp is a 32-bit value representing the number of seconds since January 1, 2001 UTC";
@@ -41,11 +40,13 @@ class ToMacAbsoluteTimestamp extends Operation {
      * @throws {OperationError} if invalid unit
      */
     run(input, args) {
-         const [showDateTime] = args, 
-	 d = moment.utc(input);
-         let  result = (d.unix()-978307200);
-         return  showDateTime ? `${result} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : result.toString(); 
+        try{
+            const [showDateTime] = args,d = moment.utc(input);
+            let  result = (d.unix()-978307200);
+            return  showDateTime ? `${result} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : result.toString(); 
+        } catch {
+            throw new OperationError("Unrecognised format"); 
+        }
     }
 }
-
 export default ToMacAbsoluteTimestamp;

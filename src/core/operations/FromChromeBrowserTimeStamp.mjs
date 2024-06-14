@@ -39,7 +39,7 @@ class FromChromeBrowserTimestamp extends Operation {
             const d = moment.unix((input /1000000) - 11644473600);
             return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC";
         } catch {
-            throw new OperationError();
+            throw new OperationError("Unrecognised format");
         }
     }
 }

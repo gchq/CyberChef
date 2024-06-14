@@ -18,7 +18,6 @@ class ToFirefoxBrowserTimestamp extends Operation {
      */
     constructor() {
         super();
-
         this.name = "To Firefox Browser Timestamp";
         this.module = "Default";
         this.description = "Converts datetime string to Firefox Browser Timestamp<br><br>e.g. <code>6 July 2012 11:47:24 UTC</code>\
@@ -43,11 +42,13 @@ class ToFirefoxBrowserTimestamp extends Operation {
      * @throws {OperationError} if invalid unit
      */
     run(input, args) {
-        const [showDateTime] = args, 
-	d = moment.utc(input);
-        let result = (d.unix() * 1000000);
-        return showDateTime ? `${result} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : result.toString();
+        try{
+            const [showDateTime] = args,d = moment.utc(input);
+            let result = (d.unix() * 1000000);
+            return showDateTime ? `${result} (${d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss")} UTC)` : result.toString();
+        } catch {
+            throw new OperationError("Unrecognised format"); 
+        }
     }
 }
-
 export default ToFirefoxBrowserTimestamp;
