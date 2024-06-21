@@ -238,6 +238,7 @@
             "Parse UDP",
             "Parse SSH Host Key",
             "Parse URI",
+            "Parse DNS Message",
             "URL Encode",
             "URL Decode",
             "Protobuf Decode",
