@@ -20,6 +20,9 @@
             "From Binary",
             "To Octal",
             "From Octal",
+            "To Base64",
+            "From Base64",
+            "Show Base64 offsets",
             "To Base32",
             "From Base32",
             "To Base45",
@@ -177,6 +180,7 @@
             "PGP Verify",
             "PGP Encrypt and Sign",
             "PGP Decrypt and Verify",
+            "Parse SSH Host Key"
             "Generate RSA Key Pair",
             "RSA Sign",
             "RSA Verify",
@@ -241,7 +245,6 @@
             "URL Encode",
             "URL Decode",
             "Protobuf Decode",
-            "Protobuf Encode",
             "VarInt Encode",
             "VarInt Decode",
             "JA3 Fingerprint",
@@ -265,10 +268,8 @@
         "ops": [
             "Encode text",
             "Decode text",
-            "Unicode Text Format",
             "Remove Diacritics",
-            "Unescape Unicode Characters",
-            "Convert to NATO alphabet"
+            "Unescape Unicode Characters"
         ]
     },
     {
@@ -301,7 +302,6 @@
             "Pad lines",
             "Find / Replace",
             "Regular expression",
-            "Fuzzy Match",
             "Offset checker",
             "Hamming Distance",
             "Levenshtein Distance",
@@ -313,7 +313,6 @@
             "Convert co-ordinate format",
             "Show on map",
             "Parse UNIX file permissions",
-            "Parse ObjectID timestamp",
             "Swap endianness",
             "Parse colour code",
             "Escape string",
@@ -330,11 +329,22 @@
             "Translate DateTime Format",
             "From UNIX Timestamp",
             "To UNIX Timestamp",
+            "From UNIX 32-bit Timestamp",
+            "To UNIX 32-bit Timestamp",
             "Windows Filetime to UNIX Timestamp",
             "UNIX Timestamp to Windows Filetime",
+	          "From Mac Absolute Timestamp",
+            "To Mac Absolute Timestamp",
+            "From HFS(+) Timestamp",
+            "To HFS(+) Timestamp",
+            "From Windows 64-bit Filetime Timestamp",
+            "To Windows 64-bit Filetime Timestamp",
+            "From Chrome Browser Timestamp",
+            "To Chrome Browser Timestamp",
+            "From Firefox Browser Timestamp",
+            "To Firefox Browser Timestamp",
             "DateTime Delta",
             "Extract dates",
-            "Get Time",
             "Sleep"
         ]
     },
@@ -355,6 +365,7 @@
             "JPath expression",
             "CSS selector",
             "Extract EXIF",
+            "Extract Files"
             "Extract ID3",
             "Extract Files",
             "RAKE"
@@ -397,7 +408,6 @@
             "SHA1",
             "SHA2",
             "SHA3",
-            "SM3",
             "Keccak",
             "Shake",
             "RIPEMD",
@@ -489,7 +499,6 @@
         "ops": [
             "Render Image",
             "Play Media",
-            "Generate Image",
             "Optical Character Recognition",
             "Remove EXIF",
             "Extract EXIF",
