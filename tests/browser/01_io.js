@@ -693,7 +693,14 @@ module.exports = {
         /* Complex deep link populates the input correctly (encoding, eol, input) */
         browser
             .urlHash("recipe=To_Base64('A-Za-z0-9%2B/%3D')&input=VGhlIHNoaXBzIGh1bmcgaW4gdGhlIHNreSBpbiBtdWNoIHRoZSBzYW1lIHdheSB0aGF0IGJyaWNrcyBkb24ndC4M&ienc=21866&oenc=1201&ieol=FF&oeol=PS")
-            .waitForElementVisible("#rec-list li.operation");
+            .waitForElementVisible("#rec-list li.operation")
+            .waitForElementVisible("#input-text .cm-file-details")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-toggle-shown")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-thumbnail")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-name")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-size")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-type")
+            .waitForElementVisible("#input-text .cm-file-details .file-details-loaded");
 
         browser.expect.element(`#input-text .cm-content`).to.have.property("textContent").match(/^.{65}$/);
         browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("66");
