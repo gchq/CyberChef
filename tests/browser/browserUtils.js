@@ -180,15 +180,16 @@ function loadRecipe(browser, opName, input, args) {
  * @param {Browser} browser - Nightwatch client
  * @param {string|RegExp} expected - The expected output value
  * @param {boolean} [waitNotNull=false] - Wait for the output to not be empty before testing the value
+ * @param {number} [waitWindow=1000] - The number of milliseconds to wait for the output to be correct
  */
-function expectOutput(browser, expected, waitNotNull=false) {
+function expectOutput(browser, expected, waitNotNull=false, waitWindow=1000) {
     if (waitNotNull && expected !== "") {
         browser.waitUntil(async function() {
             const output = await this.execute(function() {
                 return window.app.manager.output.outputEditorView.state.doc.toString();
             });
             return output.length;
-        }, 1000);
+        }, waitWindow);
     }
 
     browser.execute(expected => {
