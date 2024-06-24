@@ -171,6 +171,7 @@
                 <div id="operations" class="split split-horizontal no-select">
                     <div class="title no-select" data-help-title="Operations list" data-help="<p>The Operations list contains all the operations in CyberChef arranged into categories. Some operations may be present in multiple categories. You can search for operations using the search box.</p><p>To use an operation, either double click it, or drag it into the Recipe pane. You will then be able to configure its arguments (or 'Ingredients' in CyberChef terminology).</p>">
                         Operations
+                        <span class="op-count"></span>
                     </div>
                     <input id="search" type="search" class="form-control" placeholder="Search..." autocomplete="off" tabindex="2" data-help-title="Searching for operations" data-help="<p>Use the search box to find useful operations.</p><p>Both operation names and descriptions are queried using a fuzzy matching algorithm.</p>">
                     <ul id="search-results" class="op-list"></ul>
@@ -519,6 +520,13 @@
                             <label for="syncTabs">
                                 <input type="checkbox" option="syncTabs" id="syncTabs">
                                 Keep the current tab in sync between the input and output
+                            </label>
+                        </div>
+
+                        <div class="checkbox option-item">
+                            <label for="showCatCount">
+                                <input type="checkbox" option="showCatCount" id="showCatCount">
+                                Show the number of operations in each category
                             </label>
                         </div>
                     </div>

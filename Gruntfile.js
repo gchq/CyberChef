@@ -431,6 +431,18 @@ module.exports = function (grunt) {
                     }
                 },
                 stdout: false
+            },
+            fixJimpModule: {
+                command: function () {
+                    switch (process.platform) {
+                        case "darwin":
+                            // Space added before comma to prevent multiple modifications
+                            return `sed -i '' 's/"es\\/index.js",/"es\\/index.js" ,\\n  "type": "module",/' ./node_modules/jimp/package.json`;
+                        default:
+                            return `sed -i 's/"es\\/index.js",/"es\\/index.js" ,\\n  "type": "module",/' ./node_modules/jimp/package.json`;
+                    }
+                },
+                stdout: false
             }
         },
     });

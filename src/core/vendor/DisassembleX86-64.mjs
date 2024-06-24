@@ -3199,7 +3199,7 @@ const REG = [
   REG index 10 Intel MM qword technology MMX vector instructions.
   ---------------------------------------------------------------------------------------------------------------------------
   These can not be used with Vector length adjustment used in vector extensions. The MM register are the ST registers aliased
-  to MM register. Instructions that use these registers use the the SIMD vector unit registers (MM), these are called the old
+  to MM register. Instructions that use these registers use the SIMD vector unit registers (MM), these are called the old
   MMX vector instructions. When Intel added the SSE instructions to the SIMD math vector unit the new 128 bit XMM registers,
   are added into the SIMD unit then they ware made longer in size 256, then 512 across in length, with 1024 (?MM Reserved)
   In which the vector length setting was added to control there size though vector setting adjustment codes. Instruction
@@ -3784,7 +3784,7 @@ function GotoPosition( Address )
 /*-------------------------------------------------------------------------------------------------------------------------
 Finds bit positions to the Size attribute indexes in REG array, and the Pointer Array. For the Size Attribute variations.
 ---------------------------------------------------------------------------------------------------------------------------
-The SizeAttribute settings is 8 digits big consisting of 1, or 0 to specify the the extended size that an operand can be made.
+The SizeAttribute settings is 8 digits big consisting of 1, or 0 to specify the extended size that an operand can be made.
 In which an value of 01100100 is decoded as "0 = 1024, 1 = 512, 1 = 256, 0 = 128, 0 = 64, 1 = 32, 0 = 16, 0 = 8".
 In which the largest bit position is 512, and is the 6th number "0 = 7, 1 = 6, 1 = 5, 0 = 4, 0 = 3, 1 = 2, 0 = 1, 0 = 0".
 In which 6 is the bit position for 512 as the returned Size . Each size is in order from 0 to 7, thus the size given back
