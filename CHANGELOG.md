@@ -13,6 +13,10 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.19.0] - 2024-06-21
+- Add support for ECDSA and DSA in 'Parse CSR' [@robinsandhu] | [#1828]
+- Fix typos in SIGABA.mjs [@eltociear] | [#1834]
+
 ### [10.18.0] - 2024-04-24
 - Added 'XXTEA Encrypt' and 'XXTEA Decrypt' operations [@n1474335] | [0a353ee]
 
@@ -436,6 +440,7 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[10.19.0]: https://github.com/gchq/CyberChef/releases/tag/v10.19.0
 [10.18.0]: https://github.com/gchq/CyberChef/releases/tag/v10.18.0
 [10.17.0]: https://github.com/gchq/CyberChef/releases/tag/v10.17.0
 [10.16.0]: https://github.com/gchq/CyberChef/releases/tag/v10.16.0
@@ -623,6 +628,8 @@ All major and minor version changes will be documented in this file. Details of 
 [@TheZ3ro]: https://github.com/TheZ3ro
 [@EvieHarv]: https://github.com/EvieHarv
 [@cplussharp]: https://github.com/cplussharp
+[@robinsandhu]: https://github.com/robinsandhu
+[@eltociear]: https://github.com/eltociear
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
