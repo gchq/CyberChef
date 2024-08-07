@@ -16,7 +16,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "IPv6 Transition Addresses",
-                args: [],
+                args: [true, false],
             },
         ],
     }, {
@@ -26,7 +26,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "IPv6 Transition Addresses",
-                args: [],
+                args: [true, false],
             },
         ],
     }, {
@@ -36,7 +36,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "IPv6 Transition Addresses",
-                args: [],
+                args: [true, false],
             },
         ],
     },
