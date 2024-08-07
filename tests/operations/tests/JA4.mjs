@@ -1,5 +1,5 @@
 /**
- * JA4Fingerprint tests.
+ * JA4 tests.
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2024
@@ -51,5 +51,71 @@ TestRegister.addTests([
                 "args": ["Hex", "JA4 Original Rendering"]
             }
         ],
+    },
+    {
+        name: "JA4Server Fingerprint: TLS 1.2 h2 ALPN",
+        input: "16030300640200006003035f0236c07f47bfb12dc2da706ecb3fe7f9eeac9968cc2ddf444f574e4752440120b89ff1ab695278c69b8a73f76242ef755e0b13dc6d459aaaa784fec9c2dfce34cca900001800000000ff01000100000b00020100001000050003026832",
+        expectedOutput: "t1204h2_cca9_1428ce7b4018",
+        recipeConfig: [
+            {
+                "op": "JA4Server Fingerprint",
+                "args": ["Hex", "JA4S"]
+            }
+        ]
+    },
+    {
+        name: "JA4Server Fingerprint: TLS 1.2 h2 ALPN Raw",
+        input: "16030300640200006003035f0236c07f47bfb12dc2da706ecb3fe7f9eeac9968cc2ddf444f574e4752440120b89ff1ab695278c69b8a73f76242ef755e0b13dc6d459aaaa784fec9c2dfce34cca900001800000000ff01000100000b00020100001000050003026832",
+        expectedOutput: "t1204h2_cca9_0000,ff01,000b,0010",
+        recipeConfig: [
+            {
+                "op": "JA4Server Fingerprint",
+                "args": ["Hex", "JA4S Raw"]
+            }
+        ]
+    },
+    {
+        name: "JA4Server Fingerprint: TLS 1.3",
+        input: "160303007a020000760303236d214556452c55a0754487e64b1a8b0262c50ba23004c9d504166a6de3439920d0b0099243c9296a0c84153ea4ada7d87ad017f4211c2ea1350b0b3cc5514d5f130100002e00330024001d002099e3cc43a2c9941ae75af1b2c7a629bee3ee7031973cad85c82f2f23677fb244002b00020304",
+        expectedOutput: "t130200_1301_234ea6891581",
+        recipeConfig: [
+            {
+                "op": "JA4Server Fingerprint",
+                "args": ["Hex", "JA4S"]
+            }
+        ]
+    },
+    {
+        name: "JA4Server Fingerprint: TLS 1.3 Raw",
+        input: "160303007a020000760303236d214556452c55a0754487e64b1a8b0262c50ba23004c9d504166a6de3439920d0b0099243c9296a0c84153ea4ada7d87ad017f4211c2ea1350b0b3cc5514d5f130100002e00330024001d002099e3cc43a2c9941ae75af1b2c7a629bee3ee7031973cad85c82f2f23677fb244002b00020304",
+        expectedOutput: "t130200_1301_0033,002b",
+        recipeConfig: [
+            {
+                "op": "JA4Server Fingerprint",
+                "args": ["Hex", "JA4S Raw"]
+            }
+        ]
+    },
+    {
+        name: "JA4Server Fingerprint: TLS 1.3 non-ascii ALPN",
+        input: "160303007a020000760303897c232e3ee313314f2b662307ff4f7e2cf1caeec1b27711bca77f469519168520bc58b92f865e6b9aa4a6371cadcb0afe1da1c0f705209a11d52357f56d5dd962130100002e00330024001d002076b8b7ed0f96b63a773d85ab6f3a87a151c130529785b41a4defb53184055957002b00020304",
+        expectedOutput: "t130200_1301_234ea6891581",
+        recipeConfig: [
+            {
+                "op": "JA4Server Fingerprint",
+                "args": ["Hex", "JA4S"]
+            }
+        ]
+    },
+    {
+        name: "JA4Server Fingerprint: TLS 1.3 non-ascii ALPN Raw",
+        input: "160303007a020000760303897c232e3ee313314f2b662307ff4f7e2cf1caeec1b27711bca77f469519168520bc58b92f865e6b9aa4a6371cadcb0afe1da1c0f705209a11d52357f56d5dd962130100002e00330024001d002076b8b7ed0f96b63a773d85ab6f3a87a151c130529785b41a4defb53184055957002b00020304",
+        expectedOutput: "t130200_1301_0033,002b",
+        recipeConfig: [
+            {
+                "op": "JA4Server Fingerprint",
+                "args": ["Hex", "JA4S Raw"]
+            }
+        ]
     },
 ]);
