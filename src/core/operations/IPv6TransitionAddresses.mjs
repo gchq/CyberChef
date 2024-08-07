@@ -31,20 +31,19 @@ class IPv6TransitionAddresses extends Operation {
 	    },
             {
                 "name": "Remove headers",
-		"type": "boolean",
-		"value": false
+                "type": "boolean",
+                "value": false
             }
-	];
+        ];
     }
 
-    /**  
+    /**
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
         const XOR = {"0": "2", "1": "3", "2": "0", "3": "1", "4": "6", "5": "7", "6": "4", "7": "5", "8": "A", "9": "B", "A": "8", "B": "9", "C": "E", "D": "F", "E": "C", "F": "D"};
-        const [ignoreRanges, removeHeaders] = args;
 
         /**
 	 * Function to convert to hex
@@ -70,7 +69,7 @@ class IPv6TransitionAddresses extends Operation {
             /**
 	     * 6to4
 	     */
-            if (!args[1]){
+            if (!args[1]) {
                 output += "6to4: ";
             }
             output += "2002:" + hexify(HEXIP[0]) + hexify(HEXIP[1]) + ":" + hexify(HEXIP[2]) + hexify(HEXIP[3]) + "::/48\n";
@@ -78,7 +77,7 @@ class IPv6TransitionAddresses extends Operation {
             /**
 	     * Mapped
 	     */
-            if (!args[1]){
+            if (!args[1]) {
                 output += "IPv4 Mapped: ";
             }
             output += "::ffff:" + hexify(HEXIP[0]) + hexify(HEXIP[1]) + ":" + hexify(HEXIP[2]) + hexify(HEXIP[3]) + "\n";
@@ -86,7 +85,7 @@ class IPv6TransitionAddresses extends Operation {
             /**
 	     * Translated
 	     */
-            if (!args[1]){
+            if (!args[1]) {
                 output += "IPv4 Translated: ";
             }
             output += "::ffff:0:" + hexify(HEXIP[0]) + hexify(HEXIP[1]) + ":" + hexify(HEXIP[2]) + hexify(HEXIP[3]) + "\n";
@@ -94,7 +93,7 @@ class IPv6TransitionAddresses extends Operation {
             /**
 	     * Nat64
 	     */
-            if (!args[1]){
+            if (!args[1]) {
                 output += "Nat 64: ";
             }
             output += "64:ff9b::" + hexify(HEXIP[0]) + hexify(HEXIP[1]) + ":" + hexify(HEXIP[2]) + hexify(HEXIP[3]) + "\n";
@@ -109,7 +108,7 @@ class IPv6TransitionAddresses extends Operation {
         function macTransition(input) {
             let output = "";
             const MACPARTS = input.split(":");
-            if (!args[1]){
+            if (!args[1]) {
                 output += "EUI-64 Interface ID: ";
             }
             const MAC = MACPARTS[0] + MACPARTS[1] + ":" + MACPARTS[2] + "ff:fe" + MACPARTS[3] + ":" + MACPARTS[4] + MACPARTS[5];
@@ -130,7 +129,7 @@ class IPv6TransitionAddresses extends Operation {
 	     * 6to4
 	     */
             if (input.startsWith("2002:")) {
-                if (!args[1]){
+                if (!args[1]) {
                     output += "IPv4: ";
                 }
                 output += String(intify(input.slice(5, 7))) + "." + String(intify(input.slice(7, 9)))+ "." + String(intify(input.slice(10, 12)))+ "." + String(intify(input.slice(12, 14))) + "\n";
@@ -139,7 +138,7 @@ class IPv6TransitionAddresses extends Operation {
 		 * Mapped/Translated/Nat64
 		 */
                 hextets = /:([0-9a-z]{1,4}):[0-9a-z]{1,4}$/.exec(input)[1].padStart(4, "0") + /:([0-9a-z]{1,4})$/.exec(input)[1].padStart(4, "0");
-                if (!args[1]){
+                if (!args[1]) {
                     output += "IPv4: ";
                 }
                 output += intify(hextets.slice(-8, -7) +  hextets.slice(-7, -6)) + "." +intify(hextets.slice(-6, -5) +  hextets.slice(-5, -4)) + "." +intify(hextets.slice(-4, -3) +  hextets.slice(-3, -2)) + "." +intify(hextets.slice(-2, -1) +  hextets.slice(-1,)) + "\n";
@@ -147,7 +146,7 @@ class IPv6TransitionAddresses extends Operation {
 		/**
 		 * EUI-64
 		 */
-                if (!args[1]){
+                if (!args[1]) {
                     output += "Mac Address: ";
                 }
                 const MAC = (input.slice(-19, -17) + ":" + input.slice(-17, -15) + ":" + input.slice(-14, -12) + ":" + input.slice(-7, -5) + ":" + input.slice(-4, -2) + ":" + input.slice(-2,)).toUpperCase();
@@ -162,10 +161,10 @@ class IPv6TransitionAddresses extends Operation {
 	 * Main
 	 */
         let output = "";
-	let inputs = input.split("\n");
-        //Remove blank rows
+        let inputs = input.split("\n");
+        // Remove blank rows
         inputs = inputs.filter(Boolean);
-	for (let input = 0; input < inputs.length; input++){
+        for (let input = 0; input < inputs.length; input++) {
             if (/^[0-9]{1,3}(?:\.[0-9]{1,3}){3}$/.test(inputs[input])) {
                 output += ipTransition(inputs[input]);
             } else if (/^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(inputs[input].toUpperCase())) {
