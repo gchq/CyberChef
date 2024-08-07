@@ -23,10 +23,16 @@ class IPv6TransitionAddresses extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/IPv6_transition_mechanism";
         this.inputType = "string";
         this.outputType = "string";
-        this.args = [];
+        this.args = [
+	    {
+                "name": "Ignore ranges",
+                "type": "boolean",
+	        "value": true
+	    }
+	];
     }
 
-    /**
+    /**  
      * @param {string} input
      * @param {Object[]} args
      * @returns {string}
@@ -128,16 +134,18 @@ class IPv6TransitionAddresses extends Operation {
 	 * Main
 	 */
         let output = "";
-        if (/^[0-9]{1,3}(?:\.[0-9]{1,3}){3}$/.test(input)) {
-            output = ipTransition(input);
-        } else if (/^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(input.toUpperCase())) {
-            output = macTransition(input.toLowerCase());
-        } else if (/^((?:[0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,5}(?::[0-9a-fA-F]{1,4}){1,2}|(?:[0-9a-fA-F]{1,4}:){1,4}(?::[0-9a-fA-F]{1,4}){1,3}|(?:[0-9a-fA-F]{1,4}:){1,3}(?::[0-9a-fA-F]{1,4}){1,4}|(?:[0-9a-fA-F]{1,4}:){1,2}(?::[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:(?:(?::[0-9a-fA-F]{1,4}){1,6})|:(?:(?::[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(?::[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(?:ffff(?::0{1,4}){0,1}:){0,1}(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])|(?:[0-9a-fA-F]{1,4}:){1,4}:(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/.test(input)) {
-            output = unTransition(input);
-        } else {
-            output = "Enter a compressed or expanded IPv6 address, IPv4 address or MAC Address.";
+	const inputs = input.split("\n");
+	for (let input = 0; input < inputs.length; input++){
+            if (/^[0-9]{1,3}(?:\.[0-9]{1,3}){3}$/.test(inputs[input])) {
+                output += ipTransition(inputs[input]);
+            } else if (/^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(inputs[input].toUpperCase())) {
+                output += macTransition(input.toLowerCase());
+            } else if (/^((?:[0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,5}(?::[0-9a-fA-F]{1,4}){1,2}|(?:[0-9a-fA-F]{1,4}:){1,4}(?::[0-9a-fA-F]{1,4}){1,3}|(?:[0-9a-fA-F]{1,4}:){1,3}(?::[0-9a-fA-F]{1,4}){1,4}|(?:[0-9a-fA-F]{1,4}:){1,2}(?::[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:(?:(?::[0-9a-fA-F]{1,4}){1,6})|:(?:(?::[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(?::[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(?:ffff(?::0{1,4}){0,1}:){0,1}(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])|(?:[0-9a-fA-F]{1,4}:){1,4}:(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/.test(inputs[input])) {
+                output += unTransition(inputs[input]);
+            } else {
+                output = "Enter a compressed or expanded IPv6 address, IPv4 address or MAC Address.";
+            }
         }
-
 
         return output;
     }
