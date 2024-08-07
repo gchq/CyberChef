@@ -75,10 +75,10 @@ class ZPLConvert extends Operation {
         // The first segment of the resolution arg is the numeric indicator of the resolution
         const labelResolution = labelResolutionArg.toString().split(" ")[0];
 
-        const labelaryUrl = `${labelaryApi}/v1/printers/${labelResolution}dpmm/labels/${widthArg}x${heightArg}/${index}`
+        const labelaryUrl = `${labelaryApi}/v1/printers/${labelResolution}dpmm/labels/${widthArg}x${heightArg}/${index}`;
 
         return fetch(labelaryUrl, {
-            method: 'POST',
+            method: "POST",
             headers: {"accept": "image/png", "Content-Type": "application/x-www-form-urlencoded"},
             body: input,
         }).then(response => {
@@ -90,7 +90,7 @@ class ZPLConvert extends Operation {
             }
             return response.blob();
         }).then(blob => {
-            return blob.arrayBuffer()
+            return blob.arrayBuffer();
         }).then(data => {
             return data;
         }).catch(e => {
