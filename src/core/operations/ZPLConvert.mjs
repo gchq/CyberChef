@@ -20,7 +20,7 @@ class ZPLConvert extends Operation {
         this.name = "ZPL Converter";
         this.module = "Default";
         this.description = [
-            "Takes ZPL (Zebra Printer Language)-encoded text data and converts renders it to readable images.",
+            "Takes a ZPL (Zebra Printer Language) string and renders it into a png.",
             "<br><br>",
             "Uses the  <a href='https://labelary.com/service.html'>Labelary</a> API for full support of all ZPL instructions.",
             "<br><br>",
