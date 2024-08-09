@@ -19,7 +19,7 @@ class IPv6TransitionAddresses extends Operation {
 
         this.name = "IPv6 Transition Addresses";
         this.module = "Default";
-        this.description = "Converts IPv4 addresses to their IPv6 Transition addresses. IPv6 Transition addresses can also be converted back into their original IPv4 address. MAC addresses can also be converted into the EUI-64 format, this can them be appended to your IPv6 /64 range to obtain a full /128 address.<br><br>Transition technologies enable translation between IPv4 and IPv6 addresses or tunneling to allow traffic to pass through the incompatible network, allowing the two standards to coexist.<br><br>Remove headers to easily copy out results.";
+        this.description = "Converts IPv4 addresses to their IPv6 Transition addresses. IPv6 Transition addresses can also be converted back into their original IPv4 address. MAC addresses can also be converted into the EUI-64 format, this can them be appended to your IPv6 /64 range to obtain a full /128 address.<br><br>Transition technologies enable translation between IPv4 and IPv6 addresses or tunneling to allow traffic to pass through the incompatible network, allowing the two standards to coexist.<br><br>Only /24 ranges and currently handled. Remove headers to easily copy out results.";
         this.infoURL = "https://wikipedia.org/wiki/IPv6_transition_mechanism";
         this.inputType = "string";
         this.outputType = "string";
@@ -62,7 +62,7 @@ class IPv6TransitionAddresses extends Operation {
         /**
 	 * Function converts IPv4 to IPv6 Transtion address
 	 */
-        function ipTransition(input) {
+        function ipTransition(input, range) {
             let output = "";
             const HEXIP = input.split(".");
 
@@ -72,7 +72,12 @@ class IPv6TransitionAddresses extends Operation {
             if (!args[1]) {
                 output += "6to4: ";
             }
-            output += "2002:" + hexify(HEXIP[0]) + hexify(HEXIP[1]) + ":" + hexify(HEXIP[2]) + hexify(HEXIP[3]) + "::/48\n";
+            output += "2002:" + hexify(HEXIP[0]) + hexify(HEXIP[1]) + ":" + hexify(HEXIP[2]);
+            if (range) {
+                output += "00::/40\n";
+            } else {
+                output += hexify(HEXIP[3]) + "::/48\n";
+            }
 
             /**
 	     * Mapped
@@ -80,7 +85,12 @@ class IPv6TransitionAddresses extends Operation {
             if (!args[1]) {
                 output += "IPv4 Mapped: ";
             }
-            output += "::ffff:" + hexify(HEXIP[0]) + hexify(HEXIP[1]) + ":" + hexify(HEXIP[2]) + hexify(HEXIP[3]) + "\n";
+            output += "::ffff:" + hexify(HEXIP[0]) + hexify(HEXIP[1]) + ":" + hexify(HEXIP[2]);
+            if (range) {
+                output += "00/120\n";
+            } else {
+                output += hexify(HEXIP[3]) + "\n";
+            }
 
             /**
 	     * Translated
@@ -88,7 +98,12 @@ class IPv6TransitionAddresses extends Operation {
             if (!args[1]) {
                 output += "IPv4 Translated: ";
             }
-            output += "::ffff:0:" + hexify(HEXIP[0]) + hexify(HEXIP[1]) + ":" + hexify(HEXIP[2]) + hexify(HEXIP[3]) + "\n";
+            output += "::ffff:0:" + hexify(HEXIP[0]) + hexify(HEXIP[1]) + ":" + hexify(HEXIP[2]);
+            if (range) {
+                output += "00/120\n";
+            } else {
+                output += hexify(HEXIP[3]) + "\n";
+            }
 
             /**
 	     * Nat64
@@ -96,8 +111,12 @@ class IPv6TransitionAddresses extends Operation {
             if (!args[1]) {
                 output += "Nat 64: ";
             }
-            output += "64:ff9b::" + hexify(HEXIP[0]) + hexify(HEXIP[1]) + ":" + hexify(HEXIP[2]) + hexify(HEXIP[3]) + "\n";
-
+            output += "64:ff9b::" + hexify(HEXIP[0]) + hexify(HEXIP[1]) + ":" + hexify(HEXIP[2]);
+            if (range) {
+                output += "00/120\n";
+            } else {
+                output += hexify(HEXIP[3]) + "\n";
+            }
 
             return output;
         }
@@ -165,14 +184,19 @@ class IPv6TransitionAddresses extends Operation {
         // Remove blank rows
         inputs = inputs.filter(Boolean);
         for (let input = 0; input < inputs.length; input++) {
-            if (/^[0-9]{1,3}(?:\.[0-9]{1,3}){3}$/.test(inputs[input])) {
-                output += ipTransition(inputs[input]);
-            } else if (/^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(inputs[input].toUpperCase())) {
-                output += macTransition(input.toLowerCase());
-            } else if (/^((?:[0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,5}(?::[0-9a-fA-F]{1,4}){1,2}|(?:[0-9a-fA-F]{1,4}:){1,4}(?::[0-9a-fA-F]{1,4}){1,3}|(?:[0-9a-fA-F]{1,4}:){1,3}(?::[0-9a-fA-F]{1,4}){1,4}|(?:[0-9a-fA-F]{1,4}:){1,2}(?::[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:(?:(?::[0-9a-fA-F]{1,4}){1,6})|:(?:(?::[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(?::[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(?:ffff(?::0{1,4}){0,1}:){0,1}(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])|(?:[0-9a-fA-F]{1,4}:){1,4}:(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/.test(inputs[input])) {
-                output += unTransition(inputs[input]);
-            } else {
-                output = "Enter compressed or expanded IPv6 address, IPv4 address or MAC Address.";
+            // if ignore ranges is checked and input is a range, skip
+            if ((args[0] && !inputs[input].includes("\/")) || (!args[0])) {
+                if (/^[0-9]{1,3}(?:\.[0-9]{1,3}){3}$/.test(inputs[input])) {
+                    output += ipTransition(inputs[input], false);
+		} else if (/\/24$/.test(inputs[input])) {
+                    output += ipTransition(inputs[input], true);
+                } else if (/^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(inputs[input].toUpperCase())) {
+                    output += macTransition(input.toLowerCase());
+                } else if (/^((?:[0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,5}(?::[0-9a-fA-F]{1,4}){1,2}|(?:[0-9a-fA-F]{1,4}:){1,4}(?::[0-9a-fA-F]{1,4}){1,3}|(?:[0-9a-fA-F]{1,4}:){1,3}(?::[0-9a-fA-F]{1,4}){1,4}|(?:[0-9a-fA-F]{1,4}:){1,2}(?::[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:(?:(?::[0-9a-fA-F]{1,4}){1,6})|:(?:(?::[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(?::[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(?:ffff(?::0{1,4}){0,1}:){0,1}(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])|(?:[0-9a-fA-F]{1,4}:){1,4}:(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/.test(inputs[input])) {
+                    output += unTransition(inputs[input]);
+                } else {
+                    output = "Enter compressed or expanded IPv6 address, IPv4 address or MAC Address.";
+                }
             }
         }
 
