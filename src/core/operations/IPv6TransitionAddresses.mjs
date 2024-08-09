@@ -185,10 +185,10 @@ class IPv6TransitionAddresses extends Operation {
         inputs = inputs.filter(Boolean);
         for (let input = 0; input < inputs.length; input++) {
             // if ignore ranges is checked and input is a range, skip
-            if ((args[0] && !inputs[input].includes("\/")) || (!args[0])) {
+            if ((args[0] && !inputs[input].includes("/")) || (!args[0])) {
                 if (/^[0-9]{1,3}(?:\.[0-9]{1,3}){3}$/.test(inputs[input])) {
                     output += ipTransition(inputs[input], false);
-		} else if (/\/24$/.test(inputs[input])) {
+                } else if (/\/24$/.test(inputs[input])) {
                     output += ipTransition(inputs[input], true);
                 } else if (/^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(inputs[input].toUpperCase())) {
                     output += macTransition(input.toLowerCase());
