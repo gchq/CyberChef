@@ -151,6 +151,18 @@ class InputWaiter {
                 // Event handlers
                 EditorView.domEventHandlers({
                     paste(event, view) {
+                        const clipboardData = event.clipboardData || window.clipboardData;
+                        const items = clipboardData.items;
+                        event.target.files = [];
+                        for (let i = 0; i < items.length; i++) {
+                            const item = items[i];
+                            if (item.type.indexOf("image") !== -1) {
+                                const file = item.getAsFile();
+                                event.target.files.push(file);
+
+                                event.preventDefault(); // Prevent the default paste behavior
+                            }
+                        }
                         setTimeout(() => {
                             self.afterPaste(event);
                         });
@@ -917,6 +929,9 @@ class InputWaiter {
      * @param {event} e
      */
     afterPaste(e) {
+        if (e.target.files) {
+            this.loadUIFiles(e.target.files);
+        }
         // If EOL has been fixed, skip this.
         if (this.eolState > 1) return;
 
