@@ -929,7 +929,7 @@ class InputWaiter {
      * @param {event} e
      */
     afterPaste(e) {
-        if (e.target.files) {
+        if (e.target.files.length > 0) {
             this.loadUIFiles(e.target.files);
         }
         // If EOL has been fixed, skip this.
