@@ -17,7 +17,7 @@ class Ngram extends Operation {
     constructor() {
         super();
 
-        this.name = "Ngram";
+        this.name = "N-gram";
         this.module = "Default";
         this.description = "Extracts n-grams from the input text. N-grams are contiguous sequences of n characters from a given text sample.";
         this.infoURL = "https://wikipedia.org/wiki/N-gram";
