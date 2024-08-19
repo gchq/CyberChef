@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import {JOIN_DELIM_OPTIONS} from "../lib/Delim.mjs";
 
 /**
  * ngram operation
@@ -29,6 +30,11 @@ class Ngram extends Operation {
                 type: "number",
                 value: 3
             },
+            {
+                "name": "Join delimiter",
+                "type": "editableOptionShort",
+                "value": JOIN_DELIM_OPTIONS
+            }
         ];
     }
 
@@ -38,13 +44,15 @@ class Ngram extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const n = args[0];
+        const nGramSize = args[0],
+            joinDelim = args[1];
+
         const ngrams = [];
-        for (let i = 0; i <= input.length - n; i++) {
-            ngrams.push(input.slice(i, i + n));
+        for (let i = 0; i <= input.length - nGramSize; i++) {
+            ngrams.push(input.slice(i, i + nGramSize));
         }
 
-        return ngrams.join("\n");
+        return ngrams.join(joinDelim);
     }
 
 }
