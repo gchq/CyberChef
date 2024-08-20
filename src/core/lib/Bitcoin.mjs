@@ -12,6 +12,126 @@ import {toHex} from "crypto-api/src/encoder/hex.mjs";
 import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
+/**
+ * Validates the length of the passed in input as one of the allowable lengths.
+ * @param {*} input
+ * @param {*} allowableLengths
+ * @returns
+ */
+function validateLengths(input, allowableLengths) {
+    return allowableLengths.includes(input.length);
+}
+
+/**
+ * Returns true if input is a valid hex string, false otherwise.
+ * @param {*} input
+ */
+function isHex(input) {
+    const re = /^[0-9A-Fa-f]{2,}$/g;
+    return re.test(input);
+}
+
+/**
+ * Returns true if input could be interpreted as a byte string, false otherwise.
+ */
+function isValidBytes(input) {
+    for (let i=0; i < input.length; i ++) {
+        if (input.charCodeAt(i) > 255) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * We validate a passed in input to see if it could be a valid private key.
+ * A valid private key is string of length 64 that is valid hex, or of length 32 that could be valid bytes.
+ * @param {*} input
+ */
+export function validatePrivateKey(input) {
+    const curInput = input.trim();
+    if (!validateLengths(curInput, [32, 64])) {
+        return "Invalid length. We want either 32 or 64 but we got: " + curInput.length;
+    }
+    if (curInput.length === 64 && !isHex(curInput)) {
+        return "We have a string of length 64, but not valid hex. Cannot be interpreted as a private key.";
+    }
+    if (curInput.length === 32 && !isValidBytes(curInput)) {
+        return "We have a string of length 32 but cannot cannot be interpreted as valid bytes.";
+    }
+    return "";
+}
+
+/**
+ * We validate a passed in input to see if it could be a valid public key.
+ * A valid public key (in bytes) is either:
+ *  65 bytes beginning with 04
+ *  33 bytes beginning with 02 or 03
+ * @param {*} input
+ */
+export function validatePublicKey(input) {
+    const curInput = input.trim();
+    if (!validateLengths(curInput, [33, 65, 66, 130])) {
+        return "Invalid length. We want either 33, 65 (if bytes) or 66, 130 (if hex) but we got: " + curInput.length;
+    }
+    if (isHex(curInput)) {
+        if (!validateLengths(curInput, [66, 130])) {
+            return "We have a hex string, but its length is wrong. We want 66, 130 but we got: " + curInput.length;
+        }
+        if (curInput.length === 66 && (curInput.slice(0, 2) !== "02" && curInput.slice(0, 2) !== "03")) {
+            return "We have a valid hex string, of reasonable length, (66) but doesn't start with the right value. Correct values are 02, or 03 but we have: " + curInput.slice(0, 2);
+        }
+        if (curInput.length === 130 && curInput.slice(0, 2) !== "04") {
+            return "We have a valid hex string of reasonable length, (130) but doesn't start with the right value. Correct values are 04 but we have: " + curInput.slice(0, 2);
+        }
+        return "";
+    }
+    if (isValidBytes(curInput)) {
+        if (!validateLengths(curInput, [33, 65])) {
+            return "We have a byte string, but its length is wrong. We want 33 or 65 but we got: " + curInput.length;
+        }
+        if (curInput.length === 33 && toHex(curInput[0]) !== "02" && toHex(curInput[0]) !== "03") {
+            return "We have a valid byte string, of reasonable length, (33) but doesn't start with the right value. Correct values are 02, or 03 but we have: " + toHex(curInput[0]) ;
+        }
+        if (curInput.length === 65 && toHex(curInput[0]) !== "04") {
+            return "We have a valid byte string, of reasonable length, (65) but doesn't start with the right value. Correct value is 04 but we have: " + toHex(curInput[0]);
+        }
+        return "";
+    }
+
+}
+
+/**
+ * We make sure the input is a valid hex string, regardless of if its hex or bytes.
+ * If not valid bytes or hex, we throw TypeError.
+ * @param {*} input
+ * @returns
+ */
+export function makeSureIsHex(input) {
+    if (!(isValidBytes(input)) && !(isHex(input))) {
+        throw TypeError("Input: " + input + " is not valid bytes or hex.");
+    }
+    if (isValidBytes(input) && !isHex(input)) {
+        return toHex(input);
+    }
+    return input;
+}
+
+/**
+ * We make sure the input is valid bytes, regardless of if its hex or bytes.
+ * If not valid bytes or hex, we throw TypeError.
+ * @param {*} input
+ */
+export function makeSureIsBytes(input) {
+    if (!(isValidBytes(input)) && !(isHex(input))) {
+        throw TypeError("Input: " + input + " is not valid bytes or hex.");
+    }
+    if (isHex(input)) {
+        return fromArrayBuffer(Utils.convertToByteArray(input, "hex"));
+    }
+    return input;
+}
+
 // ################################################ BEGIN HELPER HASH FUNCTIONS #################################################
 
 // SHA256(SHA256(input))
@@ -212,6 +332,35 @@ export function deserializeExtendedKeyFunc (input) {
     }
 }
 
+// Reverse lookup for version bytes
+const versionString = {
+    "043587cf": "tpub",
+    "04358394": "tprv",
+    "044a5262": "upub",
+    "044a4e28": "uprv",
+    "045f1cf6": "vpub",
+    "045f18bc": "vprv",
+    "024289ef": "Upub",
+    "024285b5": "Uprv",
+    "02575483": "Vpub",
+    "02575048": "Vprv",
+    "0488b21e": "xpub",
+    "0488ade4": "xprv",
+    "049d7cb2": "ypub",
+    "049d7878": "yprv",
+    "04b24746": "zpub",
+    "04b2430c": "zprv",
+    "02aa7ed3": "Zpub",
+    "02aa7a99": "Zprv",
+    "0295b43f": "Ypub",
+    "0295b005": "Yprv",
+    "019da462": "Ltub",
+    "019d9cfe": "Ltpv",
+    "01b26ef6": "Mtub",
+    "01b26792": "Mtpv",
+    "0436f6e1": "ttub",
+    "0436ef7d": "ttpv"
+};
 
 // Version byte dictionary.
 const versionBytes = {
@@ -252,6 +401,16 @@ export function getExtendedKeyVersion(input) {
     return versionBytes[input];
 
 }
+
+/**
+ * Reverse lookup for version string. We take in bytes, output string.
+ * @param {*} input
+ * @returns
+ */
+export function getExtendedKeyString(input) {
+    return versionString[input];
+}
+
 
 /**
  * We serialize the extended key based off of the passed in data.
@@ -296,6 +455,12 @@ const versionByteInfo = {
         "P2SH": "C4",
         "WIF": "EF",
         "hrp": "tb"
+    },
+    "LTC": {
+        "hrp": "ltc",
+        "P2PKH": "30",
+        "P2SH": "32",
+        "WIF": "B0"
     }
 };
 

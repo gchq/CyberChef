@@ -7,9 +7,11 @@
  */
 
 import Operation from "../Operation.mjs";
-import {toHex} from "../lib/Hex.mjs";
 import ec from "elliptic";
+import { validatePrivateKey, makeSureIsHex} from "../lib/Bitcoin.mjs";
+// import { toHex } from "crypto-api/src/encoder/hex.mjs";
 
+// const curves = ["secp256k1", "ed25519", "curve25519", "p521", "p384", "p256", "p224", "p192"];
 /**
  * Class that takes in a private key, and returns the public key, either in compressed or uncompressed form(s).
  */
@@ -56,24 +58,15 @@ class PrivateECKeyToPublic extends Operation {
             return "";
         }
         input = input.trim();
-        const re = /^[0-9A-Fa-f]{2,}$/g;
-        if (!(input.length === 64 && re.test(input)) && !(input.length === 32)) {
-            return "Must pass a hex string of length 64, or a byte string of length 32. Got length " + input.length;
-        }
-        // If we have bytes, we need to turn the bytes to hex.
-        if (input.length !== undefined && input.length === 32) {
-            const buf = new Uint8Array(new ArrayBuffer(32));
 
-            for (let i= 0; i < 32; i ++) {
-                if (input.charCodeAt(i) > 255) {
-                    return "Cannot interpret this 32 character string as bytes.";
-                }
-                buf[i] = input.charCodeAt(i);
-            }
-            input = toHex(buf, "", 2, "", 0);
+        const privKeyCheck = validatePrivateKey(input);
+
+        if (privKeyCheck.trim().length !== 0) {
+            return "Error with the input as private key. Error is:\n\t" + privKeyCheck;
         }
+        const processedInput = makeSureIsHex(input);
         const ecContext = ec.ec("secp256k1");
-        const key = ecContext.keyFromPrivate(input);
+        const key = ecContext.keyFromPrivate(processedInput);
         const pubkey = key.getPublic(args[0], "hex");
 
         return pubkey;

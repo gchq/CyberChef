@@ -33,6 +33,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Public Key To Address: P2PKH LTC",
+        input: "037b39f764a10f31bfd47038738ca27bffeefce1fe4ccbfb9343fcb69d9363b27b",
+        expectedOutput: "LPTR2TBuF8vbwWaJdNeCAQemW4SC7q7zJP",
+        recipeConfig: [
+            {
+                "op": "Public Key To Cryptocurrency Address",
+                "args": ["LTC", "P2PKH (V1 BTC Addresses)"]
+            },
+        ],
+    },
+    {
         name: "Public Key To Address: P2PKH (Long)",
         input: "04219A19E157B5FEDDF7EBDD3C7A58D7AB4F6565E84226691B6A5F80BBCE8E0100B49D6AB503CA4B701626E941EB8D2460F154992D7AD4EC671CF1CFB8C1DE8164",
         expectedOutput: "1BgRqTW8RMmcTRXHymTCVJsn5NVk9U8L9q",
@@ -50,7 +61,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Public Key To Cryptocurrency Address",
-                "args": ["BTC", "P2SH-P2PWPKH (Segwit Compatible)"]
+                "args": ["BTC", "P2SH-P2PWPKH (Segwit Compatible V3 Addresses)"]
             },
         ],
     },
@@ -61,7 +72,18 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Public Key To Cryptocurrency Address",
-                "args": ["BTC", "P2SH-P2PWPKH (Segwit Compatible)"]
+                "args": ["BTC", "P2SH-P2PWPKH (Segwit Compatible V3 Addresses)"]
+            },
+        ],
+    },
+    {
+        name: "Public Key To Address: P2SH-P2WPKH LTC",
+        input: "02f442a169ca36702bbcbb268319295bece8fe1cbc6ca095b2669d13ef56c759de",
+        expectedOutput: "MMwYiJmkxDKqiP2WWAHMMgkeRt2nLxGqih",
+        recipeConfig: [
+            {
+                "op": "Public Key To Cryptocurrency Address",
+                "args": ["LTC", "P2SH-P2PWPKH (Segwit Compatible V3 Addresses)"]
             },
         ],
     },
@@ -72,7 +94,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Public Key To Cryptocurrency Address",
-                "args": ["BTC", "Segwit (P2WPKH)"]
+                "args": ["BTC", "Segwit (P2WPKH bc1 Addresses)"]
             },
         ],
     },
@@ -83,21 +105,20 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Public Key To Cryptocurrency Address",
-                "args": ["BTC", "Segwit (P2WPKH)"]
+                "args": ["BTC", "Segwit (P2WPKH bc1 Addresses)"]
             },
         ],
     },
     {
-        name: "Public Key To Address: (ETH)",
-        input: "04d26bcecd763bdf6bdb89ba929d2485429fbda73bae723d525ef55554ef45350582085bd24055079f6deebad5b6af612c14587c6862391d330484afe750fbf144",
-        expectedOutput: "0x63e8b85679d29235791a0f558d6485c7ed51c9e6",
+        name: "Public Key To Address: P2WPKH LTC",
+        input: "026a532c31184b94edf540ad60c3cc208342be4f51cc764a373a420731dd198a59",
+        expectedOutput: "ltc1qj587punda8h0r4m83k794xseqlnl3az4ktu2zp",
         recipeConfig: [
             {
                 "op": "Public Key To Cryptocurrency Address",
-                "args": ["Ethereum", "Segwit (P2WPKH)"]
+                "args": ["LTC", "Segwit (P2WPKH bc1 Addresses)"]
             },
         ],
-
     },
     {
         name: "Public Key To Address: (Testnet)",
@@ -114,29 +135,29 @@ TestRegister.addTests([
     {
         name: "Public Key To Address: P2WPKH (Wrong Length)",
         input: "03bc32bdc5dc96c9fb56e2481fefd321ebe9e17a807bbb337dea1df5e68b1f075642",
-        expectedOutput: "Input is wrong length. Should be either 33 or 65 bytes, but is: 34",
+        expectedOutput: "Invalid length. We want either 33, 65 (if bytes) or 66, 130 (if hex) but we got: 68",
         recipeConfig: [
             {
                 "op": "Public Key To Cryptocurrency Address",
-                "args": ["BTC", "Segwit (P2WPKH)"]
+                "args": ["BTC", "Segwit (P2WPKH bc1 Addresses)"]
             },
         ],
     },
     {
         name: "Public Key To Address: P2WPKH (Wrong Start)",
         input: "05bc32bdc5dc96c9fb56e2481fefd321ebe9e17a807bbb337dea1df5e68b1f0756",
-        expectedOutput: "Input is 33 bytes, but begins with invalid byte: 05",
+        expectedOutput: "We have a valid hex string, of reasonable length, (66) but doesn't start with the right value. Correct values are 02, or 03 but we have: 05",
         recipeConfig: [
             {
                 "op": "Public Key To Cryptocurrency Address",
-                "args": ["BTC", "Segwit (P2WPKH)"]
+                "args": ["BTC", "Segwit (P2WPKH bc1 Addresses)"]
             },
         ],
     },
     {
         name: "Public Key To Address: P2PKH (Long With Error)",
         input: "06219A19E157B5FEDDF7EBDD3C7A58D7AB4F6565E84226691B6A5F80BBCE8E0100B49D6AB503CA4B701626E941EB8D2460F154992D7AD4EC671CF1CFB8C1DE8164",
-        expectedOutput: "Input is 65 bytes, but begins with invalid byte: 06",
+        expectedOutput: "We have a valid hex string of reasonable length, (130) but doesn't start with the right value. Correct values are 04 but we have: 06",
         recipeConfig: [
             {
                 "op": "Public Key To Cryptocurrency Address",
@@ -159,16 +180,4 @@ TestRegister.addTests([
             }
         ],
     },
-    {
-        name: "Public Key To Address: (ETH Compressed Key)",
-        input: "03ebf60a619da2fbc6239089ca0a93878ea53baa3d22188cacad4033b103237ae9",
-        expectedOutput: "Ethereum addresses require uncompressed public keys.",
-        recipeConfig: [
-            {
-                "op": "Public Key To Cryptocurrency Address",
-                "args": ["Ethereum", "Segwit (P2WPKH)"]
-            },
-        ],
-
-    }
 ]);

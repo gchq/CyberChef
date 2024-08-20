@@ -7,10 +7,10 @@
  */
 
 import Operation from "../Operation.mjs";
-import { base58Encode, getWIFVersionByte, doubleSHA} from "../lib/Bitcoin.mjs";
+import { base58Encode, getWIFVersionByte, doubleSHA, validatePrivateKey, makeSureIsHex} from "../lib/Bitcoin.mjs";
 import { fromArrayBuffer } from "crypto-api/src/encoder/array-buffer.mjs";
 import {toHex} from "crypto-api/src/encoder/hex.mjs";
-import {toHex as toHexOther} from "../lib/Hex.mjs";
+// import {toHex as toHexOther} from "../lib/Hex.mjs";
 import Utils from "../Utils.mjs";
 
 
@@ -65,26 +65,13 @@ class PrivateKeyToWIF extends Operation {
             return "";
         }
         input = input.trim();
-        // We check to see if the input is hex or not.
-        // If it is not, we convert it back to hex
-        const re = /[0-9A-Fa-f]{2,}/g;
-        if (!(input.length === 64 && re.test(input)) && !(input.length === 32)) {
-            return "Must pass a hex string of length 64, or a byte string of length 32. Got length: " + input.length;
+        const privateKeyCheck = validatePrivateKey(input);
+        if (privateKeyCheck.trim().length !== 0) {
+            return "Error parsing private key. Error is:\n\t" + privateKeyCheck;
         }
-        if (input.length === 32) {
-            const buf = new Uint8Array(new ArrayBuffer(32));
-
-            for (let i= 0; i < 32; i ++) {
-                if (input.charCodeAt(i) > 255) {
-                    return "Cannot interpret this 32 character string as bytes.";
-                }
-                buf[i] = input.charCodeAt(i);
-            }
-            input = toHexOther(buf, "", 2, "", 0);
-        }
-
+        const processedKey = makeSureIsHex(input);
         const versionByte = getWIFVersionByte(args[0]);
-        let extendedPrivateKey = versionByte + input;
+        let extendedPrivateKey = versionByte + processedKey;
         if (args[1]) {
             extendedPrivateKey += "01";
         }

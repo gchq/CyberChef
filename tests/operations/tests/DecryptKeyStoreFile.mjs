@@ -34,8 +34,8 @@ TestRegister.addTests([
                 "args": [false]
             },
             {
-                "op": "Public Key To Cryptocurrency Address",
-                "args": ["Ethereum", "P2PKH (V1 BTC Addresses)"]
+                "op": "Public Key To ETH Style Address",
+                "args": []
             }
         ]
 

@@ -50,7 +50,7 @@ TestRegister.addTests([
     {
         name: "Private EC Key to Public (Wrong Length)",
         input: "5E2A8FDE9F861056607208F512287CFBD634E124044EE23EBF7289E8E7B3822E08",
-        expectedOutput: "Must pass a hex string of length 64, or a byte string of length 32. Got length 66",
+        expectedOutput: "Error with the input as private key. Error is:\n\tInvalid length. We want either 32 or 64 but we got: 66",
         recipeConfig: [
             {
                 "op": "Private EC Key to Public Key",
@@ -61,7 +61,7 @@ TestRegister.addTests([
     {
         name: "Private EC Key to Public (From Bytes Uncompressed Wrong Length)",
         input: "5E2A8FDE9F861056607208F512287CFBD634E124044EE23EBF7289E8E7B3822E08",
-        expectedOutput: "Must pass a hex string of length 64, or a byte string of length 32. Got length 33",
+        expectedOutput: "Error with the input as private key. Error is:\n\tInvalid length. We want either 32 or 64 but we got: 33",
         recipeConfig: [
             {
                 "op": "From Hex",

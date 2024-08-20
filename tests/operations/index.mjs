@@ -129,6 +129,7 @@ import "./tests/DecryptKeyStoreFile.mjs";
 import "./tests/WIFToPrivateKey.mjs";
 import "./tests/SeedphraseToSeed.mjs";
 import "./tests/DeserializeExtendedKey.mjs";
+import "./tests/PublicKeyToETHStyleAddress.mjs";
 import "./tests/GetAllCasings.mjs";
 import "./tests/SIGABA.mjs";
 import "./tests/ELFInfo.mjs";
