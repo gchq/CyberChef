@@ -65,7 +65,7 @@ class GeneratePassword extends Operation {
             resultArray[i] = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
         }
     
-        return resultArray.join('');
+        return resultArray.join("");
     }
 
 }
