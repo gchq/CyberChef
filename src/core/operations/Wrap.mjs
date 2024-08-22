@@ -10,6 +10,10 @@ import Operation from "../Operation.mjs";
  * Wrap operation
  */
 class Wrap extends Operation {
+
+    /**
+     * Wrap constructor
+     */
     constructor() {
         super();
 
