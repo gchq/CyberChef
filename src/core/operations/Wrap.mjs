@@ -6,6 +6,9 @@
 
 import Operation from "../Operation.mjs";
 
+/**
+ * Wrap operation
+ */
 class Wrap extends Operation {
     constructor() {
         super();
@@ -24,10 +27,15 @@ class Wrap extends Operation {
         ];
     }
 
+    /**
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
     run(input, args) {
         if (!input) return "";  // Handle empty input
         const lineWidth = args[0];
-        const regex = new RegExp(`.{1,${lineWidth}}`, 'g');
+        const regex = new RegExp(`.{1,${lineWidth}}`, "g");
         return input.match(regex).join("\n");
     }
 }
