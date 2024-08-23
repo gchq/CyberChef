@@ -41,13 +41,13 @@ class InsertDelimiter extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        if (!input) return ""
+        if (!input) return "";
 
         if (isNaN(args[0]) || args[0] <= 0) {
             return "Invalid interval: must be a positive integer.";
         }
 
-        return input.match(new RegExp(`.{1,${parseInt(args[0])}}`, "g")).join(args[1]);
+        return input.match(new RegExp(`.{1,${parseInt(args[0], 10)}}`, "g")).join(args[1]);
     }
 }
 
