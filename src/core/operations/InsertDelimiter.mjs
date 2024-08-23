@@ -47,7 +47,7 @@ class InsertDelimiter extends Operation {
             return "Invalid interval: must be a positive integer.";
         }
 
-        return input.match(new RegExp(`.{1,${parseInt(args[0])}}`, 'g')).join(args[1]);
+        return input.match(new RegExp(`.{1,${parseInt(args[0])}}`, "g")).join(args[1]);
     }
 }
 
