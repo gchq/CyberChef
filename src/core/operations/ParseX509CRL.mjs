@@ -79,8 +79,6 @@ class ParseX509CRL extends Operation {
         }
         if (undefinedInputFormat) throw "Undefined input format";
 
-        console.log(input);
-
         const crl = new r.X509CRL(input);
 
         let out = `Certificate Revocation List (CRL):
@@ -178,24 +176,12 @@ function formatCRLExtensions(extensions, indent) {
                 }
                 break;
             case "cRLDistributionPoints":
-                out += `X509v3 CRL Distribution Points:\n`;
+                out += `X509v3 CRL Distribution Points:`;
                 ext.array.forEach((distPoint) => {
-                    out += `\tFull Name:\n`;
-                    distPoint.dpname.full.forEach((name) => {
-                        if (Object.hasOwn(name, "ip")) {
-                            out += `\t\tIP:${name.ip}\n`;
-                        }
-                        if (Object.hasOwn(name, "dns")) {
-                            out += `\t\tDNS:${name.dns}\n`;
-                        }
-                        if (Object.hasOwn(name, "uri")) {
-                            out += `\t\tURI:${name.uri}\n`;
-                        }
-                        if (Object.hasOwn(name, "rfc822")) {
-                            out += `\t\tEMAIL:${name.rfc822}\n`;
-                        }
-                    });
+                    const fullName = `\nFull Name:\n${formatGeneralNames(distPoint.dpname.full, 4)}`;
+                    out += indentString(fullName, 4);
                 });
+                out += `\n`;
                 break;
             case "cRLNumber":
                 if (!Object.hasOwn(ext, "num")) {
@@ -203,9 +189,51 @@ function formatCRLExtensions(extensions, indent) {
                 }
                 out += `X509v3 CRL Number:\n\t${ext.num.hex.toUpperCase()}\n`;
                 break;
+            case "issuerAltName":
+                out += `X509v3 Issuer Alternative Name:\n${formatGeneralNames(ext.array, 4)}\n`;
+                break;
             default:
                 out += `${ext.extname}:\n`;
                 out += `\tUnsupported CRL extension. Try openssl CLI.\n`;
+                break;
+        }
+    });
+
+    return indentString(chop(out), indent);
+}
+
+/**
+ * Format general names array.
+ * @param {Object[]} names
+ * @returns Multi-line formatted string describing all supported general name types.
+ */
+function formatGeneralNames(names, indent) {
+    let out = ``;
+
+    names.forEach((name) => {
+        const key = Object.keys(name)[0];
+
+        switch (key) {
+            case "ip":
+                out += `IP:${name.ip}\n`;
+                break;
+            case "dns":
+                out += `DNS:${name.dns}\n`;
+                break;
+            case "uri":
+                out += `URI:${name.uri}\n`;
+                break;
+            case "rfc822":
+                out += `EMAIL:${name.rfc822}\n`;
+                break;
+            case "dn":
+                out += `DIR:${name.dn.str}\n`;
+                break;
+            case "other":
+                out += `OtherName:${name.other.oid}::${Object.values(name.other.value)[0].str}\n`;
+                break;
+            default:
+                out += `${key}: unsupported general name type`;
                 break;
         }
     });
