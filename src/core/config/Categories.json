@@ -164,6 +164,7 @@
         "name": "Public Key",
         "ops": [
             "Parse X.509 certificate",
+            "Parse X.509 CRL",
             "Parse ASN.1 hex string",
             "PEM to Hex",
             "Hex to PEM",
