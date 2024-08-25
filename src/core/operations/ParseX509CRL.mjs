@@ -6,8 +6,11 @@
 
 import r from "jsrsasign";
 import Operation from "../Operation.mjs";
+import { fromBase64 } from "../lib/Base64.mjs";
+import { toHex } from "../lib/Hex.mjs";
 import { formatDnObj } from "../lib/PublicKey.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Parse X.509 CRL operation
@@ -30,7 +33,7 @@ class ParseX509CRL extends Operation {
             {
                 "name": "Input format",
                 "type": "option",
-                "value": ["PEM"]
+                "value": ["PEM", "DER Hex", "Base64", "Raw"]
             }
         ];
         this.checks = [
@@ -51,6 +54,32 @@ class ParseX509CRL extends Operation {
         if (!input.length) {
             return "No input";
         }
+
+        const inputFormat = args[0];
+
+        let undefinedInputFormat = false;
+        try {
+            switch (inputFormat) {
+                case "DER Hex":
+                    input = input.replace(/\s/g, "").toLowerCase();
+                    break;
+                case "PEM":
+                    break;
+                case "Base64":
+                    input = toHex(fromBase64(input, null, "byteArray"), "");
+                    break;
+                case "Raw":
+                    input = toHex(Utils.strToArrayBuffer(input), "");
+                    break;
+                default:
+                    undefinedInputFormat = true;
+            }
+        } catch (e) {
+            throw "Certificate load error (non-certificate input?)";
+        }
+        if (undefinedInputFormat) throw "Undefined input format";
+
+        console.log(input);
 
         const crl = new r.X509CRL(input);
 
