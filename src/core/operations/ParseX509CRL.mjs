@@ -176,12 +176,11 @@ function formatCRLExtensions(extensions, indent) {
                 }
                 break;
             case "cRLDistributionPoints":
-                out += `X509v3 CRL Distribution Points:`;
+                out += `X509v3 CRL Distribution Points:\n`;
                 ext.array.forEach((distPoint) => {
-                    const fullName = `\nFull Name:\n${formatGeneralNames(distPoint.dpname.full, 4)}`;
-                    out += indentString(fullName, 4);
+                    const fullName = `Full Name:\n${formatGeneralNames(distPoint.dpname.full, 4)}`;
+                    out += indentString(fullName, 4) + "\n";
                 });
-                out += `\n`;
                 break;
             case "cRLNumber":
                 if (!Object.hasOwn(ext, "num")) {
