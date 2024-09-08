@@ -1,6 +1,6 @@
 /**
  * @author tomgond [tom.gonda@gmail.com]
- * @copyright Crown Copyright 2024 
+ * @copyright Crown Copyright 2024
  * @license Apache-2.0
  */
 
