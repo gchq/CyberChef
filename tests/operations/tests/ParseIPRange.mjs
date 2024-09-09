@@ -119,6 +119,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Invalid IPv4 subnet mask error",
+        input: "192.168.0.0/255.255.253.0",
+        expectedOutput: "Invalid subnet mask",
+        recipeConfig: [
+            {
+                "op": "Parse IP range",
+                "args": [true, true, false]
+            },
+        ],
+    },
+    {
         name: "IPv6 subnet out of range error",
         input: "2404:6800:4001::/129",
         expectedOutput: "IPv6 CIDR must be less than 128",
