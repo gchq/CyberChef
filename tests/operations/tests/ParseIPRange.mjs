@@ -20,6 +20,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Parse IPv4 subnet mask",
+        input: "10.0.0.0/255.255.255.252",
+        expectedOutput: "Network: 10.0.0.0\nCIDR: 30\nMask: 255.255.255.252\nRange: 10.0.0.0 - 10.0.0.3\nTotal addresses in range: 4\n\n10.0.0.0\n10.0.0.1\n10.0.0.2\n10.0.0.3",
+        recipeConfig: [
+            {
+                "op": "Parse IP range",
+                "args": [true, true, false]
+            },
+        ],
+    },
+    {
         name: "Parse IPv4 hyphenated",
         input: "10.0.0.0 - 10.0.0.3",
         expectedOutput: "Minimum subnet required to hold this range:\n\tNetwork: 10.0.0.0\n\tCIDR: 30\n\tMask: 255.255.255.252\n\tSubnet range: 10.0.0.0 - 10.0.0.3\n\tTotal addresses in subnet: 4\n\nRange: 10.0.0.0 - 10.0.0.3\nTotal addresses in range: 4\n\n10.0.0.0\n10.0.0.1\n10.0.0.2\n10.0.0.3",
@@ -32,7 +43,7 @@ TestRegister.addTests([
     },
     {
         name: "Parse IPv4 list",
-        input: "10.0.0.8\n10.0.0.5/30\n10.0.0.1\n10.0.0.3",
+        input: "10.0.0.8\n10.0.0.5/30\n10.0.0.1\n10.0.0.5/255.255.255.252\n10.0.0.3\n10.0.0.6/255.255.255.252",
         expectedOutput: "Minimum subnet required to hold this range:\n\tNetwork: 10.0.0.0\n\tCIDR: 28\n\tMask: 255.255.255.240\n\tSubnet range: 10.0.0.0 - 10.0.0.15\n\tTotal addresses in subnet: 16\n\nRange: 10.0.0.1 - 10.0.0.8\nTotal addresses in range: 8\n\n10.0.0.1\n10.0.0.2\n10.0.0.3\n10.0.0.4\n10.0.0.5\n10.0.0.6\n10.0.0.7\n10.0.0.8",
         recipeConfig: [
             {
@@ -121,7 +132,7 @@ TestRegister.addTests([
     {
         name: "invalid IPv6 address error",
         input: "2404:6800:4001:/12",
-        expectedOutput: "Invalid input.\n\nEnter either a CIDR range (e.g. 10.0.0.0/24) or a hyphenated range (e.g. 10.0.0.0 - 10.0.1.0). IPv6 also supported.",
+        expectedOutput: "Invalid input.\n\nThe following input strings are supported:\nCIDR range (e.g. 10.0.0.0/24)\nSubnet mask (e.g. 10.0.0.0/255.255.255.0)\nHyphenated range (e.g. 10.0.0.0 - 10.0.1.0)\nIPv6 also supported.",
         recipeConfig: [
             {
                 "op": "Parse IP range",
