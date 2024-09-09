@@ -190,6 +190,55 @@ export function ipv6HyphenatedRange(range, includeNetworkInfo) {
 }
 
 /**
+ * Parses an IPv4 subnet mask (e.g. 192.168.0.0/255.255.255.0) and displays information about it.
+ *
+ * @param {RegExp} subnetMask
+ * @param {boolean} includeNetworkInfo
+ * @param {boolean} enumerateAddresses
+ * @param {boolean} allowLargeList
+ * @returns {string}
+ */
+export function ipv4SubnetMask(subnetMask, includeNetworkInfo, enumerateAddresses, allowLargeList) {
+    const network = strToIpv4(subnetMask[1]),
+        mask = subnetMask[2];
+    let output = "";
+
+    // Calculate the CIDR
+    const octets = mask.split(".").map(Number);
+    let cidr = 0;
+    for (let i = 0; i < octets.length; i++) {
+        let octet = octets[i];
+        while (octet) {
+            cidr += (octet & 1);  // Check if the last bit is 1
+            octet >>= 1;          // Shift bits to the right
+        }
+    }
+    if (cidr < 0 || cidr > 31) {
+        throw new OperationError("IPv4 CIDR must be less than 32");
+    }
+
+    const ip1 = network & strToIpv4(mask),
+        ip2 = ip1 | ~strToIpv4(mask);
+
+    if (includeNetworkInfo) {
+        output += "Network: " + ipv4ToStr(network) + "\n";
+        output += "CIDR: " + cidr + "\n";
+        output += "Mask: " + mask + "\n";
+        output += "Range: " + ipv4ToStr(ip1) + " - " + ipv4ToStr(ip2) + "\n";
+        output += "Total addresses in range: " + (((ip2 - ip1) >>> 0) + 1) + "\n\n";
+    }
+
+    if (enumerateAddresses) {
+        if (cidr >= 16 || allowLargeList) {
+            output += generateIpv4Range(ip1, ip2).join("\n");
+        } else {
+            output += _LARGE_RANGE_ERROR;
+        }
+    }
+    return output;
+}
+
+/**
  * Parses a list of IPv4 addresses separated by a new line (\n) and displays information
  * about it.
  *

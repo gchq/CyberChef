@@ -7,7 +7,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import {ipv4CidrRange, ipv4HyphenatedRange, ipv4ListedRange, ipv6CidrRange, ipv6HyphenatedRange, ipv6ListedRange} from "../lib/IP.mjs";
+import {ipv4CidrRange, ipv4HyphenatedRange, ipv4SubnetMask, ipv4ListedRange, ipv6CidrRange, ipv6HyphenatedRange, ipv6ListedRange} from "../lib/IP.mjs";
 
 /**
  * Parse IP range operation
@@ -60,6 +60,7 @@ class ParseIPRange extends Operation {
         // Check what type of input we are looking at
         const ipv4CidrRegex = /^\s*((?:\d{1,3}\.){3}\d{1,3})\/(\d\d?)\s*$/,
             ipv4RangeRegex = /^\s*((?:\d{1,3}\.){3}\d{1,3})\s*-\s*((?:\d{1,3}\.){3}\d{1,3})\s*$/,
+            ipv4SubnetMaskRegex = /^\s*((?:\d{1,3}\.){3}\d{1,3})\/((?:\d{1,3}\.){3}\d{1,3})\s*$/,
             ipv4ListRegex = /^\s*(((?:\d{1,3}\.){3}\d{1,3})(\/(\d\d?))?(\n|$)(\n*))+\s*$/,
             ipv6CidrRegex = /^\s*(((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\4)::|:\b|(?![\dA-F])))|(?!\3\4)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\/(\d\d?\d?)\s*$/i,
             ipv6RangeRegex = /^\s*(((?=.*::)(?!.*::[^-]+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\4)::|:\b|(?![\dA-F])))|(?!\3\4)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\s*-\s*(((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\17)::|:\b|(?![\dA-F])))|(?!\16\17)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4}))\s*$/i,
@@ -70,6 +71,8 @@ class ParseIPRange extends Operation {
             return ipv4CidrRange(match, includeNetworkInfo, enumerateAddresses, allowLargeList);
         } else if ((match = ipv4RangeRegex.exec(input))) {
             return ipv4HyphenatedRange(match, includeNetworkInfo, enumerateAddresses, allowLargeList);
+        } else if ((match = ipv4SubnetMaskRegex.exec(input))) {
+            return ipv4SubnetMask(match, includeNetworkInfo, enumerateAddresses, allowLargeList);
         } else if ((match = ipv4ListRegex.exec(input))) {
             return ipv4ListedRange(match, includeNetworkInfo, enumerateAddresses, allowLargeList);
         } else if ((match = ipv6CidrRegex.exec(input))) {
