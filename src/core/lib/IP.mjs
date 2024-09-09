@@ -25,7 +25,7 @@ export function ipv4CidrRange(cidr, includeNetworkInfo, enumerateAddresses, allo
         cidrRange = parseInt(cidr[2], 10);
     let output = "";
 
-    if (cidrRange < 0 || cidrRange > 31) {
+    if (!validateCidr(cidrRange)) {
         throw new OperationError("IPv4 CIDR must be less than 32");
     }
 
@@ -192,38 +192,40 @@ export function ipv6HyphenatedRange(range, includeNetworkInfo) {
 /**
  * Parses an IPv4 subnet mask (e.g. 192.168.0.0/255.255.255.0) and displays information about it.
  *
- * @param {RegExp} subnetMask
+ * @param {RegExp} match
  * @param {boolean} includeNetworkInfo
  * @param {boolean} enumerateAddresses
  * @param {boolean} allowLargeList
  * @returns {string}
  */
-export function ipv4SubnetMask(subnetMask, includeNetworkInfo, enumerateAddresses, allowLargeList) {
-    const network = strToIpv4(subnetMask[1]),
-        mask = subnetMask[2];
-    let output = "";
+export function ipv4SubnetMask(match, includeNetworkInfo, enumerateAddresses, allowLargeList) {
+    const network = strToIpv4(match[1]),
+        mask = strToIpv4(match[2]);
+    let output = "",
+        maskCalculate = mask,
+        cidr = 0;
+
+    // Validate the subnet mask
+    if (!validateSubnetMask(mask)) {
+        throw new OperationError("Invalid subnet mask");
+    }
 
     // Calculate the CIDR
-    const octets = mask.split(".").map(Number);
-    let cidr = 0;
-    for (let i = 0; i < octets.length; i++) {
-        let octet = octets[i];
-        while (octet) {
-            cidr += (octet & 1);  // Check if the last bit is 1
-            octet >>= 1;          // Shift bits to the right
-        }
+    while (maskCalculate) {
+        cidr += maskCalculate & 1;
+        maskCalculate >>>= 1;
     }
-    if (cidr < 0 || cidr > 31) {
+    if (!validateCidr(cidr)) {
         throw new OperationError("IPv4 CIDR must be less than 32");
     }
 
-    const ip1 = network & strToIpv4(mask),
-        ip2 = ip1 | ~strToIpv4(mask);
+    const ip1 = network & mask,
+        ip2 = ip1 | ~mask;
 
     if (includeNetworkInfo) {
         output += "Network: " + ipv4ToStr(network) + "\n";
         output += "CIDR: " + cidr + "\n";
-        output += "Mask: " + mask + "\n";
+        output += "Mask: " + ipv4ToStr(mask) + "\n";
         output += "Range: " + ipv4ToStr(ip1) + " - " + ipv4ToStr(ip2) + "\n";
         output += "Total addresses in range: " + (((ip2 - ip1) >>> 0) + 1) + "\n\n";
     }
@@ -256,15 +258,27 @@ export function ipv4ListedRange(match, includeNetworkInfo, enumerateAddresses, a
     const ipv4CidrList = ipv4List.filter(function(a) {
         return a.includes("/");
     });
+    const cidrCheck = /^\d\d?$/;
     for (let i = 0; i < ipv4CidrList.length; i++) {
         const network = strToIpv4(ipv4CidrList[i].split("/")[0]);
-        const cidrRange = parseInt(ipv4CidrList[i].split("/")[1], 10);
-        if (cidrRange < 0 || cidrRange > 31) {
-            throw new OperationError("IPv4 CIDR must be less than 32");
+        const cidr = ipv4CidrList[i].split("/")[1];
+        let mask;
+
+        // Check if this is a CIDR or subnet mask
+        if (cidrCheck.exec(cidr)) {
+            const cidrRange = parseInt(cidr, 10);
+            if (!validateCidr(cidrRange)) {
+                throw new OperationError("IPv4 CIDR must be less than 32");
+            }
+            mask = ~(0xFFFFFFFF >>> cidrRange);
+        } else {
+            mask = strToIpv4(cidr);
+            if (!validateSubnetMask(mask)) {
+                throw new OperationError("Invalid subnet mask");
+            }
         }
-        const mask = ~(0xFFFFFFFF >>> cidrRange),
-            cidrIp1 = network & mask,
-            cidrIp2 = cidrIp1 | ~mask;
+        const cidrIp1 = network & mask;
+        const cidrIp2 = cidrIp1 | ~mask;
         ipv4List.splice(ipv4List.indexOf(ipv4CidrList[i]), 1);
         ipv4List.push(ipv4ToStr(cidrIp1), ipv4ToStr(cidrIp2));
     }
@@ -557,6 +571,34 @@ export function ipv6Compare(a, b) {
         }
     }
     return 0;
+}
+/**
+ * Validates a given subnet mask
+ *
+ * @param {string} mask
+ * @returns {boolean}
+ */
+export function validateSubnetMask (mask) {
+    for (; mask !== 0; mask <<= 1) {
+        if ((mask & (1<<31)) === 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Validates a given CIDR
+ *
+ * @param {string} cidr
+ * @returns {boolean}
+ */
+export function validateCidr (cidr) {
+    if (cidr < 0 || cidr > 31) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 const _LARGE_RANGE_ERROR = "The specified range contains more than 65,536 addresses. Running this query could crash your browser. If you want to run it, select the \"Allow large queries\" option. You are advised to turn off \"Auto Bake\" whilst editing large ranges.";
