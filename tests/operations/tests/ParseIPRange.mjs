@@ -132,7 +132,7 @@ TestRegister.addTests([
     {
         name: "invalid IPv6 address error",
         input: "2404:6800:4001:/12",
-        expectedOutput: "Invalid input.\n\nThe following input strings are supported:\nCIDR range (e.g. 10.0.0.0/24)\nSubnet mask (e.g. 10.0.0.0/255.255.255.0)\nHyphenated range (e.g. 10.0.0.0 - 10.0.1.0)\nIPv6 also supported.",
+        expectedOutput: "Invalid input.\n\nThe following input strings are supported:\nCIDR range (e.g. 10.0.0.0/24)\nSubnet mask (e.g. 10.0.0.0/255.255.255.0)\nHyphenated range (e.g. 10.0.0.0 - 10.0.1.0). Only one hyphenated range is allowed\nIPv6 also supported.",
         recipeConfig: [
             {
                 "op": "Parse IP range",

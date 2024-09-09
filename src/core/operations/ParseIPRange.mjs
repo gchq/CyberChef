@@ -22,7 +22,7 @@ class ParseIPRange extends Operation {
 
         this.name = "Parse IP range";
         this.module = "Default";
-        this.description = "Given a CIDR range (e.g. <code>10.0.0.0/24</code>), IP and subnet mask (e.g <code>10.0.0.0/255.255.255.0</code>), hyphenated range (e.g. <code>10.0.0.0 - 10.0.1.0</code>), or a list of IPs and/or CIDR ranges/subnet masks (separated by a new line), this operation provides network information and enumerates all IP addresses in the range.<br><br>IPv6 is supported but will not be enumerated.";
+        this.description = "This operation provides network information and enumerates all IP addresses in the given range.<br>Supported inputs:<br><ul><li>IP with a CIDR (e.g. <code>10.0.0.0/24</code>)</li><li>IP with a subnet mask (e.g <code>10.0.0.0/255.255.255.0</code>)</li><li>Hyphenated range (e.g. <code>10.0.0.0 - 10.0.1.0</code>). Only one hyphenated range is allowed</li><li>List of IPs and/or CIDR ranges/subnet masks separated by a new line</li></ul><br>IPv6 is supported but will not be enumerated.";
         this.infoURL = "https://wikipedia.org/wiki/Subnetwork";
         this.inputType = "string";
         this.outputType = "string";
@@ -82,7 +82,7 @@ class ParseIPRange extends Operation {
         } else if ((match = ipv6ListRegex.exec(input))) {
             return ipv6ListedRange(match, includeNetworkInfo);
         } else {
-            throw new OperationError("Invalid input.\n\nThe following input strings are supported:\nCIDR range (e.g. 10.0.0.0/24)\nSubnet mask (e.g. 10.0.0.0/255.255.255.0)\nHyphenated range (e.g. 10.0.0.0 - 10.0.1.0)\nIPv6 also supported.");
+            throw new OperationError("Invalid input.\n\nThe following input strings are supported:\nCIDR range (e.g. 10.0.0.0/24)\nSubnet mask (e.g. 10.0.0.0/255.255.255.0)\nHyphenated range (e.g. 10.0.0.0 - 10.0.1.0). Only one hyphenated range is allowed\nIPv6 also supported.");
         }
     }
 
