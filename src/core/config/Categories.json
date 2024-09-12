@@ -280,6 +280,7 @@
             "To Upper case",
             "To Lower case",
             "Swap case",
+            "Alternating Caps",
             "To Case Insensitive Regex",
             "From Case Insensitive Regex",
             "Add line numbers",
