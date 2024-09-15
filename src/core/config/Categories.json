@@ -236,6 +236,7 @@
             "Parse IPv4 header",
             "Parse TCP",
             "Parse UDP",
+            "Strip UDP header",
             "Parse SSH Host Key",
             "Parse URI",
             "URL Encode",
