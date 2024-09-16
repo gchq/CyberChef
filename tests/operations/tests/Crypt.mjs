@@ -580,8 +580,7 @@ Tag: a8f04c4d93bbef82bef61a103371aef9`,
         input: "",
         expectedOutput: `Invalid key length: 0 bytes
 
-DES uses a key length of 8 bytes (64 bits).
-Triple DES uses a key length of 24 bytes (192 bits).`,
+DES uses a key length of 8 bytes (64 bits).`,
         recipeConfig: [
             {
                 "op": "DES Encrypt",
@@ -674,8 +673,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
         input: "",
         expectedOutput: `Invalid key length: 0 bytes
 
-Triple DES uses a key length of 24 bytes (192 bits).
-DES uses a key length of 8 bytes (64 bits).`,
+Triple DES uses a key length of 24 bytes (192 bits).`,
         recipeConfig: [
             {
                 "op": "Triple DES Encrypt",
@@ -1300,8 +1298,7 @@ The following algorithms will be used based on the size of the key:
         input: "",
         expectedOutput: `Invalid key length: 0 bytes
 
-DES uses a key length of 8 bytes (64 bits).
-Triple DES uses a key length of 24 bytes (192 bits).`,
+DES uses a key length of 8 bytes (64 bits).`,
         recipeConfig: [
             {
                 "op": "DES Decrypt",
@@ -1394,8 +1391,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
         input: "",
         expectedOutput: `Invalid key length: 0 bytes
 
-Triple DES uses a key length of 24 bytes (192 bits).
-DES uses a key length of 8 bytes (64 bits).`,
+Triple DES uses a key length of 24 bytes (192 bits).`,
         recipeConfig: [
             {
                 "op": "Triple DES Decrypt",
