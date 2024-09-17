@@ -54,7 +54,7 @@ class ZStandardDecompress extends Operation {
 
 
         if (isWorkerEnvironment()) self.sendStatusMessage("Loading ZStandard...");
-        return new Promise( (resolve, reject) => {
+        return new Promise((resolve, reject) => {
             const compressed = new Uint8Array(input);
             try {
                 const outChunks = []; // Array of Uint8Array chunks
