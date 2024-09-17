@@ -107,7 +107,7 @@ TestRegister.addTests([
     },
     {
         name: "ZStandard Decompress",
-        input: "KLUv/QRYwQAAVGhlIGNhdCBzYXQgb24gdGhlIG1hdC4KpvSd8w==",
+        input: "KLUv/QRYuQAAVGhlIGNhdCBzYXQgb24gdGhlIG1hdC4tJ481",
         expectedOutput: "The cat sat on the mat.",
         recipeConfig: [
             {
@@ -116,7 +116,7 @@ TestRegister.addTests([
             },
             {
                 "op": "ZStandard Decompress",
-                "args": []
+                "args": [65536]
             }
         ],
     }
