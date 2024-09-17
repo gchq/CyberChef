@@ -4,7 +4,6 @@
  * @license Apache-2.0
  */
 
-global.document = {};
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import {isWorkerEnvironment} from "../Utils.mjs";
@@ -47,20 +46,21 @@ class ZStandardDecompress extends Operation {
             throw new OperationError("Please provide an input.");
         }
         // Validate input starts with ZStandard magic number
+        const ZSTD_MAGIC_NUMBER = [0x28, 0xb5, 0x2f, 0xfd];
         const magicNumber = new Uint8Array(input, 0, 4);
-        if (magicNumber[0] !== 0x28 || magicNumber[1] !== 0xb5 || magicNumber[2] !== 0x2f || magicNumber[3] !== 0xfd) {
+        if (!ZSTD_MAGIC_NUMBER.every((val, index) => val === magicNumber[index])) {
             throw new OperationError("Invalid ZStandard input: does not start with magic number.");
         }
 
+
         if (isWorkerEnvironment()) self.sendStatusMessage("Loading ZStandard...");
-        return new Promise(async (resolve, reject) => {
+        return new Promise( (resolve, reject) => {
             const compressed = new Uint8Array(input);
             try {
                 const outChunks = []; // Array of Uint8Array chunks
                 const stream = new fzstd.Decompress((chunk, isLast) => {
-                    // Add to list of output chunks
+                    // Add to the list of output chunks
                     outChunks.push(chunk);
-                    // Log after all chunks decompressed
                     if (isLast) {
                         // Combine all chunks into a single Uint8Array
                         const totalLength = outChunks.reduce((sum, chunk) => sum + chunk.length, 0);
@@ -73,8 +73,9 @@ class ZStandardDecompress extends Operation {
                         resolve(result.buffer);
                     }
                 });
+                const chunks = Math.ceil(compressed.length / chunkSize);
                 for (let i = 0; i < compressed.length; i += chunkSize) {
-                    if (isWorkerEnvironment()) self.sendStatusMessage(`Decompressing chunk ${i / chunkSize + 1} of ${Math.ceil(compressed.length / chunkSize)}`);
+                    if (isWorkerEnvironment()) self.sendStatusMessage(`Decompressing chunk ${i / chunkSize + 1} of ${chunks}...`);
                     const chunk = compressed.subarray(i, i + chunkSize);
                     stream.push(chunk);
                 }
