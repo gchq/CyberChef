@@ -105,4 +105,19 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "ZStandard Decompress",
+        input: "KLUv/QRYwQAAVGhlIGNhdCBzYXQgb24gdGhlIG1hdC4KpvSd8w==",
+        expectedOutput: "The cat sat on the mat.",
+        recipeConfig: [
+            {
+                "op": "From Base64",
+                "args": []
+            },
+            {
+                "op": "ZStandard Decompress",
+                "args": []
+            }
+        ],
+    }
 ]);
