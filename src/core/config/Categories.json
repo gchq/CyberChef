@@ -190,7 +190,8 @@
             "Parse CSR",
             "Public Key from Certificate",
             "Public Key from Private Key",
-            "SM2 Encrypt"
+            "SM2 Encrypt",
+            "SM2 Decrypt"
         ]
     },
     {
