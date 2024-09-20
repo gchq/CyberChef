@@ -126,7 +126,6 @@ class IPv6TransitionAddresses extends Operation {
 	 */
         function macTransition(input) {
             let output = "";
-            console.log(input);
             const MACPARTS = input.split(":");
             if (!args[1]) {
                 output += "EUI-64 Interface ID: ";
