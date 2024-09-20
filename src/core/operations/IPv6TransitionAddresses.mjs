@@ -43,7 +43,7 @@ class IPv6TransitionAddresses extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const XOR = {"0": "2", "1": "3", "2": "0", "3": "1", "4": "6", "5": "7", "6": "4", "7": "5", "8": "A", "9": "B", "A": "8", "B": "9", "C": "E", "D": "F", "E": "C", "F": "D"};
+        const XOR = {"0": "2", "1": "3", "2": "0", "3": "1", "4": "6", "5": "7", "6": "4", "7": "5", "8": "a", "9": "b", "a": "8", "b": "9", "c": "e", "d": "f", "e": "c", "f": "d"};
 
         /**
 	 * Function to convert to hex
@@ -126,12 +126,13 @@ class IPv6TransitionAddresses extends Operation {
 	 */
         function macTransition(input) {
             let output = "";
+            console.log(input);
             const MACPARTS = input.split(":");
             if (!args[1]) {
                 output += "EUI-64 Interface ID: ";
             }
             const MAC = MACPARTS[0] + MACPARTS[1] + ":" + MACPARTS[2] + "ff:fe" + MACPARTS[3] + ":" + MACPARTS[4] + MACPARTS[5];
-            output += MAC.slice(0, 1) + XOR[MAC.slice(1, 2).toUpperCase()].toLowerCase() + MAC.slice(2);
+            output += MAC.slice(0, 1) + XOR[MAC.slice(1, 2)] + MAC.slice(2);
 
             return output;
         }
@@ -183,17 +184,18 @@ class IPv6TransitionAddresses extends Operation {
         let inputs = input.split("\n");
         // Remove blank rows
         inputs = inputs.filter(Boolean);
-        for (let input = 0; input < inputs.length; input++) {
+
+        for (let i = 0; i < inputs.length; i++) {
             // if ignore ranges is checked and input is a range, skip
-            if ((args[0] && !inputs[input].includes("/")) || (!args[0])) {
-                if (/^[0-9]{1,3}(?:\.[0-9]{1,3}){3}$/.test(inputs[input])) {
-                    output += ipTransition(inputs[input], false);
-                } else if (/\/24$/.test(inputs[input])) {
-                    output += ipTransition(inputs[input], true);
-                } else if (/^([0-9A-F]{2}:){5}[0-9A-F]{2}$/.test(inputs[input].toUpperCase())) {
-                    output += macTransition(input.toLowerCase());
-                } else if (/^((?:[0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,5}(?::[0-9a-fA-F]{1,4}){1,2}|(?:[0-9a-fA-F]{1,4}:){1,4}(?::[0-9a-fA-F]{1,4}){1,3}|(?:[0-9a-fA-F]{1,4}:){1,3}(?::[0-9a-fA-F]{1,4}){1,4}|(?:[0-9a-fA-F]{1,4}:){1,2}(?::[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:(?:(?::[0-9a-fA-F]{1,4}){1,6})|:(?:(?::[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(?::[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(?:ffff(?::0{1,4}){0,1}:){0,1}(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])|(?:[0-9a-fA-F]{1,4}:){1,4}:(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/.test(inputs[input])) {
-                    output += unTransition(inputs[input]);
+            if ((args[0] && !inputs[i].includes("/")) || (!args[0])) {
+                if (/^[0-9]{1,3}(?:\.[0-9]{1,3}){3}$/.test(inputs[i])) {
+                    output += ipTransition(inputs[i], false);
+                } else if (/\/24$/.test(inputs[i])) {
+                    output += ipTransition(inputs[i], true);
+                } else if (/^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$/.test(inputs[i])) {
+                    output += macTransition(inputs[i]);
+                } else if (/^((?:[0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,5}(?::[0-9a-fA-F]{1,4}){1,2}|(?:[0-9a-fA-F]{1,4}:){1,4}(?::[0-9a-fA-F]{1,4}){1,3}|(?:[0-9a-fA-F]{1,4}:){1,3}(?::[0-9a-fA-F]{1,4}){1,4}|(?:[0-9a-fA-F]{1,4}:){1,2}(?::[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:(?:(?::[0-9a-fA-F]{1,4}){1,6})|:(?:(?::[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(?::[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(?:ffff(?::0{1,4}){0,1}:){0,1}(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])|(?:[0-9a-fA-F]{1,4}:){1,4}:(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/.test(inputs[i])) {
+                    output += unTransition(inputs[i]);
                 } else {
                     output = "Enter compressed or expanded IPv6 address, IPv4 address or MAC Address.";
                 }
