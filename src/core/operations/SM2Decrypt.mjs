@@ -56,7 +56,8 @@ class SM2Decrypt extends Operation {
         var sm2 = new SM2(curveName, inputFormat);
         sm2.setPrivateKey(privateKey);
 
-        var result = sm2.decrypt(new Uint8Array(input))
+        
+        var result = sm2.decrypt(input);
         return result
     }
 

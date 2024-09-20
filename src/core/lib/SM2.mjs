@@ -5,6 +5,7 @@
  * @license Apache-2.0
  */
 
+import OperationError from "../errors/OperationError.mjs";
 import { fromHex } from "../lib/Hex.mjs";
 import Utils from "../Utils.mjs";
 import Sm3 from "crypto-api/src/hasher/sm3.mjs";
@@ -42,7 +43,6 @@ export class SM2 {
      * @param {string} publicKeyY 
      */
     setPublicKey(publicKeyX, publicKeyY) {
-        console.log('Set public key')
         /*
         * TODO: This needs some additional length validation; and checking for errors in the decoding process
         * TODO: Can probably support other public key encoding methods here as well in the future
@@ -59,8 +59,8 @@ export class SM2 {
      * 
      * @param {string} privateKey 
      */
-    setPrivateKey(privateKey) {
-        this.privateKey = null; //Somehow take hex input and translate back to a BigInteger???
+    setPrivateKey(privateKeyHex) {
+        this.privateKey = new r.BigInteger(privateKeyHex, 16);
     }
     
     /**
@@ -115,10 +115,21 @@ export class SM2 {
      * @param {*} input 
      */
     decrypt(input) {
-        /*
-        * 
-        */
-        var c1 = this.ecParams.curve.decodePointHex("04" + publicKeyX + publicKeyY);
+        var c1X = input.slice(0, 64);
+        var c1Y = input.slice(64, 128);
+
+        var c3 = ""
+        var c2 = ""
+
+        if (this.format == "C1C3C2") {
+            c3 = input.slice(128,192);
+            c2 = input.slice(192);
+        } else {
+            c2 = input.slice(128, -64);
+            c3 = input.slice(-64);
+        }
+        c2 = Uint8Array.from(fromHex(c2))
+        var c1 = this.ecParams.curve.decodePointHex("04" + c1X + c1Y);
 
         /*
         * Compute the p2 (secret) value by taking the C1 point provided in the encrypted package, and multiplying by the private k value
@@ -128,12 +139,18 @@ export class SM2 {
         /*
          * Similar to encryption; compute sufficient length key material and XOR the input data to recover the original message
          */
-        var key = this.kdf(p2, input.byteLength);
-        for (let i = 0; i < input.byteLength; i++) {
-            input[i] ^= Utils.ord(key[i]);
+        var key = this.kdf(p2, c2.byteLength);
+
+        for (let i = 0; i < c2.byteLength; i++) {
+            c2[i] ^= Utils.ord(key[i]);
         }
-        console.log(input)
-        //var dec = Buffer.from(input).toString('hex');
+
+        var check = this.c3(p2, c2);
+        if (check === c3) {
+            return c2.buffer;
+        } else {
+            throw new OperationError("Decryption Error -- Computed Hashes Do Not Match");
+        }
     }
 
 
