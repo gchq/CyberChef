@@ -35,12 +35,14 @@ class SM2Decrypt extends Operation {
             {
                 "name": "Input Format",
                 "type": "option",
-                "value": ["C1C3C2", "C1C2C3"]
+                "value": ["C1C3C2", "C1C2C3"],
+                "defaultIndex": 0
             },
             {
                 name: "Curve",
                 type: "option",
-                "value": ["sm2p256v1"]
+                "value": ["sm2p256v1"],
+                "defaultIndex": 0
             }
         ];
     }
