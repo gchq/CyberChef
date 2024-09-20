@@ -80,11 +80,12 @@ class SM2Encrypt extends Operation {
      */
     run(input, args) {
         const [privateKeyX, privateKeyY, outputFormat, curveName] = args;
-
         this.outputFormat = outputFormat;
-
         this.ecParams = r.crypto.ECParameterDB.getByName(curveName);
-
+        /*
+        * TODO: This needs some additional length validation; and checking for errors in the decoding process
+        * TODO: Can probably support other public key encoding methods here as well in the future
+        */
         this.publicKey = this.ecParams.curve.decodePointHex("04" + privateKeyX + privateKeyY);
 
         if (this.publicKey.isInfinity()) {
@@ -92,7 +93,6 @@ class SM2Encrypt extends Operation {
         }
 
         var result = this.encrypt(new Uint8Array(input))
-
         return result
     }
 
@@ -117,31 +117,43 @@ class SM2Encrypt extends Operation {
         return pos;
     }
 
+    /**
+     * Main encryption function; takes user input, processes encryption and returns the result in hex (with the components arranged as configured by the user args)
+     * 
+     * @param {*} input 
+     * @returns {string}
+     */
     encrypt(input) {
-        const n = this.ecParams.n
         const G = this.ecParams.G
-        
+
+        /*
+        * Compute a new, random public key along the same elliptic curve to form the starting point for our encryption process (record the resulting X and Y as hex to provide as part of the operation output)
+        * k: Randomly generated BigInteger
+        * c1: Result of dotting our curve generator point `G` with the value of `k`
+        */
         var k = this.generatePublicKey();
         var c1 = G.multiply(k);
-
-        var bic1X = c1.getX().toBigInteger();
-        var bic1Y = c1.getY().toBigInteger();
-
-        var charlen = this.ecParams.keycharlen;
-        var hexC1X   = ("0000000000" + bic1X.toString(16)).slice(- charlen);
-        var hexC1Y   = ("0000000000" + bic1Y.toString(16)).slice(- charlen);
+        const [hexC1X, hexC1Y] = this.getPointAsHex(c1);
 
         const p2 = this.publicKey.multiply(k);
 
+        /*
+        * Compute the C3 SM3 hash before we transform the array
+        */
         var c3 = this.c3(p2, input);
 
+        /*
+        * Genreate a proper length encryption key, XOR iteratively, and convert newly encrypted data to hex
+        */
         var key = this.kdf(p2, input.byteLength);
-
         for (let i = 0; i < input.byteLength; i++) {
             input[i] ^= Utils.ord(key[i]);
         }
         var c2 = Buffer.from(input).toString('hex');
 
+        /*
+         * Check user input specs; order the output components as selected
+         */
         if (this.outputFormat == "C1C3C2") {
             return hexC1X + hexC1Y + c3 + c2;
         } else {
@@ -149,25 +161,39 @@ class SM2Encrypt extends Operation {
         }
     }
 
+    /**
+     * Generates a large random number
+     * 
+     * @param {*} limit 
+     * @returns 
+     */
     getBigRandom(limit) {
         return new r.BigInteger(limit.bitLength(), this.rng)
 	    .mod(limit.subtract(r.BigInteger.ONE))
 	    .add(r.BigInteger.ONE);
     }
 
+    /**
+     * Helper function for generating a large random K number; utilized for generating our initial C1 point
+     * TODO: Do we need to do any sort of validation on the resulting k values? 
+     * 
+     * @returns {BigInteger}
+     */
     generatePublicKey() {
         const n = this.ecParams.n;
         var k = this.getBigRandom(n);
         return k;
     }
 
+    /**
+     * SM2 Key Derivation Function (KDF); Takes P2 point, and generates a key material stream large enough to encrypt all of the input data
+     * 
+     * @param {*} p2 
+     * @param {*} len 
+     * @returns {string}
+     */
     kdf(p2, len) {
-        var biX = p2.getX().toBigInteger();
-        var biY = p2.getY().toBigInteger();
-
-        var charlen = this.ecParams.keycharlen;
-        var hX   = ("0000000000" + biX.toString(16)).slice(- charlen);
-        var hY   = ("0000000000" + biY.toString(16)).slice(- charlen);
+        const [hX, hY] = this.getPointAsHex(p2);
 
         var total = Math.ceil(len / 32) + 1;
         var cnt = 1;
@@ -180,17 +206,18 @@ class SM2Encrypt extends Operation {
             keyMaterial += this.sm3(overall);
             cnt++;
         }
-
         return keyMaterial
     }
 
+    /**
+     * Calculates the C3 component of our final encrypted payload; which is the SM3 hash of the P2 point and the original, unencrypted input data
+     * 
+     * @param {*} p2 
+     * @param {*} input 
+     * @returns {string} 
+     */
     c3(p2, input) {
-        var biX = p2.getX().toBigInteger();
-        var biY = p2.getY().toBigInteger();
-
-        var charlen = this.ecParams.keycharlen;
-        var hX   = ("0000000000" + biX.toString(16)).slice(- charlen);
-        var hY   = ("0000000000" + biY.toString(16)).slice(- charlen);
+        const [hX, hY] = this.getPointAsHex(p2);
 
         var overall = fromHex(hX).concat(Array.from(input)).concat(fromHex(hY));
 
@@ -198,11 +225,33 @@ class SM2Encrypt extends Operation {
 
     }
 
+    /**
+     * SM3 setup helper function; takes input data as an array, processes the hash and returns the result
+     * 
+     * @param {*} data 
+     * @returns {string}
+     */
     sm3(data) {
         var hashData = Utils.arrayBufferToStr(Uint8Array.from(data).buffer, false);
         const hasher = new Sm3();
         hasher.update(hashData);
         return hasher.finalize();
+    }
+
+    /**
+    * Utility function, returns an elliptic curve points X and Y values as hex;
+    * 
+    * @param {EcPointFp} point
+    * @returns {[]}
+    */
+    getPointAsHex(point) {
+        var biX = point.getX().toBigInteger();
+        var biY = point.getY().toBigInteger();
+
+        var charlen = this.ecParams.keycharlen;
+        var hX   = ("0000000000" + biX.toString(16)).slice(- charlen);
+        var hY   = ("0000000000" + biY.toString(16)).slice(- charlen);
+        return [hX, hY]
     }
 
 }
