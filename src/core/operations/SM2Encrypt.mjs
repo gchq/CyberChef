@@ -5,15 +5,8 @@
  */
 
 import Operation from "../Operation.mjs";
-import OperationError from "../errors/OperationError.mjs";
 
 import { SM2 } from "../lib/SM2.mjs";
-
-import { fromHex } from "../lib/Hex.mjs";
-import Utils from "../Utils.mjs";
-import Sm3 from "crypto-api/src/hasher/sm3.mjs";
-import {toHex} from "crypto-api/src/encoder/hex.mjs";
-import r from "jsrsasign";
 
 /**
  * SM2 Encrypt operation
@@ -68,11 +61,11 @@ class SM2Encrypt extends Operation {
         const [publicKeyX, publicKeyY, outputFormat, curveName] = args;
         this.outputFormat = outputFormat;
 
-        var sm2 = new SM2(curveName, outputFormat);
+        const sm2 = new SM2(curveName, outputFormat);
         sm2.setPublicKey(publicKeyX, publicKeyY);
 
-        var result = sm2.encrypt(new Uint8Array(input))
-        return result
+        const result = sm2.encrypt(new Uint8Array(input));
+        return result;
     }
 
     /**
@@ -85,11 +78,11 @@ class SM2Encrypt extends Operation {
      * @returns {Object[]} pos
      */
     highlight(pos, args) {
-        const [privateKeyX, privateKeyY, outputFormat, curveName] = args;
-        var num = pos[0].end - pos[0].start
-        var adjust = 128
-        if (outputFormat == "C1C3C2") {
-            adjust = 192
+        const outputFormat = args[2];
+        const num = pos[0].end - pos[0].start;
+        let adjust = 128;
+        if (outputFormat === "C1C3C2") {
+            adjust = 192;
         }
         pos[0].start = Math.ceil(pos[0].start + adjust);
         pos[0].end = Math.floor(pos[0].end + adjust + num);

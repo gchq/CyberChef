@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation.mjs";
-import OperationError from "../errors/OperationError.mjs";
 
 import { SM2 } from "../lib/SM2.mjs";
 
@@ -55,12 +54,11 @@ class SM2Decrypt extends Operation {
     run(input, args) {
         const [privateKey, inputFormat, curveName] = args;
 
-        var sm2 = new SM2(curveName, inputFormat);
+        const sm2 = new SM2(curveName, inputFormat);
         sm2.setPrivateKey(privateKey);
 
-        
-        var result = sm2.decrypt(input);
-        return result
+        const result = sm2.decrypt(input);
+        return result;
     }
 
 }
