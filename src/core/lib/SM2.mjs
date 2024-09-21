@@ -12,7 +12,16 @@ import Sm3 from "crypto-api/src/hasher/sm3.mjs";
 import {toHex} from "crypto-api/src/encoder/hex.mjs";
 import r from "jsrsasign";
 
+/**
+ * SM2 Class for encryption and decryption operations
+ */
 export class SM2 {
+    /**
+     * Constructor for SM2 class; sets up with the curve and the output format as specified in user args
+     *
+     * @param {*} curve 
+     * @param {*} format 
+     */
     constructor(curve, format) {
         this.ecParams = null;
         this.rng = new r.SecureRandom();
@@ -20,15 +29,15 @@ export class SM2 {
         For any additional curve definitions utilized by SM2, add another block like the below for that curve, then add the curve name to the Curve selection dropdown
         */
         r.crypto.ECParameterDB.regist(
-            'sm2p256v1', // name / p = 2**256 - 2**224 - 2**96 + 2**64 - 1
+            "sm2p256v1", // name / p = 2**256 - 2**224 - 2**96 + 2**64 - 1
             256,
-            'FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF', // p
-            'FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFC', // a
-            '28E9FA9E9D9F5E344D5A9E4BCF6509A7F39789F515AB8F92DDBCBD414D940E93', // b
-            'FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123', // n
-            '1', // h
-            '32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7', // gx
-            'BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0', // gy
+            "FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF", // p
+            "FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFC", // a
+            "28E9FA9E9D9F5E344D5A9E4BCF6509A7F39789F515AB8F92DDBCBD414D940E93", // b
+            "FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123", // n
+            "1", // h
+            "32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7", // gx
+            "BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0", // gy
             []
         ) // alias
         this.ecParams = r.crypto.ECParameterDB.getByName(curve);
@@ -38,9 +47,9 @@ export class SM2 {
 
     /**
      * Set the public key coordinates for the SM2 class
-     * 
-     * @param {string} publicKeyX 
-     * @param {string} publicKeyY 
+     *
+     * @param {string} publicKeyX
+     * @param {string} publicKeyY
      */
     setPublicKey(publicKeyX, publicKeyY) {
         /*
@@ -56,17 +65,17 @@ export class SM2 {
 
     /**
      * Set the private key value for the SM2 class
-     * 
-     * @param {string} privateKey 
+     *
+     * @param {string} privateKey
      */
     setPrivateKey(privateKeyHex) {
         this.privateKey = new r.BigInteger(privateKeyHex, 16);
     }
-    
+
     /**
      * Main encryption function; takes user input, processes encryption and returns the result in hex (with the components arranged as configured by the user args)
-     * 
-     * @param {*} input 
+     *
+     * @param {*} input
      * @returns {string}
      */
     encrypt(input) {
@@ -111,8 +120,8 @@ export class SM2 {
     }
     /**
      * Function to decrypt an SM2 encrypted message
-     * 
-     * @param {*} input 
+     *
+     * @param {*} input
      */
     decrypt(input) {
         var c1X = input.slice(0, 64);
