@@ -4,6 +4,7 @@
  * @license Apache-2.0
  */
 
+import OperationError from "../errors/OperationError.mjs";
 import Operation from "../Operation.mjs";
 
 import { SM2 } from "../lib/SM2.mjs";
@@ -53,6 +54,10 @@ class SM2Decrypt extends Operation {
      */
     run(input, args) {
         const [privateKey, inputFormat, curveName] = args;
+
+        if (privateKey.length !== 64) {
+            throw new OperationError("Input private key must be in hex; and should be 32 bytes");
+        }
 
         const sm2 = new SM2(curveName, inputFormat);
         sm2.setPrivateKey(privateKey);

@@ -4,6 +4,7 @@
  * @license Apache-2.0
  */
 
+import OperationError from "../errors/OperationError.mjs";
 import Operation from "../Operation.mjs";
 
 import { SM2 } from "../lib/SM2.mjs";
@@ -20,7 +21,7 @@ class SM2Encrypt extends Operation {
         super();
 
         this.name = "SM2 Encrypt";
-        this.module = "Ciphers";
+        this.module = "Crypto";
         this.description = "Encrypts a message utilizing the SM2 standard";
         this.infoURL = ""; // Usually a Wikipedia link. Remember to remove localisation (i.e. https://wikipedia.org/etc rather than https://en.wikipedia.org/etc)
         this.inputType = "ArrayBuffer";
@@ -61,32 +62,15 @@ class SM2Encrypt extends Operation {
         const [publicKeyX, publicKeyY, outputFormat, curveName] = args;
         this.outputFormat = outputFormat;
 
+        if (publicKeyX.length !== 64 || publicKeyY.length !== 64) {
+            throw new OperationError("Invalid Public Key - Ensure each component is 32 bytes in size and in hex");
+        }
+
         const sm2 = new SM2(curveName, outputFormat);
         sm2.setPublicKey(publicKeyX, publicKeyY);
 
         const result = sm2.encrypt(new Uint8Array(input));
         return result;
-    }
-
-    /**
-     * Highlight SM2 Encrypt
-     *
-     * @param {Object[]} pos
-     * @param {number} pos[].start
-     * @param {number} pos[].end
-     * @param {Object[]} args
-     * @returns {Object[]} pos
-     */
-    highlight(pos, args) {
-        const outputFormat = args[2];
-        const num = pos[0].end - pos[0].start;
-        let adjust = 128;
-        if (outputFormat === "C1C3C2") {
-            adjust = 192;
-        }
-        pos[0].start = Math.ceil(pos[0].start + adjust);
-        pos[0].end = Math.floor(pos[0].end + adjust + num);
-        return pos;
     }
 }
 
