@@ -139,6 +139,7 @@ import "./tests/SetIntersection.mjs";
 import "./tests/SetUnion.mjs";
 import "./tests/Shuffle.mjs";
 import "./tests/SIGABA.mjs";
+import "./tests/SM2.mjs";
 import "./tests/SM4.mjs";
 // import "./tests/SplitColourChannels.mjs"; // Cannot test operations that use the File type yet
 import "./tests/StrUtils.mjs";
