@@ -40,8 +40,8 @@ class WebSocketDecode extends Operation {
                 throw new OperationError("Expected size: 2 bytes");
             }
 
-            let b0 = buf[0];
-            let b1 = buf[1];
+            const b0 = buf[0];
+            const b1 = buf[1];
 
             const fin = (b0 & 0x80) === 0x80 ? true : false;
             const opcode = WEBSOCKET_OPCODE[b0 & 0x7f];
@@ -49,26 +49,26 @@ class WebSocketDecode extends Operation {
 
             pos = 2;
             const mask = (b1 & 0x80) === 0x80 ? true : false;
-            const mask_size = (mask) ? 4 : 0;
+            const maskSize = (mask) ? 4 : 0;
 
             if (payloadLength < 126) {
                 /** payload is less of 126 bytes */
-                if (buf.length < (pos + payloadLength + mask_size))
-                    throw new OperationError(`Expected size: ${(pos + payloadLength + mask_size)}`);
-            } else if (payloadLength == 126) {
+                if (buf.length < (pos + payloadLength + maskSize))
+                    throw new OperationError(`Expected size: ${(pos + payloadLength + maskSize)}`);
+            } else if (payloadLength === 126) {
                 /** payload is 2 bytes */
                 pos += 2;
                 payloadLength = buf.readUInt16BE(2);
 
-                if (buf.length < (pos + payloadLength + mask_size))
-                    throw new OperationError(`Expected size: ${(pos + payloadLength + mask_size)}`);
+                if (buf.length < (pos + payloadLength + maskSize))
+                    throw new OperationError(`Expected size: ${(pos + payloadLength + maskSize)}`);
 
-            } else if (payloadLength == 127) {
+            } else if (payloadLength === 127) {
                 pos += 8;
                 payloadLength = buf.readUInt64BE(2);
 
-                if (buf.length < (pos + payloadLength + mask_size))
-                    throw new OperationError(`Expected size: ${(pos + payloadLength + mask_size)}`);
+                if (buf.length < (pos + payloadLength + maskSize))
+                    throw new OperationError(`Expected size: ${(pos + payloadLength + maskSize)}`);
             }
 
             let maskBytes = Buffer.alloc(4);
