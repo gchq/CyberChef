@@ -71,7 +71,7 @@ class WebSocketDecode extends Operation {
                     throw new OperationError(`Expected size: ${(pos + payloadLength + maskSize)}`);
             }
 
-            let maskBytes = Buffer.alloc(4);
+            const maskBytes = Buffer.alloc(4);
 
             if (mask) {
                 maskBytes[0] = buf[pos];
@@ -81,10 +81,10 @@ class WebSocketDecode extends Operation {
                 pos += 4;
             }
 
-            let payload = buf.slice(pos, buf.length);
+            const payload = buf.slice(pos, buf.length);
 
             if (mask) {
-                for(var i = 0; i < payload.length; i++) {
+                for (let i = 0; i < payload.length; i++) {
                     payload[i] = payload[i] ^ maskBytes[i % 4];
                 }
             }
@@ -94,14 +94,14 @@ class WebSocketDecode extends Operation {
             if ((b0 & 1) === 1) {
                 content = payload.toString();
             } else {
-                content = payload.toString('hex');
+                content = payload.toString("hex");
             }
 
             const ws = {
                 fin: fin,
                 opcode: opcode,
-                mask_present: mask,
-                mask: maskBytes.toString('hex'),
+                maskPresent: mask,
+                mask: maskBytes.toString("hex"),
                 payloadLength: payloadLength,
                 payload: content
             };
