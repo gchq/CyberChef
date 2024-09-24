@@ -1,3 +1,5 @@
+ARG PLATFORM
+
 FROM --platform=${PLATFORM} node:18-alpine AS build
 
 COPY . .
