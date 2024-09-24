@@ -18,6 +18,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Apt update
+      run: sudo apt-get update
+    - name: apt install buildah qemu-user-static
+      run: sudo apt-get install -y buildah qemu-user-static
+
     - name: Set node version
       uses: actions/setup-node@v3
       with:
@@ -61,7 +66,7 @@ jobs:
         tags: ${{ steps.image-metadata.outputs.tags }}
         labels: ${{ steps.image-metadata.outputs.labels }}
         containerfiles: ./Dockerfile
-        platforms: linux/amd64,linux/arm64
+        platforms: linux/amd64, linux/arm64
         oci: true
         # Webpack seems to use a lot of open files, increase the max open file limit to accomodate.
         extra-args: |
