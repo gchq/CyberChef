@@ -61,7 +61,7 @@ jobs:
         tags: ${{ steps.image-metadata.outputs.tags }}
         labels: ${{ steps.image-metadata.outputs.labels }}
         containerfiles: ./Dockerfile
-        platforms: linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
+        platforms: linux/amd64,linux/arm64/v8
         oci: true
         # Webpack seems to use a lot of open files, increase the max open file limit to accomodate.
         extra-args: |
