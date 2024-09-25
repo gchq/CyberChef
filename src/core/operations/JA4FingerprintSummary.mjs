@@ -40,78 +40,49 @@ class JA4FingerprintSummary extends Operation {
      */
     run(input, args) {
         const [inputFormat] = args;
-        let retString = "Fingerprint summary of: " + input + "\n+------------------------------------------------------------+"
+        let retString = `Fingerprint summary of: ${input}\n+------------------------------------------------------------+`;
+        // Define format validation logic
+        const isValidJA4 = (input) => /[a-z-0-9]{10}_[a-z-0-9]{12}_[a-z-0-9]{12}/.test(input);
+        const isValidJA4Server = (input) => /[a-z-0-9]{7}_[a-z-0-9]{4}_[a-z-0-9]{12}/.test(input);        
+        // Validate the input based on inputFormat
+        if (inputFormat === "JA4" && !isValidJA4(input)) {
+            return `Error: The input does not match the expected JA4 format. Please check your input: ${input}`;
+        } 
+        if (inputFormat === "JA4Server" && !isValidJA4Server(input)) {
+            return `Error: The input does not match the expected JA4Server format. Please check your input: ${input}`;
+        }
+        const protocolMap = { t: "TCP", q: "QUIC" };
+        const tlsMap = {
+            "13": "1.3", "12": "1.2", "11": "1.1", "10": "1.0",
+            "s3": "SSL 3.0", "s2": "SSL 2.0", "s1": "SSL 1.0"
+        };
+        const alpnMap = {
+            "00": "No ALPN Chosen", "dt": "DNS-over-TLS",
+            "h1": "HTTP/1.1", "h2": "HTTP/2"
+        };
+        const getProtocol = (input) => `\nProtocol: ${protocolMap[input[0]] || "Unknown"}`;
+        const getTLSVersion = (input, start = 1, end = 3) => `\nTLS Version: ${tlsMap[input.slice(start, end)] || input.slice(start, end)}`;
+        const getALPN = (input, start, end) => `\nALPN Chosen: ${alpnMap[input.slice(start, end)] || input.slice(start, end)}`;
         if (inputFormat === "JA4") {
-            const protocolMap = { t: "TCP", q: "QUIC" };
-            const tlsMap = {
-                "13": "1.3", "12": "1.2", "11": "1.1", "10": "1.0",
-                "s3": "SSL 3.0", "s2": "SSL 2.0", "s1": "SSL 1.0"
-            };
             const sniMap = { d: "Yes (to domain)", i: "No (to IP)" };
-            const alpnMap = {
-                "00": "No ALPN Chosen", "dt": "DNS-over-TLS", 
-                "h1": "HTTP/1.1", "h2": "HTTP/2"
-            };
-        
-            // Protocol
-            retString += `\nProtocol: ${protocolMap[input[0]] || "Unknown"}`;
-        
-            // TLS Version
-            retString += `\nTLS Version: ${tlsMap[input.slice(1, 3)] || input.slice(1, 3)}`;
-        
-            // SNI Extension
+            retString += getProtocol(input);
+            retString += getTLSVersion(input);
             retString += `\nSNI Extension Present: ${sniMap[input[3]] || "Invalid symbol: " + input[3]}`;
-        
-            // Number of Cipher Suites and Extensions
             retString += `\nNumber of Cipher Suites: ${input.slice(4, 6)}`;
             retString += `\nNumber of Extensions: ${input.slice(6, 8)}`;
-        
-            // ALPN
-            retString += `\nALPN Chosen: ${alpnMap[input.slice(8, 10)] || input.slice(8, 10)}`;
-        
-            // Truncated SHA256 hashes
+            retString += getALPN(input, 8, 10);
             retString += `\nTruncated SHA256 hash of the Cipher Suites, sorted: ${input.slice(11, 23)}`;
             retString += `\nTruncated SHA256 hash of the Extensions, sorted + Signature Algorithms, in the order they appear: ${input.slice(24)}`;
-        }
-        
-
-        if (inputFormat == "JA4Server"){
-            const protocolMap = { t: "TCP", q: "QUIC" };
-            const tlsMap = {
-                "13": "1.3", "12": "1.2", "11": "1.1", "10": "1.0",
-                "s3": "SSL 3.0", "s2": "SSL 2.0", "s1": "SSL 1.0"
-            };
-            const alpnMap = {
-                "00": "No ALPN Chosen", "dt": "DNS-over-TLS", 
-                "h1": "HTTP/1.1", "h2": "HTTP/2"
-            };
-        
-            // Protocol
-            retString += `\nProtocol: ${protocolMap[input[0]] || "Unknown"}`;
-        
-            // TLS Version
-            retString += `\nTLS Version: ${tlsMap[input.slice(1, 3)] || input.slice(1, 3)}`;
-            
-            // Number of Extensions
+        } else if (inputFormat === "JA4Server") {
+            retString += getProtocol(input);
+            retString += getTLSVersion(input);
             retString += `\nNumber of Extensions: ${input.slice(3, 5)}`;
-
-            // ALPN
-            retString += `\nALPN Chosen: ${alpnMap[input.slice(5, 7)] || input.slice(5, 7)}`;
-            
-            // Cipher Suite
-            retString += `\nCipher Suite Chosen: ${input.slice(8,12)}`;
-
-            // Truncated SHA256 hashes
-            retString += `\nTruncated SH256 hash of the Extensions, in the order they appear: ${input.slice(13)}`;
+            retString += getALPN(input, 5, 7);
+            retString += `\nCipher Suite Chosen: ${input.slice(8, 12)}`;
+            retString += `\nTruncated SHA256 hash of the Extensions, in the order they appear: ${input.slice(13)}`;
         }
-
-        return retString
+        return retString;
     }
-
 }
 
 export default JA4FingerprintSummary;
-/**
- * Truncated SHA256 hash of the Cipher Suites, sorted 
- * Truncated SHA256 hash of the Extensions, sorted + Signature Algorithms, in the order they appear 
- */
