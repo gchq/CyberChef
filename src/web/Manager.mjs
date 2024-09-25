@@ -17,6 +17,7 @@ import SeasonalWaiter from "./waiters/SeasonalWaiter.mjs";
 import BindingsWaiter from "./waiters/BindingsWaiter.mjs";
 import BackgroundWorkerWaiter from "./waiters/BackgroundWorkerWaiter.mjs";
 import TabWaiter from "./waiters/TabWaiter.mjs";
+import TimingWaiter from "./waiters/TimingWaiter.mjs";
 
 
 /**
@@ -59,6 +60,7 @@ class Manager {
         this.statechange = new CustomEvent("statechange", {bubbles: true});
 
         // Define Waiter objects to handle various areas
+        this.timing      = new TimingWaiter(this.app, this);
         this.worker      = new WorkerWaiter(this.app, this);
         this.window      = new WindowWaiter(this.app);
         this.controls    = new ControlsWaiter(this.app, this);
@@ -93,6 +95,23 @@ class Manager {
         this.bindings.updateKeybList();
         this.background.registerChefWorker();
         this.seasonal.load();
+
+        this.confirmWaitersLoaded();
+    }
+
+    /**
+     * Confirms that all Waiters have loaded correctly.
+     */
+    confirmWaitersLoaded() {
+        if (this.tabs.getActiveTab("input") >= 0 &&
+            this.tabs.getActiveTab("output") >= 0) {
+            log.debug("Waiters loaded");
+            this.app.waitersLoaded = true;
+            this.app.loaded();
+        } else {
+            // Not loaded yet, try again soon
+            setTimeout(this.confirmWaitersLoaded.bind(this), 10);
+        }
     }
 
 
@@ -120,6 +139,7 @@ class Manager {
         document.getElementById("load-delete-button").addEventListener("click", this.controls.loadDeleteClick.bind(this.controls));
         document.getElementById("load-name").addEventListener("change", this.controls.loadNameChange.bind(this.controls));
         document.getElementById("load-button").addEventListener("click", this.controls.loadButtonClick.bind(this.controls));
+        document.getElementById("hide-icon").addEventListener("click", this.controls.hideRecipeArgsClick.bind(this.recipe));
         document.getElementById("support").addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
         this.addMultiEventListeners("#save-texts textarea", "keyup paste", this.controls.saveTextChange, this.controls);
 
@@ -135,6 +155,7 @@ class Manager {
         // Recipe
         this.addDynamicListener(".arg:not(select)", "input", this.recipe.ingChange, this.recipe);
         this.addDynamicListener(".arg[type=checkbox], .arg[type=radio], select.arg", "change", this.recipe.ingChange, this.recipe);
+        this.addDynamicListener(".hide-args-icon", "click", this.recipe.hideArgsClick, this.recipe);
         this.addDynamicListener(".disable-icon", "click", this.recipe.disableClick, this.recipe);
         this.addDynamicListener(".breakpoint", "click", this.recipe.breakpointClick, this.recipe);
         this.addDynamicListener("#rec-list li.operation", "dblclick", this.recipe.operationDblclick, this.recipe);
@@ -146,19 +167,14 @@ class Manager {
         this.addDynamicListener("textarea.arg", "drop", this.recipe.textArgDrop, this.recipe);
 
         // Input
-        this.addMultiEventListener("#input-text", "keyup", this.input.debounceInputChange, this.input);
-        this.addMultiEventListener("#input-text", "paste", this.input.inputPaste, this.input);
         document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
         this.addListeners("#clr-io,#btn-close-all-tabs", "click", this.input.clearAllIoClick, this.input);
         this.addListeners("#open-file,#open-folder", "change", this.input.inputOpen, this.input);
-        this.addListeners("#input-text,#input-file", "dragover", this.input.inputDragover, this.input);
-        this.addListeners("#input-text,#input-file", "dragleave", this.input.inputDragleave, this.input);
-        this.addListeners("#input-text,#input-file", "drop", this.input.inputDrop, this.input);
-        document.getElementById("input-text").addEventListener("scroll", this.highlighter.inputScroll.bind(this.highlighter));
-        document.getElementById("input-text").addEventListener("mouseup", this.highlighter.inputMouseup.bind(this.highlighter));
-        document.getElementById("input-text").addEventListener("mousemove", this.highlighter.inputMousemove.bind(this.highlighter));
-        this.addMultiEventListener("#input-text", "mousedown dblclick select",  this.highlighter.inputMousedown, this.highlighter);
-        document.querySelector("#input-file .close").addEventListener("click", this.input.clearIoClick.bind(this.input));
+        document.getElementById("btn-open-file").addEventListener("click", this.input.inputOpenClick.bind(this.input));
+        document.getElementById("btn-open-folder").addEventListener("click", this.input.folderOpenClick.bind(this.input));
+        this.addListeners("#input-wrapper", "dragover", this.input.inputDragover, this.input);
+        this.addListeners("#input-wrapper", "dragleave", this.input.inputDragleave, this.input);
+        this.addListeners("#input-wrapper", "drop", this.input.inputDrop, this.input);
         document.getElementById("btn-new-tab").addEventListener("click", this.input.addInputClick.bind(this.input));
         document.getElementById("btn-previous-input-tab").addEventListener("mousedown", this.input.previousTabClick.bind(this.input));
         document.getElementById("btn-next-input-tab").addEventListener("mousedown", this.input.nextTabClick.bind(this.input));
@@ -177,8 +193,6 @@ class Manager {
         document.getElementById("input-num-results").addEventListener("keyup", this.input.filterTabSearch.bind(this.input));
         document.getElementById("input-filter-refresh").addEventListener("click", this.input.filterTabSearch.bind(this.input));
         this.addDynamicListener(".input-filter-result", "click", this.input.filterItemClick, this.input);
-        document.getElementById("btn-open-file").addEventListener("click", this.input.inputOpenClick.bind(this.input));
-        document.getElementById("btn-open-folder").addEventListener("click", this.input.folderOpenClick.bind(this.input));
 
 
         // Output
@@ -186,19 +200,8 @@ class Manager {
         document.getElementById("save-all-to-file").addEventListener("click", this.output.saveAllClick.bind(this.output));
         document.getElementById("copy-output").addEventListener("click", this.output.copyClick.bind(this.output));
         document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
-        document.getElementById("undo-switch").addEventListener("click", this.output.undoSwitchClick.bind(this.output));
         document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
         document.getElementById("magic").addEventListener("click", this.output.magicClick.bind(this.output));
-        document.getElementById("output-text").addEventListener("scroll", this.highlighter.outputScroll.bind(this.highlighter));
-        document.getElementById("output-text").addEventListener("mouseup", this.highlighter.outputMouseup.bind(this.highlighter));
-        document.getElementById("output-text").addEventListener("mousemove", this.highlighter.outputMousemove.bind(this.highlighter));
-        document.getElementById("output-html").addEventListener("mouseup", this.highlighter.outputHtmlMouseup.bind(this.highlighter));
-        document.getElementById("output-html").addEventListener("mousemove", this.highlighter.outputHtmlMousemove.bind(this.highlighter));
-        this.addMultiEventListener("#output-text", "mousedown dblclick select",  this.highlighter.outputMousedown, this.highlighter);
-        this.addMultiEventListener("#output-html", "mousedown dblclick select",  this.highlighter.outputHtmlMousedown, this.highlighter);
-        this.addDynamicListener("#output-file-download", "click", this.output.downloadFile, this.output);
-        this.addDynamicListener("#output-file-slice i", "click", this.output.displayFileSlice, this.output);
-        document.getElementById("show-file-overlay").addEventListener("click", this.output.showFileOverlayClick.bind(this.output));
         this.addDynamicListener(".extract-file,.extract-file i", "click", this.output.extractFileClick, this.output);
         this.addDynamicListener("#output-tabs-wrapper #output-tabs li .output-tab-content", "click", this.output.changeTabClick, this.output);
         document.getElementById("btn-previous-output-tab").addEventListener("mousedown", this.output.previousTabClick.bind(this.output));
@@ -226,12 +229,12 @@ class Manager {
         this.addDynamicListener(".option-item input[type=checkbox]", "change", this.options.switchChange, this.options);
         this.addDynamicListener(".option-item input[type=checkbox]#wordWrap", "change", this.options.setWordWrap, this.options);
         this.addDynamicListener(".option-item input[type=checkbox]#useMetaKey", "change", this.bindings.updateKeybList, this.bindings);
+        this.addDynamicListener(".option-item input[type=checkbox]#showCatCount", "change", this.ops.setCatCount, this.ops);
         this.addDynamicListener(".option-item input[type=number]", "keyup", this.options.numberChange, this.options);
         this.addDynamicListener(".option-item input[type=number]", "change", this.options.numberChange, this.options);
         this.addDynamicListener(".option-item select", "change", this.options.selectChange, this.options);
         document.getElementById("theme").addEventListener("change", this.options.themeChange.bind(this.options));
         document.getElementById("logLevel").addEventListener("change", this.options.logLevelChange.bind(this.options));
-        document.getElementById("imagePreview").addEventListener("change", this.input.renderFileThumb.bind(this.input));
 
         // Misc
         window.addEventListener("keydown", this.bindings.parseInput.bind(this.bindings));
@@ -268,7 +271,7 @@ class Manager {
      * @param {Object} [scope=this] - The object to bind to the callback function
      *
      * @example
-     * // Calls the search function whenever the the keyup, paste or search events are triggered on the
+     * // Calls the search function whenever the keyup, paste or search events are triggered on the
      * // search element
      * this.addMultiEventListener("search", "keyup paste search", this.search, this);
      */
@@ -289,7 +292,7 @@ class Manager {
      * @param {Object} [scope=this] - The object to bind to the callback function
      *
      * @example
-     * // Calls the save function whenever the the keyup or paste events are triggered on any element
+     * // Calls the save function whenever the keyup or paste events are triggered on any element
      * // with the .saveable class
      * this.addMultiEventListener(".saveable", "keyup paste", this.save, this);
      */

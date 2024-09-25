@@ -9,7 +9,7 @@
  * @license Apache-2.0
  */
 
-/*eslint no-console: 0 */
+/* eslint no-console: 0 */
 
 import fs from "fs";
 import path from "path";
@@ -41,7 +41,7 @@ let code = `/**
 import NodeDish from "./NodeDish.mjs";
 import { _wrap, help, bake, _explainExcludedFunction } from "./api.mjs";
 import File from "./File.mjs";
-import { OperationError, DishError, ExcludedOperationError } from "../core/errors/index";
+import { OperationError, DishError, ExcludedOperationError } from "../core/errors/index.mjs";
 import {
     // import as core_ to avoid name clashes after wrap.
 `;
@@ -52,7 +52,7 @@ includedOperations.forEach((op) => {
 });
 
 code +=`
-} from "../core/operations/index";
+} from "../core/operations/index.mjs";
 
 global.File = File;
 
@@ -100,8 +100,7 @@ Object.keys(operations).forEach((op) => {
 
 code += `];
 
-const prebaked = bake(operations);
-chef.bake = prebaked;
+chef.bake = bake;
 export default chef;
 
 // Operations as top level exports.
@@ -114,7 +113,7 @@ Object.keys(operations).forEach((op) => {
 });
 
 code += "    NodeDish as Dish,\n";
-code += "    prebaked as bake,\n";
+code += "    bake,\n";
 code += "    help,\n";
 code += "    OperationError,\n";
 code += "    ExcludedOperationError,\n";

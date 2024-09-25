@@ -35,6 +35,13 @@ class StripHTMLTags extends Operation {
                 "value": true
             }
         ];
+        this.checks = [
+            {
+                pattern:  "(</html>|</div>|</body>)",
+                flags:  "i",
+                args:   [true, true]
+            }
+        ];
     }
 
     /**

@@ -26,6 +26,13 @@ class FromHexContent extends Operation {
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];
+        this.checks = [
+            {
+                pattern:  "\\|([\\da-f]{2} ?)+\\|",
+                flags:  "i",
+                args:   []
+            }
+        ];
     }
 
     /**

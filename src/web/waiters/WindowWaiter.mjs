@@ -23,11 +23,11 @@ class WindowWaiter {
 
     /**
      * Handler for window resize events.
-     * Resets the layout of CyberChef's panes after 200ms (so that continuous resizing doesn't cause
+     * Resets adjustable component sizes after 200ms (so that continuous resizing doesn't cause
      * continuous resetting).
      */
     windowResize() {
-        debounce(this.app.resetLayout, 200, "windowResize", this.app, [])();
+        debounce(this.app.adjustComponentSizes, 200, "windowResize", this.app, [])();
     }
 
 
@@ -37,7 +37,7 @@ class WindowWaiter {
      * focus is returned.
      */
     windowBlur() {
-        this.windowBlurTime = new Date().getTime();
+        this.windowBlurTime = Date.now();
     }
 
 
@@ -52,7 +52,7 @@ class WindowWaiter {
      * a long time and the browser has swapped out all its memory.
      */
     windowFocus() {
-        const unfocusedTime = new Date().getTime() - this.windowBlurTime;
+        const unfocusedTime = Date.now() - this.windowBlurTime;
         if (unfocusedTime > 60000) {
             this.app.silentBake();
         }

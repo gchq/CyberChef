@@ -35,6 +35,7 @@ setLongTestFailure();
 
 const logOpsTestReport = logTestReport.bind(null, testStatus);
 
-TestRegister.runApiTests()
-    .then(logOpsTestReport);
-
+(async function() {
+    const results = await TestRegister.runApiTests();
+    logOpsTestReport(results);
+})();

@@ -6,6 +6,7 @@
  */
 
 import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * @constant
@@ -86,8 +87,8 @@ export function getScatterValues(input, recordDelimiter, fieldDelimiter, columnH
     }
 
     values = values.map(row => {
-        const x = parseFloat(row[0], 10),
-            y = parseFloat(row[1], 10);
+        const x = parseFloat(row[0]),
+            y = parseFloat(row[1]);
 
         if (Number.isNaN(x)) throw new OperationError("Values must be numbers in base 10.");
         if (Number.isNaN(y)) throw new OperationError("Values must be numbers in base 10.");
@@ -121,14 +122,14 @@ export function getScatterValuesWithColour(input, recordDelimiter, fieldDelimite
     }
 
     values = values.map(row => {
-        const x = parseFloat(row[0], 10),
-            y = parseFloat(row[1], 10),
+        const x = parseFloat(row[0]),
+            y = parseFloat(row[1]),
             colour = row[2];
 
         if (Number.isNaN(x)) throw new OperationError("Values must be numbers in base 10.");
         if (Number.isNaN(y)) throw new OperationError("Values must be numbers in base 10.");
 
-        return [x, y, colour];
+        return [x, y, Utils.escapeHtml(colour)];
     });
 
     return { headings, values };
@@ -157,7 +158,7 @@ export function getSeriesValues(input, recordDelimiter, fieldDelimiter, columnHe
     values.forEach(row => {
         const serie = row[0],
             xVal = row[1],
-            val = parseFloat(row[2], 10);
+            val = parseFloat(row[2]);
 
         if (Number.isNaN(val)) throw new OperationError("Values must be numbers in base 10.");
 

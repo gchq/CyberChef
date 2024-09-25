@@ -1,7 +1,6 @@
 # CyberChef
 
-[![Build Status](https://travis-ci.org/gchq/CyberChef.svg?branch=master)](https://travis-ci.org/gchq/CyberChef)
-[![dependencies Status](https://david-dm.org/gchq/CyberChef/status.svg)](https://david-dm.org/gchq/CyberChef)
+[![](https://github.com/gchq/CyberChef/workflows/Master%20Build,%20Test%20&%20Deploy/badge.svg)](https://github.com/gchq/CyberChef/actions?query=workflow%3A%22Master+Build%2C+Test+%26+Deploy%22)
 [![npm](https://img.shields.io/npm/v/cyberchef.svg)](https://www.npmjs.com/package/cyberchef)
 [![](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/gchq/CyberChef/blob/master/LICENSE)
 [![Gitter](https://badges.gitter.im/gchq/CyberChef.svg)](https://gitter.im/gchq/CyberChef?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
@@ -9,7 +8,7 @@
 
 #### *The Cyber Swiss Army Knife*
 
-CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include simple encoding like XOR or Base64, more complex encryption like AES, DES and Blowfish, creating binary and hexdumps, compression and decompression of data, calculating hashes and checksums, IPv6 and X.509 parsing, changing character encodings, and much more.
+CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include simple encoding like XOR and Base64, more complex encryption like AES, DES and Blowfish, creating binary and hexdumps, compression and decompression of data, calculating hashes and checksums, IPv6 and X.509 parsing, changing character encodings, and much more.
 
 The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms. It was conceived, designed, built and incrementally improved by an analyst in their 10% innovation time over several years.
 
@@ -21,6 +20,22 @@ Cryptographic operations in CyberChef should not be relied upon to provide secur
 
 [A live demo can be found here][1] - have fun!
 
+## Containers
+
+If you would like to try out CyberChef locally you can either build it yourself:
+
+```bash
+docker build --tag cyberchef --ulimit nofile=10000 .
+docker run -it -p 8080:80 cyberchef
+```
+
+Or you can use our image directly:
+
+```bash
+docker run -it -p 8080:80 ghcr.io/gchq/cyberchef:latest
+```
+
+This image is built and published through our [GitHub Workflows](.github/workflows/releases.yml)
 
 ## How it works
 
@@ -54,7 +69,7 @@ You can use as many operations as you like in simple or complex ways. Some examp
      - Whenever you modify the input or the recipe, CyberChef will automatically "bake" for you and produce the output immediately.
      - This can be turned off and operated manually if it is affecting performance (if the input is very large, for instance).
  - Automated encoding detection
-     - CyberChef uses [a number of techniques](https://github.com/gchq/CyberChef/wiki/Automatic-detection-of-encoded-data-using-CyberChef-Magic) to attempt to automatically detect which encodings your data is under. If it finds a suitable operation which can make sense of your data, it displays the 'magic' icon in the Output field which you can click to decode your data.
+     - CyberChef uses [a number of techniques](https://github.com/gchq/CyberChef/wiki/Automatic-detection-of-encoded-data-using-CyberChef-Magic) to attempt to automatically detect which encodings your data is under. If it finds a suitable operation that make sense of your data, it displays the 'magic' icon in the Output field which you can click to decode your data.
  - Breakpoints
      - You can set breakpoints on any operation in your recipe to pause execution before running it.
      - You can also step through the recipe one operation at a time to see what the data looks like at each stage.
@@ -66,10 +81,18 @@ You can use as many operations as you like in simple or complex ways. Some examp
  - Highlighting
      - When you highlight text in the input or output, the offset and length values will be displayed and, if possible, the corresponding data will be highlighted in the output or input respectively (example: [highlight the word 'question' in the input to see where it appears in the output][11]).
  - Save to file and load from file
-     - You can save the output to a file at any time or load a file by dragging and dropping it into the input field. Files up to around 2GB are supported (depending on your browser), however some operations may take a very long time to run over this much data.
+     - You can save the output to a file at any time or load a file by dragging and dropping it into the input field. Files up to around 2GB are supported (depending on your browser), however, some operations may take a very long time to run over this much data.
  - CyberChef is entirely client-side
      - It should be noted that none of your recipe configuration or input (either text or files) is ever sent to the CyberChef web server - all processing is carried out within your browser, on your own computer.
      - Due to this feature, CyberChef can be downloaded and run locally. You can use the link in the top left corner of the app to download a full copy of CyberChef and drop it into a virtual machine, share it with other people, or host it in a closed network.
+
+
+## Deep linking
+
+By manipulating CyberChef's URL hash, you can change the initial settings with which the page opens.
+The format is `https://gchq.github.io/CyberChef/#recipe=Operation()&input=...`
+
+Supported arguments are `recipe`, `input` (encoded in Base64), and `theme`.
 
 
 ## Browser support
@@ -82,14 +105,14 @@ CyberChef is built to support
 
 ## Node.js support
 
-CyberChef is built to fully support Node.js `v10` and partially supports `v12`. Named imports using a deep import specifier does not work in `v12`. For more information, see the Node API page in the project [wiki pages](https://github.com/gchq/CyberChef/wiki)
+CyberChef is built to fully support Node.js `v16`. For more information, see the ["Node API" wiki page](https://github.com/gchq/CyberChef/wiki/Node-API)
 
 
 ## Contributing
 
-Contributing a new operation to CyberChef is super easy! There is a quickstart script which will walk you through the process. If you can write basic JavaScript, you can write a CyberChef operation.
+Contributing a new operation to CyberChef is super easy! The quickstart script will walk you through the process. If you can write basic JavaScript, you can write a CyberChef operation.
 
-An installation walkthrough, how-to guides for adding new operations and themes, descriptions of the repository structure, available data types and coding conventions can all be found in the project [wiki pages](https://github.com/gchq/CyberChef/wiki).
+An installation walkthrough, how-to guides for adding new operations and themes, descriptions of the repository structure, available data types and coding conventions can all be found in the ["Contributing" wiki page](https://github.com/gchq/CyberChef/wiki/Contributing).
 
  - Push your changes to your fork.
  - Submit a pull request. If you are doing this for the first time, you will be prompted to sign the [GCHQ Contributor Licence Agreement](https://cla-assistant.io/gchq/CyberChef) via the CLA assistant on the pull request. This will also ask whether you are happy for GCHQ to contact you about a token of thanks for your contribution, or about job opportunities at GCHQ.
@@ -97,7 +120,7 @@ An installation walkthrough, how-to guides for adding new operations and themes,
 
 ## Licencing
 
-CyberChef is released under the [Apache 2.0 Licence](https://www.apache.org/licenses/LICENSE-2.0) and is covered by [Crown Copyright](https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/).
+CyberChef is released under the [Apache 2.0 Licence](https://www.apache.org/licenses/LICENSE-2.0) and is covered by [Crown Copyright](https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/).
 
 
   [1]: https://gchq.github.io/CyberChef

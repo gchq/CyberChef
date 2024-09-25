@@ -117,7 +117,7 @@ class GroupIPAddresses extends Operation {
 
         // Sort IPv6 network dictionaries and print
         for (networkStr in ipv6Networks) {
-            //ipv6Networks[networkStr] = ipv6Networks[networkStr].sort();  TODO
+            // ipv6Networks[networkStr] = ipv6Networks[networkStr].sort();  TODO
 
             output += networkStr + "/" + cidr + "\n";
 
