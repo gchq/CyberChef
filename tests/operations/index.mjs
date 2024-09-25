@@ -71,6 +71,7 @@ import "./tests/Fork.mjs";
 import "./tests/FromDecimal.mjs";
 import "./tests/GenerateAllHashes.mjs";
 import "./tests/GenerateDeBruijnSequence.mjs";
+import "./tests/GeneratePassword.mjs";
 import "./tests/GetAllCasings.mjs";
 import "./tests/GOST.mjs";
 import "./tests/Gunzip.mjs";
