@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation.mjs";
-import Utils from "../Utils.mjs";
 
 /**
  * JA4 Fingerprint Summary operation
@@ -67,7 +66,7 @@ class JA4FingerprintSummary extends Operation {
             const sniMap = { d: "Yes (to domain)", i: "No (to IP)" };
             retString += getProtocol(input);
             retString += getTLSVersion(input);
-            retString += `\nSNI Extension Present: ${sniMap[input[3]] || "Invalid symbol: " + input[3]}`;
+            retString += `\nSNI Extension Present: ${sniMap[input[3]] || input[3] + " (Invalid Symbol)"}`;
             retString += `\nNumber of Cipher Suites: ${input.slice(4, 6)}`;
             retString += `\nNumber of Extensions: ${input.slice(6, 8)}`;
             retString += getALPN(input, 8, 10);
