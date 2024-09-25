@@ -50,24 +50,19 @@ class GeneratePassword extends Operation {
         const len = args[0];
         const symbols = args[1];
         const numbers = args[2];
-    
         const baseAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         const lowerAlphabet = baseAlphabet.toLowerCase();
         const symbolSet = "!@#$%^&*()-=_+|'\"";
         const numberSet = "123456789";
-    
         let alphabet = baseAlphabet + lowerAlphabet;
         alphabet += symbols ? symbolSet : "";
         alphabet += numbers ? numberSet : "";
-    
         const resultArray = new Array(len);
         for (let i = 0; i < len; i++) {
             resultArray[i] = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
         }
-    
         return resultArray.join("");
     }
-
 }
 
 export default GeneratePassword;
