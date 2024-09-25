@@ -5,8 +5,8 @@
  * @license Apache-2.0
  */
 
-import ChefWorker from "worker-loader?inline&fallback=false!../../core/ChefWorker.js";
-import DishWorker from "worker-loader?inline&fallback=false!../workers/DishWorker.mjs";
+import ChefWorker from "worker-loader?inline=no-fallback!../../core/ChefWorker.js";
+import DishWorker from "worker-loader?inline=no-fallback!../workers/DishWorker.mjs";
 import { debounce } from "../../core/Utils.mjs";
 
 /**
@@ -72,6 +72,10 @@ class WorkerWaiter {
 
         this.dishWorker.worker = new DishWorker();
         this.dishWorker.worker.addEventListener("message", this.handleDishMessage.bind(this));
+        this.dishWorker.worker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
 
         if (this.dishWorkerQueue.length > 0) {
             this.postDishMessage(this.dishWorkerQueue.splice(0, 1)[0]);
@@ -89,22 +93,27 @@ class WorkerWaiter {
             return -1;
         }
 
-        log.debug("Adding new ChefWorker");
+        log.debug(`Adding new ChefWorker (${this.chefWorkers.length + 1}/${this.maxWorkers})`);
 
         // Create a new ChefWorker and send it the docURL
         const newWorker = new ChefWorker();
         newWorker.addEventListener("message", this.handleChefMessage.bind(this));
+        newWorker.postMessage({
+            action: "setLogPrefix",
+            data: "ChefWorker"
+        });
+        newWorker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
+
         let docURL = document.location.href.split(/[#?]/)[0];
         const index = docURL.lastIndexOf("/");
         if (index > 0) {
             docURL = docURL.substring(0, index);
         }
-
         newWorker.postMessage({"action": "docURL", "data": docURL});
-        newWorker.postMessage({
-            action: "setLogLevel",
-            data: log.getLevel()
-        });
+
 
         // Store the worker, whether or not it's active, and the inputNum as an object
         const newWorkerObj = {
@@ -177,7 +186,7 @@ class WorkerWaiter {
     handleChefMessage(e) {
         const r = e.data;
         let inputNum = 0;
-        log.debug(`Receiving ${r.action} from ChefWorker.`);
+        log.debug(`Receiving '${r.action}' from ChefWorker.`);
 
         if (Object.prototype.hasOwnProperty.call(r.data, "inputNum")) {
             inputNum = r.data.inputNum;
@@ -188,6 +197,8 @@ class WorkerWaiter {
         switch (r.action) {
             case "bakeComplete":
                 log.debug(`Bake ${inputNum} complete.`);
+                this.manager.timing.recordTime("bakeComplete", inputNum);
+                this.manager.timing.recordTime("bakeDuration", inputNum, r.data.duration);
 
                 if (r.data.error) {
                     this.app.handleError(r.data.error);
@@ -217,7 +228,7 @@ class WorkerWaiter {
                 break;
             case "workerLoaded":
                 this.app.workerLoaded = true;
-                log.debug("ChefWorker loaded.");
+                log.debug("ChefWorker loaded");
                 if (!this.loaded) {
                     this.app.loaded();
                     this.loaded = true;
@@ -266,7 +277,7 @@ class WorkerWaiter {
         if (progress !== false) {
             this.manager.output.updateOutputStatus("error", inputNum);
 
-            if (inputNum === this.manager.tabs.getActiveInputTab()) {
+            if (inputNum === this.manager.tabs.getActiveTab("input")) {
                 this.manager.recipe.updateBreakpointIndicator(progress);
             }
 
@@ -312,39 +323,67 @@ class WorkerWaiter {
     }
 
     /**
+     * Cancels the current bake making it possible to autobake again
+     */
+    cancelBakeForAutoBake() {
+        if (this.totalOutputs > 1) {
+            this.cancelBake();
+        } else {
+            // In this case the UI changes can be skipped
+
+            for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
+                if (this.chefWorkers[i].active) {
+                    this.removeChefWorker(this.chefWorkers[i]);
+                }
+            }
+
+            this.inputs = [];
+            this.inputNums = [];
+            this.totalOutputs = 0;
+            this.loadingOutputs = 0;
+        }
+    }
+
+    /**
      * Cancels the current bake by terminating and removing all ChefWorkers
      *
      * @param {boolean} [silent=false] - If true, don't set the output
-     * @param {boolean} killAll - If true, kills all chefWorkers regardless of status
+     * @param {boolean} [killAll=false] - If true, kills all chefWorkers regardless of status
      */
-    cancelBake(silent, killAll) {
+    cancelBake(silent=false, killAll=false) {
+        const deactiveOutputs = new Set();
+
         for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
             if (this.chefWorkers[i].active || killAll) {
                 const inputNum = this.chefWorkers[i].inputNum;
                 this.removeChefWorker(this.chefWorkers[i]);
-                this.manager.output.updateOutputStatus("inactive", inputNum);
+                deactiveOutputs.add(inputNum);
             }
         }
         this.setBakingStatus(false);
 
-        for (let i = 0; i < this.inputs.length; i++) {
-            this.manager.output.updateOutputStatus("inactive", this.inputs[i].inputNum);
-        }
+        this.inputs.forEach(input => {
+            deactiveOutputs.add(input.inputNum);
+        });
 
-        for (let i = 0; i < this.inputNums.length; i++) {
-            this.manager.output.updateOutputStatus("inactive", this.inputNums[i]);
-        }
+        this.inputNums.forEach(inputNum => {
+            deactiveOutputs.add(inputNum);
+        });
 
-        const tabList = this.manager.tabs.getOutputTabList();
-        for (let i = 0; i < tabList.length; i++) {
-            this.manager.tabs.getOutputTabItem(tabList[i]).style.background = "";
-        }
+        deactiveOutputs.forEach(num => {
+            this.manager.output.updateOutputStatus("inactive", num);
+        });
+
+        const tabList = this.manager.tabs.getTabList("output");
+        tabList.forEach(tab => {
+            this.manager.tabs.getTabItem(tab, "output").style.background = "";
+        });
 
         this.inputs = [];
         this.inputNums = [];
         this.totalOutputs = 0;
         this.loadingOutputs = 0;
-        if (!silent) this.manager.output.set(this.manager.tabs.getActiveOutputTab());
+        if (!silent) this.manager.output.set(this.manager.tabs.getActiveTab("output"));
     }
 
     /**
@@ -375,7 +414,7 @@ class WorkerWaiter {
      */
     bakingComplete() {
         this.setBakingStatus(false);
-        let duration = new Date().getTime() - this.bakeStartTime;
+        let duration = Date.now() - this.bakeStartTime;
         duration = duration.toLocaleString() + "ms";
         const progress = this.getBakeProgress();
 
@@ -455,6 +494,7 @@ class WorkerWaiter {
         if (input instanceof ArrayBuffer || ArrayBuffer.isView(input)) {
             transferable = [input];
         }
+        this.manager.timing.recordTime("chefWorkerTasked", nextInput.inputNum);
         this.chefWorkers[workerIdx].worker.postMessage({
             action: "bake",
             data: {
@@ -489,7 +529,7 @@ class WorkerWaiter {
     bake(recipeConfig, options, progress, step) {
         this.setBakingStatus(true);
         this.manager.recipe.updateBreakpointIndicator(false);
-        this.bakeStartTime = new Date().getTime();
+        this.bakeStartTime = Date.now();
         this.bakeId++;
         this.recipeConfig = recipeConfig;
         this.options = options;
@@ -550,10 +590,12 @@ class WorkerWaiter {
      * @param {boolean} inputData.step - If true, only execute the next operation in the recipe
      * @param {number} inputData.progress - The current progress through the recipe. Used when stepping
      */
-    async bakeAllInputs(inputData) {
+    async bakeInputs(inputData) {
+        log.debug(`Baking input list [${inputData.nums.join(",")}]`);
+
         return await new Promise(resolve => {
             if (this.app.baking) return;
-            const inputNums = inputData.nums;
+            const inputNums = inputData.nums.filter(n => n > 0);
             const step = inputData.step;
 
             // Use cancelBake to clear out the inputs
@@ -586,6 +628,7 @@ class WorkerWaiter {
                 numBakes = this.inputNums.length;
             }
             for (let i = 0; i < numBakes; i++) {
+                this.manager.timing.recordTime("trigger", this.inputNums[0]);
                 this.manager.input.inputWorker.postMessage({
                     action: "bakeNext",
                     data: {
@@ -595,6 +638,7 @@ class WorkerWaiter {
                 });
                 this.loadingOutputs++;
             }
+            if (numBakes === 0) this.bakingComplete();
         });
     }
 
@@ -626,7 +670,7 @@ class WorkerWaiter {
      */
     handleDishMessage(e) {
         const r = e.data;
-        log.debug(`Receiving ${r.action} from DishWorker`);
+        log.debug(`Receiving '${r.action}' from DishWorker`);
 
         switch (r.action) {
             case "dishReturned":
@@ -645,7 +689,7 @@ class WorkerWaiter {
     }
 
     /**
-     * Asks the ChefWorker to return the dish as the specified type
+     * Asks the DishWorker to return the dish as the specified type
      *
      * @param {Dish} dish
      * @param {string} type
@@ -653,10 +697,9 @@ class WorkerWaiter {
      */
     getDishAs(dish, type, callback) {
         const id = this.callbackID++;
-
         this.callbacks[id] = callback;
-
         if (this.dishWorker.worker === null) this.setupDishWorker();
+
         this.postDishMessage({
             action: "getDishAs",
             data: {
@@ -668,7 +711,7 @@ class WorkerWaiter {
     }
 
     /**
-     * Asks the ChefWorker to get the title of the dish
+     * Asks the DishWorker to get the title of the dish
      *
      * @param {Dish} dish
      * @param {number} maxLength
@@ -677,9 +720,7 @@ class WorkerWaiter {
      */
     getDishTitle(dish, maxLength, callback) {
         const id = this.callbackID++;
-
         this.callbacks[id] = callback;
-
         if (this.dishWorker.worker === null) this.setupDishWorker();
 
         this.postDishMessage({
@@ -687,6 +728,29 @@ class WorkerWaiter {
             data: {
                 dish: dish,
                 maxLength: maxLength,
+                id: id
+            }
+        });
+    }
+
+    /**
+     * Asks the DishWorker to translate a buffer into a specific character encoding
+     *
+     * @param {ArrayBuffer} buffer
+     * @param {number} encoding
+     * @param {Function} callback
+     * @returns {string}
+     */
+    bufferToStr(buffer, encoding, callback) {
+        const id = this.callbackID++;
+        this.callbacks[id] = callback;
+        if (this.dishWorker.worker === null) this.setupDishWorker();
+
+        this.postDishMessage({
+            action: "bufferToStr",
+            data: {
+                buffer: buffer,
+                encoding: encoding,
                 id: id
             }
         });
@@ -729,12 +793,18 @@ class WorkerWaiter {
      * Sets the console log level in the workers.
      */
     setLogLevel() {
-        for (let i = 0; i < this.chefWorkers.length; i++) {
-            this.chefWorkers[i].worker.postMessage({
+        this.chefWorkers.forEach(cw => {
+            cw.worker.postMessage({
                 action: "setLogLevel",
                 data: log.getLevel()
             });
-        }
+        });
+
+        if (!this.dishWorker.worker) return;
+        this.dishWorker.worker.postMessage({
+            action: "setLogLevel",
+            data: log.getLevel()
+        });
     }
 
     /**
@@ -794,7 +864,7 @@ class WorkerWaiter {
      *
      * @param {Object[]} recipeConfig
      * @param {string} direction
-     * @param {Object} pos - The position object for the highlight.
+     * @param {Object[]} pos - The position object for the highlight.
      * @param {number} pos.start - The start offset.
      * @param {number} pos.end - The end offset.
      */

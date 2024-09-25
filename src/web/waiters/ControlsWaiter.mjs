@@ -5,6 +5,7 @@
  */
 
 import Utils from "../../core/Utils.mjs";
+import { eolSeqToCode } from "../utils/editorUtils.mjs";
 
 
 /**
@@ -34,6 +35,11 @@ class ControlsWaiter {
             container: "body",
             boundary: "viewport",
             trigger: "hover"
+        });
+
+        // Set number of operations in various places in the DOM
+        document.querySelectorAll(".num-ops").forEach(el => {
+            el.innerHTML = Object.keys(this.app.operations).length;
         });
     }
 
@@ -100,9 +106,9 @@ class ControlsWaiter {
         const includeRecipe = document.getElementById("save-link-recipe-checkbox").checked;
         const includeInput = document.getElementById("save-link-input-checkbox").checked;
         const saveLinkEl = document.getElementById("save-link");
-        const saveLink = this.generateStateUrl(includeRecipe, includeInput, recipeConfig);
+        const saveLink = this.generateStateUrl(includeRecipe, includeInput, null, recipeConfig);
 
-        saveLinkEl.innerHTML = Utils.truncate(saveLink, 120);
+        saveLinkEl.innerHTML = Utils.escapeHtml(Utils.truncate(saveLink, 120));
         saveLinkEl.setAttribute("href", saveLink);
     }
 
@@ -128,17 +134,28 @@ class ControlsWaiter {
         includeRecipe = includeRecipe && (recipeConfig.length > 0);
 
         // If we don't get passed an input, get it from the current URI
-        if (input === null) {
+        if (input === null && includeInput) {
             const params = this.app.getURIParams();
             if (params.input) {
                 includeInput = true;
                 input = params.input;
+            } else {
+                includeInput = false;
             }
         }
 
+        const inputChrEnc = this.manager.input.getChrEnc();
+        const outputChrEnc = this.manager.output.getChrEnc();
+        const inputEOL = eolSeqToCode[this.manager.input.getEOLSeq()];
+        const outputEOL = eolSeqToCode[this.manager.output.getEOLSeq()];
+
         const params = [
             includeRecipe ? ["recipe", recipeStr] : undefined,
-            includeInput ? ["input", input] : undefined,
+            includeInput && input.length ? ["input", Utils.escapeHtml(input)] : undefined,
+            inputChrEnc !== 0 ? ["ienc", inputChrEnc] : undefined,
+            outputChrEnc !== 0 ? ["oenc", outputChrEnc] : undefined,
+            inputEOL !== "LF" ? ["ieol", inputEOL] : undefined,
+            outputEOL !== "LF" ? ["oeol", outputEOL] : undefined
         ];
 
         const hash = params
@@ -334,6 +351,36 @@ class ControlsWaiter {
 
 
     /**
+     * Hides the arguments for all the operations in the current recipe.
+     */
+    hideRecipeArgsClick() {
+        const icon = document.getElementById("hide-icon");
+
+        if (icon.getAttribute("hide-args") === "false") {
+            icon.setAttribute("hide-args", "true");
+            icon.setAttribute("data-original-title", "Show arguments");
+            icon.children[0].innerText = "keyboard_arrow_down";
+            Array.from(document.getElementsByClassName("hide-args-icon")).forEach(function(item) {
+                item.setAttribute("hide-args", "true");
+                item.innerText = "keyboard_arrow_down";
+                item.classList.add("hide-args-selected");
+                item.parentNode.previousElementSibling.style.display = "none";
+            });
+        } else {
+            icon.setAttribute("hide-args", "false");
+            icon.setAttribute("data-original-title", "Hide arguments");
+            icon.children[0].innerText = "keyboard_arrow_up";
+            Array.from(document.getElementsByClassName("hide-args-icon")).forEach(function(item) {
+                item.setAttribute("hide-args", "false");
+                item.innerText = "keyboard_arrow_up";
+                item.classList.remove("hide-args-selected");
+                item.parentNode.previousElementSibling.style.display = "grid";
+            });
+        }
+    }
+
+
+    /**
      * Populates the bug report information box with useful technical info.
      *
      * @param {event} e
@@ -406,6 +453,17 @@ ${navigator.userAgent}
                 bakeButton.classList.remove("btn-warning");
                 bakeButton.classList.add("btn-success");
         }
+    }
+
+    /**
+     * Calculates the height of the controls area and adjusts the recipe
+     * height accordingly.
+     */
+    calcControlsHeight() {
+        const controls = document.getElementById("controls"),
+            recList = document.getElementById("rec-list");
+
+        recList.style.bottom = controls.clientHeight + "px";
     }
 
 }

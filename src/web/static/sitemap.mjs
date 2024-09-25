@@ -1,5 +1,5 @@
-import Sitemap from "sitemap";
-import OperationConfig from "../../core/config/OperationConfig.json";
+import sm from "sitemap";
+import OperationConfig from "../../core/config/OperationConfig.json" assert {type: "json"};
 
 
 /**
@@ -10,24 +10,25 @@ import OperationConfig from "../../core/config/OperationConfig.json";
  * @license Apache-2.0
  */
 
-const sitemap = Sitemap.createSitemap({
+const smStream = new sm.SitemapStream({
     hostname: "https://gchq.github.io/CyberChef",
 });
 
-sitemap.add({
+smStream.write({
     url: "/",
     changefreq: "weekly",
     priority: 1.0
 });
 
 for (const op in OperationConfig) {
-    sitemap.add({
+    smStream.write({
         url: `/?op=${encodeURIComponent(op)}`,
         changeFreq: "yearly",
         priority: 0.5
     });
 }
+smStream.end();
 
-const xml = sitemap.toString();
-
-console.log(xml); // eslint-disable-line no-console
+sm.streamToPromise(smStream).then(
+    buffer => console.log(buffer.toString()) // eslint-disable-line no-console
+);

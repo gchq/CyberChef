@@ -383,7 +383,7 @@ if (root.importScripts) {
      * method with data parameter: algorithm, method and arg.<br>
      * Call method execute and postMessage() results to onmessage event handler 
      * in the main process.<br>
-     * If error occured onerror event handler executed in main process.
+     * If error occurred onerror event handler executed in main process.
      * 
      * @memberOf gostEngine
      * @name onmessage

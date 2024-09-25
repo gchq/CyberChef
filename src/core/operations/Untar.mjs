@@ -27,9 +27,9 @@ class Untar extends Operation {
         this.outputType = "List<File>";
         this.presentType = "html";
         this.args = [];
-        this.patterns = [
+        this.checks = [
             {
-                "match": "^.{257}\\x75\\x73\\x74\\x61\\x72",
+                "pattern": "^.{257}\\x75\\x73\\x74\\x61\\x72",
                 "flags": "",
                 "args": []
             }

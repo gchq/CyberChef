@@ -9,7 +9,7 @@ import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import { fromBinary } from "../lib/Binary.mjs";
 import { isImage } from "../lib/FileType.mjs";
-import jimp from "jimp";
+import Jimp from "jimp/es/index.js";
 
 /**
  * Extract LSB operation
@@ -73,7 +73,7 @@ class ExtractLSB extends Operation {
         const bit = 7 - args.pop(),
             pixelOrder = args.pop(),
             colours = args.filter(option => option !== "").map(option => COLOUR_OPTIONS.indexOf(option)),
-            parsedImage = await jimp.read(input),
+            parsedImage = await Jimp.read(input),
             width = parsedImage.bitmap.width,
             height = parsedImage.bitmap.height,
             rgba = parsedImage.bitmap.data;

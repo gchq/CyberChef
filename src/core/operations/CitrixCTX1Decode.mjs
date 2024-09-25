@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import cptable from "../vendor/js-codepage/cptable.js";
+import cptable from "codepage";
 
 /**
  * Citrix CTX1 Decode operation

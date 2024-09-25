@@ -36,12 +36,12 @@ class FromBase32 extends Operation {
                 value: true
             }
         ];
-        this.patterns = [
+        this.checks = [
             {
-                match: "^(?:[A-Z2-7]{8})+(?:[A-Z2-7]{2}={6}|[A-Z2-7]{4}={4}|[A-Z2-7]{5}={3}|[A-Z2-7]{7}={1})?$",
+                pattern: "^(?:[A-Z2-7]{8})+(?:[A-Z2-7]{2}={6}|[A-Z2-7]{4}={4}|[A-Z2-7]{5}={3}|[A-Z2-7]{7}={1})?$",
                 flags: "",
                 args: ["A-Z2-7=", false]
-            },
+            }
         ];
     }
 
@@ -84,10 +84,10 @@ class FromBase32 extends Operation {
             chr5 = ((enc7 & 7) << 5) | enc8;
 
             output.push(chr1);
-            if (enc2 & 3 !== 0 || enc3 !== 32) output.push(chr2);
-            if (enc4 & 15 !== 0 || enc5 !== 32) output.push(chr3);
-            if (enc5 & 1 !== 0 || enc6 !== 32) output.push(chr4);
-            if (enc7 & 7 !== 0 || enc8 !== 32) output.push(chr5);
+            if ((enc2 & 3) !== 0 || enc3 !== 32) output.push(chr2);
+            if ((enc4 & 15) !== 0 || enc5 !== 32) output.push(chr3);
+            if ((enc5 & 1) !== 0 || enc6 !== 32) output.push(chr4);
+            if ((enc7 & 7) !== 0 || enc8 !== 32) output.push(chr5);
         }
 
         return output;

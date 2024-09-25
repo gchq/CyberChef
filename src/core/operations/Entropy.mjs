@@ -358,7 +358,7 @@ class Entropy extends Operation {
 
         <br><script>
             var canvas = document.getElementById("chart-area"),
-                parentRect = canvas.parentNode.getBoundingClientRect(),
+                parentRect = canvas.closest(".cm-scroller").getBoundingClientRect(),
                 entropy = ${entropy},
                 height = parentRect.height * 0.25;
 
