@@ -8,7 +8,7 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
- * Vigenère Encode operation
+ * Vigenère Encode operation is done
  */
 class VigenèreEncode extends Operation {
 
