@@ -28,7 +28,7 @@ function validateLengths(input, allowableLengths) {
  */
 function isHex(input) {
     const re = /^[0-9A-Fa-f]{2,}$/g;
-    return re.test(input);
+    return re.test(input) && input.length %2 === 0;
 }
 
 /**
@@ -49,14 +49,13 @@ function isValidBytes(input) {
  * @param {*} input
  */
 export function validatePrivateKey(input) {
-    const curInput = input.trim();
-    if (!validateLengths(curInput, [32, 64])) {
-        return "Invalid length. We want either 32 or 64 but we got: " + curInput.length;
+    if (!validateLengths(input, [32, 64])) {
+        return "Invalid length. We want either 32 or 64 but we got: " + input.length;
     }
-    if (curInput.length === 64 && !isHex(curInput)) {
+    if (input.length === 64 && !isHex(input)) {
         return "We have a string of length 64, but not valid hex. Cannot be interpreted as a private key.";
     }
-    if (curInput.length === 32 && !isValidBytes(curInput)) {
+    if (input.length === 32 && !isValidBytes(input)) {
         return "We have a string of length 32 but cannot cannot be interpreted as valid bytes.";
     }
     return "";
@@ -70,31 +69,30 @@ export function validatePrivateKey(input) {
  * @param {*} input
  */
 export function validatePublicKey(input) {
-    const curInput = input.trim();
-    if (!validateLengths(curInput, [33, 65, 66, 130])) {
-        return "Invalid length. We want either 33, 65 (if bytes) or 66, 130 (if hex) but we got: " + curInput.length;
+    if (!validateLengths(input, [33, 65, 66, 130])) {
+        return "Invalid length. We want either 33, 65 (if bytes) or 66, 130 (if hex) but we got: " + input.length;
     }
-    if (isHex(curInput)) {
-        if (!validateLengths(curInput, [66, 130])) {
-            return "We have a hex string, but its length is wrong. We want 66, 130 but we got: " + curInput.length;
+    if (isHex(input)) {
+        if (!validateLengths(input, [66, 130])) {
+            return "We have a hex string, but its length is wrong. We want 66, 130 but we got: " + input.length;
         }
-        if (curInput.length === 66 && (curInput.slice(0, 2) !== "02" && curInput.slice(0, 2) !== "03")) {
-            return "We have a valid hex string, of reasonable length, (66) but doesn't start with the right value. Correct values are 02, or 03 but we have: " + curInput.slice(0, 2);
+        if (input.length === 66 && (input.slice(0, 2) !== "02" && input.slice(0, 2) !== "03")) {
+            return "We have a valid hex string, of reasonable length, (66) but doesn't start with the right value. Correct values are 02, or 03 but we have: " + input.slice(0, 2);
         }
-        if (curInput.length === 130 && curInput.slice(0, 2) !== "04") {
-            return "We have a valid hex string of reasonable length, (130) but doesn't start with the right value. Correct values are 04 but we have: " + curInput.slice(0, 2);
+        if (input.length === 130 && input.slice(0, 2) !== "04") {
+            return "We have a valid hex string of reasonable length, (130) but doesn't start with the right value. Correct values are 04 but we have: " + input.slice(0, 2);
         }
         return "";
     }
-    if (isValidBytes(curInput)) {
-        if (!validateLengths(curInput, [33, 65])) {
-            return "We have a byte string, but its length is wrong. We want 33 or 65 but we got: " + curInput.length;
+    if (isValidBytes(input)) {
+        if (!validateLengths(input, [33, 65])) {
+            return "We have a byte string, but its length is wrong. We want 33 or 65 but we got: " + input.length;
         }
-        if (curInput.length === 33 && toHex(curInput[0]) !== "02" && toHex(curInput[0]) !== "03") {
-            return "We have a valid byte string, of reasonable length, (33) but doesn't start with the right value. Correct values are 02, or 03 but we have: " + toHex(curInput[0]) ;
+        if (input.length === 33 && toHex(input[0]) !== "02" && toHex(input[0]) !== "03") {
+            return "We have a valid byte string, of reasonable length, (33) but doesn't start with the right value. Correct values are 02, or 03 but we have: " + toHex(input[0]) ;
         }
-        if (curInput.length === 65 && toHex(curInput[0]) !== "04") {
-            return "We have a valid byte string, of reasonable length, (65) but doesn't start with the right value. Correct value is 04 but we have: " + toHex(curInput[0]);
+        if (input.length === 65 && toHex(input[0]) !== "04") {
+            return "We have a valid byte string, of reasonable length, (65) but doesn't start with the right value. Correct value is 04 but we have: " + toHex(input[0]);
         }
         return "";
     }

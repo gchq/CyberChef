@@ -355,7 +355,8 @@
             "Seed To Master Key",
             "Decrypt Keystore File",
             "BIP32Derive",
-            "Public Key To ETH Style Address"
+            "Public Key To ETH Style Address",
+            "Public Key To TRX Style Address"
         ]
     },
     {
