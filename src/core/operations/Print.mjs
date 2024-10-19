@@ -19,7 +19,7 @@ class Print extends Operation {
 
         this.name = "Print";
         this.module = "Other";
-        this.description = "Prints a register";
+        this.description = "Prints a text to the output.";
         this.infoURL = ""; // Usually a Wikipedia link. Remember to remove localisation (i.e. https://wikipedia.org/etc rather than https://en.wikipedia.org/etc)
         this.inputType = "string";
         this.outputType = "string";
@@ -28,6 +28,11 @@ class Print extends Operation {
                 name: "Text to print",
                 type: "string",
                 value: ""
+            },
+            {
+                name: "Replace",
+                type: "boolean",
+                value: true
             }
         ];
     }
@@ -38,11 +43,11 @@ class Print extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        console.log(args);
-
-        //input = args[0].value;
-        //return input;
-        return args[0].toString();
+        const [text, replace] = args;
+        if (replace) {
+            return text.toString();
+        }
+        return input + text.toString();
     }
 
 }
