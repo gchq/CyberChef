@@ -60,7 +60,7 @@ class RSAVerify extends Operation {
             const pubKey = forge.pki.publicKeyFromPem(pemKey);
             // Generate message digest
             const md = MD_ALGORITHMS[mdAlgo].create();
-            md.update(message, "utf8");
+            md.update(message, "raw");
             // Compare signed message digest and generated message digest
             const result = pubKey.verify(md.digest().bytes(), input);
             return result ? "Verified OK" : "Verification Failure";
