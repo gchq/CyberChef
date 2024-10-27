@@ -1,5 +1,5 @@
 /**
- * @author n1073645 [n1073645@gmail.com] 
+ * @author n1073645 [n1073645@gmail.com]
  * @author k3ach [k3ach@proton.me]
  * @copyright Crown Copyright 2020
  * @license Apache-2.0
@@ -21,7 +21,7 @@ class LuhnChecksum extends Operation {
 
         this.name = "Luhn Checksum";
         this.module = "Default";
-        this.description = "The Luhn mod N algorithm is an extension to the Luhn algorithm (also known as mod 10 algorithm) that allows it to work with sequences of values in any even-numbered base. This can be useful when a check digit is required to validate an identification string composed of letters, a combination of letters and digits or any arbitrary set of N characters where N is divisible by 2.";
+        this.description = "The Luhn mod N algorithm using the english alphabet. The Luhn mod N algorithm is an extension to the Luhn algorithm (also known as mod 10 algorithm) that allows it to work with sequences of values in any even-numbered base. This can be useful when a check digit is required to validate an identification string composed of letters, a combination of letters and digits or any arbitrary set of N characters where N is divisible by 2.";
         this.infoURL = "https://en.wikipedia.org/wiki/Luhn_mod_N_algorithm";
         this.inputType = "string";
         this.outputType = "string";
@@ -71,20 +71,20 @@ class LuhnChecksum extends Operation {
     run(input, args) {
         if (!input) return "";
 
-        let radix = args[0];
+        const radix = args[0];
 
         if (radix < 2 || radix > 36) {
             throw new OperationError("Error: Radix argument must be between 2 and 36");
         }
 
-        if (radix % 2 != 0) {
+        if (radix % 2 !== 0) {
             throw new OperationError("Error: Radix argument must be divisible by 2");
         }
 
         const checkSum = this.checksum(input, radix).toString(radix);
         let checkDigit = this.checksum(input + "0", radix);
         checkDigit = checkDigit === 0 ? 0 : (radix - checkDigit);
-        checkDigit = checkDigit.toString(radix)
+        checkDigit = checkDigit.toString(radix);
 
         return `Checksum: ${checkSum}
 Checkdigit: ${checkDigit}
