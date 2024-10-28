@@ -34,20 +34,27 @@ class ExtractURI extends Operation {
         const uri = new URL(input);
         const pieces = {};
         // Straight copy some attributes
-        ['protocol', 'hostname', 'port', 'username', 'password', 'pathname', 'hash'
-            ].forEach((name) => {
-                if (uri[name]) pieces[name] = uri[name];
+        [
+            "hash",
+            "hostname",
+            "password",
+            "pathname",
+            "port",
+            "protocol",
+            "username"
+        ].forEach((name) => {
+            if (uri[name]) pieces[name] = uri[name];
         });
         // Now handle query params
         const params = uri.searchParams;
         if (params.size) {
-            pieces['query'] = {};
+            pieces.query = {};
             for (const name of params.keys()) {
                 const values = params.getAll(name);
                 if (values.length > 1) {
-                    pieces['query'][name] = values;
+                    pieces.query[name] = values;
                 } else {
-                    pieces['query'][name] = values[0];
+                    pieces.query[name] = values[0];
                 }
             }
         }
