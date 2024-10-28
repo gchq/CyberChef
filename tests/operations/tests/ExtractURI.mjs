@@ -13,11 +13,11 @@ TestRegister.addTests([
         name: "Extract URI: Test",
         input: "http://www.example.org:9999/path?foo=bar&baz=1&baz=2#frob",
         expectedOutput: JSON.stringify({
-            "protocol": "http:",
-            "hostname": "www.example.org",
-            "port": "9999",
-            "pathname": "/path",
             "hash": "#frob",
+            "hostname": "www.example.org",
+            "pathname": "/path",
+            "port": "9999",
+            "protocol": "http:",
             "query": {
                 "foo": "bar",
                 "baz": [
