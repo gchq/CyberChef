@@ -7,4 +7,5 @@
 tasks:
   - init: npm install && npm run build
     command: npm run start
-
+  - init: update upstream
+    command: git remote add upstream https://github.com/gchq/CyberChef.git; git fetch upstream
