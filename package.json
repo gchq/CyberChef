@@ -138,7 +138,7 @@
     "js-sha3": "^0.9.3",
     "jsesc": "^3.0.2",
     "json5": "^2.2.3",
-    "jsonpath-plus": "^9.0.0",
+    "jsonpath-plus": "^10.0.7",
     "jsonwebtoken": "8.5.1",
     "jsqr": "^1.4.0",
     "jsrsasign": "^11.1.0",
