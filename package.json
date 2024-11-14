@@ -1,6 +1,6 @@
 {
   "name": "cyberchef",
-  "version": "10.19.2",
+  "version": "10.19.4",
   "description": "The Cyber Swiss Army Knife for encryption, encoding, compression and data analysis.",
   "author": "n1474335 <n1474335@gmail.com>",
   "homepage": "https://gchq.github.io/CyberChef",
@@ -55,7 +55,7 @@
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "babel-plugin-transform-builtin-extend": "1.1.2",
     "base64-loader": "^1.0.0",
-    "chromedriver": "^127.0.2",
+    "chromedriver": "^130.0.0",
     "cli-progress": "^3.12.0",
     "colors": "^1.4.0",
     "copy-webpack-plugin": "^12.0.2",
