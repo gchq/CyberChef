@@ -356,7 +356,8 @@
             "Decrypt Keystore File",
             "BIP32Derive",
             "Public Key To ETH Style Address",
-            "Public Key To TRX Style Address"
+            "Public Key To TRX Style Address",
+            "ETH / TRX Conversion"
         ]
     },
     {
