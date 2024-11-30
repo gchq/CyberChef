@@ -35,7 +35,7 @@ class LuhnChecksum extends Operation {
     }
 
     /**
-     * Generates the Luhn Checksum from the input.
+     * Generates the Luhn checksum from the input.
      *
      * @param {string} inputStr
      * @returns {number}
