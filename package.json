@@ -152,6 +152,7 @@
     "markdown-it": "^14.1.0",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
+    "mqtt": "^5.10.3",
     "ngeohash": "^0.6.3",
     "node-forge": "^1.3.1",
     "node-md6": "^0.1.0",
