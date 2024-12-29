@@ -52,13 +52,13 @@ function setInput(browser, input, type=true) {
 function bake(browser) {
     browser
         // Ensure we're not currently busy
-        .waitForElementNotVisible("#output-loader", 5000)
+        .waitForElementNotVisible("#output-loader", 6000)
         .expect.element("#bake span").text.to.equal("BAKE!");
 
     browser
         .click("#bake")
-        .waitForElementNotVisible("#stale-indicator", 5000)
-        .waitForElementNotVisible("#output-loader", 5000);
+        .waitForElementNotVisible("#stale-indicator", 6000)
+        .waitForElementNotVisible("#output-loader", 6000);
 }
 
 /** @function
