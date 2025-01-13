@@ -39,7 +39,7 @@ class AddLineNumbers extends Operation {
     run(input, args) {
         const lines = input.split("\n"),
             width = lines.length.toString().length;
-        const offset = parseInt(args[0], 10);
+        const offset = args[0] ? parseInt(args[0], 10) : 0;
         let output = "";
 
         for (let n = 0; n < lines.length; n++) {
