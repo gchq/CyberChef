@@ -82,7 +82,11 @@ module.exports = {
                     context: "node_modules/node-forge/dist",
                     from: "prime.worker.min.js",
                     to: "assets/forge/"
-                }
+                }, {
+                    context: "node_modules/libhydrogen/",
+                    from: "libhydrogen.wasm",
+                    to: "assets/libhydrogen"
+                },
             ]
         }),
         new ModifySourcePlugin({
