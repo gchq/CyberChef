@@ -175,7 +175,9 @@ class LibHydrogenCurve25519Signing extends Operation {
                     sched_yield() {
                         return 0;
                     },
-                    random_get() {
+                    random_get(buf, buf_len) {
+                        const random_arr = new Uint8Array(dataview.buffer, buf, buf_len);
+                        crypto.getRandomValues(random_arr);
                         return 0;
                     },
                     sock_accept() {
@@ -193,13 +195,13 @@ class LibHydrogenCurve25519Signing extends Operation {
                 }
             };
             instance = await WebAssembly.instantiate(wasm, imports);
-            // We must call a start method per WASI specification
-            // Libhydrogen's main method is one we have patched to initialise it
-            instance.exports._start();
             // Get the memory are used as a stack when calling into the WASI
             const memory = instance.exports.memory;
             // DataView takes care of our platform specific endian conversions
             dataview = new DataView(memory.buffer);
+            // We must call a start method per WASI specification
+            // Libhydrogen's main method is one we have patched to initialise it
+            instance.exports._start();
             // Run the various examples
             random_uniform();
             hash();
