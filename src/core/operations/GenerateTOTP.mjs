@@ -5,15 +5,14 @@
  */
 
 import Operation from "../Operation.mjs";
-import otp from "otp";
+import * as OTPAuth from "otpauth";
 
 /**
  * Generate TOTP operation
  */
 class GenerateTOTP extends Operation {
-
     /**
-     * GenerateTOTP constructor
+     *
      */
     constructor() {
         super();
@@ -28,11 +27,6 @@ class GenerateTOTP extends Operation {
                 "name": "Name",
                 "type": "string",
                 "value": ""
-            },
-            {
-                "name": "Key size",
-                "type": "number",
-                "value": 32
             },
             {
                 "name": "Code length",
@@ -53,32 +47,27 @@ class GenerateTOTP extends Operation {
     }
 
     /**
-     * @param {ArrayBuffer} input
-     * @param {Object[]} args
-     * @returns {string}
+     *
      */
     run(input, args) {
         const secretStr = new TextDecoder("utf-8").decode(input).trim();
+        const secret = secretStr ? secretStr.toUpperCase().replace(/\s+/g, "") : "";
 
-        // uppercase it and remove spaces. If input is empty, let otp generate a random key.
-        const secret = secretStr ?
-            secretStr.toUpperCase().replace(/\s+/g, "") : // e.g. "ok53 fvlf" -> "OK53FVLF"
-            "";
-
-        // Construct the OTP object. If secret is "", otp will auto-generate one.
-        const otpObj = new otp({
-            name: args[0],
-            keySize: args[1],
-            codeLength: args[2],
-            secret: secret,
-            epoch: args[3],
-            timeSlice: args[4]
+        const totp = new OTPAuth.TOTP({
+            issuer: "",
+            label: args[0],
+            algorithm: "SHA1",
+            digits: args[1],
+            period: args[3],
+            epoch: args[2] * 1000, // Convert seconds to milliseconds
+            secret: OTPAuth.Secret.fromBase32(secret)
         });
 
-        // Return TOTP URI and code
-        return `URI: ${otpObj.totpURL}\n\nPassword: ${otpObj.totp()}`;
-    }
+        const uri = totp.toString();
+        const code = totp.generate();
 
+        return `URI: ${uri}\n\nPassword: ${code}`;
+    }
 }
 
 export default GenerateTOTP;
