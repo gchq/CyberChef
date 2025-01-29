@@ -1,10 +1,6 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable camelcase */
-/* eslint-disable jsdoc/require-jsdoc */
-/* eslint-disable no-console */
 /**
  * @author Configured Things Ltd. [getconfigured@configuredthings.com]
- * @copyright Crown Copyright 2024
+ * @copyright Crown Copyright 2025
  * @license Apache-2.0
  */
 
@@ -43,6 +39,7 @@ class LibHydrogenCurve25519Signing extends Operation {
         ];
     }
 
+    /* eslint-disable camelcase */
     /**
      * @param {JSON} input
      * @param {Object[]} args
@@ -50,8 +47,8 @@ class LibHydrogenCurve25519Signing extends Operation {
      */
     async run(input, args) {
         const [context, privateKey] = args;
-        const wasm_src = await fetch(new URL(`${self.docURL}/assets/libhydrogen-wasm/libhydrogen.wasm`));
-        const wasm = await WebAssembly.compileStreaming(wasm_src);
+        const wasmSrc = await fetch(new URL(`${self.docURL}/assets/libhydrogen-wasm/libhydrogen.wasm`));
+        const wasm = await WebAssembly.compileStreaming(wasmSrc);
         const imports = {
             "wasi_snapshot_preview1": {
                 args_get() {
@@ -204,25 +201,28 @@ class LibHydrogenCurve25519Signing extends Operation {
         // Generated signature for JSON input
         return await sign(input, context, privateKey);
     }
+    /* eslint-enable camelcase */
 
 }
 
 let instance, dataview;
 
-//
-// Helper function to reserve space in the buffer used
-// as a stack between js and the wasm.
-//
-// Offset must be an an object so we can update it's value
-//   {value: n}
-//
-// Designed to allow a sequence of reservations such as
-//
-//  let offset = {value: 0};
-//  buf1 = reserve (offset, 100);
-//  buf2 = reserve (offset, 590);
-//  ...
-//
+/**
+ * Helper function to reserve space in the buffer used
+ * as a stack between js and the wasm.
+ * @param {Object} offset - Must be an an object so we can update it's value
+ * @param {number} offset.value
+ * @param {number} length
+ * @returns {Uint8Array} Returns a UInt8Array representation of the buffer
+ *
+ * @example
+ * // Designed to allow a sequence of reservations such as
+ *
+ *  let offset = {value: 0};
+ *  buf1 = reserve (offset, 100);
+ *  buf2 = reserve (offset, 590);
+ *  ...
+ */
 function reserve(offset, length) {
     const a = new Uint8Array(dataview.buffer, offset.value, length);
     const newOffset = a.byteOffset + a.byteLength;
@@ -230,36 +230,52 @@ function reserve(offset, length) {
     return a;
 }
 
-//
-// Public key signing
-//
+/**
+ * A signed JSON object.
+ * @typedef {Object} SignedJSON
+ * @property {Uint8Array} context - A buffer representing the context used to define the context of the signing operation,
+    see {@link https://github.com/jedisct1/libhydrogen/wiki/Contexts}
+ * @property {Uint8Array} input - A buffer representing the stringified JSON object used as the input to the signing operation
+ * @property {Uint8Array} signature - A buffer representing the digital signature of the signed JSON object
+ */
+
+/**
+ * Digital signing of a JSON object
+ * @param {JSON} input - A JSON object to be signed
+ * @param {string} context - A string used to define the context of the signing operation,
+ *  see {@link https://github.com/jedisct1/libhydrogen/wiki/Contexts}
+ * @param {Uint8Array} privateKey - The private key to use for the digital signing operation
+ * @returns {SignedJSON} A signed JSON object
+ */
 async function sign(input, context, privateKey) {
     // Importing libhydrogen's signing keygen and signing and verification functions
-    const { hydro_sign_keygen, hydro_sign_create, hydro_sign_verify } = instance.exports;
+    // eslint-disable-next-line camelcase
+    const { hydro_sign_create } = instance.exports;
     const textEncoder = new TextEncoder();
 
     // We have to create the stack frame to pass to libHydrogen
     // in the dataview Buffer, and then pass in pointers to
     // that buffer
     const offset = { value: 0 };
-    const context_arr = reserve(offset, hydro.hash_CONTEXTBYTES);
-    const context_ab = textEncoder.encode(context);
+    const contextArr = reserve(offset, hydro.hash_CONTEXTBYTES);
+    const contextAb = textEncoder.encode(context);
 
     for (let i = 0; i < hydro.hash_CONTEXTBYTES; i++) {
-        context_arr.set([context_ab.at(i)], i);
+        contextArr.set([contextAb.at(i)], i);
     }
 
-    const message_ab = textEncoder.encode(JSON.stringify(input));
-    const message_arr = reserve(offset, message_ab.length);
+    const messageStr = JSON.stringify(input);
+    const messageAb = textEncoder.encode(messageStr);
+    const messageArr = reserve(offset, messageAb.length);
 
-    for (let i = 0; i < message_ab.length; i++) {
-        message_arr.set([message_ab.at(i)], i);
+    for (let i = 0; i < messageAb.length; i++) {
+        messageArr.set([messageAb.at(i)], i);
     }
 
     // Generate a key pair
-    const privateKey_arr = reserve(offset, hydro.sign_SECRETKEYBYTES);
+    const privateKeyArr = reserve(offset, hydro.sign_SECRETKEYBYTES);
     for (let i = 0; i < privateKey.length; i++) {
-        privateKey_arr.set([privateKey.at(i)], i);
+        privateKeyArr.set([privateKey.at(i)], i);
     }
 
     // Reserving memory for the signature
@@ -268,18 +284,16 @@ async function sign(input, context, privateKey) {
     // Creating signature of message with secret key
     hydro_sign_create(
         signature.byteOffset,
-        message_arr.byteOffset,
-        message_arr.byteLength,
-        context_arr.byteOffset,
-        privateKey_arr.byteOffset,
+        messageArr.byteOffset,
+        messageArr.byteLength,
+        contextArr.byteOffset,
+        privateKeyArr.byteOffset,
     );
 
-    console.log(`generated signature - ${Buffer.from(signature).toString("hex")}`);
-
     return {
-        context,
-        input,
-        signature: Buffer.from(signature).toString("hex")
+        context: contextArr,
+        input: messageArr,
+        signature
     };
 }
 
