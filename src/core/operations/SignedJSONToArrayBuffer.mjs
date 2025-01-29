@@ -10,15 +10,15 @@ import OperationError from "../errors/OperationError.mjs";
 /**
  * Configured Things - Digital Security by Design - Signed JSON to Text operation
  */
-class ConfiguredThingsDigitalSecurityByDesignSignedJSONToText extends Operation {
+class SignedJSONToArrayBuffer extends Operation {
 
     /**
-     * ConfiguredThingsDigitalSecurityByDesignSignedJSONToText constructor
+     * SignedJSONToArrayBuffer constructor
      */
     constructor() {
         super();
 
-        this.name = "Configured Things - Digital Security by Design - LibHydrogen Signed JSON to Text";
+        this.name = "Signed JSON to ArrayBuffer";
         this.module = "Default";
         this.description = "Converts signed JSON to text";
         this.infoURL = ""; // Usually a Wikipedia link. Remember to remove localisation (i.e. https://wikipedia.org/etc rather than https://en.wikipedia.org/etc)
@@ -49,4 +49,4 @@ class ConfiguredThingsDigitalSecurityByDesignSignedJSONToText extends Operation 
     }
 }
 
-export default ConfiguredThingsDigitalSecurityByDesignSignedJSONToText;
+export default SignedJSONToArrayBuffer;

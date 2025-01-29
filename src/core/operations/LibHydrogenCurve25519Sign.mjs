@@ -23,7 +23,7 @@ class LibHydrogenCurve25519Signing extends Operation {
         this.module = "Crypto";
         this.description = "Computes a signature for a message using the lightweight LibHydrogen cryptography library";
         this.infoURL = "https://libhydrogen.org/";
-        this.inputType = "JSON";
+        this.inputType = "ArrayBuffer";
         this.outputType = "JSON";
         this.args = [
             {
@@ -41,7 +41,7 @@ class LibHydrogenCurve25519Signing extends Operation {
 
     /* eslint-disable camelcase */
     /**
-     * @param {JSON} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {JSON}
      */
@@ -240,8 +240,8 @@ function reserve(offset, length) {
  */
 
 /**
- * Digital signing of a JSON object
- * @param {JSON} input - A JSON object to be signed
+ * Digital signing of an ArrayBuffer's contents
+ * @param {ArrayBuffer} input - An ArrayBuffer to be signed
  * @param {string} context - A string used to define the context of the signing operation,
  *  see {@link https://github.com/jedisct1/libhydrogen/wiki/Contexts}
  * @param {Uint8Array} privateKey - The private key to use for the digital signing operation
@@ -264,12 +264,11 @@ async function sign(input, context, privateKey) {
         contextArr.set([contextAb.at(i)], i);
     }
 
-    const messageStr = JSON.stringify(input);
-    const messageAb = textEncoder.encode(messageStr);
-    const messageArr = reserve(offset, messageAb.length);
+    const messageTypedArr = new Uint8Array(input);
+    const messageArr = reserve(offset, messageTypedArr.length);
 
-    for (let i = 0; i < messageAb.length; i++) {
-        messageArr.set([messageAb.at(i)], i);
+    for (let i = 0; i < input.length; i++) {
+        messageArr.set([messageTypedArr.at(i)], i);
     }
 
     // Generate a key pair
