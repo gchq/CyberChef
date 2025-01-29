@@ -267,7 +267,7 @@ async function sign(input, context, privateKey) {
     const messageTypedArr = new Uint8Array(input);
     const messageArr = reserve(offset, messageTypedArr.length);
 
-    for (let i = 0; i < input.length; i++) {
+    for (let i = 0; i < messageTypedArr.length; i++) {
         messageArr.set([messageTypedArr.at(i)], i);
     }
 
