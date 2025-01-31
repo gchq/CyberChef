@@ -1,5 +1,7 @@
 /**
- * @author Configured Things Ltd. [getconfigured@configuredthings.com]
+ * @file Developed by {@link https://configuredthings.com Configured Things} with funding from the {@link https://www.ukri.org UKRI}
+ *     {@link https://www.dsbd.tech Digital Security by Design} program.
+ * @author Configured Things Ltd. <getconfigured@configuredthings.com>
  * @copyright Crown Copyright 2025
  * @license Apache-2.0
  */
@@ -210,6 +212,7 @@ let instance, dataview;
 /**
  * Helper function to reserve space in the buffer used
  * as a stack between js and the wasm.
+ * @private
  * @param {Object} offset - Must be an an object so we can update it's value
  * @param {number} offset.value
  * @param {number} length
@@ -231,21 +234,22 @@ function reserve(offset, length) {
 }
 
 /**
- * A signed JSON object.
- * @typedef {Object} SignedJSON
+ * An object containing the signature, the ArrayBuffer used to generate the signature, and the signing operation's context
+ * @typedef {Object} SignedObject
  * @property {Uint8Array} context - A buffer representing the context used to define the context of the signing operation,
     see {@link https://github.com/jedisct1/libhydrogen/wiki/Contexts}
- * @property {Uint8Array} input - A buffer representing the stringified JSON object used as the input to the signing operation
- * @property {Uint8Array} signature - A buffer representing the digital signature of the signed JSON object
- */
+* @property {Uint8Array} input - A buffer representing the stringified JSON object used as the input to the signing operation
+* @property {Uint8Array} signature - A buffer representing the digital signature of the signed JSON object
+*/
 
 /**
  * Digital signing of an ArrayBuffer's contents
+ * @private
  * @param {ArrayBuffer} input - An ArrayBuffer to be signed
  * @param {string} context - A string used to define the context of the signing operation,
  *  see {@link https://github.com/jedisct1/libhydrogen/wiki/Contexts}
  * @param {Uint8Array} privateKey - The private key to use for the digital signing operation
- * @returns {SignedJSON} A signed JSON object
+ * @returns {SignedObject} An object containing the signature, the ArrayBuffer used to generate the signature, and the signing operation's context
  */
 async function sign(input, context, privateKey) {
     // Importing libhydrogen's signing keygen and signing and verification functions

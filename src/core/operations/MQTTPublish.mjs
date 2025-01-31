@@ -1,5 +1,7 @@
 /**
- * @author Configured Things Ltd. [getconfigured@configuredthings.com]
+ * @file Developed by {@link https://configuredthings.com Configured Things} with funding from the {@link https://www.ukri.org UKRI}
+ *     {@link https://www.dsbd.tech Digital Security by Design} program.
+ * @author Configured Things Ltd. <getconfigured@configuredthings.com>
  * @copyright Crown Copyright 2025
  * @license Apache-2.0
  */

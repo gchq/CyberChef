@@ -1,5 +1,7 @@
 /**
- * @author Configured Things Ltd. [getconfigured@configuredthings.com]
+ * @file Developed by {@link https://configuredthings.com Configured Things} with funding from the {@link https://www.ukri.org UKRI}
+ *     {@link https://www.dsbd.tech Digital Security by Design} program.
+ * @author Configured Things Ltd. <getconfigured@configuredthings.com>
  * @copyright Crown Copyright 2025
  * @license Apache-2.0
  */
@@ -8,9 +10,9 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
- * Configured Things - Digital Security by Design - Signed JSON to Text operation
+ * Signed Object to ArrayBuffer operation
  */
-class SignedJSONToArrayBuffer extends Operation {
+class SignedObjectToArrayBuffer extends Operation {
 
     /**
      * SignedJSONToArrayBuffer constructor
@@ -18,9 +20,9 @@ class SignedJSONToArrayBuffer extends Operation {
     constructor() {
         super();
 
-        this.name = "Signed JSON to ArrayBuffer";
+        this.name = "Signed Object to ArrayBuffer";
         this.module = "Default";
-        this.description = "Converts signed JSON to text";
+        this.description = "Converts a digitally signed object created by, for example, the 'LibHydrogen Curve25519 Sign' operation to an ArrayBuffer";
         this.infoURL = ""; // Usually a Wikipedia link. Remember to remove localisation (i.e. https://wikipedia.org/etc rather than https://en.wikipedia.org/etc)
         this.inputType = "JSON";
         this.outputType = "ArrayBuffer";
@@ -49,4 +51,4 @@ class SignedJSONToArrayBuffer extends Operation {
     }
 }
 
-export default SignedJSONToArrayBuffer;
+export default SignedObjectToArrayBuffer;
