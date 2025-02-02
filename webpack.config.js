@@ -83,7 +83,7 @@ module.exports = {
                     from: "prime.worker.min.js",
                     to: "assets/forge/"
                 }, {
-                    context: "node_modules/@configuredthings/libhydrogen-wasm/",
+                    context: "node_modules/ct-dsbd-libhydrogen-wasm/",
                     from: "libhydrogen.wasm",
                     to: "assets/libhydrogen-wasm"
                 },

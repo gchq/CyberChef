@@ -8,7 +8,7 @@
 
 import Operation from "../Operation.mjs";
 
-import * as hydro from  "@configuredthings/libhydrogen-wasm/libHydrogen.js";
+import * as hydro from  "ct-dsbd-libhydrogen-wasm/libHydrogen.js";
 
 /**
  * LibHydrogen Curve25519 Sign operation
