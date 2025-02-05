@@ -268,7 +268,8 @@
             "Unicode Text Format",
             "Remove Diacritics",
             "Unescape Unicode Characters",
-            "Convert to NATO alphabet"
+            "Convert to NATO alphabet",
+            "Convert Leet Speak"
         ]
     },
     {

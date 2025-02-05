@@ -54,6 +54,7 @@ import "./tests/Comment.mjs";
 import "./tests/Compress.mjs";
 import "./tests/ConditionalJump.mjs";
 import "./tests/ConvertCoordinateFormat.mjs";
+import "./tests/ConvertLeetSpeak.mjs";
 import "./tests/ConvertToNATOAlphabet.mjs";
 import "./tests/Crypt.mjs";
 import "./tests/CSV.mjs";
