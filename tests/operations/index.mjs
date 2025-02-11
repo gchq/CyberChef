@@ -115,6 +115,7 @@ import "./tests/ParseObjectIDTimestamp.mjs";
 import "./tests/ParseQRCode.mjs";
 import "./tests/ParseSSHHostKey.mjs";
 import "./tests/ParseTCP.mjs";
+import "./tests/ParseTLSRecord.mjs";
 import "./tests/ParseTLV.mjs";
 import "./tests/ParseUDP.mjs";
 import "./tests/PEMtoHex.mjs";
