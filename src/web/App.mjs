@@ -307,7 +307,7 @@ class App {
             sizes: [20, 30, 50],
             minSize: minimise ? [0, 0, 0] : [240, 310, 450],
             gutterSize: 4,
-            expandToMin: true,
+            expandToMin: false,
             onDrag: debounce(function() {
                 this.adjustComponentSizes();
             }, 50, "dragSplitter", this, [])
