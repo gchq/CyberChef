@@ -236,6 +236,7 @@
             "Parse IPv6 address",
             "Parse IPv4 header",
             "Parse TCP",
+            "Strip TCP header",
             "Parse TLS record",
             "Parse UDP",
             "Strip UDP header",
