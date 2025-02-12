@@ -74,7 +74,9 @@
             "CBOR Decode",
             "Caret/M-decode",
             "Rison Encode",
-            "Rison Decode"
+            "Rison Decode",
+            "To Modhex",
+            "From Modhex"
         ]
     },
     {
