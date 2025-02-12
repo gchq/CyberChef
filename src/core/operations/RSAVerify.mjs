@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import forge from "node-forge";
 import { MD_ALGORITHMS } from "../lib/RSA.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * RSA Verify operation
@@ -38,6 +39,11 @@ class RSAVerify extends Operation {
                 value: ""
             },
             {
+                name: "Message format",
+                type: "option",
+                value: ["Raw", "Hex", "Base64"]
+            },
+            {
                 name: "Message Digest Algorithm",
                 type: "option",
                 value: Object.keys(MD_ALGORITHMS)
@@ -51,7 +57,7 @@ class RSAVerify extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [pemKey, message, mdAlgo] = args;
+        const [pemKey, message, format, mdAlgo] = args;
         if (pemKey.replace("-----BEGIN RSA PUBLIC KEY-----", "").length === 0) {
             throw new OperationError("Please enter a public key.");
         }
@@ -60,7 +66,8 @@ class RSAVerify extends Operation {
             const pubKey = forge.pki.publicKeyFromPem(pemKey);
             // Generate message digest
             const md = MD_ALGORITHMS[mdAlgo].create();
-            md.update(message, "utf8");
+            const messageStr = Utils.convertToByteString(message, format);
+            md.update(messageStr, "raw");
             // Compare signed message digest and generated message digest
             const result = pubKey.verify(md.digest().bytes(), input);
             return result ? "Verified OK" : "Verification Failure";
