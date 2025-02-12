@@ -116,6 +116,7 @@ import "./tests/ParseObjectIDTimestamp.mjs";
 import "./tests/ParseQRCode.mjs";
 import "./tests/ParseSSHHostKey.mjs";
 import "./tests/ParseTCP.mjs";
+import "./tests/ParseTLSRecord.mjs";
 import "./tests/ParseTLV.mjs";
 import "./tests/ParseUDP.mjs";
 import "./tests/PEMtoHex.mjs";
@@ -143,6 +144,9 @@ import "./tests/SIGABA.mjs";
 import "./tests/SM4.mjs";
 // import "./tests/SplitColourChannels.mjs"; // Cannot test operations that use the File type yet
 import "./tests/StrUtils.mjs";
+import "./tests/StripIPv4Header.mjs";
+import "./tests/StripTCPHeader.mjs";
+import "./tests/StripUDPHeader.mjs";
 import "./tests/Subsection.mjs";
 import "./tests/SwapCase.mjs";
 import "./tests/SymmetricDifference.mjs";
