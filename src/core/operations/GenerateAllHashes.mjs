@@ -29,6 +29,7 @@ import Fletcher64Checksum from "./Fletcher64Checksum.mjs";
 import Adler32Checksum from "./Adler32Checksum.mjs";
 import CRC8Checksum from "./CRC8Checksum.mjs";
 import CRC16Checksum from "./CRC16Checksum.mjs";
+import CRC16CCITTChecksum from "./CRC16CCITTChecksum.mjs";
 import CRC32Checksum from "./CRC32Checksum.mjs";
 import BLAKE2b from "./BLAKE2b.mjs";
 import BLAKE2s from "./BLAKE2s.mjs";
@@ -122,6 +123,7 @@ class GenerateAllHashes extends Operation {
             {name: "Adler-32", algo: (new Adler32Checksum), inputType: "byteArray", params: []},
             {name: "CRC-8", algo: (new CRC8Checksum), inputType: "arrayBuffer", params: ["CRC-8"]},
             {name: "CRC-16", algo: (new CRC16Checksum), inputType: "arrayBuffer", params: []},
+            {name: "CRC-16-CCITT", algo: (new CRC16CCITTChecksum), inputType: "arrayBuffer", params: []},
             {name: "CRC-32", algo: (new CRC32Checksum), inputType: "arrayBuffer", params: []}
         ];
     }

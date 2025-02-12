@@ -195,6 +195,50 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "CRC-16-CCITT: nothing",
+        input: "",
+        expectedOutput: "0000",
+        recipeConfig: [
+            {
+                "op": "CRC-16-CCITT Checksum",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "CRC-16-CCITT: basic string",
+        input: BASIC_STRING,
+        expectedOutput: "03ef",
+        recipeConfig: [
+            {
+                "op": "CRC-16-CCITT Checksum",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "CRC-16-CCITT: UTF-8",
+        input: UTF8_STR,
+        expectedOutput: "cf94",
+        recipeConfig: [
+            {
+                "op": "CRC-16-CCITT Checksum",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "CRC-16-CCITT: all bytes",
+        input: ALL_BYTES,
+        expectedOutput: "7e55",
+        recipeConfig: [
+            {
+                "op": "CRC-16-CCITT Checksum",
+                "args": []
+            }
+        ]
+    },
+    {
         name: "CRC-32: nothing",
         input: "",
         expectedOutput: "00000000",
