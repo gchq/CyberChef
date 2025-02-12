@@ -103,7 +103,7 @@
     "argon2-browser": "^1.18.0",
     "arrive": "^2.4.1",
     "avsc": "^5.7.7",
-    "bcryptjs": "^2.4.3",
+    "bcrypt": "^5.1.1",
     "bignumber.js": "^9.1.2",
     "blakejs": "^1.2.1",
     "bootstrap": "4.6.2",

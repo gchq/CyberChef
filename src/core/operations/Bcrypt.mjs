@@ -1,11 +1,11 @@
 /**
- * @author n1474335 [n1474335@gmail.com]
+ * @author n1474335
  * @copyright Crown Copyright 2016
  * @license Apache-2.0
  */
 
 import Operation from "../Operation.mjs";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { isWorkerEnvironment } from "../Utils.mjs";
 
 /**
@@ -37,20 +37,23 @@ class Bcrypt extends Operation {
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {Promise<string>}
      */
     async run(input, args) {
         const rounds = args[0];
         const salt = await bcrypt.genSalt(rounds);
 
-        return await bcrypt.hash(input, salt, null, p => {
-            // Progress callback
-            if (isWorkerEnvironment())
-                self.sendStatusMessage(`Progress: ${(p * 100).toFixed(0)}%`);
-        });
+        // The progress callback is not supported in the bcrypt library directly.
+        // Removed the progress callback from bcrypt.hash as it is not supported.
+        const hash = await bcrypt.hash(input, salt);
 
+        // Optionally, you can manually send a status message once hashing is complete.
+        if (isWorkerEnvironment()) {
+            self.sendStatusMessage(`Hashing complete.`);
+        }
+
+        return hash;
     }
-
 }
 
 export default Bcrypt;
