@@ -4,6 +4,7 @@
  * @author Matt C [matt@artemisbot.uk]
  * @author n1474335 [n1474335@gmail.com]
  * @author Evie H [evie@evie.sh]
+ * @author Barry B [profbbrown@gmail.com]
  *
  * @copyright Crown Copyright 2018
  * @license Apache-2.0
@@ -17,6 +18,7 @@ import CryptoJS from "crypto-js";
 /**
  * Affine Cipher Encode operation.
  *
+ * @deprecated Use affineEcrypt instead.
  * @author Matt C [matt@artemisbot.uk]
  * @param {string} input
  * @param {Object[]} args
@@ -49,6 +51,166 @@ export function affineEncode(input, args) {
         }
     }
     return output;
+}
+
+/**
+ * Generic affine encrypt/decrypt operation.
+ * Allows for an expanded alphabet.
+ *
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {string} input
+ * @param {number} a
+ * @param {number} b
+ * @param {string} alphabet
+ * @param {function} affineFn
+ * @returns {string}
+ */
+export function affineApplication(input, a, b, alphabet, affineFn) {
+    if (alphabet === "")
+        throw new OperationError("The alphabet cannot be empty.");
+
+    alphabet = Utils.expandAlphRange(alphabet);
+    let output = "";
+    const modulus = alphabet.length;
+
+    // If the alphabet contains letters of all the same case,
+    // the assumption will be to match case.
+    const hasLower = /[a-z]/.test(alphabet);
+    const hasUpper = /[A-Z]/.test(alphabet);
+    const matchCase = (hasLower && hasUpper) ? false : true;
+
+    // If we are matching case, convert entire alphabet to lowercase.
+    // This will simplify the encryption.
+    if (matchCase)
+        alphabet = alphabet.map((c) => c.toLowerCase());
+
+    if (a === undefined || a === "" || isNaN(a)) a = 1;
+    if (b === undefined || b === "" || isNaN(b)) b = 0;
+
+    if (!/^\+?(0|[1-9]\d*)$/.test(a) || !/^\+?(0|[1-9]\d*)$/.test(b)) {
+        throw new OperationError("The values of a and b can only be integers.");
+    }
+
+    if (Utils.gcd(a, modulus) !== 1) {
+        throw new OperationError("The value of `a` (" + a + ") must be coprime to " + modulus + ".");
+    }
+
+    // Apply affine function to each character in the input
+    for (let i = 0; i < input.length; i++) {
+        let outChar = "";
+
+        let inChar = input[i];
+        if (matchCase && isUpperCase(inChar)) inChar = inChar.toLowerCase();
+
+        const inVal = alphabet.indexOf(inChar);
+
+        if (inVal >= 0) {
+            outChar = alphabet[affineFn(inVal, a, b, modulus)];
+            if (matchCase && isUpperCase(input[i])) outChar = outChar.toUpperCase();
+        } else {
+            outChar += input[i];
+        }
+
+        output += outChar;
+    }
+    return output;
+}
+
+/**
+ * Apply the affine encryption function to p.
+ *
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {integer} p - Plaintext value
+ * @param {integer} a - Multiplier coefficient
+ * @param {integer} b - Addition coefficient
+ * @param {integer} m - Modulus
+ * @returns {integer}
+ */
+const encryptFn = function(p, a, b, m) {
+    return (a * p + b) % m;
+};
+
+/**
+ * Apply the affine decryption function to c.
+ *
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {integer} c - Ciphertext value
+ * @param {integer} a - Multiplicative inverse coefficient
+ * @param {integer} b - Additive inverse coefficient
+ * @param {integer} m - Modulus
+ * @returns {integer}
+ */
+const decryptFn = function(c, a, b, m) {
+    return ((c + b) * a) % m;
+};
+
+/**
+ * Affine encrypt operation.
+ * Allows for an expanded alphabet.
+ *
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {string} input
+ * @param {integer} a
+ * @param {integer} b
+ * @param {string} alphabet
+ * @returns {string}
+ */
+export function affineEncrypt(input, a, b, alphabet="a-z") {
+    return affineApplication(input, a, b, alphabet, encryptFn);
+}
+
+/**
+ * Affine Cipher Decrypt operation using the coefficients that were used to encrypt.
+ * The modular inverses will be calculated.
+ *
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {string} input
+ * @param {integer} a
+ * @param {integer} b
+ * @param {string} alphabet
+ * @returns {string}
+ */
+export function affineDecrypt(input, a, b, alphabet="a-z") {
+    // Because we are calculating the modulus and inverses here, we have to perform
+    // many of the same tests that the affineApplication function does.
+    // TODO: figure out a way to avoid doing the tests twice.
+    //   Idea: make a checkInputs function.
+    //   Idea: move the tests into the affineEncrypt and affineDecryptInverse functions
+    //         so that affineApplication assumes valid inputs
+    if (alphabet === "")
+        throw new OperationError("The alphabet cannot be empty.");
+
+    if (a === undefined || a === "" || isNaN(a)) a = 1;
+    if (b === undefined || b === "" || isNaN(b)) b = 0;
+
+    if (!/^\+?(0|[1-9]\d*)$/.test(a) || !/^\+?(0|[1-9]\d*)$/.test(b)) {
+        throw new OperationError("The values of a and b can only be integers.");
+    }
+
+    const m = Utils.expandAlphRange(alphabet).length;
+    if (Utils.gcd(a, m) !== 1)
+        throw new OperationError("The value of `a` (" + a + ") must be coprime to " + m + ".");
+
+    const aInv = Utils.modInv(a, m);
+    const bInv = (m - b) % m;
+    if (aInv === null || aInv === undefined)
+        throw new OperationError("The value of `a` (" + a + ") must be coprime to " + m + ".");
+    else return affineApplication(input, aInv, bInv, alphabet, decryptFn);
+}
+
+/**
+ * Affine Cipher Decrypt operation using modular inverse coefficients
+ * supplied by the user.
+ *
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {string} input
+ * @param {number} a
+ * @param {number} b
+ * @param {string} alphabet
+ * @returns {string}
+ */
+export function affineDecryptInverse(input, a, b, alphabet="a-z") {
+    return affineApplication(input, a, b, alphabet, decryptFn);
 }
 
 /**
@@ -86,3 +248,22 @@ export const format = {
     "UTF16BE": CryptoJS.enc.Utf16BE,
     "Latin1":  CryptoJS.enc.Latin1,
 };
+
+export const AFFINE_ALPHABETS = [
+    {name: "Letters, match case: a-z", value: "a-z"},
+    {name: "Letters, case sensitive: A-Za-z", value: "A-Za-z"},
+    {name: "Word characters: A-Za-z0-9_", value: "A-Za-z0-9_"},
+    {name: "Printable ASCII: space-~", value: "\\x20-~"}
+];
+
+/**
+ * Returns true if the given character is uppercase
+ *
+ * @private
+ * @author Barry B [profbbrown@gmail.com]
+ * @param {string} c - A character
+ * @returns {boolean}
+ */
+function isUpperCase(c) {
+    return c.toUpperCase() === c;
+}
