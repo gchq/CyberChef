@@ -575,12 +575,11 @@ Top Drawer`, {
     }),
 
     it("Generate HOTP", () => {
-        const result = chef.generateHOTP("Cut The Mustard", {
-            name: "colonel",
+        const result = chef.generateHOTP("JBSWY3DPEHPK3PXP", {
         });
-        const expected = `URI: otpauth://hotp/colonel?secret=IN2XIICUNBSSATLVON2GC4TE
+        const expected = `URI: otpauth://hotp/?secret=JBSWY3DPEHPK3PXP&algorithm=SHA1&digits=6&counter=0
 
-Password: 034148`;
+Password: 282760`;
         assert.strictEqual(result.toString(), expected);
     }),
 
