@@ -26,13 +26,13 @@ If you would like to try out CyberChef locally you can either build it yourself:
 
 ```bash
 docker build --tag cyberchef --ulimit nofile=10000 .
-docker run -it -p 8080:80 cyberchef
+docker run -it -p 8080:8080 cyberchef
 ```
 
 Or you can use our image directly:
 
 ```bash
-docker run -it -p 8080:80 ghcr.io/gchq/cyberchef:latest
+docker run -it -p 8080:8080 ghcr.io/gchq/cyberchef:latest
 ```
 
 This image is built and published through our [GitHub Workflows](.github/workflows/releases.yml)
