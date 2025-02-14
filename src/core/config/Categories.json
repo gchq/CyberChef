@@ -234,6 +234,7 @@
             "Parse User Agent",
             "Parse IP range",
             "Parse IPv6 address",
+            "IPv6 Transition Addresses",
             "Parse IPv4 header",
             "Strip IPv4 header",
             "Parse TCP",
@@ -326,7 +327,8 @@
             "Pseudo-Random Number Generator",
             "Sleep",
             "File Tree",
-            "Take nth bytes"
+            "Take nth bytes",
+            "Drop nth bytes"
         ]
     },
     {
