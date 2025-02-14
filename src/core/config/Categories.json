@@ -327,6 +327,7 @@
             "Pseudo-Random Number Generator",
             "Sleep",
             "File Tree",
+            "Take nth bytes",
             "Drop nth bytes"
         ]
     },

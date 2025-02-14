@@ -150,6 +150,7 @@ import "./tests/StripUDPHeader.mjs";
 import "./tests/Subsection.mjs";
 import "./tests/SwapCase.mjs";
 import "./tests/SymmetricDifference.mjs";
+import "./tests/TakeNthBytes.mjs";
 import "./tests/TextEncodingBruteForce.mjs";
 import "./tests/ToFromInsensitiveRegex.mjs";
 import "./tests/TranslateDateTimeFormat.mjs";
