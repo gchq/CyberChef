@@ -4,18 +4,18 @@ on:
   workflow_dispatch:
   push:
     branches:
-    - master
+      - master
 
 jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set node version
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: '18.x'
+        node-version: '22.x'
 
     - name: Install
       run: |
@@ -50,7 +50,7 @@ jobs:
 
     - name: Deploy to GitHub Pages
       if: success() && github.ref == 'refs/heads/master'
-      uses: crazy-max/ghaction-github-pages@v3
+      uses: crazy-max/ghaction-github-pages@v4
       with:
         target_branch: gh-pages
         build_dir: ./build/prod
