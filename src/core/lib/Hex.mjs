@@ -105,7 +105,7 @@ export function fromHex(data, delim="Auto", byteLen=2) {
         throw new OperationError("Byte length must be a positive integer");
 
     if (delim !== "None") {
-        const delimRegex = delim === "Auto" ? /\s|0x/gi : Utils.regexRep(delim);
+        const delimRegex = delim === "Auto" ? /\s+|0x/gi : Utils.regexRep(delim);
         data = data.split(delimRegex);
     } else {
         data = [data];
