@@ -113,7 +113,7 @@ export function fromHex(data, delim="Auto", byteLen=2) {
 
     const output = [];
     for (let i = 0; i < data.length; i++) {
-        if (/[^a-f\d]/.test(data[i]))
+        if (/[^a-f\d\s]/.test(data[i]))
             throw new OperationError("Hex input must only contain hex digits");
         for (let j = 0; j < data[i].length; j += byteLen) {
             output.push(parseInt(data[i].substr(j, byteLen), 16));
