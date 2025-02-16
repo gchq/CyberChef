@@ -76,7 +76,8 @@
             "Rison Encode",
             "Rison Decode",
             "To Modhex",
-            "From Modhex"
+            "From Modhex",
+            "MIME Decoding"
         ]
     },
     {
