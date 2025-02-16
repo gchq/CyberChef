@@ -443,6 +443,7 @@
             "Luhn Checksum",
             "CRC-8 Checksum",
             "CRC-16 Checksum",
+            "CRC-16-CCITT Checksum",
             "CRC-32 Checksum",
             "TCP/IP Checksum"
         ]
