@@ -36,8 +36,8 @@ class JSONToYAML extends Operation {
     run(input, args) {
         const doc = new YAML.Document();
         try {
-            doc.contents = JSON.parse(input.replace(/(\w+):/gm, `"$1":`));
-            return doc.toString();
+            doc.contents = YAML.stringify(JSON.parse(input));
+            return doc.toString().replace(/^\|\n/, "");
         } catch (err) {
             throw new OperationError("Unable to parse JSON to YAML: " + err.toString());
         }
