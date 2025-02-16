@@ -369,6 +369,7 @@
             "Extract EXIF",
             "Extract ID3",
             "Extract Files",
+            "Extract Bitcoin Addresses",
             "RAKE"
         ]
     },
