@@ -50,6 +50,7 @@ class OptionsWaiter {
 
         // Initialise options
         this.setWordWrap();
+        this.manager.ops.setCatCount();
     }
 
 
@@ -162,6 +163,14 @@ class OptionsWaiter {
         themeSelect.selectedIndex = themeSelect.querySelector(`option[value="${theme}"`).index;
     }
 
+    /**
+     * Applies the user's preferred color scheme using the `prefers-color-scheme` media query.
+     */
+    applyPreferredColorScheme() {
+        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = prefersDarkScheme ? "dark" : "classic";
+        this.changeTheme(theme);
+    }
 
     /**
      * Changes the console logging level.
