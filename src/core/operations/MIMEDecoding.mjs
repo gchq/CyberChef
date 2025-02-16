@@ -4,12 +4,12 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation";
-import OperationError from "../errors/OperationError";
-import Utils from "../Utils";
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
 import { fromHex } from "../lib/Hex.mjs";
-import { fromBase64 } from "../lib/Base64";
-import cptable from "../vendor/js-codepage/cptable.js";
+import { fromBase64 } from "../lib/Base64.mjs";
+import cptable from "codepage";
 
 /**
  * MIME Decoding operation

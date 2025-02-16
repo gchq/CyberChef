@@ -104,7 +104,7 @@ import "./tests/LZNT1Decompress.mjs";
 import "./tests/LZString.mjs";
 import "./tests/Magic.mjs";
 import "./tests/Media.mjs";
-import "./tests/MIMEDecoding";
+import "./tests/MIMEDecoding.mjs";
 import "./tests/Modhex.mjs";
 import "./tests/MorseCode.mjs";
 import "./tests/MS.mjs";
