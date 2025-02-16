@@ -59,15 +59,16 @@ class ROT13 extends Operation {
             rot13Upperacse = args[1],
             rotNumbers = args[2];
         let amount = args[3],
-            chr;
+            amountNumbers = args[3];
 
         if (amount) {
             if (amount < 0) {
                 amount = 26 - (Math.abs(amount) % 26);
+                amountNumbers = 10 - (Math.abs(amountNumbers) % 10);
             }
 
             for (let i = 0; i < input.length; i++) {
-                chr = input[i];
+                let chr = input[i];
                 if (rot13Upperacse && chr >= 65 && chr <= 90) { // Upper case
                     chr = (chr - 65 + amount) % 26;
                     output[i] = chr + 65;
@@ -75,7 +76,7 @@ class ROT13 extends Operation {
                     chr = (chr - 97 + amount) % 26;
                     output[i] = chr + 97;
                 } else if (rotNumbers && chr >= 48 && chr <= 57) { // Numbers
-                    chr = (chr - 48 + amount) % 10;
+                    chr = (chr - 48 + amountNumbers) % 10;
                     output[i] = chr + 48;
                 }
             }

@@ -166,6 +166,7 @@
         "name": "Public Key",
         "ops": [
             "Parse X.509 certificate",
+            "Parse X.509 CRL",
             "Parse ASN.1 hex string",
             "PEM to Hex",
             "Hex to PEM",
@@ -235,9 +236,14 @@
             "Parse User Agent",
             "Parse IP range",
             "Parse IPv6 address",
+            "IPv6 Transition Addresses",
             "Parse IPv4 header",
+            "Strip IPv4 header",
             "Parse TCP",
+            "Strip TCP header",
+            "Parse TLS record",
             "Parse UDP",
+            "Strip UDP header",
             "Parse SSH Host Key",
             "Parse URI",
             "URL Encode",
@@ -270,7 +276,8 @@
             "Unicode Text Format",
             "Remove Diacritics",
             "Unescape Unicode Characters",
-            "Convert to NATO alphabet"
+            "Convert to NATO alphabet",
+            "Convert Leet Speak"
         ]
     },
     {
@@ -322,7 +329,9 @@
             "Unescape string",
             "Pseudo-Random Number Generator",
             "Sleep",
-            "File Tree"
+            "File Tree",
+            "Take nth bytes",
+            "Drop nth bytes"
         ]
     },
     {
