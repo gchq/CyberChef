@@ -163,6 +163,7 @@ import "./tests/Unicode.mjs";
 import "./tests/YARA.mjs";
 import "./tests/ParseCSR.mjs";
 import "./tests/XXTEA.mjs";
+import "./tests/FNV.mjs";
 
 const testStatus = {
     allTestsPassing: true,
