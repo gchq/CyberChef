@@ -20,7 +20,7 @@ class ParseASN1HexString extends Operation {
 
         this.name = "Parse ASN.1 hex string";
         this.module = "PublicKey";
-        this.description = "Abstract Syntax Notation One (ASN.1) is a standard and notation that describes rules and structures for representing, encoding, transmitting, and decoding data in telecommunications and computer networking.<br><br>This operation parses arbitrary ASN.1 data and presents the resulting tree.";
+        this.description = "Abstract Syntax Notation One (ASN.1) is a standard and notation that describes rules and structures for representing, encoding, transmitting, and decoding data in telecommunications and computer networking.<br><br>This operation parses arbitrary ASN.1 data (encoded as an hex string: use the 'To Hex' operation if necessary) and presents the resulting tree.";
         this.infoURL = "https://wikipedia.org/wiki/Abstract_Syntax_Notation_One";
         this.inputType = "string";
         this.outputType = "string";
@@ -45,8 +45,8 @@ class ParseASN1HexString extends Operation {
      */
     run(input, args) {
         const [index, truncateLen] = args;
-        return r.ASN1HEX.dump(input.replace(/\s/g, ""), {
-            "ommitLongOctet": truncateLen
+        return r.ASN1HEX.dump(input.replace(/\s/g, "").toLowerCase(), {
+            "ommit_long_octet": truncateLen
         }, index);
     }
 

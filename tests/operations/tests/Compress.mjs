@@ -75,4 +75,34 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "LZ4 Compress",
+        input: "The cat sat on the mat.",
+        expectedOutput: "04224d184070df170000805468652063617420736174206f6e20746865206d61742e00000000",
+        recipeConfig: [
+            {
+                "op": "LZ4 Compress",
+                "args": []
+            },
+            {
+                "op": "To Hex",
+                "args": ["None", 0]
+            }
+        ],
+    },
+    {
+        name: "LZ4 Decompress",
+        input: "04224d184070df170000805468652063617420736174206f6e20746865206d61742e00000000",
+        expectedOutput: "The cat sat on the mat.",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["None"]
+            },
+            {
+                "op": "LZ4 Decompress",
+                "args": []
+            }
+        ],
+    },
 ]);

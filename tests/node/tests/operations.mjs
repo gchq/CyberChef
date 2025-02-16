@@ -45,10 +45,10 @@ TestRegister.addApiTests([
         const result = chef.ADD("sample input", {
             key: {
                 string: "some key",
-                option: "Hex"
+                option: "utf8"
             }
         });
-        assert.equal(result.toString(), "aO[^ZS\u000eW\\^cb");
+        assert.equal(result.toString(), "\xe6\xd0\xda\xd5\x8c\xd0\x85\xe2\xe1\xdf\xe2\xd9");
     }),
 
 
@@ -121,10 +121,10 @@ Tiger-128`;
         const result = chef.AND("Scot-free", {
             key: {
                 string: "Raining Cats and Dogs",
-                option: "Hex",
+                option: "utf8",
             }
         });
-        assert.strictEqual(result.toString(), "\u0000\"M$(D  E");
+        assert.strictEqual(result.toString(), "Raid)fb A");
     }),
 
     it("atBash Cipher", () => {
@@ -371,10 +371,10 @@ color: white;
             },
             salt: {
                 string: "Market",
-                option: "Hex",
+                option: "utf8",
             },
         });
-        assert.strictEqual(result.toString(), "7c21a9f5063a4d62fb1050068245c181");
+        assert.strictEqual(result.toString(), "4930d5d200e80f18c96b5550d13c6af8");
     }),
 
     it("Derive PBKDF2 Key", () => {
@@ -432,7 +432,7 @@ color: white;
     it("Disassemble x86", () => {
         const result = chef.disassembleX86(chef.toBase64("one two three"));
         const expected = `0000000000000000 0000                            ADD BYTE PTR [RAX],AL\r
-0000000000000002 0B250000000B                    OR ESP,DWORD PTR [0000000-F4FFFFF8]\r
+0000000000000002 0B250000000B                    OR ESP,DWORD PTR [000000000B000008]\r
 `;
         assert.strictEqual(result.toString(), expected);
     }),
@@ -575,12 +575,11 @@ Top Drawer`, {
     }),
 
     it("Generate HOTP", () => {
-        const result = chef.generateHOTP("Cut The Mustard", {
-            name: "colonel",
+        const result = chef.generateHOTP("JBSWY3DPEHPK3PXP", {
         });
-        const expected = `URI: otpauth://hotp/colonel?secret=IN2XIICUNBSSATLVON2GC4TE
+        const expected = `URI: otpauth://hotp/?secret=JBSWY3DPEHPK3PXP&algorithm=SHA1&digits=6&counter=0
 
-Password: 034148`;
+Password: 282760`;
         assert.strictEqual(result.toString(), expected);
     }),
 
@@ -633,6 +632,10 @@ WWFkYSBZYWRh\r
 
     it("Keccak", () => {
         assert.strictEqual(chef.keccak("Flea Market").toString(), "c2a06880b19e453ee5440e8bd4c2024bedc15a6630096aa3f609acfd2b8f15f27cd293e1cc73933e81432269129ce954a6138889ce87831179d55dcff1cc7587");
+    }),
+
+    it("LZNT1 Decompress", () => {
+        assert.strictEqual(chef.LZNT1Decompress("\x1a\xb0\x00compress\x00edtestda\x04ta\x07\x88alot").toString(), "compressedtestdatacompressedalot");
     }),
 
     it("MD6", () => {

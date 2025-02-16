@@ -58,8 +58,8 @@ CTPH:         A:E:E
 Checksums:
 Fletcher-8:   3d
 Fletcher-16:  5dc1
-Fletcher-32:  045901c0
-Fletcher-64:  00000459000001c0
+Fletcher-32:  3f5cd9e7
+Fletcher-64:  7473657474736574
 Adler-32:     045d01c1
 CRC-8:        b9
 CRC-16:       f82e

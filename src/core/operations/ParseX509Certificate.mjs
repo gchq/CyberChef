@@ -57,23 +57,29 @@ class ParseX509Certificate extends Operation {
         const cert = new r.X509(),
             inputFormat = args[0];
 
-        switch (inputFormat) {
-            case "DER Hex":
-                input = input.replace(/\s/g, "");
-                cert.readCertHex(input);
-                break;
-            case "PEM":
-                cert.readCertPEM(input);
-                break;
-            case "Base64":
-                cert.readCertHex(toHex(fromBase64(input, null, "byteArray"), ""));
-                break;
-            case "Raw":
-                cert.readCertHex(toHex(Utils.strToByteArray(input), ""));
-                break;
-            default:
-                throw "Undefined input format";
+        let undefinedInputFormat = false;
+        try {
+            switch (inputFormat) {
+                case "DER Hex":
+                    input = input.replace(/\s/g, "").toLowerCase();
+                    cert.readCertHex(input);
+                    break;
+                case "PEM":
+                    cert.readCertPEM(input);
+                    break;
+                case "Base64":
+                    cert.readCertHex(toHex(fromBase64(input, null, "byteArray"), ""));
+                    break;
+                case "Raw":
+                    cert.readCertHex(toHex(Utils.strToArrayBuffer(input), ""));
+                    break;
+                default:
+                    undefinedInputFormat = true;
+            }
+        } catch (e) {
+            throw "Certificate load error (non-certificate input?)";
         }
+        if (undefinedInputFormat) throw "Undefined input format";
 
         const sn = cert.getSerialNumberHex(),
             issuer = cert.getIssuer(),
