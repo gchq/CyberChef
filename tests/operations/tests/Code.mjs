@@ -189,7 +189,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["", "\n", true]
+                "args": ["", "\n"]
             }
         ],
     },
@@ -205,7 +205,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$.store.book[*].author", "\n", true]
+                "args": ["$.store.book[*].author", "\n"]
             }
         ],
     },
@@ -223,7 +223,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$..title", "\n", true]
+                "args": ["$..title", "\n"]
             }
         ],
     },
@@ -238,7 +238,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$.store.*", "\n", true]
+                "args": ["$.store.*", "\n"]
             }
         ],
     },
@@ -249,7 +249,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$..book[-1:]", "\n", true]
+                "args": ["$..book[-1:]", "\n"]
             }
         ],
     },
@@ -263,7 +263,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$..book[:2]", "\n", true]
+                "args": ["$..book[:2]", "\n"]
             }
         ],
     },
@@ -277,7 +277,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$..book[?(@.isbn)]", "\n", false]
+                "args": ["$..book[?(@.isbn)]", "\n"]
             }
         ],
     },
@@ -292,7 +292,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$..book[?(@.price<30 && @.category==\"fiction\")]", "\n", false]
+                "args": ["$..book[?(@.price<30 && @.category==\"fiction\")]", "\n"]
             }
         ],
     },
@@ -306,7 +306,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "JPath expression",
-                "args": ["$..book[?(@.price<10)]", "\n", false]
+                "args": ["$..book[?(@.price<10)]", "\n"]
             }
         ],
     },
@@ -318,12 +318,11 @@ TestRegister.addTests([
                 "op": "JPath expression",
                 "args": [
                     "$..[?(({__proto__:[].constructor}).constructor(\"self.postMessage({action:'bakeComplete',data:{bakeId:1,dish:{type:1,value:''},duration:1,error:false,id:undefined,inputNum:2,progress:1,result:'<iframe/onload=debugger>',type: 'html'}});\")();)]",
-                    "\n",
-                    true
+                    "\n"
                 ]
             }
         ],
-        expectedOutput: "Invalid JPath expression: Eval [?(expr)] prevented in JSONPath expression."
+        expectedMatch: /^Invalid JPath expression: jsonPath: self is not defined:/
     },
     {
         name: "CSS selector",

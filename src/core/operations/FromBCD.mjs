@@ -84,7 +84,7 @@ class FromBCD extends Operation {
                 break;
             case "Raw":
             default:
-                byteArray = Utils.strToByteArray(input);
+                byteArray = new Uint8Array(Utils.strToArrayBuffer(input));
                 byteArray.forEach(b => {
                     nibbles.push(b >>> 4);
                     nibbles.push(b & 15);

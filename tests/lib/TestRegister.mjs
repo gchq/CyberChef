@@ -74,9 +74,7 @@ class TestRegister {
             const result = await chef.bake(
                 test.input,
                 test.recipeConfig,
-                {},
-                0,
-                false
+                { returnType: "string" }
             );
 
             const ret = {

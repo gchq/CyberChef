@@ -48,7 +48,7 @@ class PlistViewer extends Operation {
             .replace(/<true\/>/g, m => "true")
             .replace(/<\/plist>/g, "/plist")
             .replace(/<date>.+<\/date>/g, m => `${m.slice(6, m.indexOf(/<\/integer>/g)-6)}`)
-            .replace(/<data>(\s|.)+?<\/data>/g, m => `${m.slice(6, m.indexOf(/<\/data>/g)-6)}`)
+            .replace(/<data>[\s\S]+?<\/data>/g, m => `${m.slice(6, m.indexOf(/<\/data>/g)-6)}`)
             .replace(/[ \t\r\f\v]/g, "");
 
         /**

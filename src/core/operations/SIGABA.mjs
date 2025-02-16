@@ -40,7 +40,7 @@ class Sigaba extends Operation {
                 value: false
             },
             {
-                name: "1st cipher rotor intial value",
+                name: "1st cipher rotor initial value",
                 type: "option",
                 value: LETTERS
             },
@@ -56,7 +56,7 @@ class Sigaba extends Operation {
                 value: false
             },
             {
-                name: "2nd cipher rotor intial value",
+                name: "2nd cipher rotor initial value",
                 type: "option",
                 value: LETTERS
             },
@@ -72,7 +72,7 @@ class Sigaba extends Operation {
                 value: false
             },
             {
-                name: "3rd cipher rotor intial value",
+                name: "3rd cipher rotor initial value",
                 type: "option",
                 value: LETTERS
             },
@@ -88,7 +88,7 @@ class Sigaba extends Operation {
                 value: false
             },
             {
-                name: "4th cipher rotor intial value",
+                name: "4th cipher rotor initial value",
                 type: "option",
                 value: LETTERS
             },
@@ -104,7 +104,7 @@ class Sigaba extends Operation {
                 value: false
             },
             {
-                name: "5th cipher rotor intial value",
+                name: "5th cipher rotor initial value",
                 type: "option",
                 value: LETTERS
             },
@@ -120,7 +120,7 @@ class Sigaba extends Operation {
                 value: false
             },
             {
-                name: "1st control rotor intial value",
+                name: "1st control rotor initial value",
                 type: "option",
                 value: LETTERS
             },
@@ -136,7 +136,7 @@ class Sigaba extends Operation {
                 value: false
             },
             {
-                name: "2nd control rotor intial value",
+                name: "2nd control rotor initial value",
                 type: "option",
                 value: LETTERS
             },
@@ -152,7 +152,7 @@ class Sigaba extends Operation {
                 value: false
             },
             {
-                name: "3rd control rotor intial value",
+                name: "3rd control rotor initial value",
                 type: "option",
                 value: LETTERS
             },
@@ -168,7 +168,7 @@ class Sigaba extends Operation {
                 value: false
             },
             {
-                name: "4th control rotor intial value",
+                name: "4th control rotor initial value",
                 type: "option",
                 value: LETTERS
             },
@@ -184,7 +184,7 @@ class Sigaba extends Operation {
                 value: false
             },
             {
-                name: "5th control rotor intial value",
+                name: "5th control rotor initial value",
                 type: "option",
                 value: LETTERS
             },
@@ -195,7 +195,7 @@ class Sigaba extends Operation {
                 defaultIndex: 0
             },
             {
-                name: "1st index rotor intial value",
+                name: "1st index rotor initial value",
                 type: "option",
                 value: NUMBERS
             },
@@ -206,7 +206,7 @@ class Sigaba extends Operation {
                 defaultIndex: 0
             },
             {
-                name: "2nd index rotor intial value",
+                name: "2nd index rotor initial value",
                 type: "option",
                 value: NUMBERS
             },
@@ -217,7 +217,7 @@ class Sigaba extends Operation {
                 defaultIndex: 0
             },
             {
-                name: "3rd index rotor intial value",
+                name: "3rd index rotor initial value",
                 type: "option",
                 value: NUMBERS
             },
@@ -228,7 +228,7 @@ class Sigaba extends Operation {
                 defaultIndex: 0
             },
             {
-                name: "4th index rotor intial value",
+                name: "4th index rotor initial value",
                 type: "option",
                 value: NUMBERS
             },
@@ -239,7 +239,7 @@ class Sigaba extends Operation {
                 defaultIndex: 0
             },
             {
-                name: "5th index rotor intial value",
+                name: "5th index rotor initial value",
                 type: "option",
                 value: NUMBERS
             },

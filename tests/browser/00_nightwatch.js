@@ -6,6 +6,8 @@
  * @license Apache-2.0
  */
 
+const utils = require("./browserUtils.js");
+
 module.exports = {
     before: browser => {
         browser
@@ -82,7 +84,7 @@ module.exports = {
         // Enter input
         browser
             .useCss()
-            .setValue("#input-text", "Don't Panic.")
+            .sendKeys("#input-text .cm-content", "Don't Panic.")
             .pause(1000)
             .click("#bake");
 
@@ -90,7 +92,7 @@ module.exports = {
         browser
             .useCss()
             .waitForElementNotVisible("#stale-indicator", 1000)
-            .expect.element("#output-text").to.have.property("value").that.equals("44 6f 6e 27 74 20 50 61 6e 69 63 2e");
+            .expect.element("#output-text .cm-content").text.that.equals("44 6f 6e 27 74 20 50 61 6e 69 63 2e");
 
         // Clear recipe
         browser
@@ -192,6 +194,9 @@ module.exports = {
 
         // Open category
         browser
+            .useCss()
+            .waitForElementNotVisible("#snackbar-container", 10000)
+            .useXpath()
             .click(otherCat)
             .expect.element(genUUID).to.be.visible;
 
@@ -206,7 +211,7 @@ module.exports = {
             .useCss()
             .waitForElementVisible(".operation .op-title", 1000)
             .waitForElementNotVisible("#stale-indicator", 1000)
-            .expect.element("#output-text").to.have.property("value").which.matches(/[\da-f-]{36}/);
+            .expect.element("#output-text .cm-content").text.which.matches(/[\da-f-]{36}/);
 
         browser.click("#clr-recipe");
     },
@@ -219,6 +224,25 @@ module.exports = {
             .setValue("#search", "md5")
             .useXpath()
             .waitForElementVisible("//ul[@id='search-results']//b[text()='MD5']", 1000);
+    },
+
+    "Alert bar": browser => {
+        // Bake nothing to create an empty output which can be copied
+        utils.clear(browser);
+        utils.bake(browser);
+
+        // Alert bar shows and contains correct content
+        browser
+            .waitForElementNotVisible("#snackbar-container")
+            .click("#copy-output")
+            .waitForElementVisible("#snackbar-container .snackbar-content")
+            .expect.element("#snackbar-container .snackbar-content").text.to.equal("Copied raw output successfully.");
+
+        // Alert bar disappears after the correct amount of time
+        // Should disappear after 2000ms
+        browser
+            .waitForElementNotPresent("#snackbar-container .snackbar-content", 2500)
+            .waitForElementNotVisible("#snackbar-container");
     },
 
     after: browser => {

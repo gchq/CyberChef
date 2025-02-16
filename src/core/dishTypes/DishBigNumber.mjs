@@ -24,12 +24,11 @@ class DishBigNumber extends DishType {
 
     /**
      * convert the given value from a ArrayBuffer
-     * @param {boolean} notUTF8
      */
-    static fromArrayBuffer(notUTF8) {
+    static fromArrayBuffer() {
         DishBigNumber.checkForValue(this.value);
         try {
-            this.value = new BigNumber(Utils.arrayBufferToStr(this.value, !notUTF8));
+            this.value = new BigNumber(Utils.arrayBufferToStr(this.value));
         } catch (err) {
             this.value = new BigNumber(NaN);
         }
