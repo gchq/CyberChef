@@ -60,6 +60,7 @@ class App {
 
         this.initialiseSplitter();
         this.loadLocalStorage();
+        this.manager.options.applyPreferredColorScheme();
         this.populateOperationsList();
         this.manager.setup();
         this.manager.output.saveBombe();
@@ -536,6 +537,8 @@ class App {
         // Read in theme from URI params
         if (this.uriParams.theme) {
             this.manager.options.changeTheme(Utils.escapeHtml(this.uriParams.theme));
+        } else {
+            this.manager.options.applyPreferredColorScheme();
         }
 
         window.dispatchEvent(this.manager.statechange);
