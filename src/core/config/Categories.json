@@ -274,7 +274,8 @@
             "Unicode Text Format",
             "Remove Diacritics",
             "Unescape Unicode Characters",
-            "Convert to NATO alphabet"
+            "Convert to NATO alphabet",
+            "Convert Leet Speak"
         ]
     },
     {
@@ -326,7 +327,9 @@
             "Unescape string",
             "Pseudo-Random Number Generator",
             "Sleep",
-            "File Tree"
+            "File Tree",
+            "Take nth bytes",
+            "Drop nth bytes"
         ]
     },
     {
