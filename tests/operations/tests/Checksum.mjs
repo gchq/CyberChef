@@ -237,5 +237,93 @@ TestRegister.addTests([
                 "args": []
             }
         ]
-    }
+    },
+    {
+        name: "XOR Checksum (1): nothing",
+        input: "",
+        expectedOutput: "00",
+        recipeConfig: [
+            {
+                "op": "XOR Checksum",
+                "args": [1]
+            }
+        ]
+    },
+    {
+        name: "XOR Checksum (1): basic string",
+        input: BASIC_STRING,
+        expectedOutput: "08",
+        recipeConfig: [
+            {
+                "op": "XOR Checksum",
+                "args": [1]
+            }
+        ]
+    },
+    {
+        name: "XOR Checksum (1): UTF-8",
+        input: UTF8_STR,
+        expectedOutput: "df",
+        recipeConfig: [
+            {
+                "op": "XOR Checksum",
+                "args": [1]
+            }
+        ]
+    },
+    {
+        name: "XOR Checksum (1): all bytes",
+        input: ALL_BYTES,
+        expectedOutput: "00",
+        recipeConfig: [
+            {
+                "op": "XOR Checksum",
+                "args": [1]
+            }
+        ]
+    },
+    {
+        name: "XOR Checksum (4): nothing",
+        input: "",
+        expectedOutput: "00000000",
+        recipeConfig: [
+            {
+                "op": "XOR Checksum",
+                "args": [4]
+            }
+        ]
+    },
+    {
+        name: "XOR Checksum (4): basic string",
+        input: BASIC_STRING,
+        expectedOutput: "4918421b",
+        recipeConfig: [
+            {
+                "op": "XOR Checksum",
+                "args": [4]
+            }
+        ]
+    },
+    {
+        name: "XOR Checksum (4): UTF-8",
+        input: UTF8_STR,
+        expectedOutput: "83a424dc",
+        recipeConfig: [
+            {
+                "op": "XOR Checksum",
+                "args": [4]
+            }
+        ]
+    },
+    {
+        name: "XOR Checksum (4): all bytes",
+        input: ALL_BYTES,
+        expectedOutput: "00000000",
+        recipeConfig: [
+            {
+                "op": "XOR Checksum",
+                "args": [4]
+            }
+        ]
+    },
 ]);
