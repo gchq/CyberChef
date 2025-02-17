@@ -100,7 +100,7 @@ export function toHexFast(data) {
  * // returns [10,20,30]
  * fromHex("0a:14:1e", "Colon");
  */
-export function fromHex(data, delim="Auto", byteLen=2, removeNonAlphChars=false, strictMode=false) {
+export function fromHex(data, delim="Auto", byteLen=2, removeNonAlphChars=false) {
     if (byteLen < 1 || Math.round(byteLen) !== byteLen)
         throw new OperationError("Byte length must be a positive integer");
 
@@ -116,7 +116,7 @@ export function fromHex(data, delim="Auto", byteLen=2, removeNonAlphChars=false,
 
     const output = [];
     for (let i = 0; i < data.length; i++) {
-        if (/[^a-f\d\s]/.test(data[i]) && strictMode)
+        if (/[^a-f\d\s]/.test(data[i]))
             throw new OperationError("Hex input must only contain hex digits");
         for (let j = 0; j < data[i].length; j += byteLen) {
             output.push(parseInt(data[i].substr(j, byteLen), 16));
