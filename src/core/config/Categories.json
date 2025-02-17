@@ -74,6 +74,7 @@
             "CBOR Decode",
             "YAML to JSON",
             "Beautify YAML",
+            "Caret/M-decode",
             "Rison Encode",
             "Rison Decode",
             "To Modhex",
