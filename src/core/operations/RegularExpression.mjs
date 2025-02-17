@@ -68,6 +68,10 @@ class RegularExpression extends Operation {
                         value: "[A-Fa-f\\d]{2}(?:[:-][A-Fa-f\\d]{2}){5}"
                     },
                     {
+                        name: "UUID",
+                        value: "[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}"
+                    },
+                    {
                         name: "Date (yyyy-mm-dd)",
                         value: "((?:19|20)\\d\\d)[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])"
                     },

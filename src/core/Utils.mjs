@@ -893,6 +893,23 @@ class Utils {
 
 
     /**
+     * Converts a string to its title case equivalent.
+     *
+     * @param {string} str
+     * @returns string
+     *
+     * @example
+     * // return "A Tiny String"
+     * Utils.toTitleCase("a tIny String");
+     */
+    static toTitleCase(str) {
+        return str.replace(/\w\S*/g, function(txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+    }
+
+
+    /**
      * Encodes a URI fragment (#) or query (?) using a minimal amount of percent-encoding.
      *
      * RFC 3986 defines legal characters for the fragment and query parts of a URL to be as follows:
