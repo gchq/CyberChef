@@ -1,5 +1,5 @@
 /**
- * JSON to CSV tests.
+ * Jsonata Query tests.
  *
  * @author Jon King [jon@ajarsoftware.com]
  *
