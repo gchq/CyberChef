@@ -105,8 +105,8 @@ export function fromHex(data, delim="Auto", byteLen=2, removeNonAlphChars=false,
         throw new OperationError("Byte length must be a positive integer");
 
     if (removeNonAlphChars)
-        data = data.replace(/[^\da-fA-F]/g, '');
-    
+        data = data.replace(/[^\da-fA-F]/g, "");
+
     if (delim !== "None") {
         const delimRegex = delim === "Auto" ? /\s+|0x/gi : Utils.regexRep(delim);
         data = data.split(delimRegex);
