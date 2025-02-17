@@ -58,7 +58,7 @@ class JsonataQuery extends Operation {
             );
         }
 
-        return JSON.stringify(result);
+        return JSON.stringify(result === undefined ? "" : result);
     }
 }
 
