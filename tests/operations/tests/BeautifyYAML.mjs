@@ -1,4 +1,3 @@
-
 /**
  * YAML tests.
  *
@@ -17,10 +16,10 @@ TestRegister.addTests([
         name: "YAML to JSON",
         input: EXAMPLE_YAML,
         expectedOutput: JSON.stringify({
-                    "number": 3,
-                    "plain": "string",
-                    "block": "two\nlines\n"
-                }, null, 4),
+            "number": 3,
+            "plain": "string",
+            "block": "two\nlines\n"
+        }, null, 4),
         recipeConfig: [
             {
                 op: "YAML to JSON",
