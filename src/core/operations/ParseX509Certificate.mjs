@@ -7,7 +7,7 @@
 import r from "jsrsasign";
 import { fromBase64 } from "../lib/Base64.mjs";
 import { toHex } from "../lib/Hex.mjs";
-import { formatByteStr, formatDnStr } from "../lib/PublicKey.mjs";
+import { formatByteStr, formatDnObj } from "../lib/PublicKey.mjs";
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 
@@ -57,27 +57,33 @@ class ParseX509Certificate extends Operation {
         const cert = new r.X509(),
             inputFormat = args[0];
 
-        switch (inputFormat) {
-            case "DER Hex":
-                input = input.replace(/\s/g, "");
-                cert.readCertHex(input);
-                break;
-            case "PEM":
-                cert.readCertPEM(input);
-                break;
-            case "Base64":
-                cert.readCertHex(toHex(fromBase64(input, null, "byteArray"), ""));
-                break;
-            case "Raw":
-                cert.readCertHex(toHex(Utils.strToByteArray(input), ""));
-                break;
-            default:
-                throw "Undefined input format";
+        let undefinedInputFormat = false;
+        try {
+            switch (inputFormat) {
+                case "DER Hex":
+                    input = input.replace(/\s/g, "").toLowerCase();
+                    cert.readCertHex(input);
+                    break;
+                case "PEM":
+                    cert.readCertPEM(input);
+                    break;
+                case "Base64":
+                    cert.readCertHex(toHex(fromBase64(input, null, "byteArray"), ""));
+                    break;
+                case "Raw":
+                    cert.readCertHex(toHex(Utils.strToArrayBuffer(input), ""));
+                    break;
+                default:
+                    undefinedInputFormat = true;
+            }
+        } catch (e) {
+            throw "Certificate load error (non-certificate input?)";
         }
+        if (undefinedInputFormat) throw "Undefined input format";
 
         const sn = cert.getSerialNumberHex(),
-            issuer = cert.getIssuerString(),
-            subject = cert.getSubjectString(),
+            issuer = cert.getIssuer(),
+            subject = cert.getSubject(),
             pk = cert.getPublicKey(),
             pkFields = [],
             sig = cert.getSignatureValueHex();
@@ -170,10 +176,10 @@ class ParseX509Certificate extends Operation {
             extensions = cert.getInfo().split("X509v3 Extensions:\n")[1].split("signature")[0];
         } catch (err) {}
 
-        const issuerStr = formatDnStr(issuer, 2),
+        const issuerStr = formatDnObj(issuer, 2),
             nbDate = formatDate(cert.getNotBefore()),
             naDate = formatDate(cert.getNotAfter()),
-            subjectStr = formatDnStr(subject, 2);
+            subjectStr = formatDnObj(subject, 2);
 
         return `Version:          ${cert.version} (0x${Utils.hex(cert.version - 1)})
 Serial number:    ${new r.BigInteger(sn, 16).toString()} (0x${sn})

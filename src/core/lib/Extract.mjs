@@ -12,15 +12,15 @@
  *
  * @param {string} input
  * @param {RegExp} searchRegex
- * @param {RegExp} removeRegex - A regular expression defining results to remove from the
+ * @param {RegExp} [removeRegex=null] - A regular expression defining results to remove from the
  *      final list
- * @param {boolean} includeTotal - Whether or not to include the total number of results
+ * @param {Function} [sortBy=null] - The sorting comparison function to apply
+ * @param {boolean} [unique=false] - Whether to unique the results
  * @returns {string}
  */
-export function search (input, searchRegex, removeRegex, includeTotal) {
-    let output = "",
-        total = 0,
-        match;
+export function search(input, searchRegex, removeRegex=null, sortBy=null, unique=false) {
+    let results = [];
+    let match;
 
     while ((match = searchRegex.exec(input))) {
         // Moves pointer when an empty string is matched (prevents infinite loop)
@@ -30,14 +30,19 @@ export function search (input, searchRegex, removeRegex, includeTotal) {
 
         if (removeRegex && removeRegex.test(match[0]))
             continue;
-        total++;
-        output += match[0] + "\n";
+
+        results.push(match[0]);
     }
 
-    if (includeTotal)
-        output = "Total found: " + total + "\n\n" + output;
+    if (sortBy) {
+        results = results.sort(sortBy);
+    }
 
-    return output;
+    if (unique) {
+        results = results.unique();
+    }
+
+    return results;
 }
 
 
@@ -57,3 +62,9 @@ export const URL_REGEX = new RegExp(protocol + hostname + "(?:" + port + ")?(?:"
  * Domain name regular expression
  */
 export const DOMAIN_REGEX = /\b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b/ig;
+
+
+/**
+ * DMARC Domain name regular expression
+ */
+export const DMARC_DOMAIN_REGEX = /\b((?=[a-z0-9_-]{1,63}\.)(xn--)?[a-z0-9_]+(-[a-z0-9_]+)*\.)+[a-z]{2,63}\b/ig;
