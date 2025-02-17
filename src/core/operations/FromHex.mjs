@@ -97,7 +97,7 @@ class FromHex extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        const [delim, removeNonAlphChars, strictMode] = [args[0] || "Auto", args[1], args[2]];
+        const [delim, removeNonAlphChars] = [args[0] || "Auto", args[1]];
         return fromHex(input, delim, 2, removeNonAlphChars);
     }
 
