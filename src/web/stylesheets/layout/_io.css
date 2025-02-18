@@ -478,6 +478,11 @@
     background-color: #ddd
 }
 
+/* Change color of dropup links on focus */
+.cm-status-bar-select-content a:focus {
+    background-color: #ddd;
+}
+
 /* Change the background color of the dropup button when the dropup content is shown */
 .cm-status-bar-select:hover .cm-status-bar-select-btn {
     background-color: #f1f1f1;
