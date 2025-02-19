@@ -24,8 +24,8 @@ class AESDecrypt extends Operation {
         this.module = "Ciphers";
         this.description = "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul><br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.<br><br><b>GCM Tag:</b> This field is ignored unless 'GCM' mode is used.";
         this.infoURL = "https://wikipedia.org/wiki/Advanced_Encryption_Standard";
-        this.inputType = "string";
-        this.outputType = "string";
+        this.inputType = "byteArray";
+        this.outputType = "byteArray";
         this.args = [
             {
                 "name": "Key",
@@ -103,9 +103,9 @@ class AESDecrypt extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      *
      * @throws {OperationError} if cannot decrypt input or invalid key length
      */
@@ -128,6 +128,7 @@ The following algorithms will be used based on the size of the key:
   32 bytes = AES-256`);
         }
 
+        input = input.map((c) => String.fromCharCode(c)).join("");
         input = Utils.convertToByteString(input, inputType);
 
         const decipher = forge.cipher.createDecipher("AES-" + mode, key);
@@ -148,7 +149,8 @@ The following algorithms will be used based on the size of the key:
         const result = decipher.finish();
 
         if (result) {
-            return outputType === "Hex" ? decipher.output.toHex() : decipher.output.getBytes();
+            const output = outputType === "Hex" ? decipher.output.toHex() : decipher.output.getBytes();
+            return Array.from(output).map((c) => c.charCodeAt(0));
         } else {
             throw new OperationError("Unable to decrypt input with these parameters.");
         }

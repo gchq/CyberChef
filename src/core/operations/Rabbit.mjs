@@ -24,8 +24,8 @@ class Rabbit extends Operation {
         this.module = "Ciphers";
         this.description = "Rabbit is a high-speed stream cipher introduced in 2003 and defined in RFC 4503.<br><br>The cipher uses a 128-bit key and an optional 64-bit initialization vector (IV).<br><br>big-endian: based on RFC4503 and RFC3447<br>little-endian: compatible with Crypto++";
         this.infoURL = "https://wikipedia.org/wiki/Rabbit_(cipher)";
-        this.inputType = "string";
-        this.outputType = "string";
+        this.inputType = "byteArray";
+        this.outputType = "byteArray";
         this.args = [
             {
                 "name": "Key",
@@ -58,9 +58,9 @@ class Rabbit extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      */
     run(input, args) {
         const key = Utils.convertToByteArray(args[0].string, args[0].option),
@@ -214,12 +214,14 @@ class Rabbit extends Operation {
             }
         };
 
-        const data = Utils.convertToByteString(input, inputType);
+        input = input.map((c) => String.fromCharCode(c)).join("");
+        const dataString = Utils.convertToByteString(input, inputType);
+        const data = Array.from(dataString).map((c) => c.charCodeAt(0));
         const result = new Uint8Array(data.length);
         for (let i = 0; i <= data.length - 16; i += 16) {
             extract();
             for (let j = 0; j < 16; j++) {
-                result[i + j] = data.charCodeAt(i + j) ^ S[j];
+                result[i + j] = data[i + j] ^ S[j];
             }
         }
         if (data.length % 16 !== 0) {
@@ -228,18 +230,18 @@ class Rabbit extends Operation {
             extract();
             if (littleEndian) {
                 for (let j = 0; j < length; j++) {
-                    result[offset + j] = data.charCodeAt(offset + j) ^ S[j];
+                    result[offset + j] = data[offset + j] ^ S[j];
                 }
             } else {
                 for (let j = 0; j < length; j++) {
-                    result[offset + j] = data.charCodeAt(offset + j) ^ S[16 - length + j];
+                    result[offset + j] = data[offset + j] ^ S[16 - length + j];
                 }
             }
         }
         if (outputType === "Hex") {
-            return toHexFast(result);
+            return Array.from(toHexFast(result)).map((c) => c.charCodeAt(0));
         }
-        return Utils.byteArrayToChars(result);
+        return Array.from(result);
     }
 
 }
