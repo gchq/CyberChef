@@ -24,8 +24,8 @@ class AESEncrypt extends Operation {
         this.module = "Ciphers";
         this.description = "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.";
         this.infoURL = "https://wikipedia.org/wiki/Advanced_Encryption_Standard";
-        this.inputType = "string";
-        this.outputType = "string";
+        this.inputType = "byteArray";
+        this.outputType = "byteArray";
         this.args = [
             {
                 "name": "Key",
@@ -89,9 +89,9 @@ class AESEncrypt extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      *
      * @throws {OperationError} if invalid key length
      */
@@ -112,6 +112,7 @@ The following algorithms will be used based on the size of the key:
   32 bytes = AES-256`);
         }
 
+        input = input.map((c) => String.fromCharCode(c)).join("");
         input = Utils.convertToByteString(input, inputType);
 
         const cipher = forge.cipher.createCipher("AES-" + mode, key);
@@ -122,19 +123,23 @@ The following algorithms will be used based on the size of the key:
         cipher.update(forge.util.createBuffer(input));
         cipher.finish();
 
+        let output;
         if (outputType === "Hex") {
             if (mode === "GCM") {
-                return cipher.output.toHex() + "\n\n" +
+                output = cipher.output.toHex() + "\n\n" +
                     "Tag: " + cipher.mode.tag.toHex();
+            } else {
+                output = cipher.output.toHex();
             }
-            return cipher.output.toHex();
         } else {
             if (mode === "GCM") {
-                return cipher.output.getBytes() + "\n\n" +
+                output = cipher.output.getBytes() + "\n\n" +
                     "Tag: " + cipher.mode.tag.getBytes();
+            } else {
+                output = cipher.output.getBytes();
             }
-            return cipher.output.getBytes();
         }
+        return Array.from(output).map((c) => c.charCodeAt(0));
     }
 
 }
