@@ -1300,6 +1300,10 @@ class InputWaiter {
         this.initEditor();
         this.manager.output.initEditor();
 
+        this.setUrl({
+            includeInput: false
+        });
+
         const tabsList = document.getElementById("input-tabs");
         const tabsListChildren = tabsList.children;
 
