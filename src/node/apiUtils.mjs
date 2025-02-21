@@ -66,7 +66,7 @@ export function removeSubheadingsFromArray(array) {
  * @param str
  */
 export function sanitise(str) {
-    return str.replace(/ /g, "").toLowerCase();
+    return str.replace(/[/\s.-]/g, "").toLowerCase();
 }
 
 
