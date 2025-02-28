@@ -20,6 +20,7 @@ import TestRegister from "../lib/TestRegister.mjs";
 import "./tests/AESKeyWrap.mjs";
 import "./tests/AvroToJSON.mjs";
 import "./tests/BaconCipher.mjs";
+import "./tests/Base32.mjs";
 import "./tests/Base45.mjs";
 import "./tests/Base58.mjs";
 import "./tests/Base62.mjs";
