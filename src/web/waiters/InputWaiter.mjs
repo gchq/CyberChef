@@ -1654,6 +1654,22 @@ class InputWaiter {
         this.changeTab(inputNum, this.app.options.syncTabs);
     }
 
+    /**
+     * Handler for incoming postMessages
+     * If the events data has a `type` property set to `dataSubmit`
+     * the value property is set to the current input
+     * @param {event} e
+     * @param {object} e.data
+     * @param {string} e.data.type - the type of request, currently the only value is "dataSubmit"
+     * @param {string} e.data.value - the value of the message
+     */
+    handlePostMessage(e) {
+        if ("data" in e && "type" in e.data && "value" in e.data) {
+            if (e.data.type === "dataSubmit") {
+                this.setInput(e.data.value);
+            }
+        }
+    }
 }
 
 export default InputWaiter;
