@@ -349,6 +349,7 @@ class CRCChecksum extends Operation {
      */
     run(input, args) {
         const algorithm = args[0];
+        input = new Uint8Array(input);
 
         switch (algorithm) {
             case "CRC-3/GSM":                return this.crc(3n, input, 0x3n, 0x0n, false, false, 0x7n);
