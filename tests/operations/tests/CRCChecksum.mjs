@@ -2003,7 +2003,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "CRC Checksum",
-                "args": ["Custom", "32", "04C11DB7", "FFFFFFFF", "True", "True", "FFFFFFFF"]
+                "args": ["Custom", {"option": "Decimal", string: "32"}, {"option": "Hex", string: "04C11DB7"}, {"option": "Hex", string: "FFFFFFFF"}, {string: "True"}, {string: "True"}, {"option": "Hex", string: "FFFFFFFF"}]
             }
         ]
     },
@@ -2014,7 +2014,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "CRC Checksum",
-                "args": ["Custom", "ABC", "04C11DB7", "FFFFFFFF", "True", "True", "FFFFFFFF"]
+                "args": ["Custom", {"option": "Decimal", string: "ABC"}, {"option": "Hex", string: "04C11DB7"}, {"option": "Hex", string: "FFFFFFFF"}, {string: "True"}, {string: "True"}, {"option": "Hex", string: "FFFFFFFF"}]
             }
         ]
     },
@@ -2025,7 +2025,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "CRC Checksum",
-                "args": ["Custom", "32", "", "FFFFFFFF", "True", "True", "FFFFFFFF"]
+                "args": ["Custom", {"option": "Decimal", string: "32"}, {"option": "Hex", string: ""}, {"option": "Hex", string: "FFFFFFFF"}, {string: "True"}, {string: "True"}, {"option": "Hex", string: "FFFFFFFF"}]
             }
         ]
     },
@@ -2036,7 +2036,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "CRC Checksum",
-                "args": ["Custom", "32", "04C11DB7", "", "True", "True", "FFFFFFFF"]
+                "args": ["Custom", {"option": "Decimal", string: "32"}, {"option": "Hex", string: "04C11DB7"}, {"option": "Hex", string: ""}, {string: "True"}, {string: "True"}, {"option": "Hex", string: "FFFFFFFF"}]
             }
         ]
     },
@@ -2047,7 +2047,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "CRC Checksum",
-                "args": ["Custom", "32", "04C11DB7", "FFFFFFFF", "True", "True", ""]
+                "args": ["Custom", {"option": "Decimal", string: "32"}, {"option": "Hex", string: "04C11DB7"}, {"option": "Hex", string: "FFFFFFFF"}, {string: "True"}, {string: "True"}, {"option": "Hex", string: ""}]
             }
         ]
     }
