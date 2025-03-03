@@ -1995,5 +1995,60 @@ TestRegister.addTests([
                 "args": ["CRC-82/DARC"]
             }
         ]
+    },
+    {
+        name: "Custom. CRC-32",
+        input: "123456789",
+        expectedOutput: "cbf43926",
+        recipeConfig: [
+            {
+                "op": "CRC Checksum",
+                "args": ["Custom", "32", "04C11DB7", "FFFFFFFF", "True", "True", "FFFFFFFF"]
+            }
+        ]
+    },
+    {
+        name: "Custom. Invalid Width",
+        input: "123456789",
+        expectedOutput: "Invalid custom CRC arguments",
+        recipeConfig: [
+            {
+                "op": "CRC Checksum",
+                "args": ["Custom", "ABC", "04C11DB7", "FFFFFFFF", "True", "True", "FFFFFFFF"]
+            }
+        ]
+    },
+    {
+        name: "Custom. Invalid Poly",
+        input: "123456789",
+        expectedOutput: "Invalid custom CRC arguments",
+        recipeConfig: [
+            {
+                "op": "CRC Checksum",
+                "args": ["Custom", "32", "", "FFFFFFFF", "True", "True", "FFFFFFFF"]
+            }
+        ]
+    },
+    {
+        name: "Custom. Invalid Init",
+        input: "123456789",
+        expectedOutput: "Invalid custom CRC arguments",
+        recipeConfig: [
+            {
+                "op": "CRC Checksum",
+                "args": ["Custom", "32", "04C11DB7", "", "True", "True", "FFFFFFFF"]
+            }
+        ]
+    },
+    {
+        name: "Custom. Invalid Xor Out",
+        input: "123456789",
+        expectedOutput: "Invalid custom CRC arguments",
+        recipeConfig: [
+            {
+                "op": "CRC Checksum",
+                "args": ["Custom", "32", "04C11DB7", "FFFFFFFF", "True", "True", ""]
+            }
+        ]
     }
 ]);
