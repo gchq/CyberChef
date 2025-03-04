@@ -139,7 +139,7 @@
     "jsesc": "^3.0.2",
     "json5": "^2.2.3",
     "jsonpath-plus": "^10.0.7",
-    "jsonwebtoken": "8.5.1",
+    "jsonwebtoken": "9.0.0",
     "jsqr": "^1.4.0",
     "jsrsasign": "^11.1.0",
     "kbpgp": "2.1.15",
