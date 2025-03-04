@@ -907,8 +907,8 @@ class CRCChecksum extends Operation {
             const width = BigInt(widthObject.string);
             const poly = BigInt("0x" + polyObject.string);
             const init = BigInt("0x" + initObject.string);
-            const reflectIn = reflectInObject.string === "True";
-            const reflectOut = reflectOutObject.string === "True";
+            const reflectIn = reflectInObject === "True";
+            const reflectOut = reflectOutObject === "True";
             const xorOut = BigInt("0x" + xorOutObject.string);
 
             return this.crc(width, input, poly, init, reflectIn, reflectOut, xorOut);
