@@ -1,6 +1,7 @@
 name: "Master Build, Test & Deploy"
 
 on:
+  workflow_dispatch:
   push:
     branches:
     - master
@@ -9,15 +10,16 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Set node version
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
-        node-version: '10.x'
+        node-version: '18.x'
 
     - name: Install
       run: |
+        export DETECT_CHROMEDRIVER_VERSION=true
         npm install
         npm run setheapsize
 
@@ -27,18 +29,20 @@ jobs:
     - name: Unit Tests
       run: |
         npm test
-        npx grunt testnodeconsumer
+        npm run testnodeconsumer
 
     - name: Production Build
       if: success()
-      run: npx grunt prod
+      run: npx grunt prod --msg="Version 10 is here! Read about the new features <a href='https://github.com/gchq/CyberChef/wiki/Character-encoding,-EOL-separators,-and-editor-features'>here</a>"
 
     - name: Generate sitemap
       run: npx grunt exec:sitemap
 
-    # - name: UI Tests
-    #   if: success()
-    #   run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+    - name: UI Tests
+      if: success()
+      run: |
+        sudo apt-get install xvfb
+        xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
     - name: Prepare for GitHub Pages
       if: success()
@@ -46,7 +50,7 @@ jobs:
 
     - name: Deploy to GitHub Pages
       if: success() && github.ref == 'refs/heads/master'
-      uses: crazy-max/ghaction-github-pages@v2
+      uses: crazy-max/ghaction-github-pages@v3
       with:
         target_branch: gh-pages
         build_dir: ./build/prod

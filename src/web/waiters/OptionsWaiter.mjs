@@ -26,33 +26,31 @@ class OptionsWaiter {
      * @param {Object} options
      */
     load(options) {
-        for (const option in options) {
-            this.app.options[option] = options[option];
-        }
+        Object.assign(this.app.options, options);
 
         // Set options to match object
-        const cboxes = document.querySelectorAll("#options-body input[type=checkbox]");
-        let i;
-        for (i = 0; i < cboxes.length; i++) {
-            cboxes[i].checked = this.app.options[cboxes[i].getAttribute("option")];
-        }
+        document.querySelectorAll("#options-body input[type=checkbox]").forEach(cbox => {
+            cbox.checked = this.app.options[cbox.getAttribute("option")];
+        });
 
-        const nboxes = document.querySelectorAll("#options-body input[type=number]");
-        for (i = 0; i < nboxes.length; i++) {
-            nboxes[i].value = this.app.options[nboxes[i].getAttribute("option")];
-            nboxes[i].dispatchEvent(new CustomEvent("change", {bubbles: true}));
-        }
+        document.querySelectorAll("#options-body input[type=number]").forEach(nbox => {
+            nbox.value = this.app.options[nbox.getAttribute("option")];
+            nbox.dispatchEvent(new CustomEvent("change", {bubbles: true}));
+        });
 
-        const selects = document.querySelectorAll("#options-body select");
-        for (i = 0; i < selects.length; i++) {
-            const val = this.app.options[selects[i].getAttribute("option")];
+        document.querySelectorAll("#options-body select").forEach(select => {
+            const val = this.app.options[select.getAttribute("option")];
             if (val) {
-                selects[i].value = val;
-                selects[i].dispatchEvent(new CustomEvent("change", {bubbles: true}));
+                select.value = val;
+                select.dispatchEvent(new CustomEvent("change", {bubbles: true}));
             } else {
-                selects[i].selectedIndex = 0;
+                select.selectedIndex = 0;
             }
-        }
+        });
+
+        // Initialise options
+        this.setWordWrap();
+        this.manager.ops.setCatCount();
     }
 
 
@@ -136,19 +134,8 @@ class OptionsWaiter {
      * Sets or unsets word wrap on the input and output depending on the wordWrap option value.
      */
     setWordWrap() {
-        document.getElementById("input-text").classList.remove("word-wrap");
-        document.getElementById("output-text").classList.remove("word-wrap");
-        document.getElementById("output-html").classList.remove("word-wrap");
-        document.getElementById("input-highlighter").classList.remove("word-wrap");
-        document.getElementById("output-highlighter").classList.remove("word-wrap");
-
-        if (!this.app.options.wordWrap) {
-            document.getElementById("input-text").classList.add("word-wrap");
-            document.getElementById("output-text").classList.add("word-wrap");
-            document.getElementById("output-html").classList.add("word-wrap");
-            document.getElementById("input-highlighter").classList.add("word-wrap");
-            document.getElementById("output-highlighter").classList.add("word-wrap");
-        }
+        this.manager.input.setWordWrap(this.app.options.wordWrap);
+        this.manager.output.setWordWrap(this.app.options.wordWrap);
     }
 
 
@@ -159,7 +146,6 @@ class OptionsWaiter {
      */
     themeChange(e) {
         const themeClass = e.target.value;
-
         this.changeTheme(themeClass);
     }
 
@@ -177,6 +163,14 @@ class OptionsWaiter {
         themeSelect.selectedIndex = themeSelect.querySelector(`option[value="${theme}"`).index;
     }
 
+    /**
+     * Applies the user's preferred color scheme using the `prefers-color-scheme` media query.
+     */
+    applyPreferredColorScheme() {
+        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = prefersDarkScheme ? "dark" : "classic";
+        this.changeTheme(theme);
+    }
 
     /**
      * Changes the console logging level.
@@ -188,6 +182,8 @@ class OptionsWaiter {
         log.setLevel(level, false);
         this.manager.worker.setLogLevel();
         this.manager.input.setLogLevel();
+        this.manager.output.setLogLevel();
+        this.manager.background.setLogLevel();
     }
 }
 

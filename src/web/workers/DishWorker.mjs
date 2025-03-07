@@ -7,11 +7,19 @@
  */
 
 import Dish from "../../core/Dish.mjs";
+import Utils from "../../core/Utils.mjs";
+import cptable from "codepage";
+import loglevelMessagePrefix from "loglevel-message-prefix";
+
+loglevelMessagePrefix(log, {
+    prefixes: [],
+    staticPrefixes: ["DishWorker"]
+});
 
 self.addEventListener("message", function(e) {
     // Handle message from the main thread
     const r = e.data;
-    log.debug(`DishWorker receiving command '${r.action}'`);
+    log.debug(`Receiving command '${r.action}'`);
 
     switch (r.action) {
         case "getDishAs":
@@ -20,8 +28,14 @@ self.addEventListener("message", function(e) {
         case "getDishTitle":
             getDishTitle(r.data);
             break;
+        case "bufferToStr":
+            bufferToStr(r.data);
+            break;
+        case "setLogLevel":
+            log.setLevel(r.data, false);
+            break;
         default:
-            log.error(`DishWorker sent invalid action: '${r.action}'`);
+            log.error(`Unknown action: '${r.action}'`);
     }
 });
 
@@ -63,6 +77,35 @@ async function getDishTitle(data) {
         action: "dishReturned",
         data: {
             value: title,
+            id: data.id
+        }
+    });
+}
+
+/**
+ * Translates a buffer to a string using a specified encoding
+ *
+ * @param {object} data
+ * @param {ArrayBuffer} data.buffer
+ * @param {number} data.id
+ * @param {number} data.encoding
+ */
+async function bufferToStr(data) {
+    let str;
+    if (data.encoding === 0) {
+        str = Utils.arrayBufferToStr(data.buffer);
+    } else {
+        try {
+            str = cptable.utils.decode(data.encoding, new Uint8Array(data.buffer));
+        } catch (err) {
+            str = err;
+        }
+    }
+
+    self.postMessage({
+        action: "dishReturned",
+        data: {
+            value: str,
             id: data.id
         }
     });
