@@ -62,7 +62,7 @@ jobs:
         tags: ${{ steps.image-metadata.outputs.tags }}
         labels: ${{ steps.image-metadata.outputs.labels }}
         containerfiles: ./Dockerfile
-        archs: amd64,arm64v8,arm32v7
+        platforms: linux/amd64,linux/arm64
         oci: true
         # enable build layer caching between platforms
         layers: true
