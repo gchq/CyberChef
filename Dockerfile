@@ -12,19 +12,24 @@ COPY package.json .
 COPY package-lock.json .
 
 # Install dependencies
-# --ignore-scripts do not run grunt postinstall script as it depends on files other than package.json
+# --ignore-scripts prevents postinstall script (which runs grunt) as it depends on files other than package.json
 RUN npm ci --ignore-scripts
 
-# Build the app
+# Copy files needed for postinstall and build
 COPY . .
 
 # npm postinstall runs grunt, which depends on files other than package.json
 RUN npm run postinstall
+
+# Build the app
 RUN npm run build
 
 #########################################
 # Package static build files into nginx #
 #########################################
-FROM nginx:stable-alpine AS cyberchef
+# We are using Github Actions: redhat-actions/buildah-build@v2 which needs manual selection of arch in base image
+# Remove TARGETARCH if docker buildx is supported in the CI release as --platform=$TARGETPLATFORM will be automatically set
+ARG TARGETARCH
+FROM ${TARGETARCH}/nginx:stable-alpine AS cyberchef
 
 COPY --from=builder /app/build/prod /usr/share/nginx/html/
