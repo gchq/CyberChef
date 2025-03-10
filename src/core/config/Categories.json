@@ -73,7 +73,7 @@
             "CBOR Encode",
             "CBOR Decode",
             "YAML to JSON",
-            "Beautify YAML",
+            "JSON to YAML",
             "Caret/M-decode",
             "Rison Encode",
             "Rison Decode",

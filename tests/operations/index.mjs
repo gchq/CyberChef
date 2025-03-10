@@ -166,12 +166,10 @@ import "./tests/CBORDecode.mjs";
 import "./tests/JA3Fingerprint.mjs";
 import "./tests/JA3SFingerprint.mjs";
 import "./tests/HASSH.mjs";
-import "./tests/BeautifyYAML.mjs";
-
+import "./tests/JSONtoYAML.mjs";
 
 // Cannot test operations that use the File type yet
 // import "./tests/SplitColourChannels.mjs";
-import "./tests/BeautifyYAML.mjs";
 import "./tests/YARA.mjs";
 import "./tests/ParseCSR.mjs";
 import "./tests/XXTEA.mjs";

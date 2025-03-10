@@ -9,17 +9,17 @@ import OperationError from "../errors/OperationError.mjs";
 import YAML from "yaml";
 
 /**
- * Beautify YAML operation
+ * JSON to YAML operation
  */
-class BeautifyYAML extends Operation {
+class JSONtoYAML extends Operation {
 
     /**
-     * BeautifyYAML constructor
+     * JSONtoYAML constructor
      */
     constructor() {
         super();
 
-        this.name = "Beautify YAML";
+        this.name = "JSON to YAML";
         this.module = "Default";
         this.description = "Format a JSON object into YAML";
         this.infoURL = "https://en.wikipedia.org/wiki/YAML";
@@ -43,4 +43,4 @@ class BeautifyYAML extends Operation {
 
 }
 
-export default BeautifyYAML;
+export default JSONtoYAML;

@@ -28,12 +28,12 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "Beautify YAML",
+        name: "JSON to YAML",
         input: EXAMPLE_JSON,
         expectedOutput: `number: 3\nplain: string\n`,
         recipeConfig: [
             {
-                op: "Beautify YAML",
+                op: "JSON to YAML",
                 args: [],
             }
         ],
