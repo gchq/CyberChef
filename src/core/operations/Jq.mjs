@@ -19,8 +19,8 @@ class Jq extends Operation {
     constructor() {
         super();
 
-        this.name = "jq";
-        this.module = "Code";
+        this.name = "Jq";
+        this.module = "Jq";
         this.description = "jq is a lightweight and flexible command-line JSON processor.";
         this.infoURL = "https://github.com/jqlang/jq";
         this.inputType = "JSON";
