@@ -167,8 +167,12 @@ class OptionsWaiter {
      * Applies the user's preferred color scheme using the `prefers-color-scheme` media query.
      */
     applyPreferredColorScheme() {
-        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const theme = prefersDarkScheme ? "dark" : "classic";
+        const themeFromStorage = this.app?.options?.theme;
+        let theme = themeFromStorage;
+        if (!theme) {
+            const preferredTheme = (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "classic");
+            theme = preferredTheme;
+        }
         this.changeTheme(theme);
     }
 
