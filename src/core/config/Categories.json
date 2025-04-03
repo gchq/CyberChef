@@ -448,7 +448,9 @@
             "CRC-8 Checksum",
             "CRC-16 Checksum",
             "CRC-32 Checksum",
-            "TCP/IP Checksum"
+            "TCP/IP Checksum",
+            "FNV-1",
+            "FNV-1a"
         ]
     },
     {
