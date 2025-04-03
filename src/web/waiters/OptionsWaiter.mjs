@@ -175,7 +175,11 @@ class OptionsWaiter {
      * Applies the user's preferred color scheme using the `prefers-color-scheme` media query.
      */
     applyPreferredColorScheme() {
-        const theme = this.getPreferredColorScheme();
+        const themeFromStorage = this.app?.options?.theme;
+        let theme = themeFromStorage;
+        if (!theme) {
+            theme = this.getPreferredColorScheme();
+        }
         this.changeTheme(theme);
     }
 
