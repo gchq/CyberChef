@@ -178,8 +178,7 @@ class OptionsWaiter {
         const themeFromStorage = this.app?.options?.theme;
         let theme = themeFromStorage;
         if (!theme) {
-            const preferredTheme = (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "classic");
-            theme = preferredTheme;
+            theme = this.getPreferredColorScheme();
         }
         this.changeTheme(theme);
     }
