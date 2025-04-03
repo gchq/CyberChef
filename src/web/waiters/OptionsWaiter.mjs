@@ -160,16 +160,31 @@ class OptionsWaiter {
 
         // Update theme selection
         const themeSelect = document.getElementById("theme");
-        themeSelect.selectedIndex = themeSelect.querySelector(`option[value="${theme}"`).index;
+        let themeOption = themeSelect.querySelector(`option[value="${theme}"]`);
+
+        if (!themeOption) {
+            const preferredColorScheme = this.getPreferredColorScheme();
+            document.querySelector(":root").className = preferredColorScheme;
+            themeOption = themeSelect.querySelector(`option[value="${preferredColorScheme}"]`);
+        }
+
+        themeSelect.selectedIndex = themeOption.index;
     }
 
     /**
      * Applies the user's preferred color scheme using the `prefers-color-scheme` media query.
      */
     applyPreferredColorScheme() {
-        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        const theme = prefersDarkScheme ? "dark" : "classic";
+        const theme = this.getPreferredColorScheme();
         this.changeTheme(theme);
+    }
+
+    /**
+     * Get the user's preferred color scheme using the `prefers-color-scheme` media query.
+     */
+    getPreferredColorScheme() {
+        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        return prefersDarkScheme ? "dark" : "classic";
     }
 
     /**
