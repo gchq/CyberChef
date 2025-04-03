@@ -4,17 +4,18 @@
  * @license Apache-2.0
  */
 
-import Operation from "../Operation.mjs";
 import * as uuid from "uuid";
+
+import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
- * Analyse hash operation
+ * Analyse UUID operation
  */
-class AnalyseHash extends Operation {
+class AnalyseUUID extends Operation {
 
     /**
-     * AnalyseHash constructor
+     * AnalyseUUID constructor
      */
     constructor() {
         super();
@@ -44,4 +45,4 @@ class AnalyseHash extends Operation {
 
 }
 
-export default AnalyseHash;
+export default AnalyseUUID;
