@@ -20,7 +20,7 @@ class GenerateUUID extends Operation {
 
         this.name = "Generate UUID";
         this.module = "Crypto";
-        this.description = "Generates an RFC 4122 compliant Universally Unique Identifier (UUID), also known as a Globally Unique Identifier (GUID).<br><br>A version 4 UUID relies on random numbers, in this case generated using <code>uuid</code> package";
+        this.description = "Generates an RFC 9562 (formerly RFC 4122) compliant Universally Unique Identifier (UUID), also known as a Globally Unique Identifier (GUID).<br><br>A version 4 UUID relies on random numbers, in this case generated using <code>uuid</code> package";
         this.infoURL = "https://wikipedia.org/wiki/Universally_unique_identifier";
         this.inputType = "string";
         this.outputType = "string";
@@ -29,7 +29,7 @@ class GenerateUUID extends Operation {
                 name: "UUID Version",
                 type: "option",
                 value: [
-                    "v1", "v3", "v4", "v5"
+                    "v1", "v3", "v4", "v5", "v6", "v7",
                 ]
             },
             {
