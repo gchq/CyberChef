@@ -144,6 +144,7 @@ import "./tests/SetIntersection.mjs";
 import "./tests/SetUnion.mjs";
 import "./tests/Shuffle.mjs";
 import "./tests/SIGABA.mjs";
+import "./tests/SM2.mjs";
 import "./tests/SM4.mjs";
 // import "./tests/SplitColourChannels.mjs"; // Cannot test operations that use the File type yet
 import "./tests/StrUtils.mjs";
@@ -160,6 +161,16 @@ import "./tests/TranslateDateTimeFormat.mjs";
 import "./tests/Typex.mjs";
 import "./tests/UnescapeString.mjs";
 import "./tests/Unicode.mjs";
+import "./tests/RSA.mjs";
+import "./tests/CBOREncode.mjs";
+import "./tests/CBORDecode.mjs";
+import "./tests/JA3Fingerprint.mjs";
+import "./tests/JA3SFingerprint.mjs";
+import "./tests/HASSH.mjs";
+import "./tests/JSONtoYAML.mjs";
+
+// Cannot test operations that use the File type yet
+// import "./tests/SplitColourChannels.mjs";
 import "./tests/YARA.mjs";
 import "./tests/ParseCSR.mjs";
 import "./tests/XXTEA.mjs";

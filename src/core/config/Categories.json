@@ -72,6 +72,8 @@
             "Avro to JSON",
             "CBOR Encode",
             "CBOR Decode",
+            "YAML to JSON",
+            "JSON to YAML",
             "Caret/M-decode",
             "Rison Encode",
             "Rison Decode",
@@ -193,7 +195,9 @@
             "Parse SSH Host Key",
             "Parse CSR",
             "Public Key from Certificate",
-            "Public Key from Private Key"
+            "Public Key from Private Key",
+            "SM2 Encrypt",
+            "SM2 Decrypt"
         ]
     },
     {
@@ -465,6 +469,7 @@
             "CSS Minify",
             "XPath expression",
             "JPath expression",
+            "Jq",
             "CSS selector",
             "PHP Deserialize",
             "Microsoft Script Decoder",
