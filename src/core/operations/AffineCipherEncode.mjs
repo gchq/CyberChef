@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import { affineEncode } from "../lib/Ciphers.mjs";
+import { affineEncrypt, AFFINE_ALPHABETS } from "../lib/Ciphers.mjs";
 
 /**
  * Affine Cipher Encode operation
@@ -20,7 +20,7 @@ class AffineCipherEncode extends Operation {
 
         this.name = "Affine Cipher Encode";
         this.module = "Ciphers";
-        this.description = "The Affine cipher is a type of monoalphabetic substitution cipher, wherein each letter in an alphabet is mapped to its numeric equivalent, encrypted using simple mathematical function, <code>(ax + b) % 26</code>, and converted back to a letter.";
+        this.description = "The Affine cipher is a type of monoalphabetic substitution cipher, wherein each letter in an alphabet is mapped to its numeric equivalent, encrypted using simple mathematical function, <code>(ax + b) % m</code>, and converted back to a letter.";
         this.infoURL = "https://wikipedia.org/wiki/Affine_cipher";
         this.inputType = "string";
         this.outputType = "string";
@@ -34,6 +34,11 @@ class AffineCipherEncode extends Operation {
                 "name": "b",
                 "type": "number",
                 "value": 0
+            },
+            {
+                "name": "Alphabet",
+                "type": "editableOption",
+                "value": AFFINE_ALPHABETS
             }
         ];
     }
@@ -44,7 +49,8 @@ class AffineCipherEncode extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        return affineEncode(input, args);
+        const a = args[0], b = args[1], alphabet = args[2];
+        return affineEncrypt(input, a, b, alphabet);
     }
 
     /**
