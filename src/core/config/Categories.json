@@ -72,6 +72,8 @@
             "Avro to JSON",
             "CBOR Encode",
             "CBOR Decode",
+            "YAML to JSON",
+            "JSON to YAML",
             "Caret/M-decode",
             "Rison Encode",
             "Rison Decode",
