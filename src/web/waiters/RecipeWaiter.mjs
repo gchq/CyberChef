@@ -8,6 +8,7 @@ import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import Utils from "../../core/Utils.mjs";
 import {escapeControlChars} from "../utils/editorUtils.mjs";
+import DOMPurify from 'dompurify';
 
 
 /**
@@ -435,7 +436,9 @@ class RecipeWaiter {
         const item = document.createElement("li");
 
         item.classList.add("operation");
-        item.innerHTML = name;
+        const clean = DOMPurify.sanitize(name);
+        item.innerHTML = clean;
+
         this.buildRecipeOperation(item);
         document.getElementById("rec-list").appendChild(item);
 
