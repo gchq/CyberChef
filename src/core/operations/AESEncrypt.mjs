@@ -135,7 +135,7 @@ The following algorithms will be used based on the size of the key:
         if (noPadding) {
             cipher.mode.pad = function(output, options) {
                 return true;
-            }
+            };
         }
         cipher.update(forge.util.createBuffer(input));
         cipher.finish();
