@@ -8,7 +8,7 @@ import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import Utils from "../../core/Utils.mjs";
 import {escapeControlChars} from "../utils/editorUtils.mjs";
-import DOMPurify from 'dompurify';
+import DOMPurify from "dompurify";
 
 
 /**
