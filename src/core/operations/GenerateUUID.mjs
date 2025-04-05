@@ -26,15 +26,15 @@ class GenerateUUID extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                name: "UUID Version",
+                name: "Version",
+                hint: "UUID version",
                 type: "option",
-                value: [
-                    "v1", "v3", "v4", "v5", "v6", "v7",
-                ]
+                value: ["v1", "v3", "v4", "v5", "v6", "v7"],
                 defaultIndex: 2,
             },
             {
-                name: "UUID namespace (valid for v3 and v5)",
+                name: "Namespace",
+                hint: "UUID namespace (UUID; valid for v3 and v5)",
                 type: "string",
                 value: "1b671a64-40d5-491e-99b0-da01ff1f3341"
             }
@@ -51,9 +51,7 @@ class GenerateUUID extends Operation {
         const hasDesiredVersion = typeof uuid[version] === "function";
         if (!hasDesiredVersion) throw new OperationError("Invalid UUID version");
 
-        const versionThatRequiresNamespace = ["v3", "v5"];
-
-        const requiresNamespace = versionThatRequiresNamespace.includes(version);
+        const requiresNamespace = ["v3", "v5"].includes(version);
         if (!requiresNamespace) return uuid[version]();
 
         const hasValidNamespace = typeof namespace === "string" && uuid.validate(namespace);
