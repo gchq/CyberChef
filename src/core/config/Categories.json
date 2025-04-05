@@ -470,6 +470,7 @@
             "Jq",
             "CSS selector",
             "PHP Deserialize",
+            "PHP Serialize",
             "Microsoft Script Decoder",
             "Strip HTML tags",
             "Diff",
