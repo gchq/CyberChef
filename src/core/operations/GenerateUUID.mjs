@@ -31,6 +31,7 @@ class GenerateUUID extends Operation {
                 value: [
                     "v1", "v3", "v4", "v5", "v6", "v7",
                 ]
+                defaultIndex: 2,
             },
             {
                 name: "UUID namespace (valid for v3 and v5)",

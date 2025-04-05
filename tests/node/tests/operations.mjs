@@ -593,6 +593,14 @@ Password: 282760`;
         assert.strictEqual(result, expected);
     })),
 
+    it("Generate UUID using defaults", () => {
+        const uuid = chef.generateUUID();
+        assert.ok(uuid);
+
+        const analysis = chef.analyseUUID(uuid).toString();
+        assert.strictEqual(analysis, "UUID version: 4");
+    }),
+
     it("Gzip, Gunzip", () => {
         assert.strictEqual(chef.gunzip(chef.gzip("Down To The Wire")).toString(), "Down To The Wire");
     }),
