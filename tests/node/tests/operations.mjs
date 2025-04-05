@@ -580,11 +580,18 @@ Password: 282760`;
         assert.strictEqual(result.toString().substr(0, 37), "-----BEGIN PGP PRIVATE KEY BLOCK-----");
     }),
 
-    it("Generate UUID", () => {
-        const result = chef.generateUUID();
-        assert.ok(result.toString());
-        assert.strictEqual(result.toString().length, 36);
-    }),
+    ...[1, 3, 4, 5, 6, 7].map(version => it(`Generate UUID v${version}`, () => {
+        const result = chef.generateUUID("", { "UUID version": `v${version}` }).toString();
+        assert.ok(result);
+        assert.strictEqual(result.length, 36);
+    })),
+
+    ...[1, 3, 4, 5, 6, 7].map(version => it(`Analyze UUID v${version}`, () => {
+        const uuid = chef.generateUUID("", { "UUID version": `v${version}` }).toString();
+        const result = chef.analyseUUID(uuid).toString();
+        const expected = `UUID version: ${version}`;
+        assert.strictEqual(result, expected);
+    })),
 
     it("Gzip, Gunzip", () => {
         assert.strictEqual(chef.gunzip(chef.gzip("Down To The Wire")).toString(), "Down To The Wire");
