@@ -123,6 +123,7 @@
     "d3": "7.9.0",
     "d3-hexbin": "^0.2.2",
     "diff": "^5.2.0",
+    "dompurify": "^3.2.5",
     "es6-promisify": "^7.0.0",
     "escodegen": "^2.1.0",
     "esprima": "^4.0.1",
