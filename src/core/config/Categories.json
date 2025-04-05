@@ -369,6 +369,7 @@
             "Regular expression",
             "XPath expression",
             "JPath expression",
+            "Jsonata Query",
             "CSS selector",
             "Extract EXIF",
             "Extract ID3",
