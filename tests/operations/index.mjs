@@ -97,6 +97,7 @@ import "./tests/JWK.mjs";
 import "./tests/JWTDecode.mjs";
 import "./tests/JWTSign.mjs";
 import "./tests/JWTVerify.mjs";
+import "./tests/KaitaiStructDecode.mjs";
 import "./tests/LevenshteinDistance.mjs";
 import "./tests/Lorenz.mjs";
 import "./tests/LS47.mjs";

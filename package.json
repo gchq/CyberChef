@@ -144,6 +144,8 @@
     "jsonwebtoken": "8.5.1",
     "jsqr": "^1.4.0",
     "jsrsasign": "^11.1.0",
+    "kaitai-struct": "^0.11.0-SNAPSHOT.3",
+    "kaitai-struct-compiler": "^0.11.0-SNAPSHOT20250330.110510.aa10f07",
     "kbpgp": "2.1.15",
     "libbzip2-wasm": "0.0.4",
     "libyara-wasm": "^1.2.1",
