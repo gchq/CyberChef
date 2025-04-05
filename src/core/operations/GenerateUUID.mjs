@@ -20,7 +20,20 @@ class GenerateUUID extends Operation {
 
         this.name = "Generate UUID";
         this.module = "Crypto";
-        this.description = "Generates an RFC 9562 (formerly RFC 4122) compliant Universally Unique Identifier (UUID), also known as a Globally Unique Identifier (GUID).<br><br>A version 4 UUID relies on random numbers, in this case generated using <code>uuid</code> package";
+        this.description =
+            "Generates an RFC 9562 (formerly RFC 4122) compliant Universally Unique Identifier (UUID), " +
+            "also known as a Globally Unique Identifier (GUID).<br>" +
+            "<br>" +
+            "We currently support generating the following UUID versions:<br>" +
+            "<ul>" +
+            "<li><strong>v1</strong>: Timestamp-based</li>" +
+            "<li><strong>v3</strong>: Namespace w/ MD5</li>" +
+            "<li><strong>v4</strong>: Random (default)</li>" +
+            "<li><strong>v5</strong>: Namespace w/ SHA-1</li>" +
+            "<li><strong>v6</strong>: Timestamp, reordered</li>" +
+            "<li><strong>v7</strong>: Unix Epoch time-based</li>" +
+            "</ul>" +
+            "UUIDs are generated using the <a href='https://npmjs.org/uuid/'><code>uuid</code><a> package.<br>";
         this.infoURL = "https://wikipedia.org/wiki/Universally_unique_identifier";
         this.inputType = "string";
         this.outputType = "string";
