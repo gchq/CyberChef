@@ -175,6 +175,7 @@ import "./tests/JSONtoYAML.mjs";
 import "./tests/YARA.mjs";
 import "./tests/ParseCSR.mjs";
 import "./tests/XXTEA.mjs";
+import "./tests/ExtractBitcoinAddresses.mjs";
 
 const testStatus = {
     allTestsPassing: true,
