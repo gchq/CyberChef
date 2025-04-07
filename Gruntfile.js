@@ -4,9 +4,19 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const glob = require("glob");
-const path = require("path");
+const path = require("node:path");
+const cp = require("node:child_process");
 
 const nodeFlags = "--experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings --no-deprecation";
+
+// Prepare platform-dependent commands
+
+// Older MacOS versions don't come with `sha256sum`, but they all come with `shasum`
+const sha256sumCmd = process.platform === "darwin" ? "shasum -a 256" : "sha256sum";
+
+// MacOS (and FreeBSD, but not OpenBSD) require an argument to `-i`.
+// However, users may have installed GNU sed, so let's check what `sed` says itself.
+const sedCmd = cp.execSync("sed -i 2>&1 | head -n1").toString().includes("option requires an argument") ? "sed -i ''" : "sed -i";
 
 /**
  * Grunt configuration for building the app in various formats.
@@ -60,7 +70,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("findModules",
         "Finds all generated modules and updates the entry point list for Webpack",
-        function(arg1, arg2) {
+        function (arg1, arg2) {
             const moduleEntryPoints = listEntryModules();
 
             grunt.log.writeln(`Found ${Object.keys(moduleEntryPoints).length} modules.`);
@@ -112,7 +122,7 @@ module.exports = function (grunt) {
                 output: {
                     path: __dirname + "/build/prod",
                     filename: chunkData => {
-                        return chunkData.chunk.name === "main" ? "assets/[name].js": "[name].js";
+                        return chunkData.chunk.name === "main" ? "assets/[name].js" : "[name].js";
                     },
                     globalObject: "this"
                 },
@@ -329,20 +339,10 @@ module.exports = function (grunt) {
         },
         exec: {
             calcDownloadHash: {
-                command: function () {
-                    switch (process.platform) {
-                        case "darwin":
-                            return chainCommands([
-                                `shasum -a 256 build/prod/CyberChef_v${pkg.version}.zip | awk '{print $1;}' > build/prod/sha256digest.txt`,
-                                `sed -i '' -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`
-                            ]);
-                        default:
-                            return chainCommands([
-                                `sha256sum build/prod/CyberChef_v${pkg.version}.zip | awk '{print $1;}' > build/prod/sha256digest.txt`,
-                                `sed -i -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`
-                            ]);
-                    }
-                },
+                command: chainCommands([
+                    `${sha256sumCmd} build/prod/CyberChef_v${pkg.version}.zip | awk '{print $1;}' > build/prod/sha256digest.txt`,
+                    `${sedCmd} -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`,
+                ]),
             },
             repoSize: {
                 command: chainCommands([
@@ -411,37 +411,15 @@ module.exports = function (grunt) {
                 stdout: false,
             },
             fixCryptoApiImports: {
-                command: function () {
-                    switch (process.platform) {
-                        case "darwin":
-                            return `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 sed -i '' -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`;
-                        default:
-                            return `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 sed -i -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`;
-                    }
-                },
+                command: `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 ${sedCmd} -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`,
                 stdout: false
             },
             fixSnackbarMarkup: {
-                command: function () {
-                    switch (process.platform) {
-                        case "darwin":
-                            return `sed -i '' 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`;
-                        default:
-                            return `sed -i 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`;
-                    }
-                },
+                command: `${sedCmd} 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`,
                 stdout: false
             },
             fixJimpModule: {
-                command: function () {
-                    switch (process.platform) {
-                        case "darwin":
-                            // Space added before comma to prevent multiple modifications
-                            return `sed -i '' 's/"es\\/index.js",/"es\\/index.js" ,\\n  "type": "module",/' ./node_modules/jimp/package.json`;
-                        default:
-                            return `sed -i 's/"es\\/index.js",/"es\\/index.js" ,\\n  "type": "module",/' ./node_modules/jimp/package.json`;
-                    }
-                },
+                command: `${sedCmd} 's/"es\\/index.js",/"es\\/index.js" ,\\n  "type": "module",/' ./node_modules/jimp/package.json`,
                 stdout: false
             }
         },
