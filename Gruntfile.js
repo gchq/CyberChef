@@ -9,14 +9,21 @@ const cp = require("node:child_process");
 
 const nodeFlags = "--experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings --no-deprecation";
 
-// Prepare platform-dependent commands
+// Define platform-dependent commands
+const pcmd = {
+    // Older MacOS versions don't come with `sha256sum`, but they all come with `shasum`
+    sha256sum: process.platform === "darwin" ? "shasum -a 256" : "sha256sum",
 
-// Older MacOS versions don't come with `sha256sum`, but they all come with `shasum`
-const sha256sumCmd = process.platform === "darwin" ? "shasum -a 256" : "sha256sum";
-
-// MacOS (and FreeBSD, but not OpenBSD) require an argument to `-i`.
-// However, users may have installed GNU sed, so let's check what `sed` says itself.
-const sedCmd = cp.execSync("sed -i 2>&1 | head -n1").toString().includes("option requires an argument") ? "sed -i ''" : "sed -i";
+    // MacOS (and FreeBSD, but not OpenBSD) require an argument to `-i`.
+    // However, users may have installed GNU sed, so let's check what `sed` says itself.
+    // NB: using a lazy, memoized getter so this is only executed at most once, upon first access.
+    get sed() {
+        delete this.sed;
+        return this.sed = (
+            cp.execSync("sed -i 2>&1 | head -n1").toString().includes("option requires an argument") ? "sed -i ''" : "sed -i"
+        );
+    }
+};
 
 /**
  * Grunt configuration for building the app in various formats.
@@ -340,8 +347,8 @@ module.exports = function (grunt) {
         exec: {
             calcDownloadHash: {
                 command: chainCommands([
-                    `${sha256sumCmd} build/prod/CyberChef_v${pkg.version}.zip | awk '{print $1;}' > build/prod/sha256digest.txt`,
-                    `${sedCmd} -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`,
+                    `${pcmd.sha256sum} build/prod/CyberChef_v${pkg.version}.zip | awk '{print $1;}' > build/prod/sha256digest.txt`,
+                    `${pcmd.sed} -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`,
                 ]),
             },
             repoSize: {
@@ -411,15 +418,15 @@ module.exports = function (grunt) {
                 stdout: false,
             },
             fixCryptoApiImports: {
-                command: `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 ${sedCmd} -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`,
+                command: `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 ${pcmd.sed} -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`,
                 stdout: false
             },
             fixSnackbarMarkup: {
-                command: `${sedCmd} 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`,
+                command: `${pcmd.sed} 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`,
                 stdout: false
             },
             fixJimpModule: {
-                command: `${sedCmd} 's/"es\\/index.js",/"es\\/index.js" ,\\n  "type": "module",/' ./node_modules/jimp/package.json`,
+                command: `${pcmd.sed} 's/"es\\/index.js",/"es\\/index.js" ,\\n  "type": "module",/' ./node_modules/jimp/package.json`,
                 stdout: false
             }
         },
