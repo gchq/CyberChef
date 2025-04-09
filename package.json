@@ -132,6 +132,7 @@
     "file-saver": "^2.0.5",
     "flat": "^6.0.1",
     "geodesy": "1.1.3",
+    "handlebars": "^4.7.8",
     "highlight.js": "^11.9.0",
     "ieee754": "^1.2.1",
     "jimp": "^0.22.12",
