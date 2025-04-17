@@ -31,6 +31,7 @@ import "./tests/BCD.mjs";
 import "./tests/BitwiseOp.mjs";
 import "./tests/BLAKE2b.mjs";
 import "./tests/BLAKE2s.mjs";
+import "./tests/BLAKE3.mjs";
 import "./tests/Bombe.mjs";
 import "./tests/BSON.mjs";
 import "./tests/ByteRepr.mjs";

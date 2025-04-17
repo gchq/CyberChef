@@ -422,6 +422,7 @@
             "Snefru",
             "BLAKE2b",
             "BLAKE2s",
+            "BLAKE3",
             "GOST Hash",
             "Streebog",
             "SSDEEP",
