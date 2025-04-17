@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import { blake3 } from 'hash-wasm';
+import { blake3 } from "hash-wasm";
 /**
  * BLAKE3 operation
  */
@@ -21,7 +21,7 @@ class BLAKE3 extends Operation {
         this.name = "BLAKE3";
         this.module = "Hashing";
         this.description = "Hashes the input using BLAKE3 (UTF-8 encoded), with an optional key (also UTF-8), and outputs the result in hexadecimal format.";
-        this.infoURL = "https://en.wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE3"; 
+        this.infoURL = "https://en.wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE3";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -32,7 +32,7 @@ class BLAKE3 extends Operation {
                 "name": "Key",
                 "type": "string",
                 "value": ""
-            }, 
+            }
         ];
     }
 
@@ -47,7 +47,7 @@ class BLAKE3 extends Operation {
         // Check if the user want a key hash or not
         if (key === "") {
             return blake3(input, size*8);
-        }if (key.length !== 32) {
+        } if (key.length !== 32) {
             throw new OperationError("The key must be exactly 32 bytes long");
         }
         return blake3(input, size*8, key);
