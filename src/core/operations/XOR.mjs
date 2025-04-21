@@ -52,8 +52,8 @@ class XOR extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
+        input = new Uint8Array(input);
         try {
-            input = new Uint8Array(input);
             const key = Utils.convertToByteArray(args[0].string || "", args[0].option),
                 [, scheme, nullPreserving] = args;
 
