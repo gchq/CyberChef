@@ -54,7 +54,7 @@ class XOR extends Operation {
     run(input, args) {
         input = new Uint8Array(input);
         try {
-            const key = Utils.convertToByteArray(args[0].string || "", args[0].option, true),
+            const key = Utils.convertToByteArray(args[0].string || "", args[0].option, "None", true),
                 [, scheme, nullPreserving] = args;
 
             return bitOp(input, key, xor, nullPreserving, scheme);
