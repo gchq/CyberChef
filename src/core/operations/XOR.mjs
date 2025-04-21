@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import { bitOp, xor, BITWISE_OP_DELIMS } from "../lib/BitwiseOp.mjs";
 
@@ -51,11 +52,15 @@ class XOR extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        input = new Uint8Array(input);
-        const key = Utils.convertToByteArray(args[0].string || "", args[0].option),
-            [, scheme, nullPreserving] = args;
+        try {
+            input = new Uint8Array(input);
+            const key = Utils.convertToByteArray(args[0].string || "", args[0].option),
+                [, scheme, nullPreserving] = args;
 
-        return bitOp(input, key, xor, nullPreserving, scheme);
+            return bitOp(input, key, xor, nullPreserving, scheme);
+        } catch (error) {
+            throw new OperationError("Invalid Characters in key");
+        }
     }
 
     /**
