@@ -42,6 +42,11 @@ class XOR extends Operation {
                 "name": "Null preserving",
                 "type": "boolean",
                 "value": false
+            },
+            {
+                "name": "Filter Key",
+                "type": "boolean",
+                "value": true
             }
         ];
     }
@@ -54,7 +59,7 @@ class XOR extends Operation {
     run(input, args) {
         input = new Uint8Array(input);
         try {
-            const key = Utils.convertToByteArray(args[0].string || "", args[0].option, "None", true),
+            const key = Utils.convertToByteArray(args[0].string || "", args[0].option, args[3] ? "Auto" : "None", true),
                 [, scheme, nullPreserving] = args;
 
             return bitOp(input, key, xor, nullPreserving, scheme);
