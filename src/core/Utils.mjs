@@ -327,6 +327,8 @@ class Utils {
      *
      * @param {string} str
      * @param {string} type - One of "Binary", "Hex", "Decimal", "Base64", "UTF8" or "Latin1"
+     * @param {string} [delim="Auto"] - (Hex only) Delimiter used to split the input string. Set to "Auto" by default.
+     * @param {boolean} [throwError=false] - (Hex only) Whether to throw an error on invalid input. Defaults to false.
      * @returns {byteArray}
      *
      * @example
