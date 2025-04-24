@@ -339,12 +339,12 @@ class Utils {
      * // returns [208, 159, 209, 128, 208, 184, 208, 178, 208, 181, 209, 130]
      * Utils.convertToByteArray("0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1", "base64");
      */
-    static convertToByteArray(str, type, delim = "Auto") {
+    static convertToByteArray(str, type, delim = "Auto", throwError = false) {
         switch (type.toLowerCase()) {
             case "binary":
                 return fromBinary(str);
             case "hex":
-                return fromHex(str, delim);
+                return fromHex(str, delim, 2, throwError);
             case "decimal":
                 return fromDecimal(str);
             case "base64":
