@@ -22,7 +22,7 @@ class ZPLConvert extends Operation {
         this.description = [
             "Takes a ZPL (Zebra Printer Language) string and renders it into a png.",
             "<br><br>",
-            "Uses the  <a href='https://labelary.com/service.html'>Labelary</a> API for full support of all ZPL instructions.",
+            "Uses the <a href='https://labelary.com/service.html'>Labelary</a> API for full support of all ZPL instructions.",
             "<br><br>",
             "Use the 'Render Image' operation to see the final label output."
         ].join("\n");
