@@ -404,6 +404,7 @@
         "name": "Hashing",
         "ops": [
             "Analyse hash",
+            "Generate all checksums",
             "Generate all hashes",
             "MD2",
             "MD4",

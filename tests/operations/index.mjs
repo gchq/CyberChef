@@ -72,6 +72,7 @@ import "./tests/FileTree.mjs";
 import "./tests/FletcherChecksum.mjs";
 import "./tests/Fork.mjs";
 import "./tests/FromDecimal.mjs";
+import "./tests/GenerateAllChecksums.mjs";
 import "./tests/GenerateAllHashes.mjs";
 import "./tests/GenerateDeBruijnSequence.mjs";
 import "./tests/GetAllCasings.mjs";
