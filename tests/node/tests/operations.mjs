@@ -982,7 +982,7 @@ smothering ampersand abreast`;
         ];        
         invalidKeys.forEach(invalidKey => {
             assert.throws(() => {
-                chef.XOR("fe023da5", { key: invalidKey });
+                chef.XOR("fe023da5", { key: invalidKey, filterKey: false });
             }, /Invalid Characters in key/);
         });
     }),
