@@ -979,7 +979,7 @@ smothering ampersand abreast`;
             { string: "zz 00 11", option: "Hex" },
 
             { string: "4~ 00 11", option: "Hex" }
-        ];        
+        ];
         invalidKeys.forEach(invalidKey => {
             assert.throws(() => {
                 chef.XOR("fe023da5", { key: invalidKey, filterKey: false });
@@ -989,7 +989,7 @@ smothering ampersand abreast`;
 
     it("XOR: should not throw 'Invalid Characters in key' error when key contains only valid characters", () => {
         assert.strictEqual(chef.XOR("fe023da5", {
-            key: "73 6f 6d 65",
+            key: "736f6d65",
             filterKey: false
         }).toString(),
         "\u0015\n]W@\u000b\fP");
