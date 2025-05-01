@@ -974,6 +974,19 @@ smothering ampersand abreast`;
         "QV\u0010\u0004UDWQ");
     }),
 
+    it("XOR: should throw 'Invalid Characters in key' error when key contains invalid characters", () => {
+        const invalidKeys = [
+            { string: "zz 00 11", option: "Hex" },
+
+            { string: "4~ 00 11", option: "Hex" }
+        ];        
+        invalidKeys.forEach(invalidKey => {
+            assert.throws(() => {
+                chef.XOR("fe023da5", { key: invalidKey });
+            }, /Invalid Characters in key/);
+        });
+    }),
+
     it("XPath expression", () => {
         assert.strictEqual(
             chef.XPathExpression("<contact-info><company>abc</company></contact-info>", {xPath: "contact-info/company"}).toString(),

@@ -46,7 +46,7 @@ class XOR extends Operation {
             {
                 "name": "Filter Key",
                 "type": "boolean",
-                "value": false
+                "value": true
             }
         ];
     }
