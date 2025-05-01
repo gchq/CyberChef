@@ -987,6 +987,14 @@ smothering ampersand abreast`;
         });
     }),
 
+    it("XOR: should not throw 'Invalid Characters in key' error when key contains only valid characters", () => {
+        assert.strictEqual(chef.XOR("fe023da5", {
+            key: "73 6f 6d 65",
+            filterKey: false
+        }).toString(),
+        "\u0015\n]W@\u000b\fP");
+    }),
+
     it("XPath expression", () => {
         assert.strictEqual(
             chef.XPathExpression("<contact-info><company>abc</company></contact-info>", {xPath: "contact-info/company"}).toString(),
