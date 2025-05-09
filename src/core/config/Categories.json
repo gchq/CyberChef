@@ -74,7 +74,10 @@
             "CBOR Decode",
             "Caret/M-decode",
             "Rison Encode",
-            "Rison Decode"
+            "Rison Decode",
+            "To Modhex",
+            "From Modhex",
+            "MIME Decoding"
         ]
     },
     {
@@ -234,7 +237,9 @@
             "Parse User Agent",
             "Parse IP range",
             "Parse IPv6 address",
+            "IPv6 Transition Addresses",
             "Parse IPv4 header",
+            "Strip IPv4 header",
             "Parse TCP",
             "Strip TCP header",
             "Parse TLS record",
@@ -272,7 +277,8 @@
             "Unicode Text Format",
             "Remove Diacritics",
             "Unescape Unicode Characters",
-            "Convert to NATO alphabet"
+            "Convert to NATO alphabet",
+            "Convert Leet Speak"
         ]
     },
     {
@@ -324,7 +330,9 @@
             "Unescape string",
             "Pseudo-Random Number Generator",
             "Sleep",
-            "File Tree"
+            "File Tree",
+            "Take nth bytes",
+            "Drop nth bytes"
         ]
     },
     {
