@@ -1664,8 +1664,9 @@ class InputWaiter {
      * @param {string} e.data.value - the value of the message
      */
     handlePostMessage(e) {
-        if ("data" in e && "type" in e.data && "value" in e.data) {
-            if (e.data.type === "dataSubmit") {
+        log.debug(e);
+        if ("data" in e && "id" in e.data && "value" in e.data) {
+            if (e.data.id === "setInput") {
                 this.setInput(e.data.value);
             }
         }
