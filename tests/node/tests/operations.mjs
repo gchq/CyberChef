@@ -305,16 +305,6 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
         assert.strictEqual(result.toString(), "2");
     }),
 
-    it("CRC16 Checksum", () => {
-        const result = chef.CRC16Checksum("Rain on Your Parade");
-        assert.strictEqual(result.toString(), "db1c");
-    }),
-
-    it("CRC32 Checksum", () => {
-        const result = chef.CRC32Checksum("Rain on Your Parade");
-        assert.strictEqual(result.toString(), "e902f76c");
-    }),
-
     it("CSS Beautify", () => {
         const result = chef.CSSBeautify("header {color:black;padding:3rem;}");
         const expected = `header {

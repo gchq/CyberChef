@@ -25,6 +25,7 @@ jobs:
 
     - name: Install
       run: |
+        export DETECT_CHROMEDRIVER_VERSION=true
         npm ci
         npm run setheapsize
 
@@ -61,12 +62,22 @@ jobs:
         tags: ${{ steps.image-metadata.outputs.tags }}
         labels: ${{ steps.image-metadata.outputs.labels }}
         containerfiles: ./Dockerfile
-        platforms: linux/amd64
+        platforms: linux/amd64,linux/arm64
         oci: true
+        # enable build layer caching between platforms
+        layers: true
         # Webpack seems to use a lot of open files, increase the max open file limit to accomodate.
         extra-args: |
           --ulimit nofile=10000
 
+    - name: Publish to GHCR
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.build-image.outputs.image }}
+        tags: ${{ steps.build-image.outputs.tags }}
+        registry: ${{ env.REGISTRY }}
+        username: ${{ env.REGISTRY_USER }}
+        password: ${{ env.REGISTRY_PASSWORD }}
 
     - name: Upload Release Assets
       id: upload-release-assets
@@ -81,13 +92,6 @@ jobs:
 
     - name: Publish to NPM
       uses: JS-DevTools/npm-publish@v1
+      if: false
       with:
         token: ${{ secrets.NPM_TOKEN }}
-
-    - name: Publish to GHCR
-      uses: redhat-actions/push-to-registry@v2
-      with:
-        tags: ${{ steps.build-image.outputs.tags }}
-        registry: ${{ env.REGISTRY }}
-        username: ${{ env.REGISTRY_USER }}
-        password: ${{ env.REGISTRY_PASSWORD }}
