@@ -7,10 +7,12 @@
  */
 
 import CryptoApi from "crypto-api/src/crypto-api.mjs";
-import { fromArrayBuffer } from "crypto-api/src/encoder/array-buffer.mjs";
+import { fromArrayBuffer} from "crypto-api/src/encoder/array-buffer.mjs";
 import {toHex} from "crypto-api/src/encoder/hex.mjs";
 import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import BigNumber from "bignumber.js";
+
 
 /**
  * Validates the length of the passed in input as one of the allowable lengths.
@@ -160,6 +162,57 @@ export function hash160Func(input) {
     const ripemdHasher=CryptoApi.getHasher("ripemd160");
     ripemdHasher.update(sha256hash);
     return ripemdHasher.finalize();
+}
+
+// Tag Hash defined in https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki
+/**
+ * Tag Hash defined in BIP340 https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki
+ * Hash is defined as SHA256(SHA256(tag) || SHA256(tag) || x)
+ * @param {*} input
+ * @returns
+ */
+export function tweakHash(input) {
+    const sha256Hasher = CryptoApi.getHasher("sha256");
+    sha256Hasher.update("TapTweak");
+    const tagHash = sha256Hasher.finalize();
+    const sha256Hasher2 = CryptoApi.getHasher("sha256");
+    sha256Hasher2.update(tagHash);
+    sha256Hasher2.update(tagHash);
+    sha256Hasher2.update(input);
+    const result = sha256Hasher2.finalize();
+    return result;
+}
+
+/**
+ * Given x, returns the point P(x) where the y-coordinate is even. Fails if x is greater than p-1 or if the point does not exist.
+ * Since this is mostly going to be used for analysis and not key derivation, failure should be rare but we check anyway.
+ * @param {*} input
+ * @returns
+ */
+export function liftX(input) {
+    const three = BigNumber(3);
+    const seven = BigNumber(7);
+    const one = BigNumber(1);
+    const four = BigNumber(4);
+    const two = BigNumber(2);
+
+    const pHex ="0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F";
+    const p = BigNumber(pHex, 16);
+    const x = BigNumber("0x" + makeSureIsHex(input), 16);
+    if (x.comparedTo(p) === 1) {
+        return -1;
+    } else {
+        const temp = x.pow(three, p).plus(seven);
+        const ySQ = temp.mod(p);
+        const tempExp = (p.plus(one)).idiv(four);
+        const y = ySQ.pow(tempExp, p);
+        if (y.pow(two, p).comparedTo(ySQ) !== 0) {
+            return -1;
+        } else {
+            return input;
+        }
+
+    }
 }
 
 // ################################################ END HELPER HASH FUNCTIONS ###################################################

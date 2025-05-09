@@ -345,7 +345,7 @@
             "Extract Segwit Addresses",
             "Extract Seedphrases",
             "Deserialize Extended Key",
-            "Public Key To Cryptocurrency Address",
+            "Public Key To Bitcoin-Like Address",
             "To WIF Format",
             "From WIF Format",
             "Type Cryptocurrency Artifact",
