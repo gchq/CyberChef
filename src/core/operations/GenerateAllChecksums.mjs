@@ -26,7 +26,7 @@ class GenerateAllChecksums extends Operation {
         this.name = "Generate all checksums";
         this.module = "Crypto";
         this.description = "Generates all available checksums for the input.";
-        this.infoURL = "https://wikipedia.org/wiki/Cyclic_redundancy_check";
+        this.infoURL = "https://wikipedia.org/wiki/Checksum";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
