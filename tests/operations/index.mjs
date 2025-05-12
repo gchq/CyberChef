@@ -163,6 +163,7 @@ import "./tests/TranslateDateTimeFormat.mjs";
 import "./tests/Typex.mjs";
 import "./tests/UnescapeString.mjs";
 import "./tests/Unicode.mjs";
+import "./tests/URLEncodeDecode.mjs";
 import "./tests/RSA.mjs";
 import "./tests/CBOREncode.mjs";
 import "./tests/CBORDecode.mjs";
