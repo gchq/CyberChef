@@ -65,7 +65,8 @@ class ExtractIPAddresses extends Operation {
      */
     run(input, args) {
         const [includeIpv4, includeIpv6, removeLocal, displayTotal, sort, unique] = args,
-            ipv4 = "(?:(?:\\d|[01]?\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d|\\d)(?:\\/\\d{1,2})?",
+            // This regex has two major options; decimal values 0-255 or octal values prefixed with 0 up to 377
+            ipv4 = "(?:(?:(?:25[0-5]|2[0-4]\\d|1?[1-9]\\d|\\d)\\.){3}(?:(?:25[0-5]|2[0-4]\\d|1?[1-9]\\d|\\d)))|(?:(?:(?:0[1-3]?[0-7]{0,2})\\.){3}(?:0[1-3]?[0-7]{0,2}))",
             ipv6 = "((?=.*::)(?!.*::.+::)(::)?([\\dA-F]{1,4}:(:|\\b)|){5}|([\\dA-F]{1,4}:){6})(([\\dA-F]{1,4}((?!\\3)::|:\\b|(?![\\dA-F])))|(?!\\2\\3)){2}";
         let ips  = "";
 

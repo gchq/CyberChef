@@ -65,6 +65,7 @@ import "./tests/ELFInfo.mjs";
 import "./tests/Enigma.mjs";
 import "./tests/ExtractEmailAddresses.mjs";
 import "./tests/ExtractHashes.mjs";
+import "./tests/ExtractIPAddresses.mjs";
 import "./tests/Float.mjs";
 import "./tests/FileTree.mjs";
 import "./tests/FletcherChecksum.mjs";
