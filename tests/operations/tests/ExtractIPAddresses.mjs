@@ -20,6 +20,28 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "ExtractIPAddress All 10s",
+        input: "10.10.10.10",
+        expectedOutput: "10.10.10.10",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress All 10s",
+        input: "100.100.100.100",
+        expectedOutput: "100.100.100.100",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false]
+            },
+        ],
+    },
+    {
         name: "ExtractIPAddress 255s",
         input: "255.255.255.255",
         expectedOutput: "255.255.255.255",
@@ -44,6 +66,17 @@ TestRegister.addTests([
     {
         name: "ExtractIPAddress 256 in middle",
         input: "255.256.255.255 255.255.256.255",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress 256 at each end",
+        input: "256.255.255.255 255.255.255.256",
         expectedOutput: "",
         recipeConfig: [
             {
