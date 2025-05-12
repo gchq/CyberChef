@@ -7,8 +7,7 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
-import jimplib from "jimp/es/index.js";
-const jimp = jimplib.default ? jimplib.default : jimplib;
+import Jimp from "jimp/es/index.js";
 
 import {RGBA_DELIM_OPTIONS} from "../lib/Delim.mjs";
 
@@ -53,7 +52,7 @@ class ExtractRGBA extends Operation {
 
         const delimiter = args[0],
             includeAlpha = args[1],
-            parsedImage = await jimp.read(input);
+            parsedImage = await Jimp.read(input);
 
         let bitmap = parsedImage.bitmap.data;
         bitmap = includeAlpha ? bitmap : bitmap.filter((val, idx) => idx % 4 !== 3);

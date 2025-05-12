@@ -1,7 +1,6 @@
 # CyberChef
 
 [![](https://github.com/gchq/CyberChef/workflows/Master%20Build,%20Test%20&%20Deploy/badge.svg)](https://github.com/gchq/CyberChef/actions?query=workflow%3A%22Master+Build%2C+Test+%26+Deploy%22)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/gchq/CyberChef.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/gchq/CyberChef/context:javascript)
 [![npm](https://img.shields.io/npm/v/cyberchef.svg)](https://www.npmjs.com/package/cyberchef)
 [![](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/gchq/CyberChef/blob/master/LICENSE)
 [![Gitter](https://badges.gitter.im/gchq/CyberChef.svg)](https://gitter.im/gchq/CyberChef?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
@@ -21,6 +20,22 @@ Cryptographic operations in CyberChef should not be relied upon to provide secur
 
 [A live demo can be found here][1] - have fun!
 
+## Containers
+
+If you would like to try out CyberChef locally you can either build it yourself:
+
+```bash
+docker build --tag cyberchef --ulimit nofile=10000 .
+docker run -it -p 8080:80 cyberchef
+```
+
+Or you can use our image directly:
+
+```bash
+docker run -it -p 8080:80 ghcr.io/gchq/cyberchef:latest
+```
+
+This image is built and published through our [GitHub Workflows](.github/workflows/releases.yml)
 
 ## How it works
 
@@ -90,14 +105,14 @@ CyberChef is built to support
 
 ## Node.js support
 
-CyberChef is built to fully support Node.js `v16`. For more information, see the Node API page in the project [wiki pages](https://github.com/gchq/CyberChef/wiki)
+CyberChef is built to fully support Node.js `v16`. For more information, see the ["Node API" wiki page](https://github.com/gchq/CyberChef/wiki/Node-API)
 
 
 ## Contributing
 
 Contributing a new operation to CyberChef is super easy! The quickstart script will walk you through the process. If you can write basic JavaScript, you can write a CyberChef operation.
 
-An installation walkthrough, how-to guides for adding new operations and themes, descriptions of the repository structure, available data types and coding conventions can all be found in the project [wiki pages](https://github.com/gchq/CyberChef/wiki).
+An installation walkthrough, how-to guides for adding new operations and themes, descriptions of the repository structure, available data types and coding conventions can all be found in the ["Contributing" wiki page](https://github.com/gchq/CyberChef/wiki/Contributing).
 
  - Push your changes to your fork.
  - Submit a pull request. If you are doing this for the first time, you will be prompted to sign the [GCHQ Contributor Licence Agreement](https://cla-assistant.io/gchq/CyberChef) via the CLA assistant on the pull request. This will also ask whether you are happy for GCHQ to contact you about a token of thanks for your contribution, or about job opportunities at GCHQ.

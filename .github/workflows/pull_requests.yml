@@ -18,6 +18,7 @@ jobs:
 
     - name: Install
       run: |
+        export DETECT_CHROMEDRIVER_VERSION=true
         npm install
         npm run setheapsize
 
@@ -33,6 +34,22 @@ jobs:
       if: success()
       run: npx grunt prod
 
-    # - name: UI Tests
-    #   if: success()
-    #   run: xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+    - name: Production Image Build
+      if: success()
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        # Not being uploaded to any registry, use a simple name to allow Buildah to build correctly.
+        image: cyberchef
+        containerfiles: ./Dockerfile
+        platforms: linux/amd64
+        oci: true
+        # Webpack seems to use a lot of open files, increase the max open file limit to accomodate.
+        extra-args: |
+          --ulimit nofile=10000
+
+    - name: UI Tests
+      if: success()
+      run: |
+        sudo apt-get install xvfb
+        xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui

@@ -1,8 +1,10 @@
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const { ModifySourcePlugin } = require("modify-source-webpack-plugin");
+const { ModifySourcePlugin, ReplaceOperation } = require("modify-source-webpack-plugin");
 const path = require("path");
+const zlib = require("zlib");
 
 /**
  * Webpack configuration details for use with Grunt.
@@ -12,13 +14,14 @@ const path = require("path");
  * @license Apache-2.0
  */
 
+const d = new Date();
 const banner = `/**
  * CyberChef - The Cyber Swiss Army Knife
  *
- * @copyright Crown Copyright 2016
+ * @copyright Crown Copyright 2016-${d.getUTCFullYear()}
  * @license Apache-2.0
  *
- *   Copyright 2016 Crown Copyright
+ *   Copyright 2016-${d.getUTCFullYear()} Crown Copyright
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,6 +66,21 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "assets/[name].css"
         }),
+        new CompressionPlugin({
+            filename: "[path][base].gz",
+            algorithm: "gzip",
+            test: /\.(js|css|html)$/,
+        }),
+        new CompressionPlugin({
+            filename: "[path][base].br",
+            algorithm: "brotliCompress",
+            test: /\.(js|css|html)$/,
+            compressionOptions: {
+                params: {
+                    [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+                },
+            },
+        }),
         new CopyWebpackPlugin({
             patterns: [
                 {
@@ -89,8 +107,9 @@ module.exports = {
                 {
                     // Fix toSpare(0) bug in Split.js by avoiding gutter accomodation
                     test: /split\.es\.js$/,
-                    modify: (src, path) =>
-                        src.replace("if (pixelSize < elementMinSize)", "if (false)")
+                    operations: [
+                        new ReplaceOperation("once", "if (pixelSize < elementMinSize)", "if (false)")
+                    ]
                 }
             ]
         })
@@ -110,10 +129,13 @@ module.exports = {
             "crypto": require.resolve("crypto-browserify"),
             "stream": require.resolve("stream-browserify"),
             "zlib": require.resolve("browserify-zlib"),
-            "process": false
+            "process": false,
+            "vm": false
         }
     },
     module: {
+        // argon2-browser loads argon2.wasm by itself, so Webpack should not load it
+        noParse: /argon2\.wasm$/,
         rules: [
             {
                 test: /\.m?js$/,
@@ -132,6 +154,12 @@ module.exports = {
                 options: {
                     additionalCode: "var jQuery = false;"
                 }
+            },
+            {
+                // Load argon2.wasm as base64-encoded binary file expected by argon2-browser
+                test: /argon2\.wasm$/,
+                loader: "base64-loader",
+                type: "javascript/auto"
             },
             {
                 test: /prime.worker.min.js$/,
