@@ -39,7 +39,9 @@ function setInput(browser, input, type=true) {
         browser.execute(text => {
             window.app.setInput(text);
         }, [input]);
+        browser.pause(100);
     }
+    expectInput(browser, input);
 }
 
 /** @function
@@ -48,6 +50,11 @@ function setInput(browser, input, type=true) {
  * @param {Browser} browser - Nightwatch client
  */
 function bake(browser) {
+    browser
+        // Ensure we're not currently busy
+        .waitForElementNotVisible("#output-loader", 5000)
+        .expect.element("#bake span").text.to.equal("BAKE!");
+
     browser
         .click("#bake")
         .waitForElementNotVisible("#stale-indicator", 5000)
@@ -161,7 +168,6 @@ function loadRecipe(browser, opName, input, args) {
         throw new Error("Invalid operation type. Must be string or array of strings. Received: " + typeof(opName));
     }
 
-    clear(browser);
     setInput(browser, input, false);
     browser
         .urlHash("recipe=" + recipeConfig)
@@ -173,16 +179,46 @@ function loadRecipe(browser, opName, input, args) {
  *
  * @param {Browser} browser - Nightwatch client
  * @param {string|RegExp} expected - The expected output value
+ * @param {boolean} [waitNotNull=false] - Wait for the output to not be empty before testing the value
+ * @param {number} [waitWindow=1000] - The number of milliseconds to wait for the output to be correct
  */
-function expectOutput(browser, expected) {
+function expectOutput(browser, expected, waitNotNull=false, waitWindow=1000) {
+    if (waitNotNull && expected !== "") {
+        browser.waitUntil(async function() {
+            const output = await this.execute(function() {
+                return window.app.manager.output.outputEditorView.state.doc.toString();
+            });
+            return output.length;
+        }, waitWindow);
+    }
+
     browser.execute(expected => {
-        const output = window.app.manager.output.outputEditorView.state.doc.toString();
+        return window.app.manager.output.outputEditorView.state.doc.toString();
+    }, [expected], function({value}) {
         if (expected instanceof RegExp) {
-            return expected.test(output);
+            browser.expect(value).match(expected);
         } else {
-            return expected === output;
+            browser.expect(value).to.be.equal(expected);
         }
-    }, [expected]);
+    });
+}
+
+/** @function
+ * Tests whether the input matches a given value
+ *
+ * @param {Browser} browser - Nightwatch client
+ * @param {string|RegExp} expected - The expected input value
+ */
+function expectInput(browser, expected) {
+    browser.execute(expected => {
+        return window.app.manager.input.inputEditorView.state.doc.toString();
+    }, [expected], function({value}) {
+        if (expected instanceof RegExp) {
+            browser.expect(value).match(expected);
+        } else {
+            browser.expect(value).to.be.equal(expected);
+        }
+    });
 }
 
 /** @function
@@ -244,6 +280,7 @@ module.exports = {
     paste: paste,
     loadRecipe: loadRecipe,
     expectOutput: expectOutput,
+    expectInput: expectInput,
     uploadFile: uploadFile,
     uploadFolder: uploadFolder
 };
