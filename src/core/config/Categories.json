@@ -550,6 +550,7 @@
             "Pseudo-Random Number Generator",
             "Generate De Bruijn Sequence",
             "Generate UUID",
+            "Analyse UUID",
             "Generate TOTP",
             "Generate HOTP",
             "Generate QR Code",
