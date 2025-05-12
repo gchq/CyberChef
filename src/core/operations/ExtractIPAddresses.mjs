@@ -67,12 +67,16 @@ class ExtractIPAddresses extends Operation {
         const [includeIpv4, includeIpv6, removeLocal, displayTotal, sort, unique] = args,
 
             // IPv4 decimal groups can have values 0 to 255. To construct a regex the following sub-regex is reused:
-            ipv4DecimalByte = "(?:25[0-5]|2[0-4]\\d|1?[1-9]\\d|\\d)",
+            ipv4DecimalByte = "(?:25[0-5]|2[0-4]\\d|1?[0-9]\\d|\\d)",
             ipv4OctalByte = "(?:0[1-3]?[0-7]{1,2})",
 
-            // Each variant requires exactly 4 groups with literal . between
-            ipv4Decimal = "(?:" + ipv4DecimalByte + "\\.){3}" + "(?:" + ipv4DecimalByte + ")",
-            ipv4Octal = "(?:" + ipv4OctalByte + "\\.){3}" + "(?:" + ipv4OctalByte + ")",
+            // Look behind and ahead will be used to exclude matches with additional decimal digits left and right of IP address
+            lookBehind = "(?<!\\d)",
+            lookAhead = "(?!\\d)",
+
+            // Each variant requires exactly 4 groups with literal . between.
+            ipv4Decimal = "(?:" + lookBehind + ipv4DecimalByte + "\\.){3}" + "(?:" + ipv4DecimalByte + lookAhead + ")",
+            ipv4Octal = "(?:" + lookBehind + ipv4OctalByte + "\\.){3}" + "(?:" + ipv4OctalByte + lookAhead + ")",
 
             // Then we allow IPv4 addresses to be expressed either entirely in decimal or entirely in Octal
             ipv4 = "(?:" + ipv4Decimal + "|" + ipv4Octal + ")",
