@@ -36,7 +36,7 @@ class AlternatingCaps extends Operation {
         let previousCaps = true;
         for (let i = 0; i < input.length; i++) {
             // Check if the element is a letter
-            if (!RegExp(/^\p{L}/, 'u').test(input[i])) {
+            if (!RegExp(/^\p{L}/, "u").test(input[i])) {
                 output += input[i];
             } else if (previousCaps) {
                 output += input[i].toLowerCase();
