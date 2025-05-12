@@ -142,6 +142,13 @@ class App {
         // Remove all current indicators
         this.manager.recipe.updateBreakpointIndicator(false);
 
+        if (this.getRecipeConfig()[this.progress] && (this.getRecipeConfig()[this.progress].disabled || this.getRecipeConfig()[this.progress].op === "Comment")) {
+            // Skip disabled operations and comments
+            // This makes stepping through the recipe work correctly
+            this.progress++;
+            return this.bake(step);
+        }
+
         this.manager.worker.bake(
             this.getRecipeConfig(), // The configuration of the recipe
             this.options,           // Options set by the user
