@@ -21,7 +21,7 @@ class ExtractIPAddresses extends Operation {
 
         this.name = "Extract IP addresses";
         this.module = "Regex";
-        this.description = "Extracts all IPv4 and IPv6 addresses.<br><br>Warning: Given a string <code>710.65.0.456</code>, this will match <code>10.65.0.45</code> so always check the original input!";
+        this.description = "Extracts all IPv4 and IPv6 addresses.<br><br>Warning: Given a string <code>1.2.3.4.5.6.7.8</code>, this will match <code>1.2.3.4 and 5.6.7.8</code> so always check the original input!";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

@@ -86,6 +86,28 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "ExtractIPAddress silly example",
+        input: "710.65.0.456",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress longer dotted decimal",
+        input: "1.2.3.4.5.6.7.8",
+        expectedOutput: "1.2.3.4\n5.6.7.8",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false]
+            },
+        ],
+    },
+    {
         name: "ExtractIPAddress octal valid",
         input: "01.01.01.01 0123.0123.0123.0123 0377.0377.0377.0377",
         expectedOutput: "01.01.01.01\n0123.0123.0123.0123\n0377.0377.0377.0377",
