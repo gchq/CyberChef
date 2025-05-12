@@ -448,7 +448,8 @@
             "Adler-32 Checksum",
             "Luhn Checksum",
             "CRC Checksum",
-            "TCP/IP Checksum"
+            "TCP/IP Checksum",
+            "XOR Checksum"
         ]
     },
     {
