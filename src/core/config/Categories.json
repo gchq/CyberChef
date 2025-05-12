@@ -294,6 +294,7 @@
             "To Upper case",
             "To Lower case",
             "Swap case",
+            "Alternating Caps",
             "To Case Insensitive Regex",
             "From Case Insensitive Regex",
             "Add line numbers",
@@ -369,6 +370,7 @@
             "Regular expression",
             "XPath expression",
             "JPath expression",
+            "Jsonata Query",
             "CSS selector",
             "Extract EXIF",
             "Extract ID3",
@@ -404,6 +406,7 @@
         "name": "Hashing",
         "ops": [
             "Analyse hash",
+            "Generate all checksums",
             "Generate all hashes",
             "MD2",
             "MD4",
@@ -422,6 +425,7 @@
             "Snefru",
             "BLAKE2b",
             "BLAKE2s",
+            "BLAKE3",
             "GOST Hash",
             "Streebog",
             "SSDEEP",
@@ -446,7 +450,8 @@
             "Adler-32 Checksum",
             "Luhn Checksum",
             "CRC Checksum",
-            "TCP/IP Checksum"
+            "TCP/IP Checksum",
+            "XOR Checksum"
         ]
     },
     {
@@ -470,6 +475,7 @@
             "Jq",
             "CSS selector",
             "PHP Deserialize",
+            "PHP Serialize",
             "Microsoft Script Decoder",
             "Strip HTML tags",
             "Diff",

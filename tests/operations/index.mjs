@@ -11,15 +11,14 @@
  * @license Apache-2.0
  */
 
-import {
-    setLongTestFailure,
-    logTestReport,
-} from "../lib/utils.mjs";
+import { setLongTestFailure, logTestReport } from "../lib/utils.mjs";
 
 import TestRegister from "../lib/TestRegister.mjs";
 import "./tests/AESKeyWrap.mjs";
+import "./tests/AlternatingCaps.mjs";
 import "./tests/AvroToJSON.mjs";
 import "./tests/BaconCipher.mjs";
+import "./tests/Base32.mjs";
 import "./tests/Base45.mjs";
 import "./tests/Base58.mjs";
 import "./tests/Base62.mjs";
@@ -30,6 +29,7 @@ import "./tests/BCD.mjs";
 import "./tests/BitwiseOp.mjs";
 import "./tests/BLAKE2b.mjs";
 import "./tests/BLAKE2s.mjs";
+import "./tests/BLAKE3.mjs";
 import "./tests/Bombe.mjs";
 import "./tests/BSON.mjs";
 import "./tests/ByteRepr.mjs";
@@ -66,11 +66,13 @@ import "./tests/ELFInfo.mjs";
 import "./tests/Enigma.mjs";
 import "./tests/ExtractEmailAddresses.mjs";
 import "./tests/ExtractHashes.mjs";
+import "./tests/ExtractIPAddresses.mjs";
 import "./tests/Float.mjs";
 import "./tests/FileTree.mjs";
 import "./tests/FletcherChecksum.mjs";
 import "./tests/Fork.mjs";
 import "./tests/FromDecimal.mjs";
+import "./tests/GenerateAllChecksums.mjs";
 import "./tests/GenerateAllHashes.mjs";
 import "./tests/GenerateDeBruijnSequence.mjs";
 import "./tests/GetAllCasings.mjs";
@@ -88,6 +90,7 @@ import "./tests/IndexOfCoincidence.mjs";
 import "./tests/JA3Fingerprint.mjs";
 import "./tests/JA4.mjs";
 import "./tests/JA3SFingerprint.mjs";
+import "./tests/Jsonata.mjs";
 import "./tests/JSONBeautify.mjs";
 import "./tests/JSONMinify.mjs";
 import "./tests/JSONtoCSV.mjs";
@@ -125,6 +128,7 @@ import "./tests/ParseUDP.mjs";
 import "./tests/PEMtoHex.mjs";
 import "./tests/PGP.mjs";
 import "./tests/PHP.mjs";
+import "./tests/PHPSerialize.mjs";
 import "./tests/PowerSet.mjs";
 import "./tests/Protobuf.mjs";
 import "./tests/PubKeyFromCert.mjs";
@@ -161,6 +165,7 @@ import "./tests/TranslateDateTimeFormat.mjs";
 import "./tests/Typex.mjs";
 import "./tests/UnescapeString.mjs";
 import "./tests/Unicode.mjs";
+import "./tests/URLEncodeDecode.mjs";
 import "./tests/RSA.mjs";
 import "./tests/CBOREncode.mjs";
 import "./tests/CBORDecode.mjs";
@@ -179,14 +184,14 @@ const testStatus = {
     allTestsPassing: true,
     counts: {
         total: 0,
-    }
+    },
 };
 
 setLongTestFailure();
 
 const logOpsTestReport = logTestReport.bind(null, testStatus);
 
-(async function() {
+(async function () {
     const results = await TestRegister.runTests();
     logOpsTestReport(results);
 })();
