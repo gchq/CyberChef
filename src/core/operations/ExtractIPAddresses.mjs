@@ -65,8 +65,17 @@ class ExtractIPAddresses extends Operation {
      */
     run(input, args) {
         const [includeIpv4, includeIpv6, removeLocal, displayTotal, sort, unique] = args,
-            // This regex has two major options; decimal values 0-255 or octal values prefixed with 0 up to 377
-            ipv4 = "(?:(?:(?:25[0-5]|2[0-4]\\d|1?[1-9]\\d|\\d)\\.){3}(?:(?:25[0-5]|2[0-4]\\d|1?[1-9]\\d|\\d)))|(?:(?:(?:0[1-3]?[0-7]{0,2})\\.){3}(?:0[1-3]?[0-7]{0,2}))",
+
+            // IPv4 decimal groups can have values 0 to 255. To construct a regex the following sub-regex is reused:
+            ipv4DecimalByte = "(?:25[0-5]|2[0-4]\\d|1?[1-9]\\d|\\d)",
+            ipv4OctalByte = "(?:0[1-3]?[0-7]{1,2})",
+
+            // Each variant requires exactly 4 groups with literal . between
+            ipv4Decimal = "(?:" + ipv4DecimalByte + "\\.){3}" + "(?:" + ipv4DecimalByte + ")",
+            ipv4Octal = "(?:" + ipv4OctalByte + "\\.){3}" + "(?:" + ipv4OctalByte + ")",
+
+            // Then we allow IPv4 addresses to be expressed either entirely in decimal or entirely in Octal
+            ipv4 = "(?:" + ipv4Decimal + "|" + ipv4Octal + ")",
             ipv6 = "((?=.*::)(?!.*::.+::)(::)?([\\dA-F]{1,4}:(:|\\b)|){5}|([\\dA-F]{1,4}:){6})(([\\dA-F]{1,4}((?!\\3)::|:\\b|(?![\\dA-F])))|(?!\\2\\3)){2}";
         let ips  = "";
 
