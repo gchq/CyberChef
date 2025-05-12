@@ -15,14 +15,14 @@ const smStream = new sm.SitemapStream({
 });
 
 smStream.write({
-    url: "/",
+    url: "CyberChef/",
     changefreq: "weekly",
     priority: 1.0
 });
 
 for (const op in OperationConfig) {
     smStream.write({
-        url: `/?op=${encodeURIComponent(op)}`,
+        url: `CyberChef/?op=${encodeURIComponent(op)}`,
         changeFreq: "yearly",
         priority: 0.5
     });
