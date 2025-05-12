@@ -129,5 +129,38 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "ExtractIPAddress IPv6 full form",
+        input: "This 2001:0db8:0001:0000:0000:0ab9:C0A8:0102 is a valid address.",
+        expectedOutput: "2001:0db8:0001:0000:0000:0ab9:C0A8:0102",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress IPv6 short form",
+        input: "Another valid style is the short form 2001:db8:1::ab9:C0A8:102 is a valid address.",
+        expectedOutput: "2001:db8:1::ab9:C0A8:102",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress IPv6 both forms",
+        input: "2001:0db8:0001:0000:0000:0ab9:C0A8:0102 can be compressed as follows: 2001:db8:1::ab9:C0A8:102.",
+        expectedOutput: "2001:0db8:0001:0000:0000:0ab9:C0A8:0102\n2001:db8:1::ab9:C0A8:102",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false]
+            },
+        ],
+    },
 ]);
 
