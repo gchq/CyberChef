@@ -79,7 +79,7 @@ class PHPDeserialize extends Operation {
 
             /**
              * Read characters from the input that must be equal to `expect`
-             * @param expect
+             * @param expectStr
              * @returns {string}
              */
             function expect(expectStr) {
@@ -131,21 +131,12 @@ class PHPDeserialize extends Operation {
                 const items = parseInt(readUntil(":"), 10) * 2;
                 expect("{");
                 const result = {};
-                let isKey = true;
-                let lastItem = null;
-                for (let idx = 0; idx < items; idx++) {
-                    const item = handleInput();
-                    if (isKey) {
-                        lastItem = item;
-                        isKey = false;
-                    } else {
-                        let key = lastItem;
-                        if (args[0] && typeof key === "number") {
-                            key = key.toString();
-                        }
-                        result[key] = item;
-                        isKey = true;
-                    }
+                for (let idx = 0; idx < items; idx += 2) {
+                    const keyInfo = handleInput();
+                    const valueInfo = handleInput();
+                    let key = keyInfo.value;
+                    if (keyInfo.keyType === "i") key = parseInt(key, 10);
+                    result[key] = valueInfo.value;
                 }
                 expect("}");
                 return result;
@@ -156,28 +147,29 @@ class PHPDeserialize extends Operation {
             switch (kind) {
                 case "n":
                     expect(";");
-                    return record(null);
+                    return record({ value: null, keyType: kind });
 
-                case "i":
-                case "d":
+                case "i": {
+                    expect(":");
+                    const data = readUntil(";");
+                    return record({ value: parseInt(data, 10), keyType: kind });
+                }
+
+                case "d": {
+                    expect(":");
+                    const data = readUntil(";");
+                    return record({ value: parseFloat(data), keyType: kind });
+                }
+
                 case "b": {
                     expect(":");
                     const data = readUntil(";");
-                    if (kind === "b") {
-                        return record(parseInt(data, 10) !== 0);
-                    }
-                    if (kind === "i") {
-                        return record(parseInt(data, 10));
-                    }
-                    if (kind === "d") {
-                        return record(parseFloat(data));
-                    }
-                    return record(data);
+                    return record({ value: data !== 0, keyType: kind });
                 }
 
                 case "a":
                     expect(":");
-                    return record(handleArray());
+                    return record({ value: handleArray(), keyType: kind });
 
                 case "s": {
                     expect(":");
@@ -202,7 +194,7 @@ class PHPDeserialize extends Operation {
                         console.warn(`Length mismatch: declared ${length}, got ${actualByteLength} — proceeding anyway`);
                     }
 
-                    return record(str);
+                    return record({ value: str, keyType: kind });
                 }
 
                 case "o": {
@@ -221,17 +213,17 @@ class PHPDeserialize extends Operation {
 
                     for (let i = 0; i < propertyCount; i++) {
                         const keyRaw = handleInput();
-                        const value = handleInput();
-                        let key = keyRaw;
-                        if (typeof keyRaw === "string" && keyRaw.startsWith('"') && keyRaw.endsWith('"')) {
-                            key = keyRaw.slice(1, -1);
+                        const valueRaw = handleInput();
+                        let key = keyRaw.value;
+                        if (typeof key === "string" && key.startsWith('"') && key.endsWith('"')) {
+                            key = key.slice(1, -1);
                         }
                         key = normalizeKey(key);
-                        obj[key] = value;
+                        obj[key] = valueRaw.value;
                     }
 
                     expect("}");
-                    return record(obj);
+                    return record({ value: obj, keyType: kind });
                 }
 
                 case "r": {
@@ -240,7 +232,11 @@ class PHPDeserialize extends Operation {
                     if (refIndex >= refStore.length || refIndex < 0) {
                         throw new OperationError(`Invalid reference index: ${refIndex}`);
                     }
-                    return refStore[refIndex];
+                    const refValue = refStore[refIndex];
+                    if (typeof refValue === "object" && refValue !== null && "value" in refValue && "keyType" in refValue) {
+                        return refValue;
+                    }
+                    return record({ value: refValue, keyType: kind });
                 }
 
                 default:
@@ -248,7 +244,25 @@ class PHPDeserialize extends Operation {
             }
         }
 
-        return JSON.stringify(handleInput());
+        /**
+         * Helper function to make invalid json output (legacy support)
+         * @returns {String}
+         */
+        function stringifyWithIntegerKeys(obj) {
+            const entries = Object.entries(obj).map(([key, value]) => {
+                const jsonKey = Number.isInteger(+key) ? key : JSON.stringify(key);
+                const jsonValue = JSON.stringify(value);
+                return `${jsonKey}:${jsonValue}`;
+            });
+            return `{${entries.join(',')}}`; // eslint-disable-line quotes
+        }
+
+        if (args[0]) {
+            return JSON.stringify(handleInput().value);
+            
+        } else {
+            return stringifyWithIntegerKeys(handleInput().value);
+        }
     }
 }
 
