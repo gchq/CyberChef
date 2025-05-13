@@ -198,7 +198,12 @@ export function liftX(input) {
 
     const pHex ="0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F";
     const p = BigNumber(pHex, 16);
-    const x = BigNumber("0x" + makeSureIsHex(input), 16);
+    let x;
+    try {
+        x = BigNumber("0x" + makeSureIsHex(input), 16);
+    } catch (TypeError) {
+        return -1;
+    }
     if (x.comparedTo(p) === 1) {
         return -1;
     } else {

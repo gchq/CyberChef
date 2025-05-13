@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import {base58Decode, base58Encode, doubleSHA} from "../lib/Bitcoin.mjs";
+import {base58Decode, base58Encode, doubleSHA, b58DoubleSHAChecksum} from "../lib/Bitcoin.mjs";
 import Utils from "../Utils.mjs";
 import {toHex} from "crypto-api/src/encoder/hex.mjs";
 import { fromArrayBuffer } from "crypto-api/src/encoder/array-buffer.mjs";
@@ -36,6 +36,24 @@ function ethCheckSum(address) {
 }
 
 /**
+ * Checks if past in address could be a valid ETH address based off of regex.
+ * @param {*} input
+ * @returns
+ */
+function validateETHAddress(input) {
+    const regex = /^0x[a-f,A-F,0-9]{40}$/g;
+    return regex.test(input);
+}
+
+/**
+ * Runs the checksum on the potential TRX address. Returns false is checksum fails.
+ * @param {*} input
+ * @returns
+ */
+function validateTRXAddress(input) {
+    return b58DoubleSHAChecksum(input);
+}
+/**
  * ETH / TRX Conversion operation
  */
 class ETHTRXConversion extends Operation {
@@ -58,18 +76,6 @@ class ETHTRXConversion extends Operation {
                 type: "option",
                 value: ["ETH->TRX", "TRX->ETH"]
             }
-            /* Example arguments. See the project wiki for full details.
-            {
-                name: "First arg",
-                type: "string",
-                value: "Don't Panic"
-            },
-            {
-                name: "Second arg",
-                type: "number",
-                value: 42
-            }
-            */
         ];
     }
 
@@ -80,8 +86,16 @@ class ETHTRXConversion extends Operation {
      */
     run(input, args) {
         const [direction] = args;
+        // We check if input is blank.
+        // If its blank or just whitespace, we don't need to bother dealing with it.
+        if (input.trim().length === 0) {
+            return "";
+        }
         switch (direction) {
             case "ETH->TRX":{
+                if (!validateETHAddress(input)) {
+                    return "Invalid ETH address. ETH addresses should have 20 bytes (40 characters) prefaced by 0x.";
+                }
                 const unencodedAddress =  input.slice(2,);
                 const checksumHash = toHex(doubleSHA(fromArrayBuffer(Utils.convertToByteArray("41" + unencodedAddress, "hex"))));
                 const finalString = "41" + unencodedAddress + checksumHash.slice(0, 8);
@@ -89,6 +103,9 @@ class ETHTRXConversion extends Operation {
                 return address;
             }
             case "TRX->ETH":{
+                if (!validateTRXAddress(input)) {
+                    return "Invalid TRX Address. Checksum failed.";
+                }
                 return ethCheckSum("0x" + toHex(fromArrayBuffer(base58Decode(input).slice(1, -4))));
             }
 

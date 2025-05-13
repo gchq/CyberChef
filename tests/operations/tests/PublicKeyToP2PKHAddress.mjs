@@ -11,6 +11,17 @@ import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
+        name: "Public Key To Address: P2PKH (Empty String)",
+        input: "",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Public Key To Bitcoin-Like Address",
+                "args": ["BTC", "P2PKH (V1 BTC Addresses)"]
+            },
+        ],
+    },
+    {
         name: "Public Key To Address: P2PKH (1)",
         input: "03ebf60a619da2fbc6239089ca0a93878ea53baa3d22188cacad4033b103237ae9",
         expectedOutput: "1MwwHqDj1FAyABeqPeiTTvJQCoCorcuFyP",
