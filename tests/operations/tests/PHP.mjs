@@ -46,7 +46,7 @@ TestRegister.addTests([
     {
         name: "PHP Deserialize array (JSON)",
         input: "a:2:{s:1:\"a\";i:10;i:0;a:1:{s:2:\"ab\";b:1;}}",
-        expectedOutput: "{\"a\": 10,\"0\": {\"ab\": true}}",
+        expectedOutput: "{\"0\": {\"ab\": true},\"a\": 10}",
         recipeConfig: [
             {
                 op: "PHP Deserialize",
@@ -57,7 +57,7 @@ TestRegister.addTests([
     {
         name: "PHP Deserialize array (non-JSON)",
         input: "a:2:{s:1:\"a\";i:10;i:0;a:1:{s:2:\"ab\";b:1;}}",
-        expectedOutput: "{\"a\": 10,0: {\"ab\": true}}",
+        expectedOutput: "{0: {\"ab\": true},\"a\": 10}",
         recipeConfig: [
             {
                 op: "PHP Deserialize",
