@@ -68,7 +68,7 @@ TestRegister.addTests([
     {
         name: "PHP Deserialize array with object and reference",
         input: 'a:1:{s:6:"navbar";O:18:"APP\View\Menu\Item":3:{s:7:"�*�name";s:16:"Secondary Navbar";s:11:"�*�children";a:1:{s:9:"View Cart";O:18:"APP\View\Menu\Item":2:{s:7:"�*�name";s:9:"View Cart";s:9:"�*�parent";r:2;}}s:9:"�*�parent";N;}}',
-        expectedOutput: '{"navbar":{"__className":"APP\\View\\Menu\\Item","�*�name":"Secondary Navbar","�*�children":{"View Cart":{"__className":"APP\\View\\Menu\\Item","�*�name":"View Cart","�*�parent":"Secondary Navbar"}},"�*�parent":null}}',
+        expectedOutput: '{"navbar":{"__className":"APP\\View\\Menu\\Item","�*�name":"Secondary Navbar","�*�children":{"View Cart":{"__className":"APP\\View\\Menu\\Item","�*�name":"View Cart","�*�parent":"Secondary Navbar"}},"�*�parent":null}}', // eslint-disable-next-line no-useless-escape
         recipeConfig: [
             {
                 op: "PHP Deserialize",
