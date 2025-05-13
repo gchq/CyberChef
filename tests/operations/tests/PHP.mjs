@@ -66,13 +66,13 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "PHP Deserialize array with object and reference",
+        name: "PHP Deserialize array with object and reference (JSON)",
         input: 'a:1:{s:6:"navbar";O:18:"APP\\View\\Menu\\Item":3:{s:4:"name";s:16:"Secondary Navbar";s:8:"children";a:1:{s:9:"View Cart";O:18:"APP\\View\\Menu\\Item":2:{s:4:"name";s:9:"View Cart";s:6:"parent";r:2;}}s:6:"parent";N;}}', // eslint-disable-line no-useless-escape
         expectedOutput: `{"navbar":{"__className":"APP\\\\View\\\\Menu\\\\Item","name":"Secondary Navbar","children":{"View Cart":{"__className":"APP\\\\View\\\\Menu\\\\Item","name":"View Cart","parent":"Secondary Navbar"}},"parent":null}}`,
         recipeConfig: [
             {
                 op: "PHP Deserialize",
-                args: [false],
+                args: [true],
             },
         ],
     }
