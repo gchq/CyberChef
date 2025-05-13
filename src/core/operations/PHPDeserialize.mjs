@@ -259,7 +259,6 @@ class PHPDeserialize extends Operation {
 
         if (args[0]) {
             return JSON.stringify(handleInput().value);
-            
         } else {
             return stringifyWithIntegerKeys(handleInput().value);
         }
