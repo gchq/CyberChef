@@ -77,6 +77,8 @@ const FLAG = {
 
 /**
  * Class for decoding data from the Bencode format.
+ * Credit to @isolomak:
+ * https://github.com/isolomak/bencodec
  */
 class BencodeDecoder {
     /**

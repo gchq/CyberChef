@@ -64,6 +64,8 @@ const FLAG = {
 
 /**
  * BencodeEncoder class for encoding data into bencode format.
+ * Credit to @isolomak:
+ * https://github.com/isolomak/bencodec
  */
 class BencodeEncoder {
     /**
