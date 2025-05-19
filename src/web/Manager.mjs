@@ -125,6 +125,7 @@ class Manager {
         window.addEventListener("focus", this.window.windowFocus.bind(this.window));
         window.addEventListener("statechange", this.app.stateChange.bind(this.app));
         window.addEventListener("popstate", this.app.popState.bind(this.app));
+        window.addEventListener("message", this.input.handlePostMessage.bind(this.input));
 
         // Controls
         document.getElementById("bake").addEventListener("click", this.controls.bakeClick.bind(this.controls));
