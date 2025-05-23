@@ -25,7 +25,13 @@ class JWTDecode extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/JSON_Web_Token";
         this.inputType = "string";
         this.outputType = "JSON";
-        this.args = [];
+        this.args = [
+                    {
+                        name: "Include header",
+                        type: "boolean",
+                        value: false
+                    }
+        ];
         this.checks = [
             {
                 pattern: "^ey([A-Za-z0-9_-]+)\\.ey([A-Za-z0-9_-]+)\\.([A-Za-z0-9_-]+)$",
@@ -42,12 +48,20 @@ class JWTDecode extends Operation {
      */
     run(input, args) {
         try {
+            const headerInclude = args[0];
+
             const decoded = jwt.decode(input, {
                 json: true,
                 complete: true
             });
-            
-            return {header: decoded.header, payload: decoded.payload};
+            if (headerInclude)
+            {
+                return {header: decoded.header, payload: decoded.payload};
+            }
+            else
+            {
+                return decoded.payload;
+            }
         } catch (err) {
             throw new OperationError(err);
         }
