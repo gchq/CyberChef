@@ -14,18 +14,6 @@ const outputObject = JSON.stringify({
     iat: 1
 }, null, 4);
 
-const outputWithHeaderObject = JSON.stringify({
-    header: {
-        alg: "algorithm",
-        typ: "algo"
-    },
-    payload: {
-        String: "SomeString",
-        Number: 42,
-        iat: 1
-    }
-}, null, 4);
-
 TestRegister.addTests([
     {
         name: "JWT Decode: HS",
@@ -60,7 +48,7 @@ TestRegister.addTests([
             }
         ],
     },
-        {
+    {
         name: "JWT Decode: HS",
         input: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.0ha6-j4FwvEIKPVZ-hf3S_R9Hy_UtXzq4dnedXcUrXk",
         expectedOutput: JSON.stringify({
