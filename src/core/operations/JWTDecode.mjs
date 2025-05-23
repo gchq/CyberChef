@@ -54,9 +54,9 @@ class JWTDecode extends Operation {
                 json: true,
                 complete: true
             });
-            if (headerInclude){
+            if (headerInclude) {
                 return {header: decoded.header, payload: decoded.payload};
-            }else{
+            } else {
                 return decoded.payload;
             }
         } catch (err) {
