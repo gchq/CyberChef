@@ -46,8 +46,8 @@ class JWTDecode extends Operation {
                 json: true,
                 complete: true
             });
-
-            return decoded.payload;
+            
+            return {header: decoded.header, payload: decoded.payload};
         } catch (err) {
             throw new OperationError(err);
         }
