@@ -5,10 +5,10 @@
  */
 
 import Operation from "../Operation.mjs";
-import Utils from "../Utils.mjs";
-import { toHexFast } from "../lib/Hex.mjs";
-import forge from "node-forge";
 import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
+import { aesKeyWrap } from "../lib/AESKeyWrap.mjs";
+import { toHexFast } from "../lib/Hex.mjs";
 
 /**
  * AES Key Wrap operation
@@ -70,44 +70,15 @@ class AESKeyWrap extends Operation {
         if (iv.length !== 8) {
             throw new OperationError("IV must be 8 bytes (currently " + iv.length + " bytes)");
         }
+
         const inputData = Utils.convertToByteString(input, inputType);
         if (inputData.length % 8 !== 0 || inputData.length < 16) {
             throw new OperationError("input must be 8n (n>=2) bytes (currently " + inputData.length + " bytes)");
         }
 
-        const cipher = forge.cipher.createCipher("AES-ECB", kek);
+        const output = aesKeyWrap(inputData, kek, iv);
 
-        let A = iv;
-        const R = [];
-        for (let i = 0; i < inputData.length; i += 8) {
-            R.push(inputData.substring(i, i + 8));
-        }
-        let cntLower = 1, cntUpper = 0;
-        for (let j = 0; j < 6; j++) {
-            for (let i = 0; i < R.length; i++) {
-                cipher.start();
-                cipher.update(forge.util.createBuffer(A + R[i]));
-                cipher.finish();
-                const B = cipher.output.getBytes();
-                const msbBuffer = Utils.strToArrayBuffer(B.substring(0, 8));
-                const msbView = new DataView(msbBuffer);
-                msbView.setUint32(0, msbView.getUint32(0) ^ cntUpper);
-                msbView.setUint32(4, msbView.getUint32(4) ^ cntLower);
-                A = Utils.arrayBufferToStr(msbBuffer, false);
-                R[i] = B.substring(8, 16);
-                cntLower++;
-                if (cntLower > 0xffffffff) {
-                    cntUpper++;
-                    cntLower = 0;
-                }
-            }
-        }
-        const C = A + R.join("");
-
-        if (outputType === "Hex") {
-            return toHexFast(Utils.strToArrayBuffer(C));
-        }
-        return C;
+        return outputType === "Hex" ? toHexFast(Utils.strToArrayBuffer(output)) : output;
     }
 
 }

@@ -155,6 +155,8 @@
             "Citrix CTX1 Decode",
             "AES Key Wrap",
             "AES Key Unwrap",
+            "AES Key Wrap With Padding",
+            "AES Key Unwrap With Padding",
             "Pseudo-Random Number Generator",
             "Enigma",
             "Bombe",

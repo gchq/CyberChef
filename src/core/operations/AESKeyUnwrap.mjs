@@ -5,10 +5,10 @@
  */
 
 import Operation from "../Operation.mjs";
-import Utils from "../Utils.mjs";
-import { toHexFast } from "../lib/Hex.mjs";
-import forge from "node-forge";
 import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
+import { aesKeyUnwrap } from "../lib/AESKeyWrap.mjs";
+import { toHexFast } from "../lib/Hex.mjs";
 
 /**
  * AES Key Unwrap operation
@@ -75,52 +75,13 @@ class AESKeyUnwrap extends Operation {
             throw new OperationError("input must be 8n (n>=3) bytes (currently " + inputData.length + " bytes)");
         }
 
-        const cipher = forge.cipher.createCipher("AES-ECB", kek);
-        cipher.start();
-        cipher.update(forge.util.createBuffer(""));
-        cipher.finish();
-        const paddingBlock = cipher.output.getBytes();
+        const [output, outputIv] = aesKeyUnwrap(inputData, kek);
 
-        const decipher = forge.cipher.createDecipher("AES-ECB", kek);
-
-        let A = inputData.substring(0, 8);
-        const R = [];
-        for (let i = 8; i < inputData.length; i += 8) {
-            R.push(inputData.substring(i, i + 8));
-        }
-        let cntLower = R.length >>> 0;
-        let cntUpper = (R.length / ((1 << 30) * 4)) >>> 0;
-        cntUpper = cntUpper * 6 + ((cntLower * 6 / ((1 << 30) * 4)) >>> 0);
-        cntLower = cntLower * 6 >>> 0;
-        for (let j = 5; j >= 0; j--) {
-            for (let i = R.length - 1; i >= 0; i--) {
-                const aBuffer = Utils.strToArrayBuffer(A);
-                const aView = new DataView(aBuffer);
-                aView.setUint32(0, aView.getUint32(0) ^ cntUpper);
-                aView.setUint32(4, aView.getUint32(4) ^ cntLower);
-                A = Utils.arrayBufferToStr(aBuffer, false);
-                decipher.start();
-                decipher.update(forge.util.createBuffer(A + R[i] + paddingBlock));
-                decipher.finish();
-                const B = decipher.output.getBytes();
-                A = B.substring(0, 8);
-                R[i] = B.substring(8, 16);
-                cntLower--;
-                if (cntLower < 0) {
-                    cntUpper--;
-                    cntLower = 0xffffffff;
-                }
-            }
-        }
-        if (A !== iv) {
+        if (outputIv !== iv) {
             throw new OperationError("IV mismatch");
         }
-        const P = R.join("");
 
-        if (outputType === "Hex") {
-            return toHexFast(Utils.strToArrayBuffer(P));
-        }
-        return P;
+        return outputType === "Hex" ? toHexFast(Utils.strToArrayBuffer(output)) : output;
     }
 
 }
