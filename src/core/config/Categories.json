@@ -4,6 +4,10 @@
         "ops": []
     },
     {
+        "name": "AI",
+        "ops": ["Count AI Tokens"]
+    },
+    {
         "name": "Data format",
         "ops": [
             "To Hexdump",
