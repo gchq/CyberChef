@@ -40,11 +40,7 @@ class CountAITokens extends Operation {
      */
     async run(input, args) {
         if (!input) return "";
-        // const [model] = args;
-        // // Use the mapping, fallback to cl100k_base if not found
-        // const encoding = MODEL_TO_ENCODING[model] || cl100k_base;
-        // const tokenCount = encoding.;
-        // return tokenCount.toString();
+
         const [model] = args;
         let countTokensFn;
         if (MODEL_TO_MODULES[model]) {
