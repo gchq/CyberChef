@@ -43,7 +43,7 @@ class FromHexdump extends Operation {
      */
     run(input, args) {
         const output = [],
-            regex = /^\s*(?:[\dA-F]{4,16}h?:?)?[ \t]+((?:[\dA-F]{2} ){1,8}(?:[ \t]|[\dA-F]{2}-)(?:[\dA-F]{2} ){1,8}|(?:[\dA-F]{4} )*[\dA-F]{4}|(?:[\dA-F]{2} )*[\dA-F]{2})/igm;
+            regex = /^\s*(?:[\dA-F]{4,16}h?:?)?[ \t]+((?:[\dA-F]{2} ){1,8}(?:[ \t]|[\dA-F]{2}-)(?:[\dA-F]{2} ){1,8}|(?:[\dA-F]{4} )*[\dA-F]{2,4}|(?:[\dA-F]{2} )*[\dA-F]{2})/igm;
         let block, line;
 
         while ((block = regex.exec(input))) {
