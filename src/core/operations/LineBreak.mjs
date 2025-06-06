@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 
 
 /**
@@ -35,6 +36,43 @@ class LineBreak extends Operation {
                 "value": false
             }
         ];
+    }
+
+    /**
+     * @param {ArrayBuffer} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run(input, args) {
+        const lines = [];
+        const lineWidth = args[0];
+        const removeLeading = args[1];
+        const msg = Utils.arrayBufferToStr(input, false);
+        let i = 0;
+
+        while (i < msg.length) {
+            let slice = msg.slice(i, i + lineWidth);
+            let leadingWhitespace = 0;
+
+            if (removeLeading) {
+                const match = slice.match(/^\s*/);
+                leadingWhitespace = match ? match[0].length : 0;
+                slice = slice.trimStart();
+            }
+
+            slice = msg.slice(i, i + lineWidth + leadingWhitespace);
+
+            if (removeLeading) {
+                slice = slice.trimStart();
+            }
+
+            i += lineWidth + leadingWhitespace;
+
+            if (slice.length === 0) continue;
+            lines.push(slice);
+        }
+
+        return lines.join("\n");
     }
 }
 
