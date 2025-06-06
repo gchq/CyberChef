@@ -9,15 +9,15 @@ import Operation from "../Operation.mjs";
 /**
  * Permutate String operation
  */
-class GetAllCasings extends Operation {
+class GetAllCases extends Operation {
 
     /**
-     * GetAllCasings constructor
+     * GetAllCases constructor
      */
     constructor() {
         super();
 
-        this.name = "Get All Casings";
+        this.name = "Get All Cases";
         this.module = "Default";
         this.description = "Outputs all possible casing variations of a string.";
         this.infoURL = "";
@@ -50,4 +50,4 @@ class GetAllCasings extends Operation {
     }
 }
 
-export default GetAllCasings;
+export default GetAllCases;

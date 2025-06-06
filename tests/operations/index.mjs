@@ -75,7 +75,7 @@ import "./tests/FromDecimal.mjs";
 import "./tests/GenerateAllChecksums.mjs";
 import "./tests/GenerateAllHashes.mjs";
 import "./tests/GenerateDeBruijnSequence.mjs";
-import "./tests/GetAllCasings.mjs";
+import "./tests/GetAllCases.mjs";
 import "./tests/GOST.mjs";
 import "./tests/Gunzip.mjs";
 import "./tests/Gzip.mjs";
