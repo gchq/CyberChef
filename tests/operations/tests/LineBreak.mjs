@@ -17,5 +17,16 @@ TestRegister.addTests([
                 "args": [32, false]
             }
         ]
+    }, {
+        // Check line remains unbroken
+        name: "Line Break: With break",
+        input: "Hello, world!",
+        expectedOutput: "Hello,\n world\n!",
+        recipeConfig: [
+            {
+                "op": "Line Break",
+                "args": [6, false]
+            }
+        ]
     }
 ]);
