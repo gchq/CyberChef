@@ -18,7 +18,7 @@ TestRegister.addTests([
             }
         ]
     }, {
-        // Check line remains unbroken
+        // Check line breaks
         name: "Line Break: With break",
         input: "Hello, world!",
         expectedOutput: "Hello,\n world\n!",
