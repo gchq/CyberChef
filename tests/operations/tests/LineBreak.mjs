@@ -28,5 +28,16 @@ TestRegister.addTests([
                 "args": [6, false]
             }
         ]
+    }, {
+        // Check line breaks and leading whitespace is removed.
+        name: "Line Break: With break and no leading whitespace",
+        input: "Hello, world!",
+        expectedOutput: "Hello,\nworld!",
+        recipeConfig: [
+            {
+                "op": "Line Break",
+                "args": [6, true]
+            }
+        ]
     }
 ]);
