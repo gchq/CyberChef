@@ -5,7 +5,7 @@
     },
     {
         "name": "AI",
-        "ops": ["Count AI Tokens"]
+        "ops": ["Count AI Tokens", "Parse AI Tokens"]
     },
     {
         "name": "Data format",
