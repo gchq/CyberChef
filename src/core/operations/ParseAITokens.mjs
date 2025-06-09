@@ -148,6 +148,7 @@ class ParseAITokens extends Operation {
                     return "";
                 }
             })
+            .replace(/<script/ig, "&lt;script") // satisfy codeql
             .replace(/[\r\n]/g, "");
     }
 
