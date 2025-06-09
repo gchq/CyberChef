@@ -95,7 +95,8 @@ class ParseAITokens extends Operation {
 
         const tokenHtml = tokens.map((t, i) => {
             const tok =
-                t.replaceAll(" ", "\u00A0")
+                t.replace(/[\u00A0-\u9999<>&]/g, i => "&#"+i.charCodeAt(0)+";")
+                    .replaceAll(" ", "\u00A0")
                     .replaceAll("\n", "<newline>");
 
             const css = [
@@ -127,21 +128,29 @@ class ParseAITokens extends Operation {
     };
 
     /**
-     * Replace all space not starting within the HTML tag.
-     * @param {string} htmlString
-     * @returns {string}
+     * Replace spaces outside HTML tags and sanitize <script> tags.
+     * @param {string} htmlString - The input HTML string.
+     * @returns {string} - The sanitized and formatted HTML string.
      */
     replaceSpacesOutsideTags(htmlString) {
-        return htmlString.replace(/(<[^>]*?>)|(\s+)/g, function(match, tag, spaces) {
-            if (tag) {
-                return tag;
-            } else if (spaces) {
-                return "";
-            }
-        }).replace(/[\r\n]/g, "");
-    };
+        return htmlString
+            .replace(/(<script\b[^>]*>.*?<\/script>)|(<[^>]*?>)|(\s+)/gi, (match, scriptTag, htmlTag, spaces) => {
+                if (scriptTag) {
+                    // Sanitize the <script> tag by escaping it
+                    return scriptTag
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;");
+                } else if (htmlTag) {
+                    // Leave other HTML tags unchanged
+                    return htmlTag;
+                } else if (spaces) {
+                    // Replace spaces outside tags
+                    return "";
+                }
+            })
+            .replace(/[\r\n]/g, "");
+    }
 
 }
 
 export default ParseAITokens;
-
