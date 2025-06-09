@@ -134,7 +134,8 @@ class ParseAITokens extends Operation {
      */
     replaceSpacesOutsideTags(htmlString) {
         return htmlString
-            .replace(/(<script\b[^>]*>.*?<\/script>)|(<[^>]*?>)|(\s+)/gi, (match, scriptTag, htmlTag, spaces) => {
+            .replace(/<script/ig, "&lt;script")
+            .replace(/(&lt;script\b[^>]*>.*?<\/script>)|(<[^>]*?>)|(\s+)/gi, (match, scriptTag, htmlTag, spaces) => {
                 if (scriptTag) {
                     // Sanitize the <script> tag by escaping it
                     return scriptTag
@@ -148,7 +149,6 @@ class ParseAITokens extends Operation {
                     return "";
                 }
             })
-            .replace(/<script/ig, "&lt;script") // satisfy codeql
             .replace(/[\r\n]/g, "");
     }
 
