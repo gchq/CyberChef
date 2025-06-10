@@ -71,7 +71,7 @@ class ParseAITokens extends Operation {
 
         const encodedTokens = fns.encode(input); // IDs
 
-        let displayTokens = [];
+        let displayTokens;
         if (showIds) {
             displayTokens = encodedTokens.map((x)=> x.toString());
         } else {
@@ -134,18 +134,11 @@ class ParseAITokens extends Operation {
      */
     replaceSpacesOutsideTags(htmlString) {
         return htmlString
-            .replace(/<script/ig, "&lt;script")
-            .replace(/(&lt;script\b[^>]*>.*?<\/script>)|(<[^>]*?>)|(\s+)/gi, (match, scriptTag, htmlTag, spaces) => {
-                if (scriptTag) {
-                    // Sanitize the <script> tag by escaping it
-                    return scriptTag
-                        .replace(/</g, "&lt;")
-                        .replace(/>/g, "&gt;");
-                } else if (htmlTag) {
-                    // Leave other HTML tags unchanged
-                    return htmlTag;
+            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/ig, "")
+            .replace(/(<[^>]*?>)|(\s+)/g, function(match, tag, spaces) {
+                if (tag) {
+                    return tag;
                 } else if (spaces) {
-                    // Replace spaces outside tags
                     return "";
                 }
             })
