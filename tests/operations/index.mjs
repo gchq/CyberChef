@@ -185,6 +185,8 @@ import "./tests/DeserializeExtendedKey.mjs";
 import "./tests/PublicKeyToETHStyleAddress.mjs";
 import "./tests/PublicKeyToTRXStyleAddress.mjs";
 import "./tests/ETHTRXConversion.mjs";
+import "./tests/KeyToExtendedKey.mjs";
+import "./tests/SeedToAddress.mjs";
 import "./tests/GetAllCasings.mjs";
 import "./tests/SIGABA.mjs";
 import "./tests/ELFInfo.mjs";

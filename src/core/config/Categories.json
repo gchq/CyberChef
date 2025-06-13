@@ -357,7 +357,8 @@
             "BIP32Derive",
             "Public Key To ETH Style Address",
             "Public Key To TRX Style Address",
-            "ETH / TRX Conversion"
+            "ETH / TRX Conversion",
+            "Key To Extended Key"
         ]
     },
     {
