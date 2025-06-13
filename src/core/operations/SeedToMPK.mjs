@@ -48,16 +48,17 @@ class SeedToMPK extends Operation {
             return "";
         }
         input = input.trim();
+
+
         // We check to see if the input is hex or not.
         // If it is not, we convert it back to hex
-        const re = /[0-9A-Fa-f]{2,}/g;
-        if (!(input.length === 128 && re.test(input)) && !(input.length === 64)) {
-            return "Must pass a hex string of length 128, or a byte string of length 64. Got length: " + input.length;
-        }
+        const re = /^[0-9A-Fa-f]{2,}$/g;
+        const isHex = re.test(input) && input.length %2 === 0;
 
+        // Create the hmac.
         const hmac = forge.hmac.create();
         hmac.start("sha512", Utils.convertToByteString("Bitcoin seed", "UTF8"));
-        if (input.length === 128) {
+        if (isHex) {
             hmac.update(Utils.convertToByteString(input, "hex"));
         } else {
             hmac.update(input);

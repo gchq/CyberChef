@@ -57,6 +57,49 @@ TestRegister.addTests([
                 "args": ["Ltpv"]
             }
         ],
+    },
+    {
+        name: "Seed To Master Private Key (XPrv, short seed)",
+        input: "1ed5b6f0dcf88085add90fbb138d5e16f661d5b738f842232fce5980fc4592",
+        expectedOutput: "xprv9s21ZrQH143K3mvkwf3aiiCQ6mpTnAh5ZPvhHFLXSaSRxAg5uAuHVvaFVSGoyE7U3UJ3knZM12AvNcF9a9xoARWCkCF9MYXjyN1ZJUC6ssa",
+        recipeConfig: [
+            {
+                "op": "Seed To Master Key",
+                "args": ["xprv"]
+            }
+        ],
+    },
+    {
+        name: "Seed to Master Private Key (XPrv, decoded Chinese)",
+        input: "霍 里 攻 繁 混 注 杀 侦 具 涤 涤 手",
+        expectedOutput: "xprv9s21ZrQH143K3NGAQKJovUKk9ty8HFDxoK2A8kseKUEQnQA2xuS1UiXj67d7jPS153aBSeqbJpGC4etDSmAJrD2MuN3pncdjFNh85PEPwS2",
+        recipeConfig: [
+            {
+                "op": "Normalise Unicode",
+                "args": ["NFKD"]
+            },
+            {
+                "op": "To Hex",
+                "args": ["None", 0]
+            },
+            {
+                "op": "Seed To Master Key",
+                "args": ["xprv"]
+            }
+
+        ]
+    },
+    {
+        name: "Seed to Master Private Key (XPrv, Non-Hex Dealing With Raw Bytes)",
+        input: "abc=_*~$%^$^*&^$%@#$^^%&*^&(YIU%^$#@",
+        expectedOutput: "xprv9s21ZrQH143K2zVX3HhaQJZPeunqrxitrCQh5ZaUzyv9uHtZu86AVigehGy2ZCfGcAmp7wJUSb4GMGsbH8qqJawZEz2mdUVV8q7VH2AqgH6",
+        recipeConfig: [
+            {
+                "op": "Seed To Master Key",
+                "args": ["xprv"]
+            }
+
+        ]
     }
 
 ]);
