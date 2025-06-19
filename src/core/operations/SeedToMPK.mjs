@@ -7,7 +7,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import { serializeExtendedKeyFunc, getExtendedKeyVersion } from "../lib/Bitcoin.mjs";
+import { serializeExtendedKeyFunc, getExtendedKeyVersion, getVersions, isHex } from "../lib/Bitcoin.mjs";
 import forge from "node-forge";
 import Utils from "../Utils.mjs";
 
@@ -33,7 +33,8 @@ class SeedToMPK extends Operation {
             {
                 "name": "Version Type",
                 "type": "option",
-                "value": ["xprv",  "yprv",  "zprv",  "Zprv",  "Yprv",  "Ltpv",  "Mtpv",  "ttpv",  "tprv", "uprv",  "vprv",  "Uprv",  "Vprv"]
+                "value": getVersions()
+                // "value": ["xprv",  "yprv",  "zprv",  "Zprv",  "Yprv",  "Ltpv",  "Mtpv",  "ttpv",  "tprv", "uprv",  "vprv",  "Uprv",  "Vprv"]
             }
         ];
     }
@@ -50,15 +51,11 @@ class SeedToMPK extends Operation {
         input = input.trim();
 
 
-        // We check to see if the input is hex or not.
-        // If it is not, we convert it back to hex
-        const re = /^[0-9A-Fa-f]{2,}$/g;
-        const isHex = re.test(input) && input.length %2 === 0;
-
+        const isItHex = isHex(input);
         // Create the hmac.
         const hmac = forge.hmac.create();
         hmac.start("sha512", Utils.convertToByteString("Bitcoin seed", "UTF8"));
-        if (isHex) {
+        if (isItHex) {
             hmac.update(Utils.convertToByteString(input, "hex"));
         } else {
             hmac.update(input);

@@ -7,7 +7,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import { deserializeExtendedKeyFunc, serializeExtendedKeyFunc, getExtendedKeyVersion } from "../lib/Bitcoin.mjs";
+import { deserializeExtendedKeyFunc, serializeExtendedKeyFunc, getExtendedKeyVersion, getVersions } from "../lib/Bitcoin.mjs";
 
 
 /**
@@ -31,7 +31,8 @@ class ChangeExtendedKeyVersion extends Operation {
             {
                 "name": "Version Type",
                 "type": "option",
-                "value": ["xpub", "xprv", "ypub", "yprv", "zpub", "zprv", "Zpub", "Zprv", "Ypub", "Yprv", "Ltub", "Ltpv", "Mtub", "Mtpv", "ttub", "ttpv", "tpub", "tprv", "upub", "uprv", "vpub", "vprv", "Upub", "Uprv", "Vpub", "Vprv"]
+                "value": getVersions()
+                // "value": ["xpub", "xprv", "ypub", "yprv", "zpub", "zprv", "Zpub", "Zprv", "Ypub", "Yprv", "Ltub", "Ltpv", "Mtub", "Mtpv", "ttub", "ttpv", "tpub", "tprv", "upub", "uprv", "vpub", "vprv", "Upub", "Uprv", "Vpub", "Vprv"]
             }
         ];
         this.checks = [

@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import { makeSureIsHex,  serializeExtendedKeyFunc, getExtendedKeyVersion } from "../lib/Bitcoin.mjs";
+import { makeSureIsHex,  serializeExtendedKeyFunc, getExtendedKeyVersion, getVersions } from "../lib/Bitcoin.mjs";
 
 
 /**
@@ -36,7 +36,8 @@ class KeyToExtendedKey extends Operation {
             {
                 "name": "Version Type",
                 "type": "option",
-                "value": ["xpub", "xprv", "ypub", "yprv", "zpub", "zprv", "Zpub", "Zprv", "Ypub", "Yprv", "Ltub", "Ltpv", "Mtub", "Mtpv", "ttub", "ttpv", "tpub", "tprv", "upub", "uprv", "vpub", "vprv", "Upub", "Uprv", "Vpub", "Vprv"]
+                "value": getVersions()
+                // "value": ["xpub", "xprv", "ypub", "yprv", "zpub", "zprv", "Zpub", "Zprv", "Ypub", "Yprv", "Ltub", "Ltpv", "Mtub", "Mtpv", "ttub", "ttpv", "tpub", "tprv", "upub", "uprv", "vpub", "vprv", "Upub", "Uprv", "Vpub", "Vprv"]
             }
             /* Example arguments. See the project wiki for full details.
             {
@@ -60,6 +61,10 @@ class KeyToExtendedKey extends Operation {
      */
     run(input, args) {
         // const [firstArg, secondArg] = args;
+        if (input.trim().length === 0) {
+            return "";
+        }
+        input = input.trim();
 
         const inputAsHex = makeSureIsHex(input);
         const isPublic = inputAsHex.length === 66 && (inputAsHex.startsWith("03") || inputAsHex.startsWith("02"));

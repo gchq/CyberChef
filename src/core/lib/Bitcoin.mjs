@@ -28,7 +28,7 @@ function validateLengths(input, allowableLengths) {
  * Returns true if input is a valid hex string, false otherwise.
  * @param {*} input
  */
-function isHex(input) {
+export function isHex(input) {
     const re = /^[0-9A-Fa-f]{2,}$/g;
     return re.test(input) && input.length %2 === 0;
 }
@@ -467,6 +467,12 @@ export function getExtendedKeyString(input) {
     return versionString[input];
 }
 
+/**
+ * Returns valid versions as an array.
+ */
+export function getVersions() {
+    return Object.keys(versionBytes);
+}
 
 /**
  * We serialize the extended key based off of the passed in data.
