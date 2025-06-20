@@ -448,6 +448,32 @@ const versionBytes = {
     "ttpv": "0436ef7d"
 };
 
+// Lookup matching private extended key versions to public
+const privateToPublicExtendedKeys = {
+    "xprv": "xpub",
+    "yprv": "ypub",
+    "zprv": "zpub",
+    "Zprv": "Zpub",
+    "Yprv": "Ypub",
+    "Ltpv": "Ltub",
+    "Mtpv": "Mtub",
+    "ttpv": "ttub",
+    "tprv": "tpub",
+    "uprv": "upub",
+    "vprv": "vprv",
+    "Uprv": "Upub",
+    "Vprv": "Vpub"
+};
+
+/**
+ * For a given private extended key version string, returns the appropriate public version string.
+ * @param {*} input
+ * @returns
+ */
+export function privateVersionToPublicVersion(input) {
+    return privateToPublicExtendedKeys[input];
+}
+
 /**
  * We return the correct version bytes from the versionBytes map, given input string.
  * @param {*} input

@@ -358,7 +358,8 @@
             "Public Key To ETH Style Address",
             "Public Key To TRX Style Address",
             "ETH / TRX Conversion",
-            "Key To Extended Key"
+            "Key To Extended Key",
+            "Private Extended Key To Public"
         ]
     },
     {
