@@ -7,8 +7,10 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import ec from "elliptic";
 import { validatePrivateKey, makeSureIsHex} from "../lib/Bitcoin.mjs";
+
 // import { toHex } from "crypto-api/src/encoder/hex.mjs";
 
 // const curves = ["secp256k1", "ed25519", "curve25519", "p521", "p384", "p256", "p224", "p192"];
@@ -62,7 +64,7 @@ class PrivateECKeyToPublic extends Operation {
         const privKeyCheck = validatePrivateKey(input);
 
         if (privKeyCheck.trim().length !== 0) {
-            return "Error with the input as private key. Error is:\n\t" + privKeyCheck;
+            throw new OperationError("Error with the input as private key. Error is:\n\t" + privKeyCheck);
         }
         const processedInput = makeSureIsHex(input);
         const ecContext = ec.ec("secp256k1");

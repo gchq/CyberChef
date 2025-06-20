@@ -32,7 +32,6 @@ class ChangeExtendedKeyVersion extends Operation {
                 "name": "Version Type",
                 "type": "option",
                 "value": getVersions()
-                // "value": ["xpub", "xprv", "ypub", "yprv", "zpub", "zprv", "Zpub", "Zprv", "Ypub", "Yprv", "Ltub", "Ltpv", "Mtub", "Mtpv", "ttub", "ttpv", "tpub", "tprv", "upub", "uprv", "vpub", "vprv", "Upub", "Uprv", "Vpub", "Vprv"]
             }
         ];
         this.checks = [

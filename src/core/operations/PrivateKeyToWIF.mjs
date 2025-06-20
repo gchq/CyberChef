@@ -7,9 +7,11 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import { base58Encode, getWIFVersionByte, doubleSHA, validatePrivateKey, makeSureIsHex} from "../lib/Bitcoin.mjs";
 import { fromArrayBuffer } from "crypto-api/src/encoder/array-buffer.mjs";
 import {toHex} from "crypto-api/src/encoder/hex.mjs";
+
 // import {toHex as toHexOther} from "../lib/Hex.mjs";
 import Utils from "../Utils.mjs";
 
@@ -67,7 +69,7 @@ class PrivateKeyToWIF extends Operation {
         input = input.trim();
         const privateKeyCheck = validatePrivateKey(input);
         if (privateKeyCheck.trim().length !== 0) {
-            return "Error parsing private key. Error is:\n\t" + privateKeyCheck;
+            throw new OperationError("Error parsing private key. Error is:\n\t" + privateKeyCheck);
         }
         const processedKey = makeSureIsHex(input);
         const versionByte = getWIFVersionByte(args[0]);

@@ -37,20 +37,7 @@ class KeyToExtendedKey extends Operation {
                 "name": "Version Type",
                 "type": "option",
                 "value": getVersions()
-                // "value": ["xpub", "xprv", "ypub", "yprv", "zpub", "zprv", "Zpub", "Zprv", "Ypub", "Yprv", "Ltub", "Ltpv", "Mtub", "Mtpv", "ttub", "ttpv", "tpub", "tprv", "upub", "uprv", "vpub", "vprv", "Upub", "Uprv", "Vpub", "Vprv"]
             }
-            /* Example arguments. See the project wiki for full details.
-            {
-                name: "First arg",
-                type: "string",
-                value: "Don't Panic"
-            },
-            {
-                name: "Second arg",
-                type: "number",
-                value: 42
-            }
-            */
         ];
     }
 

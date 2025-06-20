@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import {makeSureIsBytes, validatePublicKey, base58Encode, doubleSHA} from "../lib/Bitcoin.mjs";
 import { fromArrayBuffer } from "crypto-api/src/encoder/array-buffer.mjs";
 import {toHex} from "crypto-api/src/encoder/hex.mjs";
@@ -71,7 +72,7 @@ class PublicKeyToTRXStyleAddress extends Operation {
             return "";
         }
         if (validatePublicKey(input) !== "") {
-            return validatePublicKey(input);
+            throw new OperationError(validatePublicKey(input));
         }
         return pubKeyToTRXAddress(input);
     }

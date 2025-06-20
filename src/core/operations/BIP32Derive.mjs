@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-// import OperationError from "../errors/OperationError.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import { b58DoubleSHAChecksum} from "../lib/Bitcoin.mjs";
 import { BIP32Factory} from "bip32";
 import ecc from "@bitcoinerlab/secp256k1";
@@ -76,11 +76,11 @@ class BIP32Derive extends Operation {
         }
         input = input.trim();
         if (!verifyDerivationPath(args[0])) {
-            return "Invalid derivation path: " + args[0] + "\n";
+            throw new OperationError("Invalid derivation path: " + args[0] + "\n");
         }
         const xkeyRe = /^(X|x|Y|y|Z|z|L|l|T|t)[pub|prv|tbv|tub][A-HJ-NP-Za-km-z1-9]{2,}$/g;
         if (!b58DoubleSHAChecksum(input) || !xkeyRe.test(input)) {
-            return "Possibly invalid Extended Key: " + input + "\n";
+            throw new OperationError("Possibly invalid Extended Key: " + input + "\n");
         }
         const bip32 = BIP32Factory(ecc);
         const node = bip32.fromBase58(input);

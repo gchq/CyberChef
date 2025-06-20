@@ -7,6 +7,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import { fromArrayBuffer } from "crypto-api/src/encoder/array-buffer.mjs";
 import {toHex} from "crypto-api/src/encoder/hex.mjs";
 import { base58Encode, getP2PKHVersionByte, getP2SHVersionByte, hash160Func, doubleSHA,  getHumanReadablePart, makeSureIsBytes, validatePublicKey, tweakHash, liftX, makeSureIsHex} from "../lib/Bitcoin.mjs";
@@ -90,14 +91,14 @@ class PublicKeyToP2PKHAddress extends Operation {
             return "";
         }
         if (validatePublicKey(input) !== "") {
-            return validatePublicKey(input);
+            throw new OperationError(validatePublicKey(input));
         }
         // P2TR are their own separate case. We handle those first.
         if (args[1] === "Taproot (P2TR bc1p Addresses)") {
             const hrp = getHumanReadablePart(args[0]);
             const resultKey = tweakKey(input);
             if (resultKey === -1) {
-                return "Error: Bad Public Key to turn into P2TR Address.";
+                throw new OperationError("Error: Bad Public Key to turn into P2TR Address.");
             }
             return encodeProgramToSegwit(hrp, 1, Utils.convertToByteArray(resultKey.slice(2,), "hex"));
         } else {
@@ -111,7 +112,7 @@ class PublicKeyToP2PKHAddress extends Operation {
                 if (hrp !== "") {
                     return encodeProgramToSegwit(hrp, 0, Utils.convertToByteArray(redeemScript, "hex"));
                 } else {
-                    return args[0] + " does not support Segwit Addresses.";
+                    throw new OperationError(args[0] + " does not support Segwit Addresses.");
                 }
             }
             // It its not segwit, we create the redeemScript either for P2PKH or P2SH-P2WPKH addresses.

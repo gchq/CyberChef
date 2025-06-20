@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import {base58Decode, base58Encode, doubleSHA, b58DoubleSHAChecksum} from "../lib/Bitcoin.mjs";
 import Utils from "../Utils.mjs";
 import {toHex} from "crypto-api/src/encoder/hex.mjs";
@@ -94,7 +95,7 @@ class ETHTRXConversion extends Operation {
         switch (direction) {
             case "ETH->TRX":{
                 if (!validateETHAddress(input)) {
-                    return "Invalid ETH address. ETH addresses should have 20 bytes (40 characters) prefaced by 0x.";
+                    throw new OperationError("Invalid ETH address. ETH addresses should have 20 bytes (40 characters) prefaced by 0x.");
                 }
                 const unencodedAddress =  input.slice(2,);
                 const checksumHash = toHex(doubleSHA(fromArrayBuffer(Utils.convertToByteArray("41" + unencodedAddress, "hex"))));
@@ -104,7 +105,7 @@ class ETHTRXConversion extends Operation {
             }
             case "TRX->ETH":{
                 if (!validateTRXAddress(input)) {
-                    return "Invalid TRX Address. Checksum failed.";
+                    throw new OperationError("Invalid TRX Address. Checksum failed.");
                 }
                 return ethCheckSum("0x" + toHex(fromArrayBuffer(base58Decode(input).slice(1, -4))));
             }

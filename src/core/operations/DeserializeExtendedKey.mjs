@@ -6,6 +6,7 @@
  * @license Apache-2.0
  */
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import { deserializeExtendedKeyFunc } from "../lib/Bitcoin.mjs";
 
 
@@ -66,7 +67,7 @@ class DeserializeExtendedKey extends Operation {
      */
     present(output) {
         if ("error" in output) {
-            return output.error;
+            throw new OperationError(output.error);
         } else {
             if (Object.prototype.hasOwnProperty.call(output, "masterkey") && Object.prototype.hasOwnProperty.call(output, "checksum")) {
                 let finalOutput = "Key Analyzed: " + output.key + "\n";

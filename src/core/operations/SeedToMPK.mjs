@@ -34,7 +34,6 @@ class SeedToMPK extends Operation {
                 "name": "Version Type",
                 "type": "option",
                 "value": getVersions()
-                // "value": ["xprv",  "yprv",  "zprv",  "Zprv",  "Yprv",  "Ltpv",  "Mtpv",  "ttpv",  "tprv", "uprv",  "vprv",  "Uprv",  "Vprv"]
             }
         ];
     }
