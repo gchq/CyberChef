@@ -11,6 +11,7 @@ module.exports = function(api) {
         ],
         "plugins": [
             "dynamic-import-node",
+            "@babel/plugin-syntax-import-attributes",
             "@babel/plugin-syntax-import-assertions",
             [
                 "babel-plugin-transform-builtin-extend", {
