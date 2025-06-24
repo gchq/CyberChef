@@ -3,7 +3,7 @@
  * @copyright Crown Copyright 2016
  * @license Apache-2.0
  */
-
+import { format } from "sql-formatter";
 import Operation from "../Operation.mjs";
 
 /**
@@ -34,12 +34,10 @@ class SQLBeautify extends Operation {
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {Promise<string>}
+     * @returns {string}
      */
-    async run(input, args) {
+    run(input, args) {
         const indentStr = args[0];
-        // Lazy import of sql-formatter for performance
-        const {format}= await import("sql-formatter");
         // Extract and replace bind variables like :Bind1 with __BIND_0__
         const bindRegex = /:\w+/g;
         const bindMap = {};
