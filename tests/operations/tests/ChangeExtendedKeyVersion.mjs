@@ -52,5 +52,16 @@ TestRegister.addTests([
                 "args": ["xprv"],
             },
         ],
+    },
+    {
+        name: "Change Extended Key Version (bad cheksums))",
+        input: "zprvAWgYBBk7JR8GkFBvcbtyjkviqhbXpwsiQwVVHmmePfBQH6MC2gna9L64DcoQZAS2tsGhZkTg9xTbAd7LdaACX5J9kyPM2qTC8kE9XXGNzuz",
+        expectedOutput: "Error in deserializing key. Error is: Invalid checksum.",
+        recipeConfig: [
+            {
+                "op": "Change Extended Key Version",
+                "args": ["xprv"],
+            },
+        ],
     }
 ]);

@@ -44,6 +44,17 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Private Extended Key To Public (invalid checksum)",
+        input: "zprvAdjAKuQajRu4ptst29FzkcB18fyZuHCKJhe51m38ejMcjW5P4frUffXMYfwLiTs4UrFD5m41So3VhAWGyrb4YV4gFRwYuLom8psLoW252Xe",
+        expectedOutput: "Error in deserializing key. Error is: Invalid checksum.",
+        recipeConfig: [
+            {
+                "op": "Private Extended Key To Public",
+                "args": []
+            }
+        ]
+    },
+    {
         name: "Private Extended Key To Public (blank)",
         input: "",
         expectedOutput: "",

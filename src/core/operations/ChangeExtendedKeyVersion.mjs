@@ -7,6 +7,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import { deserializeExtendedKeyFunc, serializeExtendedKeyFunc, getExtendedKeyVersion, getVersions } from "../lib/Bitcoin.mjs";
 
 
@@ -53,6 +54,9 @@ class ChangeExtendedKeyVersion extends Operation {
             return "";
         }
         const result = deserializeExtendedKeyFunc(input);
+        if ("error" in result) {
+            throw new OperationError("Error in deserializing key. Error is: " + result.error);
+        }
         const newVersion = getExtendedKeyVersion(args[0]);
         return serializeExtendedKeyFunc(newVersion, result.level, result.fingerprint, result.i, result.chaincode, result.masterkey);
     }

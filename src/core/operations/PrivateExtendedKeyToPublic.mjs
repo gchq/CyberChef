@@ -45,6 +45,9 @@ class PrivateExtendedKeyToPublic extends Operation {
         input = input.trim();
 
         const result = deserializeExtendedKeyFunc(input);
+        if ("error" in result) {
+            throw new OperationError("Error in deserializing key. Error is: " + result.error);
+        }
         const versionString = getExtendedKeyString(result.version);
         const privateVersions = ["xprv",  "yprv",  "zprv",  "Zprv",  "Yprv",  "Ltpv",  "Mtpv",  "ttpv", "tprv",  "uprv",  "vprv",  "Uprv", "Vprv"];
         if (privateVersions.indexOf(versionString) === -1) {
