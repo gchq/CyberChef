@@ -65,7 +65,7 @@ class App {
         this.manager.setup();
         this.manager.output.saveBombe();
         this.adjustComponentSizes();
-        this.setCompileMessage();
+        // this.setCompileMessage();
         this.uriParams = this.getURIParams();
 
         log.debug("App loaded");
