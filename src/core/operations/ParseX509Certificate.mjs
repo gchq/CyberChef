@@ -167,8 +167,9 @@ class ParseX509Certificate extends Operation {
         }
 
         if (breakoutSig) { // DSA or ECDSA
-            sigStr = `  r:              ${formatByteStr(r.ASN1HEX.getV(sig, 4), 16, 18)}
-  s:              ${formatByteStr(r.ASN1HEX.getV(sig, 48), 16, 18)}`;
+            const signatureRS = r.KJUR.crypto.ECDSA.parseSigHexInHexRS(sig);
+            sigStr = `  r:              ${formatByteStr(signatureRS.r, 16, 18)}
+  s:              ${formatByteStr(signatureRS.s, 16, 18)}`;
         } else { // RSA or unknown
             sigStr = `  Signature:      ${formatByteStr(sig, 16, 18)}`;
         }
