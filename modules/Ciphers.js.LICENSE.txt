@@ -1,0 +1,362 @@
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+/*! (c) Stefan Thomas | https://github.com/bitcoinjs/bitcoinjs-lib
+ */
+
+/*! (c) Tom Wu | http://www-cs-students.stanford.edu/~tjw/jsbn/
+ */
+
+/*! Mike Samuel (c) 2009 | code.google.com/p/json-sans-eval
+ */
+
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+
+/**
+  Blowfish.js from Dojo Toolkit 1.8.1 (https://github.com/dojo/dojox/tree/1.8/encoding)
+  Extracted by Sladex (xslade@gmail.com)
+  Shoehorned into working with mjs for CyberChef by Matt C (matt@artemisbot.uk)
+  Refactored and implemented modes support by cbeuw (cbeuw.andy@gmail.com)
+
+  @license BSD
+  ========================================================================
+  The "New" BSD License:
+  **********************
+
+  Copyright (c) 2005-2016, The Dojo Foundation
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+  * Redistributions of source code must retain the above copyright notice, this
+    list of conditions and the following disclaimer.
+  * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+  * Neither the name of the Dojo Foundation nor the names of its contributors
+    may be used to endorse or promote products derived from this software
+    without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
+/**
+ * @author Flavio Diez [flaviofdiez+cyberchef@gmail.com]
+ * @copyright Crown Copyright 2020
+ * @license Apache-2.0
+ */
+
+/**
+ * @author Jarmo van Lenthe [github.com/jarmovanlenthe]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * @author Matt C [matt@artemisbot.uk]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author Matt C [matt@artemisbot.uk]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * @author Matt C [me@mitt.dev]
+ * @author gchq77703 []
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * @author Matt C [me@mitt.dev]
+ * @author gchq77703 []
+ * @copyright Crown Copyright 2020
+ * @license Apache-2.0
+ */
+
+/**
+ * @author Matt C [me@mitt.dev]
+ * @copyright Crown Copyright 2020
+ * @license Apache-2.0
+ */
+
+/**
+ * @author cplussharp
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ */
+
+/**
+ * @author d98762625 [d98762625@gmail.com]
+ * @copyright Crown Copyright 2019
+ * @license Apache-2.0
+ */
+
+/**
+ * @author devcydo [devcydo@gmail.com]
+ * @author Ma Bingyao [mabingyao@gmail.com]
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2024
+ * @license Apache-2.0
+ */
+
+/**
+ * @author dolphinOnKeys [robin@weird.io]
+ * @copyright Crown Copyright 2022
+ * @license Apache-2.0
+ */
+
+/**
+ * @author joostrijneveld [joost@joostrijneveld.nl]
+ * @copyright Crown Copyright 2022
+ * @license Apache-2.0
+ */
+
+/**
+ * @author joostrijneveld [joost@joostrijneveld.nl]
+ * @copyright Crown Copyright 2024
+ * @license Apache-2.0
+ */
+
+/**
+ * @author mikecat
+ * @copyright Crown Copyright 2022
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1073645 [n1073645@gmail.com]
+ * @copyright Crown Copyright 2020
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @author Matt C [matt@artemisbot.uk]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2023
+ * @license Apache-2.0
+ */
+
+/**
+ * @author swesven
+ * @copyright 2021
+ * @license Apache-2.0
+ */
+
+/**
+ * Base64 functions.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * Binary functions.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * Cipher functions.
+ *
+ * @author Matt C [matt@artemisbot.uk]
+ * @author n1474335 [n1474335@gmail.com]
+ * @author Evie H [evie@evie.sh]
+ *
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
+ */
+
+/**
+ * Complete implementation of SM4 cipher encryption/decryption with
+ * ECB, CBC, CFB, OFB, CTR block modes.
+ * These modes are specified in IETF draft-ribose-cfrg-sm4-09, see:
+ * https://tools.ietf.org/id/draft-ribose-cfrg-sm4-09.html
+ * for details.
+ *
+ * Follows spec from Cryptography Standardization Technical Comittee:
+ * http://www.gmbz.org.cn/upload/2018-04-04/1522788048733065051.pdf
+ *
+ * @author swesven
+ * @copyright 2021
+ * @license Apache-2.0
+ */
+
+/**
+ * Crypt resources.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ */
+
+/**
+ * Custom error type for handling Dish type errors.
+ * i.e. where the Dish cannot be successfully translated between types
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * Custom error type for handling operation input errors.
+ * i.e. where the operation can handle the error and print a message to the screen.
+ *
+ * @author d98762625 [d98762625@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * CyberChef - The Cyber Swiss Army Knife
+ *
+ * @copyright Crown Copyright 2016-2025
+ * @license Apache-2.0
+ *
+ *   Copyright 2016-2025 Crown Copyright
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Decimal functions.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * File signatures and extractor functions
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
+ */
+
+/**
+ * File type functions
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
+ */
+
+/**
+ * Hexadecimal functions.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * RSA resources.
+ *
+ * @author Matt C [me@mitt.dev]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ */
+
+/**
+ * Stream class for parsing binary protocols.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @author tlwr [toby@toby.codes]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
+ */
+
+/**
+ * Various delimiters
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * XXTEA library
+ *
+ * Encryption Algorithm Authors:
+ *     David J. Wheeler
+ *     Roger M. Needham
+ *
+ * @author Ma Bingyao [mabingyao@gmail.com]
+ * @author n1474335 [n1474335@gmail.com]
+ * @license MIT
+ */
+
+/** @preserve
+	 * Counter block mode compatible with  Dr Brian Gladman fileenc.c
+	 * derived from CryptoJS.mode.CTR
+	 * Jan Hruby jhruby.web@gmail.com
+	 */
+
+/** @preserve
+	(c) 2012 by Cédric Mesnil. All rights reserved.
+
+	Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+	    - Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+	    - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	*/

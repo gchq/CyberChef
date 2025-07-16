@@ -1,0 +1,220 @@
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+
+/**
+ * @author Jon K (jon@ajarsoftware.com)
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author Matt C (matt@artemisbot.uk)
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author Matt C [matt@artemisbot.uk]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * @author Mikescher (https://github.com/Mikescher | https://mikescher.com)
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author d98762625 [d98762625@gmail.com]
+ * @copyright Crown Copyright 2019
+ * @license Apache-2.0
+ */
+
+/**
+ * @author j433866 [j433866@gmail.com]
+ * @copyright Crown Copyright 2019
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @author Matt C [matt@artemisbot.uk]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @author Phillip Nordwall [phillip.nordwall@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author tlwr [toby@toby.codes]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+/**
+ * Base64 functions.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * Code resources.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * Custom error type for handling Dish type errors.
+ * i.e. where the Dish cannot be successfully translated between types
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * Custom error type for handling operation input errors.
+ * i.e. where the operation can handle the error and print a message to the screen.
+ *
+ * @author d98762625 [d98762625@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * CyberChef - The Cyber Swiss Army Knife
+ *
+ * @copyright Crown Copyright 2016-2025
+ * @license Apache-2.0
+ *
+ *   Copyright 2016-2025 Crown Copyright
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Decimal functions.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * File signatures and extractor functions
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
+ */
+
+/**
+ * File type functions
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
+ */
+
+/**
+ * Stream class for parsing binary protocols.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @author tlwr [toby@toby.codes]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
+ */
+
+/**
+ * Transform a json object into html representation
+ *
+ * Adapted for CyberChef by @n1474335 from jQuery json-viewer
+ * @author Alexandre Bodelot <alexandre.bodelot@gmail.com>
+ * @link https://github.com/abodelot/jquery.json-viewer
+ * @license MIT
+ *
+ * @returns {string}
+ */
+
+/**
+* vkBeautify - javascript plugin to pretty-print or minify text in XML, JSON, CSS and SQL formats.
+*
+* Copyright (c) 2012 Vadim Kiryukhin
+* vkiryukhin @ gmail.com
+* http://www.eslinstructor.net/vkbeautify/
+*
+* Dual licensed under the MIT and GPL licenses:
+*   http://www.opensource.org/licenses/mit-license.php
+*   http://www.gnu.org/licenses/gpl.html
+*
+*   Pretty print
+*
+*        vkbeautify.xml(text [,indent_pattern]);
+*        vkbeautify.json(text [,indent_pattern]);
+*        vkbeautify.css(text [,indent_pattern]);
+*        vkbeautify.sql(text [,indent_pattern]);
+*
+*        @text - String; text to beatufy;
+*        @indent_pattern - Integer | String;
+*                Integer:  number of white spaces;
+*                String:   character string to visualize indentation ( can also be a set of white spaces )
+*   Minify
+*
+*        vkbeautify.xmlmin(text [,preserve_comments]);
+*        vkbeautify.jsonmin(text);
+*        vkbeautify.cssmin(text [,preserve_comments]);
+*        vkbeautify.sqlmin(text);
+*
+*        @text - String; text to minify;
+*        @preserve_comments - Bool; [optional];
+*                Set this flag to true to prevent removing comments from @text ( minxml and mincss functions only. )
+*
+*   Examples:
+*        vkbeautify.xml(text); // pretty print XML
+*        vkbeautify.json(text, 4 ); // pretty print JSON
+*        vkbeautify.css(text, '. . . .'); // pretty print CSS
+*        vkbeautify.sql(text, '----'); // pretty print SQL
+*
+*        vkbeautify.xmlmin(text, true);// minify XML, preserve comments
+*        vkbeautify.jsonmin(text);// minify JSON
+*        vkbeautify.cssmin(text);// minify CSS, remove comments ( default )
+*        vkbeautify.sqlmin(text);// minify SQL
+*
+*/
