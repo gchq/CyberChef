@@ -22,7 +22,7 @@ Cryptographic operations in CyberChef should not be relied upon to provide secur
 
 ## Running Locally with Docker
 
-**Prerequisites:**
+**Prerequisites**
 
 - [Docker](hhttps://www.docker.com/products/docker-desktop/)
   - Docker Desktop must be open and running on your machine
