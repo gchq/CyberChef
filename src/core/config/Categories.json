@@ -162,7 +162,9 @@
             "Typex",
             "Lorenz",
             "Colossus",
-            "SIGABA"
+            "SIGABA",
+            "Bencode Encode",
+            "Bencode Decode"
         ]
     },
     {
