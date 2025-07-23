@@ -20,6 +20,37 @@ Cryptographic operations in CyberChef should not be relied upon to provide secur
 
 [A live demo can be found here][1] - have fun!
 
+## Running Locally with Docker
+
+**Prerequisites**
+
+- [Docker](hhttps://www.docker.com/products/docker-desktop/)
+  - Docker Desktop must be open and running on your machine
+
+
+#### Option 1: Build the Docker Image Yourself
+
+1. Build the docker image
+```bash
+docker build --tag cyberchef --ulimit nofile=10000 .
+```
+2. Run the docker container
+```bash
+docker run -it -p 8080:80 cyberchef
+```
+3. Navigate to `http://localhost:8080` in your browser
+
+#### Option 2: Use the pre-built Docker Image
+
+If you prefer to skip the build process, you can use the pre-built image
+
+```bash
+docker run -it -p 8080:80 ghcr.io/gchq/cyberchef:latest
+```
+
+Just like before, navigate to `http://localhost:8080` in your browser.
+
+This image is built and published through our [GitHub Workflows](.github/workflows/releases.yml)
 
 ## How it works
 
@@ -89,14 +120,14 @@ CyberChef is built to support
 
 ## Node.js support
 
-CyberChef is built to fully support Node.js `v16`. For more information, see the Node API page in the project [wiki pages](https://github.com/gchq/CyberChef/wiki)
+CyberChef is built to fully support Node.js `v16`. For more information, see the ["Node API" wiki page](https://github.com/gchq/CyberChef/wiki/Node-API)
 
 
 ## Contributing
 
 Contributing a new operation to CyberChef is super easy! The quickstart script will walk you through the process. If you can write basic JavaScript, you can write a CyberChef operation.
 
-An installation walkthrough, how-to guides for adding new operations and themes, descriptions of the repository structure, available data types and coding conventions can all be found in the project [wiki pages](https://github.com/gchq/CyberChef/wiki).
+An installation walkthrough, how-to guides for adding new operations and themes, descriptions of the repository structure, available data types and coding conventions can all be found in the ["Contributing" wiki page](https://github.com/gchq/CyberChef/wiki/Contributing).
 
  - Push your changes to your fork.
  - Submit a pull request. If you are doing this for the first time, you will be prompted to sign the [GCHQ Contributor Licence Agreement](https://cla-assistant.io/gchq/CyberChef) via the CLA assistant on the pull request. This will also ask whether you are happy for GCHQ to contact you about a token of thanks for your contribution, or about job opportunities at GCHQ.
