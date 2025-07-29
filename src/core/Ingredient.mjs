@@ -100,7 +100,7 @@ class Ingredient {
     */
     static prepare(data, type) {
         let number;
-
+        
         switch (type) {
             case "binaryString":
             case "binaryShortString":
@@ -116,6 +116,8 @@ class Ingredient {
                 }
             case "number":
                 if (data === null) return data;
+                if (isNaN(data)) throw "Ingredient can not be empty.";
+
                 number = parseFloat(data);
                 if (isNaN(number)) {
                     const sample = Utils.truncate(data.toString(), 10);
