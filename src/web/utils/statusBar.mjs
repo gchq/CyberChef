@@ -53,9 +53,26 @@ class StatusBarPanel {
         dom.appendChild(rhs);
 
         // Event listeners
-        dom.querySelectorAll(".cm-status-bar-select-btn").forEach(
-            el => el.addEventListener("click", this.showDropUp.bind(this), false)
+        const eventHandler = this.showDropUp.bind(this);
+
+        dom.querySelectorAll(".cm-status-bar-select-btn").forEach((el) => {
+            el.addEventListener("click", eventHandler, false);
+        });
+        dom.querySelectorAll(".cm-status-bar-select-btn").forEach((el) => {
+            el.addEventListener("keydown", eventHandler, false);
+        });
+
+        const selectContent = dom.querySelectorAll(
+            ".cm-status-bar-select-content"
         );
+
+        selectContent.forEach((el) => {
+            const aTags = el.getElementsByTagName("a");
+
+            for (let i = 0; i < aTags.length; i++) {
+                aTags[i].addEventListener("keydown", arrowNav, false);
+            }
+        });
         dom.querySelector(".eol-select").addEventListener("click", this.eolSelectClick.bind(this), false);
         dom.querySelector(".chr-enc-select").addEventListener("click", this.chrEncSelectClick.bind(this), false);
         dom.querySelector(".cm-status-bar-filter-input").addEventListener("keyup", this.chrEncFilter.bind(this), false);
@@ -64,26 +81,30 @@ class StatusBarPanel {
     }
 
     /**
-     * Handler for dropup clicks
+     * Handler for dropup clicks/Enter press
      * Shows/Hides the dropup
      * @param {Event} e
      */
     showDropUp(e) {
-        const el = e.target
-            .closest(".cm-status-bar-select")
-            .querySelector(".cm-status-bar-select-content");
-        const btn = e.target.closest(".cm-status-bar-select-btn");
+        if (e.type === "click" || e.key === "Enter"|| e.key === " ") {
+            const el = e.target
+                .closest(".cm-status-bar-select")
+                .querySelector(".cm-status-bar-select-content");
+            const btn = e.target.closest(".cm-status-bar-select-btn");
 
-        if (btn.classList.contains("disabled")) return;
+            if (btn.classList.contains("disabled")) return;
 
-        el.classList.add("show");
+            el.classList.add("show");
 
-        // Focus the filter input if present
-        const filter = el.querySelector(".cm-status-bar-filter-input");
-        if (filter) filter.focus();
+            // Focus the filter input if present
+            const filter = el.querySelector(".cm-status-bar-filter-input");
+            if (filter) filter.focus();
 
-        // Set up a listener to close the menu if the user clicks outside of it
-        hideOnClickOutside(el, e);
+            // Set up a listener to close the menu if the user clicks outside of it
+            hideOnClickOutside(el, e);
+            // Set up a listener to close the menu if the user presses key outside of it
+            hideOnMoveFocus(el, e);
+        }
     }
 
     /**
@@ -208,6 +229,7 @@ class StatusBarPanel {
             offset.textContent = from;
         }
     }
+
 
     /**
      * Sets the current EOL separator in the status bar
@@ -344,11 +366,11 @@ class StatusBarPanel {
      */
     constructLHS() {
         return `
-            <span data-toggle="tooltip" title="${this.label} length" data-help-title="${this.label} length" data-help="This number represents the number of characters in the ${this.label}.<br><br>The CRLF end of line separator is counted as two characters which impacts this value.">
+            <span data-toggle="tooltip" tabindex="0" title="${this.label} length" data-help-title="${this.label} length" data-help="This number represents the number of characters in the ${this.label}.<br><br>The CRLF end of line separator is counted as two characters which impacts this value.">
                 <i class="material-icons">abc</i>
                 <span class="stats-length-value"></span>
             </span>
-            <span data-toggle="tooltip" title="Number of lines"  data-help-title="Number of lines" data-help="This number represents the number of lines in the ${this.label}. Lines are separated by the End of Line Sequence which can be changed using the EOL selector at the far right of this status bar.">
+            <span data-toggle="tooltip" tabindex="0" title="Number of lines"  data-help-title="Number of lines" data-help="This number represents the number of lines in the ${this.label}. Lines are separated by the End of Line Sequence which can be changed using the EOL selector at the far right of this status bar.">
                 <i class="material-icons">sort</i>
                 <span class="stats-lines-value"></span>
             </span>
@@ -386,18 +408,18 @@ class StatusBarPanel {
         }
 
         return `
-            <span class="baking-time-info" style="display: none" data-toggle="tooltip" data-html="true" title="Baking time" data-help-title="Baking time" data-help="The baking time is the total time between data being read from the input, processed, and then displayed in the output.<br><br>The 'Threading overhead' value accounts for the transfer of data between different processing threads, as well as some garbage collection. It is not included in the overall bake time displayed in the status bar as it is largely influenced by background operating system and browser activity which can fluctuate significantly.">
+            <span class="baking-time-info" style="display: none" data-toggle="tooltip" tabindex="0" data-html="true" title="Baking time" data-help-title="Baking time" data-help="The baking time is the total time between data being read from the input, processed, and then displayed in the output.<br><br>The 'Threading overhead' value accounts for the transfer of data between different processing threads, as well as some garbage collection. It is not included in the overall bake time displayed in the status bar as it is largely influenced by background operating system and browser activity which can fluctuate significantly.">
                 <i class="material-icons">schedule</i>
                 <span class="baking-time-value"></span>ms
             </span>
 
             <div class="cm-status-bar-select chr-enc-select" data-help-title="${this.label} character encoding" data-help="${chrEncHelpText}">
-                <span class="cm-status-bar-select-btn" data-toggle="tooltip" data-html="true" data-placement="left" title="${this.label} character encoding">
+                <span class="cm-status-bar-select-btn" data-toggle="tooltip" tabindex="0" data-html="true" data-placement="left" title="${this.label} character encoding">
                     <i class="material-icons">text_fields</i> <span class="chr-enc-value">Raw Bytes</span>
                 </span>
                 <div class="cm-status-bar-select-content">
                     <div class="cm-status-bar-select-scroll no-select">
-                        <a href="#" draggable="false" data-val="0">Raw Bytes</a>
+                        <a href="#" draggable="false" data-val="0" tabindex="0">Raw Bytes</a>
                         ${chrEncOptions}
                     </div>
                     <div class="input-group cm-status-bar-filter-search">
@@ -412,18 +434,18 @@ class StatusBarPanel {
             </div>
 
             <div class="cm-status-bar-select eol-select" data-help-title="${this.label} EOL sequence" data-help="${eolHelpText}">
-                <span class="cm-status-bar-select-btn" data-toggle="tooltip" data-html="true" data-placement="left" title="End of line sequence">
+                <span class="cm-status-bar-select-btn" data-toggle="tooltip" tabindex="0" data-html="true" data-placement="left" title="End of line sequence">
                     <i class="material-icons">keyboard_return</i> <span class="eol-value"></span>
                 </span>
-                <div class="cm-status-bar-select-content no-select">
-                    <a href="#" draggable="false" data-val="LF">Line Feed, U+000A</a>
-                    <a href="#" draggable="false" data-val="VT">Vertical Tab, U+000B</a>
-                    <a href="#" draggable="false" data-val="FF">Form Feed, U+000C</a>
-                    <a href="#" draggable="false" data-val="CR">Carriage Return, U+000D</a>
-                    <a href="#" draggable="false" data-val="CRLF">CR+LF, U+000D U+000A</a>
-                    <!-- <a href="#" draggable="false" data-val="NL">Next Line, U+0085</a> This causes problems. -->
-                    <a href="#" draggable="false" data-val="LS">Line Separator, U+2028</a>
-                    <a href="#" draggable="false" data-val="PS">Paragraph Separator, U+2029</a>
+                <div class="cm-status-bar-select-content no-select" tabindex="0">
+                    <a href="#" draggable="false" data-val="LF" tabindex="0">Line Feed, U+000A</a>
+                    <a href="#" draggable="false" data-val="VT" tabindex="0">Vertical Tab, U+000B</a>
+                    <a href="#" draggable="false" data-val="FF" tabindex="0">Form Feed, U+000C</a>
+                    <a href="#" draggable="false" data-val="CR" tabindex="0">Carriage Return, U+000D</a>
+                    <a href="#" draggable="false" data-val="CRLF" tabindex="0">CR+LF, U+000D U+000A</a>
+                    <!-- <a href="#" draggable="false" data-val="NL" tabindex="0">Next Line, U+0085</a> This causes problems. -->
+                    <a href="#" draggable="false" data-val="LS" tabindex="0">Line Separator, U+2028</a>
+                    <a href="#" draggable="false" data-val="PS" tabindex="0">Paragraph Separator, U+2029</a>
                 </div>
             </div>`;
     }
@@ -458,14 +480,102 @@ function hideOnClickOutside(element, instantiatingEvent) {
     }
 }
 
+const elementsWithKeyDownListeners = {};
 /**
- * Hides the specified element and removes the click listener for it
+ * Hides the provided element when a key press is made outside of it
+ * @param {Element} element
+ * @param {Event} instantiatingEvent
+ */
+function hideOnMoveFocus(element, instantiatingEvent) {
+    /**
+     * Handler for document keydown events
+     * Closes element if key press is outside it.
+     * @param {Event} event
+     */
+    const outsidePressListener = (event) => {
+        // Don't trigger if we're pressing keys while inside the element, or if the element
+        // is not visible, or if this is the same click event that opened it.
+        if (
+            !element.contains(event.target) &&
+            event.timeStamp !== instantiatingEvent.timeStamp &&
+            event.key !== "ArrowUp"
+        ) {
+            hideElement(element);
+        } else if (
+            event.key === "Escape" &&
+            event.timeStamp !== instantiatingEvent.timeStamp
+        ) {
+            hideElement(element);
+        } else if (
+            event.key === "ArrowUp" ||
+            (event.key === "ArrowDown" &&
+                event.timeStamp !== instantiatingEvent.timeStamp)
+        ) {
+            const menuItems = element.getElementsByTagName("a");
+            menuItems[0].focus();
+
+            console.log("ev target:", event.target);
+            console.log("element", element);
+        }
+    };
+
+    if (
+        !Object.prototype.hasOwnProperty.call(
+            elementsWithKeyDownListeners,
+            element
+        )
+    ) {
+        elementsWithKeyDownListeners[element] = outsidePressListener;
+        document.addEventListener(
+            "keydown",
+            elementsWithKeyDownListeners[element],
+            false
+        );
+    }
+}
+
+/**
+ * Handler for menu item keydown events
+ * Moves focus to next/previous element based on arrow direction.
+ * @param {Event} event
+ */
+const arrowNav = (event) => {
+    const currentElement = event.target;
+    if (event.key === "ArrowDown") {
+        event.preventDefault();
+        event.stopPropagation();
+        const nextElement = currentElement.nextElementSibling;
+        if (nextElement === null) {
+            currentElement.parentElement.firstElementChild.focus();
+        } else {
+            nextElement.focus();
+        }
+    } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        event.stopPropagation();
+        const prevElement = currentElement.previousElementSibling;
+        if (prevElement === null) {
+            currentElement.parentElement.lastElementChild.focus();
+        } else {
+            prevElement.focus();
+        }
+    } else if (event.key === "Tab") {
+        event.preventDefault();
+        event.stopPropagation();
+        currentElement.parentElement.closest(".cm-status-bar-select-content").previousElementSibling.focus();
+    }
+};
+
+/**
+ * Hides the specified element and removes the click or keydown listener for it
  * @param {Element} element
  */
 function hideElement(element) {
     element.classList.remove("show");
     document.removeEventListener("click", elementsWithListeners[element], false);
+    document.removeEventListener("keydown", elementsWithKeyDownListeners[element], false);
     delete elementsWithListeners[element];
+    delete elementsWithKeyDownListeners[element];
 }
 
 
