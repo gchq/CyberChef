@@ -64,9 +64,9 @@ module.exports = {
         testOp(browser, ["From Hex", "Bzip2 Decompress"], "425a68393141592653597b0884b7000003038000008200ce00200021a647a4218013709517c5dc914e14241ec2212dc0", "test_output", [[], [true]]);
     // testOp(browser, "CBOR Decode", "test input", "test output");
     // testOp(browser, "CBOR Encode", "test input", "test output");
-        testOp(browser, "CRC-16 Checksum", "test input", "77c7");
-        testOp(browser, "CRC-32 Checksum", "test input", "29822bc8");
-        testOp(browser, "CRC-8 Checksum", "test input", "9d");
+        testOp(browser, "CRC Checksum", "test input", "77c7", ["CRC-16"]);
+        testOp(browser, "CRC Checksum", "test input", "29822bc8", ["CRC-32"]);
+        testOp(browser, "CRC Checksum", "test input", "9d", ["CRC-8"]);
     // testOp(browser, "CSS Beautify", "test input", "test_output");
     // testOp(browser, "CSS Minify", "test input", "test_output");
         // testOp(browser, "CSS selector", "test input", "test_output");
