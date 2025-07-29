@@ -61,7 +61,7 @@ export function fromBase32(data, alphabet="A-Z0-7=", returnType="string", remove
     if (strictMode) {
         // Check for incorrect lengths (even without padding)
         if (data.length % 8 === 1) {
-            throw new OperationError(`Error: Invalid Base32 input length (${data.length}). Cannot be 5n+1, even without padding chars.`);
+            throw new OperationError(`Error: Invalid Base32 input length (${data.length}). Cannot be 8n+1, even without padding chars.`);
         }
 
         if (alphabet.length === 33) { // Padding character included
