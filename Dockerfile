@@ -29,8 +29,7 @@ RUN npm run build
 #########################################
 # We are using Github Actions: redhat-actions/buildah-build@v2 which needs manual selection of arch in base image
 # Remove TARGETARCH if docker buildx is supported in the CI release as --platform=$TARGETPLATFORM will be automatically set
-ARG TARGETARCH
 ARG TARGETPLATFORM
-FROM ${TARGETARCH}/nginx:stable-alpine AS cyberchef
+FROM --platform=${TARGETPLATFORM} nginx:stable-alpine AS cyberchef
 
 COPY --from=builder /app/build/prod /usr/share/nginx/html/
