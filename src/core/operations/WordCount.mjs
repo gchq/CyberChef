@@ -63,9 +63,7 @@ class WordCount extends Operation {
         for (let j = 0; j < inputArray.length; j++) {
 
             // Trim whitespace and replace punctuation
-            const word = inputArray[j].replace(/[!"#\$%&\(\)\*\+,-\.\/:;<=>\?@\[\\\]\^_`\{\\}~£\|]/g, "").trim();
-
-
+            const word = inputArray[j].replace(/[!"#$%&()*+,-./:;<=>?@[\\\]^_`{}~£|]/g, "").trim();
 
             // If empty string or ', then skip
             if (word === "" || /[']+/.test(word)) {
@@ -102,7 +100,7 @@ class WordCount extends Operation {
 
         // Process output to string
         let output = "WORD,COUNT\n";
-        output = output + order.map(entry => `${entry},${counter[entry]}`).join('\n');
+        output = output + order.map(entry => `${entry},${counter[entry]}`).join("\n");
 
         // Add total counter at the bottom
         if (args[1]) {
