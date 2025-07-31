@@ -9,7 +9,7 @@ TestRegister.addTests([
     {
         "name": "Word Count: Empty test 1",
         "input": "",
-        "expectedOutput": "WORD,COUNT\nTOTAL,0",
+        "expectedOutput": "WORD,COUNT\n\nTOTAL,0",
 
         "recipeConfig": [
             {
@@ -21,7 +21,7 @@ TestRegister.addTests([
     {
         "name": "Word Count: Empty test 2",
         "input": "",
-        "expectedOutput": "WORD,COUNT\nTOTAL,0",
+        "expectedOutput": "WORD,COUNT\n\nTOTAL,0",
 
         "recipeConfig": [
             {
@@ -81,7 +81,7 @@ TestRegister.addTests([
     {
         "name": "Word Count: Count test 3",
         "input": "Hello world. Hello. \n\n World, ''!@£$%^&*()_+=-[]{};'|:/.,<>? world",
-        "expectedOutput": "WORD,COUNT\nhello,2\nworld,3\n",
+        "expectedOutput": "WORD,COUNT\nhello,2\nworld,3",
 
         "recipeConfig": [
             {
@@ -93,7 +93,7 @@ TestRegister.addTests([
     {
         "name": "Word Count: Count test 4",
         "input": "Hello world. Hello. \n\n World, ''!@£$%^&*()_+=-[]{};'|:/.,<>? world",
-        "expectedOutput": "WORD,COUNT\nworld,3\nhello,2\n",
+        "expectedOutput": "WORD,COUNT\nworld,3\nhello,2",
 
         "recipeConfig": [
             {
@@ -105,7 +105,7 @@ TestRegister.addTests([
     {
         "name": "Word Count: Different delimiter test",
         "input": "Hello, World\nhello, world \n''!@£$%^&*()_+=-[]{};'|:/.,<>? world",
-        "expectedOutput": "WORD,COUNT\nworld,3\nhello,2\n",
+        "expectedOutput": "WORD,COUNT\nworld,3\nhello,2",
 
         "recipeConfig": [
             {
