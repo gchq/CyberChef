@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import { fromHex } from "../lib/Hex.mjs";
+import { fromHex, toHexFast } from "../lib/Hex.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import r from "jsrsasign";
 
@@ -25,7 +25,7 @@ class ECDSASign extends Operation {
         this.module = "Ciphers";
         this.description = "Sign a plaintext message with a PEM encoded EC key.";
         this.infoURL = "https://wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm";
-        this.inputType = "string";
+        this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
             {
@@ -58,7 +58,7 @@ class ECDSASign extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {ArrayBuffer} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -79,7 +79,7 @@ class ECDSASign extends Operation {
             throw new OperationError("Provided key is not a private key.");
         }
         sig.init(key);
-        const signatureASN1Hex = sig.signString(input);
+        const signatureASN1Hex = sig.signHex(toHexFast(new Uint8Array(input)));
 
         let result;
         switch (outputFormat) {
