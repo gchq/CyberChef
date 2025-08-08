@@ -45,7 +45,7 @@ class DeriveEVPKey extends Operation {
             {
                 "name": "Hashing function",
                 "type": "option",
-                "value": ["SHA1", "SHA256", "SHA384", "SHA512", "MD5"]
+                "value": ["SHA256", "SHA384", "SHA512"]
             },
             {
                 "name": "Salt",
@@ -69,10 +69,10 @@ class DeriveEVPKey extends Operation {
             hasher = args[3],
             salt = CryptoJS.enc.Latin1.parse(
                 Utils.convertToByteString(args[4].string, args[4].option)),
-            key = CryptoJS.EvpKDF(passphrase, salt, { // lgtm [js/insufficient-password-hash]
+            key = CryptoJS.PBKDF2(passphrase, salt, { // Secure password-based key derivation
                 keySize: keySize,
                 hasher: CryptoJS.algo[hasher],
-                iterations: iterations,
+                iterations: Math.max(iterations, 10000), // Ensure a minimum of 10,000 iterations
             });
 
         return key.toString(CryptoJS.enc.Hex);
