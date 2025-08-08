@@ -161,4 +161,15 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "JSON Repair: JSONP notation",
+        input: 'callback({"name": "John", "age": 30})',
+        expectedOutput: '{"name": "John", "age": 30}',
+        recipeConfig: [
+            {
+                op: "JSON Repair",
+                args: [],
+            },
+        ],
+    },
 ]);
