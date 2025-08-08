@@ -22,8 +22,8 @@ TestRegister.addTests([
     },
     {
         name: "JSON Repair: valid JSON unchanged",
-        input: '{"name": "John", "age": 30}',
-        expectedOutput: '{"name": "John", "age": 30}',
+        input: "{\"name\": \"John\", \"age\": 30}",
+        expectedOutput: "{\"name\": \"John\", \"age\": 30}",
         recipeConfig: [
             {
                 op: "JSON Repair",
@@ -33,8 +33,8 @@ TestRegister.addTests([
     },
     {
         name: "JSON Repair: missing quotes around keys",
-        input: '{name: "John", age: 30}',
-        expectedOutput: '{"name": "John", "age": 30}',
+        input: "{name: \"John\", age: 30}",
+        expectedOutput: "{\"name\": \"John\", \"age\": 30}",
         recipeConfig: [
             {
                 op: "JSON Repair",
@@ -45,7 +45,7 @@ TestRegister.addTests([
     {
         name: "JSON Repair: single quotes to double quotes",
         input: "{'name': 'John', 'age': 30}",
-        expectedOutput: '{"name": "John", "age": 30}',
+        expectedOutput: "{\"name\": \"John\", \"age\": 30}",
         recipeConfig: [
             {
                 op: "JSON Repair",
@@ -55,8 +55,8 @@ TestRegister.addTests([
     },
     {
         name: "JSON Repair: trailing comma in object",
-        input: '{"name": "John", "age": 30,}',
-        expectedOutput: '{"name": "John", "age": 30}',
+        input: "{\"name\": \"John\", \"age\": 30,}",
+        expectedOutput: "{\"name\": \"John\", \"age\": 30}",
         recipeConfig: [
             {
                 op: "JSON Repair",
@@ -66,8 +66,8 @@ TestRegister.addTests([
     },
     {
         name: "JSON Repair: trailing comma in array",
-        input: '[1, 2, 3,]',
-        expectedOutput: '[1, 2, 3]',
+        input: "[1, 2, 3,]",
+        expectedOutput: "[1, 2, 3]",
         recipeConfig: [
             {
                 op: "JSON Repair",
@@ -77,8 +77,8 @@ TestRegister.addTests([
     },
     {
         name: "JSON Repair: Python constants",
-        input: '{"active": True, "data": None, "flag": False}',
-        expectedOutput: '{"active": true, "data": null, "flag": false}',
+        input: "{\"active\": True, \"data\": None, \"flag\": False}",
+        expectedOutput: "{\"active\": true, \"data\": null, \"flag\": false}",
         recipeConfig: [
             {
                 op: "JSON Repair",
@@ -143,7 +143,7 @@ TestRegister.addTests([
     {
         name: "JSON Repair: complex mixed issues",
         input: `{
-    name: 'John',  // Person's name
+    name: "John",  // Person's name
     age: 30,
     active: True,
     data: None,
@@ -163,8 +163,8 @@ TestRegister.addTests([
     },
     {
         name: "JSON Repair: JSONP notation",
-        input: 'callback({"name": "John", "age": 30})',
-        expectedOutput: '{"name": "John", "age": 30}',
+        input: "callback({\"name\": \"John\", \"age\": 30})",
+        expectedOutput: "{\"name\": \"John\", \"age\": 30}",
         recipeConfig: [
             {
                 op: "JSON Repair",

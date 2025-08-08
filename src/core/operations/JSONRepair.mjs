@@ -38,7 +38,7 @@ class JSONRepair extends Operation {
             // Dynamic import of jsonrepair to handle potential module loading issues
             const { jsonrepair } = await import("jsonrepair");
             return jsonrepair(input);
-            
+
         } catch (err) {
             throw new OperationError("Unable to repair JSON. The input contains errors that cannot be automatically fixed.\n" + err.message);
         }
