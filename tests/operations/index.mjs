@@ -100,6 +100,7 @@ import "./tests/JWTDecode.mjs";
 import "./tests/JWTSign.mjs";
 import "./tests/JWTVerify.mjs";
 import "./tests/LevenshteinDistance.mjs";
+import "./tests/LineBreak.mjs";
 import "./tests/Lorenz.mjs";
 import "./tests/LS47.mjs";
 import "./tests/LuhnChecksum.mjs";
