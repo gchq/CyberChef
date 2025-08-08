@@ -93,6 +93,7 @@ import "./tests/JA3SFingerprint.mjs";
 import "./tests/Jsonata.mjs";
 import "./tests/JSONBeautify.mjs";
 import "./tests/JSONMinify.mjs";
+import "./tests/JSONRepair.mjs";
 import "./tests/JSONtoCSV.mjs";
 import "./tests/Jump.mjs";
 import "./tests/JWK.mjs";
