@@ -26,6 +26,8 @@ import "./tests/Base64.mjs";
 import "./tests/Base85.mjs";
 import "./tests/Base92.mjs";
 import "./tests/BCD.mjs";
+import "./tests/BencodeEncode.mjs";
+import "./tests/BencodeDecode.mjs";
 import "./tests/BitwiseOp.mjs";
 import "./tests/BLAKE2b.mjs";
 import "./tests/BLAKE2s.mjs";
