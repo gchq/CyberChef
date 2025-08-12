@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import kbpgp from "kbpgp";
-import { ASP, importPrivateKey, importPublicKey } from "../lib/PGP.mjs";
+import { ASP, importPrivateKey } from "../lib/PGP.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import * as es6promisify from "es6-promisify";
 const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
