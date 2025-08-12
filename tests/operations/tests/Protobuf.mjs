@@ -303,4 +303,33 @@ TestRegister.addTests([
             }
         ]
     },
+    {
+        name: "Protobuf Stream Decode: no schema",
+        input: "0d081c1203596f751a024d65202b0c0a0a0a066162633132331200",
+        expectedOutput: JSON.stringify([
+            {
+                "1": 28,
+                "2": "You",
+                "3": "Me",
+                "4": 43
+            },
+            {
+                "1": {
+                    "1": "abc123",
+                    "2": {}
+                }
+            }
+        ], null, 4),
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                "op": "Protobuf Stream Decode",
+                "args": [false]
+            }
+        ]
+    },
+
 ]);
