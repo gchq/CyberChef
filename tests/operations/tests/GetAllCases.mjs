@@ -1,5 +1,5 @@
 /**
- * GetAllCasings tests.
+ * GetAllCases tests.
  *
  * @author n1073645 [n1073645@gmail.com]
  * @copyright Crown Copyright 2020
@@ -14,7 +14,7 @@ TestRegister.addTests([
         expectedOutput: "test\nTest\ntEst\nTEst\nteSt\nTeSt\ntESt\nTESt\ntesT\nTesT\ntEsT\nTEsT\nteST\nTeST\ntEST\nTEST",
         recipeConfig: [
             {
-                "op": "Get All Casings",
+                "op": "Get All Cases",
                 "args": []
             }
         ]
@@ -25,7 +25,7 @@ TestRegister.addTests([
         expectedOutput: "t\nT",
         recipeConfig: [
             {
-                "op": "Get All Casings",
+                "op": "Get All Cases",
                 "args": []
             }
         ]
@@ -36,7 +36,7 @@ TestRegister.addTests([
         expectedOutput: "",
         recipeConfig: [
             {
-                "op": "Get All Casings",
+                "op": "Get All Cases",
                 "args": []
             }
         ]
