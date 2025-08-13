@@ -45,11 +45,12 @@ class ToDecimal extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        input = new Uint8Array(input);
         const delim = Utils.charRep(args[0]),
             signed = args[1];
         if (signed) {
-            input = input.map(v => v > 0x7F ? v - 0xFF - 1 : v);
+            input = new Int8Array(input);
+        } else {
+            input = new Uint8Array(input);
         }
         return input.join(delim);
     }
