@@ -44,7 +44,18 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [hsKey, "HS256"],
+                args: [hsKey, "HS256", "{}"],
+            }
+        ],
+    },
+    {
+        name: "JWT Sign: HS256 with custom header",
+        input: inputObject,
+        expectedOutput: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImN1c3RvbS5rZXkifQ.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.kXln8btJburfRlND8IDZAQ8NZGFFZhvHyooHa6N9za8",
+        recipeConfig: [
+            {
+                op: "JWT Sign",
+                args: [hsKey, "HS256", `{"kid":"custom.key"}`],
             }
         ],
     },
@@ -55,7 +66,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [hsKey, "HS384"],
+                args: [hsKey, "HS384", "{}"],
             }
         ],
     },
@@ -66,7 +77,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [hsKey, "HS512"],
+                args: [hsKey, "HS512", "{}"],
             }
         ],
     },
@@ -77,7 +88,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [esKey, "ES256"],
+                args: [esKey, "ES256", "{}"],
             },
             {
                 op: "JWT Decode",
@@ -92,7 +103,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [esKey, "ES384"],
+                args: [esKey, "ES384", "{}"],
             },
             {
                 op: "JWT Decode",
@@ -107,7 +118,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [esKey, "ES512"],
+                args: [esKey, "ES512", "{}"],
             },
             {
                 op: "JWT Decode",
@@ -122,7 +133,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [rsKey, "RS256"],
+                args: [rsKey, "RS256", "{}"],
             },
             {
                 op: "JWT Decode",
@@ -137,7 +148,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [rsKey, "RS384"],
+                args: [rsKey, "RS384", "{}"],
             },
             {
                 op: "JWT Decode",
@@ -152,7 +163,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Sign",
-                args: [esKey, "RS512"],
+                args: [esKey, "RS512", "{}"],
             },
             {
                 op: "JWT Decode",
