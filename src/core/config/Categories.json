@@ -220,6 +220,7 @@
             "Subtract",
             "Multiply",
             "Divide",
+            "MOD",
             "Mean",
             "Median",
             "Standard Deviation",

@@ -109,6 +109,7 @@ import "./tests/Magic.mjs";
 import "./tests/Media.mjs";
 import "./tests/MIMEDecoding.mjs";
 import "./tests/Modhex.mjs";
+import "./tests/MOD.mjs";
 import "./tests/MorseCode.mjs";
 import "./tests/MS.mjs";
 import "./tests/MultipleBombe.mjs";
