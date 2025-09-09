@@ -73,7 +73,13 @@ class FromBase32 extends Operation {
         if (alphabet.length !== 33) {
             throw new OperationError("Alphabet must be of length 33"); // 32 characters + 1 padding
         }
-
+        const isCrockford = alphabet === Utils.expandAlphRange(ALPHABET_OPTIONS.find(opt => opt.name === "Crockford's alphabet").value).join("");
+        if (isCrockford) {
+            input = input
+                .replace(/[oO]/g, "0")
+                .replace(/[iIlL]/g, "1")
+                .toUpperCase();
+        }
         let chr1, chr2, chr3, chr4, chr5,
             enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
             i = 0;

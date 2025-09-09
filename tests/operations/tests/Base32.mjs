@@ -44,7 +44,7 @@ const ALL_BYTES_EXTENDED_OUT = "000G40O40K30E209185GO38E1S8124GJ2GAHC5OO34D1M70T
 const ALL_BYTES_STANDARD_OUT = "AAAQEAYEAUDAOCAJBIFQYDIOB4IBCEQTCQKRMFYYDENBWHA5DYPSAIJCEMSCKJRHFAUSUKZMFUXC6MBRGIZTINJWG44DSOR3HQ6T4P2AIFBEGRCFIZDUQSKKJNGE2TSPKBIVEU2UKVLFOWCZLJNVYXK6L5QGCYTDMRSWMZ3INFVGW3DNNZXXA4LSON2HK5TXPB4XU634PV7H7AEBQKBYJBMGQ6EITCULRSGY5D4QSGJJHFEVS2LZRGM2TOOJ3HU7UCQ2FI5EUWTKPKFJVKV2ZLNOV6YLDMVTWS23NN5YXG5LXPF5X274BQOCYPCMLRWHZDE4VS6MZXHM7UGR2LJ5JVOW27MNTWW33TO55X7A4HROHZHF43T6R2PK5PWO33XP6DY7F47U6X3PP6HZ7L57Z7P674======";
 const ALL_BYTES_CROCKFORD_OUT = "000G40R40M30E209185GR38E1W8124GK2GAHC5RR34D1P70X3RFJ08924CJ2A9H750MJMASC5MQ2YC1H68SK8D9P6WW3JEHV7GYKWFT085146H258S3MGJAA9D64TKJFA18N4MTMANB5EP2SB9DNRQAYBXG62RK3CHJPCSV8D5N6PV3DDSQQ0WBJEDT7AXKQF1WQMYVWFNZ7Z041GA1R91C6GY48K2MBHJ6RX3WGJ699754NJTBSH6CTKEE9V7MZM2GT58X4MPKAFA59NANTSBDENYRB3CNKPJTVDDXRQ6XBQF5XQTZW1GE2RF2CBHP7S34WNJYCSQ7CZM6HTB9X9NEPTZCDKPPVVKEXXQZ0W7HE7S75WVKYHTFAXFPEVVQFY3RZ5WZMYQVFFY7SZBXZSZFYZW======";
 
-const WRONG_ALPHABET = "Alphabet must be of length 33"
+const WRONG_ALPHABET = "Alphabet must be of length 33";
 
 TestRegister.addTests([
     {
@@ -308,6 +308,83 @@ TestRegister.addTests([
             {
                 op: "From Base32",
                 args: ["", false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.replaceAll("0", "o"),
+        input: CROCKFORD_OUT.replaceAll("0", "o"),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.replaceAll("0", "O"),
+        input: CROCKFORD_OUT.replaceAll("0", "O"),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.replaceAll("1", "I"),
+        input: CROCKFORD_OUT.replaceAll("1", "I"),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.replaceAll("1", "i"),
+        input: CROCKFORD_OUT.replaceAll("1", "i"),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.replaceAll("1", "L"),
+        input: CROCKFORD_OUT.replaceAll("1", "L"),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.replaceAll("1", "l"),
+        input: CROCKFORD_OUT.replaceAll("1", "l"),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.toLowerCase(),
+        input: CROCKFORD_OUT.toLowerCase(),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
             },
         ],
     },
