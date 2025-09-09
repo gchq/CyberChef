@@ -42,17 +42,17 @@ class FromBase32 extends Operation {
             {
                 pattern: "^(?:[A-Z2-7]{8})+(?:[A-Z2-7]{2}={6}|[A-Z2-7]{4}={4}|[A-Z2-7]{5}={3}|[A-Z2-7]{7}={1})?$",
                 flags: "",
-                args: ["A-Z2-7=", false]
+                args: [ALPHABET_OPTIONS.find(opt => opt.name === "Standard").value, false]
             },
             {
                 pattern: "^(?:[0-9A-V]{8})+(?:[0-9A-V]{2}={6}|[0-9A-V]{4}={4}|[0-9A-V]{5}={3}|[0-9A-V]{7}={1})?$",
                 flags: "",
-                args: ["0-9A-V=", false]
+                args: [ALPHABET_OPTIONS.find(opt => opt.name === "Hex Extended").value, false]
             },
             {
                 pattern: "^(?:(?:[0Oo]|[1IiLl]|[2-9]|[ABCDEFGHJKMNPQRSTVWXYZabcdefghjkmnpqrstvwxyz]){8})+(?:(?:[0Oo]|[1IiLl]|[2-9]|[ABCDEFGHJKMNPQRSTVWXYZabcdefghjkmnpqrstvwxyz]){2}={6}|(?:[0Oo]|[1IiLl]|[2-9]|[ABCDEFGHJKMNPQRSTVWXYZabcdefghjkmnpqrstvwxyz]){4}={4}|(?:[0Oo]|[1IiLl]|[2-9]|[ABCDEFGHJKMNPQRSTVWXYZabcdefghjkmnpqrstvwxyz]){5}={3}|(?:[0Oo]|[1IiLl]|[2-9]|[ABCDEFGHJKMNPQRSTVWXYZabcdefghjkmnpqrstvwxyz]){7}={1})?$",
                 flags: "",
-                args: ["0123456789ABCDEFGHJKMNPQRSTVWXYZ=", false]
+                args: [ALPHABET_OPTIONS.find(opt => opt.name === "Crockford's alphabet").value, false]
             }
         ];
     }
