@@ -50,7 +50,7 @@ class FromBase32 extends Operation {
                 args: [ALPHABET_OPTIONS.find(opt => opt.name === "Hex Extended").value, false]
             },
             {
-                pattern: "^(?:(?:[0Oo]|[1IiLl]|[2-9]|[ABCDEFGHJKMNPQRSTVWXYZabcdefghjkmnpqrstvwxyz]){8})+(?:(?:[0Oo]|[1IiLl]|[2-9]|[ABCDEFGHJKMNPQRSTVWXYZabcdefghjkmnpqrstvwxyz]){2}={6}|(?:[0Oo]|[1IiLl]|[2-9]|[ABCDEFGHJKMNPQRSTVWXYZabcdefghjkmnpqrstvwxyz]){4}={4}|(?:[0Oo]|[1IiLl]|[2-9]|[ABCDEFGHJKMNPQRSTVWXYZabcdefghjkmnpqrstvwxyz]){5}={3}|(?:[0Oo]|[1IiLl]|[2-9]|[ABCDEFGHJKMNPQRSTVWXYZabcdefghjkmnpqrstvwxyz]){7}={1})?$",
+                pattern: "^(?:[0-9A-TV-Za-tv-z]{8})+(?:[0-9A-TV-Za-tv-z]{2}={6}|[0-9A-TV-Za-tv-z]{4}={4}|[0-9A-TV-Za-tv-z]{5}={3}|[0-9A-TV-Za-tv-z]{7}=)?$",
                 flags: "",
                 args: [ALPHABET_OPTIONS.find(opt => opt.name === "Crockford's alphabet").value, false]
             }

@@ -21,7 +21,7 @@ export const ALPHABET_OPTIONS = [
     },
     {
         name: "Crockford's alphabet", // https://www.crockford.com/base32.html
-        value: "0123456789ABCDEFGHJKMNPQRSTVWXYZ=",
+        value: "0-9A-HJKMNP-TV-Z=",
     },
 ];
 
