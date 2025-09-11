@@ -24,7 +24,7 @@ class RenderPDF extends Operation {
             {
                 "name": "Input format",
                 "type": "option",
-                "value": ["Base64","Raw"],
+                "value": ["Base64", "Raw"],
             }
         ];
         this.checks = [
