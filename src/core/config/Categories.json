@@ -536,7 +536,9 @@
             "Hex Density chart",
             "Scatter chart",
             "Series chart",
-            "Heatmap chart"
+            "Heatmap chart",
+            "Render PDF"
+
         ]
     },
     {
