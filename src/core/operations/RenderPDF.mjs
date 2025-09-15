@@ -1,3 +1,9 @@
+/**
+ * @author Shailendra [singhshailendra.in]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
 import { fromBase64, toBase64 } from "../lib/Base64.mjs";
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
