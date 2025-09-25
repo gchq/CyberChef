@@ -1488,6 +1488,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "op": "RC2 Encrypt",
                 "args": [
                     {"option": "Hex", "string": ""},
+                    128,
                     {"option": "Hex", "string": ""},
                     "Hex", "Hex"
                 ]
@@ -1503,6 +1504,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "op": "RC2 Encrypt",
                 "args": [
                     {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    128,
                     {"option": "Hex", "string": "ae817c784a097e0c"},
                     "Hex", "Hex"
                 ]
@@ -1518,6 +1520,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "op": "RC2 Encrypt",
                 "args": [
                     {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    128,
                     {"option": "Hex", "string": ""},
                     "Hex", "Hex"
                 ]
@@ -1533,6 +1536,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "op": "RC2 Decrypt",
                 "args": [
                     {"option": "Hex", "string": ""},
+                    128,
                     {"option": "Hex", "string": ""},
                     "Hex", "Hex"
                 ]
@@ -1548,6 +1552,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "op": "RC2 Decrypt",
                 "args": [
                     {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    128,
                     {"option": "Hex", "string": "ae817c784a097e0c"},
                     "Hex", "Hex"
                 ]
@@ -1563,6 +1568,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "op": "RC2 Decrypt",
                 "args": [
                     {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    128,
                     {"option": "Hex", "string": ""},
                     "Hex", "Hex"
                 ]
