@@ -60,6 +60,7 @@ import "./tests/Crypt.mjs";
 import "./tests/CSV.mjs";
 import "./tests/DateTime.mjs";
 import "./tests/DefangIP.mjs";
+import "./tests/Deobfuscate.mjs";
 import "./tests/DropNthBytes.mjs";
 import "./tests/ECDSA.mjs";
 import "./tests/ELFInfo.mjs";

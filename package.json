@@ -156,6 +156,7 @@
     "lz-string": "^1.5.0",
     "lz4js": "^0.2.0",
     "markdown-it": "^14.1.0",
+    "minusonejs": "^0.4.2",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
     "ngeohash": "^0.6.3",

@@ -493,6 +493,7 @@
     {
         "name": "Forensics",
         "ops": [
+            "Deobfuscate",
             "Detect File Type",
             "Scan for Embedded Files",
             "Extract Files",
