@@ -367,7 +367,7 @@ TestRegister.addApiTests([
                 "args": [0, 32] }
         ]);
         assert.strictEqual(result.toString(), `SEQUENCE
-  INTEGER 05..(total 1bytes)..05
+  INTEGER 05
   IA5String 'Anybody there?'
 `);
     }),
