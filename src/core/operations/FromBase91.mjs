@@ -1,6 +1,6 @@
 /**
- * @author CyberChef Base91 Implementation
- * @copyright Crown Copyright 2024
+ * @author Izai Alejandro Zalles Merino <zallesrene@gmail.com> (ialejandrozalles)
+ * @copyright © 2025 Izai Alejandro Zalles Merino
  * @license Apache-2.0
  */
 

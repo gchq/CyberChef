@@ -7,6 +7,10 @@
  * @author CyberChef Base91 Implementation
  * @copyright Crown Copyright 2024
  * @license Apache-2.0
+ * @modified-by Izai Alejandro Zalles Merino <zallesrene@gmail.com> (ialejandrozalles)
+ * @modified-date 2025-10-01
+ * © 2025 Izai Alejandro Zalles Merino
+
  */
 
 import OperationError from "../errors/OperationError.mjs";
@@ -29,6 +33,8 @@ for (let i = 0; i < BASE91_ALPHABET.length; i++) {
  *
  * @param {Uint8Array} data - Input byte array
  * @returns {string} Base91 encoded string
+ * @modified-by Izai Alejandro Zalles Merino <zallesrene@gmail.com> (ialejandrozalles)
+
  */
 export function encodeBase91(data) {
     let accumulator = 0;
@@ -71,6 +77,8 @@ export function encodeBase91(data) {
  *
  * @param {string} str - Base91 encoded string
  * @returns {Uint8Array} Decoded byte array
+ * @modified-by Izai Alejandro Zalles Merino <zallesrene@gmail.com> (ialejandrozalles)
+
  */
 export function decodeBase91(str) {
     let accumulator = 0;
