@@ -28,7 +28,7 @@ export function affineEncode(input, args) {
         b = args[1];
     let output = "";
 
-    if (!/^\+?(0|[1-9]\d*)$/.test(a) || !/^\+?(0|[1-9]\d*)$/.test(b)) {
+    if (!/^[+-]?(0|[1-9]\d*)$/.test(a) || !/^[+-]?(0|[1-9]\d*)$/.test(b)) {
         throw new OperationError("The values of a and b can only be integers.");
     }
 
