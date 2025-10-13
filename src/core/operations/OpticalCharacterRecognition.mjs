@@ -46,6 +46,13 @@ class OpticalCharacterRecognition extends Operation {
                 defaultIndex: 1
             }
         ];
+        this.checks = [
+            {
+                pattern: "^(?:\xff\xd8\xff|\x89\x50\x4e\x47|\x47\x49\x46|.{8}\x57\x45\x42\x50|\x42\x4d)",
+                args: [true, "LSTM only"],
+                useful: true
+            }
+        ];
     }
 
     /**
