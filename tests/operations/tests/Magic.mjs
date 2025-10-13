@@ -152,8 +152,7 @@ TestRegister.addTests([
                 args: [1, false, false]
             }
         ]
-    }
-    ,
+    },
     {
         name: "Magic Chain: Base91",
         input: "xD7ghoHB4!#/Tm_ogr$J9[JTrUJ*|jgSr!=EWoFB",
