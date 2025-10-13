@@ -8,7 +8,7 @@ import { fromBase64, toBase64 } from "../lib/Base64.mjs";
 import { fromHex } from "../lib/Hex.mjs";
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import Utils from "../Utils.mjs";
+import Utils, { isWorkerEnvironment } from "../Utils.mjs";
 import {isImage} from "../lib/FileType.mjs";
 
 /**
@@ -104,7 +104,12 @@ class RenderImage extends Operation {
         // Add image data to URI
         dataURI += "base64," + toBase64(data);
 
-        return "<img src='" + dataURI + "'>";
+        let html = "<img src='" + dataURI + "'>";
+        if (isWorkerEnvironment()) {
+            const ocrLink = "#recipe=Optical_Character_Recognition('Show confidence',true,'OCR Engine Mode','LSTM only')";
+            html = "<div style=\"position:relative; display:inline-block;\">" + html + "<a href=\"" + ocrLink + "\" title=\"Run OCR\" style=\"position:absolute; top:8px; right:8px; background:rgba(0,0,0,.6); color:#fff; padding:4px 6px; border-radius:4px; text-decoration:none; font-weight:bold;\">✎</a></div>";
+        }
+        return html;
     }
 
 }

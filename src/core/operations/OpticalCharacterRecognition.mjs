@@ -15,6 +15,7 @@ import { isWorkerEnvironment } from "../Utils.mjs";
 import { createWorker } from "tesseract.js";
 
 const OEM_MODES = ["Tesseract only", "LSTM only", "Tesseract/LSTM Combined"];
+const OCR_DEFAULT_WHITELIST = "";
 
 /**
  * Optical Character Recognition operation
@@ -34,6 +35,11 @@ class OpticalCharacterRecognition extends Operation {
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
         this.args = [
+            {
+                name: "Character whitelist (optional)",
+                type: "string",
+                value: OCR_DEFAULT_WHITELIST
+            },
             {
                 name: "Show confidence",
                 type: "boolean",
@@ -61,7 +67,7 @@ class OpticalCharacterRecognition extends Operation {
      * @returns {string}
      */
     async run(input, args) {
-        const [showConfidence, oemChoice] = args;
+        const [whitelist, showConfidence, oemChoice] = args;
 
         if (!isWorkerEnvironment()) throw new OperationError("This operation only works in a browser");
 
@@ -86,6 +92,10 @@ class OpticalCharacterRecognition extends Operation {
                     }
                 }
             });
+            self.sendStatusMessage("Configuring OCR parameters...");
+            if (whitelist && whitelist.length) {
+                await worker.setParameters({ /* eslint-disable camelcase */ tessedit_char_whitelist: whitelist /* eslint-enable camelcase */ });
+            }
             self.sendStatusMessage("Finding text...");
             const result = await worker.recognize(image);
 
