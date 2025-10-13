@@ -24,6 +24,7 @@ import "./tests/Base58.mjs";
 import "./tests/Base62.mjs";
 import "./tests/Base64.mjs";
 import "./tests/Base85.mjs";
+import "./tests/Base91.mjs";
 import "./tests/Base92.mjs";
 import "./tests/BCD.mjs";
 import "./tests/BitwiseOp.mjs";

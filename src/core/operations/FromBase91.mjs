@@ -23,6 +23,17 @@ class FromBase91 extends Operation {
         this.infoURL = "https://en.wikipedia.org/wiki/Binary-to-text_encoding#Encoding_standards";
         this.inputType = "string";
         this.outputType = "ArrayBuffer";
+        this.checks = [
+            {
+                pattern:
+                    "^" +
+                    "[\\s0-9A-Za-z!#$%&()*+,./:;<=>?@\\\[\\\]\\^_`{|}~\"]*" +
+                    "[0-9A-Za-z!#$%&()*+,./:;<=>?@\\\[\\\]\\^_`{|}~\"]{15}" +
+                    "[\\s0-9A-Za-z!#$%&()*+,./:;<=>?@\\\[\\\]\\^_`{|}~\"]*" +
+                    "$",
+                args: []
+            }
+        ];
     }
 
     /**
