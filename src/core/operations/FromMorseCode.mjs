@@ -42,8 +42,20 @@ class FromMorseCode extends Operation {
                 pattern: "(?:^[-. \\n]{5,}$|^[_. \\n]{5,}$|^(?:dash|dot| |\\n){5,}$)",
                 flags: "i",
                 args: ["Space", "Line feed"]
-            }
-        ];
+            },
+            {
+                pattern: "^(?=.*/)[-./ \n]{5,}$",
+                args: ["Space", "Forward slash"]
+            },
+            {
+                pattern: "^(?=.*/)[_. /\n]{5,}$",
+                args: ["Space", "Forward slash"]
+            },
+            {
+                pattern: "^(?=.*/)(?:dash|dot| |/|\n){5,}$",
+                flags: "i",
+                args: ["Space", "Forward slash"]
+            }];
     }
 
     /**
