@@ -1665,7 +1665,12 @@ class InputWaiter {
      */
     handlePostMessage(e) {
         log.debug(e);
-        if ("data" in e && "id" in e.data && "value" in e.data) {
+        // Guard against non-object events (e.g., HMR messages may set e.data to a string like 'webpackHotUpdate...')
+        if (
+            e && typeof e === "object" &&
+            "data" in e && e.data && typeof e.data === "object" &&
+            "id" in e.data && "value" in e.data
+        ) {
             if (e.data.id === "setInput") {
                 this.setInput(e.data.value);
             }

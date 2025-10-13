@@ -44,6 +44,12 @@ class OpticalCharacterRecognition extends Operation {
                 type: "option",
                 value: OEM_MODES,
                 defaultIndex: 1
+            },
+            // New option appended to avoid breaking existing saved recipes
+            {
+                name: "Remove line breaks",
+                type: "boolean",
+                value: false
             }
         ];
     }
@@ -54,7 +60,7 @@ class OpticalCharacterRecognition extends Operation {
      * @returns {string}
      */
     async run(input, args) {
-        const [showConfidence, oemChoice] = args;
+        const [showConfidence, oemChoice, removeLineBreaks = false] = args;
 
         if (!isWorkerEnvironment()) throw new OperationError("This operation only works in a browser");
 
@@ -81,11 +87,15 @@ class OpticalCharacterRecognition extends Operation {
             });
             self.sendStatusMessage("Finding text...");
             const result = await worker.recognize(image);
+            let text = result?.data?.text ?? "";
+            if (removeLineBreaks) {
+                text = text.replace(/\r?\n/g, "");
+            }
 
             if (showConfidence) {
-                return `Confidence: ${result.data.confidence}%\n\n${result.data.text}`;
+                return `Confidence: ${result.data.confidence}%\n\n${text}`;
             } else {
-                return result.data.text;
+                return text;
             }
         } catch (err) {
             throw new OperationError(`Error performing OCR on image. (${err})`);
