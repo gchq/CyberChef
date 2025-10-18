@@ -1,5 +1,5 @@
 /**
- * Parse QR Code tests
+ * Generate QR Code tests
  *
  * @author GCHQDeveloper581
  * @copyright Crown Copyright 2025
