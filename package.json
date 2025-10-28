@@ -36,7 +36,7 @@
   "browserslist": [
     "Chrome >= 50",
     "Firefox >= 38",
-    "node >= 16"
+    "node >= 20"
   ],
   "devDependencies": {
     "@babel/core": "^7.24.7",
