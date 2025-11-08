@@ -33,7 +33,7 @@ export function toHex(data, delim=" ", padding=2, extraDelim="", lineSize=0) {
     if (data instanceof ArrayBuffer) data = new Uint8Array(data);
 
     let output = "";
-    const prepend = (delim === "0x" || delim === "\\x");
+    const prepend = (delim === "0x" || delim === "\\x" || delim === "%");
 
     for (let i = 0; i < data.length; i++) {
         const hex = data[i].toString(16).padStart(padding, "0");
