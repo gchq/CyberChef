@@ -34,10 +34,29 @@ class KeyToExtendedKey extends Operation {
                 "toggleValues": ["Hex"]
             },
             {
+                "name": "Fingerprint",
+                "type": "toggleString",
+                "value": "00000000",
+                "toggleValues": ["Hex"]
+            },
+            {
+                "name": "Level",
+                "type": "toggleString",
+                "value": 0,
+                "toggleValues": ["Hex", "Number"]
+            },
+            {
                 "name": "Version Type",
                 "type": "option",
                 "value": getVersions()
+            },
+            {
+                "name": "i",
+                "type": "toggleString",
+                "value": 0,
+                "toggleValues": ["Hex", "Number"]
             }
+
         ];
     }
 
@@ -60,16 +79,21 @@ class KeyToExtendedKey extends Operation {
         if (!isPublic && !isPrivate) {
             throw new OperationError("Error: String " + inputAsHex + " is not a valid public or private key.");
         }
-        if (isPublic && privateVersions.indexOf(args[1]) !== -1) {
+        if (isPublic && privateVersions.indexOf(args[3]) !== -1) {
             throw new OperationError("Error: Mis-Match between version and key type. Public Key is entered, but a private version is selected.");
         }
-        if (isPrivate && privateVersions.indexOf(args[1]) === -1) {
+        if (isPrivate && privateVersions.indexOf(args[3]) === -1) {
             throw new OperationError("Error: Mis-Match between version and key type. Private Key is entered, but a public version is selected.");
         }
         const key =  isPrivate ? "00" + inputAsHex : inputAsHex;
-        const newVersion = getExtendedKeyVersion(args[1]);
+        const radix = (args[2].option === "Hex") ? 16 : 10;
+        const level = parseInt(args[2].string, radix);
+        const iRadix = (args[4].option === "Hex") ? 16: 10;
+        const i = parseInt(args[4].string, iRadix);
+        const fingerprint = args[1];
+        const newVersion = getExtendedKeyVersion(args[3]);
 
-        const newExtendedKey = serializeExtendedKeyFunc(newVersion, 0, "00000000", 0, args[0].string, key);
+        const newExtendedKey = serializeExtendedKeyFunc(newVersion, level, fingerprint.string, i, args[0].string, key);
         return newExtendedKey;
 
     }

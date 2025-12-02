@@ -22,7 +22,20 @@ TestRegister.addTests([
                         "option": "Hex",
                         "string": "fedf6c5ebcc2fc7b66291e55501a005886128bf97aeced3a91478a0c44f54dbe"
                     },
-                    "xprv"
+                    {
+                        "option": "Hex",
+                        "string": "00000000"
+                    },
+                    {
+                        "option": "Number",
+                        "string": "0"
+                    },
+                    "xprv",
+                    {
+                        "option": "Number",
+                        "string": "0"
+                    },
+
                 ]
             }
         ],
@@ -39,7 +52,19 @@ TestRegister.addTests([
                         "option": "Hex",
                         "string": "fedf6c5ebcc2fc7b66291e55501a005886128bf97aeced3a91478a0c44f54dbe"
                     },
-                    "yprv"
+                    {
+                        "option": "Hex",
+                        "string": "00000000"
+                    },
+                    {
+                        "option": "Number",
+                        "string": "0"
+                    },
+                    "yprv",
+                    {
+                        "option": "Number",
+                        "string": "0"
+                    }
                 ]
             }
         ],
@@ -56,7 +81,19 @@ TestRegister.addTests([
                         "option": "Hex",
                         "string": "cda6685894f356bdf1bd6af6cb7e3961e550fb9c9b2c82d9ebfd89f48c2afea6"
                     },
-                    "xprv"
+                    {
+                        "option": "Hex",
+                        "string": "00000000"
+                    },
+                    {
+                        "option": "Number",
+                        "string": "0"
+                    },
+                    "xprv",
+                    {
+                        "option": "Number",
+                        "string": "0"
+                    }
                 ]
             }
         ],
@@ -73,7 +110,19 @@ TestRegister.addTests([
                         "option": "Hex",
                         "string": "fedf6c5ebcc2fc7b66291e55501a005886128bf97aeced3a91478a0c44f54dbe"
                     },
-                    "xpub"
+                    {
+                        "option": "Hex",
+                        "string": "00000000"
+                    },
+                    {
+                        "option": "Number",
+                        "string": "0"
+                    },
+                    "xpub",
+                    {
+                        "option": "Number",
+                        "string": "0"
+                    }
                 ]
             }
         ],
