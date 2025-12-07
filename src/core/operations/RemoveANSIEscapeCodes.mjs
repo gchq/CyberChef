@@ -1,0 +1,41 @@
+/**
+ * @author Louis-Ladd [lewisharshman1@gmail.com]
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
+
+/**
+ * Remove ANSI Escape Codes operation
+ */
+class RemoveANSIEscapeCodes extends Operation {
+
+    /**
+     * RemoveANSIEscapeCodes constructor
+     */
+    constructor() {
+        super();
+
+        this.name = "Remove ANSI Escape Codes";
+        this.module = "Default";
+        this.description = "Removes ANSI Escape Codes.";
+        this.infoURL = "https://en.wikipedia.org/wiki/ANSI_escape_code";
+        this.inputType = "string";
+        this.outputType = "string";
+        this.args = [];
+    }
+
+    /**
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
+    run(input, args) {
+        throw new OperationError("Test");
+    }
+
+}
+
+export default RemoveANSIEscapeCodes;
