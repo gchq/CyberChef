@@ -291,6 +291,7 @@
             "Diff",
             "Remove whitespace",
             "Remove null bytes",
+            "Remove ANSI Escape Codes",
             "To Upper case",
             "To Lower case",
             "Swap case",
