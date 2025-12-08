@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation.mjs";
-import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Remove ANSI Escape Codes operation
@@ -33,7 +32,8 @@ class RemoveANSIEscapeCodes extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        throw new OperationError("Test");
+        const ansiRegex = /(?:\x1B|\\x1b|\\033|\\u001b)\[[0-?]*[ -/]*[@-~]/g;
+        return input.replace(ansiRegex, "");
     }
 
 }
