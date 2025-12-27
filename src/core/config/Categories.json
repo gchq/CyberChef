@@ -161,8 +161,7 @@
             "Multiple Bombe",
             "Typex",
             "Lorenz",
-            "Colossus",
-            "SIGABA"
+            "Colossus"
         ]
     },
     {
@@ -220,6 +219,7 @@
             "Subtract",
             "Multiply",
             "Divide",
+	    "Modular Exponentiation",
             "Mean",
             "Median",
             "Standard Deviation",
