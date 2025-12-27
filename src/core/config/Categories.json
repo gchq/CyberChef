@@ -170,7 +170,8 @@
             "SIGABA",
             "Flask Session Decode",
             "Flask Session Sign",
-            "Flask Session Verify"
+            "Flask Session Verify",
+            "Modular Exponentiation"
         ]
     },
     {
@@ -228,9 +229,13 @@
             "Subtract",
             "Multiply",
             "Divide",
+<<<<<<< HEAD
             "Modular Exponentiation",
             "Modular Inverse",
             "Extended GCD",
+=======
+	    "Modular Exponentiation",
+>>>>>>> a4f52f2f (Add Modular Exponentiation operation)
             "Mean",
             "Median",
             "Standard Deviation",
