@@ -219,7 +219,7 @@
             "Subtract",
             "Multiply",
             "Divide",
-	    "Modular Exponentiation",
+            "Modular Exponentiation",
             "Mean",
             "Median",
             "Standard Deviation",
