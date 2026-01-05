@@ -32,7 +32,7 @@ class RemoveANSIEscapeCodes extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const ansiRegex = /(?:\x1B|\\x1b|\\033|\\u001b)\[[0-?]*[ -/]*[@-~]/g;
+        const ansiRegex = /(?:\x1B|\\x1b|\\033|\\u001b|\\e)\[[0-?]*[ -/]*[@-~]/g;
         return input.replace(ansiRegex, "");
     }
 
