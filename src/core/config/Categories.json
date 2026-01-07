@@ -549,6 +549,7 @@
             "P-list Viewer",
             "Disassemble x86",
             "Pseudo-Random Number Generator",
+            "Pseudo-Random Integer Generator",
             "Generate De Bruijn Sequence",
             "Generate UUID",
             "Analyse UUID",
