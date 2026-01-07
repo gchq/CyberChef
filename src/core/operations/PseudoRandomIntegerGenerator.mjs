@@ -57,6 +57,11 @@ class PseudoRandomIntegerGenerator extends Operation {
                 "name": "Delimiter",
                 "type": "option",
                 "value": DELIM_OPTIONS
+            },
+            {
+                "name": "Output",
+                "type": "option",
+                "value": ["Raw", "Hex", "Decimal"]
             }
         ];
 
@@ -71,7 +76,7 @@ class PseudoRandomIntegerGenerator extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [numInts, minInt, maxInt, delimiter] = args;
+        const [numInts, minInt, maxInt, delimiter, outputType] = args;
 
         if (minInt === null || maxInt === null) return "";
 
@@ -96,9 +101,23 @@ class PseudoRandomIntegerGenerator extends Operation {
         for (let i = 0; i < numInts; i++) {
             const result = this._generateRandomValue(rejectionThreshold);
             const intValue = min + (result % range);
-            output.push(intValue.toString());
+
+            switch (outputType) {
+                case "Hex":
+                    output.push(intValue.toString(16));
+                    break;
+                case "Decimal":
+                    output.push(intValue.toString(10));
+                    break;
+                case "Raw":
+                default:
+                    output.push(Utils.chr(intValue));
+            }
         }
 
+        if (outputType === "Raw") {
+            return output.join("");
+        }
         return output.join(delim);
     }
 
