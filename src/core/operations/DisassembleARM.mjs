@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
+import cs from "@alexaltea/capstone-js/dist/capstone.min.js";
 
 /**
  * Disassemble ARM operation
@@ -95,13 +96,6 @@ class DisassembleARM extends Operation {
         for (let i = 0; i < hexInput.length; i += 2) {
             bytes.push(parseInt(hexInput.substr(i, 2), 16));
         }
-
-        if (isWorkerEnvironment()) {
-            self.sendStatusMessage("Loading Capstone disassembler...");
-        }
-
-        // Dynamically import capstone to avoid loading the large library until needed
-        const cs = (await import("@alexaltea/capstone-js/dist/capstone.min.js")).default;
 
         // Determine architecture constant
         let arch;
