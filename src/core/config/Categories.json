@@ -548,6 +548,7 @@
             "Chi Square",
             "P-list Viewer",
             "Disassemble x86",
+            "Disassemble ARM",
             "Pseudo-Random Number Generator",
             "Generate De Bruijn Sequence",
             "Generate UUID",
