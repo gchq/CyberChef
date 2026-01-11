@@ -3,7 +3,7 @@
  * ECB and CBC block modes.
  *
  * PRESENT is an ultra-lightweight block cipher designed for constrained environments.
- * Standardized in ISO/IEC 29192-2:2019.
+ * Standardised in ISO/IEC 29192-2:2019.
  *
  * Reference: "PRESENT: An Ultra-Lightweight Block Cipher"
  * https://link.springer.com/chapter/10.1007/978-3-540-74735-2_31

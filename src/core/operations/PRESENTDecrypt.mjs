@@ -23,7 +23,7 @@ class PRESENTDecrypt extends Operation {
 
         this.name = "PRESENT Decrypt";
         this.module = "Ciphers";
-        this.description = "PRESENT is an ultra-lightweight block cipher designed for constrained environments such as RFID tags and sensor networks. It operates on 64-bit blocks and supports 80-bit or 128-bit keys with 31 rounds. Standardized in ISO/IEC 29192-2:2019.<br><br>When using CBC mode, the PKCS#7 padding scheme is used.";
+        this.description = "PRESENT is an ultra-lightweight block cipher designed for constrained environments such as RFID tags and sensor networks. It operates on 64-bit blocks and supports 80-bit or 128-bit keys with 31 rounds. Standardised in ISO/IEC 29192-2:2019.<br><br>When using CBC mode, the PKCS#7 padding scheme is used.";
         this.infoURL = "https://wikipedia.org/wiki/PRESENT_(cipher)";
         this.inputType = "string";
         this.outputType = "string";
