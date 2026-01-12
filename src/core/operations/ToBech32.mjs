@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import { encode } from "../lib/Bech32.mjs";
+import { fromHex } from "../lib/Hex.mjs";
 
 /**
  * To Bech32 operation
@@ -38,7 +39,7 @@ class ToBech32 extends Operation {
             {
                 "name": "Input Format",
                 "type": "option",
-                "value": ["Raw bytes", "Bitcoin SegWit (version + program)"]
+                "value": ["Raw bytes", "Hex", "Bitcoin SegWit (version + program)"]
             }
         ];
     }
@@ -53,7 +54,15 @@ class ToBech32 extends Operation {
         const encoding = args[1];
         const inputFormat = args[2];
 
-        const inputArray = new Uint8Array(input);
+        let inputArray;
+        if (inputFormat === "Hex") {
+            // Convert hex string to bytes
+            const hexStr = new TextDecoder().decode(new Uint8Array(input)).replace(/\s/g, "");
+            inputArray = fromHex(hexStr);
+        } else {
+            inputArray = new Uint8Array(input);
+        }
+
         const segwit = inputFormat === "Bitcoin SegWit (version + program)";
 
         return encode(hrp, inputArray, encoding, segwit);

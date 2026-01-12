@@ -34,7 +34,7 @@ class FromBech32 extends Operation {
             {
                 "name": "Output Format",
                 "type": "option",
-                "value": ["Hex", "Bitcoin scriptPubKey", "Raw", "HRP: Hex", "JSON"]
+                "value": ["Raw", "Hex", "Bitcoin scriptPubKey", "HRP: Hex", "JSON"]
             }
         ];
         this.checks = [
