@@ -24,7 +24,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Bech32",
-                "args": ["bc", "Bech32", "Raw bytes"]
+                "args": ["bc", "Bech32", "Raw bytes", "Generic", 0]
             }
         ],
     },
@@ -35,7 +35,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Bech32",
-                "args": ["bc", "Bech32", "Raw bytes"]
+                "args": ["bc", "Bech32", "Raw bytes", "Generic", 0]
             }
         ],
     },
@@ -46,7 +46,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Bech32",
-                "args": ["bc", "Bech32", "Raw bytes"]
+                "args": ["bc", "Bech32", "Raw bytes", "Generic", 0]
             }
         ],
     },
@@ -57,7 +57,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Bech32",
-                "args": ["custom", "Bech32", "Raw bytes"]
+                "args": ["custom", "Bech32", "Raw bytes", "Generic", 0]
             }
         ],
     },
@@ -68,7 +68,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Bech32",
-                "args": ["tb", "Bech32", "Raw bytes"]
+                "args": ["tb", "Bech32", "Raw bytes", "Generic", 0]
             }
         ],
     },
@@ -79,7 +79,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Bech32",
-                "args": ["bc", "Bech32m", "Raw bytes"]
+                "args": ["bc", "Bech32m", "Raw bytes", "Generic", 0]
             }
         ],
     },
@@ -90,7 +90,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Bech32",
-                "args": ["bc", "Bech32m", "Raw bytes"]
+                "args": ["bc", "Bech32m", "Raw bytes", "Generic", 0]
             }
         ],
     },
@@ -101,7 +101,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Bech32",
-                "args": ["bc", "Bech32m", "Raw bytes"]
+                "args": ["bc", "Bech32m", "Raw bytes", "Generic", 0]
             }
         ],
     },
@@ -112,7 +112,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Bech32",
-                "args": ["", "Bech32", "Raw bytes"]
+                "args": ["", "Bech32", "Raw bytes", "Generic", 0]
             }
         ],
     },
@@ -576,101 +576,45 @@ TestRegister.addTests([
     // ============= Bitcoin SegWit Encoding Tests =============
     {
         name: "To Bech32: Bitcoin SegWit v0 P2WPKH",
-        input: "00751e76e8199196d454941c45d1b3a323f1433bd6",
+        input: "751e76e8199196d454941c45d1b3a323f1433bd6",
         expectedOutput: "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
         recipeConfig: [
             {
-                "op": "From Hex",
-                "args": ["Auto"]
-            },
-            {
                 "op": "To Bech32",
-                "args": ["bc", "Bech32", "Bitcoin SegWit (version + program)"]
+                "args": ["bc", "Bech32", "Hex", "Bitcoin SegWit", 0]
             }
         ],
     },
     {
         name: "To Bech32: Bitcoin SegWit v0 P2WSH testnet",
-        input: "001863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262",
+        input: "1863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262",
         expectedOutput: "tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7",
         recipeConfig: [
             {
-                "op": "From Hex",
-                "args": ["Auto"]
-            },
-            {
                 "op": "To Bech32",
-                "args": ["tb", "Bech32", "Bitcoin SegWit (version + program)"]
+                "args": ["tb", "Bech32", "Hex", "Bitcoin SegWit", 0]
             }
         ],
     },
     {
         name: "To Bech32m: Bitcoin Taproot v1",
-        input: "0179be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+        input: "79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
         expectedOutput: "bc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqzk5jj0",
         recipeConfig: [
             {
-                "op": "From Hex",
-                "args": ["Auto"]
-            },
-            {
                 "op": "To Bech32",
-                "args": ["bc", "Bech32m", "Bitcoin SegWit (version + program)"]
+                "args": ["bc", "Bech32m", "Hex", "Bitcoin SegWit", 1]
             }
         ],
     },
     {
         name: "To Bech32m: Bitcoin SegWit v16",
-        input: "10751e",
+        input: "751e",
         expectedOutput: "bc1sw50qgdz25j",
         recipeConfig: [
             {
-                "op": "From Hex",
-                "args": ["Auto"]
-            },
-            {
                 "op": "To Bech32",
-                "args": ["bc", "Bech32m", "Bitcoin SegWit (version + program)"]
-            }
-        ],
-    },
-
-    // ============= Bitcoin Address Round-trip Tests =============
-    {
-        name: "Bitcoin SegWit v0: decode to scriptPubKey then encode back",
-        input: "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
-        expectedOutput: "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
-        recipeConfig: [
-            {
-                "op": "From Bech32",
-                "args": ["Auto-detect", "Hex"]
-            },
-            {
-                "op": "From Hex",
-                "args": ["Auto"]
-            },
-            {
-                "op": "To Bech32",
-                "args": ["bc", "Bech32", "Bitcoin SegWit (version + program)"]
-            }
-        ],
-    },
-    {
-        name: "Bitcoin Taproot v1: decode to scriptPubKey then encode back",
-        input: "bc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqzk5jj0",
-        expectedOutput: "bc1p0xlxvlhemja6c4dqv22uapctqupfhlxm9h8z3k2e72q4k9hcz7vqzk5jj0",
-        recipeConfig: [
-            {
-                "op": "From Bech32",
-                "args": ["Auto-detect", "Hex"]
-            },
-            {
-                "op": "From Hex",
-                "args": ["Auto"]
-            },
-            {
-                "op": "To Bech32",
-                "args": ["bc", "Bech32m", "Bitcoin SegWit (version + program)"]
+                "args": ["bc", "Bech32m", "Hex", "Bitcoin SegWit", 16]
             }
         ],
     },
@@ -683,7 +627,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Bech32",
-                "args": ["test", "Bech32", "Raw bytes"]
+                "args": ["test", "Bech32", "Raw bytes", "Generic", 0]
             },
             {
                 "op": "From Bech32",
@@ -698,7 +642,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Bech32",
-                "args": ["test", "Bech32m", "Raw bytes"]
+                "args": ["test", "Bech32m", "Raw bytes", "Generic", 0]
             },
             {
                 "op": "From Bech32",
@@ -717,7 +661,7 @@ TestRegister.addTests([
             },
             {
                 "op": "To Bech32",
-                "args": ["bc", "Bech32", "Raw bytes"]
+                "args": ["bc", "Bech32", "Raw bytes", "Generic", 0]
             },
             {
                 "op": "From Bech32",
@@ -732,7 +676,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Bech32",
-                "args": ["cyberchef", "Bech32", "Raw bytes"]
+                "args": ["cyberchef", "Bech32", "Raw bytes", "Generic", 0]
             },
             {
                 "op": "From Bech32",
@@ -747,7 +691,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "To Bech32",
-                "args": ["cyberchef", "Bech32m", "Raw bytes"]
+                "args": ["cyberchef", "Bech32m", "Raw bytes", "Generic", 0]
             },
             {
                 "op": "From Bech32",

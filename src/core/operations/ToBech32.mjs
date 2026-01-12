@@ -39,7 +39,18 @@ class ToBech32 extends Operation {
             {
                 "name": "Input Format",
                 "type": "option",
-                "value": ["Raw bytes", "Hex", "Bitcoin SegWit (version + program)"]
+                "value": ["Raw bytes", "Hex"]
+            },
+            {
+                "name": "Mode",
+                "type": "option",
+                "value": ["Generic", "Bitcoin SegWit"]
+            },
+            {
+                "name": "Witness Version",
+                "type": "number",
+                "value": 0,
+                "hint": "SegWit witness version (0-16). Only used in Bitcoin SegWit mode."
             }
         ];
     }
@@ -53,6 +64,8 @@ class ToBech32 extends Operation {
         const hrp = args[0];
         const encoding = args[1];
         const inputFormat = args[2];
+        const mode = args[3];
+        const witnessVersion = args[4];
 
         let inputArray;
         if (inputFormat === "Hex") {
@@ -63,9 +76,15 @@ class ToBech32 extends Operation {
             inputArray = new Uint8Array(input);
         }
 
-        const segwit = inputFormat === "Bitcoin SegWit (version + program)";
+        if (mode === "Bitcoin SegWit") {
+            // Prepend witness version to the input data
+            const withVersion = new Uint8Array(inputArray.length + 1);
+            withVersion[0] = witnessVersion;
+            withVersion.set(inputArray, 1);
+            return encode(hrp, withVersion, encoding, true);
+        }
 
-        return encode(hrp, inputArray, encoding, segwit);
+        return encode(hrp, inputArray, encoding, false);
     }
 
 }
