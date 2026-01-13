@@ -249,6 +249,13 @@ optgroup {
 }
 
 
+/* Bootstrap form inside CodeMirror editor */
+
+.cm-panel > .bmd-form-group {
+  padding-top: 0;
+}
+
+
 /* CodeMirror */
 
 .ͼ2 .cm-specialChar,
