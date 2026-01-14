@@ -6,7 +6,7 @@
  * https://datatracker.ietf.org/doc/html/draft-krovetz-rc6-rc5-vectors-00
  *
  * Note: PKCS5 padding adds an extra block when input is exactly block-aligned.
- * Round-trip tests verify correct encryption/decryption behavior.
+ * Round-trip tests verify correct encryption/decryption behaviour.
  *
  * @author Medjedtxm
  * @copyright Crown Copyright 2026
@@ -247,7 +247,7 @@ TestRegister.addTests([
                 op: "RC6 Encrypt",
                 args: [
                     { string: "mypassword123456", option: "UTF8" },
-                    { string: "initializevec123", option: "UTF8" },
+                    { string: "initialisevec123", option: "UTF8" },
                     "CBC", "Raw", "Hex", "PKCS5"
                 ]
             },
@@ -255,7 +255,7 @@ TestRegister.addTests([
                 op: "RC6 Decrypt",
                 args: [
                     { string: "mypassword123456", option: "UTF8" },
-                    { string: "initializevec123", option: "UTF8" },
+                    { string: "initialisevec123", option: "UTF8" },
                     "CBC", "Hex", "Raw", "PKCS5"
                 ]
             }
