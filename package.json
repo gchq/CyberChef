@@ -143,7 +143,7 @@
     "jsesc": "^3.0.2",
     "json5": "^2.2.3",
     "jsonata": "^2.0.3",
-    "jsonpath-plus": "^9.0.0",
+    "jsonpath-plus": "^10.3.0",
     "jsonwebtoken": "8.5.1",
     "jsqr": "^1.4.0",
     "jsrsasign": "^11.1.0",
