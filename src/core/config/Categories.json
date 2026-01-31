@@ -20,6 +20,8 @@
             "From Binary",
             "To Octal",
             "From Octal",
+            "To IEEEBinary",
+            "From IEEEBinary",
             "To Base32",
             "From Base32",
             "To Base45",
