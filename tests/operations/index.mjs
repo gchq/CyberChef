@@ -85,6 +85,7 @@ import "./tests/HaversineDistance.mjs";
 import "./tests/Hex.mjs";
 import "./tests/Hexdump.mjs";
 import "./tests/HKDF.mjs";
+import "./tests/IEEEBinary.mjs";
 import "./tests/Image.mjs";
 import "./tests/IndexOfCoincidence.mjs";
 import "./tests/JA3Fingerprint.mjs";
