@@ -95,11 +95,6 @@ class RC6Decrypt extends Operation {
         const blockSize = getBlockSize(wordSize);
         const defaultRounds = getDefaultRounds(wordSize);
 
-        if (key.length === 0)
-            throw new OperationError(`Invalid key length: ${key.length} bytes
-
-RC6 requires a key of at least 1 byte.`);
-
         if (iv.length !== blockSize && iv.length !== 0 && mode !== "ECB")
             throw new OperationError(`Invalid IV length: ${iv.length} bytes
 

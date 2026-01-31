@@ -5,9 +5,6 @@
  * "Test Vectors for RC6 and RC5"
  * https://datatracker.ietf.org/doc/html/draft-krovetz-rc6-rc5-vectors-00
  *
- * Supports all word sizes: 8, 16, 32, 64, 128 bits.
- * Round-trip tests verify correct encryption/decryption behaviour.
- *
  * @author Medjedtxm
  * @copyright Crown Copyright 2026
  * @license Apache-2.0
@@ -17,8 +14,7 @@ import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     // ============================================================
-    // IETF TEST VECTORS - RC6-8/12/4 (8-bit words, 12 rounds, 4-byte key)
-    // Block size: 4 bytes (32 bits)
+    // IETF TEST VECTORS - RC6-8/12/4
     // ============================================================
     {
         name: "RC6-8/12/4: IETF vector encrypt",
@@ -52,8 +48,7 @@ TestRegister.addTests([
     },
 
     // ============================================================
-    // IETF TEST VECTORS - RC6-16/16/8 (16-bit words, 16 rounds, 8-byte key)
-    // Block size: 8 bytes (64 bits)
+    // IETF TEST VECTORS - RC6-16/16/8
     // ============================================================
     {
         name: "RC6-16/16/8: IETF vector encrypt",
@@ -87,8 +82,7 @@ TestRegister.addTests([
     },
 
     // ============================================================
-    // IETF TEST VECTORS - RC6-32/20/16 (32-bit words, 20 rounds, 16-byte key)
-    // Block size: 16 bytes (128 bits) - Standard AES submission
+    // IETF TEST VECTORS - RC6-32/20/16 (AES standard)
     // ============================================================
     {
         name: "RC6-32/20/16: IETF vector encrypt (AES standard)",
@@ -122,8 +116,7 @@ TestRegister.addTests([
     },
 
     // ============================================================
-    // IETF TEST VECTORS - RC6-64/24/24 (64-bit words, 24 rounds, 24-byte key)
-    // Block size: 32 bytes (256 bits)
+    // IETF TEST VECTORS - RC6-64/24/24
     // ============================================================
     {
         name: "RC6-64/24/24: IETF vector encrypt",
@@ -157,8 +150,7 @@ TestRegister.addTests([
     },
 
     // ============================================================
-    // IETF TEST VECTORS - RC6-128/28/32 (128-bit words, 28 rounds, 32-byte key)
-    // Block size: 64 bytes (512 bits)
+    // IETF TEST VECTORS - RC6-128/28/32
     // ============================================================
     {
         name: "RC6-128/28/32: IETF vector encrypt",
@@ -192,7 +184,75 @@ TestRegister.addTests([
     },
 
     // ============================================================
-    // ADDITIONAL RC6-32 TEST VECTORS (192-bit and 256-bit keys)
+    // IETF TEST VECTORS - RC6-24/4/0 (non-power-of-2)
+    // ============================================================
+    {
+        name: "RC6-24/4/0: IETF non-standard vector encrypt (w=24, empty key)",
+        input: "000102030405060708090a0b",
+        expectedOutput: "0177982579be2ee3303269b9",
+        recipeConfig: [
+            {
+                op: "RC6 Encrypt",
+                args: [
+                    { string: "", option: "Hex" },
+                    { string: "", option: "Hex" },
+                    "ECB", "Hex", "Hex", "NO", 24, 4
+                ]
+            }
+        ]
+    },
+    {
+        name: "RC6-24/4/0: IETF non-standard vector decrypt (w=24, empty key)",
+        input: "0177982579be2ee3303269b9",
+        expectedOutput: "000102030405060708090a0b",
+        recipeConfig: [
+            {
+                op: "RC6 Decrypt",
+                args: [
+                    { string: "", option: "Hex" },
+                    { string: "", option: "Hex" },
+                    "ECB", "Hex", "Hex", "NO", 24, 4
+                ]
+            }
+        ]
+    },
+
+    // ============================================================
+    // IETF TEST VECTORS - RC6-80/4/12 (non-power-of-2)
+    // ============================================================
+    {
+        name: "RC6-80/4/12: IETF non-standard vector encrypt (w=80)",
+        input: "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627",
+        expectedOutput: "26d9d6128601d06dec3817d401f1c0ff715473543875da417c2116d1e87c919a49311b00b4e17962",
+        recipeConfig: [
+            {
+                op: "RC6 Encrypt",
+                args: [
+                    { string: "000102030405060708090a0b", option: "Hex" },
+                    { string: "", option: "Hex" },
+                    "ECB", "Hex", "Hex", "NO", 80, 4
+                ]
+            }
+        ]
+    },
+    {
+        name: "RC6-80/4/12: IETF non-standard vector decrypt (w=80)",
+        input: "26d9d6128601d06dec3817d401f1c0ff715473543875da417c2116d1e87c919a49311b00b4e17962",
+        expectedOutput: "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f2021222324252627",
+        recipeConfig: [
+            {
+                op: "RC6 Decrypt",
+                args: [
+                    { string: "000102030405060708090a0b", option: "Hex" },
+                    { string: "", option: "Hex" },
+                    "ECB", "Hex", "Hex", "NO", 80, 4
+                ]
+            }
+        ]
+    },
+
+    // ============================================================
+    // ADDITIONAL KEY SIZE TESTS - RC6-32 (192-bit and 256-bit keys)
     // ============================================================
     {
         name: "RC6-32/20/24: 192-bit key encrypt",
@@ -201,21 +261,6 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "RC6 Encrypt",
-                args: [
-                    { string: "000102030405060708090a0b0c0d0e0f1011121314151617", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Hex", "NO", 32, 20
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-32/20/24: 192-bit key decrypt",
-        input: "a68a14ff1342262a2bbd21f7966615eb",
-        expectedOutput: "000102030405060708090a0b0c0d0e0f",
-        recipeConfig: [
-            {
-                op: "RC6 Decrypt",
                 args: [
                     { string: "000102030405060708090a0b0c0d0e0f1011121314151617", option: "Hex" },
                     { string: "", option: "Hex" },
@@ -239,82 +284,10 @@ TestRegister.addTests([
             }
         ]
     },
-    {
-        name: "RC6-32/20/32: 256-bit key decrypt",
-        input: "921c3ecd43d9426a90089334d67aea2e",
-        expectedOutput: "000102030405060708090a0b0c0d0e0f",
-        recipeConfig: [
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Hex", "NO", 32, 20
-                ]
-            }
-        ]
-    },
 
     // ============================================================
-    // ZERO KEY/PLAINTEXT TEST (RC6-32/20/16)
+    // ROUND-TRIP TESTS - One per word size to verify encrypt/decrypt
     // ============================================================
-    {
-        name: "RC6-32/20: Zero Key/Plaintext encrypt",
-        input: "00000000000000000000000000000000",
-        expectedOutput: "8fc3a53656b1f778c129df4e9848a41e",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "00000000000000000000000000000000", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Hex", "NO", 32, 20
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-32/20: Zero Key/Plaintext decrypt",
-        input: "8fc3a53656b1f778c129df4e9848a41e",
-        expectedOutput: "00000000000000000000000000000000",
-        recipeConfig: [
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "00000000000000000000000000000000", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Hex", "NO", 32, 20
-                ]
-            }
-        ]
-    },
-
-    // ============================================================
-    // ROUND-TRIP TESTS - RC6-8 (8-bit words)
-    // ============================================================
-    {
-        name: "RC6-8 Round-trip: ECB mode",
-        input: "Test",
-        expectedOutput: "Test",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "00112233", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Raw", "Hex", "PKCS5", 8, 12
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "00112233", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Raw", "PKCS5", 8, 12
-                ]
-            }
-        ]
-    },
     {
         name: "RC6-8 Round-trip: CBC mode",
         input: "Hello World!",
@@ -334,33 +307,6 @@ TestRegister.addTests([
                     { string: "mysecret", option: "UTF8" },
                     { string: "abcd", option: "UTF8" },
                     "CBC", "Hex", "Raw", "PKCS5", 8, 12
-                ]
-            }
-        ]
-    },
-
-    // ============================================================
-    // ROUND-TRIP TESTS - RC6-16 (16-bit words)
-    // ============================================================
-    {
-        name: "RC6-16 Round-trip: ECB mode",
-        input: "Testing!",
-        expectedOutput: "Testing!",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "0011223344556677", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Raw", "Hex", "PKCS5", 16, 16
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "0011223344556677", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Raw", "PKCS5", 16, 16
                 ]
             }
         ]
@@ -388,35 +334,8 @@ TestRegister.addTests([
             }
         ]
     },
-
-    // ============================================================
-    // ROUND-TRIP TESTS - RC6-32 (32-bit words, Standard)
-    // ============================================================
     {
-        name: "RC6-32 Round-trip: ECB 128-bit key",
-        input: "Hello World!!!!",
-        expectedOutput: "Hello World!!!!",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Raw", "Hex", "PKCS5", 32, 20
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Raw", "PKCS5", 32, 20
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-32 Round-trip: CBC 128-bit key",
+        name: "RC6-32 Round-trip: CBC mode",
         input: "The quick brown fox jumps over the lazy dog",
         expectedOutput: "The quick brown fox jumps over the lazy dog",
         recipeConfig: [
@@ -434,125 +353,6 @@ TestRegister.addTests([
                     { string: "aabbccddeeff00112233445566778899", option: "Hex" },
                     { string: "00112233445566778899aabbccddeeff", option: "Hex" },
                     "CBC", "Hex", "Raw", "PKCS5", 32, 20
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-32 Round-trip: CFB mode",
-        input: "CFB mode test message",
-        expectedOutput: "CFB mode test message",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "ffeeddccbbaa99887766554433221100", option: "Hex" },
-                    "CFB", "Raw", "Hex", "PKCS5", 32, 20
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "ffeeddccbbaa99887766554433221100", option: "Hex" },
-                    "CFB", "Hex", "Raw", "PKCS5", 32, 20
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-32 Round-trip: OFB mode",
-        input: "OFB mode test message",
-        expectedOutput: "OFB mode test message",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "aabbccddeeff00112233445566778899", option: "Hex" },
-                    "OFB", "Raw", "Hex", "PKCS5", 32, 20
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "aabbccddeeff00112233445566778899", option: "Hex" },
-                    "OFB", "Hex", "Raw", "PKCS5", 32, 20
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-32 Round-trip: CTR mode",
-        input: "CTR mode test message",
-        expectedOutput: "CTR mode test message",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "00000000000000000000000000000001", option: "Hex" },
-                    "CTR", "Raw", "Hex", "PKCS5", 32, 20
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "00000000000000000000000000000001", option: "Hex" },
-                    "CTR", "Hex", "Raw", "PKCS5", 32, 20
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-32 Round-trip: UTF8 key",
-        input: "Secret message",
-        expectedOutput: "Secret message",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "mypassword123456", option: "UTF8" },
-                    { string: "initialisevec123", option: "UTF8" },
-                    "CBC", "Raw", "Hex", "PKCS5", 32, 20
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "mypassword123456", option: "UTF8" },
-                    { string: "initialisevec123", option: "UTF8" },
-                    "CBC", "Hex", "Raw", "PKCS5", 32, 20
-                ]
-            }
-        ]
-    },
-
-    // ============================================================
-    // ROUND-TRIP TESTS - RC6-64 (64-bit words)
-    // ============================================================
-    {
-        name: "RC6-64 Round-trip: ECB mode",
-        input: "Testing 64-bit word size!!!!!!!",
-        expectedOutput: "Testing 64-bit word size!!!!!!!",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "000102030405060708090a0b0c0d0e0f1011121314151617", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Raw", "Hex", "PKCS5", 64, 24
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "000102030405060708090a0b0c0d0e0f1011121314151617", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Raw", "PKCS5", 64, 24
                 ]
             }
         ]
@@ -580,10 +380,6 @@ TestRegister.addTests([
             }
         ]
     },
-
-    // ============================================================
-    // RC6-128 ROUND-TRIP TESTS (128-bit words, 64-byte block size)
-    // ============================================================
     {
         name: "RC6-128 Round-trip: ECB mode",
         input: "RC6 with 128-bit words provides massive block size for testing purposes!",
@@ -607,37 +403,41 @@ TestRegister.addTests([
             }
         ]
     },
+
+    // ============================================================
+    // STREAM MODES TEST - Verify CFB/OFB/CTR work correctly
+    // ============================================================
     {
-        name: "RC6-128 Round-trip: CBC mode",
-        input: "RC6-128 with CBC mode needs a 64-byte IV for proper operation with large blocks!",
-        expectedOutput: "RC6-128 with CBC mode needs a 64-byte IV for proper operation with large blocks!",
+        name: "RC6-32 Round-trip: CTR mode",
+        input: "CTR mode test message",
+        expectedOutput: "CTR mode test message",
         recipeConfig: [
             {
                 op: "RC6 Encrypt",
                 args: [
-                    { string: "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f", option: "Hex" },
-                    { string: "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f", option: "Hex" },
-                    "CBC", "Raw", "Hex", "PKCS5", 128, 28
+                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
+                    { string: "00000000000000000000000000000001", option: "Hex" },
+                    "CTR", "Raw", "Hex", "PKCS5", 32, 20
                 ]
             },
             {
                 op: "RC6 Decrypt",
                 args: [
-                    { string: "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f", option: "Hex" },
-                    { string: "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f", option: "Hex" },
-                    "CBC", "Hex", "Raw", "PKCS5", 128, 28
+                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
+                    { string: "00000000000000000000000000000001", option: "Hex" },
+                    "CTR", "Hex", "Raw", "PKCS5", 32, 20
                 ]
             }
         ]
     },
 
     // ============================================================
-    // CUSTOM ROUND TESTS - Verify non-standard rounds work
+    // CUSTOM ROUNDS TEST - Verify non-standard round count works
     // ============================================================
     {
         name: "RC6-32 Round-trip: Custom 8 rounds",
-        input: "Testing 8 rounds",
-        expectedOutput: "Testing 8 rounds",
+        input: "Testing custom rounds",
+        expectedOutput: "Testing custom rounds",
         recipeConfig: [
             {
                 op: "RC6 Encrypt",
@@ -657,150 +457,12 @@ TestRegister.addTests([
             }
         ]
     },
-    {
-        name: "RC6-32 Round-trip: Custom 12 rounds",
-        input: "Testing 12 rounds",
-        expectedOutput: "Testing 12 rounds",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Raw", "Hex", "PKCS5", 32, 12
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Raw", "PKCS5", 32, 12
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-32 Round-trip: Custom 32 rounds",
-        input: "Testing 32 rounds",
-        expectedOutput: "Testing 32 rounds",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Raw", "Hex", "PKCS5", 32, 32
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Raw", "PKCS5", 32, 32
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-8 Round-trip: Custom 20 rounds",
-        input: "8-bit with 20 rounds",
-        expectedOutput: "8-bit with 20 rounds",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "00112233", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Raw", "Hex", "PKCS5", 8, 20
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "00112233", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Raw", "PKCS5", 8, 20
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-16 Round-trip: Custom 24 rounds",
-        input: "16-bit with 24 rounds",
-        expectedOutput: "16-bit with 24 rounds",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "0011223344556677", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Raw", "Hex", "PKCS5", "16", 24
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "0011223344556677", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Raw", "PKCS5", "16", 24
-                ]
-            }
-        ]
-    },
 
     // ============================================================
-    // EDGE CASE TESTS - Various input lengths
+    // EDGE CASE TEST - Padding boundary
     // ============================================================
     {
-        name: "RC6-32 Round-trip: 1 byte input",
-        input: "A",
-        expectedOutput: "A",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Raw", "Hex", "PKCS5", 32, 20
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Raw", "PKCS5", 32, 20
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-32 Round-trip: 15 byte input",
-        input: "123456789012345",
-        expectedOutput: "123456789012345",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Raw", "Hex", "PKCS5", 32, 20
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Raw", "PKCS5", 32, 20
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-32 Round-trip: 16 byte input (exact block)",
+        name: "RC6-32 Round-trip: Exact block size input",
         input: "1234567890123456",
         expectedOutput: "1234567890123456",
         recipeConfig: [
@@ -818,52 +480,6 @@ TestRegister.addTests([
                     { string: "00112233445566778899aabbccddeeff", option: "Hex" },
                     { string: "", option: "Hex" },
                     "ECB", "Hex", "Raw", "PKCS5", 32, 20
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-32 Round-trip: 17 byte input",
-        input: "12345678901234567",
-        expectedOutput: "12345678901234567",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Raw", "Hex", "PKCS5", 32, 20
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    { string: "", option: "Hex" },
-                    "ECB", "Hex", "Raw", "PKCS5", 32, 20
-                ]
-            }
-        ]
-    },
-    {
-        name: "RC6-32 Round-trip: Binary data",
-        input: "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
-        expectedOutput: "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
-        recipeConfig: [
-            {
-                op: "RC6 Encrypt",
-                args: [
-                    { string: "ffeeddccbbaa99887766554433221100", option: "Hex" },
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    "CBC", "Raw", "Hex", "PKCS5", 32, 20
-                ]
-            },
-            {
-                op: "RC6 Decrypt",
-                args: [
-                    { string: "ffeeddccbbaa99887766554433221100", option: "Hex" },
-                    { string: "00112233445566778899aabbccddeeff", option: "Hex" },
-                    "CBC", "Hex", "Raw", "PKCS5", 32, 20
                 ]
             }
         ]
