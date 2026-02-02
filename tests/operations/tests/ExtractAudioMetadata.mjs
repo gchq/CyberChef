@@ -1,7 +1,7 @@
 /**
  * Extract Audio Metadata operation tests.
  *
- * @author d0s1nt [d0s1nt@cyberchefaudio]
+ * @author d0s1nt
  * @copyright Crown Copyright 2025
  * @license Apache-2.0
  */
