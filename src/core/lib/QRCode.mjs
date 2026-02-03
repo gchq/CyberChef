@@ -10,7 +10,7 @@ import OperationError from "../errors/OperationError.mjs";
 import jsQR from "jsqr";
 import qr from "qr-image";
 import Utils from "../Utils.mjs";
-import Jimp from "jimp/es/index.js";
+import { Jimp, JimpMime } from "jimp";
 
 /**
  * Parses a QR code image from an image
@@ -29,18 +29,31 @@ export async function parseQrCode(input, normalise) {
 
     try {
         if (normalise) {
-            image.rgba(false);
-            image.background(0xFFFFFFFF);
-            image.normalize();
             image.greyscale();
-            image = await image.getBufferAsync(Jimp.MIME_JPEG);
-            image = await Jimp.read(image);
+            image.normalize();
         }
     } catch (err) {
         throw new OperationError(`Error normalising image. (${err})`);
     }
 
-    const qrData = jsQR(image.bitmap.data, image.getWidth(), image.getHeight());
+    // Remove transparency which jsQR cannot handle
+    image.scan((x, y, idx) => {
+        // If pixel is fully transparent, make it opaque white
+        if (image.bitmap.data[idx + 3] === 0x00) {
+            image.bitmap.data[idx + 0] = 0xff;
+            image.bitmap.data[idx + 1] = 0xff;
+            image.bitmap.data[idx + 2] = 0xff;
+        }
+        // Otherwise, make it fully opaque at its existing colour
+        image.bitmap.data[idx + 3] = 0xff;
+    });
+    image = await Jimp.read(await image.getBuffer(JimpMime.jpeg));
+
+    const qrData = jsQR(
+        new Uint8ClampedArray(image.bitmap.data),
+        image.width,
+        image.height,
+    );
     if (qrData) {
         return qrData.data;
     } else {
@@ -58,7 +71,13 @@ export async function parseQrCode(input, normalise) {
  * @param {string} errorCorrection
  * @returns {ArrayBuffer}
  */
-export function generateQrCode(input, format, moduleSize, margin, errorCorrection) {
+export function generateQrCode(
+    input,
+    format,
+    moduleSize,
+    margin,
+    errorCorrection,
+) {
     const formats = ["SVG", "EPS", "PDF", "PNG"];
     if (!formats.includes(format.toUpperCase())) {
         throw new OperationError("Unsupported QR code format.");
@@ -70,7 +89,7 @@ export function generateQrCode(input, format, moduleSize, margin, errorCorrectio
             type: format,
             size: moduleSize,
             margin: margin,
-            "ec_level": errorCorrection.charAt(0).toUpperCase()
+            ec_level: errorCorrection.charAt(0).toUpperCase(),
         });
     } catch (err) {
         throw new OperationError(`Error generating QR code. (${err})`);

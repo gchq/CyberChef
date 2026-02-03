@@ -10,13 +10,12 @@ import { isWorkerEnvironment } from "../Utils.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import { gaussianBlur } from "../lib/ImageManipulation.mjs";
-import Jimp from "jimp/es/index.js";
+import { Jimp, JimpMime } from "jimp";
 
 /**
  * Blur Image operation
  */
 class BlurImage extends Operation {
-
     /**
      * BlurImage constructor
      */
@@ -25,7 +24,8 @@ class BlurImage extends Operation {
 
         this.name = "Blur Image";
         this.module = "Image";
-        this.description = "Applies a blur effect to the image.<br><br>Gaussian blur is much slower than fast blur, but produces better results.";
+        this.description =
+            "Applies a blur effect to the image.<br><br>Gaussian blur is much slower than fast blur, but produces better results.";
         this.infoURL = "https://wikipedia.org/wiki/Gaussian_blur";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -35,13 +35,13 @@ class BlurImage extends Operation {
                 name: "Amount",
                 type: "number",
                 value: 5,
-                min: 1
+                min: 1,
             },
             {
                 name: "Type",
                 type: "option",
-                value: ["Fast", "Gaussian"]
-            }
+                value: ["Fast", "Gaussian"],
+            },
         ];
     }
 
@@ -78,10 +78,10 @@ class BlurImage extends Operation {
             }
 
             let imageBuffer;
-            if (image.getMIME() === "image/gif") {
-                imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
+            if (image.mime === "image/gif") {
+                imageBuffer = await image.getBuffer(JimpMime.png);
             } else {
-                imageBuffer = await image.getBufferAsync(Jimp.AUTO);
+                imageBuffer = await image.getBuffer(image.mime);
             }
             return imageBuffer.buffer;
         } catch (err) {
@@ -106,7 +106,6 @@ class BlurImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default BlurImage;

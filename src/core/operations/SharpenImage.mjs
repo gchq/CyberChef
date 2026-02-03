@@ -10,13 +10,12 @@ import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import { gaussianBlur } from "../lib/ImageManipulation.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
-import Jimp from "jimp/es/index.js";
+import { Jimp, JimpMime } from "jimp";
 
 /**
  * Sharpen Image operation
  */
 class SharpenImage extends Operation {
-
     /**
      * SharpenImage constructor
      */
@@ -35,22 +34,22 @@ class SharpenImage extends Operation {
                 name: "Radius",
                 type: "number",
                 value: 2,
-                min: 1
+                min: 1,
             },
             {
                 name: "Amount",
                 type: "number",
                 value: 1,
                 min: 0,
-                step: 0.1
+                step: 0.1,
             },
             {
                 name: "Threshold",
                 type: "number",
                 value: 10,
                 min: 0,
-                max: 100
-            }
+                max: 100,
+            },
         ];
     }
 
@@ -79,67 +78,102 @@ class SharpenImage extends Operation {
             const blurMask = image.clone();
 
             if (isWorkerEnvironment())
-                self.sendStatusMessage("Sharpening image... (Blurring cloned image)");
+                self.sendStatusMessage(
+                    "Sharpening image... (Blurring cloned image)",
+                );
             const blurImage = gaussianBlur(image.clone(), radius);
 
+            if (isWorkerEnvironment())
+                self.sendStatusMessage(
+                    "Sharpening image... (Creating unsharp mask)",
+                );
+            blurMask.scan(
+                0,
+                0,
+                blurMask.bitmap.width,
+                blurMask.bitmap.height,
+                function (x, y, idx) {
+                    const blurRed = blurImage.bitmap.data[idx];
+                    const blurGreen = blurImage.bitmap.data[idx + 1];
+                    const blurBlue = blurImage.bitmap.data[idx + 2];
+
+                    const normalRed = this.bitmap.data[idx];
+                    const normalGreen = this.bitmap.data[idx + 1];
+                    const normalBlue = this.bitmap.data[idx + 2];
+
+                    // Subtract blurred pixel value from normal image
+                    this.bitmap.data[idx] =
+                        normalRed > blurRed ? normalRed - blurRed : 0;
+                    this.bitmap.data[idx + 1] =
+                        normalGreen > blurGreen ? normalGreen - blurGreen : 0;
+                    this.bitmap.data[idx + 2] =
+                        normalBlue > blurBlue ? normalBlue - blurBlue : 0;
+                },
+            );
 
             if (isWorkerEnvironment())
-                self.sendStatusMessage("Sharpening image... (Creating unsharp mask)");
-            blurMask.scan(0, 0, blurMask.bitmap.width, blurMask.bitmap.height, function(x, y, idx) {
-                const blurRed = blurImage.bitmap.data[idx];
-                const blurGreen = blurImage.bitmap.data[idx + 1];
-                const blurBlue = blurImage.bitmap.data[idx + 2];
+                self.sendStatusMessage(
+                    "Sharpening image... (Merging with unsharp mask)",
+                );
+            image.scan(
+                0,
+                0,
+                image.bitmap.width,
+                image.bitmap.height,
+                function (x, y, idx) {
+                    let maskRed = blurMask.bitmap.data[idx];
+                    let maskGreen = blurMask.bitmap.data[idx + 1];
+                    let maskBlue = blurMask.bitmap.data[idx + 2];
 
-                const normalRed = this.bitmap.data[idx];
-                const normalGreen = this.bitmap.data[idx + 1];
-                const normalBlue = this.bitmap.data[idx + 2];
+                    const normalRed = this.bitmap.data[idx];
+                    const normalGreen = this.bitmap.data[idx + 1];
+                    const normalBlue = this.bitmap.data[idx + 2];
 
-                // Subtract blurred pixel value from normal image
-                this.bitmap.data[idx] = (normalRed > blurRed) ? normalRed - blurRed : 0;
-                this.bitmap.data[idx + 1] = (normalGreen > blurGreen) ? normalGreen - blurGreen : 0;
-                this.bitmap.data[idx + 2] = (normalBlue > blurBlue) ? normalBlue - blurBlue : 0;
-            });
+                    // Calculate luminance
+                    const maskLuminance =
+                        0.2126 * maskRed +
+                        0.7152 * maskGreen +
+                        0.0722 * maskBlue;
+                    const normalLuminance =
+                        0.2126 * normalRed +
+                        0.7152 * normalGreen +
+                        0.0722 * normalBlue;
 
-            if (isWorkerEnvironment())
-                self.sendStatusMessage("Sharpening image... (Merging with unsharp mask)");
-            image.scan(0, 0, image.bitmap.width, image.bitmap.height, function(x, y, idx) {
-                let maskRed = blurMask.bitmap.data[idx];
-                let maskGreen = blurMask.bitmap.data[idx + 1];
-                let maskBlue = blurMask.bitmap.data[idx + 2];
+                    let luminanceDiff;
+                    if (maskLuminance > normalLuminance) {
+                        luminanceDiff = maskLuminance - normalLuminance;
+                    } else {
+                        luminanceDiff = normalLuminance - maskLuminance;
+                    }
 
-                const normalRed = this.bitmap.data[idx];
-                const normalGreen = this.bitmap.data[idx + 1];
-                const normalBlue = this.bitmap.data[idx + 2];
+                    // Scale mask colours by amount
+                    maskRed = maskRed * amount;
+                    maskGreen = maskGreen * amount;
+                    maskBlue = maskBlue * amount;
 
-                // Calculate luminance
-                const maskLuminance = (0.2126 * maskRed + 0.7152 * maskGreen + 0.0722 * maskBlue);
-                const normalLuminance = (0.2126 * normalRed + 0.7152 * normalGreen + 0.0722 * normalBlue);
-
-                let luminanceDiff;
-                if (maskLuminance > normalLuminance) {
-                    luminanceDiff = maskLuminance - normalLuminance;
-                } else {
-                    luminanceDiff = normalLuminance - maskLuminance;
-                }
-
-                // Scale mask colours by amount
-                maskRed = maskRed * amount;
-                maskGreen = maskGreen * amount;
-                maskBlue = maskBlue * amount;
-
-                // Only change pixel value if the difference is higher than threshold
-                if ((luminanceDiff / 255) * 100 >= threshold) {
-                    this.bitmap.data[idx] = (normalRed + maskRed) <= 255 ? normalRed + maskRed : 255;
-                    this.bitmap.data[idx + 1] = (normalGreen + maskGreen) <= 255 ? normalGreen + maskGreen : 255;
-                    this.bitmap.data[idx + 2] = (normalBlue + maskBlue) <= 255 ? normalBlue + maskBlue : 255;
-                }
-            });
+                    // Only change pixel value if the difference is higher than threshold
+                    if ((luminanceDiff / 255) * 100 >= threshold) {
+                        this.bitmap.data[idx] =
+                            normalRed + maskRed <= 255
+                                ? normalRed + maskRed
+                                : 255;
+                        this.bitmap.data[idx + 1] =
+                            normalGreen + maskGreen <= 255
+                                ? normalGreen + maskGreen
+                                : 255;
+                        this.bitmap.data[idx + 2] =
+                            normalBlue + maskBlue <= 255
+                                ? normalBlue + maskBlue
+                                : 255;
+                    }
+                },
+            );
 
             let imageBuffer;
-            if (image.getMIME() === "image/gif") {
-                imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
+            if (image.mime === "image/gif") {
+                imageBuffer = await image.getBuffer(JimpMime.png);
             } else {
-                imageBuffer = await image.getBufferAsync(Jimp.AUTO);
+                imageBuffer = await image.getBuffer(image.mime);
             }
             return imageBuffer.buffer;
         } catch (err) {
@@ -163,7 +197,6 @@ class SharpenImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default SharpenImage;
