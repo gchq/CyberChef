@@ -265,9 +265,12 @@ class AddTextToImage extends Operation {
             }
             return imageBuffer.buffer;
         } catch (err) {
-            throw new OperationError(`Error adding text to image. (${err})`, {
-                cause: err,
-            });
+            throw new OperationError(
+                `Error adding text to image. (${err.stack})`,
+                {
+                    cause: err,
+                },
+            );
         }
     }
 
