@@ -34,20 +34,20 @@ jobs:
       if: success()
       run: npx grunt prod
 
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
     - name: Production Image Build
       if: success()
       id: build-image
-      uses: redhat-actions/buildah-build@v2
+      uses: docker/build-push-action@v6
       with:
         # Not being uploaded to any registry, use a simple name to allow Buildah to build correctly.
         image: cyberchef
-        containerfiles: ./Dockerfile
-        platforms: linux/amd64
-        oci: true
-        # Webpack seems to use a lot of open files, increase the max open file limit to accomodate.
-        extra-args: |
-          --ulimit nofile=10000
-
+        platforms: linux/amd64,linux/arm64
     - name: UI Tests
       if: success()
       run: |
