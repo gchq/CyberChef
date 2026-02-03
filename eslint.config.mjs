@@ -111,7 +111,6 @@ export default [
                 "maxBOF": 0
             }],
             "no-whitespace-before-property": "error",
-            "operator-linebreak": ["error", "after"],
             "space-in-parens": "error",
             "no-var": "error",
             "prefer-const": "error",

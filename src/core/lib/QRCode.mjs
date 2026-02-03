@@ -89,6 +89,7 @@ export function generateQrCode(
             type: format,
             size: moduleSize,
             margin: margin,
+            // eslint-disable-next-line camelcase
             ec_level: errorCorrection.charAt(0).toUpperCase(),
         });
     } catch (err) {
