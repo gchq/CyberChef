@@ -6,6 +6,12 @@ on:
     tags:
     - 'v*'
 
+env:
+  REGISTRY: ghcr.io
+  REGISTRY_USER: ${{ github.actor }}
+  REGISTRY_PASSWORD: ${{ github.token }}
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   main:
     runs-on: ubuntu-latest
@@ -19,7 +25,8 @@ jobs:
 
     - name: Install
       run: |
-        npm install
+        export DETECT_CHROMEDRIVER_VERSION=true
+        npm ci
         npm run setheapsize
 
     - name: Lint
@@ -31,17 +38,46 @@ jobs:
         npm run testnodeconsumer
 
     - name: Production Build
-      if: success()
       run: npx grunt prod
 
     - name: UI Tests
-      if: success()
       run: |
         sudo apt-get install xvfb
         xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Image Metadata
+      id: image-metadata
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=semver,pattern={{major}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{version}}
+
+    - name: Log in to GHCR
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ env.REGISTRY_USER }}
+        password: ${{ env.REGISTRY_PASSWORD }}
+
+    - name: Publish to GHCR
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.image-metadata.outputs.tags }}
+        labels: ${{ steps.image-metadata.outputs.labels }}
+        platforms: linux/amd64,linux/arm64
+
     - name: Upload Release Assets
-      if: success()
       id: upload-release-assets
       uses: svenstaro/upload-release-action@v2
       with:
@@ -53,7 +89,6 @@ jobs:
         body: "See the [CHANGELOG](https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md) and [commit messages](https://github.com/gchq/CyberChef/commits/master) for details."
 
     - name: Publish to NPM
-      if: success()
       uses: JS-DevTools/npm-publish@v1
       with:
         token: ${{ secrets.NPM_TOKEN }}

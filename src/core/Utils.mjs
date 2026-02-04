@@ -177,7 +177,7 @@ class Utils {
      */
     static printable(str, preserveWs=false, onlyAscii=false) {
         if (onlyAscii) {
-            return str.replace(/[^\x20-\x7f]/g, ".");
+            return str.replace(/[^\x20-\x7e]/g, ".");
         }
 
         // eslint-disable-next-line no-misleading-character-class
@@ -888,6 +888,23 @@ class Utils {
 
         return str.replace(/(&#?x?[a-z0-9]{2,4};|\ue000)/ig, function (match) {
             return HTML_CHARS[match] || match;
+        });
+    }
+
+
+    /**
+     * Converts a string to its title case equivalent.
+     *
+     * @param {string} str
+     * @returns string
+     *
+     * @example
+     * // return "A Tiny String"
+     * Utils.toTitleCase("a tIny String");
+     */
+    static toTitleCase(str) {
+        return str.replace(/\w\S*/g, function(txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         });
     }
 
