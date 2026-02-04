@@ -5,7 +5,8 @@
  */
 
 import Utils from "./Utils.mjs";
-import {fromHex} from "./lib/Hex.mjs";
+import { fromHex } from "./lib/Hex.mjs";
+import OperationError from "./errors/OperationError.mjs";
 
 /**
  * The arguments to operations.
@@ -100,7 +101,7 @@ class Ingredient {
     */
     static prepare(data, type) {
         let number;
-        
+
         switch (type) {
             case "binaryString":
             case "binaryShortString":
@@ -116,12 +117,12 @@ class Ingredient {
                 }
             case "number":
                 if (data === null) return data;
-                if (isNaN(data)) throw "Ingredient can not be empty.";
-
                 number = parseFloat(data);
                 if (isNaN(number)) {
                     const sample = Utils.truncate(data.toString(), 10);
-                    throw "Invalid ingredient value. Not a number: " + sample;
+                    throw new OperationError(
+                        "Invalid ingredient value. Not a number: " + sample,
+                    );
                 }
                 return number;
             default:

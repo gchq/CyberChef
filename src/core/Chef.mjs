@@ -55,8 +55,15 @@ class Chef {
             progress = await recipe.execute(this.dish, progress);
         } catch (err) {
             log.error(err);
+
+            let displayStr;
+            if ("displayStr" in err) {
+                displayStr = err.displayStr;
+            } else {
+                displayStr = err.toString();
+            }
             error = {
-                displayStr: err.displayStr,
+                displayStr: displayStr,
             };
             progress = err.progress;
         }
