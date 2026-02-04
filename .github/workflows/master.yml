@@ -1,5 +1,8 @@
 name: "Master Build, Test & Deploy"
 
+permissions:
+  contents: read
+
 on:
   workflow_dispatch:
   push:
@@ -8,6 +11,8 @@ on:
 
 jobs:
   main:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
