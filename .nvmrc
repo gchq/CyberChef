@@ -1,1 +1,9 @@
-18
+# Currently, we're requiring at least Node v18.20, which introduced import
+# attributes (`with` keyword) and removed import asserts (`assert` keyword).
+#
+# We can't support Node v23+, until `argon2-browser` receives an update that
+# supports Node's native `fetch`, i.e., which doesn't require the now obsolete
+# `--no-experimental-fetch` flag.
+#
+# So, let's default to v22.
+22

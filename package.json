@@ -36,7 +36,7 @@
   "browserslist": [
     "Chrome >= 50",
     "Firefox >= 38",
-    "node >= 16"
+    "node >= 18.20"
   ],
   "devDependencies": {
     "@babel/core": "^7.24.7",
@@ -205,5 +205,8 @@
     "minor": "node --experimental-modules --experimental-json-modules src/core/config/scripts/newMinorVersion.mjs",
     "getheapsize": "node -e 'console.log(`node heap limit = ${require(\"v8\").getHeapStatistics().heap_size_limit / (1024 * 1024)} Mb`)'",
     "setheapsize": "export NODE_OPTIONS=--max_old_space_size=2048"
+  },
+  "engines": {
+    "node": ">=18.20 <23"
   }
 }
