@@ -3,6 +3,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { ModifySourcePlugin, ReplaceOperation } = require("modify-source-webpack-plugin");
+const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const path = require("path");
 const zlib = require("zlib");
 
@@ -112,26 +113,14 @@ module.exports = {
                     ]
                 }
             ]
-        })
+        }),
+        new NodePolyfillPlugin(),
     ],
     resolve: {
         extensions: [".mjs", ".js", ".json"], // Allows importing files without extensions
         alias: {
             jquery: "jquery/src/jquery",
         },
-        fallback: {
-            "fs": false,
-            "child_process": false,
-            "net": false,
-            "tls": false,
-            "path": require.resolve("path/"),
-            "buffer": require.resolve("buffer/"),
-            "crypto": require.resolve("crypto-browserify"),
-            "stream": require.resolve("stream-browserify"),
-            "zlib": require.resolve("browserify-zlib"),
-            "process": false,
-            "vm": false
-        }
     },
     module: {
         // argon2-browser loads argon2.wasm by itself, so Webpack should not load it
