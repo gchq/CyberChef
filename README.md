@@ -12,6 +12,39 @@ CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" 
 
 The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms. It was conceived, designed, built and incrementally improved by an analyst in their 10% innovation time over several years.
 
+## Payment Cryptography Extensions
+
+This fork extends **CyberChef** with a focused set of payment cryptography operations intended for engineering, debugging, and interoperability work in regulated payment environments.
+
+### Scope
+The extensions are designed to help inspect, parse, validate, and construct common payment-industry cryptographic structures without requiring access to live HSMs or production systems.
+
+Initial focus areas include:
+- TR-31 key block parsing and encoding
+- Key metadata inspection and structural validation
+- Deterministic, test-vector-driven transformations suitable for offline analysis
+
+Future extensions may include:
+- TR-31 key block validation and decryption (with provided KBPKs)
+- DUKPT (3DES and AES) derivation helpers
+- PIN block format parsing and construction
+- Payment-specific MAC and KCV utilities
+
+### Non-goals
+These extensions are not intended to:
+- Facilitate fraud, card data misuse, or PIN compromise
+- Replace certified HSMs or production cryptographic controls
+- Automate end-to-end payment authorization workflows
+
+All operations are designed to be explicit, inspectable, and composable, consistent with CyberChef’s philosophy.
+
+### Organization
+Custom operations live under:
+
+src/core/operations/payment-crypto/
+
+They appear in the CyberChef UI under the **Payment Cryptography** category.
+
 ## Live demo
 
 CyberChef is still under active development. As a result, it shouldn't be considered a finished product. There is still testing and bug fixing to do, new features to be added and additional documentation to write. Please contribute!
