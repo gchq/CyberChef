@@ -119,20 +119,19 @@ class ContainImage extends Operation {
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Containing image...");
             image.contain({
-                width,
-                height,
+                w: width,
+                h: height,
                 align: alignMap[hAlign] | alignMap[vAlign],
                 mode: resizeMap[alg],
             });
 
             if (opaqueBg) {
                 const newImage = await Jimp.read(width, height, 0x000000ff);
-                newImage.blit({
+                image = newImage.blit({
                     image,
                     x: 0,
                     y: 0,
                 });
-                image = newImage;
             }
 
             let imageBuffer;
