@@ -216,7 +216,12 @@ class AddTextToImage extends Operation {
                 width: measureText(jimpFont, text),
                 height: measureTextHeight(jimpFont, text),
             });
-            textImage.print(jimpFont, 0, 0, text);
+            textImage.print({
+                font: jimpFont,
+                x: 0,
+                y: 0,
+                text,
+            });
 
             // Scale the rendered text image to the correct size
             const scaleFactor = size / 72;
