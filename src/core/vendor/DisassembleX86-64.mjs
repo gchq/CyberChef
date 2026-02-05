@@ -246,7 +246,7 @@ const Mnemonics = [
   ["ROL","ROR","RCL","RCR","SHL","SHR","SAL","SAR"],
   ["ROL","ROR","RCL","RCR","SHL","SHR","SAL","SAR"],
   ["ROL","ROR","RCL","RCR","SHL","SHR","SAL","SAR"],
-  "AAMB","AADB","???",
+  "AAM","AAD","SALC",
   "XLAT",
   /*------------------------------------------------------------------------------------------------------------------------
   X87 FPU.
@@ -4750,36 +4750,6 @@ function DecodePrefixAdjustments()
 
       return(null);
     }
-  }
-  
-  //The L1OM vector prefix settings decoding.
-
-  if( Opcode === 0xD6 )
-  {
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode = BinCode[CodePos]; //read L1OM byte settings.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode |= ( BinCode[CodePos] << 8 ); //Read next L1OM byte settings.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-
-    WidthBit = SIMD & 1;
-    VectorRegister = ( Opcode & 0xF800 ) >> 11;
-    RoundMode = VectorRegister >> 3;
-    MaskRegister = ( Opcode & 0x0700 ) >> 8;
-    HInt_ZeroMerg = ( Opcode & 0x0080 ) >> 7;
-    ConversionMode = ( Opcode & 0x0070 ) >> 4;
-    RegExtend = ( Opcode & 0x000C ) << 1;
-    BaseExtend = ( Opcode & 0x0003 ) << 3;
-    IndexExtend = ( Opcode & 0x0002 ) << 2;
-
-    //-------------------------------------------------------------------------------------------------------------------------
-    Opcode = 0x700 | BinCode[CodePos]; //read the 8 bit opcode.
-    NextByte(); //Move to the next byte.
-    //-------------------------------------------------------------------------------------------------------------------------
-
-    return(null);
   }
 
   //Only decode L1OM instead of MVEX/EVEX if L1OM compatibility mode is set.
