@@ -106,9 +106,17 @@ class ResizeImage extends Operation {
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Resizing image...");
             if (aspect) {
-                image.scaleToFit(width, height, resizeMap[resizeAlg]);
+                image.scaleToFit({
+                    w: width,
+                    h: height,
+                    mode: resizeMap[resizeAlg],
+                });
             } else {
-                image.resize(width, height, resizeMap[resizeAlg]);
+                image.resize({
+                    w: width,
+                    h: height,
+                    mode: resizeMap[resizeAlg],
+                });
             }
 
             let imageBuffer;

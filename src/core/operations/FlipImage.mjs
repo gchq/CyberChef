@@ -59,10 +59,16 @@ class FlipImage extends Operation {
                 self.sendStatusMessage("Flipping image...");
             switch (flipAxis) {
                 case "Horizontal":
-                    image.flip(true, false);
+                    image.flip({
+                        horizontal: true,
+                        vertical: false,
+                    });
                     break;
                 case "Vertical":
-                    image.flip(false, true);
+                    image.flip({
+                        horizontal: false,
+                        vertical: true,
+                    });
                     break;
             }
 

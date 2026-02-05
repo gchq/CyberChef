@@ -76,7 +76,7 @@ class ImageHueSaturationLightness extends Operation {
             if (hue !== 0) {
                 if (isWorkerEnvironment())
                     self.sendStatusMessage("Changing image hue...");
-                image.colour([
+                image.color([
                     {
                         apply: "hue",
                         params: [hue],
@@ -86,7 +86,7 @@ class ImageHueSaturationLightness extends Operation {
             if (saturation !== 0) {
                 if (isWorkerEnvironment())
                     self.sendStatusMessage("Changing image saturation...");
-                image.colour([
+                image.color([
                     {
                         apply: "saturate",
                         params: [saturation],
@@ -96,7 +96,7 @@ class ImageHueSaturationLightness extends Operation {
             if (lightness !== 0) {
                 if (isWorkerEnvironment())
                     self.sendStatusMessage("Changing image lightness...");
-                image.colour([
+                image.color([
                     {
                         apply: "lighten",
                         params: [lightness],

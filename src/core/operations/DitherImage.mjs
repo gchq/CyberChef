@@ -50,7 +50,7 @@ class DitherImage extends Operation {
         try {
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Applying dither to image...");
-            image.dither565();
+            image.dither();
 
             let imageBuffer;
             if (image.mime === "image/gif") {

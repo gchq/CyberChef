@@ -155,11 +155,11 @@ class GenerateImage extends Operation {
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Scaling image...");
 
-            image.scaleToFit(
-                width * scale,
-                height * scale,
-                ResizeStrategy.NEAREST_NEIGHBOR,
-            );
+            image.scaleToFit({
+                w: width * scale,
+                h: height * scale,
+                mode: ResizeStrategy.NEAREST_NEIGHBOR,
+            });
         }
 
         try {

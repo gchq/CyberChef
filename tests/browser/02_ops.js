@@ -35,6 +35,10 @@ module.exports = {
         testOp(browser, "AND", "test input", "4$04  $044", [{ "option": "Hex", "string": "34" }]);
         testOp(browser, "Add line numbers", "test input", "1 test input");
         testOp(browser, ["From Hex", "Add Text To Image", "To Base64"], Images.PNG_HEX, Images.PNG_CHEF_B64, [[], ["Chef", "Center", "Middle", 0, 0, 16], []]);
+        testOp(browser, ["From Hex", "Dither Image", "SHA2"], Images.PNG_HEX, "cbf587a78915cfb14546ba83080b13e5054800802488dd0cb786b8951e7dc0b48f055260917bd0ccfc075e422b9d6aff112948562653995d74e70f0b66367ac3", [[], [], []]);
+        testOp(browser, ["From Hex", "Generate Image", "SHA2"], Images.PNG_HEX, "2c451762a6c9192fd31dc80765eab3f447be70ea51f6fdb6911ade4d89d4a98bd0a1ff00b08d76aac472faeceb54b66092e3f3be7bbf899bf3e55ca9c96a56aa", [[], [], []]);
+        testOp(browser, ["From Hex", "Image Hue/Saturation/Lightness", "SHA2"], Images.PNG_HEX, "522dfc0bbef00e05c5d6861a002039fa2952e4bbb7fe8d21d0d538ef6f9d65da82065929b4150dc5b8b49460ee6c9bef7f660b86f8d4e7442a07c61c0a152a4b", [[], [], []]);
+        testOp(browser, ["From Hex", "Resize Image", "SHA2"], Images.PNG_HEX, "654bfbf0a0537c901459c4bc22c5fb0bacbf01af775a0733e3a1c46cda5b699bcc4ed85322d813c7bb9b245d62d64425c0766fe03d3d20bc63634e2a4df17626", [[], [64, 64], []]);
         testOp(browser, "Adler-32 Checksum", "test input", "16160411");
         testOp(browser, "Affine Cipher Decode", "test input", "rcqr glnsr", [1, 2]);
         testOp(browser, "Affine Cipher Encode", "test input", "gndg zoujg", [3, 1]);

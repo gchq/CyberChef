@@ -113,12 +113,12 @@ class CoverImage extends Operation {
         try {
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Covering image...");
-            image.cover(
+            image.cover({
                 width,
                 height,
-                alignMap[hAlign] | alignMap[vAlign],
-                resizeMap[alg],
-            );
+                align: alignMap[hAlign] | alignMap[vAlign],
+                mode: resizeMap[alg],
+            });
             let imageBuffer;
             if (image.mime === "image/gif") {
                 imageBuffer = await image.getBuffer(JimpMime.png);
