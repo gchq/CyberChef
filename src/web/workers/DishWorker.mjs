@@ -7,6 +7,8 @@
  */
 
 import Dish from "../../core/Dish.mjs";
+import DishError from "../../core/errors/DishError.mjs";
+import { CHR_ENC_SIMPLE_REVERSE_LOOKUP } from "../../core/lib/ChrEnc.mjs";
 import Utils from "../../core/Utils.mjs";
 import cptable from "codepage";
 import loglevelMessagePrefix from "loglevel-message-prefix";
