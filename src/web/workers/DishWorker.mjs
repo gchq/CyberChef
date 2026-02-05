@@ -98,7 +98,7 @@ async function bufferToStr(data) {
         try {
             str = cptable.utils.decode(data.encoding, new Uint8Array(data.buffer));
         } catch (err) {
-            str = err.message;
+            str = new DishError(`Error decoding buffer with encoding ${CHR_ENC_SIMPLE_REVERSE_LOOKUP[data.encoding]}: ${err.message}`).toString();
         }
     }
 
