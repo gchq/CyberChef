@@ -17,7 +17,6 @@ import {
     measureTextHeight,
     loadFont,
 } from "jimp";
-import log from "loglevel";
 
 /**
  * Add Text To Image operation
@@ -212,10 +211,6 @@ class AddTextToImage extends Operation {
                 }
             });
 
-            let outlog = "";
-            outlog += `Adding text: "${text}" at (${xPos}, ${yPos}) with font: ${fontFace}, size: ${size}, colour: rgba(${red}, ${green}, ${blue}, ${alpha})\n`;
-            outlog += `Adding to image ${image.width}w, ${image.height}h\n`;
-
             // Create a temporary image to hold the rendered text
             const textImage = new Jimp({
                 width: measureText(jimpFont, text),
@@ -227,7 +222,6 @@ class AddTextToImage extends Operation {
                 y: 0,
                 text,
             });
-            outlog += `Rendered text image size: ${textImage.width}w, ${textImage.height}h\n`;
 
             // Scale the rendered text image to the correct size
             const scaleFactor = size / 72;
@@ -245,7 +239,6 @@ class AddTextToImage extends Operation {
                     });
                 }
             }
-            outlog += `Scaled text image size: ${textImage.width}w, ${textImage.height}h\n`;
 
             // If using the alignment options, calculate the pixel values AFTER the image has been scaled
             switch (hAlign) {
@@ -259,7 +252,6 @@ class AddTextToImage extends Operation {
                     xPos = image.width - textImage.width;
                     break;
             }
-            outlog += `Calculated xPos: ${xPos}\n`;
 
             switch (vAlign) {
                 case "Top":
@@ -272,8 +264,6 @@ class AddTextToImage extends Operation {
                     yPos = image.height - textImage.height;
                     break;
             }
-            outlog += `Calculated yPos: ${yPos}\n`;
-            // throw new OperationError(outlog);
 
             // Blit the rendered text image onto the original source image
             image.blit({
@@ -290,12 +280,9 @@ class AddTextToImage extends Operation {
             }
             return imageBuffer.buffer;
         } catch (err) {
-            throw new OperationError(
-                `Error adding text to image. (${err.stack})`,
-                {
-                    cause: err,
-                },
-            );
+            throw new OperationError(`Error adding text to image. (${err})`, {
+                cause: err,
+            });
         }
     }
 
