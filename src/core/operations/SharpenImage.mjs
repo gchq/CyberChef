@@ -8,7 +8,6 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import { gaussianBlur } from "../lib/ImageManipulation.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
 import { Jimp, JimpMime } from "jimp";
 
@@ -81,7 +80,7 @@ class SharpenImage extends Operation {
                 self.sendStatusMessage(
                     "Sharpening image... (Blurring cloned image)",
                 );
-            const blurImage = gaussianBlur(image.clone(), radius);
+            const blurImage = image.clone().gaussian(radius);
 
             if (isWorkerEnvironment())
                 self.sendStatusMessage(

@@ -62,7 +62,9 @@ module.exports = {
         testOp(browser, "Bit shift right", "test input", ":29:\u0010478::");
         testOp(browser, "Blowfish Decrypt", "10884e15427dd84ec35204e9c8e921ae", "test_output", [{"option": "Hex", "string": "1234567801234567"}, {"option": "Hex", "string": "0011223344556677"}, "CBC", "Hex", "Raw"]);
         testOp(browser, "Blowfish Encrypt", "test input", "f0fadbd1d90d774f714248cf26b96410", [{"option": "Hex", "string": "1234567801234567"}, {"option": "Hex", "string": "0011223344556677"}, "CBC", "Raw", "Hex"]);
-        testOp(browser, ["From Hex", "Blur Image", "To Base64"], Images.PNG_HEX, Images.PNG_BLUR_B64);
+        testOp(browser, ["From Hex", "Blur Image", "SHA2"], Images.PNG_HEX, "24f2e89f3e00cc35f551bbc48ea82e76474946ce0282183494d1ca3d3b0012c27b6102c4368ae056dc7fecb6df7886d86ff3d29b7e5965493f30c371eee9a24e");
+        testOp(browser, ["From Hex", "Blur Image", "SHA2"], Images.PNG_HEX, "2c49d89fc10c94352c9a19f82de353c37928831d6f976a6b36eb918825a0ba027980801838228a4a0da63f1886e4fa59b6666f992ad2d2b7d4622253dc034052", [[], [5, "Gaussian"], []]);
+        testOp(browser, ["From Hex", "Sharpen Image", "SHA2"], Images.PNG_HEX, "acc7027642c2eeb67d7356a80ed8a1bdce9adabf656ea1294e47723f506626a7aa41f1660fa844a1e1e83b17180017ab0d5bccd7f6a341692832020dc887eaa5");
         testOpHtml(browser, "Bombe", "XTSYN WAEUG EZALY NRQIM AMLZX MFUOD AWXLY LZCUZ QOQBQ JLCPK NDDRW F", "table tr:last-child td:first-child", "ECG", ["3-rotor", "LEYJVCNIXWPBQMDRTAKZGFUHOS", "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", "HELLO CYBER CHEFU SER", 0, true]);
         testOp(browser, ["Bzip2 Compress", "To Hex"], "test input", "42 5a 68 39 31 41 59 26 53 59 cf 96 82 1d 00 00 03 91 80 40 00 02 21 4e 00 20 00 21 90 c2 10 c0 88 33 92 8e df 17 72 45 38 50 90 cf 96 82 1d");
         testOp(browser, ["From Hex", "Bzip2 Decompress"], "425a68393141592653597b0884b7000003038000008200ce00200021a647a4218013709517c5dc914e14241ec2212dc0", "test_output", [[], [true]]);

@@ -9,7 +9,6 @@ import OperationError from "../errors/OperationError.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import { gaussianBlur } from "../lib/ImageManipulation.mjs";
 import { Jimp, JimpMime } from "jimp";
 
 /**
@@ -73,7 +72,7 @@ class BlurImage extends Operation {
                 case "Gaussian":
                     if (isWorkerEnvironment())
                         self.sendStatusMessage("Gaussian blurring image...");
-                    image = gaussianBlur(image, blurAmount);
+                    image.gaussian(blurAmount);
                     break;
             }
 
