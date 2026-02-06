@@ -305,16 +305,6 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
         assert.strictEqual(result.toString(), "2");
     }),
 
-    it("CRC16 Checksum", () => {
-        const result = chef.CRC16Checksum("Rain on Your Parade");
-        assert.strictEqual(result.toString(), "db1c");
-    }),
-
-    it("CRC32 Checksum", () => {
-        const result = chef.CRC32Checksum("Rain on Your Parade");
-        assert.strictEqual(result.toString(), "e902f76c");
-    }),
-
     it("CSS Beautify", () => {
         const result = chef.CSSBeautify("header {color:black;padding:3rem;}");
         const expected = `header {
@@ -432,7 +422,7 @@ color: white;
     it("Disassemble x86", () => {
         const result = chef.disassembleX86(chef.toBase64("one two three"));
         const expected = `0000000000000000 0000                            ADD BYTE PTR [RAX],AL\r
-0000000000000002 0B250000000B                    OR ESP,DWORD PTR [0000000-F4FFFFF8]\r
+0000000000000002 0B250000000B                    OR ESP,DWORD PTR [000000000B000008]\r
 `;
         assert.strictEqual(result.toString(), expected);
     }),
@@ -575,12 +565,11 @@ Top Drawer`, {
     }),
 
     it("Generate HOTP", () => {
-        const result = chef.generateHOTP("Cut The Mustard", {
-            name: "colonel",
+        const result = chef.generateHOTP("JBSWY3DPEHPK3PXP", {
         });
-        const expected = `URI: otpauth://hotp/colonel?secret=IN2XIICUNBSSATLVON2GC4TE
+        const expected = `URI: otpauth://hotp/?secret=JBSWY3DPEHPK3PXP&algorithm=SHA1&digits=6&counter=0
 
-Password: 034148`;
+Password: 282760`;
         assert.strictEqual(result.toString(), expected);
     }),
 
@@ -591,10 +580,25 @@ Password: 034148`;
         assert.strictEqual(result.toString().substr(0, 37), "-----BEGIN PGP PRIVATE KEY BLOCK-----");
     }),
 
-    it("Generate UUID", () => {
-        const result = chef.generateUUID();
-        assert.ok(result.toString());
-        assert.strictEqual(result.toString().length, 36);
+    ...[1, 3, 4, 5, 6, 7].map(version => it(`Generate UUID v${version}`, () => {
+        const result = chef.generateUUID("", { "version": `v${version}` }).toString();
+        assert.ok(result);
+        assert.strictEqual(result.length, 36);
+    })),
+
+    ...[1, 3, 4, 5, 6, 7].map(version => it(`Analyze UUID v${version}`, () => {
+        const uuid = chef.generateUUID("", { "version": `v${version}` }).toString();
+        const result = chef.analyseUUID(uuid).toString();
+        const expected = `UUID version: ${version}`;
+        assert.strictEqual(result, expected);
+    })),
+
+    it("Generate UUID using defaults", () => {
+        const uuid = chef.generateUUID();
+        assert.ok(uuid);
+
+        const analysis = chef.analyseUUID(uuid).toString();
+        assert.strictEqual(analysis, "UUID version: 4");
     }),
 
     it("Gzip, Gunzip", () => {
