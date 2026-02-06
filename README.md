@@ -20,6 +20,22 @@ Cryptographic operations in CyberChef should not be relied upon to provide secur
 
 [A live demo can be found here][1] - have fun!
 
+## Containers
+
+If you would like to try out CyberChef locally you can either build it yourself:
+
+```bash
+docker build --tag cyberchef --ulimit nofile=10000 .
+docker run -it -p 8080:80 cyberchef
+```
+
+Or you can use our image directly:
+
+```bash
+docker run -it -p 8080:80 ghcr.io/gchq/cyberchef:latest
+```
+
+This image is built and published through our [GitHub Workflows](.github/workflows/releases.yml)
 
 ## How it works
 

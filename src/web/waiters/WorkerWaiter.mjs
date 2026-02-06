@@ -323,6 +323,28 @@ class WorkerWaiter {
     }
 
     /**
+     * Cancels the current bake making it possible to autobake again
+     */
+    cancelBakeForAutoBake() {
+        if (this.totalOutputs > 1) {
+            this.cancelBake();
+        } else {
+            // In this case the UI changes can be skipped
+
+            for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
+                if (this.chefWorkers[i].active) {
+                    this.removeChefWorker(this.chefWorkers[i]);
+                }
+            }
+
+            this.inputs = [];
+            this.inputNums = [];
+            this.totalOutputs = 0;
+            this.loadingOutputs = 0;
+        }
+    }
+
+    /**
      * Cancels the current bake by terminating and removing all ChefWorkers
      *
      * @param {boolean} [silent=false] - If true, don't set the output

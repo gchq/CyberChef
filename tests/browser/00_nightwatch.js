@@ -201,6 +201,9 @@ module.exports = {
 
         // Open category
         browser
+            .useCss()
+            .waitForElementNotVisible("#snackbar-container", 10000)
+            .useXpath()
             .click(otherCat)
             .expect.element(genUUID).to.be.visible;
 
@@ -237,8 +240,8 @@ module.exports = {
 
         // Alert bar shows and contains correct content
         browser
+            .waitForElementNotVisible("#snackbar-container")
             .click("#copy-output")
-            .waitForElementVisible("#snackbar-container")
             .waitForElementVisible("#snackbar-container .snackbar-content")
             .expect.element("#snackbar-container .snackbar-content").text.to.equal("Copied raw output successfully.");
 

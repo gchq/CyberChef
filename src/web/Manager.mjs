@@ -139,6 +139,7 @@ class Manager {
         document.getElementById("load-delete-button").addEventListener("click", this.controls.loadDeleteClick.bind(this.controls));
         document.getElementById("load-name").addEventListener("change", this.controls.loadNameChange.bind(this.controls));
         document.getElementById("load-button").addEventListener("click", this.controls.loadButtonClick.bind(this.controls));
+        document.getElementById("hide-icon").addEventListener("click", this.controls.hideRecipeArgsClick.bind(this.recipe));
         document.getElementById("support").addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
         this.addMultiEventListeners("#save-texts textarea", "keyup paste", this.controls.saveTextChange, this.controls);
         document.getElementById("rec-list").addEventListener("click", this.controls.onMaximisedRecipeClick.bind(this.controls));
@@ -157,6 +158,7 @@ class Manager {
         // Recipe
         this.addDynamicListener(".arg:not(select)", "input", this.recipe.ingChange, this.recipe);
         this.addDynamicListener(".arg[type=checkbox], .arg[type=radio], select.arg", "change", this.recipe.ingChange, this.recipe);
+        this.addDynamicListener(".hide-args-icon", "click", this.recipe.hideArgsClick, this.recipe);
         this.addDynamicListener("#rec-list .dropdown-menu.toggle-dropdown a", "click", this.recipe.dropdownToggleClick, this.recipe);
         this.addDynamicListener("textarea.arg", "dragover", this.recipe.textArgDragover, this.recipe);
         this.addDynamicListener("textarea.arg", "dragleave", this.recipe.textArgDragLeave, this.recipe);
@@ -224,6 +226,7 @@ class Manager {
         this.addDynamicListener(".option-item input[type=checkbox]", "change", this.options.switchChange, this.options);
         this.addDynamicListener(".option-item input[type=checkbox]#wordWrap", "change", this.options.setWordWrap, this.options);
         this.addDynamicListener(".option-item input[type=checkbox]#useMetaKey", "change", this.bindings.updateKeybList, this.bindings);
+        this.addDynamicListener(".option-item input[type=checkbox]#showCatCount", "change", this.ops.setCatCount, this.ops);
         this.addDynamicListener(".option-item input[type=number]", "keyup", this.options.numberChange, this.options);
         this.addDynamicListener(".option-item input[type=number]", "change", this.options.numberChange, this.options);
         this.addDynamicListener(".option-item select", "change", this.options.selectChange, this.options);

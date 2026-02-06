@@ -77,5 +77,3 @@ c-operation-li li.operation.focused-op {
     background-color: var(--focused-operation-bg-colour) !important;
     border-color: var(--focused-operation-border-colour) !important;
 }
-
-

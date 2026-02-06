@@ -42,7 +42,7 @@ import {
 
 import {statusBar} from "../utils/statusBar.mjs";
 import {fileDetailsPanel} from "../utils/fileDetails.mjs";
-import {renderSpecialChar} from "../utils/editorUtils.mjs";
+import {eolCodeToSeq, eolCodeToName, renderSpecialChar} from "../utils/editorUtils.mjs";
 
 
 /**
@@ -62,6 +62,8 @@ class InputWaiter {
 
         this.inputTextEl = document.getElementById("input-text");
         this.inputChrEnc = 0;
+        this.eolState = 0; // 0 = unset, 1 = detected, 2 = manual
+        this.encodingState = 0; // 0 = unset, 1 = detected, 2 = manual
         this.initEditor();
 
         this.inputWorker = null;
@@ -92,6 +94,7 @@ class InputWaiter {
             fileDetailsPanel: new Compartment
         };
 
+        const self = this;
         const initialState = EditorState.create({
             doc: null,
             extensions: [
@@ -114,7 +117,9 @@ class InputWaiter {
                     label: "Input",
                     eolHandler: this.eolChange.bind(this),
                     chrEncHandler: this.chrEncChange.bind(this),
-                    chrEncGetter: this.getChrEnc.bind(this)
+                    chrEncGetter: this.getChrEnc.bind(this),
+                    getEncodingState: this.getEncodingState.bind(this),
+                    getEOLState: this.getEOLState.bind(this)
                 }),
 
                 // Mutable state
@@ -141,10 +146,21 @@ class InputWaiter {
                     if (e.docChanged && !this.silentInputChange)
                         this.inputChange(e);
                     this.silentInputChange = false;
+                }),
+
+                // Event handlers
+                EditorView.domEventHandlers({
+                    paste(event, view) {
+                        setTimeout(() => {
+                            self.afterPaste(event);
+                        });
+                    }
                 })
             ]
         });
 
+
+        if (this.inputEditorView) this.inputEditorView.destroy();
         this.inputEditorView = new EditorView({
             state: initialState,
             parent: this.inputTextEl
@@ -154,12 +170,23 @@ class InputWaiter {
     /**
      * Handler for EOL change events
      * Sets the line separator
-     * @param {string} eolVal
+     * @param {string} eol
+     * @param {boolean} [manual=false]
      */
-    eolChange(eolVal) {
-        const oldInputVal = this.getInput();
+    eolChange(eol, manual=false) {
+        const eolVal = eolCodeToSeq[eol];
+        if (eolVal === undefined) return;
+
+        this.eolState = manual ? 2 : this.eolState;
+        if (this.eolState < 2 && eolVal === this.getEOLSeq()) return;
+
+        if (this.eolState === 1) {
+            // Alert
+            this.app.alert(`Input end of line separator has been detected and changed to ${eolCodeToName[eol]}`, 5000);
+        }
 
         // Update the EOL value
+        const oldInputVal = this.getInput();
         this.inputEditorView.dispatch({
             effects: this.inputEditorConf.eol.reconfigure(EditorState.lineSeparator.of(eolVal))
         });
@@ -177,14 +204,27 @@ class InputWaiter {
     }
 
     /**
+     * Returns whether the input EOL sequence was set manually or has been detected automatically
+     * @returns {number} - 0 = unset, 1 = detected, 2 = manual
+     */
+    getEOLState() {
+        return this.eolState;
+    }
+
+    /**
      * Handler for Chr Enc change events
      * Sets the input character encoding
      * @param {number} chrEncVal
+     * @param {boolean} [manual=false] - Flag to indicate the encoding was set by the user
+     * @param {boolean} [internal=false] - Flag to indicate this was set internally, i.e. by loading from URI
      */
-    chrEncChange(chrEncVal) {
+    chrEncChange(chrEncVal, manual=false, internal=false) {
         if (typeof chrEncVal !== "number") return;
         this.inputChrEnc = chrEncVal;
-        this.inputChange();
+        this.encodingState = manual ? 2 : this.encodingState;
+        if (!internal) {
+            this.inputChange();
+        }
     }
 
     /**
@@ -193,6 +233,14 @@ class InputWaiter {
      */
     getChrEnc() {
         return this.inputChrEnc;
+    }
+
+    /**
+     * Returns whether the input character encoding was set manually or has been detected automatically
+     * @returns {number} - 0 = unset, 1 = detected, 2 = manual
+     */
+    getEncodingState() {
+        return this.encodingState;
     }
 
     /**
@@ -594,10 +642,6 @@ class InputWaiter {
                 const inputStr = toBase64(inputVal, "A-Za-z0-9+/");
                 this.app.updateURL(true, inputStr);
             }
-
-            // Trigger a state change
-            if (!silent) window.dispatchEvent(this.manager.statechange);
-
         }.bind(this));
     }
 
@@ -864,6 +908,55 @@ class InputWaiter {
             // Fire the statechange event as the input has been modified
             window.dispatchEvent(this.manager.statechange);
         }, delay, "inputChange", this, [e])();
+    }
+
+    /**
+     * Handler that fires just after input paste events.
+     * Checks whether the EOL separator or character encoding should be updated.
+     *
+     * @param {event} e
+     */
+    afterPaste(e) {
+        // If EOL has been fixed, skip this.
+        if (this.eolState > 1) return;
+
+        const inputText = this.getInput();
+
+        // Detect most likely EOL sequence
+        const eolCharCounts = {
+            "LF": inputText.count("\u000a"),
+            "VT": inputText.count("\u000b"),
+            "FF": inputText.count("\u000c"),
+            "CR": inputText.count("\u000d"),
+            "CRLF": inputText.count("\u000d\u000a"),
+            "NEL": inputText.count("\u0085"),
+            "LS": inputText.count("\u2028"),
+            "PS": inputText.count("\u2029")
+        };
+
+        // If all zero, leave alone
+        const total = Object.values(eolCharCounts).reduce((acc, curr) => {
+            return acc + curr;
+        }, 0);
+        if (total === 0) return;
+
+        // Find most prevalent line ending sequence
+        const highest = Object.entries(eolCharCounts).reduce((acc, curr) => {
+            return curr[1] > acc[1] ? curr : acc;
+        }, ["LF", 0]);
+        let choice = highest[0];
+
+        // If CRLF not zero and more than half the highest alternative, choose CRLF
+        if ((eolCharCounts.CRLF * 2) > highest[1]) {
+            choice = "CRLF";
+        }
+
+        const eolVal = eolCodeToSeq[choice];
+        if (eolVal === this.getEOLSeq()) return;
+
+        // Setting automatically
+        this.eolState = 1;
+        this.eolChange(choice);
     }
 
     /**
@@ -1198,6 +1291,14 @@ class InputWaiter {
         this.manager.worker.loaded = false;
         this.manager.output.removeAllOutputs();
         this.manager.output.terminateZipWorker();
+
+        this.eolState = 0;
+        this.encodingState = 0;
+        this.manager.output.eolState = 0;
+        this.manager.output.encodingState = 0;
+
+        this.initEditor();
+        this.manager.output.initEditor();
 
         const tabsList = document.getElementById("input-tabs");
         const tabsListChildren = tabsList.children;

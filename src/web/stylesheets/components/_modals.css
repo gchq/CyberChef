@@ -99,9 +99,11 @@
 .bmd-form-group.is-focused [class^='bmd-label'],
 .bmd-form-group.is-focused [class*=' bmd-label'],
 .bmd-form-group.is-focused label,
-.checkbox label:hover {
+.checkbox label:hover,
+.bmd-form-group.is-filled:focus-within .checkbox.option-item label {
     color: var(--input-highlight-colour);
 }
+
 
 .bmd-form-group.option-item label+.form-control{
     background-image:

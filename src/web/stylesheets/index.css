@@ -53,4 +53,5 @@
 @import "./layout/_structure.css";
 
 /* Operations */
+@import "./operations/diff.css";
 @import "./operations/json.css";

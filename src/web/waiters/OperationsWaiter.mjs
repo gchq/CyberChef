@@ -173,11 +173,70 @@ class OperationsWaiter {
         return -1;
     }
 
+
     /**
      * Handler for edit favourites click events.
      * Displays the 'Edit favourites' modal and handles the c-operation-list in the modal
      *
      * @param {Event} e
+     */
+    opListCreate(e) {
+        this.manager.recipe.createSortableSeedList(e.target);
+
+        // Populate ops total
+        document.querySelector("#operations .title .op-count").innerText = Object.keys(this.app.operations).length;
+
+        this.enableOpsListPopovers(e.target);
+    }
+
+
+    /**
+     * Sets up popovers, allowing the popover itself to gain focus which enables scrolling
+     * and other interactions.
+     *
+     * @param {Element} el - The element to start selecting from
+     */
+    enableOpsListPopovers(el) {
+        $(el).find("[data-toggle=popover]").addBack("[data-toggle=popover]")
+            .popover({trigger: "manual"})
+            .on("mouseenter", function(e) {
+                if (e.buttons > 0) return; // Mouse button held down - likely dragging an operation
+                const _this = this;
+                $(this).popover("show");
+                $(".popover").on("mouseleave", function () {
+                    $(_this).popover("hide");
+                });
+            }).on("mouseleave", function () {
+                const _this = this;
+                setTimeout(function() {
+                    // Determine if the popover associated with this element is being hovered over
+                    if ($(_this).data("bs.popover") &&
+                        ($(_this).data("bs.popover").tip && !$($(_this).data("bs.popover").tip).is(":hover"))) {
+                        $(_this).popover("hide");
+                    }
+                }, 50);
+            });
+    }
+
+
+    /**
+     * Handler for operation doubleclick events.
+     * Adds the operation to the recipe and auto bakes.
+     *
+     * @param {event} e
+     */
+    operationDblclick(e) {
+        const li = e.target;
+
+        this.manager.recipe.addOperation(li.textContent);
+    }
+
+
+    /**
+     * Handler for edit favourites click events.
+     * Sets up the 'Edit favourites' pane and displays it.
+     *
+     * @param {event} e
      */
     editFavouritesClick(e) {
         const div = document.getElementById("editable-favourites");
@@ -263,6 +322,19 @@ class OperationsWaiter {
     resetFavouritesClick() {
         this.app.resetFavourites();
     }
+
+
+    /**
+     * Sets whether operation counts are displayed next to a category title
+     */
+    setCatCount() {
+        if (this.app.options.showCatCount) {
+            document.querySelectorAll(".category-title .op-count").forEach(el => el.classList.remove("hidden"));
+        } else {
+            document.querySelectorAll(".category-title .op-count").forEach(el => el.classList.add("hidden"));
+        }
+    }
+
 }
 
 export default OperationsWaiter;
