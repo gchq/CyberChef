@@ -177,7 +177,7 @@ class Utils {
      */
     static printable(str, preserveWs=false, onlyAscii=false) {
         if (onlyAscii) {
-            return str.replace(/[^\x20-\x7f]/g, ".");
+            return str.replace(/[^\x20-\x7e]/g, ".");
         }
 
         // eslint-disable-next-line no-misleading-character-class
@@ -893,7 +893,7 @@ class Utils {
 
 
     /**
-     * Converts a string to it's title case equivalent.
+     * Converts a string to its title case equivalent.
      *
      * @param {string} str
      * @returns string

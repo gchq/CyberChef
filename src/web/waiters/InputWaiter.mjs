@@ -215,13 +215,16 @@ class InputWaiter {
      * Handler for Chr Enc change events
      * Sets the input character encoding
      * @param {number} chrEncVal
-     * @param {boolean} [manual=false]
+     * @param {boolean} [manual=false] - Flag to indicate the encoding was set by the user
+     * @param {boolean} [internal=false] - Flag to indicate this was set internally, i.e. by loading from URI
      */
-    chrEncChange(chrEncVal, manual=false) {
+    chrEncChange(chrEncVal, manual=false, internal=false) {
         if (typeof chrEncVal !== "number") return;
         this.inputChrEnc = chrEncVal;
         this.encodingState = manual ? 2 : this.encodingState;
-        this.inputChange();
+        if (!internal) {
+            this.inputChange();
+        }
     }
 
     /**
@@ -639,10 +642,6 @@ class InputWaiter {
                 const inputStr = toBase64(inputVal, "A-Za-z0-9+/");
                 this.app.updateURL(true, inputStr);
             }
-
-            // Trigger a state change
-            if (!silent) window.dispatchEvent(this.manager.statechange);
-
         }.bind(this));
     }
 
@@ -1655,6 +1654,23 @@ class InputWaiter {
         this.changeTab(inputNum, this.app.options.syncTabs);
     }
 
+    /**
+     * Handler for incoming postMessages
+     * If the events data has a `type` property set to `dataSubmit`
+     * the value property is set to the current input
+     * @param {event} e
+     * @param {object} e.data
+     * @param {string} e.data.type - the type of request, currently the only value is "dataSubmit"
+     * @param {string} e.data.value - the value of the message
+     */
+    handlePostMessage(e) {
+        log.debug(e);
+        if ("data" in e && "id" in e.data && "value" in e.data) {
+            if (e.data.id === "setInput") {
+                this.setInput(e.data.value);
+            }
+        }
+    }
 }
 
 export default InputWaiter;

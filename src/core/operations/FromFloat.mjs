@@ -22,8 +22,8 @@ class FromFloat extends Operation {
 
         this.name = "From Float";
         this.module = "Default";
-        this.description = "Convert from EEE754 Floating Point Numbers";
-        this.infoURL = "https://en.wikipedia.org/wiki/IEEE_754";
+        this.description = "Convert from IEEE754 Floating Point Numbers";
+        this.infoURL = "https://wikipedia.org/wiki/IEEE_754";
         this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [
