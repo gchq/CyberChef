@@ -345,6 +345,42 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "begin_something_aaaaaaaaaaaaaa_end_something");
     }),
 
+    it("chef.bake: should accept operation names from Chef Website which contain forward slash", () => {
+        const result = chef.bake("I'll have the test salmon", [
+            { "op": "Find / Replace",
+                "args": [{ "option": "Regex", "string": "test" }, "good", true, false, true, false]}
+        ]);
+        assert.strictEqual(result.toString(), "I'll have the good salmon");
+    }),
+
+    it("chef.bake: should accept operation names from Chef Website which contain a hyphen", () => {
+        const result = chef.bake("I'll have the test salmon", [
+            { "op": "Adler-32 Checksum",
+                "args": [] }
+        ]);
+        assert.strictEqual(result.toString(), "6e4208f8");
+    }),
+
+    it("chef.bake: should accept operation names from Chef Website which contain a period", () => {
+        const result = chef.bake("30 13 02 01 05 16 0e 41 6e 79 62 6f 64 79 20 74 68 65 72 65 3f", [
+            { "op": "Parse ASN.1 hex string",
+                "args": [0, 32] }
+        ]);
+        assert.strictEqual(result.toString(), `SEQUENCE
+  INTEGER 05
+  IA5String 'Anybody there?'
+`);
+    }),
+
+    it("Excluded operations: throw a sensible error when you try and call one", () => {
+        try {
+            chef.fork();
+        } catch (e) {
+            assert.strictEqual(e.type, "ExcludedOperationError");
+            assert.strictEqual(e.message, "Sorry, the Fork operation is not available in the Node.js version of CyberChef.");
+        }
+    }),
+
     it("chef.bake: cannot accept flowControl operations in recipe", () => {
         assert.throws(() => chef.bake("some input", "magic"), {
             name: "TypeError",
