@@ -124,7 +124,12 @@ class CropImage extends Operation {
                     leaveBorder: autoBorder,
                 });
             } else {
-                image.crop({ xPos, yPos, width, height });
+                image.crop({
+                    x: xPos,
+                    y: yPos,
+                    w: width,
+                    h: height,
+                });
             }
 
             let imageBuffer;
