@@ -10,6 +10,12 @@ import zip from "zlibjs/bin/zip.min.js";
 import Utils from "../../core/Utils.mjs";
 import Dish from "../../core/Dish.mjs";
 import {detectFileType} from "../../core/lib/FileType.mjs";
+import loglevelMessagePrefix from "loglevel-message-prefix";
+
+loglevelMessagePrefix(log, {
+    prefixes: [],
+    staticPrefixes: ["ZipWorker"],
+});
 
 const Zlib = zip.Zlib;
 
@@ -17,17 +23,20 @@ const Zlib = zip.Zlib;
  * Respond to message from parent thread.
  */
 self.addEventListener("message", function(e) {
+    // Handle message from the main thread
     const r = e.data;
-    if (!("outputs" in r)) {
-        log.error("No files were passed to the ZipWorker.");
-        return;
-    }
-    if (!("filename" in r)) {
-        log.error("No filename was passed to the ZipWorker");
-        return;
-    }
+    log.debug(`Receiving command '${r.action}'`);
 
-    self.zipFiles(r.outputs, r.filename, r.fileExtension);
+    switch (r.action) {
+        case "zipFiles":
+            self.zipFiles(r.data.outputs, r.data.filename, r.data.fileExtension);
+            break;
+        case "setLogLevel":
+            log.setLevel(r.data, false);
+            break;
+        default:
+            log.error(`Unknown action: '${r.action}'`);
+    }
 });
 
 self.setOption = function(...args) {};

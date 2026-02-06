@@ -1,6 +1,7 @@
 /**
  * @author j433866 [j433866@gmail.com]
- * @copyright Crown Copyright 2019
+ * @author 0xff1ce [github.com/0xff1ce]
+ * @copyright Crown Copyright 2024
  * @license Apache-2.0
  */
 
@@ -22,7 +23,7 @@ class ShowOnMap extends Operation {
         this.name = "Show on map";
         this.module = "Hashing";
         this.description = "Displays co-ordinates on a slippy map.<br><br>Co-ordinates will be converted to decimal degrees before being shown on the map.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li><li>Ordnance Survey National Grid (OSNG)</li><li>Universal Transverse Mercator (UTM)</li></ul><br>This operation will not work offline.";
-        this.infoURL = "https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use";
+        this.infoURL = "https://osmfoundation.org/wiki/Terms_of_Use";
         this.inputType = "string";
         this.outputType = "string";
         this.presentType = "html";
@@ -85,12 +86,19 @@ class ShowOnMap extends Operation {
             data = "0, 0";
         }
         const zoomLevel = args[0];
-        const tileUrl = "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png",
-            tileAttribution = "<a href=\"https://wikimediafoundation.org/wiki/Maps_Terms_of_Use\">Wikimedia maps</a> | &copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
-            leafletUrl = "https://unpkg.com/leaflet@1.5.0/dist/leaflet.js",
-            leafletCssUrl = "https://unpkg.com/leaflet@1.5.0/dist/leaflet.css";
+        const tileUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            tileAttribution = "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
+            leafletUrl = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
+            leafletCssUrl = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
         return `<link rel="stylesheet" href="${leafletCssUrl}" crossorigin=""/>
-<style>#output-html { white-space: normal; padding: 0; }</style>
+<style>
+    #output-text .cm-content,
+    #output-text .cm-line,
+    #output-html {
+        padding: 0;
+        white-space: normal;
+    }
+</style>
 <div id="presentedMap" style="width: 100%; height: 100%;"></div>
 <script type="text/javascript">
 var mapscript = document.createElement('script');

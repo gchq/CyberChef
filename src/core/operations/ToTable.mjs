@@ -214,7 +214,7 @@ class ToTable extends Operation {
             output += outputRow(row, longestCells);
             let rowOutput = verticalBorder;
             row.forEach(function(cell, index) {
-                rowOutput += " " +  headerDivider + " " + verticalBorder;
+                rowOutput += " " +  headerDivider.repeat(longestCells[index]) + " " + verticalBorder;
             });
             output += rowOutput += "\n";
 
