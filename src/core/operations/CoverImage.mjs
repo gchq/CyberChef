@@ -114,8 +114,8 @@ class CoverImage extends Operation {
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Covering image...");
             image.cover({
-                width,
-                height,
+                w: width,
+                h: height,
                 align: alignMap[hAlign] | alignMap[vAlign],
                 mode: resizeMap[alg],
             });
