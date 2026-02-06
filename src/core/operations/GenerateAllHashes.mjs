@@ -22,14 +22,6 @@ import HAS160 from "./HAS160.mjs";
 import Whirlpool from "./Whirlpool.mjs";
 import SSDEEP from "./SSDEEP.mjs";
 import CTPH from "./CTPH.mjs";
-import Fletcher8Checksum from "./Fletcher8Checksum.mjs";
-import Fletcher16Checksum from "./Fletcher16Checksum.mjs";
-import Fletcher32Checksum from "./Fletcher32Checksum.mjs";
-import Fletcher64Checksum from "./Fletcher64Checksum.mjs";
-import Adler32Checksum from "./Adler32Checksum.mjs";
-import CRC8Checksum from "./CRC8Checksum.mjs";
-import CRC16Checksum from "./CRC16Checksum.mjs";
-import CRC32Checksum from "./CRC32Checksum.mjs";
 import BLAKE2b from "./BLAKE2b.mjs";
 import BLAKE2s from "./BLAKE2s.mjs";
 import Streebog from "./Streebog.mjs";
@@ -114,16 +106,6 @@ class GenerateAllHashes extends Operation {
             {name: "SSDEEP", algo: (new SSDEEP()), inputType: "str"},
             {name: "CTPH", algo: (new CTPH()), inputType: "str"}
         ];
-        this.checksums = [
-            {name: "Fletcher-8", algo: (new Fletcher8Checksum), inputType: "byteArray", params: []},
-            {name: "Fletcher-16", algo: (new Fletcher16Checksum), inputType: "byteArray", params: []},
-            {name: "Fletcher-32", algo: (new Fletcher32Checksum), inputType: "byteArray", params: []},
-            {name: "Fletcher-64", algo: (new Fletcher64Checksum), inputType: "byteArray", params: []},
-            {name: "Adler-32", algo: (new Adler32Checksum), inputType: "byteArray", params: []},
-            {name: "CRC-8", algo: (new CRC8Checksum), inputType: "arrayBuffer", params: ["CRC-8"]},
-            {name: "CRC-16", algo: (new CRC16Checksum), inputType: "arrayBuffer", params: []},
-            {name: "CRC-32", algo: (new CRC32Checksum), inputType: "arrayBuffer", params: []}
-        ];
     }
 
     /**
@@ -143,14 +125,6 @@ class GenerateAllHashes extends Operation {
             digest = this.executeAlgo(hash.algo, hash.inputType, hash.params || []);
             output += this.formatDigest(digest, length, includeNames, hash.name);
         });
-
-        if (length === "All") {
-            output += "\nChecksums:\n";
-            this.checksums.forEach(checksum => {
-                digest = this.executeAlgo(checksum.algo, checksum.inputType, checksum.params || []);
-                output += this.formatDigest(digest, length, includeNames, checksum.name);
-            });
-        }
 
         return output;
     }
