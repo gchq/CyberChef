@@ -26,6 +26,8 @@
             "From Base45",
             "To Base58",
             "From Base58",
+            "To Bech32",
+            "From Bech32",
             "To Base62",
             "From Base62",
             "To Base64",
@@ -375,7 +377,8 @@
             "Extract EXIF",
             "Extract ID3",
             "Extract Files",
-            "RAKE"
+            "RAKE",
+            "Template"
         ]
     },
     {
