@@ -101,22 +101,17 @@ class RAKE extends Operation {
         phrases = phrases.filter(subArray => subArray.length > 0);
 
         // Remove duplicate phrases
-        const uniquePhrases = [...new Set(phrases.map(function (phrase) {
-            return phrase.join(" ");
-        }))];
-        phrases = uniquePhrases.map(function (phrase) {
-            return phrase.split(" ");
-        });
+        phrases = phrases.unique();
 
         // Generate word_degree_matrix and populate
-        const wordDegreeMatrix = Array.from(Array(tokens.length), _ => Array(tokens.length).fill(0));
-        phrases.forEach(function (phrase) {
-            phrase.forEach(function (word1) {
-                phrase.forEach(function (word2) {
+        const wordDegreeMatrix = Array(tokens.length).fill().map(() => Array(tokens.length).fill(0));
+        for (const phrase of phrases) {
+            for (const word1 of phrase) {
+                for (const word2 of phrase) {
                     wordDegreeMatrix[tokens.indexOf(word1)][tokens.indexOf(word2)]++;
-                });
-            });
-        });
+                }
+            }
+        }
 
         // Calculate degree score for each token
         const degreeScores = Array(tokens.length).fill(0);
