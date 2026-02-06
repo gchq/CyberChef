@@ -56,9 +56,9 @@ class ExtractRGBA extends Operation {
             parsedImage = await Jimp.read(input);
 
         let bitmap = parsedImage.bitmap.data;
-        bitmap = includeAlpha
-            ? bitmap
-            : bitmap.filter((val, idx) => idx % 4 !== 3);
+        bitmap = includeAlpha ?
+            bitmap :
+            bitmap.filter((val, idx) => idx % 4 !== 3);
 
         return bitmap.join(delimiter);
     }

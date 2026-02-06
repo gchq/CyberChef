@@ -153,17 +153,17 @@ class SharpenImage extends Operation {
                     // Only change pixel value if the difference is higher than threshold
                     if ((luminanceDiff / 255) * 100 >= threshold) {
                         this.bitmap.data[idx] =
-                            normalRed + maskRed <= 255
-                                ? normalRed + maskRed
-                                : 255;
+                            normalRed + maskRed <= 255 ?
+                                normalRed + maskRed :
+                                255;
                         this.bitmap.data[idx + 1] =
-                            normalGreen + maskGreen <= 255
-                                ? normalGreen + maskGreen
-                                : 255;
+                            normalGreen + maskGreen <= 255 ?
+                                normalGreen + maskGreen :
+                                255;
                         this.bitmap.data[idx + 2] =
-                            normalBlue + maskBlue <= 255
-                                ? normalBlue + maskBlue
-                                : 255;
+                            normalBlue + maskBlue <= 255 ?
+                                normalBlue + maskBlue :
+                                255;
                     }
                 },
             );
