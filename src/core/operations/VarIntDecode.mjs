@@ -24,7 +24,7 @@ class VarIntDecode extends Operation {
         this.description = "Decodes a VarInt encoded integer. VarInt is an efficient way of encoding variable length integers and is commonly used with Protobuf.";
         this.infoURL = "https://developers.google.com/protocol-buffers/docs/encoding#varints";
         this.inputType = "byteArray";
-        this.outputType = "number";
+        this.outputType = "string";
         this.args = [];
     }
 
@@ -35,7 +35,18 @@ class VarIntDecode extends Operation {
      */
     run(input, args) {
         try {
-            return Protobuf.varIntDecode(input);
+            if (typeof BigInt === "function") {
+                let result = BigInt(0);
+                let offset = BigInt(0);
+                for (let i = 0; i < input.length; i++) {
+                    result |= BigInt(input[i] & 0x7f) << offset;
+                    if (!(input[i] & 0x80)) break;
+                    offset += BigInt(7);
+                }
+                return result.toString();
+            } else {
+                return Protobuf.varIntDecode(input).toString();
+            }
         } catch (err) {
             throw new OperationError(err);
         }
