@@ -100,7 +100,7 @@ class ChaCha extends Operation {
         super();
 
         this.name = "ChaCha";
-        this.module = "Default";
+        this.module = "Ciphers";
         this.description = "ChaCha is a stream cipher designed by Daniel J. Bernstein. It is a variant of the Salsa stream cipher. Several parameterizations exist; 'ChaCha' may refer to the original construction, or to the variant as described in RFC-8439. ChaCha is often used with Poly1305, in the ChaCha20-Poly1305 AEAD construction.<br><br><b>Key:</b> ChaCha uses a key of 16 or 32 bytes (128 or 256 bits).<br><br><b>Nonce:</b> ChaCha uses a nonce of 8 or 12 bytes (64 or 96 bits).<br><br><b>Counter:</b> ChaCha uses a counter of 4 or 8 bytes (32 or 64 bits); together, the nonce and counter must add up to 16 bytes. The counter starts at zero at the start of the keystream, and is incremented at every 64 bytes.";
         this.infoURL = "https://wikipedia.org/wiki/Salsa20#ChaCha_variant";
         this.inputType = "string";
@@ -191,7 +191,7 @@ ChaCha uses a nonce of 8 or 12 bytes (64 or 96 bits).`);
         if (outputType === "Hex") {
             return toHex(output);
         } else {
-            return Utils.arrayBufferToStr(output);
+            return Utils.arrayBufferToStr(Uint8Array.from(output).buffer);
         }
     }
 

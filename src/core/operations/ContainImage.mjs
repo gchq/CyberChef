@@ -9,8 +9,7 @@ import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
-import jimplib from "jimp/es/index.js";
-const jimp = jimplib.default ? jimplib.default : jimplib;
+import Jimp from "jimp/es/index.js";
 
 /**
  * Contain Image operation
@@ -92,20 +91,20 @@ class ContainImage extends Operation {
         const [width, height, hAlign, vAlign, alg, opaqueBg] = args;
 
         const resizeMap = {
-            "Nearest Neighbour": jimp.RESIZE_NEAREST_NEIGHBOR,
-            "Bilinear": jimp.RESIZE_BILINEAR,
-            "Bicubic": jimp.RESIZE_BICUBIC,
-            "Hermite": jimp.RESIZE_HERMITE,
-            "Bezier": jimp.RESIZE_BEZIER
+            "Nearest Neighbour": Jimp.RESIZE_NEAREST_NEIGHBOR,
+            "Bilinear": Jimp.RESIZE_BILINEAR,
+            "Bicubic": Jimp.RESIZE_BICUBIC,
+            "Hermite": Jimp.RESIZE_HERMITE,
+            "Bezier": Jimp.RESIZE_BEZIER
         };
 
         const alignMap = {
-            "Left": jimp.HORIZONTAL_ALIGN_LEFT,
-            "Center": jimp.HORIZONTAL_ALIGN_CENTER,
-            "Right": jimp.HORIZONTAL_ALIGN_RIGHT,
-            "Top": jimp.VERTICAL_ALIGN_TOP,
-            "Middle": jimp.VERTICAL_ALIGN_MIDDLE,
-            "Bottom": jimp.VERTICAL_ALIGN_BOTTOM
+            "Left": Jimp.HORIZONTAL_ALIGN_LEFT,
+            "Center": Jimp.HORIZONTAL_ALIGN_CENTER,
+            "Right": Jimp.HORIZONTAL_ALIGN_RIGHT,
+            "Top": Jimp.VERTICAL_ALIGN_TOP,
+            "Middle": Jimp.VERTICAL_ALIGN_MIDDLE,
+            "Bottom": Jimp.VERTICAL_ALIGN_BOTTOM
         };
 
         if (!isImage(input)) {
@@ -114,7 +113,7 @@ class ContainImage extends Operation {
 
         let image;
         try {
-            image = await jimp.read(input);
+            image = await Jimp.read(input);
         } catch (err) {
             throw new OperationError(`Error loading image. (${err})`);
         }
@@ -124,16 +123,16 @@ class ContainImage extends Operation {
             image.contain(width, height, alignMap[hAlign] | alignMap[vAlign], resizeMap[alg]);
 
             if (opaqueBg) {
-                const newImage = await jimp.read(width, height, 0x000000FF);
+                const newImage = await Jimp.read(width, height, 0x000000FF);
                 newImage.blit(image, 0, 0);
                 image = newImage;
             }
 
             let imageBuffer;
             if (image.getMIME() === "image/gif") {
-                imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
+                imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
             } else {
-                imageBuffer = await image.getBufferAsync(jimp.AUTO);
+                imageBuffer = await image.getBufferAsync(Jimp.AUTO);
             }
             return imageBuffer.buffer;
         } catch (err) {

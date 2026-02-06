@@ -49,24 +49,6 @@ class TabWaiter {
     }
 
     /**
-     * Gets the currently active input tab number
-     *
-     * @returns {number}
-     */
-    getActiveInputTab() {
-        return this.getActiveTab("input");
-    }
-
-    /**
-     * Gets the currently active output tab number
-     *
-     * @returns {number}
-     */
-    getActiveOutputTab() {
-        return this.getActiveTab("output");
-    }
-
-    /**
      * Gets the li element for the tab of a given input number
      *
      * @param {number} inputNum - The inputNum of the tab we're trying to get
@@ -81,26 +63,6 @@ class TabWaiter {
             }
         }
         return null;
-    }
-
-    /**
-     * Gets the li element for an input tab of the given input number
-     *
-     * @param {inputNum} - The inputNum of the tab we're trying to get
-     * @returns {Element}
-     */
-    getInputTabItem(inputNum) {
-        return this.getTabItem(inputNum, "input");
-    }
-
-    /**
-     * Gets the li element for an output tab of the given input number
-     *
-     * @param {number} inputNum
-     * @returns {Element}
-     */
-    getOutputTabItem(inputNum) {
-        return this.getTabItem(inputNum, "output");
     }
 
     /**
@@ -121,24 +83,6 @@ class TabWaiter {
     }
 
     /**
-     * Gets a list of tab numbers for the currently displayed input tabs
-     *
-     * @returns {number[]}
-     */
-    getInputTabList() {
-        return this.getTabList("input");
-    }
-
-    /**
-     * Gets a list of tab numbers for the currently displayed output tabs
-     *
-     * @returns {number[]}
-     */
-    getOutputTabList() {
-        return this.getTabList("output");
-    }
-
-    /**
      * Creates a new tab element for the tab bar
      *
      * @param {number} inputNum - The inputNum of the new tab
@@ -154,11 +98,8 @@ class TabWaiter {
 
         const newTabContent = document.createElement("div");
         newTabContent.classList.add(`${io}-tab-content`);
-
         newTabContent.innerText = `Tab ${inputNum.toString()}`;
-
         newTabContent.addEventListener("wheel", this.manager[io].scrollTab.bind(this.manager[io]), {passive: false});
-
         newTab.appendChild(newTabContent);
 
         if (io === "input") {
@@ -166,40 +107,14 @@ class TabWaiter {
                 newTabButtonIcon = document.createElement("i");
             newTabButton.type = "button";
             newTabButton.className = "btn btn-primary bmd-btn-icon btn-close-tab";
-
             newTabButtonIcon.classList.add("material-icons");
             newTabButtonIcon.innerText = "clear";
-
             newTabButton.appendChild(newTabButtonIcon);
-
             newTabButton.addEventListener("click", this.manager.input.removeTabClick.bind(this.manager.input));
-
             newTab.appendChild(newTabButton);
         }
 
         return newTab;
-    }
-
-    /**
-     * Creates a new tab element for the input tab bar
-     *
-     * @param {number} inputNum - The inputNum of the new input tab
-     * @param {boolean} [active=false] - If true, sets the tab to active
-     * @returns {Element}
-     */
-    createInputTabElement(inputNum, active=false) {
-        return this.createTabElement(inputNum, active, "input");
-    }
-
-    /**
-     * Creates a new tab element for the output tab bar
-     *
-     * @param {number} inputNum - The inputNum of the new output tab
-     * @param {boolean} [active=false] - If true, sets the tab to active
-     * @returns {Element}
-     */
-    createOutputTabElement(inputNum, active=false) {
-        return this.createTabElement(inputNum, active, "output");
     }
 
     /**
@@ -208,10 +123,8 @@ class TabWaiter {
     showTabBar() {
         document.getElementById("input-tabs-wrapper").style.display = "block";
         document.getElementById("output-tabs-wrapper").style.display = "block";
-
         document.getElementById("input-wrapper").classList.add("show-tabs");
         document.getElementById("output-wrapper").classList.add("show-tabs");
-
         document.getElementById("save-all-to-file").style.display = "inline-block";
     }
 
@@ -221,10 +134,8 @@ class TabWaiter {
     hideTabBar() {
         document.getElementById("input-tabs-wrapper").style.display = "none";
         document.getElementById("output-tabs-wrapper").style.display = "none";
-
         document.getElementById("input-wrapper").classList.remove("show-tabs");
         document.getElementById("output-wrapper").classList.remove("show-tabs");
-
         document.getElementById("save-all-to-file").style.display = "none";
     }
 
@@ -272,30 +183,6 @@ class TabWaiter {
     }
 
     /**
-     * Refreshes the input tabs, and changes to activeTab
-     *
-     * @param {number[]} nums - The inputNums to be displayed as tabs
-     * @param {number} activeTab - The tab to change to
-     * @param {boolean} tabsLeft - True if there are input tabs to the left of the displayed tabs
-     * @param {boolean} tabsRight - True if there are input tabs to the right of the displayed tabs
-     */
-    refreshInputTabs(nums, activeTab, tabsLeft, tabsRight) {
-        this.refreshTabs(nums, activeTab, tabsLeft, tabsRight, "input");
-    }
-
-    /**
-     * Refreshes the output tabs, and changes to activeTab
-     *
-     * @param {number[]} nums - The inputNums to be displayed as tabs
-     * @param {number} activeTab - The tab to change to
-     * @param {boolean} tabsLeft - True if there are output tabs to the left of the displayed tabs
-     * @param {boolean} tabsRight - True if there are output tabs to the right of the displayed tabs
-     */
-    refreshOutputTabs(nums, activeTab, tabsLeft, tabsRight) {
-        this.refreshTabs(nums, activeTab, tabsLeft, tabsRight, "output");
-    }
-
-    /**
      * Changes the active tab to a different tab
      *
      * @param {number} inputNum - The inputNum of the tab to change to
@@ -304,9 +191,6 @@ class TabWaiter {
      */
     changeTab(inputNum, io) {
         const tabsList = document.getElementById(`${io}-tabs`);
-
-        this.manager.highlighter.removeHighlights();
-        getSelection().removeAllRanges();
 
         let found = false;
         for (let i = 0; i < tabsList.children.length; i++) {
@@ -320,26 +204,6 @@ class TabWaiter {
         }
 
         return found;
-    }
-
-    /**
-     * Changes the active input tab to a different tab
-     *
-     * @param {number} inputNum
-     * @returns {boolean} - False if the tab is not currently being displayed
-     */
-    changeInputTab(inputNum) {
-        return this.changeTab(inputNum, "input");
-    }
-
-    /**
-     * Changes the active output tab to a different tab
-     *
-     * @param {number} inputNum
-     * @returns {boolean} - False if the tab is not currently being displayed
-     */
-    changeOutputTab(inputNum) {
-        return this.changeTab(inputNum, "output");
     }
 
     /**
@@ -362,26 +226,6 @@ class TabWaiter {
     }
 
     /**
-     * Updates the input tab header to display a preview of the tab contents
-     *
-     * @param {number} inputNum - The inputNum of the tab to update the header of
-     * @param {string} data - The data to display in the tab header
-     */
-    updateInputTabHeader(inputNum, data) {
-        this.updateTabHeader(inputNum, data, "input");
-    }
-
-    /**
-     * Updates the output tab header to display a preview of the tab contents
-     *
-     * @param {number} inputNum - The inputNum of the tab to update the header of
-     * @param {string} data - The data to display in the tab header
-     */
-    updateOutputTabHeader(inputNum, data) {
-        this.updateTabHeader(inputNum, data, "output");
-    }
-
-    /**
      * Updates the tab background to display the progress of the current tab
      *
      * @param {number} inputNum - The inputNum of the tab
@@ -399,28 +243,6 @@ class TabWaiter {
         } else {
             tabItem.style.background = `linear-gradient(to right, var(--title-background-colour) ${percentComplete}%, var(--primary-background-colour) ${percentComplete}%)`;
         }
-    }
-
-    /**
-     * Updates the input tab background to display its progress
-     *
-     * @param {number} inputNum
-     * @param {number} progress
-     * @param {number} total
-     */
-    updateInputTabProgress(inputNum, progress, total) {
-        this.updateTabProgress(inputNum, progress, total, "input");
-    }
-
-    /**
-     * Updates the output tab background to display its progress
-     *
-     * @param {number} inputNum
-     * @param {number} progress
-     * @param {number} total
-     */
-    updateOutputTabProgress(inputNum, progress, total) {
-        this.updateTabProgress(inputNum, progress, total, "output");
     }
 
 }
