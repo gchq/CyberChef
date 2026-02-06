@@ -115,6 +115,7 @@ class ContainImage extends Operation {
         } catch (err) {
             throw new OperationError(`Error loading image. (${err})`);
         }
+        const originalMime = image.mime;
         try {
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Containing image...");
@@ -139,10 +140,10 @@ class ContainImage extends Operation {
             }
 
             let imageBuffer;
-            if (image.mime === "image/gif") {
+            if (originalMime === "image/gif") {
                 imageBuffer = await image.getBuffer(JimpMime.png);
             } else {
-                imageBuffer = await image.getBuffer(image.mime);
+                imageBuffer = await image.getBuffer(originalMime);
             }
             return imageBuffer.buffer;
         } catch (err) {
