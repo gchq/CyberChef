@@ -18,7 +18,7 @@ class ConvertLeetSpeak extends Operation {
 
         this.name = "Convert Leet Speak";
         this.module = "Default";
-        this.description = "Converts to and from Leet Speak";
+        this.description = "Converts to and from Leet Speak.";
         this.infoURL = "https://wikipedia.org/wiki/Leet";
         this.inputType = "string";
         this.outputType = "string";
@@ -39,13 +39,16 @@ class ConvertLeetSpeak extends Operation {
      */
     run(input, args) {
         const direction = args[0];
+
         if (direction === "To Leet Speak") {
-            return input.replace(/[abcdefghijklmnopqrstuvwxyz]/gi, char => {
-                return toLeetMap[char.toLowerCase()] || char;
+            return input.replace(/[a-z]/gi, char => {
+                const leetChar = toLeetMap[char.toLowerCase()] || char;
+                return char === char.toUpperCase() ? leetChar.toUpperCase() : leetChar;
             });
         } else if (direction === "From Leet Speak") {
-            return input.replace(/[48cd3f6h1jklmn0pqr57uvwxyz]/g, char => {
-                return fromLeetMap[char] || char;
+            return input.replace(/[48cd3f6h1jklmn0pqr57uvwxyz]/gi, char => {
+                const normalChar = fromLeetMap[char] || char;
+                return normalChar;
             });
         }
     }
