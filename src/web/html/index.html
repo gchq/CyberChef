@@ -148,13 +148,13 @@
         </button>
         <div id="content-wrapper">
             <div id="banner">
-                <div>
-                    <a href="#" class="banner-link" data-toggle="modal" data-target="#download-modal" data-help-title="Downloading CyberChef" data-help="<p>CyberChef can be downloaded to run locally or hosted within your own network. It has no server-side component so all that is required is that the ZIP file is uncompressed and the files are accessible.</p><p>As a user, it is worth noting that unofficial versions of CyberChef could have been modified to introduce Input and/or Recipe exfiltration. We recommend always using the official, open source, up-to-date version of CyberChef hosted at <a href='https://gchq.github.io/CyberChef'>https://gchq.github.io/CyberChef</a> if accessible.</p><p>The Network tab in your browser's Developer console (F12) can be used to inspect the network requests made by a website. This can confirm that no data is uploaded when a CyberChef recipe is baked.</p>">
+                <div id="download-wrapper">
+                    <a href="#" class="banner-link desktop-only" data-toggle="modal" data-target="#download-modal" data-help-title="Downloading CyberChef" data-help="<p>CyberChef can be downloaded to run locally or hosted within your own network. It has no server-side component so all that is required is that the ZIP file is uncompressed and the files are accessible.</p><p>As a user, it is worth noting that unofficial versions of CyberChef could have been modified to introduce Input and/or Recipe exfiltration. We recommend always using the official, open source, up-to-date version of CyberChef hosted at <a href='https://gchq.github.io/CyberChef'>https://gchq.github.io/CyberChef</a> if accessible.</p><p>The Network tab in your browser's Developer console (F12) can be used to inspect the network requests made by a website. This can confirm that no data is uploaded when a CyberChef recipe is baked.</p>">
                         <span>Download CyberChef</span>
-                        <i class="material-icons">file_download</i>
+                        <i class="material-icons banner-icon">file_download</i>
                     </a>
                 </div>
-                <div id="notice-wrapper" class="desktop-only">
+                <div id="notice-wrapper">
                     <span id="notice">
                         <script type="text/javascript">
                             // Must be text/javascript rather than application/javascript otherwise IE won't recognise it...
@@ -173,7 +173,7 @@
                        data-help-title="Options and Settings"
                        data-help="Configurable options to change how CyberChef behaves. These settings are stored in your browser's local storage, meaning they will persist between sessions that use the same browser profile.">
                         <span class="desktop-only">Options</span>
-                        <i class="material-icons">settings</i>
+                        <i class="material-icons banner-icon">settings</i>
                     </a>
                     <a href="#"
                        id="support"
@@ -183,7 +183,7 @@
                        data-help-title="About / Support"
                        data-help="This pane provides information about the CyberChef web app, how to use some of the features, and how to raise bug reports.">
                         <span class="desktop-only">About / Support</span>
-                        <i class="material-icons">help</i>
+                        <i class="material-icons banner-icon">help</i>
                     </a>
                 </div>
             </div>
@@ -193,15 +193,17 @@
                          data-help-title="Operations list"
                          data-help="<p>The Operations list contains all the operations in CyberChef arranged into categories. Some operations may be present in multiple categories. You can search for operations using the search box.</p><p>To use an operation, either double click it, or drag it into the Recipe pane. You will then be able to configure its arguments (or 'Ingredients' in CyberChef terminology).</p>">
                         Operations
-                        <span class="op-count"></span>
-                        <span class="pane-controls">
-                            <button type="button"
-                                    class="btn bmd-btn-icon mobile-only hidden"
-                                    id="close-ops-dropdown-icon"
-                                    title="Close dropdown">
-                                <i class="material-icons">close</i>
-                            </button>
-                        </span>
+                        <div id="ops-title-right">
+                            <span class="op-count"></span>
+                            <span class="pane-controls">
+                                <button type="button"
+                                        class="btn bmd-btn-icon mobile-only hidden"
+                                        id="close-ops-dropdown-icon"
+                                        title="Close dropdown">
+                                    <i class="material-icons">close</i>
+                                </button>
+                            </span>
+                        </div>
                     </div>
                     <div id="operations-wrapper">
                         <input id="search"

@@ -13,6 +13,11 @@
     padding: 8px 8px 8px 12px;
 }
 
+#operations-title-right {
+    display: flex;
+    align-items: center;
+}
+
 #operations-wrapper {
     position: relative;
 }

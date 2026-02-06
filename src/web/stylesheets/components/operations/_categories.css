@@ -59,3 +59,14 @@ c-category-list > ul {
     padding: 8px 8px 9px 8px;
 }
 
+.category-title-right {
+    display: flex;
+}
+
+.op-count {
+    color: var(--subtext-font-colour);
+    font-weight: normal;
+    font-size: xx-small;
+    opacity: 0.5;
+    padding-left: .5em;
+}

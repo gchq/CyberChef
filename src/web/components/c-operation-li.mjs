@@ -1,4 +1,5 @@
 import url from "url";
+import Utils from "../../core/Utils.mjs";
 
 /**
  * c(ustom element)-operation-li ( list item )
@@ -37,6 +38,7 @@ export class COperationLi extends HTMLElement {
         // Use mousedown event instead of click to prevent accidentally firing the handler twice on mobile
         this.addEventListener("mousedown", this.handleMousedown.bind(this));
         this.addEventListener("dblclick", this.handleDoubleClick.bind(this));
+        this.addEventListener("touchstart", this.handleTouchStart.bind(this));
 
         if (this.includeStarIcon) {
             this.observer = new MutationObserver(this.updateFavourite.bind(this));
@@ -50,6 +52,7 @@ export class COperationLi extends HTMLElement {
     disconnectedCallback() {
         this.removeEventListener("mousedown", this.handleMousedown.bind(this));
         this.removeEventListener("dblclick", this.handleDoubleClick.bind(this));
+        this.removeEventListener("touchstart", this.handleTouchStart.bind(this));
 
         if (this.includeStarIcon) {
             this.observer.disconnect();
@@ -62,6 +65,7 @@ export class COperationLi extends HTMLElement {
      * Handle double click
      */
     handleDoubleClick() {
+        this.app.manager.ops.clearSingleTapAlerts();
         this.app.manager.recipe.addOperation(this.operationName);
     }
 
@@ -72,13 +76,30 @@ export class COperationLi extends HTMLElement {
      */
     handleMousedown(e) {
         if (e.target === this.querySelector("i.star-icon")) {
-            this.app.addFavourite(this.operationName);
-        }
-        // current use case: in the 'Edit favourites' modal, the c-operation-li components have a trashcan icon to the
-        // right
-        if (e.target === this.querySelector("i.remove-icon")) {
+            if (!this.isFavourite) {
+                this.app.addFavourite(this.operationName);
+                this.isFavourite = true;
+            } else {
+                this.app.removeFavourite(this.operationName);
+                this.isFavourite = false;
+            }
+        } else if (e.target === this.querySelector("i.remove-icon")) {
+            // current use case: in the 'Edit favourites' modal, the c-operation-li components have a trashcan icon to the
+            // right
             this.remove();
+        } else {
+            return;
         }
+        // if we've handled another event, don't use this to trigger doubleclick
+        e.preventDefault();
+    }
+
+    /**
+     * If the user taps a single operation, alert them that doubletapping adds operation to recipe.
+     * @param {TouchEvent} e
+     */
+    handleTouchStart(e) {
+        this.app.manager.ops.sendSingleTapAlert();
     }
 
     /**
@@ -157,9 +178,9 @@ export class COperationLi extends HTMLElement {
             pageTitle = "";
 
         switch (urlObj.host) {
-            case "forensicswiki.xyz":
+            case "forensics.wiki":
                 wikiName = "Forensics Wiki";
-                pageTitle = urlObj.query.substr(6).replace(/_/g, " "); // Chop off 'title='
+                pageTitle = Utils.toTitleCase(urlObj.path.replace(/\//g, "").replace(/_/g, " "));
                 break;
             case "wikipedia.org":
                 wikiName = "Wikipedia";

@@ -105,6 +105,10 @@ export class CCategoryLi extends HTMLElement {
 
         a.innerText = this.label;
 
+        // Create wrapper for right-aligned controls
+        const divRight = document.createElement("div");
+        divRight.setAttribute("class", "category-title-right");
+
         if (this.label === "Favourites") {
             const editFavouritesButton = this.buildEditFavouritesButton();
 
@@ -119,8 +123,19 @@ export class CCategoryLi extends HTMLElement {
                 <li><b>To remove:</b> Click on the 'Edit favourites' button and hit the delete button next to the operation you want to remove</li>
             </ul>`);
 
-            a.appendChild(editFavouritesButton);
+            divRight.appendChild(editFavouritesButton);
         }
+
+        // Show count of operations in category
+        const opCountSpan = document.createElement("span");
+        opCountSpan.classList.add("op-count");
+        if (!this.app.options.showCatCount) {
+            opCountSpan.classList.add("hidden");
+        }
+        opCountSpan.innerText = this.category.ops.length;
+        divRight.appendChild(opCountSpan);
+
+        a.appendChild(divRight);
 
         return a;
     }

@@ -63,6 +63,7 @@ class RecipeWaiter {
             onEnd: function(e) {
                 if (this.removeIntent) {
                     e.item.remove();
+                    document.dispatchEvent(this.manager.statechange);
                     e.target.dispatchEvent(this.manager.operationremove);
                 }
             }.bind(this),

@@ -23,6 +23,9 @@ class OperationsWaiter {
         this.manager = manager;
 
         this.options = {};
+
+        this.lastSingleTapAlert = null;
+        this.singleTapAlertTimeout = null;
     }
 
 
@@ -176,64 +179,6 @@ class OperationsWaiter {
 
     /**
      * Handler for edit favourites click events.
-     * Displays the 'Edit favourites' modal and handles the c-operation-list in the modal
-     *
-     * @param {Event} e
-     */
-    opListCreate(e) {
-        this.manager.recipe.createSortableSeedList(e.target);
-
-        // Populate ops total
-        document.querySelector("#operations .title .op-count").innerText = Object.keys(this.app.operations).length;
-
-        this.enableOpsListPopovers(e.target);
-    }
-
-
-    /**
-     * Sets up popovers, allowing the popover itself to gain focus which enables scrolling
-     * and other interactions.
-     *
-     * @param {Element} el - The element to start selecting from
-     */
-    enableOpsListPopovers(el) {
-        $(el).find("[data-toggle=popover]").addBack("[data-toggle=popover]")
-            .popover({trigger: "manual"})
-            .on("mouseenter", function(e) {
-                if (e.buttons > 0) return; // Mouse button held down - likely dragging an operation
-                const _this = this;
-                $(this).popover("show");
-                $(".popover").on("mouseleave", function () {
-                    $(_this).popover("hide");
-                });
-            }).on("mouseleave", function () {
-                const _this = this;
-                setTimeout(function() {
-                    // Determine if the popover associated with this element is being hovered over
-                    if ($(_this).data("bs.popover") &&
-                        ($(_this).data("bs.popover").tip && !$($(_this).data("bs.popover").tip).is(":hover"))) {
-                        $(_this).popover("hide");
-                    }
-                }, 50);
-            });
-    }
-
-
-    /**
-     * Handler for operation doubleclick events.
-     * Adds the operation to the recipe and auto bakes.
-     *
-     * @param {event} e
-     */
-    operationDblclick(e) {
-        const li = e.target;
-
-        this.manager.recipe.addOperation(li.textContent);
-    }
-
-
-    /**
-     * Handler for edit favourites click events.
      * Sets up the 'Edit favourites' pane and displays it.
      *
      * @param {event} e
@@ -323,16 +268,39 @@ class OperationsWaiter {
         this.app.resetFavourites();
     }
 
-
     /**
      * Sets whether operation counts are displayed next to a category title
      */
     setCatCount() {
         if (this.app.options.showCatCount) {
-            document.querySelectorAll(".category-title .op-count").forEach(el => el.classList.remove("hidden"));
+            document.querySelectorAll(".category-title .category-title-right .op-count").forEach(el => el.classList.remove("hidden"));
         } else {
-            document.querySelectorAll(".category-title .op-count").forEach(el => el.classList.add("hidden"));
+            document.querySelectorAll(".category-title .category-title-right .op-count").forEach(el => el.classList.add("hidden"));
         }
+    }
+
+    /**
+     * Handles alerts for single tap events on mobile. Will disallow more than one every
+     * 30 seconds.
+     */
+    sendSingleTapAlert() {
+        clearTimeout(this.singleTapAlertTimeout);
+        this.singleTapAlertTimeout = setTimeout(() => {
+            const now = new Date();
+            // Only display alert if we've not seen one before or in at least 30 seconds.
+            if (!this.lastSingleTapAlert || now.getTime() - this.lastSingleTapAlert.getTime() > 30_000) {
+                this.lastSingleTapAlert = now;
+                this.app.alert("Double tap an operation to add it to your recipe.", 3000);
+            }
+        }, 500);
+    }
+
+    /**
+     * Clear pending single tap alerts.
+     */
+    clearSingleTapAlerts() {
+        clearTimeout(this.singleTapAlertTimeout);
+        this.singleTapAlertTimeout = null;
     }
 
 }

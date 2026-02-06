@@ -67,6 +67,7 @@ class App {
 
         this.loadLocalStorage();
         this.buildCategoryList();
+        this.setCompileMessage();
         this.buildUI();
         this.manager.setup();
         this.manager.output.saveBombe();
@@ -385,14 +386,20 @@ class App {
         this.updateFavourites(this.dfavourites, true);
     }
 
+    /**
+     * Checks if the favourites category is expanded
+     */
+    isFavouritesExpanded() {
+        const catFavourites = document.getElementById("#catFavourites");
+        return catFavourites ? catFavourites.classList.contains("show") : false;
+    }
 
     /**
      * Adds an operation to the user's favourites.
      *
      * @param {string} name - The name of the operation
-     * @param {Boolean} isExpanded - false by default
      */
-    addFavourite(name, isExpanded = false) {
+    addFavourite(name) {
         const favourites = JSON.parse(localStorage.favourites);
 
         if (favourites.indexOf(name) >= 0) {
@@ -401,7 +408,25 @@ class App {
         }
 
         favourites.push(name);
-        this.updateFavourites(favourites, isExpanded);
+        this.updateFavourites(favourites, this.isFavouritesExpanded());
+    }
+
+    /**
+     * Removes an operation from the user's favourites.
+     *
+     * @param {string} name - The name of the operation
+     */
+    removeFavourite(name) {
+        const favourites = JSON.parse(localStorage.favourites);
+
+        const index = favourites.indexOf(name);
+        if (index === -1) {
+            this.alert(`'${name}' isn't in your favourites`, 3000);
+            return;
+        }
+
+        favourites.splice(index, 1);
+        this.updateFavourites(favourites, this.isFavouritesExpanded());
     }
 
 
@@ -811,10 +836,19 @@ class App {
     }
 
     /**
+     * Set visibility of download link
+     *
+     * @param {boolean} isVisible
+     */
+    setDownloadLinkVisibility(isVisible) {
+        this.setElementVisibility(document.getElementById("download-wrapper"), true);
+    }
+
+    /**
      * Set desktop UI ( on init and on window resize events )
      */
     setDesktopUI() {
-        this.setCompileMessage();
+        this.setDownloadLinkVisibility(true);
         this.setSplitter();
 
         this.manager.input.calcMaxTabs();
@@ -825,7 +859,9 @@ class App {
      *  Set mobile UI ( on init and on window resize events )
      */
     setMobileUI()  {
+        this.setDownloadLinkVisibility(false);
         this.setSplitter(false);
+
         this.assignAvailableHeight();
         $("[data-toggle=tooltip]").tooltip("disable");
     }
@@ -859,6 +895,9 @@ class App {
      * Build a CCategoryList component and append it to #categories
      */
     buildCategoryList() {
+        // populate total operations count
+        document.querySelector("#operations .title .op-count").innerText = Object.keys(this.operations).length;
+
         // double-check if the c-category-list already exists,
         if (document.querySelector("#categories > c-category-list")) {
             // then destroy it
