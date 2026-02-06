@@ -132,7 +132,7 @@ class ContainImage extends Operation {
                     color: 0x000000ff,
                 });
                 image = newImage.blit({
-                    image,
+                    src: image,
                     x: 0,
                     y: 0,
                 });
