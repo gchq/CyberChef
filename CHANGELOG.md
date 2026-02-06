@@ -13,6 +13,94 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.21.0] - 2026-02-05
+- Fix import operations with special chars in them [@d98762625] [@jg42526] | [#1040]
+- Remove custom CodeQL workflow [@C85297] | [#2176]
+- Fix code scanning warnings in workflows [@GCHQDeveloper581] | [#2177]
+- Use NPM trusted publishing [@C85297] [@GCHQDeveloper581] | [#2174]
+- Fix: Correctly parse xxd odd byte hexdumps [@ThomasNotTom] [@GCHQDeveloper581] | [#2058]
+- Update Sitemap URLs to Use Valid Paths in sitemap.mjs [@rbpi] [@C85297] | [#1861]
+- Use recommended GitHub Actions to build image [@AlexGustafsson] [@C85297] | [#2055]
+- Remove version 10 message from banner [@C85297] | [#2169]
+- Bump form-data from 4.0.1 to 4.0.5  | [#2175]
+- Bump node-forge from 1.3.1 to 1.3.3  | [#2173]
+- Update crypto browserify [@C85297] | [#2172]
+- Update kbpgp package (resolves #2135) [@GCHQDeveloper581] | [#2136]
+- Fix the processing of ALPNs for JA4 to align with new specification update [@tuliperis] | [#2165]
+- Add Bech32 and Bech32m encoding/decoding operations [@thomasxm] | [#2159]
+- Exclude Delete character from hex dump output [@mikecat] [@C85297] | [#2086]
+- Tiny typo fix in "To Base85" operation [@twostraws] | [#2118]
+- Bump jsonpath-plus [@C85297] | [#2166]
+
+### [10.20.0] - 2026-01-28
+- Fixed Optical Character Recognition and added tests [@n1474335] | [ab37c1e]
+- Fixed JA4 version fallback value [@n1474335] | [7a5225c]
+- Updated chromedriver [@n1474335] | [0e82e4b]
+- Fixed RSA Sign and Verify character encodings [@n1474335] | [895a929]
+- Updated chromedriver [@n1474335] | [d3adfc7]
+- Added message format arg to RSA Verify operation [@n1474335] | [47c85a1]
+- Add operation for parsing X.509 CRLs [@robinsandhu] | [#1887]
+- Fix typo in description of JWT Sign recipe [@GuilhermoReadonly] | [#1961]
+- Corrected path to generateNodeIndex.mjs [@simonarnell] | [#1959]
+- Add 'header' ingredient to JWT Sign operation [@RandomByte] | [#1957]
+- Add Parse TLS record operation [@c65722] | [#1936]
+- Automatically detect chrome driver version [@gchq] | [#1972]
+- Add Strip UDP header operation [@c65722] | [#1900]
+- Add Strip TCP header operation [@c65722] | [#1898]
+- Webpack compress with gzip and brotli [@max0x53] | [#1955]
+- add offset field to 'Add Line Numbers' operation [@Adamkadaban] | [#1866]
+- Disable flakey URL test [@a3957273] | [#1973]
+- Add Strip IPv4 header operation [@c65722] | [#1899]
+- IPv6 Transition Operation [@jb30795] | [#1780]
+- fix: Blowfish - ignore IV length in ECB mode [@FranciscoPombal] | [#1902]
+- Add 'Drop nth bytes' operation [@Oshawk] | [#1914]
+- Add 'Take nth bytes' operation  [@Oshawk] | [#1915]
+- Add Leet Speak [@bartblaze] | [#1971]
+- Fix Generate TOTP & HOPT [@exactlyaron] | [#1966]
+- Updated luhn checksum operation to work with different bases [@k3ach] | [#1933]
+- automatically theme mode based on user preference [@vs4vijay] | [#1921]
+- fix: DES/Triple DES - misleading error messages [@FranciscoPombal] | [#1904]
+- fix: ROT13 - shifting numbers by negative amounts [@FranciscoPombal] | [#1903]
+- Introduce Yubico's Modhex for Conversion [@linuxgemini] | [#1105]
+- Feature: MIME RFC2047 Decoding [@MShwed] | [#630]
+- CC-1889 add _ option [@depperm] | [#1977]
+- chore(root): add cspell [@evenstensberg] | [#1976]
+- Preserve uppercase for Leet Speak [@bartblaze] | [#1981]
+- Load the user's preferred color scheme if the URL contains an invalid theme [@0xh3xa] | [#2007]
+- Add SM2 Encrypt and Decrypt Operations [@flakjacket95] | [#1909]
+- Support jq as an operation. [@zhzy0077] | [#1604]
+- Add fingerprints to the 'Parse X.509 certificate' operation [@JSCU-CNI] | [#1863]
+- Added a JSON to YAML and a YAML to JSON operation [@ccarpo] | [#1286]
+- Add CRC Operation [@r4mos] | [#1993]
+- Bug Fix: selected theme not loading when refreshing [@0xh3xa] | [#2006]
+- Fix(RecipeWaiter): sanitize user input in addOperation to prevent XSS [@0xh3xa] | [#2014]
+- Docker multiplatform build support [@PathToLife] | [#1974]
+- Add Base32 Hex Extended Alphabet and Base32 Tests. [@peterc-s] | [#1991]
+- Add ECB/NoPadding and CBC/NoPadding support to AES encryption [@plvie] | [#2013]
+- Add new operation: PHP Serialize [@brun0ne] | [#1548]
+- Push input through postmessage [@kenduguay1] | [#1992]
+- Add jsonata query operation [@jonking-ajar] | [#1587]
+- Re-enable Npm Release in github workflows [@PathToLife] | [#2031]
+- Add to ECDSA Verify the message format [@r4mos] | [#2027]
+- Added alternating caps functionality [@sw5678] | [#1897]
+- XOR Checksum operation added [@jg42526] | [#2035]
+- Add GenerateAllChecksums operation * Remove checksums from GenerateAllHashes operation [@es45411] | [66d445c]
+- Update GenerateAllChecksums infoURL [@es45411] | [#2037]
+- Add toggle "+" character to URLDecode operation [@es45411] | [#2040]
+- Workaround for Safari load bug [@GCHQDeveloper94872] | [#2038]
+- Updated Dockerfile to correctly build on ARM64 platforms [@Sma-Das] | [#2042]
+- Addresses bug report #2008 Added explicit support for octal IP addresses. Changed approach to IPv4 regex to be string manipulation generated. Added some unit tests for IP address parsing - probably not full coverage. Added lookahead and lookbehind tricks to resolve warned issue that 1.2.3.256 would still be extracted as 1.2.3.25. Now only accepts valid IP addresses. Warning replaced with clause about infinite length dotted decimal forms. [@gchqdev364] | [#2041]
+- Remove trim from rail fence [@Odyhibit] | [#1986]
+- Fix email regex [@ericli-splunk] | [#2025]
+- Add Blake3 hashing [@xumptex] | [#2023]
+- Use defaultIndex instead of 0 in transformArgs [@bartvanandel] | [#2015]
+- Add "Generate UUID" and "Analyse UUID" operations [@bartvanandel] | [#2011]
+- Add new operation: Template [@kendallgoto] | [#2021]
+- Add more clear build instructions [@remingtr] | [#1873]
+- Show On Map updated to use leaflet over WikiMedia [@0xff1ce] | [#1884]
+- Fixed ToDecimal signed logic [@starplanet] | [#1545]
+- Use BigInt for encoding/decoding VarInt [@mikecat] | [#1978]
+
 ### [10.19.0] - 2024-06-21
 - Add support for ECDSA and DSA in 'Parse CSR' [@robinsandhu] | [#1828]
 - Fix typos in SIGABA.mjs [@eltociear] | [#1834]
@@ -440,6 +528,8 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[10.21.0]: https://github.com/gchq/CyberChef/releases/tag/v10.21.0
+[10.20.0]: https://github.com/gchq/CyberChef/releases/tag/v10.20.0
 [10.19.0]: https://github.com/gchq/CyberChef/releases/tag/v10.19.0
 [10.18.0]: https://github.com/gchq/CyberChef/releases/tag/v10.18.0
 [10.17.0]: https://github.com/gchq/CyberChef/releases/tag/v10.17.0
@@ -630,6 +720,68 @@ All major and minor version changes will be documented in this file. Details of 
 [@cplussharp]: https://github.com/cplussharp
 [@robinsandhu]: https://github.com/robinsandhu
 [@eltociear]: https://github.com/eltociear
+[@GuilhermoReadonly]: https://github.com/GuilhermoReadonly
+[@simonarnell]: https://github.com/simonarnell
+[@RandomByte]: https://github.com/RandomByte
+[@c65722]: https://github.com/c65722
+[@c65722]: https://github.com/c65722
+[@c65722]: https://github.com/c65722
+[@max0x53]: https://github.com/max0x53
+[@Adamkadaban]: https://github.com/Adamkadaban
+[@c65722]: https://github.com/c65722
+[@jb30795]: https://github.com/jb30795
+[@FranciscoPombal]: https://github.com/FranciscoPombal
+[@Oshawk]: https://github.com/Oshawk
+[@Oshawk]: https://github.com/Oshawk
+[@bartblaze]: https://github.com/bartblaze
+[@exactlyaron]: https://github.com/exactlyaron
+[@k3ach]: https://github.com/k3ach
+[@vs4vijay]: https://github.com/vs4vijay
+[@FranciscoPombal]: https://github.com/FranciscoPombal
+[@FranciscoPombal]: https://github.com/FranciscoPombal
+[@linuxgemini]: https://github.com/linuxgemini
+[@depperm]: https://github.com/depperm
+[@evenstensberg]: https://github.com/evenstensberg
+[@bartblaze]: https://github.com/bartblaze
+[@0xh3xa]: https://github.com/0xh3xa
+[@flakjacket95]: https://github.com/flakjacket95
+[@zhzy0077]: https://github.com/zhzy0077
+[@JSCU-CNI]: https://github.com/JSCU-CNI
+[@ccarpo]: https://github.com/ccarpo
+[@r4mos]: https://github.com/r4mos
+[@0xh3xa]: https://github.com/0xh3xa
+[@0xh3xa]: https://github.com/0xh3xa
+[@PathToLife]: https://github.com/PathToLife
+[@peterc-s]: https://github.com/peterc-s
+[@plvie]: https://github.com/plvie
+[@kenduguay1]: https://github.com/kenduguay1
+[@jonking-ajar]: https://github.com/jonking-ajar
+[@PathToLife]: https://github.com/PathToLife
+[@r4mos]: https://github.com/r4mos
+[@jg42526]: https://github.com/jg42526
+[@es45411]: https://github.com/es45411
+[@gchq]: https://github.com/gchq
+[@gchqdev364]: https://github.com/gchqdev364
+[@GCHQDeveloper94872]: https://github.com/GCHQDeveloper94872
+[@Sma-Das]: https://github.com/Sma-Das
+[@gchq]: https://github.com/gchq
+[@Odyhibit]: https://github.com/Odyhibit
+[@ericli-splunk]: https://github.com/ericli-splunk
+[@xumptex]: https://github.com/xumptex
+[@bartvanandel]: https://github.com/bartvanandel
+[@bartvanandel]: https://github.com/bartvanandel
+[@kendallgoto]: https://github.com/kendallgoto
+[@remingtr]: https://github.com/remingtr
+[@0xff1ce]: https://github.com/0xff1ce
+[@starplanet]: https://github.com/starplanet
+[@C85297]: https://github.com/C85297
+[@GCHQDeveloper581]: https://github.com/GCHQDeveloper581
+[@ThomasNotTom]: https://github.com/ThomasNotTom
+[@rbpi]: https://github.com/rbpi
+[@AlexGustafsson]: https://github.com/AlexGustafsson
+[@tuliperis]: https://github.com/tuliperis
+[@thomasxm]: https://github.com/thomasxm
+[@twostraws]: https://github.com/twostraws
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
@@ -642,6 +794,46 @@ All major and minor version changes will be documented in this file. Details of 
 [760eff4]: https://github.com/gchq/CyberChef/commit/760eff49b5307aaa3104c5e5b437ffe62299acd1
 [65ffd8d]: https://github.com/gchq/CyberChef/commit/65ffd8d65d88eb369f6f61a5d1d0f807179bffb7
 [0a353ee]: https://github.com/gchq/CyberChef/commit/0a353eeb378b9ca5d49e23c7dfc175ae07107b08
+[66d445c]: https://github.com/gchq/CyberChef/commit/66d445c5ef4e8bd896fd15396e3ce2d660d8ace1
+[ab37c1e]: https://github.com/gchq/CyberChef/commit/ab37c1e562dbee0495ed32876ecbb8225282af25
+[965570d]: https://github.com/gchq/CyberChef/commit/965570d2504c17ee1f96211a1dc10ed40cd2b332
+[a477f47]: https://github.com/gchq/CyberChef/commit/a477f47aecd01d78b11fe186ed4b20d9c487cfac
+[7a5225c]: https://github.com/gchq/CyberChef/commit/7a5225c961a5e0d192b03152117cd10a761f73d6
+[5f88ae4]: https://github.com/gchq/CyberChef/commit/5f88ae44ec77228d9bed8f11e8cc8e7dcfb36914
+[0e82e4b]: https://github.com/gchq/CyberChef/commit/0e82e4b7c6c77cadb8be61cb145e081d6ecfdc88
+[d635cca]: https://github.com/gchq/CyberChef/commit/d635cca2106aae2a59caf0e5d7e3633ee1ea3155
+[895a929]: https://github.com/gchq/CyberChef/commit/895a9299255525cb57886deb9d9fd4ba17ae9548
+[270a333]: https://github.com/gchq/CyberChef/commit/270a33317944612d27ea1cc15275ad6b0ed097e5
+[d3adfc7]: https://github.com/gchq/CyberChef/commit/d3adfc7c3e5719279524356bce5261bd8350c0f8
+[47c85a1]: https://github.com/gchq/CyberChef/commit/47c85a105ddbdd4cabfa44ddddbc56e3907a8c33
+[3822c6c]: https://github.com/gchq/CyberChef/commit/3822c6c520a0b4200abc675c33f46082f5b9efc6
+[66d445c]: https://github.com/gchq/CyberChef/commit/66d445c5ef4e8bd896fd15396e3ce2d660d8ace1
+[ab37c1e]: https://github.com/gchq/CyberChef/commit/ab37c1e562dbee0495ed32876ecbb8225282af25
+[965570d]: https://github.com/gchq/CyberChef/commit/965570d2504c17ee1f96211a1dc10ed40cd2b332
+[a477f47]: https://github.com/gchq/CyberChef/commit/a477f47aecd01d78b11fe186ed4b20d9c487cfac
+[7a5225c]: https://github.com/gchq/CyberChef/commit/7a5225c961a5e0d192b03152117cd10a761f73d6
+[5f88ae4]: https://github.com/gchq/CyberChef/commit/5f88ae44ec77228d9bed8f11e8cc8e7dcfb36914
+[0e82e4b]: https://github.com/gchq/CyberChef/commit/0e82e4b7c6c77cadb8be61cb145e081d6ecfdc88
+[d635cca]: https://github.com/gchq/CyberChef/commit/d635cca2106aae2a59caf0e5d7e3633ee1ea3155
+[895a929]: https://github.com/gchq/CyberChef/commit/895a9299255525cb57886deb9d9fd4ba17ae9548
+[270a333]: https://github.com/gchq/CyberChef/commit/270a33317944612d27ea1cc15275ad6b0ed097e5
+[d3adfc7]: https://github.com/gchq/CyberChef/commit/d3adfc7c3e5719279524356bce5261bd8350c0f8
+[47c85a1]: https://github.com/gchq/CyberChef/commit/47c85a105ddbdd4cabfa44ddddbc56e3907a8c33
+[3822c6c]: https://github.com/gchq/CyberChef/commit/3822c6c520a0b4200abc675c33f46082f5b9efc6
+[66d445c]: https://github.com/gchq/CyberChef/commit/66d445c5ef4e8bd896fd15396e3ce2d660d8ace1
+[ab37c1e]: https://github.com/gchq/CyberChef/commit/ab37c1e562dbee0495ed32876ecbb8225282af25
+[965570d]: https://github.com/gchq/CyberChef/commit/965570d2504c17ee1f96211a1dc10ed40cd2b332
+[a477f47]: https://github.com/gchq/CyberChef/commit/a477f47aecd01d78b11fe186ed4b20d9c487cfac
+[7a5225c]: https://github.com/gchq/CyberChef/commit/7a5225c961a5e0d192b03152117cd10a761f73d6
+[5f88ae4]: https://github.com/gchq/CyberChef/commit/5f88ae44ec77228d9bed8f11e8cc8e7dcfb36914
+[0e82e4b]: https://github.com/gchq/CyberChef/commit/0e82e4b7c6c77cadb8be61cb145e081d6ecfdc88
+[d635cca]: https://github.com/gchq/CyberChef/commit/d635cca2106aae2a59caf0e5d7e3633ee1ea3155
+[895a929]: https://github.com/gchq/CyberChef/commit/895a9299255525cb57886deb9d9fd4ba17ae9548
+[270a333]: https://github.com/gchq/CyberChef/commit/270a33317944612d27ea1cc15275ad6b0ed097e5
+[d3adfc7]: https://github.com/gchq/CyberChef/commit/d3adfc7c3e5719279524356bce5261bd8350c0f8
+[47c85a1]: https://github.com/gchq/CyberChef/commit/47c85a105ddbdd4cabfa44ddddbc56e3907a8c33
+[3822c6c]: https://github.com/gchq/CyberChef/commit/3822c6c520a0b4200abc675c33f46082f5b9efc6
+[66d445c]: https://github.com/gchq/CyberChef/commit/66d445c5ef4e8bd896fd15396e3ce2d660d8ace1
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -778,4 +970,21 @@ All major and minor version changes will be documented in this file. Details of 
 [#512]: https://github.com/gchq/CyberChef/issues/512
 [#1732]: https://github.com/gchq/CyberChef/issues/1732
 [#1789]: https://github.com/gchq/CyberChef/issues/1789
+[#1040]: https://github.com/gchq/CyberChef/pull/1040
+[#2176]: https://github.com/gchq/CyberChef/pull/2176
+[#2177]: https://github.com/gchq/CyberChef/pull/2177
+[#2174]: https://github.com/gchq/CyberChef/pull/2174
+[#2058]: https://github.com/gchq/CyberChef/pull/2058
+[#1861]: https://github.com/gchq/CyberChef/pull/1861
+[#2055]: https://github.com/gchq/CyberChef/pull/2055
+[#2169]: https://github.com/gchq/CyberChef/pull/2169
+[#2175]: https://github.com/gchq/CyberChef/pull/2175
+[#2173]: https://github.com/gchq/CyberChef/pull/2173
+[#2172]: https://github.com/gchq/CyberChef/pull/2172
+[#2136]: https://github.com/gchq/CyberChef/pull/2136
+[#2165]: https://github.com/gchq/CyberChef/pull/2165
+[#2159]: https://github.com/gchq/CyberChef/pull/2159
+[#2086]: https://github.com/gchq/CyberChef/pull/2086
+[#2118]: https://github.com/gchq/CyberChef/pull/2118
+[#2166]: https://github.com/gchq/CyberChef/pull/2166
 
