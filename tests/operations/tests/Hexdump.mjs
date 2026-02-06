@@ -153,6 +153,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "From Hexdump: xxd format, odd number of bytes",
+        input: "00000000: 6162 6364 65                             abcde",
+        expectedOutput: "abcde",
+        recipeConfig: [
+            {
+                op: "From Hexdump",
+                args: []
+            }
+        ],
+    },
+    {
         name: "From Hexdump: Wireshark",
         input: `00000000  00 01 02 03 04 05 06 07  08 09 0a 0b 0c 0d 0e 0f ........ ........
 00000010  10 11 12 13 14 15 16 17  18 19 1a 1b 1c 1d 1e 1f ........ ........
