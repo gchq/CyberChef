@@ -59,6 +59,25 @@ ChaCha uses a nonce of 8 or 12 bytes (64 or 96 bits).`,
         ],
     },
     {
+        name: "ChaCha: RFC8439 Raw output",
+        input: "Ladies and Gentlemen of the class of '99: If I could offer you only one tip for the future, sunscreen would be it.",
+        expectedOutput: "6e 2e 35 9a 25 68 f9 80 41 ba 07 28 dd 0d 69 81 e9 7e 7a ec 1d 43 60 c2 0a 27 af cc fd 9f ae 0b f9 1b 65 c5 52 47 33 ab 8f 59 3d ab cd 62 b3 57 16 39 d6 24 e6 51 52 ab 8f 53 0c 35 9f 08 61 d8 07 ca 0d bf 50 0d 6a 61 56 a3 8e 08 8a 22 b6 5e 52 bc 51 4d 16 cc f8 06 81 8c e9 1a b7 79 37 36 5a f9 0b bf 74 a3 5b e6 b4 0b 8e ed f2 78 5e 42 87 4d",
+        recipeConfig: [
+            {
+                "op": "ChaCha",
+                "args": [
+                    {"option": "Hex", "string": "00:01:02:03:04:05:06:07:08:09:0a:0b:0c:0d:0e:0f:10:11:12:13:14:15:16:17:18:19:1a:1b:1c:1d:1e:1f"},
+                    {"option": "Hex", "string": "00:00:00:00:00:00:00:4a:00:00:00:00"},
+                    1, "20", "Raw", "Raw",
+                ]
+            },
+            {
+                "op": "To Hex",
+                "args": []
+            },
+        ],
+    },
+    {
         name: "ChaCha: draft-strombergson-chacha-test-vectors-01 TC7.1",
         input: "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00",
         expectedOutput: "29 56 0d 28 0b 45 28 40 0a 8f 4b 79 53 69 fb 3a 01 10 55 99 e9 f1 ed 58 27 9c fc 9e ce 2d c5 f9 9f 1c 2e 52 c9 82 38 f5 42 a5 c0 a8 81 d8 50 b6 15 d3 ac d9 fb db 02 6e 93 68 56 5d a5 0e 0d 49 dd 5b e8 ef 74 24 8b 3e 25 1d 96 5d 8f cb 21 e7 cf e2 04 d4 00 78 06 fb ee 3c e9 4c 74 bf ba d2 c1 1c 62 1b a0 48 14 7c 5c aa 94 d1 82 cc ff 6f d5 cf 44 ad f9 6e 3d 68 28 1b b4 96 76 af 87 e7",
