@@ -126,7 +126,11 @@ class ContainImage extends Operation {
             });
 
             if (opaqueBg) {
-                const newImage = await Jimp.read(width, height, 0x000000ff);
+                const newImage = new Jimp({
+                    width,
+                    height,
+                    color: 0x000000ff,
+                });
                 image = newImage.blit({
                     image,
                     x: 0,
