@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import jpath from "jsonpath";
+import {JSONPath} from "jsonpath-plus";
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
@@ -27,14 +27,14 @@ class JPathExpression extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Query",
-                "type": "string",
-                "value": ""
+                name: "Query",
+                type: "string",
+                value: ""
             },
             {
-                "name": "Result delimiter",
-                "type": "binaryShortString",
-                "value": "\\n"
+                name: "Result delimiter",
+                type: "binaryShortString",
+                value: "\\n"
             }
         ];
     }
@@ -46,17 +46,19 @@ class JPathExpression extends Operation {
      */
     run(input, args) {
         const [query, delimiter] = args;
-        let results,
-            obj;
+        let results, jsonObj;
 
         try {
-            obj = JSON.parse(input);
+            jsonObj = JSON.parse(input);
         } catch (err) {
             throw new OperationError(`Invalid input JSON: ${err.message}`);
         }
 
         try {
-            results = jpath.query(obj, query);
+            results = JSONPath({
+                path: query,
+                json: jsonObj
+            });
         } catch (err) {
             throw new OperationError(`Invalid JPath expression: ${err.message}`);
         }

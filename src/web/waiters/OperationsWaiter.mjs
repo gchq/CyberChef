@@ -109,11 +109,15 @@ class OperationsWaiter {
         const matchedOps = [];
         const matchedDescs = [];
 
+        // Create version with no whitespace for the fuzzy match
+        // Helps avoid missing matches e.g. query "TCP " would not find "Parse TCP"
+        const inStrNWS = inStr.replace(/\s/g, "");
+
         for (const opName in this.app.operations) {
             const op = this.app.operations[opName];
 
             // Match op name using fuzzy match
-            const [nameMatch, score, idxs] = fuzzyMatch(inStr, opName);
+            const [nameMatch, score, idxs] = fuzzyMatch(inStrNWS, opName);
 
             // Match description based on exact match
             const descPos = op.description.toLowerCase().indexOf(inStr.toLowerCase());
@@ -164,6 +168,10 @@ class OperationsWaiter {
      */
     opListCreate(e) {
         this.manager.recipe.createSortableSeedList(e.target);
+
+        // Populate ops total
+        document.querySelector("#operations .title .op-count").innerText = Object.keys(this.app.operations).length;
+
         this.enableOpsListPopovers(e.target);
     }
 
@@ -287,6 +295,18 @@ class OperationsWaiter {
      */
     resetFavouritesClick() {
         this.app.resetFavourites();
+    }
+
+
+    /**
+     * Sets whether operation counts are displayed next to a category title
+     */
+    setCatCount() {
+        if (this.app.options.showCatCount) {
+            document.querySelectorAll(".category-title .op-count").forEach(el => el.classList.remove("hidden"));
+        } else {
+            document.querySelectorAll(".category-title .op-count").forEach(el => el.classList.add("hidden"));
+        }
     }
 
 }

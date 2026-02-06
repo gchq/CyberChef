@@ -10,7 +10,7 @@
 
 import NodeDish from "./NodeDish.mjs";
 import NodeRecipe from "./NodeRecipe.mjs";
-import OperationConfig from "../core/config/OperationConfig.json";
+import OperationConfig from "../core/config/OperationConfig.json" assert {type: "json"};
 import { sanitise, removeSubheadingsFromArray, sentenceToCamelCase } from "./apiUtils.mjs";
 import ExcludedOperationError from "../core/errors/ExcludedOperationError.mjs";
 
@@ -74,11 +74,11 @@ function transformArgs(opArgsList, newArgs) {
     return opArgs.map((arg) => {
         if (arg.type === "option") {
             // pick default option if not already chosen
-            return typeof arg.value === "string" ? arg.value : arg.value[0];
+            return typeof arg.value === "string" ? arg.value : arg.value[arg.defaultIndex ?? 0];
         }
 
         if (arg.type === "editableOption") {
-            return typeof arg.value === "string" ? arg.value : arg.value[0].value;
+            return typeof arg.value === "string" ? arg.value : arg.value[arg.defaultIndex ?? 0].value;
         }
 
         if (arg.type === "toggleString") {

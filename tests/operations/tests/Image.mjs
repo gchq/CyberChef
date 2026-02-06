@@ -9,7 +9,7 @@
  * @license Apache-2.0
  */
 import TestRegister from "../../lib/TestRegister.mjs";
-import { GIF_ANIMATED_HEX, PNG_HEX, JPG_B64, EXIF_JPG_HEX, NO_EXIF_JPG_HEX } from "../samples/Images.mjs";
+import { GIF_ANIMATED_HEX, PNG_HEX, JPG_B64, EXIF_JPG_HEX, NO_EXIF_JPG_HEX } from "../../samples/Images.mjs";
 
 TestRegister.addTests([
     {

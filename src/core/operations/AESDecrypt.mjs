@@ -22,7 +22,7 @@ class AESDecrypt extends Operation {
 
         this.name = "AES Decrypt";
         this.module = "Ciphers";
-        this.description = "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul><br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.<br><br><b>GCM Tag:</b> This field is ignored unless 'GCM' mode is used.";
+        this.description = "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul><br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.<br><br><b>GCM Tag:</b> This field is ignored unless 'GCM' mode is used.";
         this.infoURL = "https://wikipedia.org/wiki/Advanced_Encryption_Standard";
         this.inputType = "string";
         this.outputType = "string";
@@ -66,6 +66,14 @@ class AESDecrypt extends Operation {
                     {
                         name: "ECB",
                         off: [5, 6]
+                    },
+                    {
+                        name: "CBC/NoPadding",
+                        off: [5, 6]
+                    },
+                    {
+                        name: "ECB/NoPadding",
+                        off: [5, 6]
                     }
                 ]
             },
@@ -104,7 +112,8 @@ class AESDecrypt extends Operation {
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
             iv = Utils.convertToByteString(args[1].string, args[1].option),
-            mode = args[2],
+            mode = args[2].split("/")[0],
+            noPadding = args[2].endsWith("NoPadding"),
             inputType = args[3],
             outputType = args[4],
             gcmTag = Utils.convertToByteString(args[5].string, args[5].option),
@@ -122,6 +131,14 @@ The following algorithms will be used based on the size of the key:
         input = Utils.convertToByteString(input, inputType);
 
         const decipher = forge.cipher.createDecipher("AES-" + mode, key);
+
+        /* Allow for a "no padding" mode */
+        if (noPadding) {
+            decipher.mode.unpad = function(output, options) {
+                return true;
+            };
+        }
+
         decipher.start({
             iv: iv.length === 0 ? "" : iv,
             tag: mode === "GCM" ? gcmTag : undefined,

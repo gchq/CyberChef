@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {INPUT_DELIM_OPTIONS} from "../lib/Delim.mjs";
+import {caseInsensitiveSort, ipSort, numericSort, hexadecimalSort, lengthSort} from "../lib/Sort.mjs";
 
 /**
  * Sort operation
@@ -38,7 +39,7 @@ class Sort extends Operation {
             {
                 "name": "Order",
                 "type": "option",
-                "value": ["Alphabetical (case sensitive)", "Alphabetical (case insensitive)", "IP address", "Numeric", "Numeric (hexadecimal)"]
+                "value": ["Alphabetical (case sensitive)", "Alphabetical (case insensitive)", "IP address", "Numeric", "Numeric (hexadecimal)", "Length"]
             }
         ];
     }
@@ -57,118 +58,19 @@ class Sort extends Operation {
         if (order === "Alphabetical (case sensitive)") {
             sorted = sorted.sort();
         } else if (order === "Alphabetical (case insensitive)") {
-            sorted = sorted.sort(Sort._caseInsensitiveSort);
+            sorted = sorted.sort(caseInsensitiveSort);
         } else if (order === "IP address") {
-            sorted = sorted.sort(Sort._ipSort);
+            sorted = sorted.sort(ipSort);
         } else if (order === "Numeric") {
-            sorted = sorted.sort(Sort._numericSort);
+            sorted = sorted.sort(numericSort);
         } else if (order === "Numeric (hexadecimal)") {
-            sorted = sorted.sort(Sort._hexadecimalSort);
+            sorted = sorted.sort(hexadecimalSort);
+        } else if (order === "Length") {
+            sorted = sorted.sort(lengthSort);
         }
 
         if (sortReverse) sorted.reverse();
         return sorted.join(delim);
-    }
-
-    /**
-     * Comparison operation for sorting of strings ignoring case.
-     *
-     * @private
-     * @param {string} a
-     * @param {string} b
-     * @returns {number}
-     */
-    static _caseInsensitiveSort(a, b) {
-        return a.toLowerCase().localeCompare(b.toLowerCase());
-    }
-
-
-    /**
-     * Comparison operation for sorting of IPv4 addresses.
-     *
-     * @private
-     * @param {string} a
-     * @param {string} b
-     * @returns {number}
-     */
-    static _ipSort(a, b) {
-        let a_ = a.split("."),
-            b_ = b.split(".");
-
-        a_ = a_[0] * 0x1000000 + a_[1] * 0x10000 + a_[2] * 0x100 + a_[3] * 1;
-        b_ = b_[0] * 0x1000000 + b_[1] * 0x10000 + b_[2] * 0x100 + b_[3] * 1;
-
-        if (isNaN(a_) && !isNaN(b_)) return 1;
-        if (!isNaN(a_) && isNaN(b_)) return -1;
-        if (isNaN(a_) && isNaN(b_)) return a.localeCompare(b);
-
-        return a_ - b_;
-    }
-
-    /**
-     * Comparison operation for sorting of numeric values.
-     *
-     * @author Chris van Marle
-     * @private
-     * @param {string} a
-     * @param {string} b
-     * @returns {number}
-     */
-    static _numericSort(a, b) {
-        const a_ = a.split(/([^\d]+)/),
-            b_ = b.split(/([^\d]+)/);
-
-        for (let i = 0; i < a_.length && i < b.length; ++i) {
-            if (isNaN(a_[i]) && !isNaN(b_[i])) return 1; // Numbers after non-numbers
-            if (!isNaN(a_[i]) && isNaN(b_[i])) return -1;
-            if (isNaN(a_[i]) && isNaN(b_[i])) {
-                const ret = a_[i].localeCompare(b_[i]); // Compare strings
-                if (ret !== 0) return ret;
-            }
-            if (!isNaN(a_[i]) && !isNaN(b_[i])) { // Compare numbers
-                if (a_[i] - b_[i] !== 0) return a_[i] - b_[i];
-            }
-        }
-
-        return a.localeCompare(b);
-    }
-
-    /**
-     * Comparison operation for sorting of hexadecimal values.
-     *
-     * @author Chris van Marle
-     * @private
-     * @param {string} a
-     * @param {string} b
-     * @returns {number}
-     */
-    static _hexadecimalSort(a, b) {
-        let a_ = a.split(/([^\da-f]+)/i),
-            b_ = b.split(/([^\da-f]+)/i);
-
-        a_ = a_.map(v => {
-            const t = parseInt(v, 16);
-            return isNaN(t) ? v : t;
-        });
-
-        b_ = b_.map(v => {
-            const t = parseInt(v, 16);
-            return isNaN(t) ? v : t;
-        });
-
-        for (let i = 0; i < a_.length && i < b.length; ++i) {
-            if (isNaN(a_[i]) && !isNaN(b_[i])) return 1; // Numbers after non-numbers
-            if (!isNaN(a_[i]) && isNaN(b_[i])) return -1;
-            if (isNaN(a_[i]) && isNaN(b_[i])) {
-                const ret = a_[i].localeCompare(b_[i]); // Compare strings
-                if (ret !== 0) return ret;
-            }
-            if (!isNaN(a_[i]) && !isNaN(b_[i])) { // Compare numbers
-                if (a_[i] - b_[i] !== 0) return a_[i] - b_[i];
-            }
-        }
-
-        return a.localeCompare(b);
     }
 
 }
