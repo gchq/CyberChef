@@ -44,7 +44,7 @@ export function toJA4(bytes) {
         the TLS version is the value of the Protocol Version. Handshake version (located at the top of the packet)
         should be ignored.
     */
-    let version = tlsr.version.value;
+    let version = tlsr.handshake.value.helloVersion.value;
     for (const ext of tlsr.handshake.value.extensions.value) {
         if (ext.type.value === "supported_versions") {
             version = parseHighestSupportedVersion(ext.value.data);
@@ -91,9 +91,7 @@ export function toJA4(bytes) {
     let alpn = "00";
     for (const ext of tlsr.handshake.value.extensions.value) {
         if (ext.type.value === "application_layer_protocol_negotiation") {
-            alpn = parseFirstALPNValue(ext.value.data);
-            alpn = alpn.charAt(0) + alpn.charAt(alpn.length - 1);
-            if (alpn.charCodeAt(0) > 127) alpn = "99";
+            alpn = alpnFingerprint(parseFirstALPNValue(ext.value.data));
             break;
         }
     }
@@ -189,7 +187,7 @@ export function toJA4S(bytes) {
         the TLS version is the value of the Protocol Version. Handshake version (located at the top of the packet)
         should be ignored.
     */
-    let version = tlsr.version.value;
+    let version = tlsr.handshake.value.helloVersion.value;
     for (const ext of tlsr.handshake.value.extensions.value) {
         if (ext.type.value === "supported_versions") {
             version = parseHighestSupportedVersion(ext.value.data);
@@ -212,9 +210,7 @@ export function toJA4S(bytes) {
     let alpn = "00";
     for (const ext of tlsr.handshake.value.extensions.value) {
         if (ext.type.value === "application_layer_protocol_negotiation") {
-            alpn = parseFirstALPNValue(ext.value.data);
-            alpn = alpn.charAt(0) + alpn.charAt(alpn.length - 1);
-            if (alpn.charCodeAt(0) > 127) alpn = "99";
+            alpn = alpnFingerprint(parseFirstALPNValue(ext.value.data));
             break;
         }
     }
@@ -261,4 +257,34 @@ function tlsVersionMapper(version) {
         case 0x0100: return "s1"; // SSL 1.0
         default: return "00"; // Unknown
     }
+}
+
+/**
+ * Checks if a byte is ASCII alphanumeric (0-9, A-Z, a-z).
+ * @param {number} byte
+ * @returns {boolean}
+ */
+function isAlphanumeric(byte) {
+    return (byte >= 0x30 && byte <= 0x39) ||
+           (byte >= 0x41 && byte <= 0x5A) ||
+           (byte >= 0x61 && byte <= 0x7A);
+}
+
+/**
+ * Computes the 2-character ALPN fingerprint from raw ALPN bytes.
+ * If both first and last bytes are ASCII alphanumeric, returns their characters.
+ * Otherwise, returns first hex digit of first byte + last hex digit of last byte.
+ * @param {Uint8Array|null} rawBytes
+ * @returns {string}
+ */
+function alpnFingerprint(rawBytes) {
+    if (!rawBytes || rawBytes.length === 0) return "00";
+    const firstByte = rawBytes[0];
+    const lastByte = rawBytes[rawBytes.length - 1];
+    if (isAlphanumeric(firstByte) && isAlphanumeric(lastByte)) {
+        return String.fromCharCode(firstByte) + String.fromCharCode(lastByte);
+    }
+    const firstHex = firstByte.toString(16).padStart(2, "0");
+    const lastHex = lastByte.toString(16).padStart(2, "0");
+    return firstHex[0] + lastHex[1];
 }
