@@ -91,18 +91,25 @@ class ConvertImageFormat extends Operation {
             throw new OperationError(`Error opening image file. (${err})`);
         }
         try {
-            switch (format) {
-                case "JPEG":
-                    image.quality(jpegQuality);
+            let buffer;
+            switch (mime) {
+                case JimpMime.jpeg:
+                    buffer = await image.getBuffer(mime, {
+                        quality: jpegQuality,
+                    });
                     break;
-                case "PNG":
-                    image.filterType(pngFilterMap[pngFilterType]);
-                    image.deflateLevel(pngDeflateLevel);
+                case JimpMime.png:
+                    buffer = await image.getBuffer(mime, {
+                        filterType: pngFilterMap[pngFilterType],
+                        deflateLevel: pngDeflateLevel,
+                    });
+                    break;
+                default:
+                    buffer = await image.getBuffer(mime);
                     break;
             }
 
-            const imageBuffer = await image.getBuffer(mime);
-            return imageBuffer.buffer;
+            return buffer.buffer;
         } catch (err) {
             throw new OperationError(`Error converting image format. (${err})`);
         }
