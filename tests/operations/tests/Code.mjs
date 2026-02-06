@@ -322,8 +322,21 @@ TestRegister.addTests([
                 ]
             }
         ],
-        expectedMatch: /^Invalid JPath expression: jsonPath: self is not defined:/
+        expectedMatch: /^Invalid JPath expression: Unexpected "{" at character 1/
     },
+    {
+        name: "JPath Expression: Script-based RCE",
+        input: "[{}]",
+        recipeConfig: [
+            {
+                "op": "JPath expression",
+                "args": [
+                    "$..[?(p=\"console.log(this.process.mainModule.require('child_process').execSync('id').toString())\";a=''[['constructor']][['constructor']](p);a())]",
+                    "\n"
+                ]
+            }
+        ],
+        expectedMatch: /^Invalid JPath expression: jsonPath: Cannot read properties of {2}\(reading 'constructor'\): /    },
     {
         name: "CSS selector",
         input: '<div id="test">\n<p class="a">hello</p>\n<p>world</p>\n<p class="a">again</p>\n</div>',
