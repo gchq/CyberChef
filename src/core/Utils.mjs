@@ -177,7 +177,7 @@ class Utils {
      */
     static printable(str, preserveWs=false, onlyAscii=false) {
         if (onlyAscii) {
-            return str.replace(/[^\x20-\x7f]/g, ".");
+            return str.replace(/[^\x20-\x7e]/g, ".");
         }
 
         // eslint-disable-next-line no-misleading-character-class
