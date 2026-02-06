@@ -81,7 +81,7 @@ export const FILE_SIGNATURES = {
                 0: 0x00,
                 1: 0x00,
                 2: 0x00,
-                // 3 could be 0x24 or 0x18, so skip it
+                3: [0x24, 0x18],
                 4: 0x66, // ftypheic
                 5: 0x74,
                 6: 0x79,
@@ -2748,7 +2748,7 @@ export function extractGIF(bytes, offset) {
         stream.moveForwardsBy(11);
 
         // Loop until next Graphic Control Extension.
-        while (stream.getBytes(2) !== [0x21, 0xf9]) {
+        while (!Array.from(stream.getBytes(2)).equals([0x21, 0xf9])) {
             stream.moveBackwardsBy(2);
             stream.moveForwardsBy(stream.readInt(1));
             if (!stream.readInt(1))

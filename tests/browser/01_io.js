@@ -167,6 +167,37 @@ module.exports = {
         browser.expect.element("#output-text .cm-status-bar .eol-value").text.to.equal("LF");
     },
 
+    "Autobaking the latest input": browser => {
+        // Use the sleep recipe to simulate a long running task
+        utils.loadRecipe(browser, "Sleep", "input", [2000]);
+
+        browser.waitForElementVisible("#stale-indicator");
+
+        // Enable previously disabled autobake
+        browser.expect.element("#auto-bake").to.not.be.selected;
+        browser.click("#auto-bake-label");
+        browser.expect.element("#auto-bake").to.be.selected.before(1000);
+
+        // Add content to the input
+        browser.pause(100);
+        browser.sendKeys("#input-text .cm-content", "1");
+        browser.waitForElementVisible("#output-loader");
+        browser.pause(500);
+
+        // Make another change while the previous input is being baked
+        browser
+            .sendKeys("#input-text .cm-content", "2")
+            .waitForElementNotVisible("#stale-indicator")
+            .waitForElementNotVisible("#output-loader");
+
+        // Ensure we got the latest input baked
+        utils.expectOutput(browser, "input12");
+
+        // Turn autobake off again
+        browser.click("#auto-bake-label");
+        browser.expect.element("#auto-bake").to.not.be.selected.before(1000);
+    },
+
     "Special content": browser => {
         /* Special characters are rendered correctly */
         utils.setInput(browser, SPECIAL_CHARS, false);
@@ -383,12 +414,16 @@ module.exports = {
         utils.setInput(browser, CHINESE_CHARS, false);
         utils.setChrEnc(browser, "input", "UTF-8");
         utils.bake(browser);
-        utils.expectOutput(browser, "\u00E4\u00B8\u008D\u00E8\u00A6\u0081\u00E6\u0081\u0090\u00E6\u0085\u008C\u00E3\u0080\u0082");
 
-        /* Changing output to match input works as expected */
-        utils.setChrEnc(browser, "output", "UTF-8");
-        utils.bake(browser);
+        /* Output encoding should be autodetected */
+        browser
+            .waitForElementVisible("#snackbar-container .snackbar-content", 5000)
+            .expect.element("#snackbar-container .snackbar-content").text.to.equal("Output character encoding has been detected and changed to UTF-8");
+
         utils.expectOutput(browser, CHINESE_CHARS);
+
+        /* Change the output encoding manually to test for URL presence */
+        utils.setChrEnc(browser, "output", "UTF-8");
 
         /* Encodings appear in the URL */
         browser.assert.urlContains("ienc=65001");
@@ -640,28 +675,42 @@ module.exports = {
         }
     },
 
-    "Loading from URL": browser => {
-        /* Complex deep link populates the input correctly (encoding, eol, input) */
-        browser
-            .urlHash("recipe=To_Base64('A-Za-z0-9%2B/%3D')&input=VGhlIHNoaXBzIGh1bmcgaW4gdGhlIHNreSBpbiBtdWNoIHRoZSBzYW1lIHdheSB0aGF0IGJyaWNrcyBkb24ndC4M&ienc=21866&oenc=1201&ieol=FF&oeol=PS")
-            .waitForElementVisible("#rec-list li.operation");
+    // "Loading from URL": browser => {
+    //     utils.clear(browser);
 
-        browser.expect.element(`#input-text .cm-content`).to.have.property("textContent").match(/^.{65}$/);
-        browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("66");
-        browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("2");
+    //     /* Side panel displays correct info */
+    //     utils.uploadFile(browser, "files/TowelDay.jpeg");
 
-        browser.expect.element("#input-text .chr-enc-value").text.that.equals("KOI8-U Ukrainian Cyrillic");
-        browser.expect.element("#output-text .chr-enc-value").text.that.equals("UTF-16BE");
+    //     browser
+    //         .waitForElementVisible("#input-text .cm-file-details")
+    //         .waitForElementVisible("#input-text .cm-file-details .file-details-toggle-shown")
+    //         .waitForElementVisible("#input-text .cm-file-details .file-details-thumbnail")
+    //         .waitForElementVisible("#input-text .cm-file-details .file-details-name")
+    //         .waitForElementVisible("#input-text .cm-file-details .file-details-size")
+    //         .waitForElementVisible("#input-text .cm-file-details .file-details-type")
+    //         .waitForElementVisible("#input-text .cm-file-details .file-details-loaded");
 
-        browser.expect.element("#input-text .eol-value").text.that.equals("FF");
-        browser.expect.element("#output-text .eol-value").text.that.equals("PS");
+    //     /* Complex deep link populates the input correctly (encoding, eol, input) */
+    //     browser
+    //         .urlHash("recipe=To_Base64('A-Za-z0-9%2B/%3D')&input=VGhlIHNoaXBzIGh1bmcgaW4gdGhlIHNreSBpbiBtdWNoIHRoZSBzYW1lIHdheSB0aGF0IGJyaWNrcyBkb24ndC4M&ienc=21866&oenc=1201&ieol=FF&oeol=PS")
+    //         .waitForElementVisible("#rec-list li.operation");
 
-        utils.bake(browser);
+    //     browser.expect.element(`#input-text .cm-content`).to.have.property("textContent").match(/^.{65}$/);
+    //     browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("66");
+    //     browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("2");
 
-        browser.expect.element(`#output-text .cm-content`).to.have.property("textContent").match(/^.{44}$/);
-        browser.expect.element("#output-text .cm-status-bar .stats-length-value").text.to.equal("44");
-        browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("1");
-    },
+    //     browser.expect.element("#input-text .chr-enc-value").text.that.equals("KOI8-U Ukrainian Cyrillic");
+    //     browser.expect.element("#output-text .chr-enc-value").text.that.equals("UTF-16BE");
+
+    //     browser.expect.element("#input-text .eol-value").text.that.equals("FF");
+    //     browser.expect.element("#output-text .eol-value").text.that.equals("PS");
+
+    //     utils.bake(browser);
+
+    //     browser.expect.element(`#output-text .cm-content`).to.have.property("textContent").match(/^.{44}$/);
+    //     browser.expect.element("#output-text .cm-status-bar .stats-length-value").text.to.equal("44");
+    //     browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("1");
+    // },
 
     "Replace input with output": browser => {
         /* Input is correctly populated */

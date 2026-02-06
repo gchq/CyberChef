@@ -39,7 +39,6 @@ class App {
 
         this.baking        = false;
         this.autoBake_     = false;
-        this.autoBakePause = false;
         this.progress      = 0;
         this.ingId         = 0;
 
@@ -61,6 +60,7 @@ class App {
 
         this.initialiseSplitter();
         this.loadLocalStorage();
+        this.manager.options.applyPreferredColorScheme();
         this.populateOperationsList();
         this.manager.setup();
         this.manager.output.saveBombe();
@@ -155,12 +155,12 @@ class App {
      * Runs Auto Bake if it is set.
      */
     autoBake() {
-        // If autoBakePause is set, we are loading a full recipe (and potentially input), so there is no
-        // need to set the staleness indicator. Just exit and wait until auto bake is called after loading
-        // has completed.
-        if (this.autoBakePause) return false;
+        if (this.baking) {
+            this.manager.worker.cancelBakeForAutoBake();
+            this.baking = false;
+        }
 
-        if (this.autoBake_ && !this.baking) {
+        if (this.autoBake_) {
             log.debug("Auto-baking");
             this.manager.worker.bakeInputs({
                 nums: [this.manager.tabs.getActiveTab("input")],
@@ -473,7 +473,6 @@ class App {
      * @fires Manager#statechange
      */
     loadURIParams(params=this.getURIParams()) {
-        this.autoBakePause = true;
         this.uriParams = params;
 
         // Read in recipe from URI params
@@ -502,7 +501,7 @@ class App {
         // Input Character Encoding
         // Must be set before the input is loaded
         if (this.uriParams.ienc) {
-            this.manager.input.chrEncChange(parseInt(this.uriParams.ienc, 10), true);
+            this.manager.input.chrEncChange(parseInt(this.uriParams.ienc, 10), true, true);
         }
 
         // Output Character Encoding
@@ -538,9 +537,10 @@ class App {
         // Read in theme from URI params
         if (this.uriParams.theme) {
             this.manager.options.changeTheme(Utils.escapeHtml(this.uriParams.theme));
+        } else {
+            this.manager.options.applyPreferredColorScheme();
         }
 
-        this.autoBakePause = false;
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -573,10 +573,6 @@ class App {
      */
     setRecipeConfig(recipeConfig) {
         document.getElementById("rec-list").innerHTML = null;
-
-        // Pause auto-bake while loading but don't modify `this.autoBake_`
-        // otherwise `manualBake` cannot trigger.
-        this.autoBakePause = true;
 
         for (let i = 0; i < recipeConfig.length; i++) {
             const item = this.manager.recipe.addOperation(recipeConfig[i].op);
@@ -612,9 +608,6 @@ class App {
 
             this.progress = 0;
         }
-
-        // Unpause auto bake
-        this.autoBakePause = false;
     }
 
 
@@ -657,7 +650,7 @@ class App {
 
         // const compareURL = `https://github.com/gchq/CyberChef/compare/v${prev.join(".")}...v${PKG_VERSION}`;
 
-        let compileInfo = `<a href='https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md'>Last build: ${timeSinceCompile.substr(0, 1).toUpperCase() + timeSinceCompile.substr(1)} ago</a>`;
+        let compileInfo = `<a href='https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md'>Last build: ${timeSinceCompile.substring(0, 1).toUpperCase() + timeSinceCompile.substring(1)} ago</a>`;
 
         if (window.compileMessage !== "") {
             compileInfo += " - " + window.compileMessage;

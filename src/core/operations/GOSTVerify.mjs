@@ -56,21 +56,18 @@ class GOSTVerify extends Operation {
                 type: "argSelector",
                 value: [
                     {
-                        name: "GOST 28147 (Magma, 1989)",
-                        off: [5],
-                        on: [6]
+                        name: "GOST 28147 (1989)",
+                        on: [5]
+                    },
+                    {
+                        name: "GOST R 34.12 (Magma, 2015)",
+                        off: [5]
                     },
                     {
                         name: "GOST R 34.12 (Kuznyechik, 2015)",
-                        on: [5],
-                        off: [6]
+                        off: [5]
                     }
                 ]
-            },
-            {
-                name: "Block length",
-                type: "option",
-                value: ["64", "128"]
             },
             {
                 name: "sBox",
@@ -86,15 +83,31 @@ class GOSTVerify extends Operation {
      * @returns {string}
      */
     async run(input, args) {
-        const [keyObj, ivObj, macObj, inputType, version, length, sBox] = args;
+        const [keyObj, ivObj, macObj, inputType, version, sBox] = args;
 
         const key = toHexFast(Utils.convertToByteArray(keyObj.string, keyObj.option));
         const iv = toHexFast(Utils.convertToByteArray(ivObj.string, ivObj.option));
         const mac = toHexFast(Utils.convertToByteArray(macObj.string, macObj.option));
         input = inputType === "Hex" ? input : toHexFast(Utils.strToArrayBuffer(input));
 
-        const versionNum = version === "GOST 28147 (Magma, 1989)" ? 1989 : 2015;
-        const blockLength = versionNum === 1989 ? 64 : parseInt(length, 10);
+        let blockLength, versionNum;
+        switch (version) {
+            case "GOST 28147 (1989)":
+                versionNum = 1989;
+                blockLength = 64;
+                break;
+            case "GOST R 34.12 (Magma, 2015)":
+                versionNum = 2015;
+                blockLength = 64;
+                break;
+            case "GOST R 34.12 (Kuznyechik, 2015)":
+                versionNum = 2015;
+                blockLength = 128;
+                break;
+            default:
+                throw new OperationError(`Unknown algorithm version: ${version}`);
+        }
+
         const sBoxVal = versionNum === 1989 ? sBox : null;
 
         const algorithm = {
