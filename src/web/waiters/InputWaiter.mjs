@@ -156,10 +156,12 @@ class InputWaiter {
                         event.target.files = [];
                         for (let i = 0; i < items.length; i++) {
                             const item = items[i];
-                            const file = item.getAsFile();
-                            event.target.files.push(file);
+                            if (item.kind === "file") {
+                                const file = item.getAsFile();
+                                event.target.files.push(file);
 
-                            event.preventDefault(); // Prevent the default paste behavior
+                                event.preventDefault(); // Prevent the default paste behavior
+                            }
                         }
                         setTimeout(() => {
                             self.afterPaste(event);
