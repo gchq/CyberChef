@@ -153,18 +153,18 @@ class InputWaiter {
                     paste(event, view) {
                         const clipboardData = event.clipboardData;
                         const items = clipboardData.items;
-                        event.target.files = [];
+                        const files = [];
                         for (let i = 0; i < items.length; i++) {
                             const item = items[i];
                             if (item.kind === "file") {
                                 const file = item.getAsFile();
-                                event.target.files.push(file);
+                                files.push(file);
 
                                 event.preventDefault(); // Prevent the default paste behavior
                             }
                         }
                         setTimeout(() => {
-                            self.afterPaste(event);
+                            self.afterPaste(files);
                         });
                     }
                 })
@@ -926,11 +926,11 @@ class InputWaiter {
      * Handler that fires just after input paste events.
      * Checks whether the EOL separator or character encoding should be updated.
      *
-     * @param {event} e
+     * @param {File[]} files - An array of any files that were included in the paste event
      */
-    afterPaste(e) {
-        if (e.target.files.length > 0) {
-            this.loadUIFiles(e.target.files);
+    afterPaste(files) {
+        if (files.length > 0) {
+            this.loadUIFiles(files);
         }
         // If EOL has been fixed, skip this.
         if (this.eolState > 1) return;
