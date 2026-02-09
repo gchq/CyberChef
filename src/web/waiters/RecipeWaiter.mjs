@@ -8,6 +8,7 @@ import Sortable from "sortablejs";
 import Utils from "../../core/Utils.mjs";
 import {escapeControlChars} from "../utils/editorUtils.mjs";
 import {CRecipeLi} from "../components/c-recipe-li.mjs";
+import DOMPurify from "dompurify";
 
 
 /**
@@ -283,10 +284,10 @@ class RecipeWaiter {
      * @param {number} index - The index where the operation should be displayed
      */
     addOperation(name, index = undefined) {
-        const item = new CRecipeLi(this.app, name, this.app.operations[name].args);
+        const cleanName = DOMPurify.sanitize(name);
+        const item = new CRecipeLi(this.app, cleanName, this.app.operations[name].args);
 
         const recipeList = document.getElementById("rec-list");
-
         if (index !== undefined) {
             recipeList.insertBefore(item, recipeList.children[index + 1]);
         } else {

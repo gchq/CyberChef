@@ -1,8 +1,10 @@
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { ModifySourcePlugin, ReplaceOperation } = require("modify-source-webpack-plugin");
 const path = require("path");
+const zlib = require("zlib");
 
 /**
  * Webpack configuration details for use with Grunt.
@@ -63,6 +65,21 @@ module.exports = {
         }),
         new MiniCssExtractPlugin({
             filename: "assets/[name].css"
+        }),
+        new CompressionPlugin({
+            filename: "[path][base].gz",
+            algorithm: "gzip",
+            test: /\.(js|css|html)$/,
+        }),
+        new CompressionPlugin({
+            filename: "[path][base].br",
+            algorithm: "brotliCompress",
+            test: /\.(js|css|html)$/,
+            compressionOptions: {
+                params: {
+                    [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+                },
+            },
         }),
         new CopyWebpackPlugin({
             patterns: [
