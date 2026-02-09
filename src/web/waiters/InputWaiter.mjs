@@ -151,17 +151,15 @@ class InputWaiter {
                 // Event handlers
                 EditorView.domEventHandlers({
                     paste(event, view) {
-                        const clipboardData = event.clipboardData || window.clipboardData;
+                        const clipboardData = event.clipboardData;
                         const items = clipboardData.items;
                         event.target.files = [];
                         for (let i = 0; i < items.length; i++) {
                             const item = items[i];
-                            if (item.type.indexOf("image") !== -1) {
-                                const file = item.getAsFile();
-                                event.target.files.push(file);
+                            const file = item.getAsFile();
+                            event.target.files.push(file);
 
-                                event.preventDefault(); // Prevent the default paste behavior
-                            }
+                            event.preventDefault(); // Prevent the default paste behavior
                         }
                         setTimeout(() => {
                             self.afterPaste(event);
