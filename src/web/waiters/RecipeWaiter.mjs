@@ -361,7 +361,6 @@ class RecipeWaiter {
      * @param {Event} e
      */
     opAdd(e) {
-        console.log(e);
         log.debug(`'${e.target.querySelector("li").getAttribute("data-name")}' added to recipe`);
         this.triggerArgEvents(e.target);
         window.dispatchEvent(this.manager.statechange);

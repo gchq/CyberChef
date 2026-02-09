@@ -71,7 +71,7 @@ class App {
         this.buildCategoryList();
         this.setCompileMessage();
         this.buildUI();
-        
+
         this.manager.setup();
         this.manager.output.saveBombe();
         this.uriParams = this.getURIParams();
