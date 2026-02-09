@@ -268,7 +268,7 @@ class Manager {
      * @param {Object} [scope=this] - The object to bind to the callback function
      *
      * @example
-     * // Calls the search function whenever the the keyup, paste or search events are triggered on the
+     * // Calls the search function whenever the keyup, paste or search events are triggered on the
      * // search element
      * this.addMultiEventListener("search", "keyup paste search", this.search, this);
      */
