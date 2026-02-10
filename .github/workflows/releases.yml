@@ -96,5 +96,20 @@ jobs:
           file_glob: true
           body: "See the [CHANGELOG](https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md) and [commit messages](https://github.com/gchq/CyberChef/commits/master) for details."
 
+  npm-publish:
+    permissions:
+      id-token: write
+      contents: read
+    needs: main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set node version
+        uses: actions/setup-node@v6
+        with:
+          node-version: ^24.5
+          registry-url: "https://registry.npmjs.org"
+
       - name: Publish to NPM
         run: npm publish
