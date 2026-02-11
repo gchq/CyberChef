@@ -112,3 +112,6 @@ jobs:
 
       - name: Publish to NPM
         run: npm publish
+
+      - name: Debug
+        run: cat /home/runner/.npm/_logs/*
