@@ -1,0 +1,38 @@
+name: "Releases"
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "ZZZ*"
+
+permissions:
+  contents: read
+
+jobs:
+  npm-publish:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+
+      - name: Set node version
+        uses: actions/setup-node@v6
+        with:
+          node-version: 18
+          registry-url: "https://registry.npmjs.org"
+
+      - name: install and configure
+        run: npm install && npm run node
+
+      - name: Reset node version
+        uses: actions/setup-node@v6
+        with:
+          node-version: ^24.5
+          registry-url: "https://registry.npmjs.org"
+
+      - name: simulate Publish to NPM
+        run: node --version && npm --version
