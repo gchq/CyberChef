@@ -5,6 +5,7 @@ on:
   push:
     tags:
       - "ZZZ*"
+  pull_request:
 
 permissions:
   contents: read
