@@ -1,0 +1,29 @@
+/**
+ * Operation list styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+/*
+    Note: .op-list is used in the 'edit favourites' modal & for each
+    category > c-operation-list in the Operations component
+*/
+
+.op-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.op-list .operation {
+    color: var(--op-list-operation-font-colour);
+    background-color: var(--op-list-operation-bg-colour);
+    border-color: var(--op-list-operation-border-colour);
+}
+
+.op-list .operation:hover {
+    filter: brightness(98%);
+}
+
