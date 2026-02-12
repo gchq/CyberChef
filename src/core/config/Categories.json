@@ -352,6 +352,7 @@
             "Windows Filetime to UNIX Timestamp",
             "UNIX Timestamp to Windows Filetime",
             "DateTime Delta",
+            "Time Difference",
             "Extract dates",
             "Get Time",
             "Sleep"
