@@ -22,6 +22,9 @@ module.exports = function(api) {
                     "regenerator": true
                 }
             ]
-        ]
+        ],
+        "generatorOpts": {
+            "importAttributesKeyword": "with"
+        }
     };
 };

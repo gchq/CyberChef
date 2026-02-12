@@ -17,8 +17,8 @@ import * as CanvasComponents from "../core/lib/CanvasComponents.mjs";
 
 // CyberChef
 import App from "./App.mjs";
-import Categories from "../core/config/Categories.json" assert {type: "json"};
-import OperationConfig from "../core/config/OperationConfig.json" assert {type: "json"};
+import Categories from "../core/config/Categories.json" with { type: "json" };
+import OperationConfig from "../core/config/OperationConfig.json" with { type: "json" };
 
 
 /**
