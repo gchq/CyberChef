@@ -351,6 +351,8 @@
             "To UNIX Timestamp",
             "Windows Filetime to UNIX Timestamp",
             "UNIX Timestamp to Windows Filetime",
+            "NTP Timestamp to UNIX Timestamp",
+            "UNIX Timestamp to NTP Timestamp",
             "DateTime Delta",
             "Extract dates",
             "Get Time",
