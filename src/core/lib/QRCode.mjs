@@ -86,7 +86,7 @@ export function generateQrCode(input, format, moduleSize, margin, errorCorrectio
         case "PDF":
             return Utils.strToArrayBuffer(qrImage);
         case "PNG":
-            return qrImage.buffer;
+            return qrImage.buffer.slice(qrImage.byteOffset, qrImage.byteLength + qrImage.byteOffset);
         default:
             throw new OperationError("Unsupported QR code format.");
     }
