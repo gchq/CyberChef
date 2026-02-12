@@ -96,6 +96,7 @@
     "worker-loader": "^3.0.8"
   },
   "dependencies": {
+    "@alexaltea/capstone-js": "^3.0.5",
     "@astronautlabs/amf": "^0.0.6",
     "@babel/polyfill": "^7.12.1",
     "@blu3r4y/lzma": "^2.3.3",
