@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {ALPHABET_OPTIONS} from "../lib/Base32.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * To Base32 operation
@@ -43,7 +44,11 @@ class ToBase32 extends Operation {
         if (!input) return "";
         input = new Uint8Array(input);
 
-        const alphabet = args[0] ? Utils.expandAlphRange(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=";
+        const alphabet = Utils.expandAlphRange(args[0]).join("");
+        if (alphabet.length !== 33) {
+            throw new OperationError("Alphabet must be of length 33"); // 32 characters + 1 padding
+        }
+
         let output = "",
             chr1, chr2, chr3, chr4, chr5,
             enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
