@@ -35,6 +35,10 @@ module.exports = {
         testOp(browser, "AND", "test input", "4$04  $044", [{ "option": "Hex", "string": "34" }]);
         testOp(browser, "Add line numbers", "test input", "1 test input");
         testOp(browser, ["From Hex", "Add Text To Image", "To Base64"], Images.PNG_HEX, Images.PNG_CHEF_B64, [[], ["Chef", "Center", "Middle", 0, 0, 16], []]);
+        testOp(browser, ["From Hex", "Dither Image", "SHA2"], Images.PNG_HEX, "cbf587a78915cfb14546ba83080b13e5054800802488dd0cb786b8951e7dc0b48f055260917bd0ccfc075e422b9d6aff112948562653995d74e70f0b66367ac3", [[], [], []]);
+        testOp(browser, ["From Hex", "Generate Image", "SHA2"], Images.PNG_HEX, "2c451762a6c9192fd31dc80765eab3f447be70ea51f6fdb6911ade4d89d4a98bd0a1ff00b08d76aac472faeceb54b66092e3f3be7bbf899bf3e55ca9c96a56aa", [[], [], []]);
+        testOp(browser, ["From Hex", "Image Hue/Saturation/Lightness", "SHA2"], Images.PNG_HEX, "522dfc0bbef00e05c5d6861a002039fa2952e4bbb7fe8d21d0d538ef6f9d65da82065929b4150dc5b8b49460ee6c9bef7f660b86f8d4e7442a07c61c0a152a4b", [[], [50, 50, 50], []]);
+        testOp(browser, ["From Hex", "Resize Image", "SHA2"], Images.PNG_HEX, "654bfbf0a0537c901459c4bc22c5fb0bacbf01af775a0733e3a1c46cda5b699bcc4ed85322d813c7bb9b245d62d64425c0766fe03d3d20bc63634e2a4df17626", [[], [64, 64], []]);
         testOp(browser, "Adler-32 Checksum", "test input", "16160411");
         testOp(browser, "Affine Cipher Decode", "test input", "rcqr glnsr", [1, 2]);
         testOp(browser, "Affine Cipher Encode", "test input", "gndg zoujg", [3, 1]);
@@ -58,7 +62,10 @@ module.exports = {
         testOp(browser, "Bit shift right", "test input", ":29:\u0010478::");
         testOp(browser, "Blowfish Decrypt", "10884e15427dd84ec35204e9c8e921ae", "test_output", [{"option": "Hex", "string": "1234567801234567"}, {"option": "Hex", "string": "0011223344556677"}, "CBC", "Hex", "Raw"]);
         testOp(browser, "Blowfish Encrypt", "test input", "f0fadbd1d90d774f714248cf26b96410", [{"option": "Hex", "string": "1234567801234567"}, {"option": "Hex", "string": "0011223344556677"}, "CBC", "Raw", "Hex"]);
-        testOp(browser, ["From Hex", "Blur Image", "To Base64"], Images.PNG_HEX, Images.PNG_BLUR_B64);
+        testOp(browser, ["From Hex", "Blur Image", "SHA2"], Images.PNG_HEX, "24f2e89f3e00cc35f551bbc48ea82e76474946ce0282183494d1ca3d3b0012c27b6102c4368ae056dc7fecb6df7886d86ff3d29b7e5965493f30c371eee9a24e");
+        testOp(browser, ["From Hex", "Blur Image", "SHA2"], Images.PNG_HEX, "2c49d89fc10c94352c9a19f82de353c37928831d6f976a6b36eb918825a0ba027980801838228a4a0da63f1886e4fa59b6666f992ad2d2b7d4622253dc034052", [[], [5, "Gaussian"], []]);
+        testOp(browser, ["From Hex", "Sharpen Image", "SHA2"], Images.PNG_HEX, "acc7027642c2eeb67d7356a80ed8a1bdce9adabf656ea1294e47723f506626a7aa41f1660fa844a1e1e83b17180017ab0d5bccd7f6a341692832020dc887eaa5");
+        testOp(browser, ["From Hex", "Contain Image", "SHA2"], Images.PNG_HEX, "cb871ad0722d487d56a2b18247b1aa30ecc244eb717e08e23a55cae78759553312dc1717196d7cb9daa04743e57c56fc3901ba92be5a68fb03c377f718e8efe7");
         testOpHtml(browser, "Bombe", "XTSYN WAEUG EZALY NRQIM AMLZX MFUOD AWXLY LZCUZ QOQBQ JLCPK NDDRW F", "table tr:last-child td:first-child", "ECG", ["3-rotor", "LEYJVCNIXWPBQMDRTAKZGFUHOS", "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", "HELLO CYBER CHEFU SER", 0, true]);
         testOp(browser, ["Bzip2 Compress", "To Hex"], "test input", "42 5a 68 39 31 41 59 26 53 59 cf 96 82 1d 00 00 03 91 80 40 00 02 21 4e 00 20 00 21 90 c2 10 c0 88 33 92 8e df 17 72 45 38 50 90 cf 96 82 1d");
         testOp(browser, ["From Hex", "Bzip2 Decompress"], "425a68393141592653597b0884b7000003038000008200ce00200021a647a4218013709517c5dc914e14241ec2212dc0", "test_output", [[], [true]]);
