@@ -240,6 +240,7 @@
             "DNS over HTTPS",
             "Strip HTTP headers",
             "Dechunk HTTP response",
+            "Parse Ethernet frame",
             "Parse User Agent",
             "Parse IP range",
             "Parse IPv6 address",
