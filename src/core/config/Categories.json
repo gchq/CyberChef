@@ -552,6 +552,7 @@
             "Disassemble x86",
             "Pseudo-Random Number Generator",
             "Generate De Bruijn Sequence",
+            "Generate Password",
             "Generate UUID",
             "Analyse UUID",
             "Generate TOTP",
