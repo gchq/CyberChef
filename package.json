@@ -1,6 +1,6 @@
 {
   "name": "cyberchef",
-  "version": "10.20.0",
+  "version": "10.22.1",
   "description": "The Cyber Swiss Army Knife for encryption, encoding, compression and data analysis.",
   "author": "n1474335 <n1474335@gmail.com>",
   "homepage": "https://gchq.github.io/CyberChef",
@@ -202,7 +202,8 @@
     "lint:grammar": "cspell ./src",
     "postinstall": "npx grunt exec:fixCryptoApiImports && npx grunt exec:fixSnackbarMarkup && npx grunt exec:fixJimpModule",
     "newop": "node --experimental-modules --experimental-json-modules src/core/config/scripts/newOperation.mjs",
-    "minor": "node --experimental-modules --experimental-json-modules src/core/config/scripts/newMinorVersion.mjs",
+    "minor": "node --experimental-modules --experimental-json-modules src/core/config/scripts/newMinorVersion.mjs && npm version minor --git-tag-version=false && echo \"Updated to version v$(npm pkg get version | xargs), please create a pull request and once merged use 'npm run tag'\"",
+    "tag": "git tag -s \"v$(npm pkg get version | xargs)\" -m \"$(npm pkg get version | xargs)\" && echo \"Created v$(npm pkg get version | xargs), now check and push the tag\"",
     "getheapsize": "node -e 'console.log(`node heap limit = ${require(\"v8\").getHeapStatistics().heap_size_limit / (1024 * 1024)} Mb`)'",
     "setheapsize": "export NODE_OPTIONS=--max_old_space_size=2048"
   }
