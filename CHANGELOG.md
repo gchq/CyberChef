@@ -13,6 +13,16 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.22.0] - 2026-02-11
+- Separate npm publish out into separate job and run with Node 24.5 [@GCHQDeveloper581] | [#2188]
+- Fixed Percent delimiter for hex encoding [@beneri] [@C85297] | [#2137]
+- Added the ability to paste one or more Images from the Clipboard [@t-martine] [@a3957273] [@C85297] | [#1876]
+- Quoted Printable - consistent reference to 'email' [@wesinator] | [#2186]
+- Fix freeze when output text decoding fails [@Raka-loah] | [#1573]
+- Update Browserslist DB [@C85297] | [#2183]
+- Add contents write permission to releases workflow [@C85297] | [#2182]
+- Fix release workflow permissions [@C85297] | [#2181]
+
 ### [10.21.0] - 2026-02-05
 - Fix import operations with special chars in them [@d98762625] [@jg42526] | [#1040]
 - Remove custom CodeQL workflow [@C85297] | [#2176]
@@ -528,6 +538,7 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[10.22.0]: https://github.com/gchq/CyberChef/releases/tag/v10.22.0
 [10.21.0]: https://github.com/gchq/CyberChef/releases/tag/v10.21.0
 [10.20.0]: https://github.com/gchq/CyberChef/releases/tag/v10.20.0
 [10.19.0]: https://github.com/gchq/CyberChef/releases/tag/v10.19.0
@@ -782,6 +793,10 @@ All major and minor version changes will be documented in this file. Details of 
 [@tuliperis]: https://github.com/tuliperis
 [@thomasxm]: https://github.com/thomasxm
 [@twostraws]: https://github.com/twostraws
+[@beneri]: https://github.com/beneri
+[@t-martine]: https://github.com/t-martine
+[@wesinator]: https://github.com/wesinator
+[@Raka-loah]: https://github.com/Raka-loah
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
@@ -987,4 +1002,12 @@ All major and minor version changes will be documented in this file. Details of 
 [#2086]: https://github.com/gchq/CyberChef/pull/2086
 [#2118]: https://github.com/gchq/CyberChef/pull/2118
 [#2166]: https://github.com/gchq/CyberChef/pull/2166
+[#2188]: https://github.com/gchq/CyberChef/pull/2188
+[#2137]: https://github.com/gchq/CyberChef/pull/2137
+[#1876]: https://github.com/gchq/CyberChef/pull/1876
+[#2186]: https://github.com/gchq/CyberChef/pull/2186
+[#1573]: https://github.com/gchq/CyberChef/pull/1573
+[#2183]: https://github.com/gchq/CyberChef/pull/2183
+[#2182]: https://github.com/gchq/CyberChef/pull/2182
+[#2181]: https://github.com/gchq/CyberChef/pull/2181
 
