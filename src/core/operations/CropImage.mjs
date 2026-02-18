@@ -9,13 +9,12 @@ import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
-import Jimp from "jimp/es/index.js";
+import { Jimp, JimpMime } from "jimp";
 
 /**
  * Crop Image operation
  */
 class CropImage extends Operation {
-
     /**
      * CropImage constructor
      */
@@ -24,7 +23,8 @@ class CropImage extends Operation {
 
         this.name = "Crop Image";
         this.module = "Image";
-        this.description = "Crops an image to the specified region, or automatically crops edges.<br><br><b><u>Autocrop</u></b><br>Automatically crops same-colour borders from the image.<br><br><u>Autocrop tolerance</u><br>A percentage value for the tolerance of colour difference between pixels.<br><br><u>Only autocrop frames</u><br>Only crop real frames (all sides must have the same border)<br><br><u>Symmetric autocrop</u><br>Force autocrop to be symmetric (top/bottom and left/right are cropped by the same amount)<br><br><u>Autocrop keep border</u><br>The number of pixels of border to leave around the image.";
+        this.description =
+            "Crops an image to the specified region, or automatically crops edges.<br><br><b><u>Autocrop</u></b><br>Automatically crops same-colour borders from the image.<br><br><u>Autocrop tolerance</u><br>A percentage value for the tolerance of colour difference between pixels.<br><br><u>Only autocrop frames</u><br>Only crop real frames (all sides must have the same border)<br><br><u>Symmetric autocrop</u><br>Force autocrop to be symmetric (top/bottom and left/right are cropped by the same amount)<br><br><u>Autocrop keep border</u><br>The number of pixels of border to leave around the image.";
         this.infoURL = "https://wikipedia.org/wiki/Cropping_(image)";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -34,30 +34,30 @@ class CropImage extends Operation {
                 name: "X Position",
                 type: "number",
                 value: 0,
-                min: 0
+                min: 0,
             },
             {
                 name: "Y Position",
                 type: "number",
                 value: 0,
-                min: 0
+                min: 0,
             },
             {
                 name: "Width",
                 type: "number",
                 value: 10,
-                min: 1
+                min: 1,
             },
             {
                 name: "Height",
                 type: "number",
                 value: 10,
-                min: 1
+                min: 1,
             },
             {
                 name: "Autocrop",
                 type: "boolean",
-                value: false
+                value: false,
             },
             {
                 name: "Autocrop tolerance (%)",
@@ -65,24 +65,24 @@ class CropImage extends Operation {
                 value: 0.02,
                 min: 0,
                 max: 100,
-                step: 0.01
+                step: 0.01,
             },
             {
                 name: "Only autocrop frames",
                 type: "boolean",
-                value: true
+                value: true,
             },
             {
                 name: "Symmetric autocrop",
                 type: "boolean",
-                value: false
+                value: false,
             },
             {
                 name: "Autocrop keep border (px)",
                 type: "number",
                 value: 0,
-                min: 0
-            }
+                min: 0,
+            },
         ];
     }
 
@@ -92,7 +92,17 @@ class CropImage extends Operation {
      * @returns {byteArray}
      */
     async run(input, args) {
-        const [xPos, yPos, width, height, autocrop, autoTolerance, autoFrames, autoSymmetric, autoBorder] = args;
+        const [
+            xPos,
+            yPos,
+            width,
+            height,
+            autocrop,
+            autoTolerance,
+            autoFrames,
+            autoSymmetric,
+            autoBorder,
+        ] = args;
         if (!isImage(input)) {
             throw new OperationError("Invalid file type.");
         }
@@ -108,20 +118,25 @@ class CropImage extends Operation {
                 self.sendStatusMessage("Cropping image...");
             if (autocrop) {
                 image.autocrop({
-                    tolerance: (autoTolerance / 100),
+                    tolerance: autoTolerance / 100,
                     cropOnlyFrames: autoFrames,
                     cropSymmetric: autoSymmetric,
-                    leaveBorder: autoBorder
+                    leaveBorder: autoBorder,
                 });
             } else {
-                image.crop(xPos, yPos, width, height);
+                image.crop({
+                    x: xPos,
+                    y: yPos,
+                    w: width,
+                    h: height,
+                });
             }
 
             let imageBuffer;
-            if (image.getMIME() === "image/gif") {
-                imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
+            if (image.mime === "image/gif") {
+                imageBuffer = await image.getBuffer(JimpMime.png);
             } else {
-                imageBuffer = await image.getBufferAsync(Jimp.AUTO);
+                imageBuffer = await image.getBuffer(image.mime);
             }
             return imageBuffer.buffer;
         } catch (err) {
@@ -145,7 +160,6 @@ class CropImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default CropImage;
