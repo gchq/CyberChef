@@ -29,4 +29,6 @@ RUN npm run build
 #########################################
 FROM nginx:stable-alpine AS cyberchef
 
+LABEL maintainer="GCHQ <oss@gchq.gov.uk>"
+
 COPY --from=builder /app/build/prod /usr/share/nginx/html/
