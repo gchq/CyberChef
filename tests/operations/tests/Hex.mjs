@@ -44,6 +44,20 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "ASCII to Hex with percent deliminator",
+        input: "aberystwyth",
+        expectedOutput: "%61%62%65%72%79%73%74%77%79%74%68",
+        recipeConfig: [
+            {
+                "op": "To Hex",
+                "args": [
+                    "Percent",
+                    0
+                ]
+            }
+        ]
+    },
+    {
         name: "ASCII to 0x Hex with comma and line breaks",
         input: "aberystwyth",
         expectedOutput: "0x61,0x62,0x65,0x72,\n0x79,0x73,0x74,0x77,\n0x79,0x74,0x68",
