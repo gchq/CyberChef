@@ -9,13 +9,18 @@ import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
-import Jimp from "jimp/es/index.js";
+import {
+    Jimp,
+    JimpMime,
+    ResizeStrategy,
+    HorizontalAlign,
+    VerticalAlign,
+} from "jimp";
 
 /**
  * Contain Image operation
  */
 class ContainImage extends Operation {
-
     /**
      * ContainImage constructor
      */
@@ -24,7 +29,8 @@ class ContainImage extends Operation {
 
         this.name = "Contain Image";
         this.module = "Image";
-        this.description = "Scales an image to the specified width and height, maintaining the aspect ratio. The image may be letterboxed.";
+        this.description =
+            "Scales an image to the specified width and height, maintaining the aspect ratio. The image may be letterboxed.";
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -34,33 +40,25 @@ class ContainImage extends Operation {
                 name: "Width",
                 type: "number",
                 value: 100,
-                min: 1
+                min: 1,
             },
             {
                 name: "Height",
                 type: "number",
                 value: 100,
-                min: 1
+                min: 1,
             },
             {
                 name: "Horizontal align",
                 type: "option",
-                value: [
-                    "Left",
-                    "Center",
-                    "Right"
-                ],
-                defaultIndex: 1
+                value: ["Left", "Center", "Right"],
+                defaultIndex: 1,
             },
             {
                 name: "Vertical align",
                 type: "option",
-                value: [
-                    "Top",
-                    "Middle",
-                    "Bottom"
-                ],
-                defaultIndex: 1
+                value: ["Top", "Middle", "Bottom"],
+                defaultIndex: 1,
             },
             {
                 name: "Resizing algorithm",
@@ -70,15 +68,15 @@ class ContainImage extends Operation {
                     "Bilinear",
                     "Bicubic",
                     "Hermite",
-                    "Bezier"
+                    "Bezier",
                 ],
-                defaultIndex: 1
+                defaultIndex: 1,
             },
             {
                 name: "Opaque background",
                 type: "boolean",
-                value: true
-            }
+                value: true,
+            },
         ];
     }
 
@@ -91,20 +89,20 @@ class ContainImage extends Operation {
         const [width, height, hAlign, vAlign, alg, opaqueBg] = args;
 
         const resizeMap = {
-            "Nearest Neighbour": Jimp.RESIZE_NEAREST_NEIGHBOR,
-            "Bilinear": Jimp.RESIZE_BILINEAR,
-            "Bicubic": Jimp.RESIZE_BICUBIC,
-            "Hermite": Jimp.RESIZE_HERMITE,
-            "Bezier": Jimp.RESIZE_BEZIER
+            "Nearest Neighbour": ResizeStrategy.NEAREST_NEIGHBOR,
+            Bilinear: ResizeStrategy.BILINEAR,
+            Bicubic: ResizeStrategy.BICUBIC,
+            Hermite: ResizeStrategy.HERMITE,
+            Bezier: ResizeStrategy.BEZIER,
         };
 
         const alignMap = {
-            "Left": Jimp.HORIZONTAL_ALIGN_LEFT,
-            "Center": Jimp.HORIZONTAL_ALIGN_CENTER,
-            "Right": Jimp.HORIZONTAL_ALIGN_RIGHT,
-            "Top": Jimp.VERTICAL_ALIGN_TOP,
-            "Middle": Jimp.VERTICAL_ALIGN_MIDDLE,
-            "Bottom": Jimp.VERTICAL_ALIGN_BOTTOM
+            Left: HorizontalAlign.LEFT,
+            Center: HorizontalAlign.CENTER,
+            Right: HorizontalAlign.RIGHT,
+            Top: VerticalAlign.TOP,
+            Middle: VerticalAlign.MIDDLE,
+            Bottom: VerticalAlign.BOTTOM,
         };
 
         if (!isImage(input)) {
@@ -117,22 +115,35 @@ class ContainImage extends Operation {
         } catch (err) {
             throw new OperationError(`Error loading image. (${err})`);
         }
+        const originalMime = image.mime;
         try {
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Containing image...");
-            image.contain(width, height, alignMap[hAlign] | alignMap[vAlign], resizeMap[alg]);
+            image.contain({
+                w: width,
+                h: height,
+                align: alignMap[hAlign] | alignMap[vAlign],
+                mode: resizeMap[alg],
+            });
 
             if (opaqueBg) {
-                const newImage = await Jimp.read(width, height, 0x000000FF);
-                newImage.blit(image, 0, 0);
-                image = newImage;
+                const newImage = new Jimp({
+                    width,
+                    height,
+                    color: 0x000000ff,
+                });
+                image = newImage.blit({
+                    src: image,
+                    x: 0,
+                    y: 0,
+                });
             }
 
             let imageBuffer;
-            if (image.getMIME() === "image/gif") {
-                imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
+            if (originalMime === "image/gif") {
+                imageBuffer = await image.getBuffer(JimpMime.png);
             } else {
-                imageBuffer = await image.getBufferAsync(Jimp.AUTO);
+                imageBuffer = await image.getBuffer(originalMime);
             }
             return imageBuffer.buffer;
         } catch (err) {
@@ -156,7 +167,6 @@ class ContainImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default ContainImage;

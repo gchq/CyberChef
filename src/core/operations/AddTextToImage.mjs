@@ -9,13 +9,19 @@ import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
-import Jimp from "jimp/es/index.js";
+import {
+    Jimp,
+    JimpMime,
+    ResizeStrategy,
+    measureText,
+    measureTextHeight,
+    loadFont,
+} from "jimp";
 
 /**
  * Add Text To Image operation
  */
 class AddTextToImage extends Operation {
-
     /**
      * AddTextToImage constructor
      */
@@ -24,7 +30,8 @@ class AddTextToImage extends Operation {
 
         this.name = "Add Text To Image";
         this.module = "Image";
-        this.description = "Adds text onto an image.<br><br>Text can be horizontally or vertically aligned, or the position can be manually specified.<br>Variants of the Roboto font face are available in any size or colour.";
+        this.description =
+            "Adds text onto an image.<br><br>Text can be horizontally or vertically aligned, or the position can be manually specified.<br>Variants of the Roboto font face are available in any size or colour.";
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -33,72 +40,67 @@ class AddTextToImage extends Operation {
             {
                 name: "Text",
                 type: "string",
-                value: ""
+                value: "",
             },
             {
                 name: "Horizontal align",
                 type: "option",
-                value: ["None", "Left", "Center", "Right"]
+                value: ["None", "Left", "Center", "Right"],
             },
             {
                 name: "Vertical align",
                 type: "option",
-                value: ["None", "Top", "Middle", "Bottom"]
+                value: ["None", "Top", "Middle", "Bottom"],
             },
             {
                 name: "X position",
                 type: "number",
-                value: 0
+                value: 0,
             },
             {
                 name: "Y position",
                 type: "number",
-                value: 0
+                value: 0,
             },
             {
                 name: "Size",
                 type: "number",
                 value: 32,
-                min: 8
+                min: 8,
             },
             {
                 name: "Font face",
                 type: "option",
-                value: [
-                    "Roboto",
-                    "Roboto Black",
-                    "Roboto Mono",
-                    "Roboto Slab"
-                ]
+                value: ["Roboto", "Roboto Black", "Roboto Mono", "Roboto Slab"],
             },
             {
                 name: "Red",
                 type: "number",
                 value: 255,
                 min: 0,
-                max: 255
+                max: 255,
             },
             {
                 name: "Green",
                 type: "number",
                 value: 255,
                 min: 0,
-                max: 255
+                max: 255,
             },
             {
                 name: "Blue",
                 type: "number",
                 value: 255,
                 min: 0,
-                max: 255
+                max: 255,
             },
             {
                 name: "Alpha",
                 type: "number",
                 value: 255,
                 min: 0,
-                max: 255
-            }
+                max: 255,
+            },
         ];
     }
 
@@ -137,35 +139,49 @@ class AddTextToImage extends Operation {
 
             const fontsMap = {};
             const fonts = [
-                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/Roboto72White.fnt"),
-                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoBlack72White.fnt"),
-                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoMono72White.fnt"),
-                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoSlab72White.fnt")
+                import(
+                    /* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/Roboto72White.fnt"
+                ),
+                import(
+                    /* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoBlack72White.fnt"
+                ),
+                import(
+                    /* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoMono72White.fnt"
+                ),
+                import(
+                    /* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoSlab72White.fnt"
+                ),
             ];
 
-            await Promise.all(fonts)
-                .then(fonts => {
-                    fontsMap.Roboto = fonts[0];
-                    fontsMap["Roboto Black"] = fonts[1];
-                    fontsMap["Roboto Mono"] = fonts[2];
-                    fontsMap["Roboto Slab"] = fonts[3];
-                });
-
+            await Promise.all(fonts).then((fonts) => {
+                fontsMap.Roboto = fonts[0];
+                fontsMap["Roboto Black"] = fonts[1];
+                fontsMap["Roboto Mono"] = fonts[2];
+                fontsMap["Roboto Slab"] = fonts[3];
+            });
 
             // Make Webpack load the png font images
             await Promise.all([
-                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/Roboto72White.png"),
-                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoSlab72White.png"),
-                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoMono72White.png"),
-                import(/* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoBlack72White.png")
+                import(
+                    /* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/Roboto72White.png"
+                ),
+                import(
+                    /* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoSlab72White.png"
+                ),
+                import(
+                    /* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoMono72White.png"
+                ),
+                import(
+                    /* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoBlack72White.png"
+                ),
             ]);
 
             const font = fontsMap[fontFace];
 
             // LoadFont needs an absolute url, so append the font name to self.docURL
-            const jimpFont = await Jimp.loadFont(self.docURL + "/" + font.default);
+            const jimpFont = await loadFont(self.docURL + "/" + font.default);
 
-            jimpFont.pages.forEach(function(page) {
+            jimpFont.pages.forEach(function (page) {
                 if (page.bitmap) {
                     // Adjust the RGB values of the image pages to change the font colour.
                     const pageWidth = page.bitmap.width;
@@ -175,32 +191,52 @@ class AddTextToImage extends Operation {
                             const idx = (iy * pageWidth + ix) << 2;
 
                             const newRed = page.bitmap.data[idx] - (255 - red);
-                            const newGreen = page.bitmap.data[idx + 1] - (255 - green);
-                            const newBlue = page.bitmap.data[idx + 2] - (255 - blue);
-                            const newAlpha = page.bitmap.data[idx + 3] - (255 - alpha);
+                            const newGreen =
+                                page.bitmap.data[idx + 1] - (255 - green);
+                            const newBlue =
+                                page.bitmap.data[idx + 2] - (255 - blue);
+                            const newAlpha =
+                                page.bitmap.data[idx + 3] - (255 - alpha);
 
                             // Make sure the bitmap values don't go below 0 as that makes jimp very unhappy
-                            page.bitmap.data[idx] = (newRed > 0) ? newRed : 0;
-                            page.bitmap.data[idx + 1] = (newGreen > 0) ? newGreen : 0;
-                            page.bitmap.data[idx + 2] = (newBlue > 0) ? newBlue : 0;
-                            page.bitmap.data[idx + 3] = (newAlpha > 0) ? newAlpha : 0;
+                            page.bitmap.data[idx] = newRed > 0 ? newRed : 0;
+                            page.bitmap.data[idx + 1] =
+                                newGreen > 0 ? newGreen : 0;
+                            page.bitmap.data[idx + 2] =
+                                newBlue > 0 ? newBlue : 0;
+                            page.bitmap.data[idx + 3] =
+                                newAlpha > 0 ? newAlpha : 0;
                         }
                     }
                 }
             });
 
             // Create a temporary image to hold the rendered text
-            const textImage = new Jimp(Jimp.measureText(jimpFont, text), Jimp.measureTextHeight(jimpFont, text));
-            textImage.print(jimpFont, 0, 0, text);
+            const textImage = new Jimp({
+                width: measureText(jimpFont, text),
+                height: measureTextHeight(jimpFont, text),
+            });
+            textImage.print({
+                font: jimpFont,
+                x: 0,
+                y: 0,
+                text,
+            });
 
             // Scale the rendered text image to the correct size
             const scaleFactor = size / 72;
             if (size !== 1) {
                 // Use bicubic for decreasing size
                 if (size > 1) {
-                    textImage.scale(scaleFactor, Jimp.RESIZE_BICUBIC);
+                    textImage.scale({
+                        f: scaleFactor,
+                        mode: ResizeStrategy.BICUBIC,
+                    });
                 } else {
-                    textImage.scale(scaleFactor, Jimp.RESIZE_BILINEAR);
+                    textImage.scale({
+                        f: scaleFactor,
+                        mode: ResizeStrategy.BILINEAR,
+                    });
                 }
             }
 
@@ -210,10 +246,10 @@ class AddTextToImage extends Operation {
                     xPos = 0;
                     break;
                 case "Center":
-                    xPos = (image.getWidth() / 2) - (textImage.getWidth() / 2);
+                    xPos = image.width / 2 - textImage.width / 2;
                     break;
                 case "Right":
-                    xPos = image.getWidth() - textImage.getWidth();
+                    xPos = image.width - textImage.width;
                     break;
             }
 
@@ -222,21 +258,25 @@ class AddTextToImage extends Operation {
                     yPos = 0;
                     break;
                 case "Middle":
-                    yPos = (image.getHeight() / 2) - (textImage.getHeight() / 2);
+                    yPos = image.height / 2 - textImage.height / 2;
                     break;
                 case "Bottom":
-                    yPos = image.getHeight() - textImage.getHeight();
+                    yPos = image.height - textImage.height;
                     break;
             }
 
             // Blit the rendered text image onto the original source image
-            image.blit(textImage, xPos, yPos);
+            image.blit({
+                src: textImage,
+                x: xPos,
+                y: yPos,
+            });
 
             let imageBuffer;
-            if (image.getMIME() === "image/gif") {
-                imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
+            if (image.mime === "image/gif") {
+                imageBuffer = await image.getBuffer(JimpMime.png);
             } else {
-                imageBuffer = await image.getBufferAsync(Jimp.AUTO);
+                imageBuffer = await image.getBuffer(image.mime);
             }
             return imageBuffer.buffer;
         } catch (err) {
@@ -261,7 +301,6 @@ class AddTextToImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default AddTextToImage;
