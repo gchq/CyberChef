@@ -81,7 +81,9 @@
             "Rison Decode",
             "To Modhex",
             "From Modhex",
-            "MIME Decoding"
+            "MIME Decoding",
+            "To COBS",
+            "From COBS"
         ]
     },
     {
