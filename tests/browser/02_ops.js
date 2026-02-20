@@ -34,10 +34,10 @@ module.exports = {
         testOp(browser, "AES Encrypt", "test input", "e42eb8fbfb7a98fff061cd2c1a794d92", [{"option": "Hex", "string": "00112233445566778899aabbccddeeff"}, {"option": "Hex", "string": "00000000000000000000000000000000"}, "CBC", "Raw", "Hex"]);
         testOp(browser, "AND", "test input", "4$04  $044", [{ "option": "Hex", "string": "34" }]);
         testOp(browser, "Add line numbers", "test input", "1 test input");
-        testOp(browser, ["From Hex", "Add Text To Image", "To Base64"], Images.PNG_HEX, Images.PNG_CHEF_B64, [[], ["Chef", "Center", "Middle", 0, 0, 16, "Roboto"], []]);
-        testOp(browser, ["From Hex", "Add Text To Image", "To Base64"], Images.PNG_HEX, Images.PNG_CHEF_B64, [[], ["Chef", "Center", "Middle", 0, 0, 16, "Roboto Black"], []]);
-        testOp(browser, ["From Hex", "Add Text To Image", "To Base64"], Images.PNG_HEX, Images.PNG_CHEF_B64, [[], ["Chef", "Center", "Middle", 0, 0, 16, "Roboto Mono"], []]);
-        testOp(browser, ["From Hex", "Add Text To Image", "To Base64"], Images.PNG_HEX, Images.PNG_CHEF_B64, [[], ["Chef", "Center", "Middle", 0, 0, 16, "Roboto Slab"], []]);
+        testOp(browser, ["From Hex", "Add Text To Image", "SHA2"], Images.PNG_HEX, "50cdf8ea483c55564a091650c2bccb4586f919b721e5fe9d6a61660505b4346d6ebdb2ef0cf075a7728cd84cb26ea3e477b5bd86a94a49a27d79423994afb60a", [[], ["Chef", "Center", "Middle", 0, 0, 16, "Roboto"], []]);
+        testOp(browser, ["From Hex", "Add Text To Image", "SHA2"], Images.PNG_HEX, "78b3055463d9167dd039e47f451acaf06c593d209f8e405b4e18011cdcf190dc0af5952be887d93c0ebd38738e978120c1294c71104e6b00d3f9de8d6320ec1c", [[], ["Chef", "Center", "Middle", 0, 0, 16, "Roboto Black"], []]);
+        testOp(browser, ["From Hex", "Add Text To Image", "SHA2"], Images.PNG_HEX, "4ab4d4b6cb22ad700f6cd144c2c8ecad2a094f21a1d1d5d48eb6c8f97417192f89b4512f6a78276d49668ebef5e89c3a4d14860cb79399a0dafce98c92209e07", [[], ["Chef", "Center", "Middle", 0, 0, 16, "Roboto Mono"], []]);
+        testOp(browser, ["From Hex", "Add Text To Image", "SHA2"], Images.PNG_HEX, "11490db4907516b4d9e256da1ac0b02b561fa7547971e6316a8a0b90c9c66585a11f3145672c6d972b1a221d3bfad9c8a97de7ff77fd9442ebc40f39c1ef9ef7", [[], ["Chef", "Center", "Middle", 0, 0, 16, "Roboto Slab"], []]);
         testOp(browser, ["From Hex", "Dither Image", "SHA2"], Images.PNG_HEX, "cbf587a78915cfb14546ba83080b13e5054800802488dd0cb786b8951e7dc0b48f055260917bd0ccfc075e422b9d6aff112948562653995d74e70f0b66367ac3", [[], [], []]);
         testOp(browser, ["From Hex", "Generate Image", "SHA2"], Images.PNG_HEX, "2c451762a6c9192fd31dc80765eab3f447be70ea51f6fdb6911ade4d89d4a98bd0a1ff00b08d76aac472faeceb54b66092e3f3be7bbf899bf3e55ca9c96a56aa", [[], [], []]);
         testOp(browser, ["From Hex", "Image Hue/Saturation/Lightness", "SHA2"], Images.PNG_HEX, "522dfc0bbef00e05c5d6861a002039fa2952e4bbb7fe8d21d0d538ef6f9d65da82065929b4150dc5b8b49460ee6c9bef7f660b86f8d4e7442a07c61c0a152a4b", [[], [50, 50, 50], []]);
