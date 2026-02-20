@@ -153,15 +153,21 @@ class InputWaiter {
                     paste(event, view) {
                         const clipboardData = event.clipboardData;
                         const items = clipboardData.items;
-                        const files = [];
+                        let files = [];
                         for (let i = 0; i < items.length; i++) {
                             const item = items[i];
-                            if (item.kind === "file") {
-                                const file = item.getAsFile();
-                                files.push(file);
-
-                                event.preventDefault(); // Prevent the default paste behavior
+                            if (item.kind === "string") {
+                                // If there are any string items they should be preferred over
+                                // files.
+                                files = [];
+                                break;
+                            } else if (item.kind === "file") {
+                                files.push(item.getAsFile());
                             }
+                        }
+                        if (files.length > 0) {
+                            // Prevent the default paste behavior, afterPaste will load the files instead
+                            event.preventDefault();
                         }
                         setTimeout(() => {
                             self.afterPaste(files);
