@@ -1,0 +1,341 @@
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+/*! (c) Stefan Thomas | https://github.com/bitcoinjs/bitcoinjs-lib
+ */
+
+/*! (c) Tom Wu | http://www-cs-students.stanford.edu/~tjw/jsbn/
+ */
+
+/*! Mike Samuel (c) 2009 | code.google.com/p/json-sans-eval
+ */
+
+/*! https://mths.be/punycode v1.4.1 by @mathias */
+
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+
+/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+/**
+ * @author Tan Zhen Yong [tzy@beyondthesprawl.com]
+ * @copyright Crown Copyright 2019
+ * @license Apache-2.0
+ */
+
+/**
+ * @author Thomas Weißschuh [thomas@t-8ch.de]
+ * @copyright Crown Copyright 2023
+ * @license Apache-2.0
+ */
+
+/**
+ * @author brun0ne [brunonblok@gmail.com]
+ * @copyright Crown Copyright 2022
+ * @license Apache-2.0
+ */
+
+/**
+ * @author d98762625 [d98762625@gmail.com]
+ * @copyright Crown Copyright 2019
+ * @license Apache-2.0
+ */
+
+/**
+ * @author flakjacket95 [dflack95@gmail.com]
+ * @copyright Crown Copyright 2024
+ * @license Apache-2.0
+ */
+
+/**
+ * @author gchq77703 []
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * @author h345983745
+ * @copyright Crown Copyright 2019
+ * @license Apache-2.0
+ */
+
+/**
+ * @author mikecat
+ * @copyright Crown Copyright 2022
+ * @license Apache-2.0
+ */
+
+/**
+ * @author mikecat
+ * @copyright Crown Copyright 2023
+ * @license Apache-2.0
+ */
+
+/**
+ * @author mshwed [m@ttshwed.com]
+ * @copyright Crown Copyright 2019
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1073645 [n1073645@gmail.com]
+ * @copyright Crown Copyright 2020
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @author Matt C [matt@artemisbot.uk]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @author john19696 [john19696@protonmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2019
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ *
+ * HASSH created by Salesforce
+ *   Ben Reardon (@benreardon)
+ *   Adel Karimi (@0x4d31)
+ *   and the JA3 crew:
+ *     John B. Althouse
+ *     Jeff Atkinson
+ *     Josh Atkins
+ *
+ * Algorithm released under the BSD-3-clause licence
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ *
+ * HASSH created by Salesforce
+ *   Ben Reardon (@benreardon)
+ *   Adel Karimi (@0x4d31)
+ *   and the JA3 crew:
+ *     John B. Althouse
+ *     Jeff Atkinson
+ *     Josh Atkins
+ *
+ * Algorithm released under the BSD-3-clause licence
+*/
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ *
+ * JA3 created by Salesforce
+ *   John B. Althouse
+ *   Jeff Atkinson
+ *   Josh Atkins
+ *
+ * Algorithm released under the BSD-3-clause licence
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2021
+ * @license Apache-2.0
+ *
+ * JA3S created by Salesforce
+ *   John B. Althouse
+ *   Jeff Atkinson
+ *   Josh Atkins
+ *
+ * Algorithm released under the BSD-3-clause licence
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2022
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2023
+ * @license Apache-2.0
+ */
+
+/**
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2024
+ * @license Apache-2.0
+ */
+
+/**
+ * @author r4mos [2k95ljkhg@mozmail.com]
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+/**
+ * Base64 functions.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * Custom error type for handling Dish type errors.
+ * i.e. where the Dish cannot be successfully translated between types
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * Custom error type for handling operation input errors.
+ * i.e. where the operation can handle the error and print a message to the screen.
+ *
+ * @author d98762625 [d98762625@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * CyberChef - The Cyber Swiss Army Knife
+ *
+ * @copyright Crown Copyright 2016-2026
+ * @license Apache-2.0
+ *
+ *   Copyright 2016-2026 Crown Copyright
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * Decimal functions.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * File signatures and extractor functions
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
+ */
+
+/**
+ * File type functions
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
+ */
+
+/**
+ * Hashing resources.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ *
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * Hexadecimal functions.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2016
+ * @license Apache-2.0
+ */
+
+/**
+ * JA4 resources.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2024
+ * @license Apache-2.0
+ *
+ * JA4 Copyright 2023 FoxIO, LLC.
+ * @license BSD-3-Clause
+ */
+
+/**
+ * JWT resources
+ *
+ * @author mt3571 [mt3571@protonmail.com]
+ * @copyright Crown Copyright 2020
+ * @license Apache-2.0
+ */
+
+/**
+ * Stream class for parsing binary protocols.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @author tlwr [toby@toby.codes]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ *
+ */
+
+/**
+ * TLS resources.
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2024
+ * @license Apache-2.0
+ */
+
+/**
+ * Various delimiters
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2018
+ * @license Apache-2.0
+ */
+
+/**
+ * [js-sha3]{@link https://github.com/emn178/js-sha3}
+ *
+ * @version 0.9.3
+ * @author Chen, Yi-Cyuan [emn178@gmail.com]
+ * @copyright Chen, Yi-Cyuan 2015-2023
+ * @license MIT
+ */
