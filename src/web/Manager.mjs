@@ -51,18 +51,18 @@ class Manager {
          */
         this.operationremove = new CustomEvent("operationremove", {bubbles: true});
         /**
-         * @event Manager#oplistcreate
-         */
-        this.oplistcreate = new CustomEvent("oplistcreate", {bubbles: true});
-        /**
          * @event Manager#statechange
          */
         this.statechange = new CustomEvent("statechange", {bubbles: true});
+        /**
+         * @event Manager#favouritesupdate
+         */
+        this.favouritesupdate = new CustomEvent("favouritesupdate", {bubbles: true});
 
         // Define Waiter objects to handle various areas
         this.timing      = new TimingWaiter(this.app, this);
         this.worker      = new WorkerWaiter(this.app, this);
-        this.window      = new WindowWaiter(this.app);
+        this.window      = new WindowWaiter(this.app, this);
         this.controls    = new ControlsWaiter(this.app, this);
         this.recipe      = new RecipeWaiter(this.app, this);
         this.ops         = new OperationsWaiter(this.app, this);
@@ -89,7 +89,7 @@ class Manager {
         this.input.setupInputWorker();
         this.input.addInput(true);
         this.worker.setupChefWorker();
-        this.recipe.initialiseOperationDragNDrop();
+        this.recipe.initDragAndDrop();
         this.controls.initComponents();
         this.controls.autoBakeChange();
         this.bindings.updateKeybList();
@@ -143,32 +143,30 @@ class Manager {
         document.getElementById("hide-icon").addEventListener("click", this.controls.hideRecipeArgsClick.bind(this.recipe));
         document.getElementById("support").addEventListener("click", this.controls.supportButtonClick.bind(this.controls));
         this.addMultiEventListeners("#save-texts textarea", "keyup paste", this.controls.saveTextChange, this.controls);
+        document.getElementById("rec-list").addEventListener("click", this.controls.onMaximisedRecipeClick.bind(this.controls));
+        // A note for the Maximise Controls listeners below: click events via addDynamicListener don't properly bubble and the hit-box is unacceptably tiny, hence this solution
+        document.getElementById("maximise-recipe").addEventListener("click", this.controls.onMaximiseButtonClick.bind(this.controls));
+        document.getElementById("maximise-input").addEventListener("click", this.controls.onMaximiseButtonClick.bind(this.controls));
+        document.getElementById("maximise-output").addEventListener("click", this.controls.onMaximiseButtonClick.bind(this.controls));
 
         // Operations
-        this.addMultiEventListener("#search", "keyup paste search", this.ops.searchOperations, this.ops);
-        this.addDynamicListener(".op-list li.operation", "dblclick", this.ops.operationDblclick, this.ops);
-        document.getElementById("edit-favourites").addEventListener("click", this.ops.editFavouritesClick.bind(this.ops));
+        this.addMultiEventListener("#search", "keyup paste click", this.ops.searchOperations, this.ops);
+        document.getElementById("close-ops-dropdown-icon").addEventListener("click", this.ops.closeOpsDropdown.bind(this.ops));
         document.getElementById("save-favourites").addEventListener("click", this.ops.saveFavouritesClick.bind(this.ops));
         document.getElementById("reset-favourites").addEventListener("click", this.ops.resetFavouritesClick.bind(this.ops));
-        this.addDynamicListener(".op-list", "oplistcreate", this.ops.opListCreate, this.ops);
-        this.addDynamicListener("li.operation", "operationadd", this.recipe.opAdd, this.recipe);
+        this.addDynamicListener("c-operation-li", "operationadd", this.recipe.opAdd, this.recipe);
 
         // Recipe
         this.addDynamicListener(".arg:not(select)", "input", this.recipe.ingChange, this.recipe);
         this.addDynamicListener(".arg[type=checkbox], .arg[type=radio], select.arg", "change", this.recipe.ingChange, this.recipe);
         this.addDynamicListener(".hide-args-icon", "click", this.recipe.hideArgsClick, this.recipe);
-        this.addDynamicListener(".disable-icon", "click", this.recipe.disableClick, this.recipe);
-        this.addDynamicListener(".breakpoint", "click", this.recipe.breakpointClick, this.recipe);
-        this.addDynamicListener("#rec-list li.operation", "dblclick", this.recipe.operationDblclick, this.recipe);
-        this.addDynamicListener("#rec-list li.operation > div", "dblclick", this.recipe.operationChildDblclick, this.recipe);
         this.addDynamicListener("#rec-list .dropdown-menu.toggle-dropdown a", "click", this.recipe.dropdownToggleClick, this.recipe);
-        this.addDynamicListener("#rec-list", "operationremove", this.recipe.opRemove.bind(this.recipe));
         this.addDynamicListener("textarea.arg", "dragover", this.recipe.textArgDragover, this.recipe);
         this.addDynamicListener("textarea.arg", "dragleave", this.recipe.textArgDragLeave, this.recipe);
         this.addDynamicListener("textarea.arg", "drop", this.recipe.textArgDrop, this.recipe);
 
         // Input
-        document.getElementById("reset-layout").addEventListener("click", this.app.resetLayout.bind(this.app));
+        document.getElementById("reset-layout").addEventListener("click", this.app.setDesktopUI.bind(this.app));
         this.addListeners("#clr-io,#btn-close-all-tabs", "click", this.input.clearAllIoClick, this.input);
         this.addListeners("#open-file,#open-folder", "change", this.input.inputOpen, this.input);
         document.getElementById("btn-open-file").addEventListener("click", this.input.inputOpenClick.bind(this.input));
@@ -201,7 +199,6 @@ class Manager {
         document.getElementById("save-all-to-file").addEventListener("click", this.output.saveAllClick.bind(this.output));
         document.getElementById("copy-output").addEventListener("click", this.output.copyClick.bind(this.output));
         document.getElementById("switch").addEventListener("click", this.output.switchClick.bind(this.output));
-        document.getElementById("maximise-output").addEventListener("click", this.output.maximiseOutputClick.bind(this.output));
         document.getElementById("magic").addEventListener("click", this.output.magicClick.bind(this.output));
         this.addDynamicListener(".extract-file,.extract-file i", "click", this.output.extractFileClick, this.output);
         this.addDynamicListener("#output-tabs-wrapper #output-tabs li .output-tab-content", "click", this.output.changeTabClick, this.output);

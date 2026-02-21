@@ -18,7 +18,6 @@ let modules = null;
  * The Recipe controls a list of Operations and the Dish they operate on.
  */
 class Recipe  {
-
     /**
      * Recipe constructor
      *

@@ -1,0 +1,55 @@
+/**
+ * Banner area styles
+ *
+ * @author n1474335 [n1474335@gmail.com]
+ * @copyright Crown Copyright 2017
+ * @license Apache-2.0
+ */
+
+#banner {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 12px;
+    padding-right: 4px;
+    line-height: var(--banner-height);
+    color: var(--banner-font-colour);
+    background-color: var(--banner-bg-colour);
+    border-bottom: 1px solid var(--primary-border-colour);
+}
+
+#banner i {
+    vertical-align: middle;
+    padding-right: 10px;
+}
+
+
+/* Notice wrapper */
+#notice-wrapper {
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* Banner links ( options, about / support ) */
+.banner-link {
+    color: var(--banner-url-colour);
+}
+
+.banner-link:hover {
+    text-decoration: none;
+}
+
+@media only screen and (min-width: 1024px){
+    .banner-link:hover span {
+        text-decoration: underline;
+    }
+}
+
+.banner-icon {
+    transform: translateY(-1.5px);
+}
+
+
+

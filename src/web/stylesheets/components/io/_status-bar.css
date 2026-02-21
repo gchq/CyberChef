@@ -1,0 +1,117 @@
+/* Status bar */
+.cm-panel input::placeholder {
+    font-size: 12px !important;
+}
+
+.ͼ2 .cm-panels,
+.ͼ2 .cm-side-panels {
+    background-color: var(--secondary-background-colour);
+    color: var(--primary-font-colour);
+    border-bottom: 1px solid var(--primary-border-colour);
+}
+
+.cm-status-bar {
+    font-family: var(--fixed-width-font-family);
+    font-weight: normal;
+    font-size: 8pt;
+    margin: 5px 15px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cm-status-bar i {
+    font-size: 12pt;
+    vertical-align: middle;
+    margin-left: 8px;
+}
+.cm-status-bar>div>span:first-child i {
+    margin-left: 0;
+}
+
+.cm-status-bar .disabled {
+    background-color: unset !important;
+    cursor: not-allowed;
+}
+
+/* Dropup Button */
+.cm-status-bar-select-btn {
+    border: none;
+    cursor: pointer;
+}
+
+/* The container <div> - needed to position the dropup content */
+.cm-status-bar-select {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropup content (Hidden by Default) */
+.cm-status-bar-select-content {
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    right: 0;
+    background-color: #f1f1f1;
+    min-width: 200px;
+    box-shadow: 0 4px 4px 0 rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropup */
+.cm-status-bar-select-content a {
+    color: black;
+    padding: 2px 5px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropup links on hover */
+.cm-status-bar-select-content a:hover {
+    background-color: #ddd
+}
+
+/* Change the background color of the dropup button when the dropup content is shown */
+.cm-status-bar-select:hover .cm-status-bar-select-btn {
+    background-color: #f1f1f1;
+}
+
+/* The search field */
+.cm-status-bar-filter-input {
+    box-sizing: border-box;
+    font-size: 12px;
+    padding-left: 10px !important;
+    border: none;
+}
+
+.cm-status-bar-filter-search {
+    border-top: 1px solid #ddd;
+}
+
+/* Show the dropup menu */
+.cm-status-bar-select .show {
+    display: block;
+}
+
+.cm-status-bar-select-scroll {
+    overflow-y: auto;
+    height: auto;
+}
+
+.chr-enc-value {
+    max-width: 150px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+
+/* Right hand side icons */
+.rhs {
+    right: 15px;
+}
+
+

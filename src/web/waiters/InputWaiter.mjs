@@ -716,7 +716,7 @@ class InputWaiter {
 
     /**
      * Handler for file details toggle clicks
-     * @param {event} e
+     * @param {Event} e
      */
     toggleFileDetails(e) {
         $("[data-toggle='tooltip']").tooltip("hide");
@@ -900,7 +900,7 @@ class InputWaiter {
      * Updates the value stored in the inputWorker
      * Debounces the input so we don't call autobake too often.
      *
-     * @param {event} e
+     * @param {Event} e
      *
      * @fires Manager#statechange
      */
@@ -984,7 +984,7 @@ class InputWaiter {
      * Handler for input dragover events.
      * Gives the user a visual cue to show that items can be dropped here.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     inputDragover(e) {
         // This will be set if we're dragging an operation
@@ -1000,7 +1000,7 @@ class InputWaiter {
      * Handler for input dragleave events.
      * Removes the visual cue.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     inputDragleave(e) {
         e.stopPropagation();
@@ -1017,7 +1017,7 @@ class InputWaiter {
      * Handler for input drop events.
      * Loads the dragged data.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     async inputDrop(e) {
         // This will be set if we're dragging an operation
@@ -1127,7 +1127,7 @@ class InputWaiter {
      * Handler for open input button events
      * Loads the opened data into the input textarea
      *
-     * @param {event} e
+     * @param {Event} e
      */
     inputOpen(e) {
         e.preventDefault();
@@ -1292,7 +1292,7 @@ class InputWaiter {
     /**
      * Handler for clicking on a tab
      *
-     * @param {event} mouseEvent
+     * @param {Event} mouseEvent
      */
     changeTabClick(mouseEvent) {
         if (!mouseEvent.target) return;
@@ -1483,7 +1483,7 @@ class InputWaiter {
     /**
      * Handler for clicking on a remove tab button
      *
-     * @param {event} mouseEvent
+     * @param {Event} mouseEvent
      */
     removeTabClick(mouseEvent) {
         if (!mouseEvent.target) {
@@ -1498,7 +1498,7 @@ class InputWaiter {
     /**
      * Handler for scrolling on the input tabs area
      *
-     * @param {event} wheelEvent
+     * @param {Event} wheelEvent
      */
     scrollTab(wheelEvent) {
         wheelEvent.preventDefault();
@@ -1631,7 +1631,7 @@ class InputWaiter {
     /**
      * Handle when an option in the filter drop down box is clicked
      *
-     * @param {event} mouseEvent
+     * @param {Event} mouseEvent
      */
     filterOptionClick(mouseEvent) {
         document.getElementById("input-filter-button").innerText = mouseEvent.target.innerText;
@@ -1664,7 +1664,7 @@ class InputWaiter {
     /**
      * Handler for clicking on a filter result
      *
-     * @param {event} e
+     * @param {Event} e
      */
     filterItemClick(e) {
         if (!e.target) return;

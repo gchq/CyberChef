@@ -7,11 +7,11 @@
 import Utils, { debounce } from "../core/Utils.mjs";
 import {fromBase64} from "../core/lib/Base64.mjs";
 import Manager from "./Manager.mjs";
-import HTMLCategory from "./HTMLCategory.mjs";
-import HTMLOperation from "./HTMLOperation.mjs";
 import Split from "split.js";
 import moment from "moment-timezone";
 import cptable from "codepage";
+import {CCategoryLi} from "./components/c-category-li.mjs";
+import {CCategoryList} from "./components/c-category-list.mjs";
 
 
 /**
@@ -26,7 +26,7 @@ class App {
      * @param {CatConf[]} categories - The list of categories and operations to be populated.
      * @param {Object.<string, OpConf>} operations - The list of operation configuration objects.
      * @param {String[]} defaultFavourites - A list of default favourite operations.
-     * @param {Object} options - Default setting for app options.
+     * @param {Object} defaultOptions - Default setting for app options.
      */
     constructor(categories, operations, defaultFavourites, defaultOptions) {
         this.categories    = categories;
@@ -47,8 +47,15 @@ class App {
         this.waitersLoaded = false;
 
         this.snackbars     = [];
+        this.breakpoint    = 1024;
     }
 
+    /**
+     * Is current view < breakpoint
+     */
+    isMobileView() {
+        return window.innerWidth < this.breakpoint;
+    }
 
     /**
      * This function sets up the stage and creates listeners for all events.
@@ -58,21 +65,20 @@ class App {
     setup() {
         document.dispatchEvent(this.manager.appstart);
 
-        this.initialiseSplitter();
         this.loadLocalStorage();
         this.manager.options.applyPreferredColorScheme();
-        this.populateOperationsList();
+
+        this.buildCategoryList();
+        this.setCompileMessage();
+        this.buildUI();
+
         this.manager.setup();
         this.manager.output.saveBombe();
-        this.adjustComponentSizes();
-        this.setCompileMessage();
         this.uriParams = this.getURIParams();
-
         log.debug("App loaded");
         this.appLoaded = true;
         this.loaded();
     }
-
 
     /**
      * Fires once all setup activities have completed.
@@ -243,84 +249,47 @@ class App {
 
 
     /**
-     * Populates the operations accordion list with the categories and operations specified in the
-     * view constructor.
-     *
-     * @fires Manager#oplistcreate
+     * Sets up the adjustable splitter to allow the user to resize areas of the page.
      */
-    populateOperationsList() {
-        // Move edit button away before we overwrite it
-        document.body.appendChild(document.getElementById("edit-favourites"));
-
-        let html = "";
-        let i;
-
-        for (i = 0; i < this.categories.length; i++) {
-            const catConf = this.categories[i],
-                selected = i === 0,
-                cat = new HTMLCategory(catConf.name, selected);
-
-            for (let j = 0; j < catConf.ops.length; j++) {
-                const opName = catConf.ops[j];
-                if (!(opName in this.operations)) {
-                    log.warn(`${opName} could not be found.`);
-                    continue;
-                }
-
-                const op = new HTMLOperation(opName, this.operations[opName], this, this.manager);
-                cat.addOperation(op);
-            }
-
-            html += cat.toHtml();
+    buildUI() {
+        if (this.isMobileView()) {
+            this.setMobileUI();
+        } else {
+            this.setDesktopUI();
         }
-
-        document.getElementById("categories").innerHTML = html;
-
-        const opLists = document.querySelectorAll("#categories .op-list");
-
-        for (i = 0; i < opLists.length; i++) {
-            opLists[i].dispatchEvent(this.manager.oplistcreate);
-        }
-
-        // Add edit button to first category (Favourites)
-        const favCat = document.querySelector("#categories a");
-        favCat.appendChild(document.getElementById("edit-favourites"));
-        favCat.setAttribute("data-help-title", "Favourite operations");
-        favCat.setAttribute("data-help", `<p>This category displays your favourite operations.</p>
-        <ul>
-            <li><b>To add:</b> drag an operation over the Favourites category</li>
-            <li><b>To reorder:</b> Click on the 'Edit favourites' button and drag operations up and down in the list provided</li>
-            <li><b>To remove:</b> Click on the 'Edit favourites' button and hit the delete button next to the operation you want to remove</li>
-        </ul>`);
     }
 
-
     /**
-     * Sets up the adjustable splitter to allow the user to resize areas of the page.
+     * Set splitter
      *
-     * @param {boolean} [minimise=false] - Set this flag if attempting to minimise frames to 0 width
+     * We don't actually functionally use splitters on mobile, but we leverage the splitters
+     * to create our desired layout. This prevents some problems when resizing
+     * from mobile to desktop and vice versa and reduces code complexity
      */
-    initialiseSplitter(minimise=false) {
+    setSplitter() {
         if (this.columnSplitter) this.columnSplitter.destroy();
         if (this.ioSplitter) this.ioSplitter.destroy();
 
+        const isMobileView = this.isMobileView();
+
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
-            sizes: [20, 30, 50],
-            minSize: minimise ? [0, 0, 0] : [240, 310, 450],
-            gutterSize: 4,
+            sizes: isMobileView ? [100, 100, 100] : [20, 30, 50],
+            minSize: [360, 330, 310],
+            gutterSize: isMobileView ? 0 : 4,
             expandToMin: true,
-            onDrag: debounce(function() {
-                this.adjustComponentSizes();
+            onDrag: debounce(() => {
+                if (!isMobileView) {
+                    this.manager.input.calcMaxTabs();
+                    this.manager.output.calcMaxTabs();
+                }
             }, 50, "dragSplitter", this, [])
         });
 
         this.ioSplitter = Split(["#input", "#output"], {
             direction: "vertical",
-            gutterSize: 4,
-            minSize: minimise ? [0, 0] : [100, 100]
+            gutterSize: isMobileView ? 0 : 4,
+            minSize: [50, 50]
         });
-
-        this.adjustComponentSizes();
     }
 
 
@@ -336,7 +305,6 @@ class App {
         }
         this.manager.options.load(lOptions);
 
-        // Load favourites
         this.loadFavourites();
     }
 
@@ -414,16 +382,20 @@ class App {
 
 
     /**
-     * Resets favourite operations back to the default as specified in the view constructor and
+     * Resets favourite operations to the default as specified in the view constructor and
      * refreshes the operation list.
      */
     resetFavourites() {
-        this.saveFavourites(this.dfavourites);
-        this.loadFavourites();
-        this.populateOperationsList();
-        this.manager.recipe.initialiseOperationDragNDrop();
+        this.updateFavourites(this.dfavourites, true);
     }
 
+    /**
+     * Checks if the favourites category is expanded
+     */
+    isFavouritesExpanded() {
+        const catFavourites = document.getElementById("#catFavourites");
+        return catFavourites ? catFavourites.classList.contains("show") : false;
+    }
 
     /**
      * Adds an operation to the user's favourites.
@@ -439,10 +411,69 @@ class App {
         }
 
         favourites.push(name);
+        this.updateFavourites(favourites, this.isFavouritesExpanded());
+    }
+
+    /**
+     * Removes an operation from the user's favourites.
+     *
+     * @param {string} name - The name of the operation
+     */
+    removeFavourite(name) {
+        const favourites = JSON.parse(localStorage.favourites);
+
+        const index = favourites.indexOf(name);
+        if (index === -1) {
+            this.alert(`'${name}' isn't in your favourites`, 3000);
+            return;
+        }
+
+        favourites.splice(index, 1);
+        this.updateFavourites(favourites, this.isFavouritesExpanded());
+    }
+
+
+    /**
+     * Update favourites in localstorage, load the updated
+     * favourites and rebuild cat fav-list to reflect the updates
+     *
+     * @param {string[]} favourites
+     * @param {Boolean} isExpanded, false by default
+     */
+    updateFavourites(favourites, isExpanded = false) {
         this.saveFavourites(favourites);
         this.loadFavourites();
-        this.populateOperationsList();
-        this.manager.recipe.initialiseOperationDragNDrop();
+        this.buildFavouritesCategory(isExpanded);
+
+        window.dispatchEvent(this.manager.favouritesupdate);
+
+        this.manager.recipe.initDragAndDrop();
+    }
+
+    /**
+     * (Re)render only the favourites category after updating favourites
+     *
+     * @param {Boolean} isExpanded ( false by default )
+     */
+    buildFavouritesCategory(isExpanded = false) {
+        // double-check if the first category is indeed "catFavourites",
+        if (document.querySelector("c-category-list > ul > c-category-li > li > a[data-target='#catFavourites']")) {
+            // then destroy
+            document.querySelectorAll("c-category-list > ul > c-category-li")[0].remove();
+
+            // and rebuild it
+            const favCatConfig = this.categories.find(catConfig => catConfig.name === "Favourites");
+            const favouriteCategory = new CCategoryLi(
+                this,
+                favCatConfig,
+                this.operations,
+                isExpanded,
+                true
+            );
+
+            // finally prepend it to c-category-list
+            document.querySelector("c-category-list > ul").prepend(favouriteCategory);
+        }
     }
 
     /**
@@ -488,7 +519,7 @@ class App {
             // Search for nearest match and add it
             const matchedOps = this.manager.ops.filterOperations(this.uriParams.op, false);
             if (matchedOps.length) {
-                this.manager.recipe.addOperation(matchedOps[0].name);
+                this.manager.recipe.addOperation(matchedOps[0][0]);
             }
 
             // Populate search with the string
@@ -558,7 +589,7 @@ class App {
     /**
      * Gets the current recipe configuration.
      *
-     * @returns {Object[]}
+     * @returns {Object[]} recipeConfig - The recipe configuration
      */
     getRecipeConfig() {
         return this.manager.recipe.getConfig();
@@ -601,7 +632,7 @@ class App {
                 item.querySelector(".disable-icon").click();
             }
             if (recipeConfig[i].breakpoint) {
-                item.querySelector(".breakpoint").click();
+                item.querySelector(".breakpoint-icon").click();
             }
 
             this.manager.recipe.triggerArgEvents(item);
@@ -612,27 +643,7 @@ class App {
 
 
     /**
-     * Resets the splitter positions to default.
-     */
-    resetLayout() {
-        this.columnSplitter.setSizes([20, 30, 50]);
-        this.ioSplitter.setSizes([50, 50]);
-        this.adjustComponentSizes();
-    }
-
-    /**
-     * Adjust components to fit their containers.
-     */
-    adjustComponentSizes() {
-        this.manager.recipe.adjustWidth();
-        this.manager.input.calcMaxTabs();
-        this.manager.output.calcMaxTabs();
-        this.manager.controls.calcControlsHeight();
-    }
-
-
-    /**
-     * Sets the compile message.
+     * Sets the compile message ( "notice" in #banner ).
      */
     setCompileMessage() {
         // Display time since last build and compile message
@@ -761,17 +772,16 @@ class App {
 
 
     /**
-     * Handler for CyerChef statechange events.
+     * Handler for CyberChef statechange events.
      * Fires whenever the input or recipe changes in any way.
      *
      * @listens Manager#statechange
-     * @param {event} e
      */
-    stateChange(e) {
-        debounce(function() {
+    stateChange() {
+        debounce(() => {
             this.progress = 0;
             this.autoBake();
-            this.updateURL(true, null, true);
+            this.updateURL(true);
         }, 20, "stateChange", this, [])();
     }
 
@@ -819,6 +829,95 @@ class App {
         this.loadURIParams();
     }
 
+    /**
+     * Set element visibility
+     *
+     * @param {HTMLElement} elm
+     * @param {boolean} isVisible
+     *
+     */
+    setElementVisibility(elm, isVisible) {
+        return isVisible ? elm.classList.remove("hidden") : elm.classList.add("hidden");
+    }
+
+    /**
+     * Set visibility of download link
+     *
+     * @param {boolean} isVisible
+     */
+    setDownloadLinkVisibility(isVisible) {
+        this.setElementVisibility(document.getElementById("download-wrapper"), true);
+    }
+
+    /**
+     * Set desktop UI ( on init and on window resize events )
+     */
+    setDesktopUI() {
+        this.setDownloadLinkVisibility(true);
+        this.setSplitter();
+
+        this.manager.input.calcMaxTabs();
+        this.manager.output.calcMaxTabs();
+    }
+
+    /**
+     *  Set mobile UI ( on init and on window resize events )
+     */
+    setMobileUI()  {
+        this.setDownloadLinkVisibility(false);
+        this.setSplitter(false);
+
+        this.assignAvailableHeight();
+        $("[data-toggle=tooltip]").tooltip("disable");
+    }
+
+    /**
+     * Due to variable available heights on mobile devices ( due to the
+     * address bar etc. ), we need to calculate the available space and
+     * set some heights programmatically based on the full viewport
+     * minus fixed-height elements.
+     *
+     * Be mindful to update these fixed numbers accordingly in the stylesheets
+     * ( themes/_structure ) if you make changes to those elements' height.
+     */
+    assignAvailableHeight() {
+        const bannerHeight = 30;
+        const controlsHeight = 50;
+        const operationsHeight = 80;
+
+        const remainingSpace = window.innerHeight - (bannerHeight+controlsHeight+operationsHeight - 1); // - 1 is accounting for a border
+
+        // equally divide among recipe, input and output
+        ["recipe", "input", "output"].forEach((div) => {
+            document.getElementById(div).style.height = `${remainingSpace/3}px`;
+        });
+
+        // set the ops-dropdown height
+        document.getElementById("operations-dropdown").style.maxHeight = `${window.innerHeight - (bannerHeight+operationsHeight)}px`;
+    }
+
+    /**
+     * Build a CCategoryList component and append it to #categories
+     */
+    buildCategoryList() {
+        // populate total operations count
+        document.querySelector("#operations .title .op-count").innerText = Object.keys(this.operations).length;
+
+        // double-check if the c-category-list already exists,
+        if (document.querySelector("#categories > c-category-list")) {
+            // then destroy it
+            document.querySelector("#categories > c-category-list").remove();
+        }
+
+        const categoryList = new CCategoryList(
+            this,
+            this.categories,
+            this.operations,
+            true
+        );
+
+        document.querySelector("#categories").appendChild(categoryList);
+    }
 }
 
 export default App;
