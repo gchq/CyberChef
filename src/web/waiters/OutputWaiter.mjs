@@ -551,17 +551,27 @@ class OutputWaiter {
         if (!this.outputExists(inputNum)) {
             this.addOutput(inputNum);
         }
-
-        if (Object.prototype.hasOwnProperty.call(data, "dish")) {
-            data.dish = new Dish(data.dish);
+        // Preserve current selection
+        const outputElement = document.getElementById("output-text");
+        let selectionStart = null;
+        let selectionEnd = null;
+        if (outputElement) {
+            selectionStart = outputElement.selectionStart;
+            selectionEnd = outputElement.selectionEnd;
         }
 
-        this.outputs[inputNum].data = data;
+        this.outputs[inputNum].statusMessage = statusMessage;
+        if (set) {
+            this.set(inputNum);
 
-        const tabItem = this.manager.tabs.getTabItem(inputNum, "output");
-        if (tabItem) tabItem.style.background = "";
-
-        if (set) this.set(inputNum);
+            // Restore selection if it was set
+            if (outputElement && selectionStart !== null && selectionEnd !== null) {
+                requestAnimationFrame(() => {
+                    outputElement.selectionStart = selectionStart;
+                    outputElement.selectionEnd = selectionEnd;
+                });
+            }
+        }
     }
 
     /**

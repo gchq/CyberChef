@@ -776,6 +776,15 @@ class InputWaiter {
      * @param {string | ArrayBuffer} value
      */
     updateInputValue(inputNum, value, force=false) {
+        // Preserve current selection
+        const inputElement = document.getElementById("input-text");
+        let selectionStart = null;
+        let selectionEnd = null;
+        if (inputElement) {
+            selectionStart = inputElement.selectionStart;
+            selectionEnd = inputElement.selectionEnd;
+        }
+
         // Prepare the value as a buffer (full value) and a string sample (up to 4096 bytes)
         let buffer;
         let stringSample = "";
@@ -814,6 +823,14 @@ class InputWaiter {
                 eolSequence: this.getEOLSeq()
             }
         }, transferable);
+        
+        // Restore selection if it was set
+        if (inputElement && selectionStart !== null && selectionEnd !== null) {
+            requestAnimationFrame(() => {
+                inputElement.selectionStart = selectionStart;
+                inputElement.selectionEnd = selectionEnd;
+            });
+        }
     }
 
     /**
