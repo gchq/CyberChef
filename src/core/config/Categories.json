@@ -199,7 +199,8 @@
             "Public Key from Certificate",
             "Public Key from Private Key",
             "SM2 Encrypt",
-            "SM2 Decrypt"
+            "SM2 Decrypt",
+            "Generate EdDSA Key Pair"
         ]
     },
     {
