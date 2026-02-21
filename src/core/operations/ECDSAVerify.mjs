@@ -151,8 +151,8 @@ class ECDSAVerify extends Operation {
             throw new OperationError("Provided key is not a public key.");
         }
         sig.init(key);
-        const messageStr = Utils.convertToByteString(msg, msgFormat);
-        sig.updateString(messageStr);
+        const messageByteArray = Utils.convertToByteArray(msg, msgFormat);
+        sig.updateHex(toHexFast(messageByteArray));
         const result = sig.verify(signatureASN1Hex);
         return result ? "Verified OK" : "Verification Failure";
     }
