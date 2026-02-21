@@ -26,6 +26,36 @@
     color: var(--banner-url-colour);
 }
 
+#options:focus {
+    background-color: #eef3ec;
+    border: solid black 2px;
+    border-radius: 4px;
+}
+
+#support:focus {
+    background-color: #eef3ec;
+    border: solid black 2px;
+    border-radius: 4px;
+}
+
+#notice:focus {
+    background-color: #eef3ec;
+    border: solid black 2px;
+    border-radius: 4px;
+}
+
+#banner .col a:focus {
+    background-color: #eef3ec;
+    border: solid black 2px;
+    border-radius: 4px;
+}
+
+#notice-wrapper #notice:focus {
+    background-color: #eef3ec;
+    border: solid black 2px;
+    border-radius: 4px;
+}
+
 #notice-wrapper {
     text-align: center;
     overflow: hidden;
