@@ -257,6 +257,7 @@
             "URL Decode",
             "Protobuf Decode",
             "Protobuf Encode",
+            "Protobuf Stream Decode",
             "VarInt Encode",
             "VarInt Decode",
             "JA3 Fingerprint",
