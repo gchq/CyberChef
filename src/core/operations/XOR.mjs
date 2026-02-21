@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import { bitOp, xor, BITWISE_OP_DELIMS } from "../lib/BitwiseOp.mjs";
 
@@ -41,6 +42,11 @@ class XOR extends Operation {
                 "name": "Null preserving",
                 "type": "boolean",
                 "value": false
+            },
+            {
+                "name": "Filter Key",
+                "type": "boolean",
+                "value": true
             }
         ];
     }
@@ -52,10 +58,14 @@ class XOR extends Operation {
      */
     run(input, args) {
         input = new Uint8Array(input);
-        const key = Utils.convertToByteArray(args[0].string || "", args[0].option),
-            [, scheme, nullPreserving] = args;
+        try {
+            const key = Utils.convertToByteArray(args[0].string || "", args[0].option, args[3] ? "Auto" : "None", true),
+                [, scheme, nullPreserving] = args;
 
-        return bitOp(input, key, xor, nullPreserving, scheme);
+            return bitOp(input, key, xor, nullPreserving, scheme);
+        } catch (error) {
+            throw new OperationError("Invalid Characters in key");
+        }
     }
 
     /**
