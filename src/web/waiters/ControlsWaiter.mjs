@@ -34,7 +34,7 @@ class ControlsWaiter {
             animation: false,
             container: "body",
             boundary: "viewport",
-            trigger: "hover"
+            trigger: "hover focus"
         });
 
         // Set number of operations in various places in the DOM
