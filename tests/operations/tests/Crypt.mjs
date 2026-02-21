@@ -1488,6 +1488,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "op": "RC2 Encrypt",
                 "args": [
                     {"option": "Hex", "string": ""},
+                    128,
                     {"option": "Hex", "string": ""},
                     "Hex", "Hex"
                 ]
@@ -1503,6 +1504,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "op": "RC2 Encrypt",
                 "args": [
                     {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    128,
                     {"option": "Hex", "string": "ae817c784a097e0c"},
                     "Hex", "Hex"
                 ]
@@ -1518,6 +1520,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "op": "RC2 Encrypt",
                 "args": [
                     {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    128,
                     {"option": "Hex", "string": ""},
                     "Hex", "Hex"
                 ]
@@ -1533,6 +1536,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "op": "RC2 Decrypt",
                 "args": [
                     {"option": "Hex", "string": ""},
+                    128,
                     {"option": "Hex", "string": ""},
                     "Hex", "Hex"
                 ]
@@ -1548,6 +1552,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "op": "RC2 Decrypt",
                 "args": [
                     {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    128,
                     {"option": "Hex", "string": "ae817c784a097e0c"},
                     "Hex", "Hex"
                 ]
@@ -1563,6 +1568,39 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 "op": "RC2 Decrypt",
                 "args": [
                     {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    128,
+                    {"option": "Hex", "string": ""},
+                    "Hex", "Hex"
+                ]
+            }
+        ],
+    },
+    {
+        name: "RC2 Encrypt: RC2-ECB, Binary with 80 effective key bits",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: "449d87545fc7364103e8311c732be765039e99410ef51a916481fd0879a1e32761af3c73a0129ea2768a3dd95ce8ebe49c780d8118417f659415376d97d2919838bef757be28379a1d561d7b7d94e16753a944ee90fef6c9acc8c680f39d3c5566f59340cd361167",
+        recipeConfig: [
+            {
+                "op": "RC2 Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    80,
+                    {"option": "Hex", "string": ""},
+                    "Hex", "Hex"
+                ]
+            }
+        ],
+    },
+    {
+        name: "RC2 Decrypt: RC2-ECB, Binary with 80 effective key bits",
+        input: "449d87545fc7364103e8311c732be765039e99410ef51a916481fd0879a1e32761af3c73a0129ea2768a3dd95ce8ebe49c780d8118417f659415376d97d2919838bef757be28379a1d561d7b7d94e16753a944ee90fef6c9acc8c680f39d3c5566f59340cd361167",
+        expectedOutput: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        recipeConfig: [
+            {
+                "op": "RC2 Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "eb970554bb213430f4bb4e5988a6a218"},
+                    80,
                     {"option": "Hex", "string": ""},
                     "Hex", "Hex"
                 ]
