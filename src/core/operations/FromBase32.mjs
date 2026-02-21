@@ -5,8 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import Utils from "../Utils.mjs";
-import {ALPHABET_OPTIONS} from "../lib/Base32.mjs";
+import {ALPHABET_OPTIONS, fromBase32} from "../lib/Base32.mjs";
 
 
 /**
@@ -36,6 +35,11 @@ class FromBase32 extends Operation {
                 name: "Remove non-alphabet chars",
                 type: "boolean",
                 value: true
+            },
+            {
+                name: "Strict mode",
+                type: "boolean",
+                value: false
             }
         ];
         this.checks = [
@@ -58,46 +62,8 @@ class FromBase32 extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        if (!input) return [];
-
-        const alphabet = args[0] ?
-                Utils.expandAlphRange(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
-            removeNonAlphChars = args[1],
-            output = [];
-
-        let chr1, chr2, chr3, chr4, chr5,
-            enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
-            i = 0;
-
-        if (removeNonAlphChars) {
-            const re = new RegExp("[^" + alphabet.replace(/[\]\\\-^]/g, "\\$&") + "]", "g");
-            input = input.replace(re, "");
-        }
-
-        while (i < input.length) {
-            enc1 = alphabet.indexOf(input.charAt(i++));
-            enc2 = alphabet.indexOf(input.charAt(i++) || "=");
-            enc3 = alphabet.indexOf(input.charAt(i++) || "=");
-            enc4 = alphabet.indexOf(input.charAt(i++) || "=");
-            enc5 = alphabet.indexOf(input.charAt(i++) || "=");
-            enc6 = alphabet.indexOf(input.charAt(i++) || "=");
-            enc7 = alphabet.indexOf(input.charAt(i++) || "=");
-            enc8 = alphabet.indexOf(input.charAt(i++) || "=");
-
-            chr1 = (enc1 << 3) | (enc2 >> 2);
-            chr2 = ((enc2 & 3) << 6) | (enc3 << 1) | (enc4 >> 4);
-            chr3 = ((enc4 & 15) << 4) | (enc5 >> 1);
-            chr4 = ((enc5 & 1) << 7) | (enc6 << 2) | (enc7 >> 3);
-            chr5 = ((enc7 & 7) << 5) | enc8;
-
-            output.push(chr1);
-            if ((enc2 & 3) !== 0 || enc3 !== 32) output.push(chr2);
-            if ((enc4 & 15) !== 0 || enc5 !== 32) output.push(chr3);
-            if ((enc5 & 1) !== 0 || enc6 !== 32) output.push(chr4);
-            if ((enc7 & 7) !== 0 || enc8 !== 32) output.push(chr5);
-        }
-
-        return output;
+        const [alphabet, removeNonAlphChars, strictMode] = args;
+        return fromBase32(input, alphabet, "byteArray", removeNonAlphChars, strictMode);
     }
 
 }
