@@ -24,8 +24,8 @@ class TripleDESEncrypt extends Operation {
         this.module = "Ciphers";
         this.description = "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.";
         this.infoURL = "https://wikipedia.org/wiki/Triple_DES";
-        this.inputType = "string";
-        this.outputType = "string";
+        this.inputType = "byteArray";
+        this.outputType = "byteArray";
         this.args = [
             {
                 "name": "Key",
@@ -58,9 +58,9 @@ class TripleDESEncrypt extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      */
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
@@ -81,6 +81,7 @@ Triple DES uses an IV length of 8 bytes (64 bits).
 Make sure you have specified the type correctly (e.g. Hex vs UTF8).`);
         }
 
+        input = input.map((c) => String.fromCharCode(c)).join("");
         input = Utils.convertToByteString(input, inputType);
 
         const cipher = forge.cipher.createCipher("3DES-" + mode,
@@ -89,7 +90,8 @@ Make sure you have specified the type correctly (e.g. Hex vs UTF8).`);
         cipher.update(forge.util.createBuffer(input));
         cipher.finish();
 
-        return outputType === "Hex" ? cipher.output.toHex() : cipher.output.getBytes();
+        const output = outputType === "Hex" ? cipher.output.toHex() : cipher.output.getBytes();
+        return Array.from(output).map((c) => c.charCodeAt(0));
     }
 
 }
