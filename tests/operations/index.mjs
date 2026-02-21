@@ -88,6 +88,7 @@ import "./tests/Hex.mjs";
 import "./tests/Hexdump.mjs";
 import "./tests/HKDF.mjs";
 import "./tests/Image.mjs";
+import "./tests/InsertBytes.mjs";
 import "./tests/IndexOfCoincidence.mjs";
 import "./tests/JA3Fingerprint.mjs";
 import "./tests/JA4.mjs";
