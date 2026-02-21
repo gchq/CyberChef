@@ -109,6 +109,8 @@
             "Rabbit",
             "SM4 Encrypt",
             "SM4 Decrypt",
+            "RC6 Encrypt",
+            "RC6 Decrypt",
             "GOST Encrypt",
             "GOST Decrypt",
             "GOST Sign",
