@@ -46,7 +46,7 @@ class Recipe  {
                 module: OperationConfig[c.op].module,
                 ingValues: c.args,
                 breakpoint: c.breakpoint,
-                disabled: c.disabled || c.op === "Comment",
+                disabled: c.disabled,
             });
         });
     }
