@@ -417,6 +417,8 @@ class RecipeWaiter {
             el.classList.add("flow-control-op");
         }
 
+        $(el).find("[data-toggle='tooltip']").tooltip();
+
         // Disable auto-bake if this is a manual op
         if (op.manualBake && this.app.autoBake_) {
             this.manager.controls.setAutoBake(false);
@@ -441,8 +443,6 @@ class RecipeWaiter {
 
         this.buildRecipeOperation(item);
         document.getElementById("rec-list").appendChild(item);
-
-        $(item).find("[data-toggle='tooltip']").tooltip();
 
         item.dispatchEvent(this.manager.operationadd);
         return item;
