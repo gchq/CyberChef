@@ -72,9 +72,8 @@ class RSAEncrypt extends Operation {
             // Load public key
             const pubKey = forge.pki.publicKeyFromPem(pemKey);
             // https://github.com/digitalbazaar/forge/issues/465#issuecomment-271097600
-            const plaintextBytes = forge.util.encodeUtf8(input);
             // Encrypt message
-            const eMsg = pubKey.encrypt(plaintextBytes, scheme, {md: MD_ALGORITHMS[md].create()});
+            const eMsg = pubKey.encrypt(input, scheme, {md: MD_ALGORITHMS[md].create()});
             return eMsg;
         } catch (err) {
             if (err.message === "RSAES-OAEP input message length is too long.") {
