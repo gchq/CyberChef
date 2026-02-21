@@ -182,6 +182,7 @@
             "Generate PGP Key Pair",
             "PGP Encrypt",
             "PGP Decrypt",
+            "PGP Sign",
             "PGP Verify",
             "PGP Encrypt and Sign",
             "PGP Decrypt and Verify",
