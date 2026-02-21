@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import jwt from "jsonwebtoken";
 import OperationError from "../errors/OperationError.mjs";
+import moment from "moment-timezone";
 
 /**
  * JWT Decode operation
@@ -25,7 +26,13 @@ class JWTDecode extends Operation {
         this.infoURL = "https://wikipedia.org/wiki/JSON_Web_Token";
         this.inputType = "string";
         this.outputType = "JSON";
-        this.args = [];
+        this.args = [
+            {
+                "name": "Show/Hide dates",
+                "type": "boolean",
+                "value": false
+            }
+        ];
         this.checks = [
             {
                 pattern: "^ey([A-Za-z0-9_-]+)\\.ey([A-Za-z0-9_-]+)\\.([A-Za-z0-9_-]+)$",
@@ -42,10 +49,26 @@ class JWTDecode extends Operation {
      */
     run(input, args) {
         try {
+            const formatAsDate = args[0];
             const decoded = jwt.decode(input, {
                 json: true,
                 complete: true
             });
+
+            if (formatAsDate) {
+                const payload = {...decoded.payload};
+                if (payload.iat) {
+                    payload.iat = payload.iat + " ("+moment.unix(payload.iat).tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC)";
+                }
+                if (payload.exp) {
+                    payload.exp = payload.exp + " ("+moment.unix(payload.exp).tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC)";
+                }
+                if (payload.nbf) {
+                    payload.nbf = payload.nbf + " ("+moment.unix(payload.nbf).tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC)";
+                }
+
+                return payload;
+            }
 
             return decoded.payload;
         } catch (err) {
