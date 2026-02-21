@@ -32,8 +32,10 @@ class BLAKE2b extends Operation {
         this.args = [
             {
                 "name": "Size",
-                "type": "option",
-                "value": ["512", "384", "256", "160", "128"]
+                "type": "number",
+                "value": 256,
+                "min": 8,
+                "max": 512
             }, {
                 "name": "Output Encoding",
                 "type": "option",
@@ -59,6 +61,10 @@ class BLAKE2b extends Operation {
             key = null;
         } else if (key.length > 64) {
             throw new OperationError(["Key cannot be greater than 64 bytes", "It is currently " + key.length + " bytes."].join("\n"));
+        }
+
+        if (outSize % 8 !== 0 || outSize < 8 || outSize > 512) {
+            throw new OperationError("Size has to be between 8 to 512 and multiple of 8.");
         }
 
         input = new Uint8Array(input);
