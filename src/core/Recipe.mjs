@@ -70,11 +70,15 @@ class Recipe  {
             if (o instanceof Operation) {
                 return o;
             } else {
-                const op = new modules[o.module][o.name]();
-                op.ingValues = o.ingValues;
-                op.breakpoint = o.breakpoint;
-                op.disabled = o.disabled;
-                return op;
+                try {
+                    const op = new modules[o.module][o.name]();
+                    op.ingValues = o.ingValues;
+                    op.breakpoint = o.breakpoint;
+                    op.disabled = o.disabled;
+                    return op;
+                } catch (err) {
+                    throw new Error(`Failed to hydrate operation '${o.name}': ${err}`);
+                }
             }
         });
     }

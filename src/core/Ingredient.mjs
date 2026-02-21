@@ -5,7 +5,8 @@
  */
 
 import Utils from "./Utils.mjs";
-import {fromHex} from "./lib/Hex.mjs";
+import { fromHex } from "./lib/Hex.mjs";
+import OperationError from "./errors/OperationError.mjs";
 
 /**
  * The arguments to operations.
@@ -119,7 +120,9 @@ class Ingredient {
                 number = parseFloat(data);
                 if (isNaN(number)) {
                     const sample = Utils.truncate(data.toString(), 10);
-                    throw "Invalid ingredient value. Not a number: " + sample;
+                    throw new OperationError(
+                        "Invalid ingredient value. Not a number: " + sample,
+                    );
                 }
                 return number;
             default:
