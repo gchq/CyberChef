@@ -867,13 +867,15 @@ pCGTErs=
     }),
 
     it("SQL Beautify", () => {
-        const result = chef.SQLBeautify(`SELECT MONTH, ID, RAIN_I, TEMP_F
-FROM STATS;`);
-        const expected = `SELECT MONTH,
-         ID,
-         RAIN_I,
-         TEMP_F
-FROM STATS;`;
+        const result = chef.SQLBeautify(`SELECT MONTH, ID, RAIN_I, TEMP_F FROM STATS;`);
+        const expected =
+`SELECT
+  MONTH,
+  ID,
+  RAIN_I,
+  TEMP_F
+FROM
+  STATS;`;
         assert.strictEqual(result.toString(), expected);
     }),
 
