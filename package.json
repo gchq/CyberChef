@@ -124,6 +124,7 @@
     "d3-hexbin": "^0.2.2",
     "diff": "^5.2.0",
     "dompurify": "^3.2.5",
+    "dsp.js": "^1.0.1",
     "es6-promisify": "^7.0.0",
     "escodegen": "^2.1.0",
     "esprima": "^4.0.1",
@@ -185,6 +186,7 @@
     "utf8": "^3.0.0",
     "uuid": "^11.1.0",
     "vkbeautify": "^0.99.3",
+    "wavefile": "^11.0.0",
     "xpath": "0.0.34",
     "xregexp": "^5.1.1",
     "zlibjs": "^0.3.1"
