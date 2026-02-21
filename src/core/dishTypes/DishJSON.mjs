@@ -8,6 +8,17 @@ import DishType from "./DishType.mjs";
 import Utils from "../Utils.mjs";
 
 /**
+ * Serialize Maps which are not natively compatible with JSON as an array of
+ * key-value-paris.
+ */
+function jsonStringifyReplacer(k, v) {
+    if (v instanceof Map) {
+        return [...v];
+    }
+    return v;
+}
+
+/**
  * Translation methods for JSON dishes
  */
 class DishJSON extends DishType {
@@ -17,7 +28,7 @@ class DishJSON extends DishType {
      */
     static toArrayBuffer() {
         DishJSON.checkForValue(this.value);
-        this.value = this.value !== undefined ? Utils.strToArrayBuffer(JSON.stringify(this.value, null, 4)) : new ArrayBuffer;
+        this.value = this.value !== undefined ? Utils.strToArrayBuffer(JSON.stringify(this.value, jsonStringifyReplacer, 4)) : new ArrayBuffer;
     }
 
     /**
