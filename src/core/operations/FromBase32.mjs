@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import {ALPHABET_OPTIONS} from "../lib/Base32.mjs";
 
@@ -42,12 +43,17 @@ class FromBase32 extends Operation {
             {
                 pattern: "^(?:[A-Z2-7]{8})+(?:[A-Z2-7]{2}={6}|[A-Z2-7]{4}={4}|[A-Z2-7]{5}={3}|[A-Z2-7]{7}={1})?$",
                 flags: "",
-                args: ["A-Z2-7=", false]
+                args: [ALPHABET_OPTIONS.find(opt => opt.name === "Standard").value, false]
             },
             {
                 pattern: "^(?:[0-9A-V]{8})+(?:[0-9A-V]{2}={6}|[0-9A-V]{4}={4}|[0-9A-V]{5}={3}|[0-9A-V]{7}={1})?$",
                 flags: "",
-                args: ["0-9A-V=", false]
+                args: [ALPHABET_OPTIONS.find(opt => opt.name === "Hex Extended").value, false]
+            },
+            {
+                pattern: "^(?:[0-9A-TV-Za-tv-z]{8})+(?:[0-9A-TV-Za-tv-z]{2}={6}|[0-9A-TV-Za-tv-z]{4}={4}|[0-9A-TV-Za-tv-z]{5}={3}|[0-9A-TV-Za-tv-z]{7}=)?$",
+                flags: "",
+                args: [ALPHABET_OPTIONS.find(opt => opt.name === "Crockford's alphabet").value, false]
             }
         ];
     }
@@ -60,11 +66,20 @@ class FromBase32 extends Operation {
     run(input, args) {
         if (!input) return [];
 
-        const alphabet = args[0] ?
-                Utils.expandAlphRange(args[0]).join("") : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=",
+        const alphabet = Utils.expandAlphRange(args[0]).join(""),
             removeNonAlphChars = args[1],
             output = [];
 
+        if (alphabet.length !== 33) {
+            throw new OperationError("Alphabet must be of length 33"); // 32 characters + 1 padding
+        }
+        const isCrockford = alphabet === Utils.expandAlphRange(ALPHABET_OPTIONS.find(opt => opt.name === "Crockford's alphabet").value).join("");
+        if (isCrockford) {
+            input = input
+                .replace(/[oO]/g, "0")
+                .replace(/[iIlL]/g, "1")
+                .toUpperCase();
+        }
         let chr1, chr2, chr3, chr4, chr5,
             enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
             i = 0;
