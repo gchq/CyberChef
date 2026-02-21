@@ -176,6 +176,7 @@ import "./tests/JA3Fingerprint.mjs";
 import "./tests/JA3SFingerprint.mjs";
 import "./tests/HASSH.mjs";
 import "./tests/JSONtoYAML.mjs";
+import "./tests/WordCount.mjs";
 
 // Cannot test operations that use the File type yet
 // import "./tests/SplitColourChannels.mjs";
