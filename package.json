@@ -99,6 +99,7 @@
     "@astronautlabs/amf": "^0.0.6",
     "@babel/polyfill": "^7.12.1",
     "@blu3r4y/lzma": "^2.3.3",
+    "@dnspect/dns-ts": "^0.3.0",
     "@wavesenterprise/crypto-gost-js": "^2.1.0-RC1",
     "@xmldom/xmldom": "^0.8.10",
     "argon2-browser": "^1.18.0",
