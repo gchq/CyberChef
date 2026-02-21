@@ -57,6 +57,18 @@ class ControlsWaiter {
         }
     }
 
+    /**
+     * Checks or unchecks the Auto Bake checkbox with "Enter"
+     * @param {Event} ev
+     */
+    autoBakeKeyboardHandler(ev) {
+        const checkBox = document.getElementById("auto-bake");
+        ev.preventDefault();
+        if (ev.key === "Enter" || ev.key === " ") {
+            checkBox.checked = !checkBox.checked;
+        }
+    }
+
 
     /**
      * Handler to trigger baking.
