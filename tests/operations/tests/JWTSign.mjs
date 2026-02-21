@@ -92,7 +92,7 @@ TestRegister.addTests([
             },
             {
                 op: "JWT Decode",
-                args: []
+                args: [false]
             }
         ],
     },
@@ -107,7 +107,7 @@ TestRegister.addTests([
             },
             {
                 op: "JWT Decode",
-                args: []
+                args: [false]
             }
         ],
     },
@@ -122,7 +122,7 @@ TestRegister.addTests([
             },
             {
                 op: "JWT Decode",
-                args: []
+                args: [false]
             }
         ],
     },
@@ -137,7 +137,7 @@ TestRegister.addTests([
             },
             {
                 op: "JWT Decode",
-                args: []
+                args: [false]
             }
         ],
     },
@@ -152,7 +152,7 @@ TestRegister.addTests([
             },
             {
                 op: "JWT Decode",
-                args: []
+                args: [false]
             }
         ],
     },
@@ -167,7 +167,7 @@ TestRegister.addTests([
             },
             {
                 op: "JWT Decode",
-                args: []
+                args: [false]
             }
         ],
     }
