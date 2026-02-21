@@ -1265,20 +1265,28 @@ class Utils {
 
 
     /**
-     * Finds the modular inverse of two values.
+     * Calculates the modular multiplicative inverse of a (mod n).
+     * Uses the Extended Euclidean Algorithm.
+     * https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm
      *
-     * @author Matt C [matt@artemisbot.uk]
-     * @param {number} x
-     * @param {number} y
-     * @returns {number}
+     * @author Barry B [profbbrown@gmail.com]
+     * @param {number} a
+     * @param {number} n
+     * @returns {number|undefined} The inverse of a (mod n), or undefined
      */
-    static modInv(x, y) {
-        x %= y;
-        for (let i = 1; i < y; i++) {
-            if ((x * i) % 26 === 1) {
-                return i;
-            }
+    static modInv(a, n) {
+        let t = 0, newT = 1, r = n, newR = a;
+
+        while (newR !== 0) {
+            const q = Math.floor(r / newR);
+            [t, newT] = [newT, t - q * newT];
+            [r, newR] = [newR, r - q * newR];
         }
+
+        if (r > 1) return undefined;
+        if (t < 0) t = t + n;
+
+        return t;
     }
 
 
