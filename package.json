@@ -130,7 +130,7 @@
     "esprima": "^4.0.1",
     "events": "^3.3.0",
     "exif-parser": "^0.1.12",
-    "fernet": "^0.4.0",
+    "fernet": "^0.3.3",
     "file-saver": "^2.0.5",
     "flat": "^6.0.1",
     "geodesy": "1.1.3",
