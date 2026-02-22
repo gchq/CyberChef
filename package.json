@@ -51,7 +51,7 @@
     "@codemirror/state": "^6.5.4",
     "@codemirror/view": "^6.39.15",
     "autoprefixer": "^10.4.24",
-    "babel-loader": "^9.2.1",
+    "babel-loader": "^10.0.0",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "babel-plugin-transform-builtin-extend": "1.1.2",
     "base64-loader": "^1.0.0",
