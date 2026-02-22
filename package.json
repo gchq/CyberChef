@@ -59,7 +59,7 @@
     "cli-progress": "^3.12.0",
     "colors": "^1.4.0",
     "compression-webpack-plugin": "^11.1.0",
-    "copy-webpack-plugin": "^12.0.2",
+    "copy-webpack-plugin": "^13.0.1",
     "core-js": "^3.48.0",
     "cspell": "^8.19.4",
     "css-loader": "7.1.4",
