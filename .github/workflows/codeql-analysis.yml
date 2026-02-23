@@ -5,12 +5,10 @@ on:
     branches:
       - main
       - master
-      - develop
   pull_request:
     branches:
       - main
       - master
-      - develop
   schedule:
     # Run at 4 AM UTC every Monday
     - cron: '0 4 * * 1'

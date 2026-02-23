@@ -213,6 +213,10 @@
     "security:triage:json": "node scripts/vulnerability-triage.js --json",
     "security:check": "npm run security:triage && npm run lint"
   },
+  "overrides": {
+    "pbkdf2": "^3.1.5",
+    "sha.js": "^2.4.12"
+  },
   "engines": {
     "node": ">=24"
   }

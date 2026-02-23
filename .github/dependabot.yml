@@ -43,7 +43,7 @@ updates:
 
     # Assignees
     assignees:
-      - "${{ github.repository_owner }}"
+      - "mkilijanek"
 
     # Reviewers (customize as needed)
     # reviewers:
