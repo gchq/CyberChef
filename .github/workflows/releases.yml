@@ -24,7 +24,7 @@ jobs:
       - name: Set node version
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
 
       - name: Install
@@ -104,7 +104,7 @@ jobs:
       - name: Set node version
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
 
       - name: Install
@@ -116,7 +116,7 @@ jobs:
       - name: Reset node version ready for publish
         uses: actions/setup-node@v4
         with:
-          node-version: 24.5
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
 
       - name: Publish to NPM
