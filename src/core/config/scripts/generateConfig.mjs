@@ -20,7 +20,7 @@ const dir = path.join(process.cwd() + "/src/core/config/");
 if (!fs.existsSync(dir)) {
     console.log("\nCWD: " + process.cwd());
     console.log("Error: generateConfig.mjs should be run from the project root");
-    console.log("Example> node --experimental-modules src/core/config/scripts/generateConfig.mjs");
+    console.log("Example> node src/core/config/scripts/generateConfig.mjs");
     process.exit(1);
 }
 

@@ -20,4 +20,10 @@ TestRegister.addApiTests([
         assert.equal(Utils.parseEscapedChars("\\\\\\'"), "\\'");
     }),
 
+    it("Utils: should replace delete character", () => {
+        assert.equal(
+            Utils.printable("\x7e\x7f\x80\xa7", false, true),
+            "\x7e...",
+        );
+    }),
 ]);

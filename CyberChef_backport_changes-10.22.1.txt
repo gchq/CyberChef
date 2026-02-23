@@ -1,0 +1,5755 @@
+CHANGED: .editorconfig — mkilijanek/.editorconfig +++ gchq/.editorconfig
+@@ -12,3 +12,7 @@ [{package.json,.travis.yml,nightwatch.json}]
+
+indent_style = space
+
+indent_size = 2
+
+-   
+
++[.github/**.yml]
+
++indent_style = space
+
++indent_size = 2
+
+REMOVED in gchq (exists in mkilijanek): .github/dependabot.yml REMOVED
+in gchq (exists in mkilijanek): .github/workflows/codeql-analysis.yml
+REMOVED in gchq (exists in mkilijanek): .github/workflows/codeql.yml
+REMOVED in gchq (exists in mkilijanek):
+.github/workflows/dependency-review.yml
+
+CHANGED: .github/workflows/master.yml —
+mkilijanek/.github/workflows/master.yml +++
+gchq/.github/workflows/master.yml @@ -2,129 +2,64 @@
+
+on:
+
+workflow_dispatch:
+
+-   inputs:
+
+-    nightly:
+
+-      description: "Tag build as nightly"
+
+-      required: false
+
+-      default: "false"
+
+    push:
+
+    branches:
+
+-   -   master
+
+-   schedule:
+
+-   Weekly build and publish to keep images fresh
+
+-   -   cron: ‘0 3 * * 1’
+
+-    - master
+
+-env:
+
+-   REGISTRY: ghcr.io
+
+-   IMAGE_NAME: ${{ github.repository }}
+
+-   PLATFORMS: linux/amd64,linux/arm64
+
+-   
+
+-env:
+
+-   REGISTRY: ghcr.io
+
+-   IMAGE_NAME: ${{ github.repository }}
+
+-   PLATFORMS: linux/amd64,linux/arm64
+
++permissions:
+
+-   contents: read
+
+jobs:
+
+main:
+
+-   permissions:
+
+-    contents: write
+
+-    pages: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+-   -   uses: actions/checkout@v3
+
+-    - uses: actions/checkout@v6
+
+-   -   name: Set node version
+
+-    uses: actions/setup-node@v3
+
+-    with:
+
+-      node-version: '18.x'
+
+-    - name: Set node version
+
+-      uses: actions/setup-node@v6
+
+-      with:
+
+-        node-version: 18
+
+-        registry-url: "https://registry.npmjs.org"
+
+-   -   name: Install
+
+-    run: |
+
+-      export DETECT_CHROMEDRIVER_VERSION=true
+
+-      npm install
+
+-      npm run setheapsize
+
+-    - name: Install
+
+-      run: |
+
+-        export DETECT_CHROMEDRIVER_VERSION=true
+
+-        npm install
+
+-        npm run setheapsize
+
+-   -   name: Lint
+
+-    run: npx grunt lint
+
+-    - name: Lint
+
+-      run: npx grunt lint
+
+-   -   name: Unit Tests
+
+-    run: |
+
+-      npm test
+
+-      npm run testnodeconsumer
+
+-    - name: Unit Tests
+
+-      run: |
+
+-        npm test
+
+-        npm run testnodeconsumer
+
+-   -   name: Production Build
+
+-    if: success()
+
+-    run: npx grunt prod --msg="Version 10 is here! Read about the new features <a href='https://github.com/gchq/CyberChef/wiki/Character-encoding,-EOL-separators,-and-editor-features'>here</a>"
+
+-    - name: Production Build
+
+-      if: success()
+
+-      run: npx grunt prod --msg=""
+
+-   -   name: Generate sitemap
+
+-    run: npx grunt exec:sitemap
+
+-    - name: Generate sitemap
+
+-      run: npx grunt exec:sitemap
+
+-   -   name: UI Tests
+
+-    if: success()
+
+-    run: |
+
+-      sudo apt-get install xvfb
+
+-      xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+
+-    - name: UI Tests
+
+-      if: success()
+
+-      run: |
+
+-        sudo apt-get install xvfb
+
+-        xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+
+-   -   name: Prepare for GitHub Pages
+
+-    if: success()
+
+-    run: npx grunt copy:ghPages
+
+-    - name: Prepare for GitHub Pages
+
+-      if: success()
+
+-      run: npx grunt copy:ghPages
+
+-   -   name: Deploy to GitHub Pages
+
+-    if: success() && github.ref == 'refs/heads/master'
+
+-    uses: crazy-max/ghaction-github-pages@v3
+
+-    with:
+
+-      target_branch: gh-pages
+
+-      build_dir: ./build/prod
+
+-    env:
+
+-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+-   
+
+-   docker-images:
+
+-   name: Build & Publish Docker Images
+
+-   runs-on: ubuntu-latest
+
+-   needs: main
+
+-   if: github.ref == ‘refs/heads/master’
+
+-   permissions:
+
+-    contents: read
+
+-    packages: write
+
+-   steps:
+
+-   -   uses: actions/checkout@v4
+
+-   
+
+-   -   name: Set up QEMU
+
+-    uses: docker/setup-qemu-action@v3
+
+-   
+
+-   -   name: Set up Docker Buildx
+
+-    uses: docker/setup-buildx-action@v3
+
+-   
+
+-   -   name: Log in to GitHub Container Registry
+
+-    uses: docker/login-action@v3
+
+-    with:
+
+-      registry: ${{ env.REGISTRY }}
+
+-      username: ${{ github.actor }}
+
+-      password: ${{ secrets.GITHUB_TOKEN }}
+
+-   
+
+-   -   name: Set extra tags
+
+-    run: |
+
+-      if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.nightly }}" = "true" ]; then
+
+-        echo "EXTRA_TAGS=type=raw,value=nightly" >> $GITHUB_ENV
+
+-      else
+
+-        echo "EXTRA_TAGS=" >> $GITHUB_ENV
+
+-      fi
+
+-   
+
+-   -   name: Docker metadata
+
+-    id: meta
+
+-    uses: docker/metadata-action@v5
+
+-    with:
+
+-      images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+-      tags: |
+
+-        type=raw,value=latest
+
+-        type=sha,format=long
+
+-        ${{ env.EXTRA_TAGS }}
+
+-   
+
+-   -   name: Build and push multi-arch image
+
+-    uses: docker/build-push-action@v5
+
+-    with:
+
+-      context: .
+
+-      file: ./Dockerfile
+
+-      platforms: ${{ env.PLATFORMS }}
+
+-      push: true
+
+-      tags: ${{ steps.meta.outputs.tags }}
+
+-      labels: ${{ steps.meta.outputs.labels }}
+
+-      cache-from: type=gha
+
+-      cache-to: type=gha,mode=max
+
+-    - name: Deploy to GitHub Pages
+
+-      if: success() && github.ref == 'refs/heads/master'
+
+-      uses: crazy-max/ghaction-github-pages@v3
+
+-      with:
+
+-        target_branch: gh-pages
+
+-        build_dir: ./build/prod
+
+-      env:
+
+-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+CHANGED: .github/workflows/pull_requests.yml —
+mkilijanek/.github/workflows/pull_requests.yml +++
+gchq/.github/workflows/pull_requests.yml @@ -1,4 +1,7 @@ name: “Pull
+Requests”
+
+-   
+
++permissions:
+
+-   contents: read
+
+on:
+
+workflow_dispatch:
+
+@@ -9,47 +12,46 @@ main:
+
+     runs-on: ubuntu-latest
+
+     steps:
+
+-   -   uses: actions/checkout@v3
+
+-    - uses: actions/checkout@v6
+
+-   -   name: Set node version
+
+-    uses: actions/setup-node@v3
+
+-    with:
+
+-      node-version: '18.x'
+
+-    - name: Set node version
+
+-      uses: actions/setup-node@v6
+
+-      with:
+
+-        node-version: 18
+
+-        registry-url: "https://registry.npmjs.org"
+
+-   -   name: Install
+
+-    run: |
+
+-      export DETECT_CHROMEDRIVER_VERSION=true
+
+-      npm install
+
+-      npm run setheapsize
+
+-    - name: Install
+
+-      run: |
+
+-        export DETECT_CHROMEDRIVER_VERSION=true
+
+-        npm install
+
+-        npm run setheapsize
+
+-   -   name: Lint
+
+-    run: npx grunt lint
+
+-    - name: Lint
+
+-      run: npx grunt lint
+
+-   -   name: Unit Tests
+
+-    run: |
+
+-      npm test
+
+-      npm run testnodeconsumer
+
+-    - name: Unit Tests
+
+-      run: |
+
+-        npm test
+
+-        npm run testnodeconsumer
+
+-   -   name: Production Build
+
+-    if: success()
+
+-    run: npx grunt prod
+
+-    - name: Production Build
+
+-      if: success()
+
+-      run: npx grunt prod
+
+-   -   name: Production Image Build
+
+-    if: success()
+
+-    id: build-image
+
+-    uses: redhat-actions/buildah-build@v2
+
+-    with:
+
+-      # Not being uploaded to any registry, use a simple name to allow Buildah to build correctly.
+
+-      image: cyberchef
+
+-      containerfiles: ./Dockerfile
+
+-      platforms: linux/amd64
+
+-      oci: true
+
+-      # Webpack seems to use a lot of open files, increase the max open file limit to accomodate.
+
+-      extra-args: |
+
+-        --ulimit nofile=10000
+
+-    - name: Set up Docker Buildx
+
+-      uses: docker/setup-buildx-action@v3
+
+-   -   name: UI Tests
+
+-    if: success()
+
+-    run: |
+
+-      sudo apt-get install xvfb
+
+-      xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+
+-    - name: Set up QEMU
+
+-      uses: docker/setup-qemu-action@v3
+
+-   
+
+-    - name: Production Image Build
+
+-      if: success()
+
+-      id: build-image
+
+-      uses: docker/build-push-action@v6
+
+-      with:
+
+-        platforms: linux/amd64,linux/arm64
+
+-    - name: UI Tests
+
+-      if: success()
+
+-      run: |
+
+-        sudo apt-get install xvfb
+
+-        xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+
+CHANGED: .github/workflows/releases.yml —
+mkilijanek/.github/workflows/releases.yml +++
+gchq/.github/workflows/releases.yml @@ -4,7 +4,10 @@ workflow_dispatch:
+
+push:
+
+     tags:
+
+-   -   ’v*’
+
+-    - "v*"
+
+-   
+
++permissions:
+
+-   contents: read
+
+env:
+
+REGISTRY: ghcr.io
+
+@@ -14,83 +17,110 @@
+
+jobs:
+
+main:
+
+-   permissions:
+
+-    packages: write
+
+-    contents: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+-   -   uses: actions/checkout@v3
+
+-    - uses: actions/checkout@v6
+
+-   -   name: Set node version
+
+-    uses: actions/setup-node@v3
+
+-    with:
+
+-      node-version: '18.x'
+
+-    - name: Set node version
+
+-      uses: actions/setup-node@v6
+
+-      with:
+
+-        node-version: 18
+
+-        registry-url: "https://registry.npmjs.org"
+
+-   -   name: Install
+
+-    run: |
+
+-      export DETECT_CHROMEDRIVER_VERSION=true
+
+-      npm ci
+
+-      npm run setheapsize
+
+-    - name: Install
+
+-      run: |
+
+-        export DETECT_CHROMEDRIVER_VERSION=true
+
+-        npm ci
+
+-        npm run setheapsize
+
+-   -   name: Lint
+
+-    run: npx grunt lint
+
+-    - name: Lint
+
+-      run: npx grunt lint
+
+-   -   name: Unit Tests
+
+-    run: |
+
+-      npm test
+
+-      npm run testnodeconsumer
+
+-    - name: Unit Tests
+
+-      run: |
+
+-        npm test
+
+-        npm run testnodeconsumer
+
+-   -   name: Production Build
+
+-    run: npx grunt prod
+
+-    - name: Production Build
+
+-      run: npx grunt prod
+
+-   -   name: UI Tests
+
+-    run: |
+
+-      sudo apt-get install xvfb
+
+-      xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+
+-    - name: UI Tests
+
+-      run: |
+
+-        sudo apt-get install xvfb
+
+-        xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+
+-   -   name: Image Metadata
+
+-    id: image-metadata
+
+-    uses: docker/metadata-action@v4
+
+-    with:
+
+-      images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+-      tags: |
+
+-        type=semver,pattern={{major}}
+
+-        type=semver,pattern={{major}}.{{minor}}
+
+-        type=semver,pattern={{version}}
+
+-    - name: Set up Docker Buildx
+
+-      uses: docker/setup-buildx-action@v3
+
+-   -   name: Production Image Build
+
+-    id: build-image
+
+-    uses: redhat-actions/buildah-build@v2
+
+-    with:
+
+-      tags: ${{ steps.image-metadata.outputs.tags }}
+
+-      labels: ${{ steps.image-metadata.outputs.labels }}
+
+-      containerfiles: ./Dockerfile
+
+-      platforms: linux/amd64,linux/arm64
+
+-      oci: true
+
+-      # enable build layer caching between platforms
+
+-      layers: true
+
+-      # Webpack seems to use a lot of open files, increase the max open file limit to accomodate.
+
+-      extra-args: |
+
+-        --ulimit nofile=10000
+
+-    - name: Set up QEMU
+
+-      uses: docker/setup-qemu-action@v3
+
+-   -   name: Publish to GHCR
+
+-    uses: redhat-actions/push-to-registry@v2
+
+-    with:
+
+-      image: ${{ steps.build-image.outputs.image }}
+
+-      tags: ${{ steps.build-image.outputs.tags }}
+
+-      registry: ${{ env.REGISTRY }}
+
+-      username: ${{ env.REGISTRY_USER }}
+
+-      password: ${{ env.REGISTRY_PASSWORD }}
+
+-    - name: Image Metadata
+
+-      id: image-metadata
+
+-      uses: docker/metadata-action@v4
+
+-      with:
+
+-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+-        tags: |
+
+-          type=semver,pattern={{major}}
+
+-          type=semver,pattern={{major}}.{{minor}}
+
+-          type=semver,pattern={{version}}
+
+-   -   name: Upload Release Assets
+
+-    id: upload-release-assets
+
+-    uses: svenstaro/upload-release-action@v2
+
+-    with:
+
+-      repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+-      file: build/prod/*.zip
+
+-      tag: ${{ github.ref }}
+
+-      overwrite: true
+
+-      file_glob: true
+
+-      body: "See the [CHANGELOG](https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md) and [commit messages](https://github.com/gchq/CyberChef/commits/master) for details."
+
+-    - name: Log in to GHCR
+
+-      uses: docker/login-action@v3
+
+-      with:
+
+-        registry: ${{ env.REGISTRY }}
+
+-        username: ${{ env.REGISTRY_USER }}
+
+-        password: ${{ env.REGISTRY_PASSWORD }}
+
+-   -   name: Publish to NPM
+
+-    uses: JS-DevTools/npm-publish@v1
+
+-    with:
+
+-      token: ${{ secrets.NPM_TOKEN }}
+
+-    - name: Publish to GHCR
+
+-      uses: docker/build-push-action@v6
+
+-      with:
+
+-        context: .
+
+-        push: true
+
+-        tags: ${{ steps.image-metadata.outputs.tags }}
+
+-        labels: ${{ steps.image-metadata.outputs.labels }}
+
+-        platforms: linux/amd64,linux/arm64
+
+-   
+
+-    - name: Upload Release Assets
+
+-      id: upload-release-assets
+
+-      uses: svenstaro/upload-release-action@v2
+
+-      with:
+
+-        repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+-        file: build/prod/*.zip
+
+-        tag: ${{ github.ref }}
+
+-        overwrite: true
+
+-        file_glob: true
+
+-        body: "See the [CHANGELOG](https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md) and [commit messages](https://github.com/gchq/CyberChef/commits/master) for details."
+
+-   
+
+-   npm-publish:
+
+-   permissions:
+
+-    id-token: write
+
+-    contents: read
+
+-   needs: main
+
+-   runs-on: ubuntu-latest
+
+-   steps:
+
+-    - uses: actions/checkout@v6
+
+-   
+
+-    - name: Set node version
+
+-      uses: actions/setup-node@v6
+
+-      with:
+
+-        node-version: 18
+
+-        registry-url: "https://registry.npmjs.org"
+
+-   
+
+-    - name: Install
+
+-      run: npm ci
+
+-   
+
+-    - name: Create machine generated files
+
+-      run: npm run node
+
+-   
+
+-    - name: Reset node version ready for publish
+
+-      uses: actions/setup-node@v6
+
+-      with:
+
+-        node-version: ^24.5
+
+-        registry-url: "https://registry.npmjs.org"
+
+-   
+
+-    - name: Publish to NPM
+
+-      run: npm publish
+
+REMOVED in gchq (exists in mkilijanek):
+.github/workflows/security-auto-fix.yml
+
+CHANGED: CHANGELOG.md — mkilijanek/CHANGELOG.md +++ gchq/CHANGELOG.md @@
+-12,6 +12,104 @@
+
+## Details
+
+-   
+
++### [10.22.0] - 2026-02-11
+
++- Separate npm publish out into separate job and run with Node 24.5
+[@GCHQDeveloper581] | [#2188]
+
++- Fixed Percent delimiter for hex encoding [@beneri] [@C85297] |
+[#2137]
+
++- Added the ability to paste one or more Images from the Clipboard
+[@t-martine] [@a3957273] [@C85297] | [#1876]
+
++- Quoted Printable - consistent reference to ‘email’ [@wesinator] |
+[#2186]
+
++- Fix freeze when output text decoding fails [@Raka-loah] | [#1573]
+
++- Update Browserslist DB [@C85297] | [#2183]
+
++- Add contents write permission to releases workflow [@C85297] |
+[#2182]
+
++- Fix release workflow permissions [@C85297] | [#2181]
+
+-   
+
++### [10.21.0] - 2026-02-05
+
++- Fix import operations with special chars in them [@d98762625]
+[@jg42526] | [#1040]
+
++- Remove custom CodeQL workflow [@C85297] | [#2176]
+
++- Fix code scanning warnings in workflows [@GCHQDeveloper581] | [#2177]
+
++- Use NPM trusted publishing [@C85297] [@GCHQDeveloper581] | [#2174]
+
++- Fix: Correctly parse xxd odd byte hexdumps [@ThomasNotTom]
+[@GCHQDeveloper581] | [#2058]
+
++- Update Sitemap URLs to Use Valid Paths in sitemap.mjs [@rbpi]
+[@C85297] | [#1861]
+
++- Use recommended GitHub Actions to build image [@AlexGustafsson]
+[@C85297] | [#2055]
+
++- Remove version 10 message from banner [@C85297] | [#2169]
+
++- Bump form-data from 4.0.1 to 4.0.5 | [#2175]
+
++- Bump node-forge from 1.3.1 to 1.3.3 | [#2173]
+
++- Update crypto browserify [@C85297] | [#2172]
+
++- Update kbpgp package (resolves #2135) [@GCHQDeveloper581] | [#2136]
+
++- Fix the processing of ALPNs for JA4 to align with new specification
+update [@tuliperis] | [#2165]
+
++- Add Bech32 and Bech32m encoding/decoding operations [@thomasxm] |
+[#2159]
+
++- Exclude Delete character from hex dump output [@mikecat] [@C85297] |
+[#2086]
+
++- Tiny typo fix in “To Base85” operation [@twostraws] | [#2118]
+
++- Bump jsonpath-plus [@C85297] | [#2166]
+
+-   
+
++### [10.20.0] - 2026-01-28
+
++- Fixed Optical Character Recognition and added tests [@n1474335] |
+[ab37c1e]
+
++- Fixed JA4 version fallback value [@n1474335] | [7a5225c]
+
++- Updated chromedriver [@n1474335] | [0e82e4b]
+
++- Fixed RSA Sign and Verify character encodings [@n1474335] | [895a929]
+
++- Updated chromedriver [@n1474335] | [d3adfc7]
+
++- Added message format arg to RSA Verify operation [@n1474335] |
+[47c85a1]
+
++- Add operation for parsing X.509 CRLs [@robinsandhu] | [#1887]
+
++- Fix typo in description of JWT Sign recipe [@GuilhermoReadonly] |
+[#1961]
+
++- Corrected path to generateNodeIndex.mjs [@simonarnell] | [#1959]
+
++- Add ‘header’ ingredient to JWT Sign operation [@RandomByte] | [#1957]
+
++- Add Parse TLS record operation [@c65722] | [#1936]
+
++- Automatically detect chrome driver version [@gchq] | [#1972]
+
++- Add Strip UDP header operation [@c65722] | [#1900]
+
++- Add Strip TCP header operation [@c65722] | [#1898]
+
++- Webpack compress with gzip and brotli [@max0x53] | [#1955]
+
++- add offset field to ‘Add Line Numbers’ operation [@Adamkadaban] |
+[#1866]
+
++- Disable flakey URL test [@a3957273] | [#1973]
+
++- Add Strip IPv4 header operation [@c65722] | [#1899]
+
++- IPv6 Transition Operation [@jb30795] | [#1780]
+
++- fix: Blowfish - ignore IV length in ECB mode [@FranciscoPombal] |
+[#1902]
+
++- Add ‘Drop nth bytes’ operation [@Oshawk] | [#1914]
+
++- Add ‘Take nth bytes’ operation [@Oshawk] | [#1915]
+
++- Add Leet Speak [@bartblaze] | [#1971]
+
++- Fix Generate TOTP & HOPT [@exactlyaron] | [#1966]
+
++- Updated luhn checksum operation to work with different bases [@k3ach]
+| [#1933]
+
++- automatically theme mode based on user preference [@vs4vijay] |
+[#1921]
+
++- fix: DES/Triple DES - misleading error messages [@FranciscoPombal] |
+[#1904]
+
++- fix: ROT13 - shifting numbers by negative amounts [@FranciscoPombal]
+| [#1903]
+
++- Introduce Yubico’s Modhex for Conversion [@linuxgemini] | [#1105]
+
++- Feature: MIME RFC2047 Decoding [@MShwed] | [#630]
+
++- CC-1889 add _ option [@depperm] | [#1977]
+
++- chore(root): add cspell [@evenstensberg] | [#1976]
+
++- Preserve uppercase for Leet Speak [@bartblaze] | [#1981]
+
++- Load the user’s preferred color scheme if the URL contains an invalid
+theme [@0xh3xa] | [#2007]
+
++- Add SM2 Encrypt and Decrypt Operations [@flakjacket95] | [#1909]
+
++- Support jq as an operation. [@zhzy0077] | [#1604]
+
++- Add fingerprints to the ‘Parse X.509 certificate’ operation
+[@JSCU-CNI] | [#1863]
+
++- Added a JSON to YAML and a YAML to JSON operation [@ccarpo] | [#1286]
+
++- Add CRC Operation [@r4mos] | [#1993]
+
++- Bug Fix: selected theme not loading when refreshing [@0xh3xa] |
+[#2006]
+
++- Fix(RecipeWaiter): sanitize user input in addOperation to prevent XSS
+[@0xh3xa] | [#2014]
+
++- Docker multiplatform build support [@PathToLife] | [#1974]
+
++- Add Base32 Hex Extended Alphabet and Base32 Tests. [@peterc-s] |
+[#1991]
+
++- Add ECB/NoPadding and CBC/NoPadding support to AES encryption
+[@plvie] | [#2013]
+
++- Add new operation: PHP Serialize [@brun0ne] | [#1548]
+
++- Push input through postmessage [@kenduguay1] | [#1992]
+
++- Add jsonata query operation [@jonking-ajar] | [#1587]
+
++- Re-enable Npm Release in github workflows [@PathToLife] | [#2031]
+
++- Add to ECDSA Verify the message format [@r4mos] | [#2027]
+
++- Added alternating caps functionality [@sw5678] | [#1897]
+
++- XOR Checksum operation added [@jg42526] | [#2035]
+
++- Add GenerateAllChecksums operation * Remove checksums from
+GenerateAllHashes operation [@es45411] | [66d445c]
+
++- Update GenerateAllChecksums infoURL [@es45411] | [#2037]
+
++- Add toggle “+” character to URLDecode operation [@es45411] | [#2040]
+
++- Workaround for Safari load bug [@GCHQDeveloper94872] | [#2038]
+
++- Updated Dockerfile to correctly build on ARM64 platforms [@Sma-Das] |
+[#2042]
+
++- Addresses bug report #2008 Added explicit support for octal IP
+addresses. Changed approach to IPv4 regex to be string manipulation
+generated. Added some unit tests for IP address parsing - probably not
+full coverage. Added lookahead and lookbehind tricks to resolve warned
+issue that 1.2.3.256 would still be extracted as 1.2.3.25. Now only
+accepts valid IP addresses. Warning replaced with clause about infinite
+length dotted decimal forms. [@gchqdev364] | [#2041]
+
++- Remove trim from rail fence [@Odyhibit] | [#1986]
+
++- Fix email regex [@ericli-splunk] | [#2025]
+
++- Add Blake3 hashing [@xumptex] | [#2023]
+
++- Use defaultIndex instead of 0 in transformArgs [@bartvanandel] |
+[#2015]
+
++- Add “Generate UUID” and “Analyse UUID” operations [@bartvanandel] |
+[#2011]
+
++- Add new operation: Template [@kendallgoto] | [#2021]
+
++- Add more clear build instructions [@remingtr] | [#1873]
+
++- Show On Map updated to use leaflet over WikiMedia [@0xff1ce] |
+[#1884]
+
++- Fixed ToDecimal signed logic [@starplanet] | [#1545]
+
++- Use BigInt for encoding/decoding VarInt [@mikecat] | [#1978]
+
+### 10.19.0 - 2024-06-21
+
+-   Add support for ECDSA and DSA in ‘Parse CSR’ [@robinsandhu] |
+    [#1828]
+
+@@ -440,6 +538,9 @@ ## [4.0.0] - 2016-11-28
+
+-   Initial open source commit [@n1474335] | b1d73a72
+
++[10.22.0]: https://github.com/gchq/CyberChef/releases/tag/v10.22.0
+
++[10.21.0]: https://github.com/gchq/CyberChef/releases/tag/v10.21.0
+
++[10.20.0]: https://github.com/gchq/CyberChef/releases/tag/v10.20.0
+
+@@ -630,6 +731,72 @@ [@cplussharp]: https://github.com/cplussharp
+
+[@robinsandhu]: https://github.com/robinsandhu
+
+[@eltociear]: https://github.com/eltociear
+
++[@GuilhermoReadonly]: https://github.com/GuilhermoReadonly
+
++[@simonarnell]: https://github.com/simonarnell
+
++[@RandomByte]: https://github.com/RandomByte
+
++[@c65722]: https://github.com/c65722
+
++[@c65722]: https://github.com/c65722
+
++[@c65722]: https://github.com/c65722
+
++[@max0x53]: https://github.com/max0x53
+
++[@Adamkadaban]: https://github.com/Adamkadaban
+
++[@c65722]: https://github.com/c65722
+
++[@jb30795]: https://github.com/jb30795
+
++[@FranciscoPombal]: https://github.com/FranciscoPombal
+
++[@Oshawk]: https://github.com/Oshawk
+
++[@Oshawk]: https://github.com/Oshawk
+
++[@bartblaze]: https://github.com/bartblaze
+
++[@exactlyaron]: https://github.com/exactlyaron
+
++[@k3ach]: https://github.com/k3ach
+
++[@vs4vijay]: https://github.com/vs4vijay
+
++[@FranciscoPombal]: https://github.com/FranciscoPombal
+
++[@FranciscoPombal]: https://github.com/FranciscoPombal
+
++[@linuxgemini]: https://github.com/linuxgemini
+
++[@depperm]: https://github.com/depperm
+
++[@evenstensberg]: https://github.com/evenstensberg
+
++[@bartblaze]: https://github.com/bartblaze
+
++[@0xh3xa]: https://github.com/0xh3xa
+
++[@flakjacket95]: https://github.com/flakjacket95
+
++[@zhzy0077]: https://github.com/zhzy0077
+
++[@JSCU-CNI]: https://github.com/JSCU-CNI
+
++[@ccarpo]: https://github.com/ccarpo
+
++[@r4mos]: https://github.com/r4mos
+
++[@0xh3xa]: https://github.com/0xh3xa
+
++[@0xh3xa]: https://github.com/0xh3xa
+
++[@PathToLife]: https://github.com/PathToLife
+
++[@peterc-s]: https://github.com/peterc-s
+
++[@plvie]: https://github.com/plvie
+
++[@kenduguay1]: https://github.com/kenduguay1
+
++[@jonking-ajar]: https://github.com/jonking-ajar
+
++[@PathToLife]: https://github.com/PathToLife
+
++[@r4mos]: https://github.com/r4mos
+
++[@jg42526]: https://github.com/jg42526
+
++[@es45411]: https://github.com/es45411
+
++[@gchq]: https://github.com/gchq
+
++[@gchqdev364]: https://github.com/gchqdev364
+
++[@GCHQDeveloper94872]: https://github.com/GCHQDeveloper94872
+
++[@Sma-Das]: https://github.com/Sma-Das
+
++[@gchq]: https://github.com/gchq
+
++[@Odyhibit]: https://github.com/Odyhibit
+
++[@ericli-splunk]: https://github.com/ericli-splunk
+
++[@xumptex]: https://github.com/xumptex
+
++[@bartvanandel]: https://github.com/bartvanandel
+
++[@bartvanandel]: https://github.com/bartvanandel
+
++[@kendallgoto]: https://github.com/kendallgoto
+
++[@remingtr]: https://github.com/remingtr
+
++[@0xff1ce]: https://github.com/0xff1ce
+
++[@starplanet]: https://github.com/starplanet
+
++[@C85297]: https://github.com/C85297
+
++[@GCHQDeveloper581]: https://github.com/GCHQDeveloper581
+
++[@ThomasNotTom]: https://github.com/ThomasNotTom
+
++[@rbpi]: https://github.com/rbpi
+
++[@AlexGustafsson]: https://github.com/AlexGustafsson
+
++[@tuliperis]: https://github.com/tuliperis
+
++[@thomasxm]: https://github.com/thomasxm
+
++[@twostraws]: https://github.com/twostraws
+
++[@beneri]: https://github.com/beneri
+
++[@t-martine]: https://github.com/t-martine
+
++[@wesinator]: https://github.com/wesinator
+
++[@Raka-loah]: https://github.com/Raka-loah
+
+@@ -642,6 +809,46 @@ [760eff4]:
+https://github.com/gchq/CyberChef/commit/760eff49b5307aaa3104c5e5b437ffe62299acd1
+
++[66d445c]:
+https://github.com/gchq/CyberChef/commit/66d445c5ef4e8bd896fd15396e3ce2d660d8ace1
+
++[ab37c1e]:
+https://github.com/gchq/CyberChef/commit/ab37c1e562dbee0495ed32876ecbb8225282af25
+
++[965570d]:
+https://github.com/gchq/CyberChef/commit/965570d2504c17ee1f96211a1dc10ed40cd2b332
+
++[a477f47]:
+https://github.com/gchq/CyberChef/commit/a477f47aecd01d78b11fe186ed4b20d9c487cfac
+
++[7a5225c]:
+https://github.com/gchq/CyberChef/commit/7a5225c961a5e0d192b03152117cd10a761f73d6
+
++[5f88ae4]:
+https://github.com/gchq/CyberChef/commit/5f88ae44ec77228d9bed8f11e8cc8e7dcfb36914
+
++[0e82e4b]:
+https://github.com/gchq/CyberChef/commit/0e82e4b7c6c77cadb8be61cb145e081d6ecfdc88
+
++[d635cca]:
+https://github.com/gchq/CyberChef/commit/d635cca2106aae2a59caf0e5d7e3633ee1ea3155
+
++[895a929]:
+https://github.com/gchq/CyberChef/commit/895a9299255525cb57886deb9d9fd4ba17ae9548
+
++[270a333]:
+https://github.com/gchq/CyberChef/commit/270a33317944612d27ea1cc15275ad6b0ed097e5
+
++[d3adfc7]:
+https://github.com/gchq/CyberChef/commit/d3adfc7c3e5719279524356bce5261bd8350c0f8
+
++[47c85a1]:
+https://github.com/gchq/CyberChef/commit/47c85a105ddbdd4cabfa44ddddbc56e3907a8c33
+
++[3822c6c]:
+https://github.com/gchq/CyberChef/commit/3822c6c520a0b4200abc675c33f46082f5b9efc6
+
++[66d445c]:
+https://github.com/gchq/CyberChef/commit/66d445c5ef4e8bd896fd15396e3ce2d660d8ace1
+
++[ab37c1e]:
+https://github.com/gchq/CyberChef/commit/ab37c1e562dbee0495ed32876ecbb8225282af25
+
++[965570d]:
+https://github.com/gchq/CyberChef/commit/965570d2504c17ee1f96211a1dc10ed40cd2b332
+
++[a477f47]:
+https://github.com/gchq/CyberChef/commit/a477f47aecd01d78b11fe186ed4b20d9c487cfac
+
++[7a5225c]:
+https://github.com/gchq/CyberChef/commit/7a5225c961a5e0d192b03152117cd10a761f73d6
+
++[5f88ae4]:
+https://github.com/gchq/CyberChef/commit/5f88ae44ec77228d9bed8f11e8cc8e7dcfb36914
+
++[0e82e4b]:
+https://github.com/gchq/CyberChef/commit/0e82e4b7c6c77cadb8be61cb145e081d6ecfdc88
+
++[d635cca]:
+https://github.com/gchq/CyberChef/commit/d635cca2106aae2a59caf0e5d7e3633ee1ea3155
+
++[895a929]:
+https://github.com/gchq/CyberChef/commit/895a9299255525cb57886deb9d9fd4ba17ae9548
+
++[270a333]:
+https://github.com/gchq/CyberChef/commit/270a33317944612d27ea1cc15275ad6b0ed097e5
+
++[d3adfc7]:
+https://github.com/gchq/CyberChef/commit/d3adfc7c3e5719279524356bce5261bd8350c0f8
+
++[47c85a1]:
+https://github.com/gchq/CyberChef/commit/47c85a105ddbdd4cabfa44ddddbc56e3907a8c33
+
++[3822c6c]:
+https://github.com/gchq/CyberChef/commit/3822c6c520a0b4200abc675c33f46082f5b9efc6
+
++[66d445c]:
+https://github.com/gchq/CyberChef/commit/66d445c5ef4e8bd896fd15396e3ce2d660d8ace1
+
++[ab37c1e]:
+https://github.com/gchq/CyberChef/commit/ab37c1e562dbee0495ed32876ecbb8225282af25
+
++[965570d]:
+https://github.com/gchq/CyberChef/commit/965570d2504c17ee1f96211a1dc10ed40cd2b332
+
++[a477f47]:
+https://github.com/gchq/CyberChef/commit/a477f47aecd01d78b11fe186ed4b20d9c487cfac
+
++[7a5225c]:
+https://github.com/gchq/CyberChef/commit/7a5225c961a5e0d192b03152117cd10a761f73d6
+
++[5f88ae4]:
+https://github.com/gchq/CyberChef/commit/5f88ae44ec77228d9bed8f11e8cc8e7dcfb36914
+
++[0e82e4b]:
+https://github.com/gchq/CyberChef/commit/0e82e4b7c6c77cadb8be61cb145e081d6ecfdc88
+
++[d635cca]:
+https://github.com/gchq/CyberChef/commit/d635cca2106aae2a59caf0e5d7e3633ee1ea3155
+
++[895a929]:
+https://github.com/gchq/CyberChef/commit/895a9299255525cb57886deb9d9fd4ba17ae9548
+
++[270a333]:
+https://github.com/gchq/CyberChef/commit/270a33317944612d27ea1cc15275ad6b0ed097e5
+
++[d3adfc7]:
+https://github.com/gchq/CyberChef/commit/d3adfc7c3e5719279524356bce5261bd8350c0f8
+
++[47c85a1]:
+https://github.com/gchq/CyberChef/commit/47c85a105ddbdd4cabfa44ddddbc56e3907a8c33
+
++[3822c6c]:
+https://github.com/gchq/CyberChef/commit/3822c6c520a0b4200abc675c33f46082f5b9efc6
+
++[66d445c]:
+https://github.com/gchq/CyberChef/commit/66d445c5ef4e8bd896fd15396e3ce2d660d8ace1
+
+@@ -778,4 +985,29 @@ [#512]:
+https://github.com/gchq/CyberChef/issues/512
+
+-   
+
++[#1040]: https://github.com/gchq/CyberChef/pull/1040
+
++[#2176]: https://github.com/gchq/CyberChef/pull/2176
+
++[#2177]: https://github.com/gchq/CyberChef/pull/2177
+
++[#2174]: https://github.com/gchq/CyberChef/pull/2174
+
++[#2058]: https://github.com/gchq/CyberChef/pull/2058
+
++[#1861]: https://github.com/gchq/CyberChef/pull/1861
+
++[#2055]: https://github.com/gchq/CyberChef/pull/2055
+
++[#2169]: https://github.com/gchq/CyberChef/pull/2169
+
++[#2175]: https://github.com/gchq/CyberChef/pull/2175
+
++[#2173]: https://github.com/gchq/CyberChef/pull/2173
+
++[#2172]: https://github.com/gchq/CyberChef/pull/2172
+
++[#2136]: https://github.com/gchq/CyberChef/pull/2136
+
++[#2165]: https://github.com/gchq/CyberChef/pull/2165
+
++[#2159]: https://github.com/gchq/CyberChef/pull/2159
+
++[#2086]: https://github.com/gchq/CyberChef/pull/2086
+
++[#2118]: https://github.com/gchq/CyberChef/pull/2118
+
++[#2166]: https://github.com/gchq/CyberChef/pull/2166
+
++[#2188]: https://github.com/gchq/CyberChef/pull/2188
+
++[#2137]: https://github.com/gchq/CyberChef/pull/2137
+
++[#1876]: https://github.com/gchq/CyberChef/pull/1876
+
++[#2186]: https://github.com/gchq/CyberChef/pull/2186
+
++[#1573]: https://github.com/gchq/CyberChef/pull/1573
+
++[#2183]: https://github.com/gchq/CyberChef/pull/2183
+
++[#2182]: https://github.com/gchq/CyberChef/pull/2182
+
++[#2181]: https://github.com/gchq/CyberChef/pull/2181
+
+-   
+
+CHANGED: Dockerfile — mkilijanek/Dockerfile +++ gchq/Dockerfile @@ -27,9
++27,6 @@ #########################################
+
+# Package static build files into nginx #
+
+#########################################
+
+-# We are using Github Actions: redhat-actions/buildah-build@v2 which
+needs manual selection of arch in base image
+
+-# Remove TARGETARCH if docker buildx is supported in the CI release as
+–platform=$TARGETPLATFORM will be automatically set
+
+-ARG TARGETPLATFORM
+
+-FROM –platform=${TARGETPLATFORM} nginx:stable-alpine AS cyberchef
+
++FROM nginx:stable-alpine AS cyberchef
+
+COPY –from=builder /app/build/prod /usr/share/nginx/html/
+
+REMOVED in gchq (exists in mkilijanek): Makefile REMOVED in gchq (exists
+in mkilijanek): SECURITY_ANALYSIS.md REMOVED in gchq (exists in
+mkilijanek): SECURITY_AUTOMATION.md REMOVED in gchq (exists in
+mkilijanek): SECURITY_FIXES_APPLIED.md REMOVED in gchq (exists in
+mkilijanek): SECURITY_QUICK_START.md
+
+CHANGED: package-lock.json — mkilijanek/package-lock.json +++
+gchq/package-lock.json @@ -1,12 +1,12 @@ {
+
+“name”: “cyberchef”,
+
+-   “version”: “10.19.4”,
+
+-   “version”: “10.22.1”,
+
+    “lockfileVersion”: 3,
+
+    “requires”: true,
+
+    “packages”: {
+
+    ““: {
+
+        "name": "cyberchef",
+
+-    "version": "10.19.4",
+
+-    "version": "10.22.1",
+
+         "hasInstallScript": true,
+
+         "license": "Apache-2.0",
+
+         "dependencies": {
+
+@@ -31,7 +31,7 @@ “chi-squared”: “^1.1.0”,
+
+         "codepage": "^1.15.0",
+
+         "crypto-api": "^0.8.5",
+
+-      "crypto-browserify": "^3.12.0",
+
+-      "crypto-browserify": "^3.12.1",
+
+           "crypto-js": "^4.2.0",
+
+           "ctph.js": "0.0.5",
+
+           "d3": "7.9.0",
+
+@@ -58,10 +58,10 @@ “json5”: “^2.2.3”,
+
+         "jsonata": "^2.0.3",
+
+         "jsonpath-plus": "^10.3.0",
+
+-      "jsonwebtoken": "9.0.0",
+
+-      "jsonwebtoken": "8.5.1",
+
+           "jsqr": "^1.4.0",
+
+           "jsrsasign": "^11.1.0",
+
+-      "kbpgp": "2.1.15",
+
+-      "kbpgp": "^2.1.17",
+
+           "libbzip2-wasm": "0.0.4",
+
+           "libyara-wasm": "^1.2.1",
+
+           "lodash": "^4.17.21",
+
+@@ -156,7 +156,7 @@ “terser”: “^5.31.1”,
+
+         "webpack": "^5.91.0",
+
+         "webpack-bundle-analyzer": "^4.10.2",
+
+-      "webpack-dev-server": "5.2.1",
+
+-      "webpack-dev-server": "5.0.4",
+
+           "webpack-node-externals": "^3.0.0",
+
+           "worker-loader": "^3.0.8"
+
+         }
+
+@@ -255,7 +255,6 @@ “integrity”:
+“sha512-i1SLeK+DzNnQ3LL/CswPCa/E5u4lh1k6IAEphON8F+cXt0t9euTshDru0q7/IqMa1PMPz5RnHuHscF8/ZJsStg==”,
+
+       "dev": true,
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "@ampproject/remapping": "^2.2.0",
+
+           "@babel/code-frame": "^7.26.0",
+
+@@ -1744,16 +1743,23 @@ }
+
+     },
+
+     "node_modules/@babel/runtime-corejs3": {
+
+-    "version": "7.28.4",
+
+-    "resolved": "https://registry.npmjs.org/@babel/runtime-corejs3/-/runtime-corejs3-7.28.4.tgz",
+
+-    "integrity": "sha512-h7iEYiW4HebClDEhtvFObtPmIvrd1SSfpI9EhOeKk4CtIK/ngBWFpuhCzhdmRKtg71ylcue+9I6dv54XYO1epQ==",
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "core-js-pure": "^3.43.0"
+
+-    "version": "7.26.0",
+
+-    "resolved": "https://registry.npmjs.org/@babel/runtime-corejs3/-/runtime-corejs3-7.26.0.tgz",
+
+-    "integrity": "sha512-YXHu5lN8kJCb1LOb9PgV6pvak43X2h4HvRApcN5SdWeaItQOzfn1hgP6jasD6KWQyJDBxrVmA9o9OivlnNJK/w==",
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "core-js-pure": "^3.30.2",
+
+-      "regenerator-runtime": "^0.14.0"
+
+         },
+
+         "engines": {
+
+           "node": ">=6.9.0"
+
+         }
+
+-   },
+
+-   “node_modules/@babel/runtime-corejs3/node_modules/regenerator-runtime”:
+    {
+
+-    "version": "0.14.1",
+
+-    "resolved": "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.14.1.tgz",
+
+-    "integrity": "sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==",
+
+-    "license": "MIT"
+
+    },
+
+    “node_modules/@babel/runtime/node_modules/regenerator-runtime”: {
+
+         "version": "0.14.1",
+
+@@ -2098,8 +2104,7 @@ “resolved”:
+“https://registry.npmjs.org/@cspell/dict-css/-/dict-css-4.0.17.tgz”,
+
+       "integrity": "sha512-2EisRLHk6X/PdicybwlajLGKF5aJf4xnX2uuG5lexuYKt05xV/J/OiBADmi8q9obhxf1nesrMQbqAt+6CsHo/w==",
+
+       "dev": true,
+
+-    "license": "MIT",
+
+-    "peer": true
+
+-    "license": "MIT"
+
+    },
+
+    “node_modules/@cspell/dict-dart”: {
+
+         "version": "2.3.0",
+
+@@ -2239,16 +2244,14 @@ “resolved”:
+“https://registry.npmjs.org/@cspell/dict-html/-/dict-html-4.0.11.tgz”,
+
+       "integrity": "sha512-QR3b/PB972SRQ2xICR1Nw/M44IJ6rjypwzA4jn+GH8ydjAX9acFNfc+hLZVyNe0FqsE90Gw3evLCOIF0vy1vQw==",
+
+       "dev": true,
+
+-    "license": "MIT",
+
+-    "peer": true
+
+-    "license": "MIT"
+
+    },
+
+    “node_modules/@cspell/dict-html-symbol-entities”: {
+
+         "version": "4.0.3",
+
+         "resolved": "https://registry.npmjs.org/@cspell/dict-html-symbol-entities/-/dict-html-symbol-entities-4.0.3.tgz",
+
+         "integrity": "sha512-aABXX7dMLNFdSE8aY844X4+hvfK7977sOWgZXo4MTGAmOzR8524fjbJPswIBK7GaD3+SgFZ2yP2o0CFvXDGF+A==",
+
+         "dev": true,
+
+-    "license": "MIT",
+
+-    "peer": true
+
+-    "license": "MIT"
+
+    },
+
+    “node_modules/@cspell/dict-java”: {
+
+         "version": "5.0.11",
+
+@@ -2446,8 +2449,7 @@ “resolved”:
+“https://registry.npmjs.org/@cspell/dict-typescript/-/dict-typescript-3.2.0.tgz”,
+
+       "integrity": "sha512-Pk3zNePLT8qg51l0M4g1ISowYAEGxTuNfZlgkU5SvHa9Cu7x/BWoyYq9Fvc3kAyoisCjRPyvWF4uRYrPitPDFw==",
+
+       "dev": true,
+
+-    "license": "MIT",
+
+-    "peer": true
+
+-    "license": "MIT"
+
+    },
+
+    “node_modules/@cspell/dict-vue”: {
+
+         "version": "3.0.4",
+
+@@ -2588,7 +2590,6 @@ }
+
+       ],
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "engines": {
+
+           "node": ">=18"
+
+         },
+
+@@ -2612,7 +2613,6 @@ }
+
+       ],
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "engines": {
+
+           "node": ">=18"
+
+         }
+
+@@ -2847,6 +2847,109 @@ “funding”: {
+
+         "type": "github",
+
+         "url": "https://github.com/sponsors/nzakas"
+
+-    }
+
+-   },
+
+-   “node_modules/@isaacs/cliui”: {
+
+-    "version": "8.0.2",
+
+-    "resolved": "https://registry.npmjs.org/@isaacs/cliui/-/cliui-8.0.2.tgz",
+
+-    "integrity": "sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==",
+
+-    "dev": true,
+
+-    "license": "ISC",
+
+-    "dependencies": {
+
+-      "string-width": "^5.1.2",
+
+-      "string-width-cjs": "npm:string-width@^4.2.0",
+
+-      "strip-ansi": "^7.0.1",
+
+-      "strip-ansi-cjs": "npm:strip-ansi@^6.0.1",
+
+-      "wrap-ansi": "^8.1.0",
+
+-      "wrap-ansi-cjs": "npm:wrap-ansi@^7.0.0"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=12"
+
+-    }
+
+-   },
+
+-   “node_modules/@isaacs/cliui/node_modules/ansi-regex”: {
+
+-    "version": "6.1.0",
+
+-    "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-6.1.0.tgz",
+
+-    "integrity": "sha512-7HSX4QQb4CspciLpVFwyRe79O3xsIZDDLER21kERQ71oaPodF8jL725AgJMFAYbooIqolJoRLuM81SpeUkpkvA==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "engines": {
+
+-      "node": ">=12"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/chalk/ansi-regex?sponsor=1"
+
+-    }
+
+-   },
+
+-   “node_modules/@isaacs/cliui/node_modules/ansi-styles”: {
+
+-    "version": "6.2.1",
+
+-    "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-6.2.1.tgz",
+
+-    "integrity": "sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "engines": {
+
+-      "node": ">=12"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/chalk/ansi-styles?sponsor=1"
+
+-    }
+
+-   },
+
+-   “node_modules/@isaacs/cliui/node_modules/emoji-regex”: {
+
+-    "version": "9.2.2",
+
+-    "resolved": "https://registry.npmjs.org/emoji-regex/-/emoji-regex-9.2.2.tgz",
+
+-    "integrity": "sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==",
+
+-    "dev": true,
+
+-    "license": "MIT"
+
+-   },
+
+-   “node_modules/@isaacs/cliui/node_modules/string-width”: {
+
+-    "version": "5.1.2",
+
+-    "resolved": "https://registry.npmjs.org/string-width/-/string-width-5.1.2.tgz",
+
+-    "integrity": "sha512-HnLOCR3vjcY8beoNLtcjZ5/nxn2afmME6lhrDrebokqMap+XbeW8n9TXpPDOqdGK5qcI3oT0GKTW6wC7EMiVqA==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "eastasianwidth": "^0.2.0",
+
+-      "emoji-regex": "^9.2.2",
+
+-      "strip-ansi": "^7.0.1"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=12"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/sponsors/sindresorhus"
+
+-    }
+
+-   },
+
+-   “node_modules/@isaacs/cliui/node_modules/strip-ansi”: {
+
+-    "version": "7.1.0",
+
+-    "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-7.1.0.tgz",
+
+-    "integrity": "sha512-iq6eVVI64nQQTRYq2KtEg2d2uU7LElhTJwsH4YzIHZshxlgZms/wIc4VoDQTlG/IvVIrBKG06CrZnp0qv7hkcQ==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "ansi-regex": "^6.0.1"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=12"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/chalk/strip-ansi?sponsor=1"
+
+-    }
+
+-   },
+
+-   “node_modules/@isaacs/cliui/node_modules/wrap-ansi”: {
+
+-    "version": "8.1.0",
+
+-    "resolved": "https://registry.npmjs.org/wrap-ansi/-/wrap-ansi-8.1.0.tgz",
+
+-    "integrity": "sha512-si7QWI6zUMq56bESFvagtmzMdGOtoxfR+Sez11Mobfc7tm+VkUckk9bW2UeffTGVUbOksxmSw0AA2gs8g71NCQ==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "ansi-styles": "^6.1.0",
+
+-      "string-width": "^5.0.1",
+
+-      "strip-ansi": "^7.0.1"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=12"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/chalk/wrap-ansi?sponsor=1"
+
+         }
+
+    },
+
+    “node_modules/@jimp/bmp”: {
+
+@@ -2907,7 +3010,6 @@ “resolved”:
+“https://registry.npmjs.org/@jimp/custom/-/custom-0.22.12.tgz”,
+
+       "integrity": "sha512-xcmww1O/JFP2MrlGUMd3Q78S3Qu6W3mYTXYuIqFq33EorgYHV/HqymHfXy9GjiCJ7OI+7lWx6nYFOzU7M4rd1Q==",
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "@jimp/core": "^0.22.12"
+
+         }
+
+@@ -2944,7 +3046,6 @@ “resolved”:
+“https://registry.npmjs.org/@jimp/plugin-blit/-/plugin-blit-0.22.12.tgz”,
+
+       "integrity": "sha512-xslz2ZoFZOPLY8EZ4dC29m168BtDx95D6K80TzgUi8gqT7LY6CsajWO0FAxDwHz6h0eomHMfyGX0stspBrTKnQ==",
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "@jimp/utils": "^0.22.12"
+
+         },
+
+@@ -2957,7 +3058,6 @@ “resolved”:
+“https://registry.npmjs.org/@jimp/plugin-blur/-/plugin-blur-0.22.12.tgz”,
+
+       "integrity": "sha512-S0vJADTuh1Q9F+cXAwFPlrKWzDj2F9t/9JAbUvaaDuivpyWuImEKXVz5PUZw2NbpuSHjwssbTpOZ8F13iJX4uw==",
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "@jimp/utils": "^0.22.12"
+
+         },
+
+@@ -2982,7 +3082,6 @@ “resolved”:
+“https://registry.npmjs.org/@jimp/plugin-color/-/plugin-color-0.22.12.tgz”,
+
+       "integrity": "sha512-xImhTE5BpS8xa+mAN6j4sMRWaUgUDLoaGHhJhpC+r7SKKErYDR0WQV4yCE4gP+N0gozD0F3Ka1LUSaMXrn7ZIA==",
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "@jimp/utils": "^0.22.12",
+
+           "tinycolor2": "^1.6.0"
+
+@@ -3026,7 +3125,6 @@ “resolved”:
+“https://registry.npmjs.org/@jimp/plugin-crop/-/plugin-crop-0.22.12.tgz”,
+
+       "integrity": "sha512-FNuUN0OVzRCozx8XSgP9MyLGMxNHHJMFt+LJuFjn1mu3k0VQxrzqbN06yIl46TVejhyAhcq5gLzqmSCHvlcBVw==",
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "@jimp/utils": "^0.22.12"
+
+         },
+
+@@ -3150,7 +3248,6 @@ “resolved”:
+“https://registry.npmjs.org/@jimp/plugin-resize/-/plugin-resize-0.22.12.tgz”,
+
+       "integrity": "sha512-3NyTPlPbTnGKDIbaBgQ3HbE6wXbAlFfxHVERmrbqAi8R3r6fQPxpCauA8UVDnieg5eo04D0T8nnnNIX//i/sXg==",
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "@jimp/utils": "^0.22.12"
+
+         },
+
+@@ -3163,7 +3260,6 @@ “resolved”:
+“https://registry.npmjs.org/@jimp/plugin-rotate/-/plugin-rotate-0.22.12.tgz”,
+
+       "integrity": "sha512-9YNEt7BPAFfTls2FGfKBVgwwLUuKqy+E8bDGGEsOqHtbuhbshVGxN2WMZaD4gh5IDWvR+emmmPPWGgaYNYt1gA==",
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "@jimp/utils": "^0.22.12"
+
+         },
+
+@@ -3179,7 +3275,6 @@ “resolved”:
+“https://registry.npmjs.org/@jimp/plugin-scale/-/plugin-scale-0.22.12.tgz”,
+
+       "integrity": "sha512-dghs92qM6MhHj0HrV2qAwKPMklQtjNpoYgAB94ysYpsXslhRTiPisueSIELRwZGEr0J0VUxpUY7HgJwlSIgGZw==",
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "@jimp/utils": "^0.22.12"
+
+         },
+
+@@ -3887,6 +3982,17 @@ “node”: “>= 8”
+
+       }
+
+     },
+
+-   “node_modules/@pkgjs/parseargs”: {
+
+-    "version": "0.11.0",
+
+-    "resolved": "https://registry.npmjs.org/@pkgjs/parseargs/-/parseargs-0.11.0.tgz",
+
+-    "integrity": "sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "optional": true,
+
+-    "engines": {
+
+-      "node": ">=14"
+
+-    }
+
+-   },
+
+    “node_modules/@pkgr/core”: {
+
+    “version”: “0.1.1”,
+
+    “resolved”:
+    “https://registry.npmjs.org/@pkgr/core/-/core-0.1.1.tgz”,
+
+@@ -4508,7 +4614,6 @@ “integrity”:
+“sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==”,
+
+       "dev": true,
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "bin": {
+
+           "acorn": "bin/acorn"
+
+         },
+
+@@ -4555,7 +4660,6 @@ “integrity”:
+“sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==”,
+
+       "dev": true,
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "fast-deep-equal": "^3.1.1",
+
+           "fast-json-stable-stringify": "^2.0.0",
+
+@@ -5064,14 +5168,14 @@ }
+
+     },
+
+     "node_modules/axios": {
+
+-    "version": "1.13.2",
+
+-    "resolved": "https://registry.npmjs.org/axios/-/axios-1.13.2.tgz",
+
+-    "integrity": "sha512-VPk9ebNqPcy5lRGuSlKx752IlDatOjT9paPlm8A7yOuW2Fbvp4X3JznJtT4f0GzGLLiWE9W8onz51SqLYwzGaA==",
+
+-    "version": "1.7.9",
+
+-    "resolved": "https://registry.npmjs.org/axios/-/axios-1.7.9.tgz",
+
+-    "integrity": "sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==",
+
+         "dev": true,
+
+         "license": "MIT",
+
+         "dependencies": {
+
+           "follow-redirects": "^1.15.6",
+
+-      "form-data": "^4.0.4",
+
+-      "form-data": "^4.0.0",
+
+           "proxy-from-env": "^1.1.0"
+
+         }
+
+    },
+
+@@ -5898,7 +6002,6 @@ }
+
+       ],
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "caniuse-lite": "^1.0.30001688",
+
+           "electron-to-chromium": "^1.5.73",
+
+@@ -6120,9 +6223,9 @@ }
+
+     },
+
+     "node_modules/caniuse-lite": {
+
+-    "version": "1.0.30001695",
+
+-    "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001695.tgz",
+
+-    "integrity": "sha512-vHyLade6wTgI2u1ec3WQBxv+2BrTERV28UXQu9LO6lZ9pYeMk34vjXFLOxo1A4UBA8XTL4njRQZdno/yYaSmWw==",
+
+-    "version": "1.0.30001769",
+
+-    "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001769.tgz",
+
+-    "integrity": "sha512-BCfFL1sHijQlBGWBMuJyhZUhzo7wer5sVj9hqekB/7xn0Ypy+pER/edCYQm4exbXj4WiySGp40P8UuTh6w1srg==",
+
+         "dev": true,
+
+         "funding": [
+
+           {
+
+@@ -6653,9 +6756,9 @@ }
+
+     },
+
+     "node_modules/compression": {
+
+-    "version": "1.8.1",
+
+-    "resolved": "https://registry.npmjs.org/compression/-/compression-1.8.1.tgz",
+
+-    "integrity": "sha512-9mAqGPHLakhCLeNyxPkK4xVo746zQ/czLH1Ky+vkitMnWfWZps8r0qXuwhwizagCRttsL4lfG4pIOvaWLpAP0w==",
+
+-    "version": "1.7.5",
+
+-    "resolved": "https://registry.npmjs.org/compression/-/compression-1.7.5.tgz",
+
+-    "integrity": "sha512-bQJ0YRck5ak3LgtnpKkiabX5pNF7tMUh1BSy2ZBOTh0Dim0BUu6aPPwByIns6/A5Prh8PufSPerMDUklpzes2Q==",
+
+         "dev": true,
+
+         "license": "MIT",
+
+         "dependencies": {
+
+@@ -6663,7 +6766,7 @@ “compressible”: “~2.0.18”,
+
+         "debug": "2.6.9",
+
+         "negotiator": "~0.6.4",
+
+-      "on-headers": "~1.1.0",
+
+-      "on-headers": "~1.0.2",
+
+           "safe-buffer": "5.2.1",
+
+           "vary": "~1.1.2"
+
+         },
+
+@@ -6894,9 +6997,9 @@ }
+
+     },
+
+     "node_modules/core-js-pure": {
+
+-    "version": "3.47.0",
+
+-    "resolved": "https://registry.npmjs.org/core-js-pure/-/core-js-pure-3.47.0.tgz",
+
+-    "integrity": "sha512-BcxeDbzUrRnXGYIVAGFtcGQVNpFcUhVjr6W7F8XktvQW2iJP9e66GP6xdKotCRFlrxBvNIBrhwKteRXqMV86Nw==",
+
+-    "version": "3.40.0",
+
+-    "resolved": "https://registry.npmjs.org/core-js-pure/-/core-js-pure-3.40.0.tgz",
+
+-    "integrity": "sha512-AtDzVIgRrmRKQai62yuSIN5vNiQjcJakJb4fbhVw3ehxx7Lohphvw9SGNWKhLFqSxC4ilD0g/L1huAYFQU3Q6A==",
+
+         "hasInstallScript": true,
+
+         "license": "MIT",
+
+         "funding": {
+
+@@ -7801,7 +7904,6 @@ “resolved”:
+“https://registry.npmjs.org/d3-selection/-/d3-selection-3.0.0.tgz”,
+
+       "integrity": "sha512-fmTRWbNMmsmWq6xJV8D19U/gw/bwrHfNXxrIN+HfZgnzqTHp9jOmKMhsTUjXOJnZOdZY9Q28y4yebKzqDKlxlQ==",
+
+       "license": "ISC",
+
+-    "peer": true,
+
+         "engines": {
+
+           "node": ">=12"
+
+         }
+
+@@ -8043,6 +8145,19 @@ },
+
+       "funding": {
+
+         "url": "https://github.com/sponsors/sindresorhus"
+
+-    }
+
+-   },
+
+-   “node_modules/default-gateway”: {
+
+-    "version": "6.0.3",
+
+-    "resolved": "https://registry.npmjs.org/default-gateway/-/default-gateway-6.0.3.tgz",
+
+-    "integrity": "sha512-fwSOJsbbNzZ/CUFpqFBqYfYNLj1NbMPm8MMCIzHjC83iSJRBEGmDUxU+WP661BaBQImeC2yHwXtz+P/O9o+XEg==",
+
+-    "dev": true,
+
+-    "license": "BSD-2-Clause",
+
+-    "dependencies": {
+
+-      "execa": "^5.0.0"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">= 10"
+
+         }
+
+    },
+
+    “node_modules/defaults”: {
+
+@@ -8387,6 +8502,13 @@ “readable-stream”: “^2.0.0”,
+
+         "stream-shift": "^1.0.0"
+
+       }
+
+-   },
+
+-   “node_modules/eastasianwidth”: {
+
+-    "version": "0.2.0",
+
+-    "resolved": "https://registry.npmjs.org/eastasianwidth/-/eastasianwidth-0.2.0.tgz",
+
+-    "integrity": "sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==",
+
+-    "dev": true,
+
+-    "license": "MIT"
+
+    },
+
+    “node_modules/ecdsa-sig-formatter”: {
+
+         "version": "1.0.11",
+
+@@ -8720,7 +8842,6 @@ “integrity”:
+“sha512-+waTfRWQlSbpt3KWE+CjrPPYnbq9kfZIYUqapc0uBXyjTp8aYXZDsUH16m39Ryq3NjAVP4tjuF7KaukeqoCoaA==”,
+
+       "dev": true,
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "@eslint-community/eslint-utils": "^4.2.0",
+
+           "@eslint-community/regexpp": "^4.12.1",
+
+@@ -9082,6 +9203,43 @@ “safe-buffer”: “^5.1.1”
+
+       }
+
+     },
+
+-   “node_modules/execa”: {
+
+-    "version": "5.1.1",
+
+-    "resolved": "https://registry.npmjs.org/execa/-/execa-5.1.1.tgz",
+
+-    "integrity": "sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "cross-spawn": "^7.0.3",
+
+-      "get-stream": "^6.0.0",
+
+-      "human-signals": "^2.1.0",
+
+-      "is-stream": "^2.0.0",
+
+-      "merge-stream": "^2.0.0",
+
+-      "npm-run-path": "^4.0.1",
+
+-      "onetime": "^5.1.2",
+
+-      "signal-exit": "^3.0.3",
+
+-      "strip-final-newline": "^2.0.0"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=10"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/sindresorhus/execa?sponsor=1"
+
+-    }
+
+-   },
+
+-   “node_modules/execa/node_modules/get-stream”: {
+
+-    "version": "6.0.1",
+
+-    "resolved": "https://registry.npmjs.org/get-stream/-/get-stream-6.0.1.tgz",
+
+-    "integrity": "sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "engines": {
+
+-      "node": ">=10"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/sponsors/sindresorhus"
+
+-    }
+
+-   },
+
+    “node_modules/exif-parser”: {
+
+    “version”: “0.1.12”,
+
+    “resolved”:
+    “https://registry.npmjs.org/exif-parser/-/exif-parser-0.1.12.tgz”,
+
+@@ -9729,6 +9887,36 @@ “node”: “>=0.10.0”
+
+       }
+
+     },
+
+-   “node_modules/foreground-child”: {
+
+-    "version": "3.3.0",
+
+-    "resolved": "https://registry.npmjs.org/foreground-child/-/foreground-child-3.3.0.tgz",
+
+-    "integrity": "sha512-Ld2g8rrAyMYFXBhEqMz8ZAHBi4J4uS1i/CxGMDnjyFWddMXLVcDp051DZfu+t7+ab7Wv6SMqpWmyFIj5UbfFvg==",
+
+-    "dev": true,
+
+-    "license": "ISC",
+
+-    "dependencies": {
+
+-      "cross-spawn": "^7.0.0",
+
+-      "signal-exit": "^4.0.1"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=14"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/sponsors/isaacs"
+
+-    }
+
+-   },
+
+-   “node_modules/foreground-child/node_modules/signal-exit”: {
+
+-    "version": "4.1.0",
+
+-    "resolved": "https://registry.npmjs.org/signal-exit/-/signal-exit-4.1.0.tgz",
+
+-    "integrity": "sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==",
+
+-    "dev": true,
+
+-    "license": "ISC",
+
+-    "engines": {
+
+-      "node": ">=14"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/sponsors/isaacs"
+
+-    }
+
+-   },
+
+    “node_modules/form-data”: {
+
+    “version”: “4.0.5”,
+
+    “resolved”:
+    “https://registry.npmjs.org/form-data/-/form-data-4.0.5.tgz”,
+
+@@ -10202,7 +10390,6 @@ “integrity”:
+“sha512-/ABUy3gYWu5iBmrUSRBP97JLpQUm0GgVveDCp6t3yRNIoltIYw7rEj3g5y1o2PGPR2vfTRGa7WC/LZHLTXnEzA==”,
+
+       "dev": true,
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "dateformat": "~4.6.2",
+
+           "eventemitter2": "~0.4.13",
+
+@@ -10899,6 +11086,23 @@ “node”: “>=18”
+
+       }
+
+     },
+
+-   “node_modules/html-entities”: {
+
+-    "version": "2.5.2",
+
+-    "resolved": "https://registry.npmjs.org/html-entities/-/html-entities-2.5.2.tgz",
+
+-    "integrity": "sha512-K//PSRMQk4FZ78Kyau+mZurHn3FH0Vwr+H36eE0rPbeYkRRi9YxceYPhuN60UwWorxyKHhqoAJl2OFKa4BVtaA==",
+
+-    "dev": true,
+
+-    "funding": [
+
+-      {
+
+-        "type": "github",
+
+-        "url": "https://github.com/sponsors/mdevils"
+
+-      },
+
+-      {
+
+-        "type": "patreon",
+
+-        "url": "https://patreon.com/mdevils"
+
+-      }
+
+-    ],
+
+-    "license": "MIT"
+
+-   },
+
+    “node_modules/html-escaper”: {
+
+    “version”: “2.0.2”,
+
+    “resolved”:
+    “https://registry.npmjs.org/html-escaper/-/html-escaper-2.0.2.tgz”,
+
+@@ -11078,9 +11282,9 @@ }
+
+     },
+
+     "node_modules/http-proxy-middleware": {
+
+-    "version": "2.0.9",
+
+-    "resolved": "https://registry.npmjs.org/http-proxy-middleware/-/http-proxy-middleware-2.0.9.tgz",
+
+-    "integrity": "sha512-c1IyJYLYppU574+YI7R4QyX2ystMtVXZwIdzazUIPIJsHuWNd+mho2j+bKoHftndicGj9yh+xjd+l0yj7VeT1Q==",
+
+-    "version": "2.0.7",
+
+-    "resolved": "https://registry.npmjs.org/http-proxy-middleware/-/http-proxy-middleware-2.0.7.tgz",
+
+-    "integrity": "sha512-fgVY8AV7qU7z/MmXJ/rxwbrtQH4jBQ9m7kp3llF0liB7glmFeVZFBepQb32T3y8n8k2+AEYuMPCpinYW+/CuRA==",
+
+         "dev": true,
+
+         "license": "MIT",
+
+         "dependencies": {
+
+@@ -11121,6 +11325,16 @@ },
+
+       "engines": {
+
+         "node": ">= 14"
+
+-    }
+
+-   },
+
+-   “node_modules/human-signals”: {
+
+-    "version": "2.1.0",
+
+-    "resolved": "https://registry.npmjs.org/human-signals/-/human-signals-2.1.0.tgz",
+
+-    "integrity": "sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==",
+
+-    "dev": true,
+
+-    "license": "Apache-2.0",
+
+-    "engines": {
+
+-      "node": ">=10.17.0"
+
+         }
+
+    },
+
+    “node_modules/hyperdyperid”: {
+
+@@ -11810,6 +12024,19 @@ “url”: “https://github.com/sponsors/ljharb”
+
+       }
+
+     },
+
+-   “node_modules/is-stream”: {
+
+-    "version": "2.0.1",
+
+-    "resolved": "https://registry.npmjs.org/is-stream/-/is-stream-2.0.1.tgz",
+
+-    "integrity": "sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "engines": {
+
+-      "node": ">=8"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/sponsors/sindresorhus"
+
+-    }
+
+-   },
+
+    “node_modules/is-string”: {
+
+    “version”: “1.1.1”,
+
+    “resolved”:
+    “https://registry.npmjs.org/is-string/-/is-string-1.1.1.tgz”,
+
+@@ -12000,6 +12227,22 @@ “dev”: true,
+
+       "license": "MIT"
+
+     },
+
+-   “node_modules/jackspeak”: {
+
+-    "version": "3.4.3",
+
+-    "resolved": "https://registry.npmjs.org/jackspeak/-/jackspeak-3.4.3.tgz",
+
+-    "integrity": "sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==",
+
+-    "dev": true,
+
+-    "license": "BlueOak-1.0.0",
+
+-    "dependencies": {
+
+-      "@isaacs/cliui": "^8.0.2"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/sponsors/isaacs"
+
+-    },
+
+-    "optionalDependencies": {
+
+-      "@pkgjs/parseargs": "^0.11.0"
+
+-    }
+
+-   },
+
+    “node_modules/jake”: {
+
+    “version”: “10.9.2”,
+
+    “resolved”: “https://registry.npmjs.org/jake/-/jake-10.9.2.tgz”,
+
+@@ -12114,7 +12357,6 @@ “integrity”:
+“sha512-/imKNG4EbWNrVjoNC/1H5/9GFy+tqjGBHCaSsN+P2RnPqjsLmv6UD3Ej+Kj8nBWaRAwyk7kK5ZUc+OEatnTR3A==”,
+
+       "dev": true,
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "bin": {
+
+           "jiti": "bin/jiti.js"
+
+         }
+
+@@ -12135,8 +12377,7 @@ “version”: “3.7.1”,
+
+       "resolved": "https://registry.npmjs.org/jquery/-/jquery-3.7.1.tgz",
+
+       "integrity": "sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==",
+
+-    "license": "MIT",
+
+-    "peer": true
+
+-    "license": "MIT"
+
+    },
+
+    “node_modules/js-sha3”: {
+
+         "version": "0.9.3",
+
+@@ -12227,7 +12468,6 @@ “resolved”:
+“https://registry.npmjs.org/jsep/-/jsep-1.4.0.tgz”,
+
+       "integrity": "sha512-B7qPcEVE3NVkmSJbaYxvv4cHkVW7DQsZz13pUMrfS8z8Q/BuShN+gcTXrUlPiGqM2/t/EEaI030bpxMqY8gMlw==",
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "engines": {
+
+           "node": ">= 10.16.0"
+
+         }
+
+@@ -12311,31 +12551,34 @@ }
+
+     },
+
+     "node_modules/jsonwebtoken": {
+
+-    "version": "9.0.0",
+
+-    "resolved": "https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-9.0.0.tgz",
+
+-    "integrity": "sha512-tuGfYXxkQGDPnLJ7SibiQgVgeDgfbPq2k2ICcbgqW8WxWLBAxKQM/ZCu/IT8SOSwmaYl4dpTFCW5xZv7YbbWUw==",
+
+-    "version": "8.5.1",
+
+-    "resolved": "https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-8.5.1.tgz",
+
+-    "integrity": "sha512-XjwVfRS6jTMsqYs0EsuJ4LGxXV14zQybNd4L2r0UvbVnSF9Af8x7p5MzbJ90Ioz/9TI41/hTCvznF/loiSzn8w==",
+
+         "license": "MIT",
+
+         "dependencies": {
+
+           "jws": "^3.2.2",
+
+-      "lodash": "^4.17.21",
+
+-      "lodash.includes": "^4.3.0",
+
+-      "lodash.isboolean": "^3.0.3",
+
+-      "lodash.isinteger": "^4.0.4",
+
+-      "lodash.isnumber": "^3.0.3",
+
+-      "lodash.isplainobject": "^4.0.6",
+
+-      "lodash.isstring": "^4.0.1",
+
+-      "lodash.once": "^4.0.0",
+
+           "ms": "^2.1.1",
+
+-      "semver": "^7.3.8"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=12",
+
+-      "npm": ">=6"
+
+-      "semver": "^5.6.0"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=4",
+
+-      "npm": ">=1.4.28"
+
+         }
+
+    },
+
+    “node_modules/jsonwebtoken/node_modules/semver”: {
+
+-    "version": "7.7.3",
+
+-    "resolved": "https://registry.npmjs.org/semver/-/semver-7.7.3.tgz",
+
+-    "integrity": "sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==",
+
+-    "version": "5.7.2",
+
+-    "resolved": "https://registry.npmjs.org/semver/-/semver-5.7.2.tgz",
+
+-    "integrity": "sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==",
+
+         "license": "ISC",
+
+         "bin": {
+
+-      "semver": "bin/semver.js"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=10"
+
+-      "semver": "bin/semver"
+
+         }
+
+    },
+
+    “node_modules/jsqr”: {
+
+@@ -12367,30 +12610,30 @@ }
+
+     },
+
+     "node_modules/jwa": {
+
+-    "version": "1.4.2",
+
+-    "resolved": "https://registry.npmjs.org/jwa/-/jwa-1.4.2.tgz",
+
+-    "integrity": "sha512-eeH5JO+21J78qMvTIDdBXidBd6nG2kZjg5Ohz/1fpa28Z4CcsWUzJ1ZZyFq/3z3N17aZy+ZuBoHljASbL1WfOw==",
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "buffer-equal-constant-time": "^1.0.1",
+
+-    "version": "1.4.1",
+
+-    "resolved": "https://registry.npmjs.org/jwa/-/jwa-1.4.1.tgz",
+
+-    "integrity": "sha512-qiLX/xhEEFKUAJ6FiBMbes3w9ATzyk5W7Hvzpa/SLYdxNtng+gcurvrI7TbACjIXlsJyr05/S1oUhZrc63evQA==",
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "buffer-equal-constant-time": "1.0.1",
+
+           "ecdsa-sig-formatter": "1.0.11",
+
+           "safe-buffer": "^5.0.1"
+
+         }
+
+    },
+
+    “node_modules/jws”: {
+
+-    "version": "3.2.3",
+
+-    "resolved": "https://registry.npmjs.org/jws/-/jws-3.2.3.tgz",
+
+-    "integrity": "sha512-byiJ0FLRdLdSVSReO/U4E7RoEyOCKnEnEPMjq3HxWtvzLsV08/i5RQKsFVNkCldrCaPr2vDNAOMsfs8T/Hze7g==",
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "jwa": "^1.4.2",
+
+-    "version": "3.2.2",
+
+-    "resolved": "https://registry.npmjs.org/jws/-/jws-3.2.2.tgz",
+
+-    "integrity": "sha512-YHlZCB6lMTllWDtSPHz/ZXTsi8S00usEV6v1tjq8tOUZzw7DpSDWVXjXDre6ed1w/pd495ODpHZYSdkRTsa0HA==",
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "jwa": "^1.4.1",
+
+           "safe-buffer": "^5.0.1"
+
+         }
+
+    },
+
+    “node_modules/kbpgp”: {
+
+-    "version": "2.1.15",
+
+-    "resolved": "https://registry.npmjs.org/kbpgp/-/kbpgp-2.1.15.tgz",
+
+-    "integrity": "sha512-iFdQT+m2Mi2DB14kEFydF2joNe9x3E2VZCGZUt7UXsiZnQx5TtSl4KofP7EPtjHvf7weCxNKlEPSYiiCNMZ2jA==",
+
+-    "version": "2.1.17",
+
+-    "resolved": "https://registry.npmjs.org/kbpgp/-/kbpgp-2.1.17.tgz",
+
+-    "integrity": "sha512-pnjH7amyg6dZLXyF42BKbCTST0l0r1ErunqtFRrJCkHkGJb83cZZmx1pnqNFr+d/ls+5gvcHrZLPfUG5q7oRYw==",
+
+         "license": "BSD-3-Clause",
+
+         "dependencies": {
+
+           "bn": "^1.0.5",
+
+@@ -12673,6 +12916,18 @@ “dev”: true,
+
+       "license": "MIT"
+
+     },
+
+-   “node_modules/lodash.includes”: {
+
+-    "version": "4.3.0",
+
+-    "resolved": "https://registry.npmjs.org/lodash.includes/-/lodash.includes-4.3.0.tgz",
+
+-    "integrity": "sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==",
+
+-    "license": "MIT"
+
+-   },
+
+-   “node_modules/lodash.isboolean”: {
+
+-    "version": "3.0.3",
+
+-    "resolved": "https://registry.npmjs.org/lodash.isboolean/-/lodash.isboolean-3.0.3.tgz",
+
+-    "integrity": "sha512-Bz5mupy2SVbPHURB98VAcw+aHh4vRV5IPNhILUCsOzRmsTmSQ17jIuqopAentWoehktxGd9e/hbIXq980/1QJg==",
+
+-    "license": "MIT"
+
+-   },
+
+    “node_modules/lodash.isfinite”: {
+
+    “version”: “3.3.2”,
+
+    “resolved”:
+    “https://registry.npmjs.org/lodash.isfinite/-/lodash.isfinite-3.3.2.tgz”,
+
+@@ -12680,11 +12935,28 @@ “dev”: true,
+
+       "license": "MIT"
+
+     },
+
+-   “node_modules/lodash.isinteger”: {
+
+-    "version": "4.0.4",
+
+-    "resolved": "https://registry.npmjs.org/lodash.isinteger/-/lodash.isinteger-4.0.4.tgz",
+
+-    "integrity": "sha512-DBwtEWN2caHQ9/imiNeEA5ys1JoRtRfY3d7V9wkqtbycnAmTvRRmbHKDV4a0EYc678/dia0jrte4tjYwVBaZUA==",
+
+-    "license": "MIT"
+
+-   },
+
+-   “node_modules/lodash.isnumber”: {
+
+-    "version": "3.0.3",
+
+-    "resolved": "https://registry.npmjs.org/lodash.isnumber/-/lodash.isnumber-3.0.3.tgz",
+
+-    "integrity": "sha512-QYqzpfwO3/CWf3XP+Z+tkQsfaLL/EnUlXWVkIk5FUPc4sBdTehEqZONuyRt2P67PXAk+NXmTBcc97zw9t1FQrw==",
+
+-    "license": "MIT"
+
+-   },
+
+    “node_modules/lodash.isplainobject”: {
+
+    “version”: “4.0.6”,
+
+    “resolved”:
+    “https://registry.npmjs.org/lodash.isplainobject/-/lodash.isplainobject-4.0.6.tgz”,
+
+    “integrity”:
+    “sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==”,
+
+-    "dev": true,
+
+-    "license": "MIT"
+
+-   },
+
+-   “node_modules/lodash.isstring”: {
+
+-    "version": "4.0.1",
+
+-    "resolved": "https://registry.npmjs.org/lodash.isstring/-/lodash.isstring-4.0.1.tgz",
+
+-    "integrity": "sha512-0wJxfxH1wgO3GrbuP+dTTk7op+6L41QCXbGINEmD+ny/G/eCqGzxyCsh7159S+mgDDcoarnBw6PC1PS5+wUGgw==",
+
+         "license": "MIT"
+
+    },
+
+    “node_modules/lodash.merge”: {
+
+@@ -12692,6 +12964,12 @@ “resolved”:
+“https://registry.npmjs.org/lodash.merge/-/lodash.merge-4.6.2.tgz”,
+
+       "integrity": "sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==",
+
+       "dev": true,
+
+-    "license": "MIT"
+
+-   },
+
+-   “node_modules/lodash.once”: {
+
+-    "version": "4.1.1",
+
+-    "resolved": "https://registry.npmjs.org/lodash.once/-/lodash.once-4.1.1.tgz",
+
+-    "integrity": "sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==",
+
+         "license": "MIT"
+
+    },
+
+    “node_modules/lodash.union”: {
+
+@@ -13064,10 +13342,9 @@ }
+
+     },
+
+     "node_modules/min-document": {
+
+-    "version": "2.19.2",
+
+-    "resolved": "https://registry.npmjs.org/min-document/-/min-document-2.19.2.tgz",
+
+-    "integrity": "sha512-8S5I8db/uZN8r9HSLFVWPdJCvYOejMcEC82VIzNUc6Zkklf/d1gg2psfE79/vyhWOj4+J8MtwmoOz3TmvaGu5A==",
+
+-    "license": "MIT",
+
+-    "version": "2.19.0",
+
+-    "resolved": "https://registry.npmjs.org/min-document/-/min-document-2.19.0.tgz",
+
+-    "integrity": "sha512-9Wy1B3m3f66bPPmU5hdA4DR4PB2OfDU/+GS3yAB7IQozE3tqXaVv2zOjgla7MEGSRv95+ILmOuvhLkOK6wJtCQ==",
+
+         "dependencies": {
+
+           "dom-walk": "^0.1.0"
+
+         }
+
+@@ -13125,6 +13402,16 @@ “license”: “MIT”,
+
+       "funding": {
+
+         "url": "https://github.com/sponsors/ljharb"
+
+-    }
+
+-   },
+
+-   “node_modules/minipass”: {
+
+-    "version": "7.1.2",
+
+-    "resolved": "https://registry.npmjs.org/minipass/-/minipass-7.1.2.tgz",
+
+-    "integrity": "sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==",
+
+-    "dev": true,
+
+-    "license": "ISC",
+
+-    "engines": {
+
+-      "node": ">=16 || 14 >=14.17"
+
+         }
+
+    },
+
+    “node_modules/mocha”: {
+
+@@ -13325,9 +13612,9 @@ }
+
+     },
+
+     "node_modules/morgan": {
+
+-    "version": "1.10.1",
+
+-    "resolved": "https://registry.npmjs.org/morgan/-/morgan-1.10.1.tgz",
+
+-    "integrity": "sha512-223dMRJtI/l25dJKWpgij2cMtywuG/WiUKXdvwfbhGKBhy1puASqXwFzmWZ7+K73vUPoR7SS2Qz2cI/g9MKw0A==",
+
+-    "version": "1.10.0",
+
+-    "resolved": "https://registry.npmjs.org/morgan/-/morgan-1.10.0.tgz",
+
+-    "integrity": "sha512-AbegBVI4sh6El+1gNwvD5YIck7nSA36weD7xvIxG4in80j/UoK8AEGaWnnz8v1GxonMCltmlNs5ZKbGvl9b1XQ==",
+
+         "dev": true,
+
+         "license": "MIT",
+
+         "dependencies": {
+
+@@ -13335,7 +13622,7 @@ “debug”: “2.6.9”,
+
+         "depd": "~2.0.0",
+
+         "on-finished": "~2.3.0",
+
+-      "on-headers": "~1.1.0"
+
+-      "on-headers": "~1.0.2"
+
+         },
+
+         "engines": {
+
+           "node": ">= 0.8.0"
+
+@@ -13832,6 +14119,19 @@ “integrity”:
+“sha512-TKC/8zH5pXIAMVQio2TvVDTtPRX+DJPHDqjRbxogtFiByHyzKmy96RA0JtCQJ+WouyyL4A10xomQzgbUT+1jCg==”,
+
+       "license": "MIT"
+
+     },
+
+-   “node_modules/npm-run-path”: {
+
+-    "version": "4.0.1",
+
+-    "resolved": "https://registry.npmjs.org/npm-run-path/-/npm-run-path-4.0.1.tgz",
+
+-    "integrity": "sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "path-key": "^3.0.0"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=8"
+
+-    }
+
+-   },
+
+    “node_modules/nth-check”: {
+
+    “version”: “2.1.1”,
+
+    “resolved”:
+    “https://registry.npmjs.org/nth-check/-/nth-check-2.1.1.tgz”,
+
+@@ -14005,9 +14305,9 @@ }
+
+     },
+
+     "node_modules/on-headers": {
+
+-    "version": "1.1.0",
+
+-    "resolved": "https://registry.npmjs.org/on-headers/-/on-headers-1.1.0.tgz",
+
+-    "integrity": "sha512-737ZY3yNnXy37FHkQxPzt4UZ2UWPWiCZWLvFZ4fu5cueciegX0zGPnrlY6bwRg4FdQOe9YU8MkmJwGhoMybl8A==",
+
+-    "version": "1.0.2",
+
+-    "resolved": "https://registry.npmjs.org/on-headers/-/on-headers-1.0.2.tgz",
+
+-    "integrity": "sha512-pZAE+FJLoyITytdqK0U5s+FIpjN0JP3OzFi/u8Rx+EV5/W+JTWGXG8xFzevE7AjBfDqHv/8vL8qQsIhHnqRkrA==",
+
+         "dev": true,
+
+         "license": "MIT",
+
+         "engines": {
+
+@@ -14316,6 +14616,13 @@ “node”: “>= 14”
+
+       }
+
+     },
+
+-   “node_modules/package-json-from-dist”: {
+
+-    "version": "1.0.1",
+
+-    "resolved": "https://registry.npmjs.org/package-json-from-dist/-/package-json-from-dist-1.0.1.tgz",
+
+-    "integrity": "sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==",
+
+-    "dev": true,
+
+-    "license": "BlueOak-1.0.0"
+
+-   },
+
+    “node_modules/pad-stream”: {
+
+    “version”: “2.0.0”,
+
+    “resolved”:
+    “https://registry.npmjs.org/pad-stream/-/pad-stream-2.0.0.tgz”,
+
+@@ -14568,6 +14875,30 @@ “node”: “>=0.10.0”
+
+       }
+
+     },
+
+-   “node_modules/path-scurry”: {
+
+-    "version": "1.11.1",
+
+-    "resolved": "https://registry.npmjs.org/path-scurry/-/path-scurry-1.11.1.tgz",
+
+-    "integrity": "sha512-Xa4Nw17FS9ApQFJ9umLiJS4orGjm7ZzwUrwamcGQuHSzDyth9boKDaycYdDcZDuqYATXw4HFXgaqWTctW/v1HA==",
+
+-    "dev": true,
+
+-    "license": "BlueOak-1.0.0",
+
+-    "dependencies": {
+
+-      "lru-cache": "^10.2.0",
+
+-      "minipass": "^5.0.0 || ^6.0.2 || ^7.0.0"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=16 || 14 >=14.18"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/sponsors/isaacs"
+
+-    }
+
+-   },
+
+-   “node_modules/path-scurry/node_modules/lru-cache”: {
+
+-    "version": "10.4.3",
+
+-    "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-10.4.3.tgz",
+
+-    "integrity": "sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==",
+
+-    "dev": true,
+
+-    "license": "ISC"
+
+-   },
+
+    “node_modules/path-to-regexp”: {
+
+    “version”: “0.1.12”,
+
+    “resolved”:
+    “https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-0.1.12.tgz”,
+
+@@ -14836,7 +15167,6 @@ “integrity”:
+“sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==”,
+
+       "deprecated": "You can find the new Popper v2 at @popperjs/core, this package is dedicated to the legacy v1",
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "funding": {
+
+           "type": "opencollective",
+
+           "url": "https://opencollective.com/popperjs"
+
+@@ -14896,7 +15226,6 @@ }
+
+       ],
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "nanoid": "^3.3.8",
+
+           "picocolors": "^1.1.1",
+
+@@ -16034,7 +16363,6 @@ “integrity”:
+“sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==”,
+
+       "dev": true,
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "fast-deep-equal": "^3.1.3",
+
+           "fast-uri": "^3.0.1",
+
+@@ -16891,6 +17219,45 @@ “node”: “>=8”
+
+       }
+
+     },
+
+-   “node_modules/string-width-cjs”: {
+
+-    "name": "string-width",
+
+-    "version": "4.2.3",
+
+-    "resolved": "https://registry.npmjs.org/string-width/-/string-width-4.2.3.tgz",
+
+-    "integrity": "sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "emoji-regex": "^8.0.0",
+
+-      "is-fullwidth-code-point": "^3.0.0",
+
+-      "strip-ansi": "^6.0.1"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=8"
+
+-    }
+
+-   },
+
+-   “node_modules/string-width-cjs/node_modules/ansi-regex”: {
+
+-    "version": "5.0.1",
+
+-    "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz",
+
+-    "integrity": "sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "engines": {
+
+-      "node": ">=8"
+
+-    }
+
+-   },
+
+-   “node_modules/string-width-cjs/node_modules/strip-ansi”: {
+
+-    "version": "6.0.1",
+
+-    "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-6.0.1.tgz",
+
+-    "integrity": "sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "ansi-regex": "^5.0.1"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=8"
+
+-    }
+
+-   },
+
+    “node_modules/string-width/node_modules/ansi-regex”: {
+
+    “version”: “5.0.1”,
+
+    “resolved”:
+    “https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz”,
+
+@@ -16927,6 +17294,30 @@ “node”: “>=0.10.0”
+
+       }
+
+     },
+
+-   “node_modules/strip-ansi-cjs”: {
+
+-    "name": "strip-ansi",
+
+-    "version": "6.0.1",
+
+-    "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-6.0.1.tgz",
+
+-    "integrity": "sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "ansi-regex": "^5.0.1"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=8"
+
+-    }
+
+-   },
+
+-   “node_modules/strip-ansi-cjs/node_modules/ansi-regex”: {
+
+-    "version": "5.0.1",
+
+-    "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz",
+
+-    "integrity": "sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "engines": {
+
+-      "node": ">=8"
+
+-    }
+
+-   },
+
+    “node_modules/strip-comments”: {
+
+    “version”: “2.0.1”,
+
+    “resolved”:
+    “https://registry.npmjs.org/strip-comments/-/strip-comments-2.0.1.tgz”,
+
+@@ -16935,6 +17326,16 @@ “license”: “MIT”,
+
+       "engines": {
+
+         "node": ">=10"
+
+-    }
+
+-   },
+
+-   “node_modules/strip-final-newline”: {
+
+-    "version": "2.0.0",
+
+-    "resolved": "https://registry.npmjs.org/strip-final-newline/-/strip-final-newline-2.0.0.tgz",
+
+-    "integrity": "sha512-BrpvfNAE3dcvq7ll3xVumzjKjZQ5tI1sEUIKr3Uoks0XUl45St3FlatVqef9prk4jRDzhW6WZg+3bk93y6pLjA==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "engines": {
+
+-      "node": ">=6"
+
+         }
+
+    },
+
+    “node_modules/strip-json-comments”: {
+
+@@ -17300,7 +17701,6 @@ “integrity”:
+“sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==”,
+
+       "dev": true,
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "engines": {
+
+           "node": ">=12"
+
+         },
+
+@@ -17309,9 +17709,9 @@ }
+
+     },
+
+     "node_modules/tmp": {
+
+-    "version": "0.2.5",
+
+-    "resolved": "https://registry.npmjs.org/tmp/-/tmp-0.2.5.tgz",
+
+-    "integrity": "sha512-voyz6MApa1rQGUxT3E+BK7/ROe8itEx7vD8/HEvt4xwXucvQ5G5oeEiHkmHZJuBO21RpOf+YYm9MOivj709jow==",
+
+-    "version": "0.2.3",
+
+-    "resolved": "https://registry.npmjs.org/tmp/-/tmp-0.2.3.tgz",
+
+-    "integrity": "sha512-nZD7m9iCPC5g0pYmcaxogYKggSfLsdxl8of3Q/oIbqCqLLIO9IAF0GWjX1z9NZRHPiXv8Wex4yDCaZsgEw0Y8w==",
+
+         "dev": true,
+
+         "license": "MIT",
+
+         "engines": {
+
+@@ -17462,8 +17862,7 @@ “resolved”:
+“https://registry.npmjs.org/tslib/-/tslib-2.8.1.tgz”,
+
+       "integrity": "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==",
+
+       "dev": true,
+
+-    "license": "0BSD",
+
+-    "peer": true
+
+-    "license": "0BSD"
+
+    },
+
+    “node_modules/tweetnacl”: {
+
+         "version": "0.13.3",
+
+@@ -17980,7 +18379,6 @@ “integrity”:
+“sha512-EksG6gFY3L1eFMROS/7Wzgrii5mBAFe4rIr3r2BTfo7bcc+DWwFZ4OJ/miOuHJO/A85HwyI4eQ0F6IKXesO7Fg==”,
+
+       "dev": true,
+
+       "license": "MIT",
+
+-    "peer": true,
+
+         "dependencies": {
+
+           "@types/eslint-scope": "^3.7.7",
+
+           "@types/estree": "^1.0.6",
+
+@@ -18128,16 +18526,15 @@ }
+
+     },
+
+     "node_modules/webpack-dev-server": {
+
+-    "version": "5.2.1",
+
+-    "resolved": "https://registry.npmjs.org/webpack-dev-server/-/webpack-dev-server-5.2.1.tgz",
+
+-    "integrity": "sha512-ml/0HIj9NLpVKOMq+SuBPLHcmbG+TGIjXRHsYfZwocUBIqEvws8NnS/V9AFQ5FKP+tgn5adwVwRrTEpGL33QFQ==",
+
+-    "version": "5.0.4",
+
+-    "resolved": "https://registry.npmjs.org/webpack-dev-server/-/webpack-dev-server-5.0.4.tgz",
+
+-    "integrity": "sha512-dljXhUgx3HqKP2d8J/fUMvhxGhzjeNVarDLcbO/EWMSgRizDkxHQDZQaLFL5VJY9tRBj2Gz+rvCEYYvhbqPHNA==",
+
+         "dev": true,
+
+         "license": "MIT",
+
+         "dependencies": {
+
+           "@types/bonjour": "^3.5.13",
+
+           "@types/connect-history-api-fallback": "^1.5.4",
+
+           "@types/express": "^4.17.21",
+
+-      "@types/express-serve-static-core": "^4.17.21",
+
+           "@types/serve-index": "^1.9.4",
+
+           "@types/serve-static": "^1.15.5",
+
+           "@types/sockjs": "^0.3.36",
+
+@@ -18148,20 +18545,23 @@ “colorette”: “^2.0.10”,
+
+         "compression": "^1.7.4",
+
+         "connect-history-api-fallback": "^2.0.0",
+
+-      "express": "^4.21.2",
+
+-      "default-gateway": "^6.0.3",
+
+-      "express": "^4.17.3",
+
+           "graceful-fs": "^4.2.6",
+
+-      "http-proxy-middleware": "^2.0.7",
+
+-      "html-entities": "^2.4.0",
+
+-      "http-proxy-middleware": "^2.0.3",
+
+           "ipaddr.js": "^2.1.0",
+
+           "launch-editor": "^2.6.1",
+
+           "open": "^10.0.3",
+
+           "p-retry": "^6.2.0",
+
+-      "rimraf": "^5.0.5",
+
+           "schema-utils": "^4.2.0",
+
+           "selfsigned": "^2.4.1",
+
+           "serve-index": "^1.9.1",
+
+           "sockjs": "^0.3.24",
+
+           "spdy": "^4.0.2",
+
+-      "webpack-dev-middleware": "^7.4.2",
+
+-      "ws": "^8.18.0"
+
+-      "webpack-dev-middleware": "^7.1.0",
+
+-      "ws": "^8.16.0"
+
+         },
+
+         "bin": {
+
+           "webpack-dev-server": "bin/webpack-dev-server.js"
+
+@@ -18185,17 +18585,14 @@ }
+
+       }
+
+     },
+
+-   “node_modules/webpack-dev-server/node_modules/@types/express-serve-static-core”:
+    {
+
+-    "version": "4.19.7",
+
+-    "resolved": "https://registry.npmjs.org/@types/express-serve-static-core/-/express-serve-static-core-4.19.7.tgz",
+
+-    "integrity": "sha512-FvPtiIf1LfhzsaIXhv/PHan/2FeQBbtBDtfX2QfvPxdUelMDEckK08SM6nqo1MIZY3RUlfA+HV8+hFUSio78qg==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "@types/node": "*",
+
+-      "@types/qs": "*",
+
+-      "@types/range-parser": "*",
+
+-      "@types/send": "*"
+
+-   “node_modules/webpack-dev-server/node_modules/brace-expansion”: {
+
+-    "version": "2.0.1",
+
+-    "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-2.0.1.tgz",
+
+-    "integrity": "sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "balanced-match": "^1.0.0"
+
+         }
+
+    },
+
+    “node_modules/webpack-dev-server/node_modules/chokidar”: {
+
+@@ -18236,6 +18633,27 @@ “url”:
+“https://github.com/sponsors/sindresorhus”
+
+       }
+
+     },
+
+-   “node_modules/webpack-dev-server/node_modules/glob”: {
+
+-    "version": "10.4.5",
+
+-    "resolved": "https://registry.npmjs.org/glob/-/glob-10.4.5.tgz",
+
+-    "integrity": "sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==",
+
+-    "dev": true,
+
+-    "license": "ISC",
+
+-    "dependencies": {
+
+-      "foreground-child": "^3.1.0",
+
+-      "jackspeak": "^3.1.2",
+
+-      "minimatch": "^9.0.4",
+
+-      "minipass": "^7.1.2",
+
+-      "package-json-from-dist": "^1.0.0",
+
+-      "path-scurry": "^1.11.1"
+
+-    },
+
+-    "bin": {
+
+-      "glob": "dist/esm/bin.mjs"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/sponsors/isaacs"
+
+-    }
+
+-   },
+
+    “node_modules/webpack-dev-server/node_modules/glob-parent”: {
+
+    “version”: “5.1.2”,
+
+    “resolved”:
+    “https://registry.npmjs.org/glob-parent/-/glob-parent-5.1.2.tgz”,
+
+@@ -18265,6 +18683,22 @@ “url”:
+“https://github.com/sponsors/sindresorhus”
+
+       }
+
+     },
+
+-   “node_modules/webpack-dev-server/node_modules/minimatch”: {
+
+-    "version": "9.0.5",
+
+-    "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-9.0.5.tgz",
+
+-    "integrity": "sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==",
+
+-    "dev": true,
+
+-    "license": "ISC",
+
+-    "dependencies": {
+
+-      "brace-expansion": "^2.0.1"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=16 || 14 >=14.17"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/sponsors/isaacs"
+
+-    }
+
+-   },
+
+    “node_modules/webpack-dev-server/node_modules/open”: {
+
+    “version”: “10.1.0”,
+
+    “resolved”: “https://registry.npmjs.org/open/-/open-10.1.0.tgz”,
+
+@@ -18282,6 +18716,22 @@ },
+
+       "funding": {
+
+         "url": "https://github.com/sponsors/sindresorhus"
+
+-    }
+
+-   },
+
+-   “node_modules/webpack-dev-server/node_modules/rimraf”: {
+
+-    "version": "5.0.10",
+
+-    "resolved": "https://registry.npmjs.org/rimraf/-/rimraf-5.0.10.tgz",
+
+-    "integrity": "sha512-l0OE8wL34P4nJH/H2ffoaniAokM2qSmrtXHmlpvYr5AVVX8msAyW0l8NVJFDxlSK4u3Uh/f41cQheDVdnYijwQ==",
+
+-    "dev": true,
+
+-    "license": "ISC",
+
+-    "dependencies": {
+
+-      "glob": "^10.3.7"
+
+-    },
+
+-    "bin": {
+
+-      "rimraf": "dist/esm/bin.mjs"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/sponsors/isaacs"
+
+         }
+
+    },
+
+    “node_modules/webpack-node-externals”: {
+
+@@ -18640,6 +19090,64 @@ },
+
+       "funding": {
+
+         "url": "https://github.com/chalk/wrap-ansi?sponsor=1"
+
+-    }
+
+-   },
+
+-   “node_modules/wrap-ansi-cjs”: {
+
+-    "name": "wrap-ansi",
+
+-    "version": "7.0.0",
+
+-    "resolved": "https://registry.npmjs.org/wrap-ansi/-/wrap-ansi-7.0.0.tgz",
+
+-    "integrity": "sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "ansi-styles": "^4.0.0",
+
+-      "string-width": "^4.1.0",
+
+-      "strip-ansi": "^6.0.0"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=10"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/chalk/wrap-ansi?sponsor=1"
+
+-    }
+
+-   },
+
+-   “node_modules/wrap-ansi-cjs/node_modules/ansi-regex”: {
+
+-    "version": "5.0.1",
+
+-    "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz",
+
+-    "integrity": "sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "engines": {
+
+-      "node": ">=8"
+
+-    }
+
+-   },
+
+-   “node_modules/wrap-ansi-cjs/node_modules/ansi-styles”: {
+
+-    "version": "4.3.0",
+
+-    "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-4.3.0.tgz",
+
+-    "integrity": "sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "color-convert": "^2.0.1"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=8"
+
+-    },
+
+-    "funding": {
+
+-      "url": "https://github.com/chalk/ansi-styles?sponsor=1"
+
+-    }
+
+-   },
+
+-   “node_modules/wrap-ansi-cjs/node_modules/strip-ansi”: {
+
+-    "version": "6.0.1",
+
+-    "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-6.0.1.tgz",
+
+-    "integrity": "sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==",
+
+-    "dev": true,
+
+-    "license": "MIT",
+
+-    "dependencies": {
+
+-      "ansi-regex": "^5.0.1"
+
+-    },
+
+-    "engines": {
+
+-      "node": ">=8"
+
+         }
+
+    },
+
+    “node_modules/wrap-ansi/node_modules/ansi-regex”: {
+
+CHANGED: package.json — mkilijanek/package.json +++ gchq/package.json @@
+-1,6 +1,6 @@ {
+
+“name”: “cyberchef”,
+
+-   “version”: “10.19.4”,
+
+-   “version”: “10.22.1”,
+
+    “description”: “The Cyber Swiss Army Knife for encryption, encoding,
+    compression and data analysis.”,
+
+    “author”: “n1474335 n1474335@gmail.com”,
+
+    “homepage”: “https://gchq.github.io/CyberChef”,
+
+@@ -91,7 +91,7 @@ “terser”: “^5.31.1”,
+
+     "webpack": "^5.91.0",
+
+     "webpack-bundle-analyzer": "^4.10.2",
+
+-   “webpack-dev-server”: “5.2.1”,
+
+-   “webpack-dev-server”: “5.0.4”,
+
+    “webpack-node-externals”: “^3.0.0”,
+
+    “worker-loader”: “^3.0.8”
+
+},
+
+@@ -117,7 +117,7 @@ “chi-squared”: “^1.1.0”,
+
+     "codepage": "^1.15.0",
+
+     "crypto-api": "^0.8.5",
+
+-   “crypto-browserify”: “^3.12.0”,
+
+-   “crypto-browserify”: “^3.12.1”,
+
+    “crypto-js”: “^4.2.0”,
+
+    “ctph.js”: “0.0.5”,
+
+    “d3”: “7.9.0”,
+
+@@ -144,10 +144,10 @@ “json5”: “^2.2.3”,
+
+     "jsonata": "^2.0.3",
+
+     "jsonpath-plus": "^10.3.0",
+
+-   “jsonwebtoken”: “9.0.0”,
+
+-   “jsonwebtoken”: “8.5.1”,
+
+    “jsqr”: “^1.4.0”,
+
+    “jsrsasign”: “^11.1.0”,
+
+-   “kbpgp”: “2.1.15”,
+
+-   “kbpgp”: “^2.1.17”,
+
+    “libbzip2-wasm”: “0.0.4”,
+
+    “libyara-wasm”: “^1.2.1”,
+
+    “lodash”: “^4.17.21”,
+
+@@ -202,14 +202,9 @@ “lint:grammar”: “cspell ./src”,
+
+     "postinstall": "npx grunt exec:fixCryptoApiImports && npx grunt exec:fixSnackbarMarkup && npx grunt exec:fixJimpModule",
+
+     "newop": "node --experimental-modules --experimental-json-modules src/core/config/scripts/newOperation.mjs",
+
+-   “minor”: “node –experimental-modules –experimental-json-modules
+    src/core/config/scripts/newMinorVersion.mjs”,
+
+-   “minor”: “node –experimental-modules –experimental-json-modules
+    src/core/config/scripts/newMinorVersion.mjs && npm version minor
+    –git-tag-version=false && echo "Updated to version v$(npm pkg get
+    version | xargs), please create a pull request and once merged use
+    ‘npm run tag’"”,
+
+-   “tag”: “git tag -s "v$(npm pkg get version | xargs)\" -m \"$(npm pkg
+    get version | xargs)" && echo "Created v$(npm pkg get version |
+    xargs), now check and push the tag"”,
+
+    “getheapsize”: “node -e
+    ‘console.log(node heap limit = ${require(\"v8\").getHeapStatistics().heap_size_limit / (1024 * 1024)} Mb)’”,
+
+-   “setheapsize”: “export NODE_OPTIONS=–max_old_space_size=2048”,
+
+-   “security:audit”: “npm audit”,
+
+-   “security:audit:json”: “npm audit –json”,
+
+-   “security:fix”: “./scripts/security-fix.sh”,
+
+-   “security:triage”: “node scripts/vulnerability-triage.js”,
+
+-   “security:triage:json”: “node scripts/vulnerability-triage.js
+    –json”,
+
+-   “security:check”: “npm run security:triage && npm run lint”
+
+-   “setheapsize”: “export NODE_OPTIONS=–max_old_space_size=2048”
+
+}
+
+}
+
+REMOVED in gchq (exists in mkilijanek): scripts/security-fix.sh REMOVED
+in gchq (exists in mkilijanek): scripts/vulnerability-triage.js
+
+CHANGED: src/core/Utils.mjs — mkilijanek/src/core/Utils.mjs +++
+gchq/src/core/Utils.mjs @@ -177,7 +177,7 @@ */
+
+     static printable(str, preserveWs=false, onlyAscii=false) {
+
+         if (onlyAscii) {
+
+-          return str.replace(/[^\x20-\x7f]/g, ".");
+
+-          return str.replace(/[^\x20-\x7e]/g, ".");
+
+           }
+
+
+
+           // eslint-disable-next-line no-misleading-character-class
+
+CHANGED: src/core/config/Categories.json —
+mkilijanek/src/core/config/Categories.json +++
+gchq/src/core/config/Categories.json @@ -26,6 +26,8 @@ “From Base45”,
+
+             "To Base58",
+
+             "From Base58",
+
+-          "To Bech32",
+
+-          "From Bech32",
+
+               "To Base62",
+
+               "From Base62",
+
+               "To Base64",
+
+CHANGED: src/core/config/scripts/newMinorVersion.mjs —
+mkilijanek/src/core/config/scripts/newMinorVersion.mjs +++
+gchq/src/core/config/scripts/newMinorVersion.mjs @@ -7,138 +7,197 @@ */
+
+/* eslint no-console: [“off”] */
+
+-   
+
+-import prompt from “prompt”;
+
+-import colors from “colors”;
+
++/* eslint jsdoc/require-jsdoc: [“off”] */
+
+-   import path from “path”;
+
+-import fs from “fs”;
+
++import fs from “fs”;
+
+import process from “process”;
+
+-   
+
+-const dir = path.join(process.cwd() + “/src/core/config/”);
+
+-if (!fs.existsSync(dir)) {
+
+-   console.log(“:” + process.cwd());
+
+-   console.log(“Error: newMinorVersion.mjs should be run from the
+    project root”);
+
+-   console.log(“Example> node –experimental-modules
+    src/core/config/scripts/newMinorVersion.mjs”);
+
+-   process.exit(1);
+
++import { execSync } from “child_process”;
+
+-   
+
++const ignoredAuthors = [“github-advanced-security[bot]”,
+“dependabot[bot]”];
+
+-   
+
++async function main() {
+
+-   const dir = path.join(process.cwd() + “/src/core/config/”);
+
+-   if (!fs.existsSync(dir)) {
+
+-      console.log("\nCWD: " + process.cwd());
+
+-      console.log(
+
+-          "Error: newMinorVersion.mjs should be run from the project root",
+
+-      );
+
+-      console.log(
+
+-          "Example> node --experimental-modules src/core/config/scripts/newMinorVersion.mjs",
+
+-      );
+
+-      process.exit(1);
+
+-   }
+
+-   
+
+-   let changelogData = fs.readFileSync(
+
+-      path.join(process.cwd(), "CHANGELOG.md"),
+
+-      "utf8",
+
+-   );
+
+-   const lastVersion = changelogData.match(
+
+-      /## Details\s+### \[(\d+)\.(\d+)\.(\d+)\]/,
+
+-   );
+
+-   const newVersion = [
+
+-      parseInt(lastVersion[1], 10),
+
+-      parseInt(lastVersion[2], 10) + 1,
+
+-      0,
+
+-   ];
+
+-   
+
+-   let knownContributors = changelogData.match(/^[@([^\]]+)]/gm);
+
+-   knownContributors = knownContributors.map((c) => c.slice(2, -1));
+
+-   
+
+-   const date = new Date().toISOString().split(“T”)[0];
+
+-   
+
+-   const lastVersionSha = execSync(
+
+-      `git rev-list -n 1 v${lastVersion[1]}.${lastVersion[2]}.${lastVersion[3]}`,
+
+-      {
+
+-          encoding: "utf8",
+
+-      },
+
+-   ).trim();
+
+-   if (lastVersionSha.length !== 40) {
+
+-      throw new Error(
+
+-          `Unexpected output from git rev-list: ${lastVersionSha}`,
+
+-      );
+
+-   }
+
+-   
+
+-   const features = [];
+
+-   
+
+-   const commits = await (
+
+-      await fetch(`https://api.github.com/repos/gchq/cyberchef/commits`)
+
+-   ).json();
+
+-   let foundLast = false;
+
+-   for (const commit of commits) {
+
+-      if (commit.sha === lastVersionSha) {
+
+-          foundLast = true;
+
+-          break;
+
+-      } else {
+
+-          const feature = {
+
+-              message: "",
+
+-              authors: [],
+
+-              id: "",
+
+-          };
+
+-   
+
+-          const msgparts = commit.commit.message.split("\n\n");
+
+-          feature.message = msgparts[0];
+
+-          const prIdMatch = feature.message.match(/\(#(\d+)\)$/);
+
+-          if (prIdMatch !== null) {
+
+-              feature.message = feature.message
+
+-                  .replace(prIdMatch[0], "")
+
+-                  .trim();
+
+-              feature.id = prIdMatch[1];
+
+-          }
+
+-   
+
+-          if (!ignoredAuthors.includes(commit.author.login)) {
+
+-              feature.authors.push(commit.author.login);
+
+-          }
+
+-   
+
+-          if (msgparts.length > 1) {
+
+-              msgparts[1]
+
+-                  .split("\n")
+
+-                  .filter((line) => line.startsWith("Co-authored-by: "))
+
+-                  .forEach((line) => {
+
+-                      let coAuthor = line.slice("Co-authored-by: ".length);
+
+-                      if (coAuthor.indexOf(">") !== -1) {
+
+-                          const email = coAuthor.slice(
+
+-                              coAuthor.indexOf("<") + 1,
+
+-                              coAuthor.indexOf(">"),
+
+-                          );
+
+-                          if (email.endsWith("@users.noreply.github.com")) {
+
+-                              coAuthor = email.slice(
+
+-                                  email.indexOf("+") + 1,
+
+-                                  -"@users.noreply.github.com".length,
+
+-                              );
+
+-                          } else {
+
+-                              throw new Error(
+
+-                                  "Could not get ID of co-author: " +
+
+-                                      coAuthor,
+
+-                              );
+
+-                          }
+
+-                      } else {
+
+-                          throw new Error(
+
+-                              "Could not get email of co-author: " + coAuthor,
+
+-                          );
+
+-                      }
+
+-                      if (!ignoredAuthors.includes(coAuthor)) {
+
+-                          feature.authors.push(coAuthor);
+
+-                      }
+
+-                  });
+
+-          }
+
+-   
+
+-          features.push(feature);
+
+-      }
+
+-   }
+
+-   if (!foundLast) {
+
+-      throw new Error(
+
+-          `Could not find last version commit: ${lastVersionSha} - need to add paging functionality`,
+
+-      );
+
+-   }
+
+-   
+
+-   let message =
+    ### [${newVersion[0]}.${newVersion[1]}.${newVersion[2]}] - ${date}\n;
+
+-   
+
+-   const authors = [];
+
+-   const prIDs = [];
+
+-   const commitIDs = [];
+
+-   
+
+-   features.forEach((feature) => {
+
+-      const id =
+
+-          feature.id.length > 10 ? feature.id.slice(0, 7) : "#" + feature.id;
+
+-      message += `- ${feature.message} ${feature.authors.map((a) => `[@${a}]`).join(" ")} | [${id}]\n`;
+
+-   
+
+-      feature.authors.forEach((author) => {
+
+-          if (!knownContributors.includes(author)) {
+
+-              knownContributors.push(author);
+
+-              authors.push(`[@${author}]: https://github.com/${author}`);
+
+-          }
+
+-      });
+
+-   
+
+-      if (feature.id.length > 10) {
+
+-          commitIDs.push(
+
+-              `[${id}]: https://github.com/gchq/CyberChef/commit/${feature.id}`,
+
+-          );
+
+-      } else {
+
+-          prIDs.push(
+
+-              `[#${feature.id}]: https://github.com/gchq/CyberChef/pull/${feature.id}`,
+
+-          );
+
+-      }
+
+-   });
+
+-   
+
+-   // Message
+
+-   changelogData = changelogData.replace(
+
+-      /## Details\n\n/,
+
+-      "## Details\n\n" + message + "\n",
+
+-   );
+
+-   
+
+-   // Tag
+
+-   const newTag =
+    [${newVersion[0]}.${newVersion[1]}.${newVersion[2]}]: https://github.com/gchq/CyberChef/releases/tag/v${newVersion[0]}.${newVersion[1]}.${newVersion[2]}\n;
+
+-   changelogData = changelogData.replace(
+
+-      /\n\n(\[\d+\.\d+\.\d+\]: https)/,
+
+-      "\n\n" + newTag + "$1",
+
+-   );
+
+-   
+
+-   // Author
+
+-   authors.forEach((author) => {
+
+-      changelogData = changelogData.replace(
+
+-          /(\n\[@[^\]]+\]: https:\/\/github\.com\/[^\n]+\n)\n/,
+
+-          "$1" + author + "\n\n",
+
+-      );
+
+-   });
+
+-   
+
+-   // Commit IDs
+
+-   commitIDs.forEach((commitID) => {
+
+-      changelogData = changelogData.replace(
+
+-          /(\n\[[^\].]+\]: https:\/\/github.com\/gchq\/CyberChef\/commit\/[^\n]+\n)\n/,
+
+-          "$1" + commitID + "\n\n",
+
+-      );
+
+-   });
+
+-   
+
+-   // PR IDs
+
+-   prIDs.forEach((prID) => {
+
+-      changelogData = changelogData.replace(
+
+-          /(\n\[#[^\]]+\]: https:\/\/github.com\/gchq\/CyberChef\/(?:pull|issues)\/[^\n]+\n)\n*$/,
+
+-          "$1" + prID + "\n\n",
+
+-      );
+
+-   });
+
+-   
+
+-   fs.writeFileSync(path.join(process.cwd(), “CHANGELOG.md”),
+    changelogData);
+
+}
+
+-   
+
+-let changelogData = fs.readFileSync(path.join(process.cwd(),
+“CHANGELOG.md”), “utf8”);
+
+-const lastVersion = changelogData.match(/## Details+### [().().()]/);
+
+-const newVersion = [];
+
+-   
+
+-let knownContributors = changelogData.match(/^[@([^\]]+)]/gm);
+
+-knownContributors = knownContributors.map(c => c.slice(2, -1));
+
+-   
+
+-const date = (new Date()).toISOString().split(“T”)[0];
+
+-   
+
+-const schema = {
+
+-   properties: {
+
+-      message: {
+
+-          description: "A short but descriptive summary of a feature in this version",
+
+-          example: "Added 'Op name' operation",
+
+-          prompt: "Feature description",
+
+-          type: "string",
+
+-          required: true,
+
+-      },
+
+-      author: {
+
+-          description: "The author of the feature (only one supported, edit manually to add more)",
+
+-          example: "n1474335",
+
+-          prompt: "Author",
+
+-          type: "string",
+
+-          default: "n1474335"
+
+-      },
+
+-      id: {
+
+-          description: "The PR number or full commit hash for this feature.",
+
+-          example: "1200",
+
+-          prompt: "Pull request or commit ID",
+
+-          type: "string"
+
+-      },
+
+-      another: {
+
+-          description: "y/n",
+
+-          example: "y",
+
+-          prompt: "Add another feature?",
+
+-          type: "string",
+
+-          pattern: /^[yn]$/,
+
+-      }
+
+-   }
+
+-};
+
+-   
+
+-// Build schema
+
+-for (const prop in schema.properties) {
+
+-   const p = schema.properties[prop];
+
+-   p.description = “” + colors.white(p.description) + colors.cyan(“:” +
+    p.example) + “” + colors.green(p.prompt);
+
+-}
+
+-   
+
+-prompt.message = ““;
+
+-prompt.delimiter = “:”.green;
+
+-   
+
+-const features = [];
+
+-const authors = [];
+
+-const prIDs = [];
+
+-const commitIDs = [];
+
+-   
+
+-prompt.start();
+
+-   
+
+-const getFeature = function() {
+
+-   prompt.get(schema, (err, result) => {
+
+-      if (err) {
+
+-          console.log("\nExiting script.");
+
+-          process.exit(0);
+
+-      }
+
+-   
+
+-      features.push(result);
+
+-   
+
+-      if (result.another === "y") {
+
+-          getFeature();
+
+-      } else {
+
+-          let message = `### [${newVersion[0]}.${newVersion[1]}.${newVersion[2]}] - ${date}\n`;
+
+-   
+
+-          features.forEach(feature => {
+
+-              const id = feature.id.length > 10 ? feature.id.slice(0, 7) : "#" + feature.id;
+
+-              message += `- ${feature.message} [@${feature.author}] | [${id}]\n`;
+
+-   
+
+-              if (!knownContributors.includes(feature.author)) {
+
+-                  authors.push(`[@${feature.author}]: https://github.com/${feature.author}`);
+
+-              }
+
+-   
+
+-              if (feature.id.length > 10) {
+
+-                  commitIDs.push(`[${id}]: https://github.com/gchq/CyberChef/commit/${feature.id}`);
+
+-              } else {
+
+-                  prIDs.push(`[#${feature.id}]: https://github.com/gchq/CyberChef/pull/${feature.id}`);
+
+-              }
+
+-          });
+
+-   
+
+-          // Message
+
+-          changelogData = changelogData.replace(/## Details\n\n/, "## Details\n\n" + message + "\n");
+
+-   
+
+-          // Tag
+
+-          const newTag = `[${newVersion[0]}.${newVersion[1]}.${newVersion[2]}]: https://github.com/gchq/CyberChef/releases/tag/v${newVersion[0]}.${newVersion[1]}.${newVersion[2]}\n`;
+
+-          changelogData = changelogData.replace(/\n\n(\[\d+\.\d+\.\d+\]: https)/, "\n\n" + newTag + "$1");
+
+-   
+
+-          // Author
+
+-          authors.forEach(author => {
+
+-              changelogData = changelogData.replace(/(\n\[@[^\]]+\]: https:\/\/github\.com\/[^\n]+\n)\n/, "$1" + author + "\n\n");
+
+-          });
+
+-   
+
+-          // Commit IDs
+
+-          commitIDs.forEach(commitID => {
+
+-              changelogData = changelogData.replace(/(\n\[[^\].]+\]: https:\/\/github.com\/gchq\/CyberChef\/commit\/[^\n]+\n)\n/, "$1" + commitID + "\n\n");
+
+-          });
+
+-   
+
+-          // PR IDs
+
+-          prIDs.forEach(prID => {
+
+-              changelogData = changelogData.replace(/(\n\[#[^\]]+\]: https:\/\/github.com\/gchq\/CyberChef\/pull\/[^\n]+\n)\n*$/, "$1" + prID + "\n\n");
+
+-          });
+
+-   
+
+-          fs.writeFileSync(path.join(process.cwd(), "CHANGELOG.md"), changelogData);
+
+-   
+
+-          console.log("Written CHANGELOG.md\nCommit changes and then run `npm version minor`.");
+
+-      }
+
+-   });
+
+-};
+
+-   
+
+-getFeature();
+
++main().catch(console.error);
+
+ADDED in gchq (missing in mkilijanek): src/core/lib/Bech32.mjs
+
+CHANGED: src/core/lib/Hex.mjs — mkilijanek/src/core/lib/Hex.mjs +++
+gchq/src/core/lib/Hex.mjs @@ -33,7 +33,7 @@ if (data instanceof
+ArrayBuffer) data = new Uint8Array(data);
+
+     let output = "";
+
+-   const prepend = (delim === “0x” || delim === “\x”);
+
+-   const prepend = (delim === “0x” || delim === “\x” || delim === “%”);
+
+    for (let i = 0; i < data.length; i++) {
+
+        const hex = data[i].toString(16).padStart(padding, "0");
+
+CHANGED: src/core/lib/JA4.mjs — mkilijanek/src/core/lib/JA4.mjs +++
+gchq/src/core/lib/JA4.mjs @@ -91,9 +91,7 @@ let alpn = “00”;
+
+     for (const ext of tlsr.handshake.value.extensions.value) {
+
+         if (ext.type.value === "application_layer_protocol_negotiation") {
+
+-          alpn = parseFirstALPNValue(ext.value.data);
+
+-          alpn = alpn.charAt(0) + alpn.charAt(alpn.length - 1);
+
+-          if (alpn.charCodeAt(0) > 127) alpn = "99";
+
+-          alpn = alpnFingerprint(parseFirstALPNValue(ext.value.data));
+
+               break;
+
+           }
+
+    }
+
+@@ -212,9 +210,7 @@ let alpn = “00”;
+
+     for (const ext of tlsr.handshake.value.extensions.value) {
+
+         if (ext.type.value === "application_layer_protocol_negotiation") {
+
+-          alpn = parseFirstALPNValue(ext.value.data);
+
+-          alpn = alpn.charAt(0) + alpn.charAt(alpn.length - 1);
+
+-          if (alpn.charCodeAt(0) > 127) alpn = "99";
+
+-          alpn = alpnFingerprint(parseFirstALPNValue(ext.value.data));
+
+               break;
+
+           }
+
+    }
+
+@@ -262,3 +258,33 @@ default: return “00”; // Unknown
+
+     }
+
+}
+
+-   
+
++/**
+
+-   -   Checks if a byte is ASCII alphanumeric (0-9, A-Z, a-z).
+
+-   -   @param {number} byte
+
+-   -   @returns {boolean}
+
+-   */
+
++function isAlphanumeric(byte) {
+
+-   return (byte >= 0x30 && byte <= 0x39) ||
+
+-         (byte >= 0x41 && byte <= 0x5A) ||
+
+-         (byte >= 0x61 && byte <= 0x7A);
+
++}
+
+-   
+
++/**
+
+-   -   Computes the 2-character ALPN fingerprint from raw ALPN bytes.
+
+-   -   If both first and last bytes are ASCII alphanumeric, returns
+        their characters.
+
+-   -   Otherwise, returns first hex digit of first byte + last hex
+        digit of last byte.
+
+-   -   @param {Uint8Array|null} rawBytes
+
+-   -   @returns {string}
+
+-   */
+
++function alpnFingerprint(rawBytes) {
+
+-   if (!rawBytes || rawBytes.length === 0) return “00”;
+
+-   const firstByte = rawBytes[0];
+
+-   const lastByte = rawBytes[rawBytes.length - 1];
+
+-   if (isAlphanumeric(firstByte) && isAlphanumeric(lastByte)) {
+
+-      return String.fromCharCode(firstByte) + String.fromCharCode(lastByte);
+
+-   }
+
+-   const firstHex = firstByte.toString(16).padStart(2, “0”);
+
+-   const lastHex = lastByte.toString(16).padStart(2, “0”);
+
+-   return firstHex[0] + lastHex[1];
+
++}
+
+CHANGED: src/core/lib/LS47.mjs — mkilijanek/src/core/lib/LS47.mjs +++
+gchq/src/core/lib/LS47.mjs @@ -223,19 +223,8 @@ initTiles();
+
+     checkKey(key);
+
+     let padding = "";
+
+-   
+
+-   // Use cryptographically secure random if available, otherwise
+    fallback to Math.random
+
+-   const getSecureRandom = () => {
+
+-      if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+
+-          const array = new Uint32Array(1);
+
+-          crypto.getRandomValues(array);
+
+-          return array[0] / (0xFFFFFFFF + 1);
+
+-      }
+
+-      return Math.random();
+
+-   };
+
+-   for (let i = 0; i < paddingSize; i++) {
+
+-      padding += letters.charAt(Math.floor(getSecureRandom() * letters.length));
+
+-      padding += letters.charAt(Math.floor(Math.random() * letters.length));
+
+    }
+
+    return encrypt(key, padding+plaintext+“—”+signature);
+
+}
+
+CHANGED: src/core/lib/TLS.mjs — mkilijanek/src/core/lib/TLS.mjs +++
+gchq/src/core/lib/TLS.mjs @@ -247,7 +247,7 @@ description: “Selected
+Compression Method”,
+
+         length: 1,
+
+         data: b.getBytes(1),
+
+-      value: COMPRESSION_METHODS_LOOKUP[s.readInt(1)] || "Unknown"
+
+-      value: s.readInt(1) // TODO: Compression method name here
+
+    };
+
+    // Extensions Length
+
+@@ -303,7 +303,7 @@ description: “Compression Method”,
+
+             length: 1,
+
+             data: b.getBytes(1),
+
+-          value: COMPRESSION_METHODS_LOOKUP[s.readInt(1)] || "Unknown"
+
+-          value: s.readInt(1) // TODO: Compression method name here
+
+           });
+
+    }
+
+    return cm;
+
+@@ -837,15 +837,6 @@ ];
+
+/**
+
+-   -   Compression methods lookup table
+
+-   */
+
+-const COMPRESSION_METHODS_LOOKUP = {
+
+-   0: “null”,
+
+-   1: “DEFLATE”,
+
+-   64: “LZS”
+
+-};
+
+-   
+
+-/**
+
+-   Parses the supported_versions extension and returns the highest
+    supported version.
+
+-   @param {Uint8Array} bytes
+
+-   @returns {number}
+
+@@ -872,15 +863,15 @@ }
+
+/**
+
+-   -   Parses the application_layer_protocol_negotiation extension and
+        returns the first value.
+
+-   -   Parses the application_layer_protocol_negotiation extension and
+        returns the first value as raw bytes.
+
+    -   @param {Uint8Array} bytes
+
+-   -   @returns {number}
+
+-   -   @returns {Uint8Array|null}
+
+    */
+
+export function parseFirstALPNValue(bytes) {
+
+     const s = new Stream(bytes);
+
+     const alpnExtLen = s.readInt(2);
+
+-   if (alpnExtLen < 3) return “00”;
+
+-   if (alpnExtLen < 2) return null;
+
+    const strLen = s.readInt(1);
+
+-   if (strLen < 2) return “00”;
+
+-   return s.readString(strLen);
+
+-   if (strLen < 1) return null;
+
+-   return s.getBytes(strLen);
+
+}
+
+ADDED in gchq (missing in mkilijanek):
+src/core/operations/FromBech32.mjs
+
+CHANGED: src/core/operations/FromHexdump.mjs —
+mkilijanek/src/core/operations/FromHexdump.mjs +++
+gchq/src/core/operations/FromHexdump.mjs @@ -43,7 +43,7 @@ */
+
+     run(input, args) {
+
+         const output = [],
+
+-          regex = /^\s*(?:[\dA-F]{4,16}h?:?)?[ \t]+((?:[\dA-F]{2} ){1,8}(?:[ \t]|[\dA-F]{2}-)(?:[\dA-F]{2} ){1,8}|(?:[\dA-F]{4} )*[\dA-F]{4}|(?:[\dA-F]{2} )*[\dA-F]{2})/igm;
+
+-          regex = /^\s*(?:[\dA-F]{4,16}h?:?)?[ \t]+((?:[\dA-F]{2} ){1,8}(?:[ \t]|[\dA-F]{2}-)(?:[\dA-F]{2} ){1,8}|(?:[\dA-F]{4} )+(?:[\dA-F]{2})?|(?:[\dA-F]{2} )*[\dA-F]{2})/igm;
+
+           let block, line;
+
+
+
+           while ((block = regex.exec(input))) {
+
+CHANGED: src/core/operations/FromQuotedPrintable.mjs —
+mkilijanek/src/core/operations/FromQuotedPrintable.mjs +++
+gchq/src/core/operations/FromQuotedPrintable.mjs @@ -23,7 +23,7 @@
+
+         this.name = "From Quoted Printable";
+
+         this.module = "Default";
+
+-      this.description = "Converts QP-encoded text back to standard text.<br><br>e.g. The quoted-printable encoded string <code>hello=20world</code> becomes <code>hello world</code>";
+
+-      this.description = "Converts QP-encoded text back to standard text. This format is a content transfer encoding common in email messages.<br><br>e.g. The quoted-printable encoded string <code>hello=20world</code> becomes <code>hello world</code>";
+
+           this.infoURL = "https://wikipedia.org/wiki/Quoted-printable";
+
+           this.inputType = "string";
+
+           this.outputType = "byteArray";
+
+CHANGED: src/core/operations/ToBase85.mjs —
+mkilijanek/src/core/operations/ToBase85.mjs +++
+gchq/src/core/operations/ToBase85.mjs @@ -33,7 +33,7 @@ value:
+ALPHABET_OPTIONS
+
+             },
+
+             {
+
+-              name: "Include delimeter",
+
+-              name: "Include delimiter",
+
+                   type: "boolean",
+
+                   value: false
+
+               }
+
+ADDED in gchq (missing in mkilijanek): src/core/operations/ToBech32.mjs
+
+CHANGED: src/core/operations/ToQuotedPrintable.mjs —
+mkilijanek/src/core/operations/ToQuotedPrintable.mjs +++
+gchq/src/core/operations/ToQuotedPrintable.mjs @@ -23,7 +23,7 @@
+
+         this.name = "To Quoted Printable";
+
+         this.module = "Default";
+
+-      this.description = "Quoted-Printable, or QP encoding, is an encoding using printable ASCII characters (alphanumeric and the equals sign '=') to transmit 8-bit data over a 7-bit data path or, generally, over a medium which is not 8-bit clean. It is defined as a MIME content transfer encoding for use in e-mail.<br><br>QP works by using the equals sign '=' as an escape character. It also limits line length to 76, as some software has limits on line length.";
+
+-      this.description = "Quoted-Printable, or QP encoding, is an encoding using printable ASCII characters (alphanumeric and the equals sign '=') to transmit 8-bit data over a 7-bit data path or, generally, over a medium which is not 8-bit clean. It is defined as a MIME content transfer encoding for use in email.<br><br>QP works by using the equals sign '=' as an escape character. It also limits line length to 76, as some software has limits on line length.";
+
+           this.infoURL = "https://wikipedia.org/wiki/Quoted-printable";
+
+           this.inputType = "ArrayBuffer";
+
+           this.outputType = "string";
+
+CHANGED: src/core/vendor/gost/gostRandom.mjs —
+mkilijanek/src/core/vendor/gost/gostRandom.mjs +++
+gchq/src/core/vendor/gost/gostRandom.mjs @@ -114,10 +114,7 @@ // Native
+window cryptographic interface
+
+         rootCrypto.getRandomValues(u8);
+
+     } else {
+
+-      // Standard Javascript method - WARNING: Not cryptographically secure!
+
+-      if (typeof console !== "undefined" && console.warn) {
+
+-          console.warn("SECURITY WARNING: crypto.getRandomValues not available, falling back to Math.random() which is NOT cryptographically secure!");
+
+-      }
+
+-      // Standard Javascript method
+
+           for (var i = 0, n = u8.length; i < n; i++)
+
+               u8[i] = Math.floor(256 * Math.random()) & 255;
+
+    }
+
+CHANGED: src/node/apiUtils.mjs — mkilijanek/src/node/apiUtils.mjs +++
+gchq/src/node/apiUtils.mjs @@ -66,7 +66,7 @@ * @param str
+
+*/
+
+export function sanitise(str) {
+
+-   return str.replace(/ /g, ““).toLowerCase();
+
+-   return str.replace(/[/.-]/g, ““).toLowerCase();
+
+}
+
+CHANGED: src/web/App.mjs — mkilijanek/src/web/App.mjs +++
+gchq/src/web/App.mjs @@ -650,7 +650,7 @@
+
+         // const compareURL = `https://github.com/gchq/CyberChef/compare/v${prev.join(".")}...v${PKG_VERSION}`;
+
+-      let compileInfo = `<a href='https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md'>Last build: ${timeSinceCompile.substr(0, 1).toUpperCase() + timeSinceCompile.substr(1)} ago</a>`;
+
+-      let compileInfo = `<a href='https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md'>Last build: ${timeSinceCompile.substring(0, 1).toUpperCase() + timeSinceCompile.substring(1)} ago</a>`;
+
+
+
+           if (window.compileMessage !== "") {
+
+               compileInfo += " - " + window.compileMessage;
+
+CHANGED: src/web/static/sitemap.mjs —
+mkilijanek/src/web/static/sitemap.mjs +++
+gchq/src/web/static/sitemap.mjs @@ -1,6 +1,5 @@ import sm from
+“sitemap”;
+
+-import OperationConfig from “../../core/config/OperationConfig.json”
+assert {type: “json”};
+
+-   
+
++import OperationConfig from “../../core/config/OperationConfig.json”
+assert { type: “json” };
+
+/**
+
+-   Generates an XML sitemap for all CyberChef operations and a number
+    of recipes.
+
+@@ -10,25 +9,25 @@ * @license Apache-2.0
+
+*/
+
+-const smStream = new sm.SitemapStream({
+
+-   hostname: “https://gchq.github.io/CyberChef”,
+
+-});
+
++const baseUrl = “https://gchq.github.io/CyberChef/”;
+
+-   
+
++const smStream = new sm.SitemapStream({});
+
+smStream.write({
+
+-   url: “/”,
+
+-   url: baseUrl,
+
+    changefreq: “weekly”,
+
+-   priority: 1.0
+
+-   priority: 1.0,
+
+});
+
+for (const op in OperationConfig) {
+
+     smStream.write({
+
+-      url: `/?op=${encodeURIComponent(op)}`,
+
+-      url: `${baseUrl}?op=${encodeURIComponent(op)}`,
+
+           changeFreq: "yearly",
+
+-      priority: 0.5
+
+-      priority: 0.5,
+
+    });
+
+}
+
+smStream.end();
+
+sm.streamToPromise(smStream).then(
+
+-   buffer => console.log(buffer.toString()) // eslint-disable-line
+    no-console
+
+-   (buffer) => console.log(buffer.toString()), // eslint-disable-line
+    no-console
+
+);
+
+CHANGED: src/web/waiters/InputWaiter.mjs —
+mkilijanek/src/web/waiters/InputWaiter.mjs +++
+gchq/src/web/waiters/InputWaiter.mjs @@ -151,8 +151,20 @@ // Event
+handlers
+
+                 EditorView.domEventHandlers({
+
+                     paste(event, view) {
+
+-                      const clipboardData = event.clipboardData;
+
+-                      const items = clipboardData.items;
+
+-                      const files = [];
+
+-                      for (let i = 0; i < items.length; i++) {
+
+-                          const item = items[i];
+
+-                          if (item.kind === "file") {
+
+-                              const file = item.getAsFile();
+
+-                              files.push(file);
+
+-   
+
+-                              event.preventDefault(); // Prevent the default paste behavior
+
+-                          }
+
+-                      }
+
+                           setTimeout(() => {
+
+-                          self.afterPaste(event);
+
+-                          self.afterPaste(files);
+
+                           });
+
+                       }
+
+                   })
+
+@@ -914,9 +926,12 @@ * Handler that fires just after input paste events.
+
+      * Checks whether the EOL separator or character encoding should be updated.
+
+      *
+
+-   * @param {event} e
+
+-   */
+
+-   afterPaste(e) {
+
+-   * @param {File[]} files - An array of any files that were included in the paste event
+
+-   */
+
+-   afterPaste(files) {
+
+-      if (files.length > 0) {
+
+-          this.loadUIFiles(files);
+
+-      }
+
+           // If EOL has been fixed, skip this.
+
+           if (this.eolState > 1) return;
+
+CHANGED: src/web/workers/DishWorker.mjs —
+mkilijanek/src/web/workers/DishWorker.mjs +++
+gchq/src/web/workers/DishWorker.mjs @@ -7,6 +7,8 @@ */
+
+import Dish from “../../core/Dish.mjs”;
+
++import DishError from “../../core/errors/DishError.mjs”;
+
++import { CHR_ENC_SIMPLE_REVERSE_LOOKUP } from
+“../../core/lib/ChrEnc.mjs”;
+
+import Utils from “../../core/Utils.mjs”;
+
+import cptable from “codepage”;
+
+import loglevelMessagePrefix from “loglevel-message-prefix”;
+
+@@ -98,7 +100,7 @@ try {
+
+             str = cptable.utils.decode(data.encoding, new Uint8Array(data.buffer));
+
+         } catch (err) {
+
+-          str = err;
+
+-          str = new DishError(`Error decoding buffer with encoding ${CHR_ENC_SIMPLE_REVERSE_LOOKUP[data.encoding]}: ${err.message}`).toString();
+
+           }
+
+    }
+
+CHANGED: tests/node/tests/Utils.mjs —
+mkilijanek/tests/node/tests/Utils.mjs +++
+gchq/tests/node/tests/Utils.mjs @@ -20,4 +20,10 @@
+assert.equal(Utils.parseEscapedChars(“\\\‘“),”\’”);
+
+     }),
+
+-   it(“Utils: should replace delete character”, () => {
+
+-      assert.equal(
+
+-          Utils.printable("\x7e\x7f\x80\xa7", false, true),
+
+-          "\x7e...",
+
+-      );
+
+-   }),
+
+]);
+
+CHANGED: tests/node/tests/nodeApi.mjs —
+mkilijanek/tests/node/tests/nodeApi.mjs +++
+gchq/tests/node/tests/nodeApi.mjs @@ -343,6 +343,42 @@ “args”: [false] }
+
+         ]);
+
+         assert.strictEqual(result.toString(), "begin_something_aaaaaaaaaaaaaa_end_something");
+
+-   }),
+
+-   
+
+-   it(“chef.bake: should accept operation names from Chef Website which
+    contain forward slash”, () => {
+
+-      const result = chef.bake("I'll have the test salmon", [
+
+-          { "op": "Find / Replace",
+
+-              "args": [{ "option": "Regex", "string": "test" }, "good", true, false, true, false]}
+
+-      ]);
+
+-      assert.strictEqual(result.toString(), "I'll have the good salmon");
+
+-   }),
+
+-   
+
+-   it(“chef.bake: should accept operation names from Chef Website which
+    contain a hyphen”, () => {
+
+-      const result = chef.bake("I'll have the test salmon", [
+
+-          { "op": "Adler-32 Checksum",
+
+-              "args": [] }
+
+-      ]);
+
+-      assert.strictEqual(result.toString(), "6e4208f8");
+
+-   }),
+
+-   
+
+-   it(“chef.bake: should accept operation names from Chef Website which
+    contain a period”, () => {
+
+-      const result = chef.bake("30 13 02 01 05 16 0e 41 6e 79 62 6f 64 79 20 74 68 65 72 65 3f", [
+
+-          { "op": "Parse ASN.1 hex string",
+
+-              "args": [0, 32] }
+
+-      ]);
+
+-      assert.strictEqual(result.toString(), `SEQUENCE
+
+-   INTEGER 05
+
+-   IA5String ‘Anybody there?’
+
++`);
+
+-   }),
+
+-   
+
+-   it(“Excluded operations: throw a sensible error when you try and
+    call one”, () => {
+
+-      try {
+
+-          chef.fork();
+
+-      } catch (e) {
+
+-          assert.strictEqual(e.type, "ExcludedOperationError");
+
+-          assert.strictEqual(e.message, "Sorry, the Fork operation is not available in the Node.js version of CyberChef.");
+
+-      }
+
+    }),
+
+    it(“chef.bake: cannot accept flowControl operations in recipe”, ()
+    => {
+
+CHANGED: tests/operations/index.mjs —
+mkilijanek/tests/operations/index.mjs +++
+gchq/tests/operations/index.mjs @@ -26,6 +26,7 @@ import
+“./tests/Base85.mjs”;
+
+import “./tests/Base92.mjs”;
+
+import “./tests/BCD.mjs”;
+
++import “./tests/Bech32.mjs”;
+
+import “./tests/BitwiseOp.mjs”;
+
+import “./tests/BLAKE2b.mjs”;
+
+import “./tests/BLAKE2s.mjs”;
+
+ADDED in gchq (missing in mkilijanek): tests/operations/tests/Bech32.mjs
+
+CHANGED: tests/operations/tests/Code.mjs —
+mkilijanek/tests/operations/tests/Code.mjs +++
+gchq/tests/operations/tests/Code.mjs @@ -322,8 +322,21 @@ ]
+
+             }
+
+         ],
+
+-      expectedMatch: /^Invalid JPath expression: jsonPath: self is not defined:/
+
+-   },
+
+-      expectedMatch: /^Invalid JPath expression: Unexpected "{" at character 1/
+
+-   },
+
+-   {
+
+-      name: "JPath Expression: Script-based RCE",
+
+-      input: "[{}]",
+
+-      recipeConfig: [
+
+-          {
+
+-              "op": "JPath expression",
+
+-              "args": [
+
+-                  "$..[?(p=\"console.log(this.process.mainModule.require('child_process').execSync('id').toString())\";a=''[['constructor']][['constructor']](p);a())]",
+
+-                  "\n"
+
+-              ]
+
+-          }
+
+-      ],
+
+-      expectedMatch: /^Invalid JPath expression: jsonPath: Cannot read properties of {2}\(reading 'constructor'\): /    },
+
+    {
+
+           name: "CSS selector",
+
+           input: '<div id="test">\n<p class="a">hello</p>\n<p>world</p>\n<p class="a">again</p>\n</div>',
+
+CHANGED: tests/operations/tests/Hex.mjs —
+mkilijanek/tests/operations/tests/Hex.mjs +++
+gchq/tests/operations/tests/Hex.mjs @@ -38,6 +38,20 @@ “op”: “To Hex”,
+
+                 "args": [
+
+                     "0x with comma",
+
+-                  0
+
+-              ]
+
+-          }
+
+-      ]
+
+-   },
+
+-   {
+
+-      name: "ASCII to Hex with percent deliminator",
+
+-      input: "aberystwyth",
+
+-      expectedOutput: "%61%62%65%72%79%73%74%77%79%74%68",
+
+-      recipeConfig: [
+
+-          {
+
+-              "op": "To Hex",
+
+-              "args": [
+
+-                  "Percent",
+
+                       0
+
+                   ]
+
+               }
+
+CHANGED: tests/operations/tests/Hexdump.mjs —
+mkilijanek/tests/operations/tests/Hexdump.mjs +++
+gchq/tests/operations/tests/Hexdump.mjs @@ -153,6 +153,17 @@ ],
+
+     },
+
+     {
+
+-      name: "From Hexdump: xxd format, odd number of bytes",
+
+-      input: "00000000: 6162 6364 65                             abcde",
+
+-      expectedOutput: "abcde",
+
+-      recipeConfig: [
+
+-          {
+
+-              op: "From Hexdump",
+
+-              args: []
+
+-          }
+
+-      ],
+
+-   },
+
+-   {
+
+        name: "From Hexdump: Wireshark",
+
+        input: `00000000  00 01 02 03 04 05 06 07  08 09 0a 0b 0c 0d 0e 0f ........ ........
+
+00000010 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e 1f …….. ……..
+
+CHANGED: tests/operations/tests/JA4.mjs —
+mkilijanek/tests/operations/tests/JA4.mjs +++
+gchq/tests/operations/tests/JA4.mjs @@ -27,6 +27,28 @@ {
+
+                 "op": "JA4 Fingerprint",
+
+                 "args": ["Hex", "JA4 Original Rendering"]
+
+-          }
+
+-      ],
+
+-   },
+
+-   {
+
+-      name: "JA4 Fingerprint: TLS 1.3 with whitespace-only ALPN",
+
+-      input: "1603010200010001fc0303ed338a18e711d670cdc472ff570a5b59f1ace12e5365918bf68bf845019147b6207e4437bfb062d98a4aeb753be8f09022a9dc9413d7694dad4db57fcdcf076e820024130213031301c02cc030c02bc02fcca9cca8c024c028c023c027009f009e006b006700ff0100018f0000001800160000136465762e636f6e74656e74677261622e6e6574000b000403000102000a00160014001d0017001e00190018010001010102010301040023000000100004000201200016000000170000000d002a0028040305030603080708080809080a080b080408050806040105010601030303010302040205020602002b00050403040303002d00020101003300260024001d00207af053336d5e2c1675aa4c6ce78de5e5fdbd296538113f051ea17ccb64289f22001500d2000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+
+-      expectedOutput: "t13d181220_85036bcba153_d41ae481755e",
+
+-      recipeConfig: [
+
+-          {
+
+-              "op": "JA4 Fingerprint",
+
+-              "args": ["Hex", "JA4"]
+
+-          }
+
+-      ],
+
+-   },
+
+-   {
+
+-      name: "JA4 Fingerprint: TLS 1.3 with ALPN containing a whitespace",
+
+-      input: "1603010200010001fc0303273682a603be3f64dd025df4ad0f4d2d13043c3a233405a68bb29b865808749a20f4dfc40242b2fce38fae26c516ef9bef20a1b9349eba3c003780168d72471f5c0024130213031301c02cc030c02bc02fcca9cca8c024c028c023c027009f009e006b006700ff0100018f0000001800160000136465762e636f6e74656e74677261622e6e6574000b000403000102000a00160014001d0017001e0019001801000101010201030104002300000010000500030261200016000000170000000d002a0028040305030603080708080809080a080b080408050806040105010601030303010302040205020602002b00050403040303002d00020101003300260024001d0020f4dd1567bd858d3a9f1d88db1fee6a10ab0ea1aa6afe96ffb6a7c4d79dea4075001500d10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+
+-      expectedOutput: "t13d181260_85036bcba153_d41ae481755e",
+
+-      recipeConfig: [
+
+-          {
+
+-              "op": "JA4 Fingerprint",
+
+-              "args": ["Hex", "JA4"]
+
+               }
+
+           ],
+
+    },
