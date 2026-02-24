@@ -7,30 +7,57 @@
  */
 
 #controls {
-    position: absolute;
     width: 100%;
-    bottom: 0;
-    padding: 10px 0;
     border-top: 1px solid var(--primary-border-colour);
     background-color: var(--secondary-background-colour);
+    overflow: hidden;
 }
 
 #controls-content {
-    position: relative;
     display: flex;
-    flex-flow: row nowrap;
+    padding: 10px 0;
+    height: 100%;
+}
+
+#controls-content > div {
+    height: 100%;
+}
+
+/* bake button */
+#bake {
+    box-shadow: none;
+}
+
+/* bake and step buttons */
+#controls .btn {
+    border-radius: 30px;
+    margin: 0;
+    font-size: initial;
+    line-height: 0;
+    height: 100%;
+}
+
+/* auto bake */
+#controls-content .form-group {
+    text-align: center;
+    height: 100%;
+}
+
+#controls-content .form-group > .checkbox {
+    height: 100%;
+    display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 #auto-bake-label {
-    display: inline-block;
-    width: 100px;
     padding: 0;
     margin: 0;
-    text-align: center;
+    font-size: initial;
     color: var(--primary-font-colour);
-    font-size: 14px;
     cursor: pointer;
+    display: inline-flex;
+    gap: 5px;
 }
 
 #auto-bake-label .check,
@@ -40,30 +67,11 @@
 }
 
 #auto-bake-label .checkbox-decorator {
+    display: inline-flex;
     position: relative;
-}
-
-#bake {
-    box-shadow: none;
-}
-
-#controls .btn {
-    border-radius: 30px;
     margin: 0;
+    padding: 0;
 }
 
-.output-maximised .hide-on-maximised-output {
-    display: none !important;
-}
 
-.spin {
-    animation-name: spin;
-    animation-duration: 3s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-}
 
-@keyframes spin {
-    0%      {transform: rotate(0deg);}
-    100%    {transform: rotate(360deg);}
-}

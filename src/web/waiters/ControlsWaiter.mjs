@@ -383,7 +383,7 @@ class ControlsWaiter {
     /**
      * Populates the bug report information box with useful technical info.
      *
-     * @param {event} e
+     * @param {Event} e
      */
     supportButtonClick(e) {
         e.preventDefault();
@@ -456,16 +456,89 @@ ${navigator.userAgent}
     }
 
     /**
-     * Calculates the height of the controls area and adjusts the recipe
-     * height accordingly.
+     * Maximise control button click handler.
+     *
+     * The buttons have IDs like 'maximise-input', 'maximise-output' etc. We grab the
+     * to-be-maximised pane ID itself by stripping the pane ID from the button ID.
+     *
+     * @param {Event} e
      */
-    calcControlsHeight() {
-        const controls = document.getElementById("controls"),
-            recList = document.getElementById("rec-list");
-
-        recList.style.bottom = controls.clientHeight + "px";
+    onMaximiseButtonClick(e) {
+        // the target pane is not already maximised because it does not have the 'maximised-pane' class..
+        const maximise = !document.getElementById(e.currentTarget.id.replace("maximise-", "")).classList.contains("maximised-pane");
+        this.setPaneMaximised(e.currentTarget.id.replace("maximise-", ""), maximise);
     }
 
+    /**
+     * Handle the maximising ( and resetting to default state ) of
+     * panes.
+     *
+     * @param {string} paneId
+     * @param {boolean} maximise
+     */
+    setPaneMaximised(paneId, maximise) {
+        const pane = document.getElementById(paneId);
+        const btn = document.getElementById(`maximise-${paneId}`);
+
+        this.setMaximiseControlButton(btn, maximise);
+        this.setPaneMaximisedClasses(pane, maximise);
+
+        if (maximise) {
+            pane.style.height = `${window.innerHeight - 40}px`;
+        } else {
+            if (this.app.isMobileView()) {
+                this.app.assignAvailableHeight();
+            }
+        }
+    }
+
+    /**
+     * Set and remove the appropriate classes on maximise / minimise actions
+     *
+     * @param {HTMLElement} pane
+     * @param {boolean} maximise
+     */
+    setPaneMaximisedClasses(pane, maximise) {
+        if (maximise) {
+            pane.classList.add("top-zindex");
+            pane.classList.add("maximised-pane");
+        } else {
+            pane.classList.remove("top-zindex");
+            pane.classList.remove("maximised-pane");
+        }
+    }
+
+
+    /**
+     * Set the correct icon and data title attribute text based on
+     * the 'maximise' flag
+     *
+     * @param {HTMLElement} btn
+     * @param {boolean} maximise
+     */
+    setMaximiseControlButton(btn, maximise) {
+        if (maximise) {
+            btn.querySelector("i").innerHTML = "fullscreen_exit";
+            btn.setAttribute("data-original-title", "Reset pane");
+        } else {
+            btn.querySelector("i").innerHTML = "fullscreen";
+            btn.setAttribute("data-original-title", "Maximise pane");
+        }
+    }
+
+    /**
+     * If #recipe is maximised and #rec-list is empty, clicking / tapping on
+     * the ( empty ) list will open #operations-dropdown to help guide users
+     * with that they are supposed to do
+     */
+    onMaximisedRecipeClick() {
+        // if #recipe is maximised & rec-list is empty on mobile UI
+        if (this.app.isMobileView() && document.querySelector("#recipe.maximised-pane") && document.querySelectorAll("#rec-list > c-recipe-li").length === 0) {
+            // close max pane and display the expanded #operations-dropdown
+            this.setPaneMaximised("recipe", false);
+            this.manager.ops.openOpsDropdown();
+        }
+    }
 }
 
 export default ControlsWaiter;
