@@ -13,12 +13,12 @@ const validKey = "mysecretkey";
 const outputObject = {
     user: "admin",
     role: "superuser",
-}
+};
 
 const outputVerify = {
     valid: true,
     payload: outputObject,
-}
+};
 
 TestRegister.addTests([
     {
@@ -41,9 +41,9 @@ TestRegister.addTests([
                 op: "Flask Session Verify",
                 args: [
                     {
-                        string: validKey, 
+                        string: validKey,
                         option: "UTF8"
-                    }, 
+                    },
                     {
                         string: "cookie-session",
                         option: "UTF8"
@@ -53,4 +53,4 @@ TestRegister.addTests([
             }
         ]
     },
-])
+]);

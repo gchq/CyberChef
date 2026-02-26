@@ -69,13 +69,13 @@ class FlaskSessionSign extends Operation {
         const view = new DataView(buffer);
         view.setInt32(0, currentTimeStamp, false);
         const bytes = new Uint8Array(buffer);
-        let binary = '';
+        let binary = "";
         bytes.forEach(b => binary += String.fromCharCode(b));
         const timeB64 = toBase64(Utils.strToByteArray(binary));
         const time = timeB64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
-        
+
         const data = Utils.convertToByteString(payload + "." + time, "utf8");
-        const sign = CryptoApi.getHmac(derivedKey.finalize(), CryptoApi.getHasher(algorithm));        
+        const sign = CryptoApi.getHmac(derivedKey.finalize(), CryptoApi.getHasher(algorithm));
         sign.update(data);
 
         const signB64 = toBase64(sign.finalize());

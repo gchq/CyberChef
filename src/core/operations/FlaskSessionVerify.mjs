@@ -53,9 +53,9 @@ class FlaskSessionVerify extends Operation {
     run(input, args) {
 
         if (!args[0].string) {
-            throw new OperationError("Secret key required");        
+            throw new OperationError("Secret key required");
         }
-        
+
         const key = Utils.convertToByteString(args[0].string, args[0].option);
         const salt = Utils.convertToByteString(args[1].string || "cookie-session", args[1].option);
         const algorithm = args[2] || "sha1";
@@ -65,7 +65,7 @@ class FlaskSessionVerify extends Operation {
         const parts = input.split(".");
 
         if (parts.length !== 3) {
-           throw new OperationError("Invalid Flask token format. Expected payload.timestamp.signature");
+            throw new OperationError("Invalid Flask token format. Expected payload.timestamp.signature");
         }
 
         const data = Utils.convertToByteString(parts[0] + "." + parts[1], "utf8");
@@ -73,8 +73,8 @@ class FlaskSessionVerify extends Operation {
 
         const derivedKey = CryptoApi.getHmac(key, CryptoApi.getHasher(algorithm));
         derivedKey.update(salt);
-        
-        const sign = CryptoApi.getHmac(derivedKey.finalize(), CryptoApi.getHasher(algorithm));        
+
+        const sign = CryptoApi.getHmac(derivedKey.finalize(), CryptoApi.getHasher(algorithm));
         sign.update(data);
 
         const payloadB64 = parts[0];
@@ -91,10 +91,10 @@ class FlaskSessionVerify extends Operation {
         const signB64 = toBase64(sign.finalize());
         const sign64 = signB64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 
-        if (sign64 !== parts[2]){
+        if (sign64 !== parts[2]) {
             throw new OperationError("Invalid signature!");
         }
-        
+
         try {
             const decoded = JSON.parse(payloadJson);
             return {

@@ -5,7 +5,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import { fromBase64 } from "../lib/Base64.mjs"
+import { fromBase64 } from "../lib/Base64.mjs";
 
 /**
  * Flask Session Decode operation
@@ -17,9 +17,9 @@ class FlaskSessionDecode extends Operation {
     constructor() {
         super();
 
-        this.name = "Flask Session Decode"; 
+        this.name = "Flask Session Decode";
         this.module = "Crypto";
-        this.description = "Decodes the payload of a Flask session cookie (itsdangerous) into JSON.";        
+        this.description = "Decodes the payload of a Flask session cookie (itsdangerous) into JSON.";
         this.inputType = "string";
         this.outputType = "JSON";
         this.args = [];
@@ -34,7 +34,7 @@ class FlaskSessionDecode extends Operation {
         input = input.trim();
         const parts = input.split(".");
         if (parts.length !== 3) {
-            throw new OperationError("Invalid Flask token format. Expected payload.timestamp.signature");        
+            throw new OperationError("Invalid Flask token format. Expected payload.timestamp.signature");
         }
 
         const payloadB64 = parts[0];
