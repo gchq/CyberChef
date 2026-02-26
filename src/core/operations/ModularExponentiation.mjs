@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import { parseBigInt } from "../lib/BigIntUtils.mjs";
 
 /* ---------- helper functions ---------- */
 
@@ -25,18 +26,6 @@ function modPow(base, exponent, modulus) {
     }
 
     return result;
-}
-
-/**
- * parseBigInt helper operation
- */
-function parseBigInt(value, param) {
-    const v = value.trim();
-
-    if (/^0x[0-9a-f]+$/i.test(v)) return BigInt(v);
-    if (/^[0-9]+$/.test(v)) return BigInt(v);
-
-    throw new OperationError(param + " must be decimal or hex (0x...)");
 }
 
 /* ---------- operation class ---------- */
