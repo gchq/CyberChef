@@ -9,13 +9,12 @@ import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
-import Jimp from "jimp/es/index.js";
+import { Jimp, JimpMime } from "jimp";
 
 /**
  * Rotate Image operation
  */
 class RotateImage extends Operation {
-
     /**
      * RotateImage constructor
      */
@@ -24,7 +23,8 @@ class RotateImage extends Operation {
 
         this.name = "Rotate Image";
         this.module = "Image";
-        this.description = "Rotates an image by the specified number of degrees.";
+        this.description =
+            "Rotates an image by the specified number of degrees.";
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -33,8 +33,8 @@ class RotateImage extends Operation {
             {
                 name: "Rotation amount (degrees)",
                 type: "number",
-                value: 90
-            }
+                value: 90,
+            },
         ];
     }
 
@@ -62,10 +62,10 @@ class RotateImage extends Operation {
             image.rotate(degrees);
 
             let imageBuffer;
-            if (image.getMIME() === "image/gif") {
-                imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
+            if (image.mime === "image/gif") {
+                imageBuffer = await image.getBuffer(JimpMime.png);
             } else {
-                imageBuffer = await image.getBufferAsync(Jimp.AUTO);
+                imageBuffer = await image.getBuffer(image.mime);
             }
             return imageBuffer.buffer;
         } catch (err) {
@@ -89,7 +89,6 @@ class RotateImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default RotateImage;
