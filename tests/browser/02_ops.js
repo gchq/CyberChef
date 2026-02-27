@@ -206,6 +206,7 @@ module.exports = {
         testOpHtml(browser, "Index of Coincidence", "test input", "", /Index of Coincidence: 0.08333333333333333/);
         testOpImage(browser, "Invert Image", "files/Hitchhikers_Guide.jpeg");
     // testOp(browser, "JPath expression", "test input", "test_output");
+        testOp(browser, "Jq", "{a:1}", "1", [".a"]);
         testOpHtml(browser, "JSON Beautify", "{a:1}", ".json-dict .json-literal", "1");
         // testOp(browser, "JSON Minify", "test input", "test_output");
     // testOp(browser, "JSON to CSV", "test input", "test_output");
