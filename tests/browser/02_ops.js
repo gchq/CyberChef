@@ -50,6 +50,14 @@ module.exports = {
         testOp(browser, "Analyse hash", "0123456789abcdef", /CRC-64/);
         testOp(browser, "Atbash Cipher", "test input", "gvhg rmkfg");
         // testOp(browser, "Avro to JSON", "test input", "test_output");
+        testOp(browser,
+            [
+                "From Hex", "Avro to JSON"
+            ],
+            "4f626a0104166176726f2e736368656d6196017b2274797065223a227265636f7264222c226e616d65223a22736d616c6c222c226669656c6473223a5b7b226e616d65223a226e616d65222c2274797065223a22737472696e67227d5d7d146176726f2e636f646563086e756c6c004e0247632e3702e5b75cdab9a62f1541020e0c6d796e616d654e0247632e3702e5b75cdab9a62f1541",
+            '{"name":"myname"}\n',
+            [[], [false]]
+        );
         testOp(browser, "BLAKE2b", "test input", "33ebdc8f38177f3f3f334eeb117a84e11f061bbca4db6b8923e5cec85103f59f415551a5d5a933fdb6305dc7bf84671c2540b463dbfa08ee1895cfaa5bd780b5", ["512", "Hex", { "option": "UTF8", "string": "pass" }]);
         testOp(browser, "BLAKE2s", "test input", "defe73d61dfa6e5807e4f9643e159a09ccda6be3c26dcd65f8a9bb38bfc973a7", ["256", "Hex", { "option": "UTF8", "string": "pass" }]);
         testOp(browser, "BSON deserialise", "\u0011\u0000\u0000\u0000\u0002a\u0000\u0005\u0000\u0000\u0000test\u0000\u0000", '{\u000A  "a": "test"\u000A}');
@@ -206,7 +214,7 @@ module.exports = {
         testOpHtml(browser, "Index of Coincidence", "test input", "", /Index of Coincidence: 0.08333333333333333/);
         testOpImage(browser, "Invert Image", "files/Hitchhikers_Guide.jpeg");
     // testOp(browser, "JPath expression", "test input", "test_output");
-        testOp(browser, "Jq", "{a:1}", "1", [".a"]);
+        testOp(browser, "Jq", '{"a":{"b":1}}', '{"b":1}', [".a"]);
         testOpHtml(browser, "JSON Beautify", "{a:1}", ".json-dict .json-literal", "1");
         // testOp(browser, "JSON Minify", "test input", "test_output");
     // testOp(browser, "JSON to CSV", "test input", "test_output");
