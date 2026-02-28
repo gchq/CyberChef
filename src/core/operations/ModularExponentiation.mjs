@@ -6,30 +6,9 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import { parseBigInt } from "../lib/BigIntUtils.mjs";
-
-/* ---------- helper functions ---------- */
-
-/**
- * modPow helper operation
- */
-function modPow(base, exponent, modulus) {
-    let result = 1n;
-    base %= modulus;
-
-    while (exponent > 0n) {
-        if (exponent & 1n) {
-            result = (result * base) % modulus;
-        }
-        base = (base * base) % modulus;
-        exponent >>= 1n;
-    }
-
-    return result;
-}
+import { parseBigInt, modPow } from "../lib/BigIntUtils.mjs";
 
 /* ---------- operation class ---------- */
-
 
 /**
  * Modular Exponentiation operation
