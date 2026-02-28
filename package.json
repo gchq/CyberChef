@@ -89,8 +89,7 @@
     "webpack": "^5.105.4",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-dev-server": "5.0.4",
-    "webpack-node-externals": "^3.0.0",
-    "worker-loader": "^3.0.8"
+    "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
     "@alexaltea/capstone-js": "^3.0.5",

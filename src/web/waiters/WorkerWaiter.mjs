@@ -5,8 +5,6 @@
  * @license Apache-2.0
  */
 
-import ChefWorker from "worker-loader?inline=no-fallback!../../core/ChefWorker.js";
-import DishWorker from "worker-loader?inline=no-fallback!../workers/DishWorker.mjs";
 import { debounce } from "../../core/Utils.mjs";
 
 /**
@@ -70,7 +68,7 @@ class WorkerWaiter {
         }
         log.debug("Adding new DishWorker");
 
-        this.dishWorker.worker = new DishWorker();
+        this.dishWorker.worker = new Worker(new URL("../workers/DishWorker.mjs", import.meta.url));
         this.dishWorker.worker.addEventListener("message", this.handleDishMessage.bind(this));
         this.dishWorker.worker.postMessage({
             action: "setLogLevel",
@@ -96,7 +94,7 @@ class WorkerWaiter {
         log.debug(`Adding new ChefWorker (${this.chefWorkers.length + 1}/${this.maxWorkers})`);
 
         // Create a new ChefWorker and send it the docURL
-        const newWorker = new ChefWorker();
+        const newWorker = new Worker(new URL("../../core/ChefWorker.js", import.meta.url));
         newWorker.addEventListener("message", this.handleChefMessage.bind(this));
         newWorker.postMessage({
             action: "setLogPrefix",

@@ -5,8 +5,6 @@
  * @license Apache-2.0
  */
 
-import LoaderWorker from "worker-loader?inline=no-fallback!../workers/LoaderWorker.js";
-import InputWorker from "worker-loader?inline=no-fallback!../workers/InputWorker.mjs";
 import Utils, {debounce} from "../../core/Utils.mjs";
 import {toBase64} from "../../core/lib/Base64.mjs";
 import cptable from "codepage";
@@ -359,7 +357,7 @@ class InputWaiter {
         }
 
         log.debug("Adding new InputWorker");
-        this.inputWorker = new InputWorker();
+        this.inputWorker = new Worker(new URL("../workers/InputWorker.mjs", import.meta.url));
         this.inputWorker.postMessage({
             action: "setLogLevel",
             data: log.getLevel()
@@ -405,7 +403,7 @@ class InputWaiter {
             return -1;
         }
         log.debug(`Adding new LoaderWorker (${this.loaderWorkers.length + 1}/${this.maxWorkers}).`);
-        const newWorker = new LoaderWorker();
+        const newWorker = new Worker(new URL("../workers/LoaderWorker.js", import.meta.url));
         const workerId = this.workerId++;
         newWorker.addEventListener("message", this.handleLoaderMessage.bind(this));
         newWorker.postMessage({
