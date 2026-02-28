@@ -36,7 +36,7 @@
   "browserslist": [
     "Chrome >= 50",
     "Firefox >= 38",
-    "node >= 22"
+    "node >= 24"
   ],
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.6",
@@ -194,21 +194,21 @@
     "start": "npx grunt dev",
     "build": "npx grunt prod",
     "node": "npx grunt node",
-    "repl": "node --experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-experimental-fetch --no-warnings src/node/repl.mjs",
-    "test": "npx grunt configTests && node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation --openssl-legacy-provider --no-experimental-fetch tests/node/index.mjs && node --experimental-modules --experimental-json-modules --no-warnings --no-deprecation --openssl-legacy-provider --no-experimental-fetch --trace-uncaught tests/operations/index.mjs",
+    "repl": "node --no-warnings src/node/repl.mjs",
+    "test": "npx grunt configTests && node --no-warnings --no-deprecation --openssl-legacy-provider tests/node/index.mjs && node --no-warnings --no-deprecation --openssl-legacy-provider --trace-uncaught tests/operations/index.mjs",
     "testnodeconsumer": "npx grunt testnodeconsumer",
     "testui": "npx grunt testui",
     "testuidev": "npx nightwatch --env=dev",
     "lint": "npx grunt lint",
     "lint:grammar": "cspell ./src",
     "postinstall": "npx grunt exec:fixCryptoApiImports && npx grunt exec:fixSnackbarMarkup",
-    "newop": "node --experimental-modules --experimental-json-modules src/core/config/scripts/newOperation.mjs",
-    "minor": "node --experimental-modules --experimental-json-modules src/core/config/scripts/newMinorVersion.mjs && npm version minor --git-tag-version=false && echo \"Updated to version v$(npm pkg get version | xargs), please create a pull request and once merged use 'npm run tag'\"",
+    "newop": "node src/core/config/scripts/newOperation.mjs",
+    "minor": "node src/core/config/scripts/newMinorVersion.mjs && npm version minor --git-tag-version=false && echo \"Updated to version v$(npm pkg get version | xargs), please create a pull request and once merged use 'npm run tag'\"",
     "tag": "git tag -s \"v$(npm pkg get version | xargs)\" -m \"$(npm pkg get version | xargs)\" && echo \"Created v$(npm pkg get version | xargs), now check and push the tag\"",
     "getheapsize": "node -e 'console.log(`node heap limit = ${require(\"v8\").getHeapStatistics().heap_size_limit / (1024 * 1024)} Mb`)'",
     "setheapsize": "export NODE_OPTIONS=--max_old_space_size=2048"
   },
   "engines": {
-    "node": ">=22 <23"
+    "node": ">=24 <25"
   }
 }
