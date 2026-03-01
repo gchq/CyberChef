@@ -112,7 +112,7 @@ class WorkerWaiter {
         if (index > 0) {
             docURL = docURL.substring(0, index);
         }
-        newWorker.postMessage({"action": "docURL", "data": docURL});
+        newWorker.postMessage({ "action": "docURL", "data": docURL });
 
 
         // Store the worker, whether or not it's active, and the inputNum as an object
@@ -132,7 +132,7 @@ class WorkerWaiter {
      * @param {boolean} [setActive=true] - If true, set the worker status to active
      * @returns {number} - The index of the ChefWorker
      */
-    getInactiveChefWorker(setActive=true) {
+    getInactiveChefWorker(setActive = true) {
         for (let i = 0; i < this.chefWorkers.length; i++) {
             if (!this.chefWorkers[i].active) {
                 this.chefWorkers[i].active = setActive;
@@ -252,6 +252,39 @@ class WorkerWaiter {
             case "highlightsCalculated":
                 this.manager.highlighter.displayHighlights(r.data.pos, r.data.direction);
                 break;
+            case "gcpAuthRequest":
+                log.debug("Initializing Google Identity Services for PKCE Auth...");
+                try {
+                    const client = google.accounts.oauth2.initTokenClient({
+                        client_id: r.data.clientId,
+                        scope: "https://www.googleapis.com/auth/cloud-platform",
+                        callback: (response) => {
+                            if (response.error) {
+                                currentWorker.worker.postMessage({
+                                    action: "gcpAuthResponse",
+                                    data: { error: response.error_description || response.error }
+                                });
+                            } else if (response.access_token) {
+                                // Store temporarily in sessionStorage for anti-XSS posture
+                                sessionStorage.setItem("gcp_access_token", response.access_token);
+                                currentWorker.worker.postMessage({
+                                    action: "gcpAuthResponse",
+                                    data: {
+                                        token: response.access_token,
+                                        expires_in: response.expires_in
+                                    }
+                                });
+                            }
+                        }
+                    });
+                    client.requestAccessToken();
+                } catch (e) {
+                    currentWorker.worker.postMessage({
+                        action: "gcpAuthResponse",
+                        data: { error: `Failed to initialize Google Auth popup: ${e.message}` }
+                    });
+                }
+                break;
             default:
                 log.error("Unrecognised message from ChefWorker", e);
                 break;
@@ -350,7 +383,7 @@ class WorkerWaiter {
      * @param {boolean} [silent=false] - If true, don't set the output
      * @param {boolean} [killAll=false] - If true, kills all chefWorkers regardless of status
      */
-    cancelBake(silent=false, killAll=false) {
+    cancelBake(silent = false, killAll = false) {
         const deactiveOutputs = new Set();
 
         for (let i = this.chefWorkers.length - 1; i >= 0; i--) {
@@ -852,7 +885,7 @@ class WorkerWaiter {
         }
 
         if (progress.total !== progress.baked) {
-            setTimeout(function() {
+            setTimeout(function () {
                 this.displayProgress();
             }.bind(this), 100);
         }

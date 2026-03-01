@@ -7,8 +7,8 @@
 
 import LoaderWorker from "worker-loader?inline=no-fallback!../workers/LoaderWorker.js";
 import InputWorker from "worker-loader?inline=no-fallback!../workers/InputWorker.mjs";
-import Utils, {debounce} from "../../core/Utils.mjs";
-import {toBase64} from "../../core/lib/Base64.mjs";
+import Utils, { debounce } from "../../core/Utils.mjs";
+import { toBase64 } from "../../core/lib/Base64.mjs";
 import cptable from "codepage";
 
 import {
@@ -40,9 +40,9 @@ import {
     highlightSelectionMatches
 } from "@codemirror/search";
 
-import {statusBar} from "../utils/statusBar.mjs";
-import {fileDetailsPanel} from "../utils/fileDetails.mjs";
-import {eolCodeToSeq, eolCodeToName, renderSpecialChar} from "../utils/editorUtils.mjs";
+import { statusBar } from "../utils/statusBar.mjs";
+import { fileDetailsPanel } from "../utils/fileDetails.mjs";
+import { eolCodeToSeq, eolCodeToName, renderSpecialChar } from "../utils/editorUtils.mjs";
 
 
 /**
@@ -109,7 +109,7 @@ class InputWaiter {
                 dropCursor(),
                 bracketMatching(),
                 highlightSelectionMatches(),
-                search({top: true}),
+                search({ top: true }),
                 EditorState.allowMultipleSelections.of(true),
 
                 // Custom extensions
@@ -191,7 +191,7 @@ class InputWaiter {
      * @param {string} eol
      * @param {boolean} [manual=false]
      */
-    eolChange(eol, manual=false) {
+    eolChange(eol, manual = false) {
         const eolVal = eolCodeToSeq[eol];
         if (eolVal === undefined) return;
 
@@ -236,7 +236,7 @@ class InputWaiter {
      * @param {boolean} [manual=false] - Flag to indicate the encoding was set by the user
      * @param {boolean} [internal=false] - Flag to indicate this was set internally, i.e. by loading from URI
      */
-    chrEncChange(chrEncVal, manual=false, internal=false) {
+    chrEncChange(chrEncVal, manual = false, internal = false) {
         if (typeof chrEncVal !== "number") return;
         this.inputChrEnc = chrEncVal;
         this.encodingState = manual ? 2 : this.encodingState;
@@ -288,7 +288,7 @@ class InputWaiter {
      * @param {string} data
      * @param {boolean} [silent=false]
      */
-    setInput(data, silent=false) {
+    setInput(data, silent = false) {
         const lineLengthThreshold = 131072; // 128KB
         let wrap = this.app.options.wordWrap;
         if (data.length > lineLengthThreshold) {
@@ -617,8 +617,8 @@ class InputWaiter {
      *     @param {string} eolSequence
      * @param {boolean} [silent=false] - If false, fires the manager statechange event
      */
-    async set(inputNum, inputData, silent=false) {
-        return new Promise(function(resolve, reject) {
+    async set(inputNum, inputData, silent = false) {
+        return new Promise(function (resolve, reject) {
             const activeTab = this.manager.tabs.getActiveTab("input");
             if (inputNum !== activeTab) {
                 this.changeTab(inputNum, this.app.options.syncTabs);
@@ -775,7 +775,7 @@ class InputWaiter {
      * @param {number} inputNum
      * @param {string | ArrayBuffer} value
      */
-    updateInputValue(inputNum, value, force=false) {
+    updateInputValue(inputNum, value, force = false) {
         // Prepare the value as a buffer (full value) and a string sample (up to 4096 bytes)
         let buffer;
         let stringSample = "";
@@ -913,7 +913,7 @@ class InputWaiter {
         else if (inputLength < 1000000) delay = 200;
         else delay = 500;
 
-        debounce(function(e) {
+        debounce(function (e) {
             const value = this.getInput();
             const activeTab = this.manager.tabs.getActiveTab("input");
 
@@ -1241,7 +1241,7 @@ class InputWaiter {
         }
 
         if (loaded < total && autoRefresh) {
-            setTimeout(function() {
+            setTimeout(function () {
                 this.inputWorker.postMessage({
                     action: "getLoadProgress",
                     data: this.manager.tabs.getActiveTab("input")
@@ -1256,7 +1256,7 @@ class InputWaiter {
      * @param {number} inputNum - The inputNum of the tab to change to
      * @param {boolean} [changeOutput=false] - If true, also changes the output
      */
-    changeTab(inputNum, changeOutput=false) {
+    changeTab(inputNum, changeOutput = false) {
         if (this.manager.tabs.getTabItem(inputNum, "input") !== null) {
             this.manager.tabs.changeTab(inputNum, "input");
             this.inputWorker.postMessage({
@@ -1368,7 +1368,7 @@ class InputWaiter {
      * Sends a message to the inputWorker to add a new input.
      * @param {boolean} [changeTab=false] - If true, changes the tab to the new input
      */
-    addInput(changeTab=false) {
+    addInput(changeTab = false) {
         if (!this.inputWorker) return;
         this.inputWorker.postMessage({
             action: "addInput",
@@ -1411,7 +1411,7 @@ class InputWaiter {
      * @param {number} inputNum - The inputNum of the new tab
      * @param {boolean} [changeTab=true] - If true, changes to the new tab once it's been added
      */
-    addTab(inputNum, changeTab=true) {
+    addTab(inputNum, changeTab = true) {
         const tabsWrapper = document.getElementById("input-tabs"),
             numTabs = tabsWrapper.children.length;
 
@@ -1517,7 +1517,7 @@ class InputWaiter {
         this.mousedown = true;
         this.changeTabRight();
         const time = 200;
-        const func = function(time) {
+        const func = function (time) {
             if (this.mousedown) {
                 this.changeTabRight();
                 const newTime = (time > 50) ? time - 10 : 50;
@@ -1534,7 +1534,7 @@ class InputWaiter {
         this.mousedown = true;
         this.changeTabLeft();
         const time = 200;
-        const func = function(time) {
+        const func = function (time) {
             if (this.mousedown) {
                 this.changeTabLeft();
                 const newTime = (time > 50) ? time - 10 : 50;
@@ -1686,7 +1686,7 @@ class InputWaiter {
      */
     handlePostMessage(e) {
         log.debug(e);
-        if ("data" in e && "id" in e.data && "value" in e.data) {
+        if (e && e.data && typeof e.data === "object" && "id" in e.data && "value" in e.data) {
             if (e.data.id === "setInput") {
                 this.setInput(e.data.value);
             }

@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import { GCP_AUTH_ARGS, applyGCPAuth, listGCSBucket } from "../lib/GoogleCloud.mjs";
+import { listGCSBucket } from "../lib/GoogleCloud.mjs";
 
 /**
  * GCloud List Bucket operation
@@ -44,8 +44,7 @@ class GCloudListBucket extends Operation {
                 "name": "Output Format",
                 "type": "option",
                 "value": ["GCS URIs (one per line)", "Filenames only", "JSON"]
-            },
-            ...GCP_AUTH_ARGS
+            }
         ];
     }
 
@@ -55,7 +54,7 @@ class GCloudListBucket extends Operation {
      * @returns {string}
      */
     async run(input, args) {
-        const [prefix, outputFormat, authType, authStringObj, quotaProject] = args;
+        const [prefix, outputFormat] = args;
 
         if (!input || !input.trim()) throw new OperationError("Please provide a GCS bucket name.");
 
@@ -63,7 +62,7 @@ class GCloudListBucket extends Operation {
         let bucket = input.trim().replace(/^gs:\/\//, "").split("/")[0];
 
         try {
-            const items = await listGCSBucket(bucket, prefix, authType, authStringObj, quotaProject);
+            const items = await listGCSBucket(bucket, prefix);
 
             if (items.length === 0) {
                 return `No objects found in gs://${bucket}/${prefix || ""}`;

@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import { GCP_AUTH_ARGS, applyGCPAuth } from "../lib/GoogleCloud.mjs";
+import { applyGCPAuth } from "../lib/GoogleCloud.mjs";
 
 /**
  * Google Translate operation
@@ -41,8 +41,7 @@ class GoogleTranslate extends Operation {
                 "name": "Target Language (ISO-639-1)",
                 "type": "string",
                 "value": "es"
-            },
-            ...GCP_AUTH_ARGS
+            }
         ];
     }
 
@@ -52,7 +51,7 @@ class GoogleTranslate extends Operation {
      * @returns {string}
      */
     async run(input, args) {
-        const [sourceLanguage, targetLanguage, authType, authStringObj, quotaProject] = args;
+        const [sourceLanguage, targetLanguage] = args;
 
         if (input.length === 0) return "";
 
@@ -60,7 +59,7 @@ class GoogleTranslate extends Operation {
         let headers = new Headers();
         headers.set("Content-Type", "application/json; charset=utf-8");
 
-        ({ url, headers } = applyGCPAuth(url, headers, authType, authStringObj, quotaProject));
+        ({ url, headers } = applyGCPAuth(url, headers));
 
         const body = JSON.stringify({
             q: input,

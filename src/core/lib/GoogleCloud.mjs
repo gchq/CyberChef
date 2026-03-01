@@ -7,16 +7,37 @@
 import OperationError from "../errors/OperationError.mjs";
 
 /**
+ * Global store for GCP credentials in this web worker session.
+ */
+globalThis.__gcpAuthStore = globalThis.__gcpAuthStore || null;
+
+/**
+ * Retrieves the currently active GCP credentials.
+ * @returns {Object|null} { authType, authString, quotaProject }
+ */
+export function get_gcp_credentials() {
+    if (globalThis.__gcpAuthStore) {
+        return globalThis.__gcpAuthStore;
+    }
+    return null;
+}
+
+/**
+ * Sets the active GCP credentials for the web worker session.
+ * @param {Object} credObj { authType, authString, quotaProject }
+ */
+export function set_gcp_credentials(credObj) {
+    globalThis.__gcpAuthStore = credObj;
+}
+
+/**
  * Lists objects in a GCS bucket under a given prefix.
  *
  * @param {string} bucket - The GCS bucket name (without gs://).
  * @param {string} prefix - The folder prefix to filter by (e.g. "audio/").
- * @param {string} authType - "API Key" or "OAuth Token".
- * @param {Object|string} authStringObj - The auth credential.
- * @param {string} quotaProject - Optional quota project for ADC OAuth tokens.
  * @returns {Promise<Array>} Array of GCS object metadata { name, gs_uri, size, contentType }.
  */
-export async function listGCSBucket(bucket, prefix, authType, authStringObj, quotaProject) {
+export async function listGCSBucket(bucket, prefix) {
     let url = `https://storage.googleapis.com/storage/v1/b/${encodeURIComponent(bucket)}/o`;
     const params = new URLSearchParams();
     if (prefix) params.set("prefix", prefix);
@@ -25,7 +46,7 @@ export async function listGCSBucket(bucket, prefix, authType, authStringObj, quo
     if (paramStr) url += `?${paramStr}`;
 
     const headers = new Headers();
-    const authed = applyGCPAuth(url, headers, authType, authStringObj, quotaProject);
+    const authed = applyGCPAuth(url, headers);
 
     const response = await fetch(authed.url, { method: "GET", headers: authed.headers, mode: "cors", cache: "no-cache" });
     let data;
@@ -54,12 +75,9 @@ export async function listGCSBucket(bucket, prefix, authType, authStringObj, quo
  * Downloads a file from GCS and returns its raw bytes.
  *
  * @param {string} gcsUri - Full gs:// URI of the file.
- * @param {string} authType - "API Key" or "OAuth Token".
- * @param {Object|string} authStringObj - The auth credential.
- * @param {string} quotaProject - Optional quota project.
  * @returns {Promise<ArrayBuffer>} Raw file bytes.
  */
-export async function readGCSFile(gcsUri, authType, authStringObj, quotaProject) {
+export async function readGCSFile(gcsUri) {
     const match = gcsUri.match(/^gs:\/\/([^/]+)\/(.+)$/);
     if (!match) throw new OperationError(`GCloud Read File: Invalid GCS URI: ${gcsUri}`);
     const [, bucket, object] = match;
@@ -67,7 +85,7 @@ export async function readGCSFile(gcsUri, authType, authStringObj, quotaProject)
     let url = `https://storage.googleapis.com/storage/v1/b/${encodeURIComponent(bucket)}/o/${encodedObject}?alt=media`;
 
     const headers = new Headers();
-    const authed = applyGCPAuth(url, headers, authType, authStringObj, quotaProject);
+    const authed = applyGCPAuth(url, headers);
 
     const response = await fetch(authed.url, { method: "GET", headers: authed.headers, mode: "cors", cache: "no-cache" });
     if (!response.ok) {
@@ -84,18 +102,15 @@ export async function readGCSFile(gcsUri, authType, authStringObj, quotaProject)
  * @param {string} bucket - Destination bucket name (without gs://).
  * @param {string} objectPath - Destination object path within the bucket.
  * @param {string} content - Text content to write.
- * @param {string} authType - "API Key" or "OAuth Token".
- * @param {Object|string} authStringObj - The auth credential.
- * @param {string} quotaProject - Optional quota project.
  * @returns {Promise<string>} The gs:// URI of the written file.
  */
-export async function writeGCSFile(bucket, objectPath, content, authType, authStringObj, quotaProject) {
+export async function writeGCSFile(bucket, objectPath, content) {
     const encodedObject = encodeURIComponent(objectPath).replace(/%2F/g, "%2F");
     let url = `https://storage.googleapis.com/upload/storage/v1/b/${encodeURIComponent(bucket)}/o?uploadType=media&name=${encodedObject}`;
 
     const headers = new Headers();
     headers.set("Content-Type", "text/plain; charset=utf-8");
-    const authed = applyGCPAuth(url, headers, authType, authStringObj, quotaProject);
+    const authed = applyGCPAuth(url, headers);
 
     const response = await fetch(authed.url, {
         method: "POST",
@@ -117,15 +132,12 @@ export async function writeGCSFile(bucket, objectPath, content, authType, authSt
  *
  * @param {string} operationName - The operation ID (numeric string from the API response).
  * @param {string} pollUrl - The base polling URL (e.g. https://speech.googleapis.com/v1/operations/).
- * @param {string} authType - "API Key" or "OAuth Token".
- * @param {Object|string} authStringObj - The auth credential.
- * @param {string} quotaProject - Optional quota project.
  * @param {number} maxMs - Maximum wait time in milliseconds (default 30 minutes).
  * @param {number} intervalMs - Poll interval in milliseconds (default 10 seconds).
  * @param {Function} onProgress - Optional callback(elapsedSeconds) called on each poll tick.
  * @returns {Promise<Object>} The completed operation response object.
  */
-export async function pollLongRunningOperation(operationName, pollUrl, authType, authStringObj, quotaProject, maxMs = 30 * 60 * 1000, intervalMs = 10000, onProgress = null) {
+export async function pollLongRunningOperation(operationName, pollUrl, maxMs = 30 * 60 * 1000, intervalMs = 10000, onProgress = null) {
     const startTime = Date.now();
     const url = `${pollUrl}${operationName}`;
 
@@ -136,7 +148,7 @@ export async function pollLongRunningOperation(operationName, pollUrl, authType,
         }
 
         const headers = new Headers();
-        const authed = applyGCPAuth(url, headers, authType, authStringObj, quotaProject);
+        const authed = applyGCPAuth(url, headers);
         const response = await fetch(authed.url, { method: "GET", headers: authed.headers, mode: "cors", cache: "no-cache" });
 
         let data;
@@ -158,52 +170,26 @@ export async function pollLongRunningOperation(operationName, pollUrl, authType,
 }
 
 /**
- * Common arguments for Google Cloud Platform operations
- * 
- * Spread these into the `args` array of any new GCP operation.
- */
-export const GCP_AUTH_ARGS = [
-    {
-        "name": "Auth Type",
-        "type": "option",
-        "value": ["API Key", "OAuth Token"]
-    },
-    {
-        "name": "GCP Auth String",
-        "type": "toggleString",
-        "value": "",
-        "toggleValues": ["UTF8", "Latin1", "Base64", "Hex"]
-    },
-    {
-        "name": "Quota Project (ADC only)",
-        "type": "string",
-        "value": ""
-    }
-];
-
-/**
- * Validates and applies GCP authentication to a URL and Headers object.
+ * Validates and applies GCP authentication to a URL and Headers object
+ * using the globally cached credentials from AuthenticateGoogleCloud.
  * 
  * @param {string} url - The base URL of the API endpoint.
  * @param {Headers} headers - The Headers object for the request.
- * @param {string} authType - "API Key" or "OAuth Token".
- * @param {Object|string} authStringObj - The authentication string (can be a toggleString object).
- * @param {string} quotaProject - Optional quota project for ADC OAuth tokens.
  * @returns {Object} An object containing the modified { url, headers }
  */
-export function applyGCPAuth(url, headers, authType, authStringObj, quotaProject) {
-    const authString = typeof authStringObj === "string" ? authStringObj : (authStringObj.string || "");
+export function applyGCPAuth(url, headers) {
+    const creds = get_gcp_credentials();
 
-    if (!authString) {
-        throw new OperationError("Error: Please provide a valid GCP Auth String (API Key or OAuth Token).");
+    if (!creds || !creds.authString) {
+        throw new OperationError("No Google Cloud credentials found. Please add the 'Authenticate Google Cloud' operation before this one.");
     }
 
-    if (authType === "API Key") {
-        url += `${url.includes('?') ? '&' : '?'}key=${encodeURIComponent(authString)}`;
-    } else if (authType === "OAuth Token") {
-        headers.set("Authorization", `Bearer ${authString}`);
-        if (quotaProject) {
-            headers.set("x-goog-user-project", quotaProject);
+    if (creds.authType === "API Key") {
+        url += `${url.includes('?') ? '&' : '?'}key=${encodeURIComponent(creds.authString)}`;
+    } else if (creds.authType === "OAuth 2.0 (Web Application: PKCE)" || creds.authType === "Personal Access Token (PAT)") {
+        headers.set("Authorization", `Bearer ${creds.authString}`);
+        if (creds.quotaProject) {
+            headers.set("x-goog-user-project", creds.quotaProject);
         }
     }
 

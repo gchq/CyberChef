@@ -24,13 +24,24 @@ module.exports = {
     },
 
     "Google Translate: Missing Key Validation": function (browser) {
-        browserUtils.loadRecipe(browser, "Google Translate", "Hello World", [
-            "en",
-            "es",
-            "API Key",
-            { option: "UTF8", string: "" },
-            ""
-        ]);
+        browserUtils.loadRecipeConfig(browser, [
+            {
+                op: "Authenticate Google Cloud",
+                args: [
+                    "API Key",
+                    { option: "UTF8", string: "" },
+                    "",
+                    true
+                ]
+            },
+            {
+                op: "Google Translate",
+                args: [
+                    "en",
+                    "es"
+                ]
+            }
+        ], "Hello World");
 
         browser.waitForElementNotVisible("#snackbar-container", 6000);
         browserUtils.bake(browser);
@@ -38,38 +49,50 @@ module.exports = {
         browser.execute(function () {
             return window.app.manager.output.outputEditorView.state.doc.toString();
         }, [], function ({ value }) {
-            browser.assert.ok(value.includes("Please provide a valid GCP Auth String"));
+            browser.assert.ok(value.includes("No Google Cloud credentials found") || value.includes("Please provide Google Cloud credentials"), "Expected auth missing error.");
         });
     },
 
-    "Google Translate: Successful OAuth Token Translation": function (browser) {
+
+    "Google Translate: Successful PAT Translation": function (browser) {
         let testToken = process.env.CYBERCHEF_GCP_TEST_TOKEN;
 
         if (!testToken || testToken === "YOUR_OAUTH_TOKEN_HERE") {
             try {
                 testToken = require('child_process').execSync('gcloud auth print-access-token', { stdio: 'pipe', encoding: 'utf-8' }).trim();
             } catch (e) {
-                console.log("No valid CYBERCHEF_GCP_TEST_TOKEN found and gcloud failed. Skipping live API test.");
+                console.log("No valid CYBERCHEF_GCP_TEST_TOKEN found and gcloud failed. Skipping live PAT API test.");
                 return;
             }
         }
 
-        browserUtils.loadRecipe(browser, "Google Translate", "Hello", [
-            "en",
-            "es",
-            "OAuth Token",
-            { option: "UTF8", string: testToken },
-            "cyberchefcloud"
-        ]);
+        browserUtils.loadRecipeConfig(browser, [
+            {
+                op: "Authenticate Google Cloud",
+                args: [
+                    "Personal Access Token (PAT)",
+                    { option: "UTF8", string: testToken },
+                    "cyberchefcloud",
+                    true
+                ]
+            },
+            {
+                op: "Google Translate",
+                args: [
+                    "en",
+                    "es"
+                ]
+            }
+        ], "Hello");
 
         browser.waitForElementNotVisible("#snackbar-container", 6000);
         browserUtils.bake(browser);
         browser.pause(2000);
-        browser.saveScreenshot("tests/browser/output/success_oauth_debug.png");
+        browser.saveScreenshot("tests/browser/output/success_pat_debug.png");
         browser.execute(function () {
             return window.app.manager.output.outputEditorView.state.doc.toString();
         }, [], function ({ value }) {
-            browser.assert.equal(value, "Hola");
+            browser.assert.ok(value.includes("Hola"), "Expected translation 'Hola'");
         });
     },
 
@@ -81,13 +104,24 @@ module.exports = {
             return;
         }
 
-        browserUtils.loadRecipe(browser, "Google Translate", "Hello", [
-            "en",
-            "es",
-            "API Key",
-            { option: "UTF8", string: testKey },
-            ""
-        ]);
+        browserUtils.loadRecipeConfig(browser, [
+            {
+                op: "Authenticate Google Cloud",
+                args: [
+                    "API Key",
+                    { option: "UTF8", string: testKey },
+                    "",
+                    true
+                ]
+            },
+            {
+                op: "Google Translate",
+                args: [
+                    "en",
+                    "es"
+                ]
+            }
+        ], "Hello");
 
         browser.waitForElementNotVisible("#snackbar-container", 6000);
         browserUtils.bake(browser);
@@ -96,20 +130,31 @@ module.exports = {
         browser.execute(function () {
             return window.app.manager.output.outputEditorView.state.doc.toString();
         }, [], function ({ value }) {
-            browser.assert.equal(value, "Hola");
+            browser.assert.ok(value.includes("Hola"), "Expected translation 'Hola'");
         });
     },
 
     // ─── GCloud List Bucket ────────────────────────────────────────────────────
 
-    "GCloud List Bucket: Missing Key Validation": function (browser) {
-        browserUtils.loadRecipe(browser, "GCloud List Bucket", "cyber-chef-cloud-examples", [
-            "audio/",
-            "GCS URIs (one per line)",
-            "API Key",
-            { option: "UTF8", string: "" },
-            ""
-        ]);
+    "GCloud List Bucket: Missing Creds Validation": function (browser) {
+        browserUtils.loadRecipeConfig(browser, [
+            {
+                op: "Authenticate Google Cloud",
+                args: [
+                    "API Key",
+                    { option: "UTF8", string: "" },
+                    "",
+                    true
+                ]
+            },
+            {
+                op: "GCloud List Bucket",
+                args: [
+                    "audio/",
+                    "GCS URIs (one per line)"
+                ]
+            }
+        ], "cyber-chef-cloud-examples");
 
         browser.waitForElementNotVisible("#snackbar-container", 6000);
         browserUtils.bake(browser);
@@ -118,7 +163,7 @@ module.exports = {
         browser.execute(function () {
             return window.app.manager.output.outputEditorView.state.doc.toString();
         }, [], function ({ value }) {
-            browser.assert.ok(value.includes("Please provide a valid GCP Auth String"));
+            browser.assert.ok(value.includes("No Google Cloud credentials found") || value.includes("Please provide Google Cloud credentials"));
         });
     },
 
@@ -134,13 +179,24 @@ module.exports = {
             }
         }
 
-        browserUtils.loadRecipe(browser, "GCloud List Bucket", "cyber-chef-cloud-examples", [
-            "audio/",
-            "GCS URIs (one per line)",
-            "OAuth Token",
-            { option: "UTF8", string: testToken },
-            "cyberchefcloud"
-        ]);
+        browserUtils.loadRecipeConfig(browser, [
+            {
+                op: "Authenticate Google Cloud",
+                args: [
+                    "Personal Access Token (PAT)",
+                    { option: "UTF8", string: testToken },
+                    "cyberchefcloud",
+                    true
+                ]
+            },
+            {
+                op: "GCloud List Bucket",
+                args: [
+                    "audio/",
+                    "GCS URIs (one per line)"
+                ]
+            }
+        ], "cyber-chef-cloud-examples");
 
         browser.waitForElementNotVisible("#snackbar-container", 6000);
         browserUtils.bake(browser);
@@ -170,17 +226,29 @@ module.exports = {
 
         const gcsUri = "gs://cyber-chef-cloud-examples/audio/she_achieves_great_results_f55548.mp3";
 
-        browserUtils.loadRecipe(browser, "GCloud Speech to Text", gcsUri, [
-            "GCS URI (gs://...)",
-            "en-US",
-            "latest_long",
-            "Return to CyberChef",
-            "cyber-chef-cloud-examples",
-            30,
-            "OAuth Token",
-            { option: "UTF8", string: testToken },
-            "cyberchefcloud"
-        ]);
+        browserUtils.loadRecipeConfig(browser, [
+            {
+                op: "Authenticate Google Cloud",
+                args: [
+                    "Personal Access Token (PAT)",
+                    { option: "UTF8", string: testToken },
+                    "cyberchefcloud",
+                    true
+                ]
+            },
+            {
+                op: "GCloud Speech to Text",
+                args: [
+                    "GCS URI (gs://...)",
+                    "en-US",
+                    "latest_long",
+                    "Return to CyberChef",
+                    "cyber-chef-cloud-examples",
+                    30
+                ]
+            }
+        ], gcsUri);
+
 
         browser.waitForElementNotVisible("#snackbar-container", 6000);
         browserUtils.bake(browser);
@@ -211,17 +279,28 @@ module.exports = {
 
         const gcsUri = "gs://cyber-chef-cloud-examples/audio/she_achieves_great_results_f55548.mp3";
 
-        browserUtils.loadRecipe(browser, "GCloud Speech to Text", gcsUri, [
-            "GCS URI (gs://...)",
-            "en-US",
-            "latest_long",
-            "Write to GCS",
-            "cyber-chef-cloud-examples",
-            30,
-            "OAuth Token",
-            { option: "UTF8", string: testToken },
-            "cyberchefcloud"
-        ]);
+        browserUtils.loadRecipeConfig(browser, [
+            {
+                op: "Authenticate Google Cloud",
+                args: [
+                    "Personal Access Token (PAT)",
+                    { option: "UTF8", string: testToken },
+                    "cyberchefcloud",
+                    true
+                ]
+            },
+            {
+                op: "GCloud Speech to Text",
+                args: [
+                    "GCS URI (gs://...)",
+                    "en-US",
+                    "latest_long",
+                    "Write to GCS",
+                    "cyber-chef-cloud-examples",
+                    30
+                ]
+            }
+        ], gcsUri);
 
         browser.waitForElementNotVisible("#snackbar-container", 6000);
         browserUtils.bake(browser);

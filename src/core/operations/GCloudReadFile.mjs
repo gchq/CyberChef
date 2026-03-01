@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import { GCP_AUTH_ARGS, readGCSFile } from "../lib/GoogleCloud.mjs";
+import { readGCSFile } from "../lib/GoogleCloud.mjs";
 
 /**
  * GCloud Read File operation
@@ -35,9 +35,7 @@ class GCloudReadFile extends Operation {
         this.inputType = "string";
         this.outputType = "ArrayBuffer";
         this.manualBake = true;
-        this.args = [
-            ...GCP_AUTH_ARGS
-        ];
+        this.args = [];
     }
 
     /**
@@ -46,15 +44,13 @@ class GCloudReadFile extends Operation {
      * @returns {ArrayBuffer}
      */
     async run(input, args) {
-        const [authType, authStringObj, quotaProject] = args;
-
         const uri = input.trim();
         if (!uri.startsWith("gs://")) {
             throw new OperationError("Input must be a GCS URI starting with gs://");
         }
 
         try {
-            return await readGCSFile(uri, authType, authStringObj, quotaProject);
+            return await readGCSFile(uri);
         } catch (e) {
             if (e.name === "OperationError") throw e;
             throw new OperationError(e.message || e.toString());

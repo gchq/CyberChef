@@ -14,3 +14,4 @@ src/node/index.mjs
 tests/browser/output/*
 .node-version
 .env
+.antigravity

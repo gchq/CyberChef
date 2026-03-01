@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import { GCP_AUTH_ARGS, applyGCPAuth, pollLongRunningOperation, writeGCSFile } from "../lib/GoogleCloud.mjs";
+import { applyGCPAuth, pollLongRunningOperation, writeGCSFile } from "../lib/GoogleCloud.mjs";
 
 /**
  * GCloud Speech to Text operation
@@ -73,8 +73,7 @@ class GCloudSpeechToText extends Operation {
                 "name": "Max Poll Minutes",
                 "type": "number",
                 "value": 30
-            },
-            ...GCP_AUTH_ARGS
+            }
         ];
     }
 
@@ -85,15 +84,11 @@ class GCloudSpeechToText extends Operation {
      */
     async run(input, args) {
         const [
-            inputMode, languageCode, model, outputDest, outputBucket, maxPollMinutes,
-            authType, authStringObj, quotaProject
+            inputMode, languageCode, model, outputDest, outputBucket, maxPollMinutes
         ] = args;
 
         const uri = input.trim();
         if (!uri) throw new OperationError("Please provide a GCS URI or Base64 audio input.");
-
-        const authString = typeof authStringObj === "string" ? authStringObj : (authStringObj.string || "");
-        if (!authString) throw new OperationError("Please provide a valid GCP Auth String (API Key or OAuth Token).");
 
         const maxMs = maxPollMinutes * 60 * 1000;
         let transcript;
@@ -102,10 +97,10 @@ class GCloudSpeechToText extends Operation {
             if (!uri.startsWith("gs://")) {
                 throw new OperationError("Input Mode is set to GCS URI but input does not start with gs://");
             }
-            transcript = await this._transcribeGcsUri(uri, languageCode, model, authType, authStringObj, quotaProject, maxMs);
+            transcript = await this._transcribeGcsUri(uri, languageCode, model, maxMs);
         } else {
             // Raw audio bytes (Base64)
-            transcript = await this._transcribeRawAudio(uri, languageCode, model, authType, authStringObj, quotaProject);
+            transcript = await this._transcribeRawAudio(uri, languageCode, model);
         }
 
         if (outputDest === "Write to GCS") {
@@ -115,7 +110,7 @@ class GCloudSpeechToText extends Operation {
                 : "raw_audio";
 
             const objectPath = `output/audio/${sourceFilename}/speech-to-text/text.txt`;
-            const destUri = await writeGCSFile(outputBucket, objectPath, transcript, authType, authStringObj, quotaProject);
+            const destUri = await writeGCSFile(outputBucket, objectPath, transcript);
             return destUri;
         }
 
@@ -128,17 +123,14 @@ class GCloudSpeechToText extends Operation {
      * @param {string} gcsUri
      * @param {string} languageCode
      * @param {string} model
-     * @param {string} authType
-     * @param {Object|string} authStringObj
-     * @param {string} quotaProject
      * @param {number} maxMs
      * @returns {Promise<string>}
      */
-    async _transcribeGcsUri(gcsUri, languageCode, model, authType, authStringObj, quotaProject, maxMs) {
+    async _transcribeGcsUri(gcsUri, languageCode, model, maxMs) {
         let url = "https://speech.googleapis.com/v1/speech:longrunningrecognize";
         const headers = new Headers();
         headers.set("Content-Type", "application/json; charset=utf-8");
-        const authed = applyGCPAuth(url, headers, authType, authStringObj, quotaProject);
+        const authed = applyGCPAuth(url, headers);
 
         const body = JSON.stringify({
             config: {
@@ -174,9 +166,6 @@ class GCloudSpeechToText extends Operation {
         const completed = await pollLongRunningOperation(
             operationName,
             POLL_URL,
-            authType,
-            authStringObj,
-            quotaProject,
             maxMs,
             10000,
             (elapsedSec) => {
@@ -195,16 +184,13 @@ class GCloudSpeechToText extends Operation {
      * @param {string} base64Audio
      * @param {string} languageCode
      * @param {string} model
-     * @param {string} authType
-     * @param {Object|string} authStringObj
-     * @param {string} quotaProject
      * @returns {Promise<string>}
      */
-    async _transcribeRawAudio(base64Audio, languageCode, model, authType, authStringObj, quotaProject) {
+    async _transcribeRawAudio(base64Audio, languageCode, model) {
         let url = "https://speech.googleapis.com/v1/speech:recognize";
         const headers = new Headers();
         headers.set("Content-Type", "application/json; charset=utf-8");
-        const authed = applyGCPAuth(url, headers, authType, authStringObj, quotaProject);
+        const authed = applyGCPAuth(url, headers);
 
         const body = JSON.stringify({
             config: {
