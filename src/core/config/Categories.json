@@ -222,6 +222,7 @@
             "Subtract",
             "Multiply",
             "Divide",
+            "Extended GCD",
             "Mean",
             "Median",
             "Standard Deviation",
