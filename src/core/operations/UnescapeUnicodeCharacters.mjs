@@ -30,6 +30,23 @@ class UnescapeUnicodeCharacters extends Operation {
                 "value": ["\\u", "%u", "U+"]
             }
         ];
+        this.checks = [
+            {
+                pattern: "\\\\u(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["\\u"]
+            },
+            {
+                pattern: "%u(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["%u"]
+            },
+            {
+                pattern: "U\\+(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["U+"]
+            }
+        ];
     }
 
     /**
