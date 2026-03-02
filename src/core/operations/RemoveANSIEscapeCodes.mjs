@@ -20,7 +20,7 @@ class RemoveANSIEscapeCodes extends Operation {
         this.name = "Remove ANSI Escape Codes";
         this.module = "Default";
         this.description = "Removes ANSI Escape Codes.";
-        this.infoURL = "https://en.wikipedia.org/wiki/ANSI_escape_code";
+        this.infoURL = "https://wikipedia.org/wiki/ANSI_escape_code";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
