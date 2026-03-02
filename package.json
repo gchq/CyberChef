@@ -39,7 +39,6 @@
     "node >= 16"
   ],
   "devDependencies": {
-    "@babel/core": "^7.29.0",
     "@babel/eslint-parser": "^7.28.6",
     "@babel/plugin-syntax-import-assertions": "^7.28.6",
     "@babel/plugin-transform-runtime": "^7.29.0",
@@ -52,8 +51,6 @@
     "@codemirror/view": "^6.39.15",
     "autoprefixer": "^10.4.24",
     "babel-loader": "^10.0.0",
-    "babel-plugin-dynamic-import-node": "^2.3.3",
-    "babel-plugin-transform-builtin-extend": "1.1.2",
     "base64-loader": "^1.0.0",
     "chromedriver": "^130.0.4",
     "cli-progress": "^3.12.0",
@@ -64,7 +61,7 @@
     "cspell": "^8.19.4",
     "css-loader": "7.1.4",
     "eslint": "^9.39.3",
-    "eslint-plugin-jsdoc": "^48.11.0",
+    "eslint-plugin-jsdoc": "^50.8.0",
     "globals": "^15.15.0",
     "grunt": "^1.6.1",
     "grunt-chmod": "~1.1.1",
@@ -97,7 +94,6 @@
   },
   "dependencies": {
     "@astronautlabs/amf": "^0.0.6",
-    "@babel/polyfill": "^7.12.1",
     "@blu3r4y/lzma": "^2.3.3",
     "@wavesenterprise/crypto-gost-js": "^2.1.0-RC1",
     "@xmldom/xmldom": "^0.8.11",
