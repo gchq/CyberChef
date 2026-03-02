@@ -178,7 +178,7 @@
     "sql-formatter": "^15.6.5",
     "ssdeep.js": "0.0.3",
     "stream-browserify": "^3.0.0",
-    "tesseract.js": "5.1.1",
+    "tesseract.js": "^6.0.1",
     "ua-parser-js": "^1.0.41",
     "unorm": "^1.6.0",
     "url": "^0.11.4",
