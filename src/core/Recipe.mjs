@@ -229,6 +229,7 @@ class Recipe  {
                 }
                 this.lastRunOp = op;
             } catch (err) {
+                log.error(err);
                 // Return expected errors as output
                 if (err instanceof OperationError || err?.type === "OperationError") {
                     // Cannot rely on `err instanceof OperationError` here as extending
