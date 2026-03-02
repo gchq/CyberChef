@@ -222,6 +222,7 @@
             "Subtract",
             "Multiply",
             "Divide",
+            "Modular Inverse",
             "Mean",
             "Median",
             "Standard Deviation",
