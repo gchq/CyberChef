@@ -12,6 +12,7 @@ import OperationError from "../errors/OperationError.mjs";
  * Currently provides:
  *   - parseBigInt
  *   - Extended Euclidean Algorithm
+ *   - Modular Exponentiation
  *
  * Additional algorithms may be added as required.
  */
@@ -51,3 +52,22 @@ export function egcd(a, b) {
     // oldS and oldT are the Bézout coefficients
     return [oldR, oldS, oldT];
 }
+
+/**
+ * Modular exponentiation
+ */
+export function modPow(base, exponent, modulus) {
+    let result = 1n;
+    base %= modulus;
+
+    while (exponent > 0n) {
+        if (exponent & 1n) {
+            result = (result * base) % modulus;
+        }
+        base = (base * base) % modulus;
+        exponent >>= 1n;
+    }
+
+    return result;
+}
+
