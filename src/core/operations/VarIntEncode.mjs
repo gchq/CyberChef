@@ -23,19 +23,31 @@ class VarIntEncode extends Operation {
         this.module = "Default";
         this.description = "Encodes a Vn integer as a VarInt. VarInt is an efficient way of encoding variable length integers and is commonly used with Protobuf.";
         this.infoURL = "https://developers.google.com/protocol-buffers/docs/encoding#varints";
-        this.inputType = "number";
+        this.inputType = "string";
         this.outputType = "byteArray";
         this.args = [];
     }
 
     /**
-     * @param {number} input
+     * @param {string} input
      * @param {Object[]} args
      * @returns {byteArray}
      */
     run(input, args) {
         try {
-            return Protobuf.varIntEncode(input);
+            if (typeof BigInt === "function") {
+                let value = BigInt(input);
+                if (value < 0) throw new OperationError("Negative values cannot be represented as VarInt");
+                const result = [];
+                while (value >= 0x80) {
+                    result.push(Number(value & BigInt(0x7f)) | 0x80);
+                    value >>= BigInt(7);
+                }
+                result.push(Number(value));
+                return result;
+            } else {
+                return Protobuf.varIntEncode(Number(input));
+            }
         } catch (err) {
             throw new OperationError(err);
         }
