@@ -12,15 +12,7 @@ TestRegister.addTests([
     {
         name: "Extended GCD: coprime numbers (3, 11)",
         input: "",
-        expectedOutput: "Extended Euclidean Algorithm Results:\n" +
-            "=====================================\n\n" +
-            "gcd(a, b) = 1\n\n" +
-            "Béut coefficients:\n" +
-            "  x = 4\n" +
-            "  y = -1\n\n" +
-            "Verification:\n" +
-            "  a·x + b·y = gcd(a, b)\n" +
-            "  (3) ×(4) + (11) ×(-1) = 1",
+        expectedOutput: "gcd: 1\n\nBezout coefficients:\nx = 4\ny = -1\n\n",
         recipeConfig: [
             {
                 op: "Extended GCD",
@@ -31,15 +23,7 @@ TestRegister.addTests([
     {
         name: "Extended GCD: non-coprime numbers (240, 46)",
         input: "",
-        expectedOutput: "Extended Euclidean Algorithm Results:\n" +
-            "=====================================\n\n" +
-            "gcd(a, b) = 2\n\n" +
-            "Béut coefficients:\n" +
-            "  x = -9\n" +
-            "  y = 47\n\n" +
-            "Verification:\n" +
-            "  a·x + b·y = gcd(a, b)\n" +
-            "  (240) ×(-9) + (46) ×(47) = 2",
+        expectedOutput: "gcd: 2\n\nBezout coefficients:\nx = -9\ny = 47\n\n",
         recipeConfig: [
             {
                 op: "Extended GCD",
@@ -50,15 +34,7 @@ TestRegister.addTests([
     {
         name: "Extended GCD: with zero (17, 0)",
         input: "",
-        expectedOutput: "Extended Euclidean Algorithm Results:\n" +
-            "=====================================\n\n" +
-            "gcd(a, b) = 17\n\n" +
-            "Béut coefficients:\n" +
-            "  x = 1\n" +
-            "  y = 0\n\n" +
-            "Verification:\n" +
-            "  a·x + b·y = gcd(a, b)\n" +
-            "  (17) ×(1) + (0) ×(0) = 17",
+        expectedOutput: "gcd: 17\n\nBezout coefficients:\nx = 1\ny = 0\n\n",
         recipeConfig: [
             {
                 op: "Extended GCD",
@@ -69,15 +45,7 @@ TestRegister.addTests([
     {
         name: "Extended GCD: hexadecimal input (0xFF, 0x11)",
         input: "",
-        expectedOutput: "Extended Euclidean Algorithm Results:\n" +
-            "=====================================\n\n" +
-            "gcd(a, b) = 17\n\n" +
-            "Béut coefficients:\n" +
-            "  x = 1\n" +
-            "  y = -15\n\n" +
-            "Verification:\n" +
-            "  a·x + b·y = gcd(a, b)\n" +
-            "  (255) ×(1) + (17) ×(-15) = 17",
+        expectedOutput: "gcd: 17\n\nBezout coefficients:\nx = 0\ny = 1\n\n",
         recipeConfig: [
             {
                 op: "Extended GCD",
@@ -88,15 +56,7 @@ TestRegister.addTests([
     {
         name: "Extended GCD: using input field for value a",
         input: "42",
-        expectedOutput: "Extended Euclidean Algorithm Results:\n" +
-            "=====================================\n\n" +
-            "gcd(a, b) = 7\n\n" +
-            "Béut coefficients:\n" +
-            "  x = -2\n" +
-            "  y = 3\n\n" +
-            "Verification:\n" +
-            "  a·x + b·y = gcd(a, b)\n" +
-            "  (42) ×(-2) + (35) ×(3) = 7",
+        expectedOutput: "gcd: 7\n\nBezout coefficients:\nx = 1\ny = -1\n\n",
         recipeConfig: [
             {
                 op: "Extended GCD",
@@ -107,15 +67,7 @@ TestRegister.addTests([
     {
         name: "Extended GCD: large numbers",
         input: "",
-        expectedOutput: "Extended Euclidean Algorithm Results:\n" +
-            "=====================================\n\n" +
-            "gcd(a, b) = 1\n\n" +
-            "Béut coefficients:\n" +
-            "  x = -80538738812075595\n" +
-            "  y = 10000000000000000\n\n" +
-            "Verification:\n" +
-            "  a·x + b·y = gcd(a, b)\n" +
-            "  (123456789012345678901234567890) ×(-80538738812075595) + (994064509324197316) ×(10000000000000000) = 1",
+        expectedOutput: "gcd: 2\n\nBezout coefficients:\nx = 12703973750415151\ny = -1577756566311408967124629843\n\n",
         recipeConfig: [
             {
                 op: "Extended GCD",
