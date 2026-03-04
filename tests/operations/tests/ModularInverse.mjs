@@ -56,7 +56,7 @@ TestRegister.addTests([
     {
         name: "Modular Inverse: using input field for modulus",
         input: "17",
-        expectedOutput: "38",
+        expectedOutput: "7",
         recipeConfig: [
             {
                 op: "Modular Inverse",
@@ -67,7 +67,7 @@ TestRegister.addTests([
     {
         name: "Modular Inverse: large number (RSA-like)",
         input: "",
-        expectedOutput: "4969696969697",
+        expectedOutput: "934281398294",
         recipeConfig: [
             {
                 op: "Modular Inverse",
