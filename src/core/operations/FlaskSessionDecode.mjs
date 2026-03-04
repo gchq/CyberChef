@@ -22,7 +22,13 @@ class FlaskSessionDecode extends Operation {
         this.description = "Decodes the payload of a Flask session cookie (itsdangerous) into JSON.";
         this.inputType = "string";
         this.outputType = "JSON";
-        this.args = [];
+        this.args = [
+            {
+                name: "View TimeStamp",
+                type: "boolean",
+                value: false
+            }
+        ];
     }
 
     /**
@@ -38,6 +44,16 @@ class FlaskSessionDecode extends Operation {
         }
 
         const payloadB64 = parts[0];
+        const time = parts[1];
+
+        const timeB64 = time.replace(/-/g, "+").replace(/_/g, "/");
+        const binary = fromBase64(timeB64);
+        const bytes = new Uint8Array(4);
+        for (let i = 0; i < 4; i++) {
+            bytes[i] = binary.charCodeAt(i);
+        }
+        const view = new DataView(bytes.buffer);
+        const timestamp = view.getInt32(0, false);
 
         const base64 = payloadB64.replace(/-/g, "+").replace(/_/g, "/");
         const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, "=");
@@ -49,7 +65,11 @@ class FlaskSessionDecode extends Operation {
         }
 
         try {
-            const data = JSON.parse(payloadJson);
+            let data = JSON.parse(payloadJson);
+
+            if (args[0]) {
+                data = {payload: data, timestamp: timestamp};
+            }
             return data;
         } catch (e) {
             throw new OperationError("Unable to decode JSON payload: " + e.message);

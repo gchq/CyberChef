@@ -41,6 +41,11 @@ class FlaskSessionVerify extends Operation {
                 name: "Algorithm",
                 type: "option",
                 value: ["sha1", "sha256"],
+            },
+            {
+                name: "View TimeStamp",
+                type: "boolean",
+                value: true
             }
         ];
     }
@@ -81,6 +86,17 @@ class FlaskSessionVerify extends Operation {
         const base64 = payloadB64.replace(/-/g, "+").replace(/_/g, "/");
         const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, "=");
 
+        const time = parts[1];
+
+        const timeB64 = time.replace(/-/g, "+").replace(/_/g, "/");
+        const binary = fromBase64(timeB64);
+        const bytes = new Uint8Array(4);
+        for (let i = 0; i < 4; i++) {
+            bytes[i] = binary.charCodeAt(i);
+        }
+        const view = new DataView(bytes.buffer);
+        const timestamp = view.getInt32(0, false);
+
         let payloadJson;
         try {
             payloadJson = fromBase64(padded);
@@ -97,10 +113,18 @@ class FlaskSessionVerify extends Operation {
 
         try {
             const decoded = JSON.parse(payloadJson);
-            return {
-                valid: true,
-                payload: decoded,
-            };
+            if (!args[3]) {
+                return {
+                    valid: true,
+                    payload: decoded,
+                };
+            } else {
+                return {
+                    valid: true,
+                    payload: decoded,
+                    timestamp: timestamp
+                };
+            }
         } catch (e) {
             throw new OperationError("Unable to decode JSON payload: " + e.message);
         }
