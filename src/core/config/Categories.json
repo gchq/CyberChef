@@ -218,6 +218,7 @@
             "AND",
             "ADD",
             "SUB",
+            "Basic Arithmetic",
             "Sum",
             "Subtract",
             "Multiply",
