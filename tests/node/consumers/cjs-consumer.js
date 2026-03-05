@@ -8,9 +8,9 @@
 
 const assert = require("assert");
 
-require("cyberchef").then(chef => {
+require("cyberchef").then(async chef => {
 
-    const d = chef.bake("Testing, 1 2 3", [
+    const d = await chef.bake("Testing, 1 2 3", [
         chef.toHex,
         chef.reverse,
         {
