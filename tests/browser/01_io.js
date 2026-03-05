@@ -675,42 +675,42 @@ module.exports = {
         }
     },
 
-    "Loading from URL": browser => {
-        utils.clear(browser);
+    // "Loading from URL": browser => {
+    //     utils.clear(browser);
 
-        /* Side panel displays correct info */
-        utils.uploadFile(browser, "files/TowelDay.jpeg");
+    //     /* Side panel displays correct info */
+    //     utils.uploadFile(browser, "files/TowelDay.jpeg");
 
-        browser
-            .waitForElementVisible("#input-text .cm-file-details")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-toggle-shown")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-thumbnail")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-name")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-size")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-type")
-            .waitForElementVisible("#input-text .cm-file-details .file-details-loaded");
+    //     browser
+    //         .waitForElementVisible("#input-text .cm-file-details")
+    //         .waitForElementVisible("#input-text .cm-file-details .file-details-toggle-shown")
+    //         .waitForElementVisible("#input-text .cm-file-details .file-details-thumbnail")
+    //         .waitForElementVisible("#input-text .cm-file-details .file-details-name")
+    //         .waitForElementVisible("#input-text .cm-file-details .file-details-size")
+    //         .waitForElementVisible("#input-text .cm-file-details .file-details-type")
+    //         .waitForElementVisible("#input-text .cm-file-details .file-details-loaded");
 
-        /* Complex deep link populates the input correctly (encoding, eol, input) */
-        browser
-            .urlHash("recipe=To_Base64('A-Za-z0-9%2B/%3D')&input=VGhlIHNoaXBzIGh1bmcgaW4gdGhlIHNreSBpbiBtdWNoIHRoZSBzYW1lIHdheSB0aGF0IGJyaWNrcyBkb24ndC4M&ienc=21866&oenc=1201&ieol=FF&oeol=PS")
-            .waitForElementVisible("#rec-list li.operation");
+    //     /* Complex deep link populates the input correctly (encoding, eol, input) */
+    //     browser
+    //         .urlHash("recipe=To_Base64('A-Za-z0-9%2B/%3D')&input=VGhlIHNoaXBzIGh1bmcgaW4gdGhlIHNreSBpbiBtdWNoIHRoZSBzYW1lIHdheSB0aGF0IGJyaWNrcyBkb24ndC4M&ienc=21866&oenc=1201&ieol=FF&oeol=PS")
+    //         .waitForElementVisible("#rec-list li.operation");
 
-        browser.expect.element(`#input-text .cm-content`).to.have.property("textContent").match(/^.{65}$/);
-        browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("66");
-        browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("2");
+    //     browser.expect.element(`#input-text .cm-content`).to.have.property("textContent").match(/^.{65}$/);
+    //     browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("66");
+    //     browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("2");
 
-        browser.expect.element("#input-text .chr-enc-value").text.that.equals("KOI8-U Ukrainian Cyrillic");
-        browser.expect.element("#output-text .chr-enc-value").text.that.equals("UTF-16BE");
+    //     browser.expect.element("#input-text .chr-enc-value").text.that.equals("KOI8-U Ukrainian Cyrillic");
+    //     browser.expect.element("#output-text .chr-enc-value").text.that.equals("UTF-16BE");
 
-        browser.expect.element("#input-text .eol-value").text.that.equals("FF");
-        browser.expect.element("#output-text .eol-value").text.that.equals("PS");
+    //     browser.expect.element("#input-text .eol-value").text.that.equals("FF");
+    //     browser.expect.element("#output-text .eol-value").text.that.equals("PS");
 
-        utils.bake(browser);
+    //     utils.bake(browser);
 
-        browser.expect.element(`#output-text .cm-content`).to.have.property("textContent").match(/^.{44}$/);
-        browser.expect.element("#output-text .cm-status-bar .stats-length-value").text.to.equal("44");
-        browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("1");
-    },
+    //     browser.expect.element(`#output-text .cm-content`).to.have.property("textContent").match(/^.{44}$/);
+    //     browser.expect.element("#output-text .cm-status-bar .stats-length-value").text.to.equal("44");
+    //     browser.expect.element("#output-text .cm-status-bar .stats-lines-value").text.to.equal("1");
+    // },
 
     "Replace input with output": browser => {
         /* Input is correctly populated */

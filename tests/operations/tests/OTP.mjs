@@ -11,12 +11,12 @@ import TestRegister from "../../lib/TestRegister.mjs";
 TestRegister.addTests([
     {
         name: "Generate HOTP",
-        input: "12345678901234567890",
-        expectedOutput: "URI: otpauth://hotp/OTPAuthentication?secret=GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ\n\nPassword: 755224",
+        input: "JBSWY3DPEHPK3PXP",
+        expectedOutput: `URI: otpauth://hotp/?secret=JBSWY3DPEHPK3PXP&algorithm=SHA1&digits=6&counter=0\n\nPassword: 282760`,
         recipeConfig: [
             {
                 op: "Generate HOTP",
-                args: ["", 32, 6, 0],
+                args: ["", 6, 0], // [Name, Code length, Counter]
             },
         ],
     },

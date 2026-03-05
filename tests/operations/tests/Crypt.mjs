@@ -580,8 +580,7 @@ Tag: a8f04c4d93bbef82bef61a103371aef9`,
         input: "",
         expectedOutput: `Invalid key length: 0 bytes
 
-DES uses a key length of 8 bytes (64 bits).
-Triple DES uses a key length of 24 bytes (192 bits).`,
+DES uses a key length of 8 bytes (64 bits).`,
         recipeConfig: [
             {
                 "op": "DES Encrypt",
@@ -674,8 +673,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
         input: "",
         expectedOutput: `Invalid key length: 0 bytes
 
-Triple DES uses a key length of 24 bytes (192 bits).
-DES uses a key length of 8 bytes (64 bits).`,
+Triple DES uses a key length of 24 bytes (192 bits).`,
         recipeConfig: [
             {
                 "op": "Triple DES Encrypt",
@@ -1300,8 +1298,7 @@ The following algorithms will be used based on the size of the key:
         input: "",
         expectedOutput: `Invalid key length: 0 bytes
 
-DES uses a key length of 8 bytes (64 bits).
-Triple DES uses a key length of 24 bytes (192 bits).`,
+DES uses a key length of 8 bytes (64 bits).`,
         recipeConfig: [
             {
                 "op": "DES Decrypt",
@@ -1394,8 +1391,7 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
         input: "",
         expectedOutput: `Invalid key length: 0 bytes
 
-Triple DES uses a key length of 24 bytes (192 bits).
-DES uses a key length of 8 bytes (64 bits).`,
+Triple DES uses a key length of 24 bytes (192 bits).`,
         recipeConfig: [
             {
                 "op": "Triple DES Decrypt",
@@ -1579,19 +1575,31 @@ DES uses a key length of 8 bytes (64 bits).`,
         from Crypto.Cipher import Blowfish
         import binascii
 
-        input_data = b"The quick brown fox jumps over the lazy dog."
+        # Blowfish cipher parameters - key, mode, iv, segment_size, nonce
         key = binascii.unhexlify("0011223344556677")
-        iv = binascii.unhexlify("0000000000000000")
         mode = Blowfish.MODE_CBC
+        kwargs = {}
+        iv = binascii.unhexlify("ffeeddccbbaa9988")
+        if mode in [Blowfish.MODE_CBC, Blowfish.MODE_CFB, Blowfish.MODE_OFB]:
+            kwargs = {"iv": iv}
+        if mode == Blowfish.MODE_CFB:
+            kwargs["segment_size"] = 64
+        if mode == Blowfish.MODE_CTR:
+            nonce = binascii.unhexlify("0000000000000000")
+            nonce = nonce[:7]
+            kwargs["nonce"] = nonce
 
+        cipher = Blowfish.new(key, mode, **kwargs)
+
+        # Input data and padding
+        input_data = b"The quick brown fox jumps over the lazy dog."
         if mode == Blowfish.MODE_ECB or mode == Blowfish.MODE_CBC:
             padding_len = 8-(len(input_data) & 7)
             for i in range(padding_len):
                 input_data += bytes([padding_len])
 
-        cipher = Blowfish.new(key, mode)  # set iv, nonce, segment_size etc. here
+        # Encrypted text
         cipher_text = cipher.encrypt(input_data)
-
         cipher_text = binascii.hexlify(cipher_text).decode("UTF-8")
 
         print("Encrypted: {}".format(cipher_text))

@@ -1,232 +1,45 @@
 /**
- * Bech32 Encoding and Decoding resources (BIP0173 and BIP0350)
+ * Pure JavaScript implementation of Bech32 and Bech32m encoding.
  *
- * @author dgoldenberg [virtualcurrency@mitre.org]
- * @copyright  MITRE 2023, geco 2019
- * @license MIT
- */
-
-
-// ################################################ BEGIN SEGWIT DECODING FUNCTIONS #################################################
-
-/**
-  * Javascript code below taken from:
-  * https://github.com/geco/bech32-js/blob/master/bech32-js.js
-  * Implements various segwit encoding / decoding functions.
-  *
-  * MIT License
-  *
-  * Copyright (c) 2019 geco
-  * Permission is hereby granted, free of charge, to any person obtaining a copy
-  * of this software and associated documentation files (the "Software"), to deal
-  * in the Software without restriction, including without limitation the rights
-  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  * copies of the Software, and to permit persons to whom the Software is
-  * furnished to do so, subject to the following conditions:
-  *
-  * The above copyright notice and this permission notice shall be included in all
-  * copies or substantial portions of the Software.
-  *
-  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  * SOFTWARE.
-*/
-
-// Segwit alphabet
-const ALPHABET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
-
-const ALPHABET_MAP = {};
-for (let z = 0; z < ALPHABET.length; z++) {
-    const x = ALPHABET.charAt(z);
-    ALPHABET_MAP[x] = z;
-}
-
-/**
- * Polynomial multiply step.
- * Input value is viewed as 32 bit int.
- * Constants taken from the BIP0173 wiki: https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki
- * They are part of the BCH code generator polynomial.
- * @param {string} pre
- * @returns
- */
-function polymodStep (pre) {
-    const b = pre >> 25;
-    return ((pre & 0x1FFFFFF) << 5) ^
-    (-((b >> 0) & 1) & 0x3b6a57b2) ^
-    (-((b >> 1) & 1) & 0x26508e6d) ^
-    (-((b >> 2) & 1) & 0x1ea119fa) ^
-    (-((b >> 3) & 1) & 0x3d4233dd) ^
-    (-((b >> 4) & 1) & 0x2a1462b3);
-}
-
-/**
- * Checks the prefix of a string.
- * @param {*} prefix
- * @returns
- */
-function prefixChk (prefix) {
-    let chk = 1;
-    for (let i = 0; i < prefix.length; ++i) {
-        const c = prefix.charCodeAt(i);
-        if (c < 33 || c > 126) return "KO";
-        chk = polymodStep(chk) ^ (c >> 5);
-    }
-    chk = polymodStep(chk);
-
-    for (let i = 0; i < prefix.length; ++i) {
-        const v = prefix.charCodeAt(i);
-        chk = polymodStep(chk) ^ (v & 0x1f);
-    }
-    return chk;
-}
-
-/**
- * Bech32 Checksum
- * We check the entire string to see if its segwit encoded.
- * Lengths and other constants taken from BIP 0173: https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki
+ * Bech32 is defined in BIP-0173: https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki
+ * Bech32m is defined in BIP-0350: https://github.com/bitcoin/bips/blob/master/bip-0350.mediawiki
  *
- * @param {*} str
- * @returns
+ * @author Medjedtxm
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
  */
-function checkbech32 (str) {
-    const LIMIT = 90;
-    if (str.length < 8) return "KO";
-    if (str.length > LIMIT) return "KO";
 
+import OperationError from "../errors/OperationError.mjs";
 
-    const split = str.lastIndexOf("1");
-    if (split === -1) return "KO";
-    if (split === 0) return "KO";
+/** Bech32 character set (32 characters, excludes 1, b, i, o) */
+const CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l";
 
-    const prefix = str.slice(0, split);
-    const wordChars = str.slice(split + 1);
-    if (wordChars.length < 6) return "KO";
-
-    let chk = prefixChk(prefix);
-    if (typeof chk === "string") return "KO";
-
-    const words = [];
-    for (let i = 0; i < wordChars.length; ++i) {
-        const c = wordChars.charAt(i);
-        const v = ALPHABET_MAP[c];
-        if (v === undefined) return "KO";
-        chk = polymodStep(chk) ^ v;
-        if (i + 6 >= wordChars.length) continue;
-        words.push(v);
-    }
-    // Second number is decimal representation of 0x2bc830a3
-    // Useful as P2TR addresses are segwit encoded, with different final checksum.
-    // Taken from https://github.com/bitcoin/bips/blob/master/bip-0350.mediawiki
-    if (chk === 1 || chk === 734539939) {
-        return "OK";
-    } else {
-        return "KO";
-    }
+/** Reverse lookup table for decoding */
+const CHARSET_REV = {};
+for (let i = 0; i < CHARSET.length; i++) {
+    CHARSET_REV[CHARSET[i]] = i;
 }
 
-// ################################################ END SEGWIT DECODING FUNCTIONS ###################################################
+/** Checksum constant for Bech32 (BIP-0173) */
+const BECH32_CONST = 1;
 
-// ################################################ BEGIN MAIN CHECKSUM FUNCTIONS ###################################################
+/** Checksum constant for Bech32m (BIP-0350) */
+const BECH32M_CONST = 0x2bc830a3;
 
-// Segwit Checksum
-/**
- * Segwit Checksum
- * @param {*} str
- * @returns
- */
-export function segwitChecksum(str) {
-    return (checkbech32(str) === "OK");
-}
-
-// ################################################ END MAIN CHECKSUM FUNCTIONS #####################################################
-
-
-// ################################################ BEGIN SEGWIT ENCODING FUNCTIONS #################################################
-
-// We use this to encode values into segwit encoding.
-// Taken from https://github.com/sipa/bech32/blob/master/ref/javascript/bech32.js
-
-// Copyright (c) 2017, 2021 Pieter Wuille
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
-/**
- * Expands the human readable part.
- * @param {string} hrp
- * @returns
- */
-function hrpExpand (hrp) {
-    const ret = [];
-    let p;
-    for (p = 0; p < hrp.length; ++p) {
-        ret.push(hrp.charCodeAt(p) >> 5);
-    }
-    ret.push(0);
-    for (p = 0; p < hrp.length; ++p) {
-        ret.push(hrp.charCodeAt(p) & 31);
-    }
-    return ret;
-}
-
-const encodings = {
-    BECH32: "bech32",
-    BECH32M: "bech32m",
-};
-
-
-/**
- * We get the encoding constant.
- * Differentiates between Segwit and P2TR.
- * Constants found in BIP0173: https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki
- * Also BIP0350: https://github.com/bitcoin/bips/blob/master/bip-0350.mediawiki
- * @param {string} enc
- * @returns
- */
-function getEncodingConst (enc) {
-    if (enc === encodings.BECH32) {
-        return 1;
-    } else if (enc === encodings.BECH32M) {
-        return 0x2bc830a3;
-    } else {
-        return null;
-    }
-}
-
-// Constants for the BIP0173 BCH Generator polynomial.
+/** Generator polynomial coefficients for checksum */
 const GENERATOR = [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3];
 
 /**
- * Separate version of the polymod step. Taken from https://github.com/sipa/bech32/blob/master/ref/javascript/bech32.js
- * Here its an array of values.
- * @param {} values
- * @returns
+ * Compute the polymod checksum
+ * @param {number[]} values - Array of 5-bit values
+ * @returns {number} - Checksum value
  */
-function polymod (values) {
+function polymod(values) {
     let chk = 1;
-    for (let p = 0; p < values.length; ++p) {
+    for (const v of values) {
         const top = chk >> 25;
-        chk = (chk & 0x1ffffff) << 5 ^ values[p];
-        for (let i = 0; i < 5; ++i) {
+        chk = ((chk & 0x1ffffff) << 5) ^ v;
+        for (let i = 0; i < 5; i++) {
             if ((top >> i) & 1) {
                 chk ^= GENERATOR[i];
             }
@@ -236,93 +49,323 @@ function polymod (values) {
 }
 
 /**
- * Creates the Segwit checksum
- * @param {string} hrp
- * @param {string} data
- * @param {string} enc
- * @returns
+ * Expand HRP for checksum computation
+ * @param {string} hrp - Human-readable part (lowercase)
+ * @returns {number[]} - Expanded values
  */
-function createChecksum (hrp, data, enc) {
+function hrpExpand(hrp) {
+    const result = [];
+    for (let i = 0; i < hrp.length; i++) {
+        result.push(hrp.charCodeAt(i) >> 5);
+    }
+    result.push(0);
+    for (let i = 0; i < hrp.length; i++) {
+        result.push(hrp.charCodeAt(i) & 31);
+    }
+    return result;
+}
+
+/**
+ * Verify checksum of a Bech32/Bech32m string
+ * @param {string} hrp - Human-readable part (lowercase)
+ * @param {number[]} data - Data including checksum (5-bit values)
+ * @param {string} encoding - "Bech32" or "Bech32m"
+ * @returns {boolean} - True if checksum is valid
+ */
+function verifyChecksum(hrp, data, encoding) {
+    const constant = encoding === "Bech32m" ? BECH32M_CONST : BECH32_CONST;
+    return polymod(hrpExpand(hrp).concat(data)) === constant;
+}
+
+/**
+ * Create checksum for Bech32/Bech32m encoding
+ * @param {string} hrp - Human-readable part (lowercase)
+ * @param {number[]} data - Data values (5-bit)
+ * @param {string} encoding - "Bech32" or "Bech32m"
+ * @returns {number[]} - 6 checksum values
+ */
+function createChecksum(hrp, data, encoding) {
+    const constant = encoding === "Bech32m" ? BECH32M_CONST : BECH32_CONST;
     const values = hrpExpand(hrp).concat(data).concat([0, 0, 0, 0, 0, 0]);
-    const mod = polymod(values) ^ getEncodingConst(enc);
-    const ret = [];
-    for (let p = 0; p < 6; ++p) {
-        ret.push((mod >> 5 * (5 - p)) & 31);
+    const mod = polymod(values) ^ constant;
+    const result = [];
+    for (let i = 0; i < 6; i++) {
+        result.push((mod >> (5 * (5 - i))) & 31);
     }
-    return ret;
+    return result;
 }
 
 /**
- * Converts bits from base 5 to base 8 or back again as appropriate.
- * @param {*} data
- * @param {*} frombits
- * @param {*} tobits
- * @param {*} pad
- * @returns
+ * Convert 8-bit bytes to 5-bit words
+ * @param {number[]|Uint8Array} data - Input bytes
+ * @returns {number[]} - 5-bit words
  */
-function convertbits (data, frombits, tobits, pad) {
-    let acc = 0;
+export function toWords(data) {
+    let value = 0;
     let bits = 0;
-    const ret = [];
-    const maxv = (1 << tobits) - 1;
-    for (let p = 0; p < data.length; ++p) {
-        const value = data[p];
-        if (value < 0 || (value >> frombits) !== 0) {
-            return null;
-        }
-        acc = (acc << frombits) | value;
-        bits += frombits;
-        while (bits >= tobits) {
-            bits -= tobits;
-            ret.push((acc >> bits) & maxv);
+    const result = [];
+
+    for (let i = 0; i < data.length; i++) {
+        value = (value << 8) | data[i];
+        bits += 8;
+
+        while (bits >= 5) {
+            bits -= 5;
+            result.push((value >> bits) & 31);
         }
     }
-    if (pad) {
-        if (bits > 0) {
-            ret.push((acc << (tobits - bits)) & maxv);
-        }
-    } else if (bits >= frombits || ((acc << (tobits - bits)) & maxv)) {
-        return null;
+
+    // Pad remaining bits
+    if (bits > 0) {
+        result.push((value << (5 - bits)) & 31);
     }
-    return ret;
+
+    return result;
 }
 
 /**
- * Function to encode data into a segwit address.
- * We take in the human readable part, the data, and whether its P2TR or Segwit.
- * @param {string} hrp
- * @param {string} data
- * @param {string} enc
- * @returns
+ * Convert 5-bit words to 8-bit bytes
+ * @param {number[]} words - 5-bit words
+ * @returns {number[]} - Output bytes
  */
-function segwitEncode (hrp, data, enc) {
-    const combined = data.concat(createChecksum(hrp, data, enc));
-    let ret = hrp + "1";
-    for (let p = 0; p < combined.length; ++p) {
-        ret += ALPHABET.charAt(combined[p]);
+export function fromWords(words) {
+    let value = 0;
+    let bits = 0;
+    const result = [];
+
+    for (let i = 0; i < words.length; i++) {
+        value = (value << 5) | words[i];
+        bits += 5;
+
+        while (bits >= 8) {
+            bits -= 8;
+            result.push((value >> bits) & 255);
+        }
     }
-    return ret;
+
+    // Check for invalid padding per BIP-0173
+    // Condition 1: Cannot have 5+ bits remaining (would indicate incomplete byte)
+    if (bits >= 5) {
+        throw new OperationError("Invalid padding: too many bits remaining");
+    }
+    // Condition 2: Remaining padding bits must all be zero
+    if (bits > 0) {
+        const paddingValue = (value << (8 - bits)) & 255;
+        if (paddingValue !== 0) {
+            throw new OperationError("Invalid padding: non-zero bits in padding");
+        }
+    }
+
+    return result;
 }
 
 /**
- * Turns the public key (as 'program') into the address.
- * @param {*} hrp
- * @param {*} version
- * @param {*} program
- * @returns
+ * Encode data to Bech32/Bech32m string
+ *
+ * @param {string} hrp - Human-readable part
+ * @param {number[]|Uint8Array} data - Data bytes to encode
+ * @param {string} encoding - "Bech32" or "Bech32m"
+ * @param {boolean} segwit - If true, treat first byte as witness version (for Bitcoin SegWit)
+ * @returns {string} - Encoded Bech32/Bech32m string
  */
-export function encodeProgramToSegwit (hrp, version, program) {
-    let enc;
-    if (version > 0) {
-        enc = encodings.BECH32M;
+export function encode(hrp, data, encoding = "Bech32", segwit = false) {
+    // Validate HRP
+    if (!hrp || hrp.length === 0) {
+        throw new OperationError("Human-Readable Part (HRP) cannot be empty.");
+    }
+
+    // Check HRP characters (ASCII 33-126)
+    for (let i = 0; i < hrp.length; i++) {
+        const c = hrp.charCodeAt(i);
+        if (c < 33 || c > 126) {
+            throw new OperationError(`HRP contains invalid character at position ${i}. Only printable ASCII characters (33-126) are allowed.`);
+        }
+    }
+
+    // Convert HRP to lowercase
+    const hrpLower = hrp.toLowerCase();
+
+    let words;
+    if (segwit && data.length >= 2) {
+        // SegWit encoding: first byte is witness version (0-16), rest is witness program
+        const witnessVersion = data[0];
+        if (witnessVersion > 16) {
+            throw new OperationError(`Invalid witness version: ${witnessVersion}. Must be 0-16.`);
+        }
+        const witnessProgram = Array.prototype.slice.call(data, 1);
+
+        // Validate witness program length per BIP-0141
+        if (witnessProgram.length < 2 || witnessProgram.length > 40) {
+            throw new OperationError(`Invalid witness program length: ${witnessProgram.length}. Must be 2-40 bytes.`);
+        }
+        if (witnessVersion === 0 && witnessProgram.length !== 20 && witnessProgram.length !== 32) {
+            throw new OperationError(`Invalid witness program length for v0: ${witnessProgram.length}. Must be 20 or 32 bytes.`);
+        }
+
+        // Witness version is kept as single 5-bit value, program is converted
+        words = [witnessVersion].concat(toWords(witnessProgram));
     } else {
-        enc = encodings.BECH32;
+        // Generic encoding: convert all bytes to 5-bit words
+        words = toWords(data);
     }
-    const convertedbits = convertbits(program, 8, 5, true);
-    const intermediate = [version].concat(convertedbits);
-    const ret = segwitEncode(hrp, intermediate, enc);
-    return ret;
+
+    // Create checksum
+    const checksum = createChecksum(hrpLower, words, encoding);
+
+    // Build result string
+    let result = hrpLower + "1";
+    for (const w of words.concat(checksum)) {
+        result += CHARSET[w];
+    }
+
+    // Check maximum length (90 characters)
+    if (result.length > 90) {
+        throw new OperationError(`Encoded string exceeds maximum length of 90 characters (got ${result.length}). Consider using smaller input data.`);
+    }
+
+    return result;
 }
 
+/**
+ * Decode a Bech32/Bech32m string
+ *
+ * @param {string} str - Bech32/Bech32m encoded string
+ * @param {string} encoding - "Bech32", "Bech32m", or "Auto-detect"
+ * @returns {{hrp: string, data: number[]}} - Decoded HRP and data bytes
+ */
+export function decode(str, encoding = "Auto-detect") {
+    // Check for empty input
+    if (!str || str.length === 0) {
+        throw new OperationError("Input cannot be empty.");
+    }
 
-// ################################################ END SEGWIT ENCODING FUNCTIONS ###################################################
+    // Check maximum length
+    if (str.length > 90) {
+        throw new OperationError(`Invalid Bech32 string: exceeds maximum length of 90 characters (got ${str.length}).`);
+    }
+
+    // Check for mixed case
+    const hasUpper = /[A-Z]/.test(str);
+    const hasLower = /[a-z]/.test(str);
+    if (hasUpper && hasLower) {
+        throw new OperationError("Invalid Bech32 string: mixed case is not allowed. Use all uppercase or all lowercase.");
+    }
+
+    // Convert to lowercase for processing
+    str = str.toLowerCase();
+
+    // Find separator (last occurrence of '1')
+    const sepIndex = str.lastIndexOf("1");
+    if (sepIndex === -1) {
+        throw new OperationError("Invalid Bech32 string: no separator '1' found.");
+    }
+
+    if (sepIndex === 0) {
+        throw new OperationError("Invalid Bech32 string: Human-Readable Part (HRP) cannot be empty.");
+    }
+
+    if (sepIndex + 7 > str.length) {
+        throw new OperationError("Invalid Bech32 string: data part is too short (minimum 6 characters for checksum).");
+    }
+
+    // Extract HRP and data part
+    const hrp = str.substring(0, sepIndex);
+    const dataPart = str.substring(sepIndex + 1);
+
+    // Validate HRP characters
+    for (let i = 0; i < hrp.length; i++) {
+        const c = hrp.charCodeAt(i);
+        if (c < 33 || c > 126) {
+            throw new OperationError(`HRP contains invalid character at position ${i}.`);
+        }
+    }
+
+    // Decode data characters to 5-bit values
+    const data = [];
+    for (let i = 0; i < dataPart.length; i++) {
+        const c = dataPart[i];
+        if (CHARSET_REV[c] === undefined) {
+            throw new OperationError(`Invalid character '${c}' at position ${sepIndex + 1 + i}.`);
+        }
+        data.push(CHARSET_REV[c]);
+    }
+
+    // Verify checksum
+    let usedEncoding;
+    if (encoding === "Bech32") {
+        if (!verifyChecksum(hrp, data, "Bech32")) {
+            throw new OperationError("Invalid Bech32 checksum.");
+        }
+        usedEncoding = "Bech32";
+    } else if (encoding === "Bech32m") {
+        if (!verifyChecksum(hrp, data, "Bech32m")) {
+            throw new OperationError("Invalid Bech32m checksum.");
+        }
+        usedEncoding = "Bech32m";
+    } else {
+        // Auto-detect: try Bech32 first, then Bech32m
+        if (verifyChecksum(hrp, data, "Bech32")) {
+            usedEncoding = "Bech32";
+        } else if (verifyChecksum(hrp, data, "Bech32m")) {
+            usedEncoding = "Bech32m";
+        } else {
+            throw new OperationError("Invalid Bech32/Bech32m string: checksum verification failed.");
+        }
+    }
+
+    // Remove checksum (last 6 values)
+    const words = data.slice(0, data.length - 6);
+
+    // Check if this is likely a SegWit address (Bitcoin, Litecoin, etc.)
+    // For SegWit, the first 5-bit word is the witness version (0-16)
+    // and should be extracted separately, not bit-converted with the rest
+    const segwitHrps = ["bc", "tb", "ltc", "tltc", "bcrt"];
+    const couldBeSegWit = segwitHrps.includes(hrp) && words.length > 0 && words[0] <= 16;
+
+    let bytes;
+    let witnessVersion = null;
+
+    if (couldBeSegWit) {
+        // Try SegWit decode first
+        try {
+            witnessVersion = words[0];
+            const programWords = words.slice(1);
+            const programBytes = fromWords(programWords);
+
+            // Validate SegWit witness program length (20 or 32 bytes for v0, 2-40 for others)
+            const validV0 = witnessVersion === 0 && (programBytes.length === 20 || programBytes.length === 32);
+            const validOther = witnessVersion !== 0 && programBytes.length >= 2 && programBytes.length <= 40;
+
+            if (validV0 || validOther) {
+                // Valid SegWit address
+                bytes = [witnessVersion, ...programBytes];
+            } else {
+                // Not valid SegWit, fall back to generic decode
+                witnessVersion = null;
+                bytes = fromWords(words);
+            }
+        } catch (e) {
+            // SegWit decode failed, try generic decode
+            witnessVersion = null;
+            try {
+                bytes = fromWords(words);
+            } catch (e2) {
+                throw new OperationError(`Failed to decode data: ${e2.message}`);
+            }
+        }
+    } else {
+        // Generic Bech32: convert all words
+        try {
+            bytes = fromWords(words);
+        } catch (e) {
+            throw new OperationError(`Failed to decode data: ${e.message}`);
+        }
+    }
+
+    return {
+        hrp: hrp,
+        data: bytes,
+        encoding: usedEncoding,
+        witnessVersion: witnessVersion
+    };
+}

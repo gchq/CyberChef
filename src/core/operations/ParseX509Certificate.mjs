@@ -6,7 +6,8 @@
 
 import r from "jsrsasign";
 import { fromBase64 } from "../lib/Base64.mjs";
-import { toHex } from "../lib/Hex.mjs";
+import { runHash } from "../lib/Hash.mjs";
+import { fromHex, toHex } from "../lib/Hex.mjs";
 import { formatByteStr, formatDnObj } from "../lib/PublicKey.mjs";
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
@@ -81,7 +82,8 @@ class ParseX509Certificate extends Operation {
         }
         if (undefinedInputFormat) throw "Undefined input format";
 
-        const sn = cert.getSerialNumberHex(),
+        const hex = Utils.strToArrayBuffer(Utils.byteArrayToChars(fromHex(cert.hex))),
+            sn = cert.getSerialNumberHex(),
             issuer = cert.getIssuer(),
             subject = cert.getSubject(),
             pk = cert.getPublicKey(),
@@ -191,6 +193,10 @@ Issuer
 ${issuerStr}
 Subject
 ${subjectStr}
+Fingerprints
+  MD5:            ${runHash("md5", hex)}
+  SHA1:           ${runHash("sha1", hex)}
+  SHA256:         ${runHash("sha256", hex)}
 Public Key
 ${pkStr.slice(0, -1)}
 Certificate Signature

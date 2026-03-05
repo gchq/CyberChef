@@ -23,6 +23,7 @@ import "./tests/Dish.mjs";
 import "./tests/NodeDish.mjs";
 import "./tests/Utils.mjs";
 import "./tests/Categories.mjs";
+import "./tests/lib/BigIntUtils.mjs";
 
 const testStatus = {
     allTestsPassing: true,

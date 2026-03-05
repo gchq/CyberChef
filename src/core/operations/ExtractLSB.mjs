@@ -9,13 +9,12 @@ import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import { fromBinary } from "../lib/Binary.mjs";
 import { isImage } from "../lib/FileType.mjs";
-import Jimp from "jimp/es/index.js";
+import { Jimp } from "jimp";
 
 /**
  * Extract LSB operation
  */
 class ExtractLSB extends Operation {
-
     /**
      * ExtractLSB constructor
      */
@@ -24,8 +23,10 @@ class ExtractLSB extends Operation {
 
         this.name = "Extract LSB";
         this.module = "Image";
-        this.description = "Extracts the Least Significant Bit data from each pixel in an image. This is a common way to hide data in Steganography.";
-        this.infoURL = "https://wikipedia.org/wiki/Bit_numbering#Least_significant_bit_in_digital_steganography";
+        this.description =
+            "Extracts the Least Significant Bit data from each pixel in an image. This is a common way to hide data in Steganography.";
+        this.infoURL =
+            "https://wikipedia.org/wiki/Bit_numbering#Least_significant_bit_in_digital_steganography";
         this.inputType = "ArrayBuffer";
         this.outputType = "byteArray";
         this.args = [
@@ -57,8 +58,8 @@ class ExtractLSB extends Operation {
             {
                 name: "Bit",
                 type: "number",
-                value: 0
-            }
+                value: 0,
+            },
         ];
     }
 
@@ -68,21 +69,27 @@ class ExtractLSB extends Operation {
      * @returns {byteArray}
      */
     async run(input, args) {
-        if (!isImage(input)) throw new OperationError("Please enter a valid image file.");
+        if (!isImage(input))
+            throw new OperationError("Please enter a valid image file.");
 
         const bit = 7 - args.pop(),
             pixelOrder = args.pop(),
-            colours = args.filter(option => option !== "").map(option => COLOUR_OPTIONS.indexOf(option)),
+            colours = args
+                .filter((option) => option !== "")
+                .map((option) => COLOUR_OPTIONS.indexOf(option)),
             parsedImage = await Jimp.read(input),
             width = parsedImage.bitmap.width,
             height = parsedImage.bitmap.height,
             rgba = parsedImage.bitmap.data;
 
         if (bit < 0 || bit > 7) {
-            throw new OperationError("Error: Bit argument must be between 0 and 7");
+            throw new OperationError(
+                "Error: Bit argument must be between 0 and 7",
+            );
         }
 
-        let i, combinedBinary = "";
+        let i,
+            combinedBinary = "";
 
         if (pixelOrder === "Row") {
             for (i = 0; i < rgba.length; i += 4) {
@@ -106,7 +113,6 @@ class ExtractLSB extends Operation {
 
         return fromBinary(combinedBinary);
     }
-
 }
 
 const COLOUR_OPTIONS = ["R", "G", "B", "A"];
