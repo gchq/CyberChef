@@ -76,6 +76,7 @@ import "./tests/FromDecimal.mjs";
 import "./tests/GenerateAllChecksums.mjs";
 import "./tests/GenerateAllHashes.mjs";
 import "./tests/GenerateDeBruijnSequence.mjs";
+import "./tests/GenerateQRCode.mjs";
 import "./tests/GetAllCasings.mjs";
 import "./tests/GOST.mjs";
 import "./tests/Gunzip.mjs";
@@ -153,6 +154,7 @@ import "./tests/SIGABA.mjs";
 import "./tests/SM2.mjs";
 import "./tests/SM4.mjs";
 // import "./tests/SplitColourChannels.mjs"; // Cannot test operations that use the File type yet
+import "./tests/SQLBeautify.mjs";
 import "./tests/StrUtils.mjs";
 import "./tests/StripIPv4Header.mjs";
 import "./tests/StripTCPHeader.mjs";
