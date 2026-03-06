@@ -158,6 +158,7 @@
             "AES Key Wrap",
             "AES Key Unwrap",
             "Pseudo-Random Number Generator",
+            "Pseudo-Random Prime Generator",
             "Enigma",
             "Bombe",
             "Multiple Bombe",
