@@ -100,7 +100,7 @@ class PublicKeyToP2PKHAddress extends Operation {
             if (resultKey === -1) {
                 throw new OperationError("Error: Bad Public Key to turn into P2TR Address.");
             }
-            return encodeProgramToSegwit(hrp, 1, Utils.convertToByteArray(resultKey.slice(2,), "hex"));
+            return encodeProgramToSegwit(hrp, 1, Utils.convertToByteArray("01" + resultKey.slice(2,), "hex"));
         } else {
             // We hash the input
             const curInput = makeSureIsBytes(input);
@@ -110,7 +110,7 @@ class PublicKeyToP2PKHAddress extends Operation {
                 const redeemScript = hash160;
                 const hrp = getHumanReadablePart(args[0]);
                 if (hrp !== "") {
-                    return encodeProgramToSegwit(hrp, 0, Utils.convertToByteArray(redeemScript, "hex"));
+                    return encodeProgramToSegwit(hrp, 0, Utils.convertToByteArray("00" + redeemScript, "hex"));
                 } else {
                     throw new OperationError(args[0] + " does not support Segwit Addresses.");
                 }
