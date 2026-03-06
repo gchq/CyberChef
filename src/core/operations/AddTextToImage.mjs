@@ -133,11 +133,12 @@ class AddTextToImage extends Operation {
         } catch (err) {
             throw new OperationError(`Error loading image. (${err})`);
         }
-        try {
-            if (isWorkerEnvironment())
-                self.sendStatusMessage("Adding text to image...");
 
-            const fontsMap = {};
+        if (isWorkerEnvironment())
+            self.sendStatusMessage("Adding text to image...");
+
+        const fontsMap = {};
+        try {
             const fonts = [
                 import(
                     /* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/Roboto72White.fnt"
@@ -159,7 +160,6 @@ class AddTextToImage extends Operation {
                 fontsMap["Roboto Mono"] = fonts[2];
                 fontsMap["Roboto Slab"] = fonts[3];
             });
-
             // Make Webpack load the png font images
             await Promise.all([
                 import(
@@ -175,11 +175,16 @@ class AddTextToImage extends Operation {
                     /* webpackMode: "eager" */ "../../web/static/fonts/bmfonts/RobotoBlack72White.png"
                 ),
             ]);
+        } catch (err) {
+            throw new OperationError(`Error preparing fonts. (${err})`);
+        }
 
+        let jimpFont;
+        try {
             const font = fontsMap[fontFace];
 
             // LoadFont needs an absolute url, so append the font name to self.docURL
-            const jimpFont = await loadFont(self.docURL + "/" + font.default);
+            jimpFont = await loadFont(self.docURL + "/" + font.default);
 
             jimpFont.pages.forEach(function (page) {
                 if (page.bitmap) {
@@ -210,7 +215,11 @@ class AddTextToImage extends Operation {
                     }
                 }
             });
+        } catch (err) {
+            throw new OperationError(`Error loading font. (${err})`);
+        }
 
+        try {
             // Create a temporary image to hold the rendered text
             const textImage = new Jimp({
                 width: measureText(jimpFont, text),
@@ -271,7 +280,11 @@ class AddTextToImage extends Operation {
                 x: xPos,
                 y: yPos,
             });
+        } catch (err) {
+            throw new OperationError(`Error adding text to image. (${err})`);
+        }
 
+        try {
             let imageBuffer;
             if (image.mime === "image/gif") {
                 imageBuffer = await image.getBuffer(JimpMime.png);
@@ -280,7 +293,7 @@ class AddTextToImage extends Operation {
             }
             return imageBuffer.buffer;
         } catch (err) {
-            throw new OperationError(`Error adding text to image. (${err})`);
+            throw new OperationError(`Error exporting image. (${err})`);
         }
     }
 

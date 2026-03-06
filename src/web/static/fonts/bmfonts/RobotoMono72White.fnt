@@ -104,6 +104,7 @@
     <char id="126" x="454" y="319" width="42" height="16" xoffset="1" yoffset="47" xadvance="44" page="0" chnl="0" />
     <char id="127" x="0" y="0" width="45" height="99" xoffset="-1" yoffset="-2" xadvance="43" page="0" chnl="0" />
   </chars>
-  <kernings count="0">
+  <kernings count="1">
+    <kerning first="0" second="0" amount="0" />
   </kernings>
 </font>
