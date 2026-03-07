@@ -104,8 +104,9 @@ class NodeRecipe {
             if (prev && typeof prev.then === 'function') {
                 return prev.then(runOp);
             }
-        }
-        return prev;
+
+            return runOp(prev);
+        }, dish);
     }
 }
 
