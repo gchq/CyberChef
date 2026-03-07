@@ -1147,6 +1147,25 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Argon2: Base64 Salt",
+        input: "argon2password",
+        expectedOutput: "$argon2i$v=19$m=4096,t=3,p=1$c29tZXNhbHQ$s43my9eBljQADuF/LWCG8vGqwAJzOorKQ0Yog8jFvbw",
+        recipeConfig: [
+            {
+                op: "Argon2",
+                args: [
+                    {"option": "Base64", "string": "c29tZXNhbHQ="},
+                    3,
+                    4096,
+                    1,
+                    32,
+                    "Argon2i",
+                    "Encoded hash"
+                ]
+            }
+        ]
+    },
+    {
         name: "Argon2 compare",
         input: "argon2password",
         expectedOutput: "Match: argon2password",
