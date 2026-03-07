@@ -45,6 +45,38 @@ export function search(input, searchRegex, removeRegex=null, sortBy=null, unique
     return results;
 }
 
+/**
+ * Runs search operation across the input data using the regular expressions. Filters using the filterFunc.
+ * @param {string} input
+ * @param {RegExp} searchRegex
+ * @param {RegExp} removeRegex
+ * @param {func} filterFunc
+ * @param {boolean} includeTotal
+ * @returns {string}
+ */
+export function searchAndFilter(input, searchRegex, removeRegex, filterFunc, includeTotal) {
+    let output = "",
+        total = 0,
+        match;
+
+    while ((match = searchRegex.exec(input))) {
+        // Moves pointer when an empty string is matched (prevents infinite loop)
+        if (match.index === searchRegex.lastIndex) {
+            searchRegex.lastIndex++;
+        }
+        if (removeRegex && removeRegex.test(match[0]))
+            continue;
+        if (filterFunc && !filterFunc(match[0]))
+            continue;
+        total++;
+        output += match[0] + "\n";
+    }
+
+    if (includeTotal)
+        output = "Total found: " + total + "\n\n" + output;
+
+    return output;
+}
 
 /**
  * URL regular expression

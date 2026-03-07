@@ -364,6 +364,30 @@
         ]
     },
     {
+        "name": "Cryptocurrency",
+        "ops": [
+            "Extract Double SHA Artifacts",
+            "Extract Segwit Addresses",
+            "Extract Seedphrases",
+            "Deserialize Extended Key",
+            "Public Key To Bitcoin-Like Address",
+            "To WIF Format",
+            "From WIF Format",
+            "Type Cryptocurrency Artifact",
+            "Private EC Key to Public Key",
+            "Seedphrase To Seed",
+            "Change Extended Key Version",
+            "Seed To Master Key",
+            "Decrypt Keystore File",
+            "BIP32Derive",
+            "Public Key To ETH Style Address",
+            "Public Key To TRX Style Address",
+            "ETH / TRX Conversion",
+            "Key To Extended Key",
+            "Private Extended Key To Public"
+        ]
+    },
+    {
         "name": "Extractors",
         "ops": [
             "Strings",
