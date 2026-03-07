@@ -119,6 +119,7 @@ import "./tests/NetBIOS.mjs";
 import "./tests/NormaliseUnicode.mjs";
 import "./tests/NTLM.mjs";
 import "./tests/OTP.mjs";
+import "./tests/ParseEthernetFrame.mjs";
 import "./tests/ParseIPRange.mjs";
 import "./tests/ParseObjectIDTimestamp.mjs";
 import "./tests/ParseQRCode.mjs";
