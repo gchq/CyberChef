@@ -188,7 +188,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Hex", "NO"
+                    "ECB", "Hex", "Hex", "NO", 32
                 ]
             }
         ],
@@ -203,7 +203,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Hex", "NO"
+                    "ECB", "Hex", "Hex", "NO", 32
                 ]
             }
         ],
@@ -218,7 +218,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Hex", "NO"
+                    "ECB", "Hex", "Hex", "NO", 32
                 ]
             }
         ],
@@ -233,7 +233,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Hex", "NO"
+                    "ECB", "Hex", "Hex", "NO", 32
                 ]
             }
         ],
@@ -248,7 +248,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Hex", "NO"
+                    "ECB", "Hex", "Hex", "NO", 32
                 ]
             }
         ],
@@ -263,7 +263,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Hex", "NO"
+                    "ECB", "Hex", "Hex", "NO", 32
                 ]
             }
         ],
@@ -278,7 +278,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Hex", "NO"
+                    "ECB", "Hex", "Hex", "NO", 32
                 ]
             }
         ],
@@ -293,7 +293,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Hex", "NO"
+                    "ECB", "Hex", "Hex", "NO", 32
                 ]
             }
         ],
@@ -308,7 +308,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "0123456712345678234567893456789a"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Hex", "NO"
+                    "ECB", "Hex", "Hex", "NO", 32
                 ]
             }
         ],
@@ -323,7 +323,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "0123456712345678234567893456789a"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Hex", "NO"
+                    "ECB", "Hex", "Hex", "NO", 32
                 ]
             }
         ],
@@ -338,7 +338,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "0123456712345678234567893456789a"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Hex", "NO"
+                    "ECB", "Hex", "Hex", "NO", 32
                 ]
             }
         ],
@@ -355,7 +355,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "0123456789abcdef0123456789abcdef"},
                     {"option": "Hex", "string": "fedcba9876543210"},
-                    "CBC", "Raw", "Hex", "PKCS5"
+                    "CBC", "Raw", "Hex", "PKCS5", 32
                 ]
             },
             {
@@ -363,7 +363,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "0123456789abcdef0123456789abcdef"},
                     {"option": "Hex", "string": "fedcba9876543210"},
-                    "CBC", "Hex", "Raw", "PKCS5"
+                    "CBC", "Hex", "Raw", "PKCS5", 32
                 ]
             }
         ],
@@ -380,7 +380,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "deadbeefdeadbeefdeadbeefdeadbeef"},
                     {"option": "Hex", "string": "0102030405060708"},
-                    "OFB", "Raw", "Hex", "NO"
+                    "OFB", "Raw", "Hex", "NO", 32
                 ]
             },
             {
@@ -388,7 +388,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "deadbeefdeadbeefdeadbeefdeadbeef"},
                     {"option": "Hex", "string": "0102030405060708"},
-                    "OFB", "Hex", "Raw", "NO"
+                    "OFB", "Hex", "Raw", "NO", 32
                 ]
             }
         ],
@@ -405,7 +405,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "deadbeefdeadbeefdeadbeefdeadbeef"},
                     {"option": "Hex", "string": "0000000000000001"},
-                    "CTR", "Raw", "Hex", "NO"
+                    "CTR", "Raw", "Hex", "NO", 32
                 ]
             },
             {
@@ -413,7 +413,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "deadbeefdeadbeefdeadbeefdeadbeef"},
                     {"option": "Hex", "string": "0000000000000001"},
-                    "CTR", "Hex", "Raw", "NO"
+                    "CTR", "Hex", "Raw", "NO", 32
                 ]
             }
         ],
@@ -430,7 +430,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "0123456789abcdef0123456789abcdef"},
                     {"option": "Hex", "string": "aabbccddeeff0011"},
-                    "CFB", "Raw", "Hex", "NO"
+                    "CFB", "Raw", "Hex", "NO", 32
                 ]
             },
             {
@@ -438,7 +438,47 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "0123456789abcdef0123456789abcdef"},
                     {"option": "Hex", "string": "aabbccddeeff0011"},
-                    "CFB", "Hex", "Raw", "NO"
+                    "CFB", "Hex", "Raw", "NO", 32
+                ]
+            }
+        ],
+    },
+
+    // ==================== XTEA NON-DEFAULT ROUNDS TEST ====================
+    {
+        name: "XTEA Encrypt then Decrypt: round-trip ECB with 16 rounds",
+        input: "4142434445464748",
+        expectedOutput: "4142434445464748",
+        recipeConfig: [
+            {
+                "op": "XTEA Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
+                    {"option": "Hex", "string": ""},
+                    "ECB", "Hex", "Hex", "NO", 16
+                ]
+            },
+            {
+                "op": "XTEA Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
+                    {"option": "Hex", "string": ""},
+                    "ECB", "Hex", "Hex", "NO", 16
+                ]
+            }
+        ],
+    },
+    {
+        name: "XTEA Encrypt: ECB, 16 rounds differs from 32 rounds",
+        input: "4142434445464748",
+        expectedOutput: "497df3d072612cb5",
+        recipeConfig: [
+            {
+                "op": "XTEA Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "000102030405060708090a0b0c0d0e0f"},
+                    {"option": "Hex", "string": ""},
+                    "ECB", "Hex", "Hex", "NO", 32
                 ]
             }
         ],
@@ -470,7 +510,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Hex", "NO"
+                    "ECB", "Hex", "Hex", "NO", 32
                 ]
             }
         ],
@@ -510,7 +550,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "0123456789abcdef0123456789abcdef"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Raw", "Hex", "PKCS5"
+                    "ECB", "Raw", "Hex", "PKCS5", 32
                 ]
             },
             {
@@ -518,7 +558,7 @@ TestRegister.addTests([
                 "args": [
                     {"option": "Hex", "string": "0123456789abcdef0123456789abcdef"},
                     {"option": "Hex", "string": ""},
-                    "ECB", "Hex", "Raw", "PKCS5"
+                    "ECB", "Hex", "Raw", "PKCS5", 32
                 ]
             }
         ],

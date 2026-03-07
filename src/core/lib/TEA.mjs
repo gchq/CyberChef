@@ -108,15 +108,16 @@ function teaDecryptBlock(block, key) {
  *
  * @param {number[]} block - 8 bytes (plaintext)
  * @param {number[]} key - 16 bytes (128-bit key)
+ * @param {number} rounds - Number of rounds (default 32)
  * @returns {number[]} - 8 bytes (ciphertext)
  */
-function xteaEncryptBlock(block, key) {
+function xteaEncryptBlock(block, key, rounds) {
     const v = bytesToUint32(block);
     const k = bytesToUint32(key);
     let v0 = v[0], v1 = v[1];
     let sum = 0;
 
-    for (let i = 0; i < ROUNDS; i++) {
+    for (let i = 0; i < rounds; i++) {
         v0 = (v0 + ((((v1 << 4) ^ (v1 >>> 5)) + v1) ^ (sum + k[sum & 3]))) >>> 0;
         sum = (sum + DELTA) >>> 0;
         v1 = (v1 + ((((v0 << 4) ^ (v0 >>> 5)) + v0) ^ (sum + k[(sum >>> 11) & 3]))) >>> 0;
@@ -130,15 +131,16 @@ function xteaEncryptBlock(block, key) {
  *
  * @param {number[]} block - 8 bytes (ciphertext)
  * @param {number[]} key - 16 bytes (128-bit key)
+ * @param {number} rounds - Number of rounds (default 32)
  * @returns {number[]} - 8 bytes (plaintext)
  */
-function xteaDecryptBlock(block, key) {
+function xteaDecryptBlock(block, key, rounds) {
     const v = bytesToUint32(block);
     const k = bytesToUint32(key);
     let v0 = v[0], v1 = v[1];
-    let sum = (DELTA * ROUNDS) >>> 0;
+    let sum = (DELTA * rounds) >>> 0;
 
-    for (let i = 0; i < ROUNDS; i++) {
+    for (let i = 0; i < rounds; i++) {
         v1 = (v1 - ((((v0 << 4) ^ (v0 >>> 5)) + v0) ^ (sum + k[(sum >>> 11) & 3]))) >>> 0;
         sum = (sum - DELTA) >>> 0;
         v0 = (v0 - ((((v1 << 4) ^ (v1 >>> 5)) + v1) ^ (sum + k[sum & 3]))) >>> 0;
@@ -464,10 +466,12 @@ export function decryptTEA(cipherText, key, iv, mode = "ECB", padding = "PKCS5")
  * @param {number[]} iv - 8-byte IV
  * @param {string} mode - Block cipher mode
  * @param {string} padding - Padding type
+ * @param {number} rounds - Number of rounds (default 32)
  * @returns {number[]} - Ciphertext bytes
  */
-export function encryptXTEA(message, key, iv, mode = "ECB", padding = "PKCS5") {
-    return encryptWithMode(message, key, iv, mode, padding, xteaEncryptBlock);
+export function encryptXTEA(message, key, iv, mode = "ECB", padding = "PKCS5", rounds = 32) {
+    const encFn = (block, k) => xteaEncryptBlock(block, k, rounds);
+    return encryptWithMode(message, key, iv, mode, padding, encFn);
 }
 
 /**
@@ -477,10 +481,13 @@ export function encryptXTEA(message, key, iv, mode = "ECB", padding = "PKCS5") {
  * @param {number[]} iv - 8-byte IV
  * @param {string} mode - Block cipher mode
  * @param {string} padding - Padding type
+ * @param {number} rounds - Number of rounds (default 32)
  * @returns {number[]} - Plaintext bytes
  */
-export function decryptXTEA(cipherText, key, iv, mode = "ECB", padding = "PKCS5") {
-    return decryptWithMode(cipherText, key, iv, mode, padding, xteaEncryptBlock, xteaDecryptBlock);
+export function decryptXTEA(cipherText, key, iv, mode = "ECB", padding = "PKCS5", rounds = 32) {
+    const encFn = (block, k) => xteaEncryptBlock(block, k, rounds);
+    const decFn = (block, k) => xteaDecryptBlock(block, k, rounds);
+    return decryptWithMode(cipherText, key, iv, mode, padding, encFn, decFn);
 }
 
 /** Block size in bytes (exported for operation validation) */

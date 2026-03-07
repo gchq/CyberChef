@@ -23,7 +23,7 @@ class XTEAEncrypt extends Operation {
 
         this.name = "XTEA Encrypt";
         this.module = "Ciphers";
-        this.description = "XTEA (eXtended Tiny Encryption Algorithm) is a block cipher designed by David Wheeler and Roger Needham in 1997 as a successor to TEA, correcting several weaknesses identified in the original algorithm. It operates on 64-bit blocks using a 128-bit key and performs 32 cycles (64 Feistel rounds) with an improved key schedule that uses sum-dependent key word selection to resist related-key attacks.<br><br>XTEA retains the simplicity and compact implementation of TEA whilst providing significantly improved security. It is frequently encountered in malware analysis and CTF challenges due to its straightforward implementation.<br><br><b>Key:</b> Must be exactly 16 bytes (128 bits).<br><br><b>IV:</b> The Initialisation Vector should be 8 bytes (64 bits). If not entered, it will default to null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, the PKCS#5 padding scheme is used.";
+        this.description = "XTEA (eXtended Tiny Encryption Algorithm) is a block cipher designed by David Wheeler and Roger Needham in 1997 as a successor to TEA, correcting several weaknesses identified in the original algorithm. It operates on 64-bit blocks using a 128-bit key with an improved key schedule that uses sum-dependent key word selection to resist related-key attacks.<br><br>XTEA retains the simplicity and compact implementation of TEA whilst providing significantly improved security. It is frequently encountered in malware analysis and CTF challenges due to its straightforward implementation.<br><br><b>Key:</b> Must be exactly 16 bytes (128 bits).<br><br><b>IV:</b> The Initialisation Vector should be 8 bytes (64 bits). If not entered, it will default to null bytes.<br><br><b>Rounds:</b> The recommended number of rounds is 32 (default). The reference implementation by Wheeler &amp; Needham accepts a configurable round count.<br><br><b>Padding:</b> In CBC and ECB mode, the PKCS#5 padding scheme is used.";
         this.infoURL = "https://wikipedia.org/wiki/XTEA";
         this.inputType = "string";
         this.outputType = "string";
@@ -59,6 +59,13 @@ class XTEAEncrypt extends Operation {
                 "name": "Padding",
                 "type": "option",
                 "value": ["PKCS5", "NO", "ZERO", "RANDOM", "BIT"]
+            },
+            {
+                "name": "Rounds",
+                "type": "number",
+                "value": 32,
+                "min": 1,
+                "max": 255
             }
         ];
     }
@@ -71,7 +78,7 @@ class XTEAEncrypt extends Operation {
     run(input, args) {
         const key = Utils.convertToByteArray(args[0].string, args[0].option),
             iv = Utils.convertToByteArray(args[1].string, args[1].option),
-            [,, mode, inputType, outputType, padding] = args;
+            [,, mode, inputType, outputType, padding, rounds] = args;
 
         if (key.length !== 16)
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -85,11 +92,16 @@ Make sure you have specified the type correctly (e.g. Hex vs UTF8).`);
 XTEA uses an IV length of ${TEA_BLOCK_SIZE} bytes (${TEA_BLOCK_SIZE * 8} bits).
 Make sure you have specified the type correctly (e.g. Hex vs UTF8).`);
 
+        if (!Number.isInteger(rounds) || rounds < 1 || rounds > 255)
+            throw new OperationError(`Invalid number of rounds: ${rounds}
+
+Rounds must be an integer between 1 and 255. Standard XTEA uses 32 rounds.`);
+
         // Default IV to null bytes if empty (like AES)
         const actualIv = iv.length === 0 ? new Array(TEA_BLOCK_SIZE).fill(0) : iv;
 
         input = Utils.convertToByteArray(input, inputType);
-        const output = encryptXTEA(input, key, actualIv, mode, padding);
+        const output = encryptXTEA(input, key, actualIv, mode, padding, rounds);
         return outputType === "Hex" ? toHex(output, "") : Utils.byteArrayToUtf8(output);
     }
 
