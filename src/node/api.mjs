@@ -327,7 +327,7 @@ export function help(input) {
 export function bake(input, recipeConfig) {
     const recipe = new NodeRecipe(recipeConfig);
     const dish = ensureIsDish(input);
-    return recipe.execute(dish); 
+    return recipe.execute(dish);
 }
 
 
