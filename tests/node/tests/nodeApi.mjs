@@ -171,12 +171,12 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should return NodeDish", async () => {
-        const result = await chef.bake("input", "to base 64");
+        const result = chef.bake("input", "to base 64");
         assert(result instanceof NodeDish);
     }),
 
     it("chef.bake: should take an input and an op name and perform it", async () => {
-        const result = await chef.bake("some input", "to base 32");
+        const result = chef.bake("some input", "to base 32");
         assert.strictEqual(result.toString(), "ONXW2ZJANFXHA5LU");
     }),
 
@@ -195,7 +195,7 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: Should take an input and an operation and perform it", async () => {
-        const result = await chef.bake("https://google.com/search?q=help", chef.parseURI);
+        const result = chef.bake("https://google.com/search?q=help", chef.parseURI);
         assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = help\n");
     }),
 
@@ -207,28 +207,28 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: accepts an array of operation names and performs them all in order", async () => {
-        const result = await chef.bake("https://google.com/search?q=that's a complicated question", ["URL encode", "URL decode", "Parse URI"]);
+        const result = chef.bake("https://google.com/search?q=that's a complicated question", ["URL encode", "URL decode", "Parse URI"]);
         assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = that's a complicated question\n");
     }),
 
     it("chef.bake: forgiving with operation names", async () =>{
-        const result = await chef.bake("https://google.com/search?q=that's a complicated question", ["urlencode", "url decode", "parseURI"]);
+        const result = chef.bake("https://google.com/search?q=that's a complicated question", ["urlencode", "url decode", "parseURI"]);
         assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = that's a complicated question\n");
     }),
 
     it("chef.bake: forgiving with operation names", async () =>{
-        const result = await chef.bake("hello", ["to base 64"]);
+        const result = chef.bake("hello", ["to base 64"]);
         assert.strictEqual(result.toString(), "aGVsbG8=");
     }),
 
     it("chef.bake: if recipe is empty array, return input as dish", async () => {
-        const result = await chef.bake("some input", []);
+        const result = chef.bake("some input", []);
         assert.strictEqual(result.toString(), "some input");
         assert(result instanceof NodeDish, "Result is not instance of NodeDish");
     }),
 
     it("chef.bake: accepts an array of operations as recipe", async () => {
-        const result = await chef.bake("https://google.com/search?q=that's a complicated question", [chef.URLEncode, chef.URLDecode, chef.parseURI]);
+        const result = chef.bake("https://google.com/search?q=that's a complicated question", [chef.URLEncode, chef.URLDecode, chef.parseURI]);
         assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = that's a complicated question\n");
     }),
 
@@ -240,7 +240,7 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should take single JSON object describing op and args OBJ", async () => {
-        const result = await chef.bake("some input", {
+        const result = chef.bake("some input", {
             op: chef.toHex,
             args: {
                 Delimiter: "Colon"
@@ -250,14 +250,14 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should take single JSON object desribing op with optional args", async () => {
-        const result = await chef.bake("some input", {
+        const result = chef.bake("some input", {
             op: chef.toHex,
         });
         assert.strictEqual(result.toString(), "73 6f 6d 65 20 69 6e 70 75 74");
     }),
 
     it("chef.bake: should take single JSON object describing op and args ARRAY", async () => {
-        const result = await chef.bake("some input", {
+        const result = chef.bake("some input", {
             op: chef.toHex,
             args: ["Colon"]
         });
@@ -275,7 +275,7 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should take multiple ops in JSON object form, some ops by string", async () => {
-        const result = await chef.bake("some input", [
+        const result = chef.bake("some input", [
             {
                 op: chef.toHex,
                 args: ["Colon"]
@@ -291,7 +291,7 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should take multiple ops in JSON object form, some without args", async () => {
-        const result = await chef.bake("some input", [
+        const result = chef.bake("some input", [
             {
                 op: chef.toHex,
             },
@@ -306,7 +306,7 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should handle op with multiple args", async () => {
-        const result = await chef.bake("some input", {
+        const result = chef.bake("some input", {
             op: "to morse code",
             args: {
                 formatOptions: "Dash/Dot",
@@ -318,12 +318,12 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should take compact JSON format from Chef Website as recipe", async () => {
-        const result = await chef.bake("some input", [{"op": "To Morse Code", "args": ["Dash/Dot", "Backslash", "Comma"]}, {"op": "Hex to PEM", "args": ["SOMETHING"]}, {"op": "To Snake case", "args": [false]}]);
+        const result = chef.bake("some input", [{"op": "To Morse Code", "args": ["Dash/Dot", "Backslash", "Comma"]}, {"op": "Hex to PEM", "args": ["SOMETHING"]}, {"op": "To Snake case", "args": [false]}]);
         assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak_end_something");
     }),
 
     it("chef.bake: should accept Clean JSON format from Chef website as recipe", async () => {
-        const result = await chef.bake("some input", [
+        const result = chef.bake("some input", [
             { "op": "To Morse Code",
                 "args": ["Dash/Dot", "Backslash", "Comma"] },
             { "op": "Hex to PEM",
@@ -335,7 +335,7 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should accept Clean JSON format from Chef website - args optional", async () => {
-        const result = await chef.bake("some input", [
+        const result = chef.bake("some input", [
             { "op": "To Morse Code" },
             { "op": "Hex to PEM",
                 "args": ["SOMETHING"] },
@@ -346,7 +346,7 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should accept operation names from Chef Website which contain forward slash", async () => {
-        const result = await chef.bake("I'll have the test salmon", [
+        const result = chef.bake("I'll have the test salmon", [
             { "op": "Find / Replace",
                 "args": [{ "option": "Regex", "string": "test" }, "good", true, false, true, false]}
         ]);
@@ -354,7 +354,7 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should accept operation names from Chef Website which contain a hyphen", async () => {
-        const result = await chef.bake("I'll have the test salmon", [
+        const result = chef.bake("I'll have the test salmon", [
             { "op": "Adler-32 Checksum",
                 "args": [] }
         ]);
@@ -362,7 +362,7 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should accept operation names from Chef Website which contain a period", async () => {
-        const result = await chef.bake("30 13 02 01 05 16 0e 41 6e 79 62 6f 64 79 20 74 68 65 72 65 3f", [
+        const result = chef.bake("30 13 02 01 05 16 0e 41 6e 79 62 6f 64 79 20 74 68 65 72 65 3f", [
             { "op": "Parse ASN.1 hex string",
                 "args": [0, 32] }
         ]);
