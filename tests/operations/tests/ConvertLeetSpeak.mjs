@@ -28,6 +28,28 @@ TestRegister.addTests([
                 args: ["From Leet Speak"]
             }
         ]
+    },
+    {
+        name: "Convert to Leet Speak: basic text, keep case",
+        input: "HELLO",
+        expectedOutput: "H3LL0",
+        recipeConfig: [
+            {
+                op: "Convert Leet Speak",
+                args: ["To Leet Speak"]
+            }
+        ]
+    },
+    {
+        name: "Convert from Leet Speak: basic leet, keep case",
+        input: "H3LL0",
+        expectedOutput: "HeLLo",
+        recipeConfig: [
+            {
+                op: "Convert Leet Speak",
+                args: ["From Leet Speak"]
+            }
+        ]
     }
 ]);
 

@@ -9,13 +9,12 @@ import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
-import Jimp from "jimp/es/index.js";
+import { Jimp, JimpMime, ResizeStrategy } from "jimp";
 
 /**
  * Resize Image operation
  */
 class ResizeImage extends Operation {
-
     /**
      * ResizeImage constructor
      */
@@ -24,7 +23,8 @@ class ResizeImage extends Operation {
 
         this.name = "Resize Image";
         this.module = "Image";
-        this.description = "Resizes an image to the specified width and height values.";
+        this.description =
+            "Resizes an image to the specified width and height values.";
         this.infoURL = "https://wikipedia.org/wiki/Image_scaling";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -34,23 +34,23 @@ class ResizeImage extends Operation {
                 name: "Width",
                 type: "number",
                 value: 100,
-                min: 1
+                min: 1,
             },
             {
                 name: "Height",
                 type: "number",
                 value: 100,
-                min: 1
+                min: 1,
             },
             {
                 name: "Unit type",
                 type: "option",
-                value: ["Pixels", "Percent"]
+                value: ["Pixels", "Percent"],
             },
             {
                 name: "Maintain aspect ratio",
                 type: "boolean",
-                value: false
+                value: false,
             },
             {
                 name: "Resizing algorithm",
@@ -60,10 +60,10 @@ class ResizeImage extends Operation {
                     "Bilinear",
                     "Bicubic",
                     "Hermite",
-                    "Bezier"
+                    "Bezier",
                 ],
-                defaultIndex: 1
-            }
+                defaultIndex: 1,
+            },
         ];
     }
 
@@ -80,11 +80,11 @@ class ResizeImage extends Operation {
             resizeAlg = args[4];
 
         const resizeMap = {
-            "Nearest Neighbour": Jimp.RESIZE_NEAREST_NEIGHBOR,
-            "Bilinear": Jimp.RESIZE_BILINEAR,
-            "Bicubic": Jimp.RESIZE_BICUBIC,
-            "Hermite": Jimp.RESIZE_HERMITE,
-            "Bezier": Jimp.RESIZE_BEZIER
+            "Nearest Neighbour": ResizeStrategy.NEAREST_NEIGHBOR,
+            Bilinear: ResizeStrategy.BILINEAR,
+            Bicubic: ResizeStrategy.BICUBIC,
+            Hermite: ResizeStrategy.HERMITE,
+            Bezier: ResizeStrategy.BEZIER,
         };
 
         if (!isImage(input)) {
@@ -99,23 +99,31 @@ class ResizeImage extends Operation {
         }
         try {
             if (unit === "Percent") {
-                width = image.getWidth() * (width / 100);
-                height = image.getHeight() * (height / 100);
+                width = image.width * (width / 100);
+                height = image.height * (height / 100);
             }
 
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Resizing image...");
             if (aspect) {
-                image.scaleToFit(width, height, resizeMap[resizeAlg]);
+                image.scaleToFit({
+                    w: width,
+                    h: height,
+                    mode: resizeMap[resizeAlg],
+                });
             } else {
-                image.resize(width, height, resizeMap[resizeAlg]);
+                image.resize({
+                    w: width,
+                    h: height,
+                    mode: resizeMap[resizeAlg],
+                });
             }
 
             let imageBuffer;
-            if (image.getMIME() === "image/gif") {
-                imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
+            if (image.mime === "image/gif") {
+                imageBuffer = await image.getBuffer(JimpMime.png);
             } else {
-                imageBuffer = await image.getBufferAsync(Jimp.AUTO);
+                imageBuffer = await image.getBuffer(image.mime);
             }
             return imageBuffer.buffer;
         } catch (err) {
@@ -139,7 +147,6 @@ class ResizeImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default ResizeImage;
