@@ -101,7 +101,7 @@ class NodeRecipe {
             };
 
 
-            if (prev && typeof prev.then === 'function') {
+            if (prev && typeof prev.then === "function") {
                 return prev.then(runOp);
             }
 
