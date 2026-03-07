@@ -113,6 +113,7 @@ import "./tests/MIMEDecoding.mjs";
 import "./tests/Modhex.mjs";
 import "./tests/MorseCode.mjs";
 import "./tests/MS.mjs";
+import "./tests/MSDOSDateAndTime.mjs";
 import "./tests/MultipleBombe.mjs";
 import "./tests/MurmurHash3.mjs";
 import "./tests/NetBIOS.mjs";
