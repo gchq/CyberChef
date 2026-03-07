@@ -30,4 +30,37 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "From Decimal with Auto delimiter (space)",
+        input: "72 101 108 108 111",
+        expectedOutput: "Hello",
+        recipeConfig: [
+            {
+                op: "From Decimal",
+                args: ["Auto", false]
+            },
+        ],
+    },
+    {
+        name: "From Decimal with Auto delimiter (comma)",
+        input: "72,101,108,108,111",
+        expectedOutput: "Hello",
+        recipeConfig: [
+            {
+                op: "From Decimal",
+                args: ["Auto", false]
+            },
+        ],
+    },
+    {
+        name: "From Decimal with Auto delimiter (mixed)",
+        input: "72, 101 : 108; 108\t111",
+        expectedOutput: "Hello",
+        recipeConfig: [
+            {
+                op: "From Decimal",
+                args: ["Auto", false]
+            },
+        ],
+    },
 ]);
