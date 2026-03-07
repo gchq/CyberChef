@@ -95,6 +95,25 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Text-Integer Conversion implicit round trip string-string Latin-1",
+        input: "U+00FF",
+        expectedOutput: "U+00FF",  // U+00FF (Latin small letter y with diaeresis)
+        recipeConfig: [
+            {
+                op: "Unescape Unicode Characters",
+                args: ["U+"],
+            },
+            {
+                op: "Text-Integer Conversion",
+                args: ["String"],
+            },
+            {
+                op: "Escape Unicode Characters",
+                args: ["U+", false, 4, true],
+            },
+        ],
+    },
+    {
         name: "Text-Integer Conversion unquoted text to decimal",
         input: "Hi",
         expectedOutput: "18537",

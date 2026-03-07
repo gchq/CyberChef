@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /* ---------- helper functions ---------- */
 
@@ -17,6 +18,11 @@ function textToBigInt(text) {
     let result = 0n;
     for (let i = 0; i < text.length; i++) {
         const charCode = BigInt(text.charCodeAt(i));
+        if (charCode > 255n) {
+            throw new OperationError(
+                `Character at position ${i} exceeds Latin-1 range (0-255).\n` +
+                "Only ASCII and Latin-1 characters are supported.");
+        }
         result = (result << 8n) | charCode;
     }
     return result;
@@ -58,7 +64,10 @@ class TextIntegerConverter extends Operation {
             "<b>Input format detection:</b><br>" +
             "Decimal: digits 0-9 only<br>" +
             "Hexadecimal: 0x... prefix<br>" +
-            "Quoted or unquoted text: treated as string<br><br>" ;
+            "Quoted or unquoted text: treated as string<br><br>" +
+            "<b>Character limitations:</b><br>" +
+            "Text input may only contain ASCII and Latin-1 characters (code point < 256).<br>" +
+            "Multi-byte Unicode characters will generate an error.<br><br>." ;
         this.infoURL = "https://wikipedia.org/wiki/Endianness";
         this.inputType = "string";
         this.outputType = "string";
