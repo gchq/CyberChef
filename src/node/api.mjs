@@ -324,10 +324,10 @@ export function help(input) {
  * @returns {NodeDish} of the result
  * @throws {TypeError} if invalid recipe given.
  */
-export async function bake(input, recipeConfig) {
+export function bake(input, recipeConfig) {
     const recipe = new NodeRecipe(recipeConfig);
     const dish = ensureIsDish(input);
-    return await recipe.execute(dish); 
+    return recipe.execute(dish); 
 }
 
 
