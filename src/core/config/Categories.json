@@ -164,7 +164,10 @@
             "Typex",
             "Lorenz",
             "Colossus",
-            "SIGABA"
+            "SIGABA",
+            "Flask Session Decode",
+            "Flask Session Sign",
+            "Flask Session Verify"
         ]
     },
     {
@@ -222,6 +225,9 @@
             "Subtract",
             "Multiply",
             "Divide",
+            "Modular Exponentiation",
+            "Modular Inverse",
+            "Extended GCD",
             "Mean",
             "Median",
             "Standard Deviation",
@@ -552,6 +558,7 @@
             "P-list Viewer",
             "Disassemble x86",
             "Pseudo-Random Number Generator",
+            "Pseudo-Random Integer Generator",
             "Generate De Bruijn Sequence",
             "Generate UUID",
             "Analyse UUID",
