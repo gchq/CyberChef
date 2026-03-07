@@ -81,7 +81,8 @@
             "Rison Decode",
             "To Modhex",
             "From Modhex",
-            "MIME Decoding"
+            "MIME Decoding",
+            "Kaitai Struct Decode"
         ]
     },
     {
