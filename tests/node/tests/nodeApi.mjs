@@ -170,76 +170,76 @@ TestRegister.addApiTests([
         assert(chef.bake);
     }),
 
-    it("chef.bake: should return NodeDish", async () => {
+    it("chef.bake: should return NodeDish", () => {
         const result = chef.bake("input", "to base 64");
         assert(result instanceof NodeDish);
     }),
 
-    it("chef.bake: should take an input and an op name and perform it", async () => {
+    it("chef.bake: should take an input and an op name and perform it", () => {
         const result = chef.bake("some input", "to base 32");
         assert.strictEqual(result.toString(), "ONXW2ZJANFXHA5LU");
     }),
 
-    it("chef.bake: should complain if recipe isnt a valid object", async () => {
-        await assert.rejects(() => chef.bake("some input", 3264), {
+    it("chef.bake: should complain if recipe isnt a valid object", () => {
+        assert.throws(() => chef.bake("some input", 3264), {
             name: "TypeError",
             message: "Recipe can only contain function names or functions"
         });
     }),
 
-    it("chef.bake: Should complain if string op is invalid", async () => {
-        await assert.rejects(() => chef.bake("some input", "not a valid operation"), {
+    it("chef.bake: Should complain if string op is invalid", () => {
+        assert.throws(() => chef.bake("some input", "not a valid operation"), {
             name: "TypeError",
             message: "Couldn't find an operation with name 'not a valid operation'."
         });
     }),
 
-    it("chef.bake: Should take an input and an operation and perform it", async () => {
+    it("chef.bake: Should take an input and an operation and perform it", () => {
         const result = chef.bake("https://google.com/search?q=help", chef.parseURI);
         assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = help\n");
     }),
 
-    it("chef.bake: Should complain if an invalid operation is inputted", async () => {
-        await assert.rejects(() => chef.bake("https://google.com/search?q=help", () => {}), {
+    it("chef.bake: Should complain if an invalid operation is inputted", () => {
+        assert.throws(() => chef.bake("https://google.com/search?q=help", () => {}), {
             name: "TypeError",
             message: "Inputted function not a Chef operation."
         });
     }),
 
-    it("chef.bake: accepts an array of operation names and performs them all in order", async () => {
+    it("chef.bake: accepts an array of operation names and performs them all in order", () => {
         const result = chef.bake("https://google.com/search?q=that's a complicated question", ["URL encode", "URL decode", "Parse URI"]);
         assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = that's a complicated question\n");
     }),
 
-    it("chef.bake: forgiving with operation names", async () =>{
+    it("chef.bake: forgiving with operation names", () =>{
         const result = chef.bake("https://google.com/search?q=that's a complicated question", ["urlencode", "url decode", "parseURI"]);
         assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = that's a complicated question\n");
     }),
 
-    it("chef.bake: forgiving with operation names", async () =>{
+    it("chef.bake: forgiving with operation names", () =>{
         const result = chef.bake("hello", ["to base 64"]);
         assert.strictEqual(result.toString(), "aGVsbG8=");
     }),
 
-    it("chef.bake: if recipe is empty array, return input as dish", async () => {
+    it("chef.bake: if recipe is empty array, return input as dish", () => {
         const result = chef.bake("some input", []);
         assert.strictEqual(result.toString(), "some input");
         assert(result instanceof NodeDish, "Result is not instance of NodeDish");
     }),
 
-    it("chef.bake: accepts an array of operations as recipe", async () => {
+    it("chef.bake: accepts an array of operations as recipe", () => {
         const result = chef.bake("https://google.com/search?q=that's a complicated question", [chef.URLEncode, chef.URLDecode, chef.parseURI]);
         assert.strictEqual(result.toString(), "Protocol:\thttps:\nHostname:\tgoogle.com\nPath name:\t/search\nArguments:\n\tq = that's a complicated question\n");
     }),
 
-    it("should complain if an invalid operation is inputted as part of array", async () => {
-        await assert.rejects(() => chef.bake("something", [() => {}]), {
+    it("should complain if an invalid operation is inputted as part of array", () => {
+        assert.throws(() => chef.bake("something", [() => {}]), {
             name: "TypeError",
             message: "Inputted function not a Chef operation."
         });
     }),
 
-    it("chef.bake: should take single JSON object describing op and args OBJ", async () => {
+    it("chef.bake: should take single JSON object describing op and args OBJ", () => {
         const result = chef.bake("some input", {
             op: chef.toHex,
             args: {
@@ -249,14 +249,14 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "73:6f:6d:65:20:69:6e:70:75:74");
     }),
 
-    it("chef.bake: should take single JSON object desribing op with optional args", async () => {
+    it("chef.bake: should take single JSON object desribing op with optional args", () => {
         const result = chef.bake("some input", {
             op: chef.toHex,
         });
         assert.strictEqual(result.toString(), "73 6f 6d 65 20 69 6e 70 75 74");
     }),
 
-    it("chef.bake: should take single JSON object describing op and args ARRAY", async () => {
+    it("chef.bake: should take single JSON object describing op and args ARRAY", () => {
         const result = chef.bake("some input", {
             op: chef.toHex,
             args: ["Colon"]
@@ -264,8 +264,8 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "73:6f:6d:65:20:69:6e:70:75:74");
     }),
 
-    it("chef.bake: should error if op in JSON is not chef op", async () => {
-        await assert.rejects(() => chef.bake("some input", {
+    it("chef.bake: should error if op in JSON is not chef op", () => {
+        assert.throws(() => chef.bake("some input", {
             op: () => {},
             args: ["Colon"],
         }), {
@@ -274,7 +274,7 @@ TestRegister.addApiTests([
         });
     }),
 
-    it("chef.bake: should take multiple ops in JSON object form, some ops by string", async () => {
+    it("chef.bake: should take multiple ops in JSON object form, some ops by string", () => {
         const result = chef.bake("some input", [
             {
                 op: chef.toHex,
@@ -290,7 +290,7 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "67;63;72;66;146;72;66;144;72;66;65;72;62;60;72;66;71;72;66;145;72;67;60;72;67;65;72;67;64");
     }),
 
-    it("chef.bake: should take multiple ops in JSON object form, some without args", async () => {
+    it("chef.bake: should take multiple ops in JSON object form, some without args", () => {
         const result = chef.bake("some input", [
             {
                 op: chef.toHex,
@@ -305,7 +305,7 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "67;63;40;66;146;40;66;144;40;66;65;40;62;60;40;66;71;40;66;145;40;67;60;40;67;65;40;67;64");
     }),
 
-    it("chef.bake: should handle op with multiple args", async () => {
+    it("chef.bake: should handle op with multiple args", () => {
         const result = chef.bake("some input", {
             op: "to morse code",
             args: {
@@ -317,12 +317,12 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "DotDotDot\\DashDashDash\\DashDash\\Dot,DotDot\\DashDot\\DotDashDashDot\\DotDotDash\\Dash");
     }),
 
-    it("chef.bake: should take compact JSON format from Chef Website as recipe", async () => {
+    it("chef.bake: should take compact JSON format from Chef Website as recipe", () => {
         const result = chef.bake("some input", [{"op": "To Morse Code", "args": ["Dash/Dot", "Backslash", "Comma"]}, {"op": "Hex to PEM", "args": ["SOMETHING"]}, {"op": "To Snake case", "args": [false]}]);
         assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak_end_something");
     }),
 
-    it("chef.bake: should accept Clean JSON format from Chef website as recipe", async () => {
+    it("chef.bake: should accept Clean JSON format from Chef website as recipe", () => {
         const result = chef.bake("some input", [
             { "op": "To Morse Code",
                 "args": ["Dash/Dot", "Backslash", "Comma"] },
@@ -334,7 +334,7 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak_end_something");
     }),
 
-    it("chef.bake: should accept Clean JSON format from Chef website - args optional", async () => {
+    it("chef.bake: should accept Clean JSON format from Chef website - args optional", () => {
         const result = chef.bake("some input", [
             { "op": "To Morse Code" },
             { "op": "Hex to PEM",
@@ -345,7 +345,7 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "begin_something_aaaaaaaaaaaaaa_end_something");
     }),
 
-    it("chef.bake: should accept operation names from Chef Website which contain forward slash", async () => {
+    it("chef.bake: should accept operation names from Chef Website which contain forward slash", () => {
         const result = chef.bake("I'll have the test salmon", [
             { "op": "Find / Replace",
                 "args": [{ "option": "Regex", "string": "test" }, "good", true, false, true, false]}
@@ -353,7 +353,7 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "I'll have the good salmon");
     }),
 
-    it("chef.bake: should accept operation names from Chef Website which contain a hyphen", async () => {
+    it("chef.bake: should accept operation names from Chef Website which contain a hyphen", () => {
         const result = chef.bake("I'll have the test salmon", [
             { "op": "Adler-32 Checksum",
                 "args": [] }
@@ -361,12 +361,15 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "6e4208f8");
     }),
 
-    it("chef.bake: should accept operation names from Chef Website which contain a period", async () => {
+    it("chef.bake: should accept operation names from Chef Website which contain a period", () => {
         const result = chef.bake("30 13 02 01 05 16 0e 41 6e 79 62 6f 64 79 20 74 68 65 72 65 3f", [
             { "op": "Parse ASN.1 hex string",
                 "args": [0, 32] }
         ]);
-        assert.strictEqual(result.toString(), `SEQUENCE\n  INTEGER 05\n  IA5String 'Anybody there?'\n`);
+        assert.strictEqual(result.toString(), `SEQUENCE
+  INTEGER 05
+  IA5String 'Anybody there?'
+`);
     }),
 
     it("Excluded operations: throw a sensible error when you try and call one", () => {
@@ -378,16 +381,16 @@ TestRegister.addApiTests([
         }
     }),
 
-    it("chef.bake: cannot accept flowControl operations in recipe", async () => {
-        await assert.rejects(() => chef.bake("some input", "magic"), {
+    it("chef.bake: cannot accept flowControl operations in recipe", () => {
+        assert.throws(() => chef.bake("some input", "magic"), {
             name: "TypeError",
             message: "flowControl operations like Magic are not currently allowed in recipes for chef.bake in the Node API"
         });
-        await assert.rejects(() => chef.bake("some input", magic), {
+        assert.throws(() => chef.bake("some input", magic), {
             name: "TypeError",
             message: "flowControl operations like Magic are not currently allowed in recipes for chef.bake in the Node API"
         });
-        await assert.rejects(() => chef.bake("some input", ["to base 64", "magic"]), {
+        assert.throws(() => chef.bake("some input", ["to base 64", "magic"]), {
             name: "TypeError",
             message: "flowControl operations like Magic are not currently allowed in recipes for chef.bake in the Node API"
         });
