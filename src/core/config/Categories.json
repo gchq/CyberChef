@@ -344,6 +344,7 @@
             "Pseudo-Random Number Generator",
             "Sleep",
             "File Tree",
+            "N-gram"
             "Take nth bytes",
             "Drop nth bytes"
         ]
