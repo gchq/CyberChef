@@ -120,17 +120,20 @@ module.exports = {
             jquery: "jquery/src/jquery",
         },
         fallback: {
-            "fs": false,
-            "child_process": false,
-            "net": false,
-            "tls": false,
-            "path": require.resolve("path/"),
+            "assert": require.resolve("assert/"),
             "buffer": require.resolve("buffer/"),
+            "child_process": false,
             "crypto": require.resolve("crypto-browserify"),
-            "stream": require.resolve("stream-browserify"),
-            "zlib": require.resolve("browserify-zlib"),
+            "events": require.resolve("events/"),
+            "fs": false,
+            "net": false,
+            "path": require.resolve("path/"),
             "process": false,
-            "vm": false
+            "stream": require.resolve("stream-browserify"),
+            "tls": false,
+            "url": require.resolve("url/"),
+            "vm": false,
+            "zlib": require.resolve("browserify-zlib")
         }
     },
     module: {
