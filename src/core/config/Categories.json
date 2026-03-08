@@ -41,6 +41,7 @@
             "From Base",
             "To BCD",
             "From BCD",
+            "Text-Integer Conversion",
             "To HTML Entity",
             "From HTML Entity",
             "URL Encode",
