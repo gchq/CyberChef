@@ -93,6 +93,7 @@
     "worker-loader": "^3.0.8"
   },
   "dependencies": {
+    "@alexaltea/capstone-js": "^3.0.5",
     "@astronautlabs/amf": "^0.0.6",
     "@blu3r4y/lzma": "^2.3.3",
     "@wavesenterprise/crypto-gost-js": "^2.1.0-RC1",
