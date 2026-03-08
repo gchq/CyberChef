@@ -284,7 +284,8 @@ export function ToIEEE754Float64(input) {
     const eD = BigInt(D.toString(2).length - 1);
     let e2   = eN - eD;
 
-    const GRS = 3n;                    // Guard, Round, Sticky bits
+    // Guard, Round, Sticky bits
+    const GRS = 3n;
     const totalBits = PRECISION + GRS;
 
     // Approximate bit-length of normalised N/D: e2 + 1
