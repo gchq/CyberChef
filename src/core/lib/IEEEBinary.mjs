@@ -28,6 +28,14 @@ function normaliseInput(input) {
     return String(input).trim();
 }
 
+function safeBigInt(str, context="number") {
+    try {
+        return BigInt(str);
+    } catch {
+        throw new Error(`Invalid ${context}`);
+    }
+}
+
 
 /**
  * Compute 10^exp as BigInt without using ** on BigInt, to avoid
@@ -216,19 +224,19 @@ export function ToIEEE754Float64(input) {
     const sciMatch = input.match(/^(.*)e([+-]?\d+)$/i);
     if (sciMatch) {
         input = sciMatch[1];
-        sci   = BigInt(sciMatch[2]);
+        sci = safeBigInt(sciMatch[2], "exponent");
     }
 
     let [intStr, fracStr] = input.split(".");
     intStr  = (intStr  || "0").replace(/_/g, "");
     fracStr = (fracStr || "").replace(/_/g, "");
 
-    let N = BigInt(intStr);
+    let N = safeBigInt(intStr, "integer part");
     let D = 1n;
 
     if (fracStr.length > 0) {
-        const pow10 = pow10BigInt(BigInt(fracStr.length));
-        N = N * pow10 + BigInt(fracStr);
+        const pow10 = pow10BigInt(BigInt(fracStr.length)); 
+        N = N * pow10 + safeBigInt(fracStr, "fractional part");
         D = pow10;
     }
 
