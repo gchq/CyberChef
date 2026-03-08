@@ -110,6 +110,8 @@
             "Rabbit",
             "SM4 Encrypt",
             "SM4 Decrypt",
+            "RC6 Encrypt",
+            "RC6 Decrypt",
             "GOST Encrypt",
             "GOST Decrypt",
             "GOST Sign",
@@ -165,7 +167,10 @@
             "Typex",
             "Lorenz",
             "Colossus",
-            "SIGABA"
+            "SIGABA",
+            "Flask Session Decode",
+            "Flask Session Sign",
+            "Flask Session Verify"
         ]
     },
     {
