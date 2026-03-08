@@ -4,6 +4,7 @@
  * @license Apache-2.0
  */
 
+import OperationError from "../errors/OperationError.mjs";
 import Operation from "../Operation.mjs";
 import { FromIEEE754Float64 } from "../lib/IEEEBinary.mjs";
 
@@ -35,13 +36,22 @@ class FromIEEEBinary extends Operation {
      * @param {Object[]} args
      * @returns {string}
      */
-    run(input, args) {
-        if (!input || input.trim().length === 0) {
-            return "";
-        }
 
+    run(input, args) {
+    if (input === null || input === undefined)
+        return "";
+
+    input = String(input);
+
+    if (input.trim().length === 0)
+        return "";
+
+    try {
         return FromIEEE754Float64(input);
+    } catch (err) {
+        throw new OperationError(err.message);
     }
+} 
 }
 
 export default FromIEEEBinary;
