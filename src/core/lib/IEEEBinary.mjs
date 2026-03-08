@@ -22,6 +22,12 @@ const MAX_EXP    = (1n << EXP_BITS) - 1n;
 const EXP_BITS_NUM  = Number(EXP_BITS);
 const MANT_BITS_NUM = Number(MANT_BITS);
 
+function normaliseInput(input) {
+    if (input === null || input === undefined)
+        throw new Error("Invalid decimal number");
+    return String(input).trim();
+}
+
 
 /**
  * Compute 10^exp as BigInt without using ** on BigInt, to avoid
@@ -183,7 +189,7 @@ export function FromIEEE754Float64(binary64String) {
  * ToIEEE754Float64("23.300000000000000710542735760100185871124267578125");
  */
 export function ToIEEE754Float64(input) {
-    input = String(input).trim();
+    input = normaliseInput(input);
 
     const expOnes   = "1".repeat(EXP_BITS_NUM);
     const mantZeros = "0".repeat(MANT_BITS_NUM);
