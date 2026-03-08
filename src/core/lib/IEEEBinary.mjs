@@ -36,6 +36,12 @@ function safeBigInt(str, context="number") {
     }
 }
 
+function validateDecimal(input) {
+    // validates optional-sign base-10 decimal input: integers, decimals with optional digits before or after the decimal point, and scientific notation
+    if (!/^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i.test(input))
+        throw new Error("Invalid decimal number");
+}
+
 
 /**
  * Compute 10^exp as BigInt without using ** on BigInt, to avoid
@@ -211,6 +217,8 @@ export function ToIEEE754Float64(input) {
         const s = input.startsWith("-") ? "1" : "0";
         return `${s} ${expOnes} ${mantZeros}`;
     }
+
+    validateDecimal(input);
 
     let sign = 0n;
     if (input.startsWith("-")) {
