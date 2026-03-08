@@ -7,7 +7,7 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
-import cs from "../vendor/capstone.min.js";
+import cs from "@alexaltea/capstone-js/dist/capstone.min.js";
 
 /**
  * Disassemble ARM operation
