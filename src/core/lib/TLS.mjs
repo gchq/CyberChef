@@ -863,15 +863,15 @@ export function parseHighestSupportedVersion(bytes) {
 }
 
 /**
- * Parses the application_layer_protocol_negotiation extension and returns the first value.
+ * Parses the application_layer_protocol_negotiation extension and returns the first value as raw bytes.
  * @param {Uint8Array} bytes
- * @returns {number}
+ * @returns {Uint8Array|null}
  */
 export function parseFirstALPNValue(bytes) {
     const s = new Stream(bytes);
     const alpnExtLen = s.readInt(2);
-    if (alpnExtLen < 3) return "00";
+    if (alpnExtLen < 2) return null;
     const strLen = s.readInt(1);
-    if (strLen < 2) return "00";
-    return s.readString(strLen);
+    if (strLen < 1) return null;
+    return s.getBytes(strLen);
 }
