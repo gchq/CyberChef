@@ -240,6 +240,7 @@ export function ToIEEE754Float64(input) {
         input = input.slice(1);
     }
 
+
     let sci = 0n;
     const sciMatch = input.match(/^(.*)e([+-]?\d+)$/i);
     if (sciMatch) {
@@ -286,7 +287,7 @@ export function ToIEEE754Float64(input) {
     const GRS = 3n;                    // Guard, Round, Sticky bits
     const totalBits = PRECISION + GRS;
 
-    // Approximate bit-length of normalized N/D: e2 + 1
+    // Approximate bit-length of normalised N/D: e2 + 1
     const currentBitLength = eN - eD + 1n;
 
     // Shift so we get 'totalBits' bits of precision in the quotient
@@ -343,7 +344,7 @@ export function ToIEEE754Float64(input) {
 
     if (roundUp) mant++;
 
-    // Renormalize if mantissa overflowed
+    // Renormalise if mantissa overflowed
     if (mant >= (1n << PRECISION)) {
         mant >>= 1n;
         e2   += 1n;
