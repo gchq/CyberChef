@@ -179,4 +179,21 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "Text-Integer Conversion non-Latin1 character in input",
+        input: "61 ce 93 61",
+        expectedOutput:
+`Character at position 1 exceeds Latin-1 range (0-255).
+Only ASCII and Latin-1 characters are supported.`,
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                op: "Text-Integer Conversion",
+                args: ["Decimal"],
+            },
+        ],
+    },
 ]);
