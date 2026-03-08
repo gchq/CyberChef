@@ -42,6 +42,18 @@ function validateDecimal(input) {
         throw new Error("Invalid decimal number");
 }
 
+function validateBinary64(input) {
+    input = normaliseInput(input);
+
+    if (!/^[01\s]+$/.test(input))
+        throw new Error("Binary64 must contain only 0 and 1");
+
+    if (input.replace(/\s+/g,"").length !== 64)
+        throw new Error("Binary64 must be exactly 64 bits");
+
+    return input.replace(/\s+/g,"");
+}
+
 
 /**
  * Compute 10^exp as BigInt without using ** on BigInt, to avoid
@@ -141,7 +153,7 @@ function fractionToDecimal(num, den) {
  * FromIEEE754Float64("0 10000000001 1101001100110011001100110011001100110011001100110011);
  */
 export function FromIEEE754Float64(binary64String) {
-    const bin = binary64String.trim().replace(/\s+/g, "");
+    const bin = validateBinary64(binary64String);
 
     if (bin.length !== 64) {
         throw new Error("Input must be 64 bits.");
