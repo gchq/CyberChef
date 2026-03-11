@@ -425,10 +425,6 @@ module.exports = function (grunt) {
                 command: `${pcmd.sed} 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`,
                 stdout: false
             },
-            fixJimpModule: {
-                command: `${pcmd.sed} 's/"es\\/index.js",/"es\\/index.js" ,\\n  "type": "module",/' ./node_modules/jimp/package.json`,
-                stdout: false
-            }
         },
     });
 };
