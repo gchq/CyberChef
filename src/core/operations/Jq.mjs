@@ -30,7 +30,12 @@ class Jq extends Operation {
                 name: "Query",
                 type: "string",
                 value: ""
-            }
+            },
+            {
+                name: "Raw",
+                type: "boolean",
+                value: false
+            },
         ];
     }
 
@@ -41,12 +46,20 @@ class Jq extends Operation {
      */
     run(input, args) {
         return (async () => {
-            const [query] = args;
-            try {
-                const result = await jq.json(input, query);
-                return JSON.stringify(result);
-            } catch (err) {
-                throw new OperationError(`Invalid jq expression: ${err.message}`);
+            const [query, raw] = args;
+            if (raw) {
+                const result = await jq.raw(input, query, ["-r"]);
+                if (result.stderr !== "") {
+                    throw new OperationError(`Invalid jq expression: ${result.stderr}`);
+                }
+                return result.stdout;
+            } else {
+                try {
+                    const result = await jq.json(input, query);
+                    return JSON.stringify(result);
+                } catch (err) {
+                    throw new OperationError(`Invalid jq expression: ${err.message}`);
+                }
             }
         })();
     }
