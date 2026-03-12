@@ -21,7 +21,7 @@ jobs:
       - name: Set node version
         uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 22
           registry-url: "https://registry.npmjs.org"
 
       - name: Install
