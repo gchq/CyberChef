@@ -1263,6 +1263,18 @@ class Utils {
         return Utils.gcd(y, x % y);
     }
 
+    /**
+     * Finds the greatest common divisor of two BigInt numbers.
+     *
+     * @author atsiv1 [atsiv1@proton.me]
+     * @param {BigInt} x
+     * @param {BigInt} y
+     * @returns {BigInt}
+     */
+    static gcdBigInt(a, b) {
+      return b === 0n ? a : Utils.gcdBigInt(b, a % b);
+    }
+
 
     /**
      * Finds the modular inverse of two values.
