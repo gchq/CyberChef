@@ -9,7 +9,7 @@ import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
-        name: "Median: sorts odd-length input",
+        name: "Median: odd-length input",
         input: "10 1 2",
         expectedOutput: "2",
         recipeConfig: [
@@ -20,7 +20,7 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "Median: keeps even-length behavior",
+        name: "Median: even-length input",
         input: "10 1 2 5",
         expectedOutput: "3.5",
         recipeConfig: [
