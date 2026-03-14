@@ -49,6 +49,7 @@
             "Escape Unicode Characters",
             "Unescape Unicode Characters",
             "Normalise Unicode",
+            "To Fullwidth",
             "To Quoted Printable",
             "From Quoted Printable",
             "To Punycode",
