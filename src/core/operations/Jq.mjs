@@ -7,6 +7,7 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import * as jq from "jq-wasm";
+import * as jqjs from "@michaelhomer/jqjs";
 
 /**
  * jq operation
@@ -30,7 +31,12 @@ class Jq extends Operation {
                 name: "Query",
                 type: "string",
                 value: ""
-            }
+            },
+            {
+                name: "Implementation",
+                type: "option",
+                value: ["WASM", "Native JS"]
+            },
         ];
     }
 
@@ -41,12 +47,31 @@ class Jq extends Operation {
      */
     run(input, args) {
         return (async () => {
-            const [query] = args;
-            try {
-                const result = await jq.json(input, query);
-                return JSON.stringify(result);
-            } catch (err) {
-                throw new OperationError(`Invalid jq expression: ${err.message}`);
+            const query = args[0];
+            const implementation = args[1].toLowerCase();
+
+            switch (implementation) {
+                case "wasm":
+                    try {
+                        const result = await jq.json(input, query);
+                        return JSON.stringify(result);
+                    } catch (err) {
+                        throw new OperationError(`Invalid jq expression: ${err.message}`);
+                    }
+                case "native js":
+                    let result = '';
+                    let filter = jqjs.compile(query)
+                    for (let i of filter(input)) {
+                        if (typeof i == 'undefined') {
+                            result += 'undefined (runtime error)\n'
+                        } else {
+                            result += jqjs.prettyPrint(i) + '\n'
+                        }
+                    }
+                    return result;
+                default:
+                    throw new OperationError(`Invalid jq implementation: ${implementation}`);
+                    break;
             }
         })();
     }
