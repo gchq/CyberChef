@@ -325,7 +325,7 @@ export function help(input) {
  * @throws {TypeError} if invalid recipe given.
  */
 export function bake(input, recipeConfig) {
-    const recipe =  new NodeRecipe(recipeConfig);
+    const recipe = new NodeRecipe(recipeConfig);
     const dish = ensureIsDish(input);
     return recipe.execute(dish);
 }
