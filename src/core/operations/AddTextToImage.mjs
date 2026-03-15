@@ -16,7 +16,7 @@ import {
     measureText,
     measureTextHeight,
     loadFont,
-} from "jimp";
+} from "../lib/Jimp.mjs";
 
 /**
  * Add Text To Image operation

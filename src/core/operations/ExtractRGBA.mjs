@@ -7,7 +7,7 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
-import { Jimp } from "jimp";
+import { Jimp } from "../lib/Jimp.mjs";
 
 import { RGBA_DELIM_OPTIONS } from "../lib/Delim.mjs";
 

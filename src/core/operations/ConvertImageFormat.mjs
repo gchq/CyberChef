@@ -8,16 +8,7 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import { Jimp as BaseJimp, JimpMime, PNGFilterType } from "jimp";
-import webp from "@jimp/wasm-webp";
-
-/**
- * Configure Jimp with WebP support
- */
-const Jimp = new BaseJimp({
-    plugins: [webp],
-    formats: [webp]
-});
+import { Jimp, JimpMime, PNGFilterType } from "../lib/Jimp.mjs";
 
 function canTranscodeViaCanvas() {
     return (
@@ -31,7 +22,7 @@ function canTranscodeViaCanvas() {
 }
 
 async function transcodeViaCanvas(input, inputMime, outputMime, quality) {
-    const {Blob: BlobCtor, createImageBitmap: createImageBitmapFn, OffscreenCanvas: OffscreenCanvasCtor, document} =
+    const { Blob: BlobCtor, createImageBitmap: createImageBitmapFn, OffscreenCanvas: OffscreenCanvasCtor, document } =
         globalThis;
 
     const inputBytes = input instanceof ArrayBuffer ? new Uint8Array(input) : input;
@@ -52,7 +43,7 @@ async function transcodeViaCanvas(input, inputMime, outputMime, quality) {
         const ctx = canvas.getContext("2d");
         if (!ctx) throw new Error("Unable to initialise canvas context");
 
-        if (outputMime === "image/jpeg") {
+        if (outputMime === "image/jpeg" || outputMime === "image/webp") {
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, bitmap.width, bitmap.height);
         }
@@ -98,7 +89,7 @@ class ConvertImageFormat extends Operation {
         this.name = "Convert Image Format";
         this.module = "Image";
         this.description =
-            "Converts an image between different formats. Supported output formats:<br><ul><li>Joint Photographic Experts Group (JPEG)</li><li>Portable Network Graphics (PNG)</li><li>Bitmap (BMP)</li><li>Tagged Image File Format (TIFF)</li></ul><br>Note: GIF and WebP files are supported for input, but cannot be outputted.";
+            "Converts an image between different formats. Supported output formats:<br><ul><li>Joint Photographic Experts Group (JPEG)</li><li>Portable Network Graphics (PNG)</li><li>Bitmap (BMP)</li><li>Tagged Image File Format (TIFF)</li><li>WebP</li></ul><br>Note: GIF files are supported for input, but cannot be outputted.";
         this.infoURL = "https://wikipedia.org/wiki/Image_file_formats";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -107,10 +98,10 @@ class ConvertImageFormat extends Operation {
             {
                 name: "Output Format",
                 type: "option",
-                value: ["JPEG", "PNG", "BMP", "TIFF"],
+                value: ["JPEG", "PNG", "BMP", "TIFF", "WEBP"],
             },
             {
-                name: "JPEG Quality",
+                name: "Quality (JPEG/WebP)",
                 type: "number",
                 value: 80,
                 min: 1,
@@ -137,12 +128,13 @@ class ConvertImageFormat extends Operation {
      * @returns {byteArray}
      */
     async run(input, args) {
-        const [format, jpegQuality, pngFilterType, pngDeflateLevel] = args;
+        const [format, quality, pngFilterType, pngDeflateLevel] = args;
         const formatMap = {
             JPEG: JimpMime.jpeg,
             PNG: JimpMime.png,
             BMP: JimpMime.bmp,
             TIFF: JimpMime.tiff,
+            WEBP: "image/webp",
         };
 
         const pngFilterMap = {
@@ -167,8 +159,11 @@ class ConvertImageFormat extends Operation {
             canTranscodeViaCanvas()
         ) {
             try {
-                const outputMime = mime === JimpMime.jpeg ? "image/jpeg" : "image/png";
-                const quality = outputMime === "image/jpeg" ? jpegQuality : undefined;
+                let outputMime;
+                if (mime === JimpMime.jpeg) outputMime = "image/jpeg";
+                else if (mime === "image/webp") outputMime = "image/webp";
+                else outputMime = "image/png";
+
                 return await transcodeViaCanvas(input, inputMime, outputMime, quality);
             } catch (err) {
                 // If canvas fails, we can fall back to Jimp
@@ -185,8 +180,9 @@ class ConvertImageFormat extends Operation {
             let buffer;
             switch (mime) {
                 case JimpMime.jpeg:
+                case "image/webp":
                     buffer = await image.getBuffer(mime, {
-                        quality: jpegQuality,
+                        quality: quality,
                     });
                     break;
                 case JimpMime.png:

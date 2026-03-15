@@ -15,7 +15,7 @@ import {
     ResizeStrategy,
     HorizontalAlign,
     VerticalAlign,
-} from "jimp";
+} from "../lib/Jimp.mjs";
 
 /**
  * Contain Image operation

@@ -9,7 +9,7 @@ import OperationError from "../errors/OperationError.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import { Jimp, JimpMime } from "jimp";
+import { Jimp, JimpMime } from "../lib/Jimp.mjs";
 
 /**
  * Blur Image operation

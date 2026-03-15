@@ -8,7 +8,7 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import { Jimp, JimpMime } from "jimp";
+import { Jimp, JimpMime } from "../lib/Jimp.mjs";
 
 /**
  * Normalise Image operation
