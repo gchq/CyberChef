@@ -9,7 +9,7 @@ import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import { Jimp } from "jimp";
+import { Jimp } from "../lib/Jimp.mjs";
 
 /**
  * View Bit Plane operation

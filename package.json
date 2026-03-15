@@ -188,7 +188,8 @@
     "vkbeautify": "^0.99.3",
     "xpath": "0.0.34",
     "xregexp": "^5.1.2",
-    "zlibjs": "^0.3.1"
+    "zlibjs": "^0.3.1",
+    "@jimp/wasm-webp": "^1.6.0"
   },
   "scripts": {
     "start": "npx grunt dev",
