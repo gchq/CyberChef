@@ -287,14 +287,14 @@ class RecipeWaiter {
         const cleanName = DOMPurify.sanitize(name);
         const item = new CRecipeLi(this.app, cleanName, this.app.operations[name].args);
 
+        $(item).find("[data-toggle='tooltip']").tooltip();
+
         const recipeList = document.getElementById("rec-list");
         if (index !== undefined) {
             recipeList.insertBefore(item, recipeList.children[index + 1]);
         } else {
             recipeList.appendChild(item);
         }
-
-        $(item).find("[data-toggle='tooltip']").tooltip();
 
         item.dispatchEvent(this.manager.operationadd);
         document.dispatchEvent(this.app.manager.statechange);

@@ -66,6 +66,9 @@ export class COperationList extends HTMLElement {
         ul.classList.add("op-list");
 
         this.operations.forEach((([opName, charIndicesToHighlight]) => {
+            if (!this.app.operations[opName]) {
+                return;
+            }
             const cOpLi = new COperationLi(
                 this.app,
                 opName,
