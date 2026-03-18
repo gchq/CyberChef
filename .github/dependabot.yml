@@ -11,11 +11,9 @@ updates:
     directory: '/'
     versioning-strategy: increase
     schedule:
-      # interval: 'weekly'
-      # day: 'friday'
-      # time: '03:00'
-      interval: 'daily'
-      time: '14:00'
+      interval: 'weekly'
+      day: 'friday'
+      time: '03:00'
       timezone: Europe/London
     commit-message:
       prefix: 'chore (deps): '
@@ -60,14 +58,15 @@ updates:
         update-types:
           - 'patch'
 
-  - package-ecosystem: "github-actions"
-    # Workflow files stored in the default location of `.github/workflows`; no need to
-    # specify `/.github/workflows` for `directory`
-    directory: '/'
-    schedule:
-      interval: 'weekly'
-      day: 'friday'
-      time: '03:00'
-      timezone: Europe/London
-    commit-message:
-      prefix: 'chore (deps): '
+  # Can't enable this until we are using Node 24 as the latest actions all require this version
+  # - package-ecosystem: "github-actions"
+  #   # Workflow files stored in the default location of `.github/workflows`; no need to
+  #   # specify `/.github/workflows` for `directory`
+  #   directory: '/'
+  #   schedule:
+  #     interval: 'weekly'
+  #     day: 'friday'
+  #     time: '03:00'
+  #     timezone: Europe/London
+  #   commit-message:
+  #     prefix: 'chore (deps): '
