@@ -15,7 +15,7 @@ updates:
       # day: 'friday'
       # time: '03:00'
       interval: 'daily'
-      time: '12:05'
+      time: '12:45'
       timezone: Europe/London
     commit-message:
       prefix: 'chore (deps): '
