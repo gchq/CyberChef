@@ -15,7 +15,7 @@ updates:
       # day: 'friday'
       # time: '03:00'
       interval: 'daily'
-      time: '12:45'
+      time: '14:00'
       timezone: Europe/London
     commit-message:
       prefix: 'chore (deps): '
@@ -27,7 +27,7 @@ updates:
       # see issue #2214 for rationale for each of these
       - dependency-name: '@xmldom/xmldom'
         versions: [ '>=0.9.0' ]
-      - dependnecy-name: 'bcryptjs'
+      - dependency-name: 'bcryptjs'
         versions: [ '>=3.0.0' ]
       - dependency-name: 'bootstrap'
         versions: [ '>=5.0.0' ]
@@ -64,7 +64,6 @@ updates:
     # Workflow files stored in the default location of `.github/workflows`; no need to
     # specify `/.github/workflows` for `directory`
     directory: '/'
-    versioning-strategy: increase
     schedule:
       interval: 'weekly'
       day: 'friday'
