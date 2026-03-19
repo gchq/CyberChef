@@ -14,6 +14,7 @@
 import { setLongTestFailure, logTestReport } from "../lib/utils.mjs";
 
 import TestRegister from "../lib/TestRegister.mjs";
+import "./tests/A1Z26CipherDecode.mjs";
 import "./tests/AESKeyWrap.mjs";
 import "./tests/AlternatingCaps.mjs";
 import "./tests/AvroToJSON.mjs";
@@ -61,6 +62,7 @@ import "./tests/Crypt.mjs";
 import "./tests/CSV.mjs";
 import "./tests/DateTime.mjs";
 import "./tests/DefangIP.mjs";
+import "./tests/DisassembleARM.mjs";
 import "./tests/DropNthBytes.mjs";
 import "./tests/ECDSA.mjs";
 import "./tests/ELFInfo.mjs";
@@ -153,6 +155,7 @@ import "./tests/Shuffle.mjs";
 import "./tests/SIGABA.mjs";
 import "./tests/SM2.mjs";
 import "./tests/SM4.mjs";
+import "./tests/RC6.mjs";
 // import "./tests/SplitColourChannels.mjs"; // Cannot test operations that use the File type yet
 import "./tests/SQLBeautify.mjs";
 import "./tests/StrUtils.mjs";
@@ -165,6 +168,7 @@ import "./tests/SymmetricDifference.mjs";
 import "./tests/TakeNthBytes.mjs";
 import "./tests/Template.mjs";
 import "./tests/TextEncodingBruteForce.mjs";
+import "./tests/TextIntegerConverter.mjs";
 import "./tests/ToFromInsensitiveRegex.mjs";
 import "./tests/TranslateDateTimeFormat.mjs";
 import "./tests/Typex.mjs";

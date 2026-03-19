@@ -41,6 +41,7 @@
             "From Base",
             "To BCD",
             "From BCD",
+            "Text-Integer Conversion",
             "To HTML Entity",
             "From HTML Entity",
             "URL Encode",
@@ -109,6 +110,8 @@
             "Rabbit",
             "SM4 Encrypt",
             "SM4 Decrypt",
+            "RC6 Encrypt",
+            "RC6 Decrypt",
             "GOST Encrypt",
             "GOST Decrypt",
             "GOST Sign",
@@ -164,7 +167,10 @@
             "Typex",
             "Lorenz",
             "Colossus",
-            "SIGABA"
+            "SIGABA",
+            "Flask Session Decode",
+            "Flask Session Sign",
+            "Flask Session Verify"
         ]
     },
     {
@@ -222,6 +228,9 @@
             "Subtract",
             "Multiply",
             "Divide",
+            "Modular Exponentiation",
+            "Modular Inverse",
+            "Extended GCD",
             "Mean",
             "Median",
             "Standard Deviation",
@@ -553,7 +562,9 @@
             "Chi Square",
             "P-list Viewer",
             "Disassemble x86",
+            "Disassemble ARM",
             "Pseudo-Random Number Generator",
+            "Pseudo-Random Integer Generator",
             "Generate De Bruijn Sequence",
             "Generate UUID",
             "Analyse UUID",
