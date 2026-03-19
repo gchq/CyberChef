@@ -26,7 +26,7 @@ class ExtractAudioMetadata extends Operation {
         this.module = "Default";
         this.description =
             "Extract common audio metadata across MP3 (ID3v2/ID3v1/GEOB), WAV/BWF/BW64 (INFO/bext/iXML/axml), FLAC (Vorbis Comment/Picture), OGG (Vorbis/OpusTags), AAC (ADTS), AC3 (Dolby Digital), WMA (ASF), plus best-effort MP4/M4A and AIFF scanning. Outputs normalized JSON.";
-        this.infoURL = "https://en.wikipedia.org/wiki/Audio_file_format";
+        this.infoURL = "https://wikipedia.org/wiki/Audio_file_format";
         this.inputType = "ArrayBuffer";
         this.outputType = "JSON";
         this.presentType = "html";
