@@ -30,7 +30,12 @@ class Jq extends Operation {
                 name: "Query",
                 type: "string",
                 value: ""
-            }
+            },
+            {
+                name: "Raw",
+                type: "boolean",
+                value: false
+            },
         ];
     }
 
@@ -40,7 +45,7 @@ class Jq extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [query] = args;
+        const [query, raw] = args;
         let result;
 
         try {
@@ -48,8 +53,11 @@ class Jq extends Operation {
         } catch (err) {
             throw new OperationError(`Invalid jq expression: ${err.message}`);
         }
-
-        return JSON.stringify(result);
+        if (raw && typeof result === 'string') {
+            return result;
+        } else {
+            return JSON.stringify(result);
+        }
     }
 
 }
