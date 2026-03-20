@@ -13,9 +13,11 @@ import { readFile } from "fs/promises";
 if (globalThis.fetch) {
     const originalFetch = globalThis.fetch;
     globalThis.fetch = async function patchedFetch(url, options) {
-        const urlStr = typeof url === "string" ? url
-            : url instanceof URL ? url.href
-            : String(url);
+        const urlStr = typeof url === "string" ?
+            url :
+            url instanceof URL ?
+                url.href :
+                String(url);
         // Intercept bare filesystem paths (absolute POSIX or Windows)
         if (urlStr.startsWith("/") || /^[A-Za-z]:[/\\]/.test(urlStr)) {
             const buffer = await readFile(urlStr);
