@@ -14,6 +14,7 @@
 import { setLongTestFailure, logTestReport } from "../lib/utils.mjs";
 
 import TestRegister from "../lib/TestRegister.mjs";
+import "./tests/A1Z26CipherDecode.mjs";
 import "./tests/AESKeyWrap.mjs";
 import "./tests/AlternatingCaps.mjs";
 import "./tests/AvroToJSON.mjs";
@@ -66,6 +67,7 @@ import "./tests/DropNthBytes.mjs";
 import "./tests/ECDSA.mjs";
 import "./tests/ELFInfo.mjs";
 import "./tests/Enigma.mjs";
+import "./tests/ExtractAudioMetadata.mjs";
 import "./tests/ExtractEmailAddresses.mjs";
 import "./tests/ExtractHashes.mjs";
 import "./tests/ExtractIPAddresses.mjs";
