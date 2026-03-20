@@ -53,7 +53,7 @@ class Jq extends Operation {
         } catch (err) {
             throw new OperationError(`Invalid jq expression: ${err.message}`);
         }
-        if (raw && typeof result === 'string') {
+        if (raw && typeof result === "string") {
             return result;
         } else {
             return JSON.stringify(result);
