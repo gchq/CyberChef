@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import * as jq from "jq-wasm";
+import jq from "jq-web";
 
 /**
  * jq operation
@@ -40,15 +40,16 @@ class Jq extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        return (async () => {
-            const [query] = args;
-            try {
-                const result = await jq.json(input, query);
-                return JSON.stringify(result);
-            } catch (err) {
-                throw new OperationError(`Invalid jq expression: ${err.message}`);
-            }
-        })();
+        const [query] = args;
+        let result;
+
+        try {
+            result = jq.json(input, query);
+        } catch (err) {
+            throw new OperationError(`Invalid jq expression: ${err.message}`);
+        }
+
+        return JSON.stringify(result);
     }
 
 }

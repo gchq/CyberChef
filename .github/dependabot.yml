@@ -1,0 +1,72 @@
+# See the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  #
+  # Check for minor/patch versions only on a weekly basis - we are likely to be able to
+  # merge these routinely. Major versions we'll check for and update manually.
+  #
+  - package-ecosystem: 'npm'
+    directory: '/'
+    versioning-strategy: increase
+    schedule:
+      interval: 'weekly'
+      day: 'friday'
+      time: '03:00'
+      timezone: Europe/London
+    commit-message:
+      prefix: 'chore (deps): '
+    ignore:
+      # we'll do any major version updates manually
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
+      # packages we can't currently update
+      # see issue #2214 for rationale for each of these
+      - dependency-name: '@xmldom/xmldom'
+        versions: [ '>=0.9.0' ]
+      - dependency-name: 'bcryptjs'
+        versions: [ '>=3.0.0' ]
+      - dependency-name: 'bootstrap'
+        versions: [ '>=5.0.0' ]
+      - dependency-name: 'bson'
+        versions: [ '>=5.0.0' ]
+      - dependency-name: 'cbor'
+        versions: [ '>=10.0.0' ]
+      - dependency-name: 'cspell'
+        versions: [ '>=9.0.0' ]
+      - dependency-name: 'eslint'
+        versions: [ '>=10.0.0' ]
+      - dependency-name: 'eslint-plugin-jsdoc'
+        versions: [ '>=51.0.0' ]
+      - dependency-name: 'fernet'
+        versions: [ '>=0.4.0' ]
+      - dependency-name: 'geodesy'
+        versions: [ '>=2.0.0' ]
+      - dependency-name: 'otpauth'
+        versions: [ '>=9.4.0' ]
+      - dependency-name: 'webpack-dev-server'
+        versions: [ '>=5.1.0' ]
+    groups:
+      #
+      # Grouping so we don't get a seperate PR for every patch version.
+      #
+      patch-updates:
+        applies-to: version-updates
+        patterns:
+          - '*'
+        update-types:
+          - 'patch'
+
+  # Can't enable this until we are using Node 24 as the latest actions all require this version
+  # - package-ecosystem: "github-actions"
+  #   # Workflow files stored in the default location of `.github/workflows`; no need to
+  #   # specify `/.github/workflows` for `directory`
+  #   directory: '/'
+  #   schedule:
+  #     interval: 'weekly'
+  #     day: 'friday'
+  #     time: '03:00'
+  #     timezone: Europe/London
+  #   commit-message:
+  #     prefix: 'chore (deps): '
