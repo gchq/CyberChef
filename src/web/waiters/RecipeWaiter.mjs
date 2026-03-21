@@ -538,7 +538,7 @@ class RecipeWaiter {
      */
     textArgDragover (e) {
         // This will be set if we're dragging an operation
-        if (e.dataTransfer.effectAllowed === "move")
+        if (this.dragInProgress)
             return false;
 
         e.stopPropagation();
@@ -568,7 +568,7 @@ class RecipeWaiter {
      */
     textArgDrop(e) {
         // This will be set if we're dragging an operation
-        if (e.dataTransfer.effectAllowed === "move")
+        if (this.dragInProgress)
             return false;
 
         e.stopPropagation();
