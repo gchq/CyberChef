@@ -1,0 +1,151 @@
+/**
+ * Nord theme definitions
+ *
+ * Based on the Nord color palette by Arctic Ice Studio
+ * https://www.nordtheme.com/
+ *
+ * Nord structure by qdii [qdii@pm.me]
+ *
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+:root.nord {
+    /* Nord Color Palette */
+    --nord0: #2e3440; /* Polar Night - Darkest background */
+    --nord1: #3b4252; /* Polar Night - Lighter background */
+    --nord2: #434c5e; /* Polar Night - Even lighter background */
+    --nord3: #4c566a; /* Polar Night - Borders, highlights */
+    --nord4: #d8dee9; /* Snow Storm - Primary font color */
+    --nord5: #e5e9f0; /* Snow Storm - Lighter font color */
+    --nord6: #eceff4; /* Snow Storm - Lightest font color */
+    --nord7: #8fbcbb; /* Frost - Moss green */
+    --nord8: #88c0d0; /* Frost - Icy blue */
+    --nord9: #81a1c1; /* Frost - Water blue */
+    --nord10: #5e81ac; /* Frost - Deep blue */
+    --nord11: #bf616d; /* Aurora - Red */
+    --nord12: #d08770; /* Aurora - Orange */
+    --nord13: #ebcb8b; /* Aurora - Yellow */
+    --nord14: #a3be8c; /* Aurora - Green */
+    --nord15: #b48ead; /* Aurora - Purple */
+
+    /* General */
+    --primary-font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, sans-serif;
+    --primary-font-colour: var(--nord4);
+    --primary-font-size: 14px;
+    --primary-line-height: 20px;
+
+    --fixed-width-font-family:
+        SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
+    --fixed-width-font-colour: var(--nord4);
+    --fixed-width-font-size: inherit;
+
+    --subtext-font-colour: var(--nord3);
+    --subtext-font-size: 13px;
+
+    --primary-background-colour: var(--nord0);
+    --secondary-background-colour: var(--nord1);
+
+    --primary-border-colour: var(--nord3);
+    --secondary-border-colour: var(--nord2);
+
+    --title-colour: var(--nord6);
+    --title-weight: bold;
+    --title-background-colour: var(--nord1);
+
+    --banner-font-colour: var(--nord6);
+    --banner-bg-colour: var(--nord10);
+    --banner-url-colour: var(--nord8);
+
+    --category-list-font-colour: var(--nord4);
+
+    --loader-background-colour: var(--nord1);
+    --loader-outer-colour: var(--nord10);
+    --loader-middle-colour: var(--nord9);
+    --loader-inner-colour: var(--nord8);
+
+    /* Operation colours */
+    --op-list-operation-font-colour: var(--nord4);
+    --op-list-operation-bg-colour: var(--nord1);
+    --op-list-operation-border-colour: var(--nord2);
+
+    --rec-list-operation-font-colour: var(--nord6);
+    --rec-list-operation-bg-colour: var(--nord10);
+    --rec-list-operation-border-colour: var(--nord9);
+
+    --selected-operation-font-color: var(--nord6);
+    --selected-operation-bg-colour: var(--nord10);
+    --selected-operation-border-colour: var(--nord8);
+
+    --breakpoint-font-colour: var(--nord6);
+    --breakpoint-bg-colour: var(--nord11);
+    --breakpoint-border-colour: var(--nord11);
+
+    --disabled-font-colour: var(--nord3);
+    --disabled-bg-colour: var(--nord1);
+    --disabled-border-colour: var(--nord2);
+
+    --fc-operation-font-colour: var(--nord4);
+    --fc-operation-bg-colour: var(--nord15);
+    --fc-operation-border-colour: var(--nord15);
+
+    --fc-breakpoint-operation-font-colour: var(--nord6);
+    --fc-breakpoint-operation-bg-colour: var(--nord11);
+    --fc-breakpoint-operation-border-colour: var(--nord12);
+
+    /* Operation arguments */
+    --op-title-font-weight: bold;
+    --arg-font-colour: var(--nord5);
+    --arg-background: var(--nord2);
+    --arg-border-colour: var(--nord3);
+    --arg-disabled-background: var(--nord1);
+    --arg-label-colour: var(--nord8);
+
+    /* Operation buttons */
+    --disable-icon-colour: var(--nord4);
+    --disable-icon-selected-colour: var(--nord12);
+    --breakpoint-icon-colour: var(--nord4);
+    --breakpoint-icon-selected-colour: var(--nord11);
+
+    /* Buttons */
+    --btn-default-font-colour: var(--nord6);
+    --btn-default-bg-colour: var(--nord2);
+    --btn-default-border-colour: var(--nord3);
+
+    --btn-default-hover-font-colour: var(--nord6);
+    --btn-default-hover-bg-colour: var(--nord3);
+    --btn-default-hover-border-colour: var(--nord3);
+
+    --btn-success-font-colour: var(--nord0);
+    --btn-success-bg-colour: var(--nord14);
+    --btn-success-border-colour: var(--nord14);
+
+    --btn-success-hover-font-colour: var(--nord0);
+    --btn-success-hover-bg-colour: #b1d09a; /* Lighter nord14 */
+    --btn-success-hover-border-colour: #b1d09a;
+
+    /* Highlighter colours */
+    --hl1: var(--nord13); /* Yellow */
+    --hl2: var(--nord8); /* Icy blue */
+    --hl3: var(--nord11); /* Red */
+    --hl4: var(--nord15); /* Purple */
+    --hl5: var(--nord14); /* Green */
+
+    /* Scrollbar */
+    --scrollbar-track: var(--nord1);
+    --scrollbar-thumb: var(--nord3);
+    --scrollbar-hover: var(--nord10);
+
+    /* Misc. */
+    --drop-file-border-colour: var(--nord10);
+    --table-border-colour: var(--nord3);
+    --popover-background: var(--nord2);
+    --popover-border-colour: var(--nord10);
+    --code-background: var(--nord1);
+    --code-font-colour: var(--nord5);
+    --input-highlight-colour: var(--nord8);
+    --input-border-colour: var(--nord3);
+}
