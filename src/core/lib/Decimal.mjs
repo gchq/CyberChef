@@ -24,12 +24,17 @@ import Utils from "../Utils.mjs";
  * fromDecimal("10:20:30", "Colon");
  */
 export function fromDecimal(data, delim="Auto") {
-    delim = Utils.charRep(delim);
-    const output = [];
-    let byteStr = data.split(delim);
-    if (byteStr[byteStr.length-1] === "")
-        byteStr = byteStr.slice(0, byteStr.length-1);
+    let byteStr;
+    if (delim === "Auto") {
+        byteStr = data.split(/[^\d-]+/);
+    } else {
+        delim = Utils.charRep(delim);
+        byteStr = data.split(delim);
+    }
 
+    byteStr = byteStr.filter(str => str !== "");
+
+    const output = [];
     for (let i = 0; i < byteStr.length; i++) {
         output[i] = parseInt(byteStr[i], 10);
     }
