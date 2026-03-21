@@ -183,10 +183,11 @@ class OperationsWaiter {
      * @param {Element} el - The element to start selecting from
      */
     enableOpsListPopovers(el) {
+        const self = this;
         $(el).find("[data-toggle=popover]").addBack("[data-toggle=popover]")
             .popover({trigger: "manual"})
             .on("mouseenter", function(e) {
-                if (e.buttons > 0) return; // Mouse button held down - likely dragging an operation
+                if (e.buttons > 0 || self.manager.recipe.dragInProgress) return; // Mouse button held down - likely dragging an operation
                 const _this = this;
                 $(this).popover("show");
                 $(".popover").on("mouseleave", function () {
