@@ -63,4 +63,26 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "From Decimal with Auto delimiter (newline)",
+        input: "72\n101\n108\n108\n111",
+        expectedOutput: "Hello",
+        recipeConfig: [
+            {
+                op: "From Decimal",
+                args: ["Auto", false]
+            },
+        ],
+    },
+    {
+        name: "From Decimal with Auto delimiter and signed values",
+        input: "-130 -140 -152 -151 115 33 0 -1",
+        expectedOutput: "~this!\u0000\u00ff",
+        recipeConfig: [
+            {
+                op: "From Decimal",
+                args: ["Auto", true]
+            },
+        ],
+    },
 ]);
