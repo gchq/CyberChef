@@ -1,18 +1,19 @@
 name: "Master Build, Test & Deploy"
 
-permissions:
-  contents: read
-
 on:
   workflow_dispatch:
   push:
     branches:
       - master
 
+permissions:
+  contents: read
+
 jobs:
   main:
     permissions:
       contents: write
+      pages: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
