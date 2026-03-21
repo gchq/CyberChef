@@ -37,21 +37,24 @@ class FromIEEEBinary extends Operation {
      * @returns {string}
      */
 
+    /**
+     *
+     */
     run(input, args) {
-    if (input === null || input === undefined)
-        return "";
+        if (input === null || input === undefined)
+            return "";
 
-    input = String(input);
+        input = String(input);
 
-    if (input.trim().length === 0)
-        return "";
+        if (input.trim().length === 0)
+            return "";
 
-    try {
-        return FromIEEE754Float64(input);
-    } catch (err) {
-        throw new OperationError(err.message);
+        try {
+            return FromIEEE754Float64(input);
+        } catch (err) {
+            throw new OperationError(err.message);
+        }
     }
-} 
 }
 
 export default FromIEEEBinary;

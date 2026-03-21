@@ -35,22 +35,22 @@ class ToIEEEBinary extends Operation {
      * @param {Object[]} args
      * @returns {string}
      */
-   run(input, args) {
-    if (input === null || input === undefined)
-        return "";
+    run(input, args) {
+        if (input === null || input === undefined)
+            return "";
 
-    input = String(input);
+        input = String(input);
 
-    if (input.trim().length === 0)
-        return "";
+        if (input.trim().length === 0)
+            return "";
 
-    try {
-        return ToIEEE754Float64(input);
-    } catch (err) {
-        throw new OperationError(err.message);
+        try {
+            return ToIEEE754Float64(input);
+        } catch (err) {
+            throw new OperationError(err.message);
 
+        }
     }
-}
 
 }
 

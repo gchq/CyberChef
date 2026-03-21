@@ -1272,7 +1272,7 @@ class Utils {
      * @returns {BigInt}
      */
     static gcdBigInt(a, b) {
-      return b === 0n ? a : Utils.gcdBigInt(b, a % b);
+        return b === 0n ? a : Utils.gcdBigInt(b, a % b);
     }
 
 

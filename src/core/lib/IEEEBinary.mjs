@@ -22,12 +22,18 @@ const MAX_EXP    = (1n << EXP_BITS) - 1n;
 const EXP_BITS_NUM  = Number(EXP_BITS);
 const MANT_BITS_NUM = Number(MANT_BITS);
 
+/**
+ *
+ */
 function normaliseInput(input) {
     if (input === null || input === undefined)
         throw new Error("Invalid decimal number");
     return String(input).trim();
 }
 
+/**
+ *
+ */
 function safeBigInt(str, context="number") {
     try {
         return BigInt(str);
@@ -36,22 +42,28 @@ function safeBigInt(str, context="number") {
     }
 }
 
+/**
+ *
+ */
 function validateDecimal(input) {
     // validates optional-sign base-10 decimal input: integers, decimals with optional digits before or after the decimal point, and scientific notation
     if (!/^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i.test(input))
         throw new Error("Invalid decimal number");
 }
 
+/**
+ *
+ */
 function validateBinary64(input) {
     input = normaliseInput(input);
 
     if (!/^[01\s]+$/.test(input))
         throw new Error("Binary64 must contain only 0 and 1");
 
-    if (input.replace(/\s+/g,"").length !== 64)
+    if (input.replace(/\s+/g, "").length !== 64)
         throw new Error("Binary64 must be exactly 64 bits");
 
-    return input.replace(/\s+/g,"");
+    return input.replace(/\s+/g, "");
 }
 
 
@@ -256,7 +268,7 @@ export function ToIEEE754Float64(input) {
     let D = 1n;
 
     if (fracStr.length > 0) {
-        const pow10 = pow10BigInt(BigInt(fracStr.length)); 
+        const pow10 = pow10BigInt(BigInt(fracStr.length));
         N = N * pow10 + safeBigInt(fracStr, "fractional part");
         D = pow10;
     }
