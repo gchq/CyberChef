@@ -163,7 +163,7 @@ class RecipeWaiter {
      * @param {event} e
      */
     favDragover(e) {
-        if (e.dataTransfer.effectAllowed !== "move")
+        if (!this.dragInProgress)
             return false;
 
         e.stopPropagation();
