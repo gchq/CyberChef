@@ -1,0 +1,159 @@
+/**
+ * Catppuccin Macchiato theme definitions
+ *
+ * Based on the Catppuccin color palette
+ * https://catppuccin.com/
+ *
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+:root.catppuccin-macchiato {
+    /* Catppuccin Macchiato Color Palette */
+    --macchiato-rosewater: #f4dbd6;
+    --macchiato-flamingo: #f0c6c6;
+    --macchiato-pink: #f5bde6;
+    --macchiato-mauve: #c6a0f6;
+    --macchiato-red: #ed8796;
+    --macchiato-maroon: #ee99a0;
+    --macchiato-peach: #f5a97f;
+    --macchiato-yellow: #eed49f;
+    --macchiato-green: #a6da95;
+    --macchiato-teal: #8bd5ca;
+    --macchiato-sky: #91d7e3;
+    --macchiato-sapphire: #7dc4e4;
+    --macchiato-blue: #8aadf4;
+    --macchiato-lavender: #b7bdf8;
+    --macchiato-text: #cad3f5;
+    --macchiato-subtext1: #b8c0e0;
+    --macchiato-subtext0: #a5adce;
+    --macchiato-overlay2: #939ab7;
+    --macchiato-overlay1: #8087a2;
+    --macchiato-overlay0: #6e738d;
+    --macchiato-surface2: #5b6078;
+    --macchiato-surface1: #494d64;
+    --macchiato-surface0: #363a4f;
+    --macchiato-base: #24273a; /* Primary Background */
+    --macchiato-mantle: #1e2030; /* Secondary Background */
+    --macchiato-crust: #181926; /* Borders, accessory background */
+
+    /* General */
+    --primary-font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, sans-serif;
+    --primary-font-colour: var(--macchiato-text);
+    --primary-font-size: 14px;
+    --primary-line-height: 20px;
+
+    --fixed-width-font-family:
+        SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
+    --fixed-width-font-colour: var(--macchiato-text);
+    --fixed-width-font-size: inherit;
+
+    --subtext-font-colour: var(--macchiato-subtext0);
+    --subtext-font-size: 13px;
+
+    --primary-background-colour: var(--macchiato-base);
+    --secondary-background-colour: var(--macchiato-mantle);
+
+    --primary-border-colour: var(--macchiato-surface1);
+    --secondary-border-colour: var(--macchiato-surface0);
+
+    --title-colour: var(--macchiato-text);
+    --title-weight: bold;
+    --title-background-colour: var(--macchiato-mantle);
+
+    --banner-font-colour: var(--macchiato-base);
+    --banner-bg-colour: var(--macchiato-blue);
+    --banner-url-colour: var(--macchiato-sky);
+
+    --category-list-font-colour: var(--macchiato-text);
+
+    --loader-background-colour: var(--macchiato-mantle);
+    --loader-outer-colour: var(--macchiato-blue);
+    --loader-middle-colour: var(--macchiato-sky);
+    --loader-inner-colour: var(--macchiato-sapphire);
+
+    /* Operation colours */
+    --op-list-operation-font-colour: var(--macchiato-text);
+    --op-list-operation-bg-colour: var(--macchiato-base);
+    --op-list-operation-border-colour: var(--macchiato-surface0);
+
+    --rec-list-operation-font-colour: var(--macchiato-base);
+    --rec-list-operation-bg-colour: var(--macchiato-sapphire);
+    --rec-list-operation-border-colour: var(--macchiato-sky);
+
+    --selected-operation-font-color: var(--macchiato-base);
+    --selected-operation-bg-colour: var(--macchiato-blue);
+    --selected-operation-border-colour: var(--macchiato-sapphire);
+
+    --breakpoint-font-colour: var(--macchiato-base);
+    --breakpoint-bg-colour: var(--macchiato-red);
+    --breakpoint-border-colour: var(--macchiato-red);
+
+    --disabled-font-colour: var(--macchiato-overlay1);
+    --disabled-bg-colour: var(--macchiato-surface0);
+    --disabled-border-colour: var(--macchiato-surface1);
+
+    --fc-operation-font-colour: var(--macchiato-base);
+    --fc-operation-bg-colour: var(--macchiato-mauve);
+    --fc-operation-border-colour: var(--macchiato-mauve);
+
+    --fc-breakpoint-operation-font-colour: var(--macchiato-base);
+    --fc-breakpoint-operation-bg-colour: var(--macchiato-red);
+    --fc-breakpoint-operation-border-colour: var(--macchiato-maroon);
+
+    /* Operation arguments */
+    --op-title-font-weight: bold;
+    --arg-font-colour: var(--macchiato-subtext1);
+    --arg-background: var(--macchiato-mantle);
+    --arg-border-colour: var(--macchiato-surface1);
+    --arg-disabled-background: var(--macchiato-surface0);
+    --arg-label-colour: var(--macchiato-blue);
+
+    /* Operation buttons */
+    --disable-icon-colour: var(--macchiato-text);
+    --disable-icon-selected-colour: var(--macchiato-peach);
+    --breakpoint-icon-colour: var(--macchiato-text);
+    --breakpoint-icon-selected-colour: var(--macchiato-red);
+
+    /* Buttons */
+    --btn-default-font-colour: var(--macchiato-text);
+    --btn-default-bg-colour: var(--macchiato-surface0);
+    --btn-default-border-colour: var(--macchiato-surface1);
+
+    --btn-default-hover-font-colour: var(--macchiato-text);
+    --btn-default-hover-bg-colour: var(--macchiato-surface1);
+    --btn-default-hover-border-colour: var(--macchiato-surface2);
+
+    --btn-success-font-colour: var(--macchiato-base);
+    --btn-success-bg-colour: var(--macchiato-green);
+    --btn-success-border-colour: var(--macchiato-green);
+
+    --btn-success-hover-font-colour: var(--macchiato-base);
+    --btn-success-hover-bg-colour: #b4e3a3; /* Lighter macchiato-green */
+    --btn-success-hover-border-colour: #b4e3a3;
+
+    /* Highlighter colours */
+    --hl1: var(--macchiato-yellow);
+    --hl2: var(--macchiato-sky);
+    --hl3: var(--macchiato-red);
+    --hl4: var(--macchiato-mauve);
+    --hl5: var(--macchiato-green);
+
+    /* Scrollbar */
+    --scrollbar-track: var(--macchiato-mantle);
+    --scrollbar-thumb: var(--macchiato-surface1);
+    --scrollbar-hover: var(--macchiato-surface2);
+
+    /* Misc. */
+    --drop-file-border-colour: var(--macchiato-blue);
+    --table-border-colour: var(--macchiato-surface0);
+    --popover-background: var(--macchiato-crust);
+    --popover-border-colour: var(--macchiato-surface1);
+    --code-background: var(--macchiato-mantle);
+    --code-font-colour: var(--macchiato-subtext1);
+    --input-highlight-colour: var(--macchiato-blue);
+    --input-border-colour: var(--macchiato-surface1);
+}

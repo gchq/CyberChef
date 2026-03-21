@@ -1,0 +1,159 @@
+/**
+ * Catppuccin Frappé theme definitions
+ *
+ * Based on the Catppuccin color palette
+ * https://catppuccin.com/
+ *
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+:root.catppuccin-frappe {
+    /* Catppuccin Frappé Color Palette */
+    --frappe-rosewater: #f2d5cf;
+    --frappe-flamingo: #eebebe;
+    --frappe-pink: #f4b8e4;
+    --frappe-mauve: #ca9ee6;
+    --frappe-red: #e78284;
+    --frappe-maroon: #ea999c;
+    --frappe-peach: #ef9f76;
+    --frappe-yellow: #e5c890;
+    --frappe-green: #a6d189;
+    --frappe-teal: #81c8be;
+    --frappe-sky: #99d1db;
+    --frappe-sapphire: #85c1dc;
+    --frappe-blue: #8caaee;
+    --frappe-lavender: #babbf1;
+    --frappe-text: #c6d0f5;
+    --frappe-subtext1: #b5bfe2;
+    --frappe-subtext0: #a5adce;
+    --frappe-overlay2: #949cbb;
+    --frappe-overlay1: #838ba7;
+    --frappe-overlay0: #737994;
+    --frappe-surface2: #626880;
+    --frappe-surface1: #51576d;
+    --frappe-surface0: #414559;
+    --frappe-base: #303446; /* Primary Background */
+    --frappe-mantle: #292c3c; /* Secondary Background */
+    --frappe-crust: #232634; /* Borders, accessory background */
+
+    /* General */
+    --primary-font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, sans-serif;
+    --primary-font-colour: var(--frappe-text);
+    --primary-font-size: 14px;
+    --primary-line-height: 20px;
+
+    --fixed-width-font-family:
+        SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
+    --fixed-width-font-colour: var(--frappe-text);
+    --fixed-width-font-size: inherit;
+
+    --subtext-font-colour: var(--frappe-subtext0);
+    --subtext-font-size: 13px;
+
+    --primary-background-colour: var(--frappe-base);
+    --secondary-background-colour: var(--frappe-mantle);
+
+    --primary-border-colour: var(--frappe-surface1);
+    --secondary-border-colour: var(--frappe-surface0);
+
+    --title-colour: var(--frappe-text);
+    --title-weight: bold;
+    --title-background-colour: var(--frappe-mantle);
+
+    --banner-font-colour: var(--frappe-base);
+    --banner-bg-colour: var(--frappe-blue);
+    --banner-url-colour: var(--frappe-sky);
+
+    --category-list-font-colour: var(--frappe-text);
+
+    --loader-background-colour: var(--frappe-mantle);
+    --loader-outer-colour: var(--frappe-blue);
+    --loader-middle-colour: var(--frappe-sky);
+    --loader-inner-colour: var(--frappe-sapphire);
+
+    /* Operation colours */
+    --op-list-operation-font-colour: var(--frappe-text);
+    --op-list-operation-bg-colour: var(--frappe-base);
+    --op-list-operation-border-colour: var(--frappe-surface0);
+
+    --rec-list-operation-font-colour: var(--frappe-base);
+    --rec-list-operation-bg-colour: var(--frappe-sapphire);
+    --rec-list-operation-border-colour: var(--frappe-sky);
+
+    --selected-operation-font-color: var(--frappe-base);
+    --selected-operation-bg-colour: var(--frappe-blue);
+    --selected-operation-border-colour: var(--frappe-sapphire);
+
+    --breakpoint-font-colour: var(--frappe-base);
+    --breakpoint-bg-colour: var(--frappe-red);
+    --breakpoint-border-colour: var(--frappe-red);
+
+    --disabled-font-colour: var(--frappe-overlay1);
+    --disabled-bg-colour: var(--frappe-surface0);
+    --disabled-border-colour: var(--frappe-surface1);
+
+    --fc-operation-font-colour: var(--frappe-base);
+    --fc-operation-bg-colour: var(--frappe-mauve);
+    --fc-operation-border-colour: var(--frappe-mauve);
+
+    --fc-breakpoint-operation-font-colour: var(--frappe-base);
+    --fc-breakpoint-operation-bg-colour: var(--frappe-red);
+    --fc-breakpoint-operation-border-colour: var(--frappe-maroon);
+
+    /* Operation arguments */
+    --op-title-font-weight: bold;
+    --arg-font-colour: var(--frappe-subtext1);
+    --arg-background: var(--frappe-mantle);
+    --arg-border-colour: var(--frappe-surface1);
+    --arg-disabled-background: var(--frappe-surface0);
+    --arg-label-colour: var(--frappe-blue);
+
+    /* Operation buttons */
+    --disable-icon-colour: var(--frappe-text);
+    --disable-icon-selected-colour: var(--frappe-peach);
+    --breakpoint-icon-colour: var(--frappe-text);
+    --breakpoint-icon-selected-colour: var(--frappe-red);
+
+    /* Buttons */
+    --btn-default-font-colour: var(--frappe-text);
+    --btn-default-bg-colour: var(--frappe-surface0);
+    --btn-default-border-colour: var(--frappe-surface1);
+
+    --btn-default-hover-font-colour: var(--frappe-text);
+    --btn-default-hover-bg-colour: var(--frappe-surface1);
+    --btn-default-hover-border-colour: var(--frappe-surface2);
+
+    --btn-success-font-colour: var(--frappe-base);
+    --btn-success-bg-colour: var(--frappe-green);
+    --btn-success-border-colour: var(--frappe-green);
+
+    --btn-success-hover-font-colour: var(--frappe-base);
+    --btn-success-hover-bg-colour: #b1d992; /* Lighter frappe-green */
+    --btn-success-hover-border-colour: #b1d992;
+
+    /* Highlighter colours */
+    --hl1: var(--frappe-yellow);
+    --hl2: var(--frappe-sky);
+    --hl3: var(--frappe-red);
+    --hl4: var(--frappe-mauve);
+    --hl5: var(--frappe-green);
+
+    /* Scrollbar */
+    --scrollbar-track: var(--frappe-mantle);
+    --scrollbar-thumb: var(--frappe-surface1);
+    --scrollbar-hover: var(--frappe-surface2);
+
+    /* Misc. */
+    --drop-file-border-colour: var(--frappe-blue);
+    --table-border-colour: var(--frappe-surface0);
+    --popover-background: var(--frappe-crust);
+    --popover-border-colour: var(--frappe-surface1);
+    --code-background: var(--frappe-mantle);
+    --code-font-colour: var(--frappe-subtext1);
+    --input-highlight-colour: var(--frappe-blue);
+    --input-border-colour: var(--frappe-surface1);
+}

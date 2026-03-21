@@ -1,0 +1,159 @@
+/**
+ * Catppuccin Mocha theme definitions
+ *
+ * Based on the Catppuccin color palette
+ * https://catppuccin.com/
+ *
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+:root.catppuccin-mocha {
+    /* Catppuccin Mocha Color Palette */
+    --mocha-rosewater: #f5e0dc;
+    --mocha-flamingo: #f2cdcd;
+    --mocha-pink: #f5c2e7;
+    --mocha-mauve: #cba6f7;
+    --mocha-red: #f38ba8;
+    --mocha-maroon: #eba0ac;
+    --mocha-peach: #fab387;
+    --mocha-yellow: #f9e2af;
+    --mocha-green: #a6e3a1;
+    --mocha-teal: #94e2d5;
+    --mocha-sky: #89dceb;
+    --mocha-sapphire: #74c7ec;
+    --mocha-blue: #89b4fa;
+    --mocha-lavender: #b4befe;
+    --mocha-text: #cdd6f4;
+    --mocha-subtext1: #bac2de;
+    --mocha-subtext0: #a6adc8;
+    --mocha-overlay2: #9399b2;
+    --mocha-overlay1: #7f849c;
+    --mocha-overlay0: #6c7086;
+    --mocha-surface2: #585b70;
+    --mocha-surface1: #45475a;
+    --mocha-surface0: #313244;
+    --mocha-base: #1e1e2e; /* Primary Background */
+    --mocha-mantle: #181825; /* Secondary Background */
+    --mocha-crust: #11111b; /* Borders, accessory background */
+
+    /* General */
+    --primary-font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, sans-serif;
+    --primary-font-colour: var(--mocha-text);
+    --primary-font-size: 14px;
+    --primary-line-height: 20px;
+
+    --fixed-width-font-family:
+        SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
+    --fixed-width-font-colour: var(--mocha-text);
+    --fixed-width-font-size: inherit;
+
+    --subtext-font-colour: var(--mocha-subtext0);
+    --subtext-font-size: 13px;
+
+    --primary-background-colour: var(--mocha-base);
+    --secondary-background-colour: var(--mocha-mantle);
+
+    --primary-border-colour: var(--mocha-surface1);
+    --secondary-border-colour: var(--mocha-surface0);
+
+    --title-colour: var(--mocha-text);
+    --title-weight: bold;
+    --title-background-colour: var(--mocha-mantle);
+
+    --banner-font-colour: var(--mocha-base);
+    --banner-bg-colour: var(--mocha-blue);
+    --banner-url-colour: var(--mocha-sky);
+
+    --category-list-font-colour: var(--mocha-text);
+
+    --loader-background-colour: var(--mocha-mantle);
+    --loader-outer-colour: var(--mocha-blue);
+    --loader-middle-colour: var(--mocha-sky);
+    --loader-inner-colour: var(--mocha-sapphire);
+
+    /* Operation colours */
+    --op-list-operation-font-colour: var(--mocha-text);
+    --op-list-operation-bg-colour: var(--mocha-base);
+    --op-list-operation-border-colour: var(--mocha-surface0);
+
+    --rec-list-operation-font-colour: var(--mocha-base);
+    --rec-list-operation-bg-colour: var(--mocha-sapphire);
+    --rec-list-operation-border-colour: var(--mocha-sky);
+
+    --selected-operation-font-color: var(--mocha-base);
+    --selected-operation-bg-colour: var(--mocha-blue);
+    --selected-operation-border-colour: var(--mocha-sapphire);
+
+    --breakpoint-font-colour: var(--mocha-base);
+    --breakpoint-bg-colour: var(--mocha-red);
+    --breakpoint-border-colour: var(--mocha-red);
+
+    --disabled-font-colour: var(--mocha-overlay1);
+    --disabled-bg-colour: var(--mocha-surface0);
+    --disabled-border-colour: var(--mocha-surface1);
+
+    --fc-operation-font-colour: var(--mocha-base);
+    --fc-operation-bg-colour: var(--mocha-mauve);
+    --fc-operation-border-colour: var(--mocha-mauve);
+
+    --fc-breakpoint-operation-font-colour: var(--mocha-base);
+    --fc-breakpoint-operation-bg-colour: var(--mocha-red);
+    --fc-breakpoint-operation-border-colour: var(--mocha-maroon);
+
+    /* Operation arguments */
+    --op-title-font-weight: bold;
+    --arg-font-colour: var(--mocha-subtext1);
+    --arg-background: var(--mocha-mantle);
+    --arg-border-colour: var(--mocha-surface1);
+    --arg-disabled-background: var(--mocha-surface0);
+    --arg-label-colour: var(--mocha-blue);
+
+    /* Operation buttons */
+    --disable-icon-colour: var(--mocha-text);
+    --disable-icon-selected-colour: var(--mocha-peach);
+    --breakpoint-icon-colour: var(--mocha-text);
+    --breakpoint-icon-selected-colour: var(--mocha-red);
+
+    /* Buttons */
+    --btn-default-font-colour: var(--mocha-text);
+    --btn-default-bg-colour: var(--mocha-surface0);
+    --btn-default-border-colour: var(--mocha-surface1);
+
+    --btn-default-hover-font-colour: var(--mocha-text);
+    --btn-default-hover-bg-colour: var(--mocha-surface1);
+    --btn-default-hover-border-colour: var(--mocha-surface2);
+
+    --btn-success-font-colour: var(--mocha-base);
+    --btn-success-bg-colour: var(--mocha-green);
+    --btn-success-border-colour: var(--mocha-green);
+
+    --btn-success-hover-font-colour: var(--mocha-base);
+    --btn-success-hover-bg-colour: #bce8ba; /* Lighter mocha-green */
+    --btn-success-hover-border-colour: #bce8ba;
+
+    /* Highlighter colours */
+    --hl1: var(--mocha-yellow);
+    --hl2: var(--mocha-sky);
+    --hl3: var(--mocha-red);
+    --hl4: var(--mocha-mauve);
+    --hl5: var(--mocha-green);
+
+    /* Scrollbar */
+    --scrollbar-track: var(--mocha-mantle);
+    --scrollbar-thumb: var(--mocha-surface1);
+    --scrollbar-hover: var(--mocha-surface2);
+
+    /* Misc. */
+    --drop-file-border-colour: var(--mocha-blue);
+    --table-border-colour: var(--mocha-surface0);
+    --popover-background: var(--mocha-crust);
+    --popover-border-colour: var(--mocha-surface1);
+    --code-background: var(--mocha-mantle);
+    --code-font-colour: var(--mocha-subtext1);
+    --input-highlight-colour: var(--mocha-blue);
+    --input-border-colour: var(--mocha-surface1);
+}

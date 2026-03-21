@@ -1,0 +1,159 @@
+/**
+ * Catppuccin Latte theme definitions
+ *
+ * Based on the Catppuccin color palette
+ * https://catppuccin.com/
+ *
+ * @copyright Crown Copyright 2025
+ * @license Apache-2.0
+ */
+
+:root.catppuccin-latte {
+    /* Catppuccin Latte Color Palette */
+    --latte-rosewater: #dc8a78;
+    --latte-flamingo: #dd7878;
+    --latte-pink: #ea76cb;
+    --latte-mauve: #8839ef;
+    --latte-red: #d20f39;
+    --latte-maroon: #e64553;
+    --latte-peach: #fe640b;
+    --latte-yellow: #df8e1d;
+    --latte-green: #40a02b;
+    --latte-teal: #179299;
+    --latte-sky: #04a5e5;
+    --latte-sapphire: #209fb5;
+    --latte-blue: #1e66f5;
+    --latte-lavender: #7287fd;
+    --latte-text: #4c4f69;
+    --latte-subtext1: #5c5f77;
+    --latte-subtext0: #6c6f85;
+    --latte-overlay2: #7c7f93;
+    --latte-overlay1: #8c8fa1;
+    --latte-overlay0: #9ca0b0;
+    --latte-surface2: #acb0be;
+    --latte-surface1: #bcc0cc;
+    --latte-surface0: #ccd0da;
+    --latte-base: #eff1f5; /* Primary Background */
+    --latte-mantle: #e6e9ef; /* Secondary Background */
+    --latte-crust: #dce0e8; /* Borders, accessory background */
+
+    /* General */
+    --primary-font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, sans-serif;
+    --primary-font-colour: var(--latte-text);
+    --primary-font-size: 14px;
+    --primary-line-height: 20px;
+
+    --fixed-width-font-family:
+        SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
+    --fixed-width-font-colour: var(--latte-text);
+    --fixed-width-font-size: inherit;
+
+    --subtext-font-colour: var(--latte-subtext0);
+    --subtext-font-size: 13px;
+
+    --primary-background-colour: var(--latte-base);
+    --secondary-background-colour: var(--latte-mantle);
+
+    --primary-border-colour: var(--latte-surface1);
+    --secondary-border-colour: var(--latte-surface0);
+
+    --title-colour: var(--latte-text);
+    --title-weight: bold;
+    --title-background-colour: var(--latte-mantle);
+
+    --banner-font-colour: var(--latte-base);
+    --banner-bg-colour: var(--latte-blue);
+    --banner-url-colour: var(--latte-sky);
+
+    --category-list-font-colour: var(--latte-text);
+
+    --loader-background-colour: var(--latte-mantle);
+    --loader-outer-colour: var(--latte-blue);
+    --loader-middle-colour: var(--latte-sky);
+    --loader-inner-colour: var(--latte-sapphire);
+
+    /* Operation colours */
+    --op-list-operation-font-colour: var(--latte-text);
+    --op-list-operation-bg-colour: var(--latte-base);
+    --op-list-operation-border-colour: var(--latte-surface0);
+
+    --rec-list-operation-font-colour: var(--latte-base);
+    --rec-list-operation-bg-colour: var(--latte-sapphire);
+    --rec-list-operation-border-colour: var(--latte-sky);
+
+    --selected-operation-font-color: var(--latte-base);
+    --selected-operation-bg-colour: var(--latte-blue);
+    --selected-operation-border-colour: var(--latte-sapphire);
+
+    --breakpoint-font-colour: var(--latte-base);
+    --breakpoint-bg-colour: var(--latte-red);
+    --breakpoint-border-colour: var(--latte-red);
+
+    --disabled-font-colour: var(--latte-overlay1);
+    --disabled-bg-colour: var(--latte-surface0);
+    --disabled-border-colour: var(--latte-surface1);
+
+    --fc-operation-font-colour: var(--latte-base);
+    --fc-operation-bg-colour: var(--latte-mauve);
+    --fc-operation-border-colour: var(--latte-mauve);
+
+    --fc-breakpoint-operation-font-colour: var(--latte-base);
+    --fc-breakpoint-operation-bg-colour: var(--latte-red);
+    --fc-breakpoint-operation-border-colour: var(--latte-maroon);
+
+    /* Operation arguments */
+    --op-title-font-weight: bold;
+    --arg-font-colour: var(--latte-subtext1);
+    --arg-background: var(--latte-mantle);
+    --arg-border-colour: var(--latte-surface1);
+    --arg-disabled-background: var(--latte-surface0);
+    --arg-label-colour: var(--latte-blue);
+
+    /* Operation buttons */
+    --disable-icon-colour: var(--latte-text);
+    --disable-icon-selected-colour: var(--latte-peach);
+    --breakpoint-icon-colour: var(--latte-text);
+    --breakpoint-icon-selected-colour: var(--latte-red);
+
+    /* Buttons */
+    --btn-default-font-colour: var(--latte-text);
+    --btn-default-bg-colour: var(--latte-surface0);
+    --btn-default-border-colour: var(--latte-surface1);
+
+    --btn-default-hover-font-colour: var(--latte-text);
+    --btn-default-hover-bg-colour: var(--latte-surface1);
+    --btn-default-hover-border-colour: var(--latte-surface2);
+
+    --btn-success-font-colour: var(--latte-base);
+    --btn-success-bg-colour: var(--latte-green);
+    --btn-success-border-colour: var(--latte-green);
+
+    --btn-success-hover-font-colour: var(--latte-base);
+    --btn-success-hover-bg-colour: #57b340; /* Lighter latte-green */
+    --btn-success-hover-border-colour: #57b340;
+
+    /* Highlighter colours */
+    --hl1: var(--latte-yellow);
+    --hl2: var(--latte-sky);
+    --hl3: var(--latte-red);
+    --hl4: var(--latte-mauve);
+    --hl5: var(--latte-green);
+
+    /* Scrollbar */
+    --scrollbar-track: var(--latte-mantle);
+    --scrollbar-thumb: var(--latte-surface1);
+    --scrollbar-hover: var(--latte-surface2);
+
+    /* Misc. */
+    --drop-file-border-colour: var(--latte-blue);
+    --table-border-colour: var(--latte-surface0);
+    --popover-background: var(--latte-crust);
+    --popover-border-colour: var(--latte-surface1);
+    --code-background: var(--latte-mantle);
+    --code-font-colour: var(--latte-subtext1);
+    --input-highlight-colour: var(--latte-blue);
+    --input-border-colour: var(--latte-surface1);
+}

@@ -13,6 +13,10 @@
 @import "./themes/_nord.css";
 @import "./themes/_solarizedDark.css";
 @import "./themes/_solarizedLight.css";
+@import "./themes/_catppuccin_frappe.css";
+@import "./themes/_catppuccin_latte.css";
+@import "./themes/_catppuccin_macchiato.css";
+@import "./themes/_catppuccin_mocha.css";
 
 /* Utilities */
 @import "./utils/_overrides.css";
