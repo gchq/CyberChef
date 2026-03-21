@@ -35,12 +35,6 @@ class JPathExpression extends Operation {
                 name: "Result delimiter",
                 type: "binaryShortString",
                 value: "\\n"
-            },
-            {
-                name: "Prevent eval",
-                type: "boolean",
-                value: true,
-                description: "Evaluated expressions are disabled by default for security reasons"
             }
         ];
     }
@@ -51,7 +45,7 @@ class JPathExpression extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [query, delimiter, preventEval] = args;
+        const [query, delimiter] = args;
         let results, jsonObj;
 
         try {
@@ -63,8 +57,7 @@ class JPathExpression extends Operation {
         try {
             results = JSONPath({
                 path: query,
-                json: jsonObj,
-                preventEval: preventEval
+                json: jsonObj
             });
         } catch (err) {
             throw new OperationError(`Invalid JPath expression: ${err.message}`);

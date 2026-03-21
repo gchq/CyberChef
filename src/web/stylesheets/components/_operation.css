@@ -69,6 +69,10 @@ select.arg {
     min-width: 100px;
 }
 
+select.arg.form-control:not([size]):not([multiple]), select.custom-file-control:not([size]):not([multiple]) {
+    height: 100% !important;
+}
+
 textarea.arg {
     min-height: 74px;
     resize: vertical;
@@ -80,7 +84,7 @@ div.toggle-string {
 
 input.toggle-string {
     border-top-right-radius: 0 !important;
-    height: 42px !important;
+    height: 100%;
 }
 
 .operation [class^='bmd-label'],

@@ -23,7 +23,7 @@ const dir = path.join(`${process.cwd()}/src/node`);
 if (!fs.existsSync(dir)) {
     console.log("\nCWD: " + process.cwd());
     console.log("Error: generateNodeIndex.mjs should be run from the project root");
-    console.log("Example> node --experimental-modules src/core/config/scripts/generateNodeIndex.mjs");
+    console.log("Example> node --experimental-modules src/node/config/scripts/generateNodeIndex.mjs");
     process.exit(1);
 }
 

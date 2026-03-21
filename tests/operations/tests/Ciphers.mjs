@@ -528,4 +528,15 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "Rail Fence Cipher Encode: Normal with Offset with Spaces",
+        input: "No one expects the spanish Inquisition.",
+        expectedOutput: "  e  n ut.ooeepcstesaihIqiiinNnxthpsnso",
+        recipeConfig: [
+            {
+                "op": "Rail Fence Cipher Encode",
+                "args": [3, 2]
+            }
+        ],
+    },
 ]);

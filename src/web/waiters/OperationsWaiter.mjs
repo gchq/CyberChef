@@ -168,6 +168,10 @@ class OperationsWaiter {
      */
     opListCreate(e) {
         this.manager.recipe.createSortableSeedList(e.target);
+
+        // Populate ops total
+        document.querySelector("#operations .title .op-count").innerText = Object.keys(this.app.operations).length;
+
         this.enableOpsListPopovers(e.target);
     }
 
@@ -291,6 +295,18 @@ class OperationsWaiter {
      */
     resetFavouritesClick() {
         this.app.resetFavourites();
+    }
+
+
+    /**
+     * Sets whether operation counts are displayed next to a category title
+     */
+    setCatCount() {
+        if (this.app.options.showCatCount) {
+            document.querySelectorAll(".category-title .op-count").forEach(el => el.classList.remove("hidden"));
+        } else {
+            document.querySelectorAll(".category-title .op-count").forEach(el => el.classList.add("hidden"));
+        }
     }
 
 }
