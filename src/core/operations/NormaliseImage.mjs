@@ -8,13 +8,12 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import Jimp from "jimp/es/index.js";
+import { Jimp, JimpMime } from "jimp";
 
 /**
  * Normalise Image operation
  */
 class NormaliseImage extends Operation {
-
     /**
      * NormaliseImage constructor
      */
@@ -27,7 +26,7 @@ class NormaliseImage extends Operation {
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
-        this.presentType=  "html";
+        this.presentType = "html";
         this.args = [];
     }
 
@@ -52,10 +51,10 @@ class NormaliseImage extends Operation {
             image.normalize();
 
             let imageBuffer;
-            if (image.getMIME() === "image/gif") {
-                imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
+            if (image.mime === "image/gif") {
+                imageBuffer = await image.getBuffer(JimpMime.png);
             } else {
-                imageBuffer = await image.getBufferAsync(Jimp.AUTO);
+                imageBuffer = await image.getBuffer(image.mime);
             }
             return imageBuffer.buffer;
         } catch (err) {
@@ -79,7 +78,6 @@ class NormaliseImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default NormaliseImage;
