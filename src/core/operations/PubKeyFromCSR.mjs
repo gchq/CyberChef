@@ -16,7 +16,7 @@ class PubKeyFromCSR extends Operation {
         super();
         this.name = "Public Key from CSR";
         this.module = "PublicKey";
-        this.description = "Extracts the Public Key from a Certificate Signing Request.";
+        this.description = "Extracts the Public Key from a Certificate Signing Request. Currently only supports ECDSA and RSA.";
         this.infoURL = "https://en.wikipedia.org/wiki/Certificate_signing_request";
         this.inputType = "string";
         this.outputType = "string";

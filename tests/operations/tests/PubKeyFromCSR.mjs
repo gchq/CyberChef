@@ -18,7 +18,17 @@ myh7wbLev8yPjAL+WSKoN45MuOlOrLBJp+lr3LlEWconRAfHpHPPhYcLbieaUZgx
 ia/tkQICn+jPRTFtN1Bkn+SdUKVx1W5HTKy4yTE3Km1yh0nPUS5MGBBFgWnKANo=
 -----END CERTIFICATE REQUEST-----`;
 
-/* RSA 2048 Private Key for above CSR
+const RSA_2048_CSR_PUB_KEY = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkhQAPH9yK8qU3hYi8hiJ
+PycmBlcUn8qLjSKaYFd0GlK90rlMgiGvFOQVYM66y3PTXnmGilyOUxTqtyK4Yy2a
+qyr3GY6OrsS8I8EgvKiOVd39eO6hehPPz9fCGmbSZ9FyRxFmPM2dbvcDB1EQeIgu
+o7rM4OFIWMAIKils0ZfTjfGqqV0sadNXlLVV/lXuPhosSlgmX8TIy1mfE9a82FHw
+v1tMJdTxST1RgUCgXgU0GihEYCyIzV+UJPxrxcLd21AXd+BoB/wsm4WoD9xgUBf/
+mSexXFruDeLRexsZ+iGr4zxCCfOg3sYK0fVroM3KgcJnTTAOmyvQOF2oHpGPWqOE
+RQIDAQAB
+-----END PUBLIC KEY-----`;
+
+/* RSA 2048 Private Key
 -----BEGIN PRIVATE KEY-----
 MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCSFAA8f3IrypTe
 FiLyGIk/JyYGVxSfyouNIppgV3QaUr3SuUyCIa8U5BVgzrrLc9NeeYaKXI5TFOq3
@@ -49,15 +59,29 @@ H2zqBm8koIaSdtBUYfsJM08=
 -----END PRIVATE KEY-----
 */
 
-const RSA_2048_CSR_PUB_KEY = `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkhQAPH9yK8qU3hYi8hiJ
-PycmBlcUn8qLjSKaYFd0GlK90rlMgiGvFOQVYM66y3PTXnmGilyOUxTqtyK4Yy2a
-qyr3GY6OrsS8I8EgvKiOVd39eO6hehPPz9fCGmbSZ9FyRxFmPM2dbvcDB1EQeIgu
-o7rM4OFIWMAIKils0ZfTjfGqqV0sadNXlLVV/lXuPhosSlgmX8TIy1mfE9a82FHw
-v1tMJdTxST1RgUCgXgU0GihEYCyIzV+UJPxrxcLd21AXd+BoB/wsm4WoD9xgUBf/
-mSexXFruDeLRexsZ+iGr4zxCCfOg3sYK0fVroM3KgcJnTTAOmyvQOF2oHpGPWqOE
-RQIDAQAB
+// -------------------------------------------------------------
+
+const EC_PUB_KEY = `-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEtV2tWhuWHVvaZGpAfdbz6XK7YS8b
+qUx6D7VWiQkYidpzXWCTlnprARCO/2OK5t3EhUwZyPZueFr7lgIAFRFDkw==
 -----END PUBLIC KEY-----`;
+
+const EC_CSR = `-----BEGIN CERTIFICATE REQUEST-----
+MIIBADCBpwIBADBFMQswCQYDVQQGEwJOQTETMBEGA1UECAwKU29tZS1TdGF0ZTEh
+MB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMFkwEwYHKoZIzj0CAQYI
+KoZIzj0DAQcDQgAEtV2tWhuWHVvaZGpAfdbz6XK7YS8bqUx6D7VWiQkYidpzXWCT
+lnprARCO/2OK5t3EhUwZyPZueFr7lgIAFRFDk6AAMAoGCCqGSM49BAMCA0gAMEUC
+IQCEswjMY+jmBXtUogwoZ9GjOb9g72ZAiiL3fbUIKKOuigIgK10fc/M2QSgfv9x6
+r18dKfOku2+q1Sa9M08iee6hGUI=
+-----END CERTIFICATE REQUEST-----`;
+
+/* EC Private Key
+-----BEGIN EC PRIVATE KEY-----
+MHcCAQEEIA42NtMH8T9dPpbKlptxNcUmAIcv112fwJkn9XRYxbdMoAoGCCqGSM49
+AwEHoUQDQgAEtV2tWhuWHVvaZGpAfdbz6XK7YS8bqUx6D7VWiQkYidpzXWCTlnpr
+ARCO/2OK5t3EhUwZyPZueFr7lgIAFRFDkw==
+-----END EC PRIVATE KEY-----
+*/
 
 TestRegister.addTests([
 
@@ -130,11 +154,9 @@ MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEA
         ],
     },
     {
-        name: "Public Key from CSR: corrupted Base64 body throws parse error",
-        input: `-----BEGIN CERTIFICATE REQUEST-----
-!!THIS_IS_NOT_VALID_BASE64!!
------END CERTIFICATE REQUEST-----`,
-        expectedOutput: "Failed to parse CSR or extract public key:",
+        name: "Public Key from CSR: EC P-256 returns correct public key",
+        input: EC_CSR,
+        expectedOutput: EC_PUB_KEY,
         recipeConfig: [
             {
                 op: "Public Key from CSR",
