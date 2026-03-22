@@ -4,8 +4,6 @@
  * @license Apache-2.0
  */
 
-import ChefWorker from "worker-loader?inline=no-fallback!../../core/ChefWorker.js";
-
 /**
  * Waiter to handle conversations with a ChefWorker in the background.
  */
@@ -33,7 +31,7 @@ class BackgroundWorkerWaiter {
      */
     registerChefWorker() {
         log.debug("Registering new background ChefWorker");
-        this.chefWorker = new ChefWorker();
+        this.chefWorker = new Worker(new URL("../../core/ChefWorker.js", import.meta.url));
         this.chefWorker.addEventListener("message", this.handleChefMessage.bind(this));
         this.chefWorker.postMessage({
             action: "setLogPrefix",
