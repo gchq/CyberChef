@@ -218,6 +218,7 @@ module.exports = {
         testOpHtml(browser, "JSON Beautify", "{a:1}", ".json-dict .json-literal", "1");
         // testOp(browser, "JSON Minify", "test input", "test_output");
     // testOp(browser, "JSON to CSV", "test input", "test_output");
+        testOp(browser, "Jsonata Query", '{}', '"Hello World!"', ['$base64decode("SGVsbG8gV29ybGQh")']);
     // testOp(browser, "JWT Decode", "test input", "test_output");
     // testOp(browser, "JWT Sign", "test input", "test_output");
     // testOp(browser, "JWT Verify", "test input", "test_output");
