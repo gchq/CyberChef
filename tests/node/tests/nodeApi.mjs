@@ -319,7 +319,7 @@ TestRegister.addApiTests([
 
     it("chef.bake: should take compact JSON format from Chef Website as recipe", () => {
         const result = chef.bake("some input", [{"op": "To Morse Code", "args": ["Dash/Dot", "Backslash", "Comma"]}, {"op": "Hex to PEM", "args": ["SOMETHING"]}, {"op": "To Snake case", "args": [false]}]);
-        assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak_end_something");
+        assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak==_end_something");
     }),
 
     it("chef.bake: should accept Clean JSON format from Chef website as recipe", () => {
@@ -331,7 +331,7 @@ TestRegister.addApiTests([
             { "op": "To Snake case",
                 "args": [false] }
         ]);
-        assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak_end_something");
+        assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak==_end_something");
     }),
 
     it("chef.bake: should accept Clean JSON format from Chef website - args optional", () => {
@@ -342,7 +342,7 @@ TestRegister.addApiTests([
             { "op": "To Snake case",
                 "args": [false] }
         ]);
-        assert.strictEqual(result.toString(), "begin_something_aaaaaaaaaaaaaa_end_something");
+        assert.strictEqual(result.toString(), "begin_something_aaaaaaaaaaaaaa==_end_something");
     }),
 
     it("chef.bake: should accept operation names from Chef Website which contain forward slash", () => {
