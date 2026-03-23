@@ -4,6 +4,8 @@
  * @license Apache-2.0
  */
 
+import * as bootstrap from "bootstrap";
+
 /**
  * Waiter to handle events related to the CyberChef options.
  */
@@ -62,7 +64,7 @@ class OptionsWaiter {
      */
     optionsClick(e) {
         e.preventDefault();
-        $("#options-modal").modal();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("options-modal")).show();
     }
 
 

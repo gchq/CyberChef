@@ -104,17 +104,23 @@ HSL:  ${hsl}
 HSLA: ${hsla}
 CMYK: ${cmyk}
 <script>
-    $('#colorpicker').colorpicker({
-        format: 'rgba',
-        color: '${rgba}',
-        container: true,
-        inline: true,
-        useAlpha: true
-    }).on('colorpickerChange', function(e) {
-        var color = e.color.string('rgba');
-        window.app.manager.input.setInput(color);
-        window.app.manager.input.inputChange(new Event("keyup"));
-    });
+    (function() {
+        var el = document.getElementById('colorpicker');
+        if (el) {
+            var picker = document.createElement('input');
+            picker.type = 'color';
+            picker.value = '${hex}';
+            picker.style.width = '200px';
+            picker.style.height = '200px';
+            picker.style.border = 'none';
+            picker.style.cursor = 'pointer';
+            el.appendChild(picker);
+            picker.addEventListener('input', function(e) {
+                window.app.manager.input.setInput(e.target.value);
+                window.app.manager.input.inputChange(new Event("keyup"));
+            });
+        }
+    })();
 </script>`;
     }
 

@@ -7,6 +7,7 @@
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
+import * as bootstrap from "bootstrap";
 
 
 /**
@@ -78,12 +79,15 @@ class OperationsWaiter {
 
             while (searchResultsEl.firstChild) {
                 try {
-                    $(searchResultsEl.firstChild).popover("dispose");
+                    const existingPopover = bootstrap.Popover.getInstance(searchResultsEl.firstChild);
+                    if (existingPopover) existingPopover.dispose();
                 } catch (err) {}
                 searchResultsEl.removeChild(searchResultsEl.firstChild);
             }
 
-            $("#categories .show").collapse("hide");
+            document.querySelectorAll("#categories .show").forEach(el => {
+                bootstrap.Collapse.getOrCreateInstance(el).hide();
+            });
             if (str) {
                 const matchedOps = this.filterOperations(str, true);
                 const matchedOpsHtml = matchedOps
@@ -183,25 +187,41 @@ class OperationsWaiter {
      * @param {Element} el - The element to start selecting from
      */
     enableOpsListPopovers(el) {
-        $(el).find("[data-toggle=popover]").addBack("[data-toggle=popover]")
-            .popover({trigger: "manual"})
-            .on("mouseenter", function(e) {
+        // Collect elements: those inside el plus el itself if it matches
+        const popoverEls = [];
+        if (el.matches && el.matches("[data-bs-toggle=popover]")) {
+            popoverEls.push(el);
+        }
+        el.querySelectorAll("[data-bs-toggle=popover]").forEach(e => popoverEls.push(e));
+
+        popoverEls.forEach(popEl => {
+            // Dispose any existing popover to avoid duplicates
+            const existing = bootstrap.Popover.getInstance(popEl);
+            if (existing) existing.dispose();
+
+            const pop = new bootstrap.Popover(popEl, {trigger: "manual"});
+
+            popEl.addEventListener("mouseenter", function(e) {
                 if (e.buttons > 0) return; // Mouse button held down - likely dragging an operation
-                const _this = this;
-                $(this).popover("show");
-                $(".popover").on("mouseleave", function () {
-                    $(_this).popover("hide");
-                });
-            }).on("mouseleave", function () {
-                const _this = this;
+                pop.show();
+                // When the popover tip is shown, attach a mouseleave handler to it
+                const tip = pop.tip;
+                if (tip) {
+                    tip.addEventListener("mouseleave", function() {
+                        pop.hide();
+                    });
+                }
+            });
+
+            popEl.addEventListener("mouseleave", function() {
                 setTimeout(function() {
-                    // Determine if the popover associated with this element is being hovered over
-                    if ($(_this).data("bs.popover") &&
-                        ($(_this).data("bs.popover").tip && !$($(_this).data("bs.popover").tip).is(":hover"))) {
-                        $(_this).popover("hide");
+                    const tip = pop.tip;
+                    if (tip && !tip.matches(":hover")) {
+                        pop.hide();
                     }
                 }, 50);
             });
+        });
     }
 
 
@@ -249,13 +269,15 @@ class OperationsWaiter {
             onFilter: function (evt) {
                 const el = editableList.closest(evt.item);
                 if (el && el.parentNode) {
-                    $(el).popover("dispose");
+                    const pop = bootstrap.Popover.getInstance(el);
+                    if (pop) pop.dispose();
                     el.parentNode.removeChild(el);
                 }
             },
             onEnd: function(evt) {
                 if (this.removeIntent) {
-                    $(evt.item).popover("dispose");
+                    const pop = bootstrap.Popover.getInstance(evt.item);
+                    if (pop) pop.dispose();
                     evt.item.remove();
                 }
             }.bind(this),
@@ -269,8 +291,10 @@ class OperationsWaiter {
             this.removeIntent = false;
         }.bind(this));
 
-        $("#edit-favourites-list [data-toggle=popover]").popover();
-        $("#favourites-modal").modal();
+        document.querySelectorAll("#edit-favourites-list [data-bs-toggle=popover]").forEach(el => {
+            new bootstrap.Popover(el);
+        });
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("favourites-modal")).show();
     }
 
 

@@ -51,8 +51,8 @@ class HTMLOperation {
         if (this.description) {
             const infoLink = this.infoURL ? `<hr>${titleFromWikiLink(this.infoURL)}` : "";
 
-            html += ` data-container='body' data-toggle='popover' data-placement='right'
-                data-content="${this.description}${infoLink}" data-html='true' data-trigger='hover'
+            html += ` data-bs-container='body' data-bs-toggle='popover' data-bs-placement='right'
+                data-bs-content="${this.description}${infoLink}" data-bs-html='true' data-bs-trigger='hover'
                 data-boundary='viewport'`;
         }
 

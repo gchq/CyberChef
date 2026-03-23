@@ -26,12 +26,11 @@ jobs:
 
       - name: Install
         run: |
-          export DETECT_CHROMEDRIVER_VERSION=true
           npm install
           npm run setheapsize
 
       - name: Lint
-        run: npx grunt lint
+        run: npm run lint
 
       - name: Unit Tests
         run: |
@@ -40,20 +39,22 @@ jobs:
 
       - name: Production Build
         if: success()
-        run: npx grunt prod --msg=""
+        run: npm run build
 
       - name: Generate sitemap
-        run: npx grunt exec:sitemap
+        run: npm run build:sitemap
+
+      - name: Install Playwright Browsers
+        if: success()
+        run: npx playwright install --with-deps chromium
 
       - name: UI Tests
         if: success()
-        run: |
-          sudo apt-get install xvfb
-          xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+        run: npm run testui
 
       - name: Prepare for GitHub Pages
         if: success()
-        run: npx grunt copy:ghPages
+        run: npm run build:ghpages
 
       - name: Deploy to GitHub Pages
         if: success() && github.ref == 'refs/heads/master'

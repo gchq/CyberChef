@@ -1,15 +1,12 @@
-const webpack = require("webpack");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CompressionPlugin = require("compression-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
-const { ModifySourcePlugin, ReplaceOperation } = require("modify-source-webpack-plugin");
+const rspack = require("@rspack/core");
 const path = require("path");
 const zlib = require("zlib");
 
 /**
- * Webpack configuration details for use with Grunt.
+ * Rspack configuration for CyberChef.
+ * Migrated from Webpack 5 for faster build times.
  *
- * @author n1474335 [n1474335@gmail.com]
+ * @author CyberChef Modernization
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
@@ -44,42 +41,23 @@ module.exports = {
         assetModuleFilename: "assets/[hash][ext][query]"
     },
     plugins: [
-        new webpack.ProvidePlugin({
+        new rspack.ProvidePlugin({
             log: "loglevel",
-            // process and Buffer are no longer polyfilled in webpack 5 but
-            // many of our dependencies expect them, so it is easiest to just
-            // provide them everywhere as was the case in webpack 4-
             process: "process",
             Buffer: ["buffer", "Buffer"]
         }),
-        new webpack.BannerPlugin({
+        new rspack.BannerPlugin({
             banner: banner,
             raw: true,
             entryOnly: true
         }),
-        new webpack.DefinePlugin({
-            // Required by Jimp to improve loading speed in browsers
+        new rspack.DefinePlugin({
             "process.browser": "true"
         }),
-        new MiniCssExtractPlugin({
+        new rspack.CssExtractRspackPlugin({
             filename: "assets/[name].css"
         }),
-        new CompressionPlugin({
-            filename: "[path][base].gz",
-            algorithm: "gzip",
-            test: /\.(js|css|html)$/,
-        }),
-        new CompressionPlugin({
-            filename: "[path][base].br",
-            algorithm: "brotliCompress",
-            test: /\.(js|css|html)$/,
-            compressionOptions: {
-                params: {
-                    [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
-                },
-            },
-        }),
-        new CopyWebpackPlugin({
+        new rspack.CopyRspackPlugin({
             patterns: [
                 {
                     context: "src/core/vendor/",
@@ -100,20 +78,9 @@ module.exports = {
                 }
             ]
         }),
-        new ModifySourcePlugin({
-            rules: [
-                {
-                    // Fix toSpare(0) bug in Split.js by avoiding gutter accomodation
-                    test: /split\.es\.js$/,
-                    operations: [
-                        new ReplaceOperation("once", "if (pixelSize < elementMinSize)", "if (false)")
-                    ]
-                }
-            ]
-        })
     ],
     resolve: {
-        extensions: [".mjs", ".js", ".json"], // Allows importing files without extensions
+        extensions: [".mjs", ".js", ".json"],
         alias: {},
         fallback: {
             "assert": require.resolve("assert/"),
@@ -133,19 +100,26 @@ module.exports = {
         }
     },
     module: {
-        // argon2-browser loads argon2.wasm by itself, so Webpack should not load it
         noParse: /argon2\.wasm$/,
         rules: [
             {
                 test: /\.m?js$/,
                 exclude: /node_modules\/(?!crypto-api|bootstrap)/,
+                loader: "builtin:swc-loader",
                 options: {
-                    configFile: path.resolve(__dirname, "babel.config.js"),
-                    cacheDirectory: true,
-                    compact: false
+                    jsc: {
+                        parser: {
+                            syntax: "ecmascript",
+                            dynamicImport: true,
+                            importAssertions: true,
+                        },
+                        target: "es2020",
+                    },
+                    env: {
+                        targets: "Chrome >= 80, Firefox >= 78, Safari >= 14",
+                    },
                 },
                 type: "javascript/auto",
-                loader: "babel-loader"
             },
             {
                 test: /node-forge/,
@@ -155,7 +129,6 @@ module.exports = {
                 }
             },
             {
-                // Load argon2.wasm as base64-encoded binary file expected by argon2-browser
                 test: /argon2\.wasm$/,
                 loader: "base64-loader",
                 type: "javascript/auto"
@@ -176,7 +149,7 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     {
-                        loader: MiniCssExtractPlugin.loader,
+                        loader: rspack.CssExtractRspackPlugin.loader,
                         options: {
                             publicPath: "../"
                         }
@@ -193,14 +166,14 @@ module.exports = {
                 test: /\.svg$/,
                 type: "asset/inline",
             },
-            { // Store font .fnt and .png files in a separate fonts folder
+            {
                 test: /(\.fnt$|bmfonts\/.+\.png$)/,
                 type: "asset/resource",
                 generator: {
                     filename: "assets/fonts/[name][ext]"
                 }
             },
-            { // First party images are saved as files to be cached
+            {
                 test: /\.(png|jpg|gif)$/,
                 exclude: /(node_modules|bmfonts)/,
                 type: "asset/resource",
@@ -208,7 +181,7 @@ module.exports = {
                     filename: "images/[name][ext]"
                 }
             },
-            { // Third party images are inlined
+            {
                 test: /\.(png|jpg|gif)$/,
                 exclude: /web\/static/,
                 type: "asset/inline",

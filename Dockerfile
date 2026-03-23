@@ -12,14 +12,14 @@ COPY package.json .
 COPY package-lock.json .
 
 # Install dependencies
-# --ignore-scripts prevents postinstall script (which runs grunt) as it depends on files other than package.json
+# --ignore-scripts prevents postinstall script as it depends on files other than package.json
 RUN npm ci --ignore-scripts
 
 # Copy files needed for postinstall and build
 COPY . .
 
-# npm postinstall runs grunt, which depends on files other than package.json
-RUN npm run postinstall
+# Run postinstall to fix dependency issues
+RUN node scripts/postinstall.mjs
 
 # Build the app
 RUN npm run build

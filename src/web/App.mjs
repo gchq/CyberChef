@@ -10,8 +10,10 @@ import Manager from "./Manager.mjs";
 import HTMLCategory from "./HTMLCategory.mjs";
 import HTMLOperation from "./HTMLOperation.mjs";
 import Split from "split.js";
-import moment from "moment-timezone";
+import { formatDistance } from "date-fns";
 import cptable from "codepage";
+import {showSnackbar} from "./utils/Snackbar.mjs";
+import * as bootstrap from "bootstrap";
 
 
 /**
@@ -638,7 +640,7 @@ class App {
         // Display time since last build and compile message
         const now = new Date(),
             msSinceCompile = now.getTime() - window.compileTime,
-            timeSinceCompile = moment.duration(msSinceCompile, "milliseconds").humanize();
+            timeSinceCompile = formatDistance(new Date(window.compileTime), now, { addSuffix: false });
 
         // Calculate previous version to compare to
         const prev = PKG_VERSION.split(".").map(n => {
@@ -703,14 +705,11 @@ class App {
         log.info("[" + time.toLocaleString() + "] " + str);
         if (silent) return;
 
-        this.snackbars.push($.snackbar({
+        showSnackbar({
             content: str,
             timeout: timeout,
-            htmlAllowed: true,
-            onClose: () => {
-                this.snackbars.shift().remove();
-            }
-        }));
+            style: "snackbar"
+        });
     }
 
 
@@ -738,25 +737,40 @@ class App {
         document.getElementById("confirm-modal").style.display = "block";
 
         this.confirmClosed = false;
-        $("#confirm-modal").modal()
-            .one("show.bs.modal", function(e) {
-                this.confirmClosed = false;
-            }.bind(this))
-            .one("click", "#confirm-yes", function() {
-                this.confirmClosed = true;
-                callback.bind(scope)(true);
-                $("#confirm-modal").modal("hide");
-            }.bind(this))
-            .one("click", "#confirm-no", function() {
-                this.confirmClosed = true;
-                callback.bind(scope)(false);
-            }.bind(this))
-            .one("hide.bs.modal", function(e) {
-                if (!this.confirmClosed) {
-                    callback.bind(scope)(undefined);
-                }
-                this.confirmClosed = true;
-            }.bind(this));
+
+        const confirmModalEl = document.getElementById("confirm-modal");
+        const confirmModal = bootstrap.Modal.getOrCreateInstance(confirmModalEl);
+
+        const onShow = (e) => {
+            this.confirmClosed = false;
+        };
+        const onYes = () => {
+            this.confirmClosed = true;
+            callback.bind(scope)(true);
+            confirmModal.hide();
+        };
+        const onNo = () => {
+            this.confirmClosed = true;
+            callback.bind(scope)(false);
+        };
+        const onHide = (e) => {
+            if (!this.confirmClosed) {
+                callback.bind(scope)(undefined);
+            }
+            this.confirmClosed = true;
+            // Clean up one-time listeners
+            confirmModalEl.removeEventListener("show.bs.modal", onShow);
+            confirmModalEl.removeEventListener("hide.bs.modal", onHide);
+            document.getElementById("confirm-yes").removeEventListener("click", onYes);
+            document.getElementById("confirm-no").removeEventListener("click", onNo);
+        };
+
+        confirmModalEl.addEventListener("show.bs.modal", onShow, { once: true });
+        confirmModalEl.addEventListener("hide.bs.modal", onHide, { once: true });
+        document.getElementById("confirm-yes").addEventListener("click", onYes, { once: true });
+        document.getElementById("confirm-no").addEventListener("click", onNo, { once: true });
+
+        confirmModal.show();
     }
 
 

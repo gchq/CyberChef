@@ -5,7 +5,8 @@
  */
 
 import Operation from "../Operation.mjs";
-import blakejs from "blakejs";
+import { blake2s } from "@noble/hashes/blake2s";
+import { bytesToHex } from "@noble/hashes/utils";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
@@ -23,7 +24,7 @@ class BLAKE2s extends Operation {
 
         this.name = "BLAKE2s";
         this.module = "Hashing";
-        this.description = `Performs BLAKE2s hashing on the input.  
+        this.description = `Performs BLAKE2s hashing on the input.
         <br><br>BLAKE2s is a flavour of the BLAKE cryptographic hash function that is optimized for 8- to 32-bit platforms and produces digests of any size between 1 and 32 bytes.
         <br><br>Supports the use of an optional key.`;
         this.infoURL = "https://wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE2";
@@ -57,19 +58,27 @@ class BLAKE2s extends Operation {
         const [outSize, outFormat] = args;
         let key = Utils.convertToByteArray(args[2].string || "", args[2].option);
         if (key.length === 0) {
-            key = null;
+            key = undefined;
         } else if (key.length > 32) {
             throw new OperationError(["Key cannot be greater than 32 bytes", "It is currently " + key.length + " bytes."].join("\n"));
+        } else {
+            key = new Uint8Array(key);
         }
 
-        input = new Uint8Array(input);
+        const data = new Uint8Array(input);
+        const dkLen = outSize / 8;
+        const opts = { dkLen };
+        if (key) opts.key = key;
+
+        const hash = blake2s(data, opts);
+
         switch (outFormat) {
             case "Hex":
-                return blakejs.blake2sHex(input, key, outSize / 8);
+                return bytesToHex(hash);
             case "Base64":
-                return toBase64(blakejs.blake2s(input, key, outSize / 8));
+                return toBase64(hash);
             case "Raw":
-                return Utils.arrayBufferToStr(blakejs.blake2s(input, key, outSize / 8).buffer);
+                return Utils.arrayBufferToStr(hash.buffer);
             default:
                 return new OperationError("Unsupported Output Type");
         }

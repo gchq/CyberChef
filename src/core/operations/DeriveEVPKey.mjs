@@ -6,7 +6,58 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import CryptoJS from "crypto-js";
+import { md5, sha1 } from "@noble/hashes/legacy";
+import { sha256, sha384, sha512 } from "@noble/hashes/sha2";
+import { bytesToHex } from "@noble/hashes/utils";
+
+/**
+ * Map of hash function names to noble implementations.
+ */
+const HASH_MAP = {
+    "MD5": md5,
+    "SHA1": sha1,
+    "SHA256": sha256,
+    "SHA384": sha384,
+    "SHA512": sha512,
+};
+
+/**
+ * EVP_BytesToKey key derivation function (OpenSSL).
+ * Derives key material from password + salt using iterated hashing.
+ *
+ * @param {Uint8Array} password
+ * @param {Uint8Array} salt
+ * @param {number} keySize - Key size in bytes
+ * @param {number} iterations
+ * @param {Function} hashFn - Noble hash function
+ * @returns {Uint8Array}
+ */
+function evpKDF(password, salt, keySize, iterations, hashFn) {
+    let derivedKey = new Uint8Array(0);
+    let block = new Uint8Array(0);
+
+    while (derivedKey.length < keySize) {
+        // Concatenate previous block + password + salt
+        const input = new Uint8Array(block.length + password.length + salt.length);
+        input.set(block, 0);
+        input.set(password, block.length);
+        input.set(salt, block.length + password.length);
+
+        // Hash with iterations
+        block = hashFn(input);
+        for (let i = 1; i < iterations; i++) {
+            block = hashFn(block);
+        }
+
+        // Append to derived key
+        const combined = new Uint8Array(derivedKey.length + block.length);
+        combined.set(derivedKey, 0);
+        combined.set(block, derivedKey.length);
+        derivedKey = combined;
+    }
+
+    return derivedKey.slice(0, keySize);
+}
 
 /**
  * Derive EVP key operation
@@ -62,86 +113,28 @@ class DeriveEVPKey extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const passphrase = CryptoJS.enc.Latin1.parse(
-                Utils.convertToByteString(args[0].string, args[0].option)),
-            keySize = args[1] / 32,
-            iterations = args[2],
-            hasher = args[3],
-            salt = CryptoJS.enc.Latin1.parse(
-                Utils.convertToByteString(args[4].string, args[4].option)),
-            key = CryptoJS.EvpKDF(passphrase, salt, { // lgtm [js/insufficient-password-hash]
-                keySize: keySize,
-                hasher: CryptoJS.algo[hasher],
-                iterations: iterations,
-            });
+        const passStr = Utils.convertToByteString(args[0].string, args[0].option);
+        const keySize = args[1] / 8; // Convert bits to bytes
+        const iterations = args[2];
+        const hasherName = args[3];
+        const saltStr = Utils.convertToByteString(args[4].string, args[4].option);
 
-        return key.toString(CryptoJS.enc.Hex);
+        const hashFn = HASH_MAP[hasherName];
+        if (!hashFn) {
+            throw new Error(`Unsupported hash function: ${hasherName}`);
+        }
+
+        // Convert strings to Uint8Array
+        const password = new Uint8Array(passStr.length);
+        for (let i = 0; i < passStr.length; i++) password[i] = passStr.charCodeAt(i) & 0xFF;
+
+        const salt = new Uint8Array(saltStr.length);
+        for (let i = 0; i < saltStr.length; i++) salt[i] = saltStr.charCodeAt(i) & 0xFF;
+
+        const key = evpKDF(password, salt, keySize, iterations, hashFn);
+        return bytesToHex(key);
     }
 
 }
 
 export default DeriveEVPKey;
-
-/**
- * Overwriting the CryptoJS OpenSSL key derivation function so that it is possible to not pass a
- * salt in.
-
- * @param {string} password - The password to derive from.
- * @param {number} keySize - The size in words of the key to generate.
- * @param {number} ivSize - The size in words of the IV to generate.
- * @param {WordArray|string} salt (Optional) A 64-bit salt to use. If omitted, a salt will be
- *                 generated randomly. If set to false, no salt will be added.
- *
- * @returns {CipherParams} A cipher params object with the key, IV, and salt.
- *
- * @static
- *
- * @example
- * // Randomly generates a salt
- * var derivedParams = CryptoJS.kdf.OpenSSL.execute('Password', 256/32, 128/32);
- * // Uses the salt 'saltsalt'
- * var derivedParams = CryptoJS.kdf.OpenSSL.execute('Password', 256/32, 128/32, 'saltsalt');
- * // Does not use a salt
- * var derivedParams = CryptoJS.kdf.OpenSSL.execute('Password', 256/32, 128/32, false);
- */
-CryptoJS.kdf.OpenSSL.execute = function (password, keySize, ivSize, salt) {
-    // Generate random salt if no salt specified and not set to false
-    // This line changed from `if (!salt) {` to the following
-    if (salt === undefined || salt === null) {
-        salt = CryptoJS.lib.WordArray.random(64/8);
-    }
-
-    // Derive key and IV
-    const key = CryptoJS.algo.EvpKDF.create({ keySize: keySize + ivSize }).compute(password, salt);
-
-    // Separate key and IV
-    const iv = CryptoJS.lib.WordArray.create(key.words.slice(keySize), ivSize * 4);
-    key.sigBytes = keySize * 4;
-
-    // Return params
-    return CryptoJS.lib.CipherParams.create({ key: key, iv: iv, salt: salt });
-};
-
-
-/**
- * Override for the CryptoJS Hex encoding parser to remove whitespace before attempting to parse
- * the hex string.
- *
- * @param {string} hexStr
- * @returns {CryptoJS.lib.WordArray}
- */
-CryptoJS.enc.Hex.parse = function (hexStr) {
-    // Remove whitespace
-    hexStr = hexStr.replace(/\s/g, "");
-
-    // Shortcut
-    const hexStrLength = hexStr.length;
-
-    // Convert
-    const words = [];
-    for (let i = 0; i < hexStrLength; i += 2) {
-        words[i >>> 3] |= parseInt(hexStr.substr(i, 2), 16) << (24 - (i % 8) * 4);
-    }
-
-    return new CryptoJS.lib.WordArray.init(words, hexStrLength / 2);
-};

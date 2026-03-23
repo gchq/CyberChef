@@ -9,6 +9,7 @@ import Sortable from "sortablejs";
 import Utils from "../../core/Utils.mjs";
 import {escapeControlChars} from "../utils/editorUtils.mjs";
 import DOMPurify from "dompurify";
+import * as bootstrap from "bootstrap";
 
 
 /**
@@ -102,15 +103,12 @@ class RecipeWaiter {
                 // Removes popover element and event bindings from the dragged operation but not the
                 // event bindings from the one left in the operations list. Without manually removing
                 // these bindings, we cannot re-initialise the popover on the stub operation.
-                $(evt.item)
-                    .popover("dispose")
-                    .removeData("bs.popover")
-                    .off("mouseenter")
-                    .off("mouseleave")
-                    .attr("data-toggle", "popover-disabled");
-                $(evt.clone)
-                    .off(".popover")
-                    .removeData("bs.popover");
+                const itemPopover = bootstrap.Popover.getInstance(evt.item);
+                if (itemPopover) itemPopover.dispose();
+                evt.item.setAttribute("data-toggle", "popover-disabled");
+
+                const clonePopover = bootstrap.Popover.getInstance(evt.clone);
+                if (clonePopover) clonePopover.dispose();
             },
             onEnd: this.opSortEnd.bind(this)
         });
@@ -138,7 +136,7 @@ class RecipeWaiter {
             enableOpsElement = evt.clone;
         } else {
             enableOpsElement = evt.item;
-            $(evt.item).attr("data-toggle", "popover");
+            evt.item.setAttribute("data-toggle", "popover");
         }
         this.manager.ops.enableOpsListPopovers(enableOpsElement);
 
@@ -417,7 +415,9 @@ class RecipeWaiter {
             el.classList.add("flow-control-op");
         }
 
-        $(el).find("[data-toggle='tooltip']").tooltip();
+        el.querySelectorAll("[data-bs-toggle='tooltip']").forEach(tooltipEl => {
+            new bootstrap.Tooltip(tooltipEl);
+        });
 
         // Disable auto-bake if this is a manual op
         if (op.manualBake && this.app.autoBake_) {

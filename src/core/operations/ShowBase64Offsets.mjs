@@ -66,7 +66,7 @@ class ShowBase64Offsets extends Operation {
         const len0 = offset0.indexOf("="),
             len1 = offset1.indexOf("="),
             len2 = offset2.indexOf("="),
-            script = "<script type='application/javascript'>$('[data-toggle=\"tooltip\"]').tooltip()</script>";
+            script = "<script type='application/javascript'>document.querySelectorAll('[data-bs-toggle=\"tooltip\"]').forEach(function(el){new bootstrap.Tooltip(el)})</script>";
 
         if (input.length < 1) {
             throw new OperationError("Please enter a string.");

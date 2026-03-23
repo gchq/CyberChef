@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import kebabCase from "lodash/kebabCase.js";
+import { kebabCase } from "../lib/CaseConvert.mjs";
 import Operation from "../Operation.mjs";
 import { replaceVariableNames } from "../lib/Code.mjs";
 

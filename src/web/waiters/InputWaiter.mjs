@@ -5,11 +5,13 @@
  * @license Apache-2.0
  */
 
-import LoaderWorker from "worker-loader?inline=no-fallback!../workers/LoaderWorker.js";
-import InputWorker from "worker-loader?inline=no-fallback!../workers/InputWorker.mjs";
+// Native Webpack 5 worker support (replaces deprecated worker-loader)
+const createLoaderWorker = () => new Worker(new URL("../workers/LoaderWorker.js", import.meta.url));
+const createInputWorker = () => new Worker(new URL("../workers/InputWorker.mjs", import.meta.url));
 import Utils, {debounce} from "../../core/Utils.mjs";
 import {toBase64} from "../../core/lib/Base64.mjs";
 import cptable from "codepage";
+import * as bootstrap from "bootstrap";
 
 import {
     EditorView,
@@ -359,7 +361,7 @@ class InputWaiter {
         }
 
         log.debug("Adding new InputWorker");
-        this.inputWorker = new InputWorker();
+        this.inputWorker = createInputWorker();
         this.inputWorker.postMessage({
             action: "setLogLevel",
             data: log.getLevel()
@@ -405,7 +407,7 @@ class InputWaiter {
             return -1;
         }
         log.debug(`Adding new LoaderWorker (${this.loaderWorkers.length + 1}/${this.maxWorkers}).`);
-        const newWorker = new LoaderWorker();
+        const newWorker = createLoaderWorker();
         const workerId = this.workerId++;
         newWorker.addEventListener("message", this.handleLoaderMessage.bind(this));
         newWorker.postMessage({
@@ -719,7 +721,10 @@ class InputWaiter {
      * @param {event} e
      */
     toggleFileDetails(e) {
-        $("[data-toggle='tooltip']").tooltip("hide");
+        document.querySelectorAll("[data-bs-toggle='tooltip']").forEach(el => {
+            const tip = bootstrap.Tooltip.getInstance(el);
+            if (tip) tip.hide();
+        });
         this.fileDetails.hidden = !this.fileDetails.hidden;
         this.inputEditorView.dispatch({
             effects: this.inputEditorConf.fileDetailsPanel.reconfigure(
@@ -1600,7 +1605,7 @@ class InputWaiter {
      */
     findTab() {
         this.filterTabSearch();
-        $("#input-tab-modal").modal();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("input-tab-modal")).show();
     }
 
     /**
@@ -1671,7 +1676,7 @@ class InputWaiter {
         const inputNum = parseInt(e.target.getAttribute("inputNum"), 10);
         if (inputNum <= 0) return;
 
-        $("#input-tab-modal").modal("hide");
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("input-tab-modal")).hide();
         this.changeTab(inputNum, this.app.options.syncTabs);
     }
 

@@ -4,6 +4,8 @@
  * @license Apache-2.0
  */
 
+import * as bootstrap from "bootstrap";
+
 /**
  * Waiter to handle keybindings to CyberChef functions (i.e. Bake, Step, Save, Load etc.)
  */
@@ -300,7 +302,7 @@ class BindingsWaiter {
         document.querySelector("#help-modal .modal-body").innerHTML = helpText;
         document.querySelector("#help-modal #help-title").innerHTML = helpTitle;
 
-        $("#help-modal").modal();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("help-modal")).show();
     }
 
 }

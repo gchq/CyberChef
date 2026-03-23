@@ -10,7 +10,9 @@ import Dish from "../../core/Dish.mjs";
 import {isUTF8, CHR_ENC_SIMPLE_REVERSE_LOOKUP} from "../../core/lib/ChrEnc.mjs";
 import {detectFileType} from "../../core/lib/FileType.mjs";
 import FileSaver from "file-saver";
-import ZipWorker from "worker-loader?inline=no-fallback!../workers/ZipWorker.mjs";
+import * as bootstrap from "bootstrap";
+// Native Webpack 5 worker support (replaces deprecated worker-loader)
+const createZipWorker = () => new Worker(new URL("../workers/ZipWorker.mjs", import.meta.url));
 
 import {
     EditorView,
@@ -987,7 +989,7 @@ class OutputWaiter {
         downloadButton.firstElementChild.innerHTML = "autorenew";
 
         log.debug("Creating ZipWorker");
-        this.zipWorker = new ZipWorker();
+        this.zipWorker = createZipWorker();
         this.zipWorker.postMessage({
             action: "setLogLevel",
             data: log.getLevel()
@@ -1508,7 +1510,8 @@ class OutputWaiter {
         switchButton.classList.add("spin");
         switchButton.disabled = true;
         switchButton.firstElementChild.innerHTML = "autorenew";
-        $(switchButton).tooltip("hide");
+        const switchTooltip = bootstrap.Tooltip.getInstance(switchButton);
+        if (switchTooltip) switchTooltip.hide();
 
         const activeData = await this.getDishBuffer(this.getOutputDish(activeTab));
 
@@ -1540,13 +1543,13 @@ class OutputWaiter {
             this.app.columnSplitter.collapse(1);
             this.app.ioSplitter.collapse(0);
 
-            $(el).attr("data-original-title", "Restore output pane");
-            $(el).attr("aria-label", "Restore output pane");
+            el.setAttribute("data-original-title", "Restore output pane");
+            el.setAttribute("aria-label", "Restore output pane");
             el.querySelector("i").innerHTML = "fullscreen_exit";
         } else {
             document.body.classList.remove("output-maximised");
-            $(el).attr("data-original-title", "Maximise output pane");
-            $(el).attr("aria-label", "Maximise output pane");
+            el.setAttribute("data-original-title", "Maximise output pane");
+            el.setAttribute("aria-label", "Maximise output pane");
             el.querySelector("i").innerHTML = "fullscreen";
             this.app.initialiseSplitter(false);
             this.app.resetLayout();
@@ -1558,7 +1561,7 @@ class OutputWaiter {
      */
     findTab() {
         this.filterTabSearch();
-        $("#output-tab-modal").modal();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("output-tab-modal")).show();
     }
 
     /**
@@ -1669,7 +1672,7 @@ class OutputWaiter {
         const inputNum = parseInt(e.target.getAttribute("inputNum"), 10);
         if (inputNum <= 0) return;
 
-        $("#output-tab-modal").modal("hide");
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("output-tab-modal")).hide();
         this.changeTab(inputNum, this.app.options.syncTabs);
     }
 

@@ -5,8 +5,10 @@
  */
 
 import Operation from "../Operation.mjs";
-import CryptoJS from "crypto-js";
-import { format } from "../lib/Ciphers.mjs";
+import Utils from "../Utils.mjs";
+import { rc4 } from "../lib/RC4.mjs";
+import { toHex, fromHex } from "../lib/Hex.mjs";
+import { toBase64, fromBase64 } from "../lib/Base64.mjs";
 
 /**
  * RC4 operation
@@ -51,11 +53,16 @@ class RC4 extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const message = format[args[1]].parse(input),
-            passphrase = format[args[0].option].parse(args[0].string),
-            encrypted = CryptoJS.RC4.encrypt(message, passphrase);
+        const inputFormat = args[1];
+        const outputFormat = args[2];
+        const keyFormat = args[0].option;
+        const keyStr = args[0].string;
 
-        return encrypted.ciphertext.toString(format[args[2]]);
+        const inputBytes = formatParse(input, inputFormat);
+        const keyBytes = formatParse(keyStr, keyFormat);
+        const outputBytes = rc4(inputBytes, keyBytes);
+
+        return formatStringify(outputBytes, outputFormat);
     }
 
     /**
@@ -84,6 +91,92 @@ class RC4 extends Operation {
         return pos;
     }
 
+}
+
+/**
+ * Parse a string in the given format to Uint8Array.
+ *
+ * @param {string} str
+ * @param {string} format
+ * @returns {Uint8Array}
+ */
+function formatParse(str, format) {
+    switch (format) {
+        case "Hex":
+            return new Uint8Array(fromHex(str, "Auto"));
+        case "Base64":
+            return Utils.strToByteArray(fromBase64(str));
+        case "UTF8":
+            return new TextEncoder().encode(str);
+        case "Latin1":
+        default: {
+            const bytes = new Uint8Array(str.length);
+            for (let i = 0; i < str.length; i++) {
+                bytes[i] = str.charCodeAt(i) & 0xFF;
+            }
+            return bytes;
+        }
+        case "UTF16":
+        case "UTF16BE": {
+            const bytes = new Uint8Array(str.length * 2);
+            for (let i = 0; i < str.length; i++) {
+                const code = str.charCodeAt(i);
+                bytes[i * 2] = (code >> 8) & 0xFF;
+                bytes[i * 2 + 1] = code & 0xFF;
+            }
+            return bytes;
+        }
+        case "UTF16LE": {
+            const bytes = new Uint8Array(str.length * 2);
+            for (let i = 0; i < str.length; i++) {
+                const code = str.charCodeAt(i);
+                bytes[i * 2] = code & 0xFF;
+                bytes[i * 2 + 1] = (code >> 8) & 0xFF;
+            }
+            return bytes;
+        }
+    }
+}
+
+/**
+ * Stringify a Uint8Array in the given format.
+ *
+ * @param {Uint8Array} bytes
+ * @param {string} format
+ * @returns {string}
+ */
+function formatStringify(bytes, format) {
+    switch (format) {
+        case "Hex":
+            return toHex(bytes, "");
+        case "Base64":
+            return toBase64(bytes);
+        case "UTF8":
+            return new TextDecoder("utf-8").decode(bytes);
+        case "Latin1":
+        default: {
+            let str = "";
+            for (let i = 0; i < bytes.length; i++) {
+                str += String.fromCharCode(bytes[i]);
+            }
+            return str;
+        }
+        case "UTF16":
+        case "UTF16BE": {
+            let str = "";
+            for (let i = 0; i < bytes.length - 1; i += 2) {
+                str += String.fromCharCode((bytes[i] << 8) | bytes[i + 1]);
+            }
+            return str;
+        }
+        case "UTF16LE": {
+            let str = "";
+            for (let i = 0; i < bytes.length - 1; i += 2) {
+                str += String.fromCharCode(bytes[i] | (bytes[i + 1] << 8));
+            }
+            return str;
+        }
+    }
 }
 
 export default RC4;

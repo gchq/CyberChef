@@ -6,6 +6,7 @@
 
 import Utils from "../../core/Utils.mjs";
 import { eolSeqToCode } from "../utils/editorUtils.mjs";
+import * as bootstrap from "bootstrap";
 
 
 /**
@@ -29,12 +30,13 @@ class ControlsWaiter {
      * Initialise Bootstrap components
      */
     initComponents() {
-        $("body").bootstrapMaterialDesign();
-        $("[data-toggle=tooltip]").tooltip({
-            animation: false,
-            container: "body",
-            boundary: "viewport",
-            trigger: "hover"
+        document.querySelectorAll("[data-bs-toggle=tooltip]").forEach(el => {
+            new bootstrap.Tooltip(el, {
+                animation: false,
+                container: "body",
+                boundary: "viewport",
+                trigger: "hover"
+            });
         });
 
         // Set number of operations in various places in the DOM
@@ -211,7 +213,7 @@ class ControlsWaiter {
         document.getElementById("save-text-compact").value = recipeStr;
 
         this.initialiseSaveLink(recipeConfig);
-        $("#save-modal").modal();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("save-modal")).show();
     }
 
 
@@ -236,7 +238,7 @@ class ControlsWaiter {
      */
     loadClick() {
         this.populateLoadRecipesList();
-        $("#load-modal").modal();
+        bootstrap.Modal.getOrCreateInstance(document.getElementById("load-modal")).show();
     }
 
 
@@ -355,7 +357,9 @@ class ControlsWaiter {
             this.app.setRecipeConfig(recipeConfig);
             this.app.autoBake();
 
-            $("#rec-list [data-toggle=popover]").popover();
+            document.querySelectorAll("#rec-list [data-bs-toggle=popover]").forEach(el => {
+                new bootstrap.Popover(el);
+            });
         } catch (e) {
             this.app.alert("Invalid recipe", 2000);
         }

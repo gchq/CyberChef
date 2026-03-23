@@ -5,9 +5,10 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import CryptoApi from "crypto-api/src/crypto-api.mjs";
 import Utils from "../Utils.mjs";
 import { toBase64, fromBase64 } from "../lib/Base64.mjs";
+import { getHashFunction } from "../lib/Hash.mjs";
+import { hmac } from "@noble/hashes/hmac";
 
 /**
  * Flask Session Verify operation
@@ -64,6 +65,7 @@ class FlaskSessionVerify extends Operation {
         const key = Utils.convertToByteString(args[0].string, args[0].option);
         const salt = Utils.convertToByteString(args[1].string || "cookie-session", args[1].option);
         const algorithm = args[2] || "sha1";
+        const hashFn = getHashFunction(algorithm);
 
         input = input.trim();
 
@@ -75,12 +77,14 @@ class FlaskSessionVerify extends Operation {
 
         const data = Utils.convertToByteString(parts[0] + "." + parts[1], "utf8");
 
+        // Derive key: HMAC(secret, salt)
+        const keyBytes = new Uint8Array(Utils.strToArrayBuffer(key));
+        const saltBytes = new Uint8Array(Utils.strToArrayBuffer(salt));
+        const derivedKeyBytes = hmac(hashFn, keyBytes, saltBytes);
 
-        const derivedKey = CryptoApi.getHmac(key, CryptoApi.getHasher(algorithm));
-        derivedKey.update(salt);
-
-        const sign = CryptoApi.getHmac(derivedKey.finalize(), CryptoApi.getHasher(algorithm));
-        sign.update(data);
+        // Sign: HMAC(derivedKey, data)
+        const dataBytes = new Uint8Array(Utils.strToArrayBuffer(data));
+        const signBytes = hmac(hashFn, derivedKeyBytes, dataBytes);
 
         const payloadB64 = parts[0];
         const base64 = payloadB64.replace(/-/g, "+").replace(/_/g, "/");
@@ -104,7 +108,10 @@ class FlaskSessionVerify extends Operation {
             throw new OperationError("Invalid Base64 payload");
         }
 
-        const signB64 = toBase64(sign.finalize());
+        // Convert Uint8Array back to byte string for toBase64
+        let signStr = "";
+        signBytes.forEach(b => signStr += String.fromCharCode(b));
+        const signB64 = toBase64(Utils.strToByteArray(signStr));
         const sign64 = signB64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 
         if (sign64 !== parts[2]) {

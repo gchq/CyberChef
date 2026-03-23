@@ -5,17 +5,12 @@ module.exports = function(api) {
         "presets": [
             ["@babel/preset-env", {
                 "modules": false,
-                "useBuiltIns": "entry",
+                "useBuiltIns": "usage",
                 "corejs": 3
             }]
         ],
         "plugins": [
-            "@babel/plugin-syntax-import-assertions",
-            [
-                "@babel/plugin-transform-runtime", {
-                    "regenerator": true
-                }
-            ]
+            "@babel/plugin-syntax-import-assertions"
         ]
     };
 };

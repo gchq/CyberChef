@@ -8,17 +8,14 @@
 import "./stylesheets/index.js";
 
 // Libs
-import "arrive";
-import "snackbarjs";
-import "bootstrap-material-design/js/index";
-import "bootstrap-colorpicker";
-import moment from "moment-timezone";
+import "bootstrap";
+import { parse } from "date-fns";
 import * as CanvasComponents from "../core/lib/CanvasComponents.mjs";
 
 // CyberChef
 import App from "./App.mjs";
-import Categories from "../core/config/Categories.json" assert {type: "json"};
-import OperationConfig from "../core/config/OperationConfig.json" assert {type: "json"};
+import Categories from "../core/config/Categories.json" with {type: "json"};
+import OperationConfig from "../core/config/OperationConfig.json" with {type: "json"};
 
 
 /**
@@ -60,7 +57,8 @@ function main() {
     window.app.setup();
 }
 
-window.compileTime = moment.tz(COMPILE_TIME, "DD/MM/YYYY HH:mm:ss z", "UTC").valueOf();
+// Parse compile time string (format: "DD/MM/YYYY HH:mm:ss UTC")
+window.compileTime = parse(COMPILE_TIME.replace(/ UTC$/, ""), "dd/MM/yyyy HH:mm:ss", new Date()).getTime();
 window.compileMessage = COMPILE_MSG;
 
 // Make libs available to operation outputs

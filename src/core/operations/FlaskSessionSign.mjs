@@ -4,10 +4,11 @@
  */
 
 import Operation from "../Operation.mjs";
-import CryptoApi from "crypto-api/src/crypto-api.mjs";
 import Utils from "../Utils.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import { getHashFunction } from "../lib/Hash.mjs";
+import { hmac } from "@noble/hashes/hmac";
 
 /**
  * Flask Session Sign operation
@@ -57,12 +58,15 @@ class FlaskSessionSign extends Operation {
         const key = Utils.convertToByteString(args[0].string, args[0].option);
         const salt = Utils.convertToByteString(args[1].string || "cookie-session", args[1].option);
         const algorithm = args[2] || "sha1";
+        const hashFn = getHashFunction(algorithm);
 
         const payloadB64 = toBase64(Utils.strToByteArray(JSON.stringify(input)));
         const payload = payloadB64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 
-        const derivedKey = CryptoApi.getHmac(key, CryptoApi.getHasher(algorithm));
-        derivedKey.update(salt);
+        // Derive key: HMAC(secret, salt)
+        const keyBytes = new Uint8Array(Utils.strToArrayBuffer(key));
+        const saltBytes = new Uint8Array(Utils.strToArrayBuffer(salt));
+        const derivedKeyBytes = hmac(hashFn, keyBytes, saltBytes);
 
         const currentTimeStamp = Math.ceil(Date.now() / 1000);
         const buffer = new ArrayBuffer(4);
@@ -75,10 +79,15 @@ class FlaskSessionSign extends Operation {
         const time = timeB64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 
         const data = Utils.convertToByteString(payload + "." + time, "utf8");
-        const sign = CryptoApi.getHmac(derivedKey.finalize(), CryptoApi.getHasher(algorithm));
-        sign.update(data);
+        const dataBytes = new Uint8Array(Utils.strToArrayBuffer(data));
 
-        const signB64 = toBase64(sign.finalize());
+        // Sign: HMAC(derivedKey, data)
+        const signBytes = hmac(hashFn, derivedKeyBytes, dataBytes);
+
+        // Convert Uint8Array back to byte string for toBase64
+        let signStr = "";
+        signBytes.forEach(b => signStr += String.fromCharCode(b));
+        const signB64 = toBase64(Utils.strToByteArray(signStr));
         const sign64 = signB64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 
         return payload + "." + time + "." + sign64;

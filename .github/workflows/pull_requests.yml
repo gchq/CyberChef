@@ -22,12 +22,11 @@ jobs:
 
       - name: Install
         run: |
-          export DETECT_CHROMEDRIVER_VERSION=true
           npm install
           npm run setheapsize
 
       - name: Lint
-        run: npx grunt lint
+        run: npm run lint
 
       - name: Unit Tests
         run: |
@@ -36,7 +35,7 @@ jobs:
 
       - name: Production Build
         if: success()
-        run: npx grunt prod
+        run: npm run build
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -50,8 +49,11 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64,linux/arm64
+
+      - name: Install Playwright Browsers
+        if: success()
+        run: npx playwright install --with-deps chromium
+
       - name: UI Tests
         if: success()
-        run: |
-          sudo apt-get install xvfb
-          xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+        run: npm run testui
