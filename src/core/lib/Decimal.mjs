@@ -7,6 +7,7 @@
  */
 
 import Utils from "../Utils.mjs";
+import {DELIM_OPTIONS} from "./Delim.mjs";
 
 
 /**
@@ -35,3 +36,9 @@ export function fromDecimal(data, delim="Auto") {
     }
     return output;
 }
+
+
+/**
+ * From Decimal delimiters.
+ */
+export const FROM_DECIMAL_DELIM_OPTIONS = [...DELIM_OPTIONS, "Auto"];
