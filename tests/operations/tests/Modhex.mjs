@@ -147,4 +147,24 @@ dc;ii;hv;ig;hr;hf;dc;he;hj;hv;hv;ie;hg;du",
             }
         ]
     },
+    {
+        name: "Empty input through From Hex and To Modhex returns empty output",
+        input: "",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": [
+                    "Auto"
+                ]
+            },
+            {
+                "op": "To Modhex",
+                "args": [
+                    "Space",
+                    0
+                ]
+            }
+        ]
+    },
 ]);
