@@ -45,12 +45,15 @@ class DechunkHTTPResponse extends Operation {
         const lineEndingsLength = lineEndings.length;
         let chunkSize = parseInt(input.slice(0, chunkSizeEnd), 16);
         while (!isNaN(chunkSize)) {
+            if (chunkSize === 0) {
+                break;
+            }
             chunks.push(input.slice(chunkSizeEnd, chunkSize + chunkSizeEnd));
             input = input.slice(chunkSizeEnd + chunkSize + lineEndingsLength);
             chunkSizeEnd = input.indexOf(lineEndings) + lineEndingsLength;
             chunkSize = parseInt(input.slice(0, chunkSizeEnd), 16);
         }
-        return chunks.join("") + input;
+        return chunks.join("");
     }
 
 }
