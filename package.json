@@ -52,7 +52,7 @@
     "autoprefixer": "^10.4.27",
     "babel-loader": "^10.1.1",
     "base64-loader": "^1.0.0",
-    "chromedriver": "^130.0.4",
+    "chromedriver": "^146.0.6",
     "cli-progress": "^3.12.0",
     "colors": "^1.4.0",
     "compression-webpack-plugin": "^11.1.0",
