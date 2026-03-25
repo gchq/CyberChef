@@ -36,7 +36,7 @@
   "browserslist": [
     "Chrome >= 50",
     "Firefox >= 38",
-    "node >= 22"
+    "node >= 24"
   ],
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.6",
@@ -207,5 +207,8 @@
     "tag": "git tag -s \"v$(npm pkg get version | xargs)\" -m \"$(npm pkg get version | xargs)\" && echo \"Created v$(npm pkg get version | xargs), now check and push the tag\"",
     "getheapsize": "node -e 'console.log(`node heap limit = ${require(\"v8\").getHeapStatistics().heap_size_limit / (1024 * 1024)} Mb`)'",
     "setheapsize": "export NODE_OPTIONS=--max_old_space_size=2048"
+  },
+  "engines": {
+    "node": ">=24 <25"
   }
 }
