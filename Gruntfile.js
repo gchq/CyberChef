@@ -411,11 +411,11 @@ module.exports = function (grunt) {
                 stdout: false,
             },
             fixCryptoApiImports: {
-                command: `node ${nodeFlags} src/core/config/scripts/fixCryptoApiImports.js`,
+                command: `node ${nodeFlags} src/core/config/scripts/fixCryptoApiImports.mjs`,
                 stdout: false
             },
             fixSnackbarMarkup: {
-                command: `node ${nodeFlags} src/core/config/scripts/fixSnackBarMarkup.js`,
+                command: `node ${nodeFlags} src/core/config/scripts/fixSnackBarMarkup.mjs`,
                 stdout: false
             },
         },
