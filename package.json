@@ -149,7 +149,7 @@
     "kbpgp": "^2.1.17",
     "libbzip2-wasm": "0.0.4",
     "libyara-wasm": "^1.2.1",
-    "lodash": "^4.17.23",
+    "lodash": "^4.18.1",
     "loglevel": "^1.9.2",
     "loglevel-message-prefix": "^3.0.0",
     "lz-string": "^1.5.0",
