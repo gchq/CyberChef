@@ -9,13 +9,12 @@ import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
-import Jimp from "jimp/es/index.js";
+import { Jimp, JimpMime } from "jimp";
 
 /**
  * Image Opacity operation
  */
 class ImageOpacity extends Operation {
-
     /**
      * ImageOpacity constructor
      */
@@ -35,8 +34,8 @@ class ImageOpacity extends Operation {
                 type: "number",
                 value: 100,
                 min: 0,
-                max: 100
-            }
+                max: 100,
+            },
         ];
     }
 
@@ -63,10 +62,10 @@ class ImageOpacity extends Operation {
             image.opacity(opacity / 100);
 
             let imageBuffer;
-            if (image.getMIME() === "image/gif") {
-                imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
+            if (image.mime === "image/gif") {
+                imageBuffer = await image.getBuffer(JimpMime.png);
             } else {
-                imageBuffer = await image.getBufferAsync(Jimp.AUTO);
+                imageBuffer = await image.getBuffer(image.mime);
             }
             return imageBuffer.buffer;
         } catch (err) {
@@ -90,7 +89,6 @@ class ImageOpacity extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default ImageOpacity;
