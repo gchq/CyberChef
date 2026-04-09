@@ -4,6 +4,8 @@
  * @license Apache-2.0
  */
 
+import OperationError from "../errors/OperationError.mjs";
+
 /**
  * COBS-encode a byte array
  * @param {Uint8Array} data
@@ -23,7 +25,7 @@ export function toCobs(data) {
         if ((endIndex < 0 || endIndex > 254) && data.length > 254) {
             output.push(255);
             output.push(...data.slice(1, 255));
-            data = [...data.slice(255)];
+            data = data.slice(255);
             if (data.length !== 0) {
                 data = [0, ...data];
             }
@@ -49,6 +51,10 @@ export function toCobs(data) {
 export function fromCobs(data) {
     if (!data || data.length === 0) {
         return new Uint8Array();
+    }
+
+    if (data.findIndex((value) => value === 0) >= 0) {
+        throw new OperationError("Could not decode from COBS: payload must not contain a 0x00 byte");
     }
 
     const output = [];

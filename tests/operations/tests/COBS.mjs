@@ -428,4 +428,49 @@ TestRegister.addTests([
             }
         ]
     },
+    {
+        "name": "From COBS Invalid input #1",
+        "input": "00 48 45 4C 4C 4F",
+        "expectedOutput": "Could not decode from COBS: payload must not contain a 0x00 byte",
+        "recipeConfig": [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                "op": "From COBS",
+                "args": []
+            }
+        ],
+    },
+    {
+        "name": "From COBS Invalid input #2",
+        "input": "48 45 00 4C 4C 4F",
+        "expectedOutput": "Could not decode from COBS: payload must not contain a 0x00 byte",
+        "recipeConfig": [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                "op": "From COBS",
+                "args": []
+            }
+        ],
+    },
+    {
+        "name": "From COBS Invalid input #3",
+        "input": "48 45 4C 4C 4F 00",
+        "expectedOutput": "Could not decode from COBS: payload must not contain a 0x00 byte",
+        "recipeConfig": [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                "op": "From COBS",
+                "args": []
+            }
+        ],
+    },
 ]);
