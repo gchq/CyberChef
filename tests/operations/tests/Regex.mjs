@@ -55,5 +55,16 @@ TestRegister.addTests([
                 "args": ["User defined", "\\pS", true, true, false, false, true, false, "List matches"]
             }
         ],
-    }
+    },
+    {
+        name: "Regex: Email address preset matches IPv4 domain",
+        input: "user@[1.2.3.4]\ntest@[192.168.0.1]\nno-match@[1.2.3.]",
+        expectedOutput: "user@[1.2.3.4]\ntest@[192.168.0.1]",
+        recipeConfig: [
+            {
+                "op": "Regular expression",
+                "args": ["Email address", "", true, true, false, false, false, false, "List matches"]
+            }
+        ],
+    },
 ]);
