@@ -6,6 +6,7 @@
  * @license Apache-2.0
  */
 import TestRegister from "../../lib/TestRegister.mjs";
+import { EMAIL_REGEX } from "../../../src/core/lib/Extract.mjs";
 
 TestRegister.addTests([
     {
@@ -17,7 +18,7 @@ TestRegister.addTests([
                 op: "Regular expression",
                 args: [
                     "Email address",
-                    null,
+                    EMAIL_REGEX.source,
                     true,
                     true,
                     false,
@@ -31,14 +32,14 @@ TestRegister.addTests([
     },
     {
         name: "Regular Expression - built in email regex - invalid IP address",
-        input: "yaunwfkb\false_positive@[1.2.3.]\n091nvka",
+        input: "yaunwfkb\nfalse_positive@[1.2.3.]\n091nvka",
         expectedOutput: "",
         recipeConfig: [
             {
                 op: "Regular expression",
                 args: [
                     "Email address",
-                    null,
+                    EMAIL_REGEX.source,
                     true,
                     true,
                     false,
@@ -59,7 +60,7 @@ TestRegister.addTests([
                 op: "Regular expression",
                 args: [
                     "Email address",
-                    null,
+                    EMAIL_REGEX.source,
                     true,
                     true,
                     false,
