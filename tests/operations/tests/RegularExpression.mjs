@@ -50,4 +50,25 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "Regular Expression - built in email regex - IPv4 from #2318",
+        input: "user@[1.2.3.4]\ntest@[192.168.0.1]\nno-match@[1.2.3.]",
+        expectedOutput: "user@[1.2.3.4]\ntest@[192.168.0.1]",
+        recipeConfig: [
+            {
+                op: "Regular expression",
+                args: [
+                    "Email address",
+                    null,
+                    true,
+                    true,
+                    false,
+                    false,
+                    false,
+                    false,
+                    "List matches",
+                ],
+            },
+        ],
+    },
 ]);
