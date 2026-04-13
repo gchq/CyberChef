@@ -5,6 +5,7 @@
  */
 
 import Dish from "./Dish.mjs";
+import OperationError from "./errors/OperationError.mjs";
 import Ingredient from "./Ingredient.mjs";
 
 /**
@@ -223,7 +224,11 @@ class Operation {
      */
     set ingValues(ingValues) {
         ingValues.forEach((val, i) => {
-            this._ingList[i].value = val;
+            try {
+                this._ingList[i].value = val;
+            } catch (err) {
+                throw new OperationError(`Failed to set value of ingredient '${this._ingList[i].name}': ${err}`);
+            }
         });
     }
 
