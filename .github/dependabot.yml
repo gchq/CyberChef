@@ -43,6 +43,8 @@ updates:
         versions: [ '>=0.4.0' ]
       - dependency-name: 'geodesy'
         versions: [ '>=2.0.0' ]
+      - dependency-name: 'jimp'
+        versions: [ '1.6.1' ]
       - dependency-name: 'otpauth'
         versions: [ '>=9.4.0' ]
       - dependency-name: 'webpack-dev-server'
