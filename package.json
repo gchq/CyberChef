@@ -49,7 +49,7 @@
     "@codemirror/search": "^6.6.0",
     "@codemirror/state": "^6.5.4",
     "@codemirror/view": "^6.41.0",
-    "autoprefixer": "^10.4.27",
+    "autoprefixer": "^10.5.0",
     "babel-loader": "^10.1.1",
     "base64-loader": "^1.0.0",
     "chromedriver": "^146.0.6",
