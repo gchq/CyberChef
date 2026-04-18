@@ -37,6 +37,14 @@ jobs:
         if: success()
         run: npx grunt prod
 
+      - name: Upload Build Artefact
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          name: zipped-build
+          path: build/prod/*.zip
+          retention-days: 5
+
       - name: UI Tests
         if: success()
         run: |
