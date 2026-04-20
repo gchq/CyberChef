@@ -104,7 +104,8 @@ class RenderImage extends Operation {
         // Add image data to URI
         dataURI += "base64," + toBase64(data);
 
-        return "<img src='" + dataURI + "'>";
+        // style tag for image responsiveness
+        return "<img src='" + dataURI + "' style='max-width:100%;max-height:100vh;display:block;margin:auto;' alt='Rendered image'>";
     }
 
 }
