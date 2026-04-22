@@ -190,6 +190,7 @@ import "./tests/JSONtoYAML.mjs";
 import "./tests/YARA.mjs";
 import "./tests/ParseCSR.mjs";
 import "./tests/XXTEA.mjs";
+import "./tests/TEA.mjs";
 
 const testStatus = {
     allTestsPassing: true,
