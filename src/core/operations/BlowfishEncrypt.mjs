@@ -25,8 +25,8 @@ class BlowfishEncrypt extends Operation {
         this.module = "Ciphers";
         this.description = "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.";
         this.infoURL = "https://wikipedia.org/wiki/Blowfish_(cipher)";
-        this.inputType = "string";
-        this.outputType = "string";
+        this.inputType = "byteArray";
+        this.outputType = "byteArray";
         this.args = [
             {
                 "name": "Key",
@@ -59,9 +59,9 @@ class BlowfishEncrypt extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      */
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
@@ -80,6 +80,7 @@ Blowfish's key length needs to be between 4 and 56 bytes (32-448 bits).`);
             throw new OperationError(`Invalid IV length: ${iv.length} bytes. Expected 8 bytes.`);
         }
 
+        input = input.map((c) => String.fromCharCode(c)).join("");
         input = Utils.convertToByteString(input, inputType);
 
         const cipher = Blowfish.createCipher(key, mode);
@@ -87,11 +88,8 @@ Blowfish's key length needs to be between 4 and 56 bytes (32-448 bits).`);
         cipher.update(forge.util.createBuffer(input));
         cipher.finish();
 
-        if (outputType === "Hex") {
-            return cipher.output.toHex();
-        } else {
-            return cipher.output.getBytes();
-        }
+        const output = outputType === "Hex" ? cipher.output.toHex() : cipher.output.getBytes();
+        return Array.from(output).map((c) => c.charCodeAt(0));
     }
 
 }

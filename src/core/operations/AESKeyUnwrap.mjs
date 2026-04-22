@@ -25,8 +25,8 @@ class AESKeyUnwrap extends Operation {
         this.module = "Ciphers";
         this.description = "Decryptor for a key wrapping algorithm defined in RFC3394, which is used to protect keys in untrusted storage or communications, using AES.<br><br>This algorithm uses an AES key (KEK: key-encryption key) and a 64-bit IV to decrypt 64-bit blocks.";
         this.infoURL = "https://wikipedia.org/wiki/Key_wrap";
-        this.inputType = "string";
-        this.outputType = "string";
+        this.inputType = "byteArray";
+        this.outputType = "byteArray";
         this.args = [
             {
                 "name": "Key (KEK)",
@@ -54,9 +54,9 @@ class AESKeyUnwrap extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      */
     run(input, args) {
         const kek = Utils.convertToByteString(args[0].string, args[0].option),
@@ -70,6 +70,7 @@ class AESKeyUnwrap extends Operation {
         if (iv.length !== 8) {
             throw new OperationError("IV must be 8 bytes (currently " + iv.length + " bytes)");
         }
+        input = input.map((c) => String.fromCharCode(c)).join("");
         const inputData = Utils.convertToByteString(input, inputType);
         if (inputData.length % 8 !== 0 || inputData.length < 24) {
             throw new OperationError("input must be 8n (n>=3) bytes (currently " + inputData.length + " bytes)");
@@ -117,10 +118,8 @@ class AESKeyUnwrap extends Operation {
         }
         const P = R.join("");
 
-        if (outputType === "Hex") {
-            return toHexFast(Utils.strToArrayBuffer(P));
-        }
-        return P;
+        const output = outputType === "Hex" ? toHexFast(Utils.strToArrayBuffer(P)) : P;
+        return Array.from(output).map((c) => c.charCodeAt(0));
     }
 
 }
