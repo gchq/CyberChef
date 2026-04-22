@@ -16,6 +16,7 @@ import { setLongTestFailure, logTestReport } from "../lib/utils.mjs";
 import TestRegister from "../lib/TestRegister.mjs";
 import "./tests/A1Z26CipherDecode.mjs";
 import "./tests/AESKeyWrap.mjs";
+import "./tests/AESKeyWrapWithPadding.mjs";
 import "./tests/AlternatingCaps.mjs";
 import "./tests/AvroToJSON.mjs";
 import "./tests/BaconCipher.mjs";
