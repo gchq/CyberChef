@@ -49,6 +49,13 @@ class DechunkHTTPResponse extends Operation {
             input = input.slice(chunkSizeEnd + chunkSize + lineEndingsLength);
             chunkSizeEnd = input.indexOf(lineEndings) + lineEndingsLength;
             chunkSize = parseInt(input.slice(0, chunkSizeEnd), 16);
+            if (chunkSize === 0) {
+                input = input.slice(chunkSizeEnd);
+                if (input.startsWith(lineEndings)) {
+                    input = input.slice(lineEndingsLength);
+                }
+                break;
+            }
         }
         return chunks.join("") + input;
     }
