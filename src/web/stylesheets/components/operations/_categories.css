@@ -1,27 +1,28 @@
 /**
- * Operation list styles
- *
- * @author n1474335 [n1474335@gmail.com]
- * @copyright Crown Copyright 2017
- * @license Apache-2.0
+ * Operations - Categories list
  */
 
-.op-list {
+c-category-list > ul {
     list-style-type: none;
-    margin: 0;
-    padding: 0;
+    padding-left: 0;
+    margin-bottom: 0;
 }
 
 .category-title {
-    display: block;
+    display: flex;
+    justify-content: space-between;
     padding: 10px;
     background-color: var(--secondary-background-colour);
     border-bottom: 1px solid var(--secondary-border-colour);
     font-weight: var(--title-weight);
 }
 
-.category-title[href='#catFavourites'] {
-    border-bottom-color: var(--primary-border-colour);
+.category-title[data-target="#catFavourites"] {
+    height: 41px;
+}
+
+#edit-favourites {
+    transform: translateY(-7px);
 }
 
 .category-title[aria-expanded=true] {
@@ -42,8 +43,27 @@
     border: none;
 }
 
+#categories a {
+    color: var(--category-list-font-colour);
+    cursor: pointer;
+}
+
+#categories a:hover {
+    filter: brightness(98%);
+}
+
+.favourites-hover {
+    color: var(--rec-list-operation-font-colour);
+    background-color: var(--rec-list-operation-bg-colour);
+    border: 2px dashed var(--rec-list-operation-font-colour) !important;
+    padding: 8px 8px 9px 8px;
+}
+
+.category-title-right {
+    display: flex;
+}
+
 .op-count {
-    float: right;
     color: var(--subtext-font-colour);
     font-weight: normal;
     font-size: xx-small;

@@ -14,17 +14,17 @@
     margin-bottom: 20px;
 }
 
-#edit-favourites-list {
+#editable-favourites {
     margin: 10px;
     border: 1px solid var(--op-list-operation-border-colour);
 }
 
-#edit-favourites-list .operation {
+#editable-favourites c-operation-li > li {
     border-left: none;
     border-right: none;
 }
 
-#edit-favourites-list .operation:last-child {
+#editable-favourites c-operation-list > li:last-child {
     border-bottom: none;
 }
 

@@ -1,0 +1,35 @@
+#stale-indicator {
+    opacity: 1;
+    visibility: visible;
+    transition: margin 0s, opacity 0.3s;
+    margin-left: 5px;
+    cursor: help;
+}
+
+#stale-indicator i {
+    vertical-align: middle;
+    margin-bottom: 5px;
+}
+
+#magic {
+    opacity: 1;
+    visibility: visible;
+    transition: margin 0s 0.3s, opacity 0.3s 0.3s, visibility 0.3s 0.3s;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+#magic.hidden,
+#stale-indicator.hidden {
+    visibility: hidden;
+    transition: opacity 0.3s, margin 0.3s 0.3s, visibility 0.3s;
+    opacity: 0;
+}
+
+#magic.hidden {
+    margin-left: -32px;
+}
+
+#magic svg path {
+    fill: var(--primary-font-colour);
+}
