@@ -393,7 +393,7 @@ class App {
      * Checks if the favourites category is expanded
      */
     isFavouritesExpanded() {
-        const catFavourites = document.getElementById("#catFavourites");
+        const catFavourites = document.getElementById("catFavourites");
         return catFavourites ? catFavourites.classList.contains("show") : false;
     }
 

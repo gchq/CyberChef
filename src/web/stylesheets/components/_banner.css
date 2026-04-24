@@ -22,6 +22,11 @@
     padding-right: 10px;
 }
 
+#banner div a:focus {
+    background-color: #eef3ec;
+    border: solid black 2px;
+    border-radius: 4px;
+}
 
 /* Notice wrapper */
 #notice-wrapper {
