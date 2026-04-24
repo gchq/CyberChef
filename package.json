@@ -46,7 +46,7 @@
     "@babel/runtime": "^7.29.2",
     "@codemirror/commands": "^6.10.3",
     "@codemirror/language": "^6.12.3",
-    "@codemirror/search": "^6.6.0",
+    "@codemirror/search": "^6.7.0",
     "@codemirror/state": "^6.5.4",
     "@codemirror/view": "^6.41.0",
     "autoprefixer": "^10.5.0",
