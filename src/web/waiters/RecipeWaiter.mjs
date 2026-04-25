@@ -225,6 +225,9 @@ class RecipeWaiter {
      */
     ingChange(e) {
         if (e && e?.target?.classList?.contains("no-state-change")) return;
+        if (e?.target?.classList?.contains("arg")) {
+            this.syncArgVisualState(e.target);
+        }
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -553,6 +556,8 @@ class RecipeWaiter {
             } else {
                 ingEls[i].value = args[i];
             }
+
+            this.syncArgVisualState(ingEls[i]);
         }
 
         this.triggerArgEvents(op);
@@ -754,6 +759,30 @@ class RecipeWaiter {
 
 
     /**
+     * Keeps floating-label state in sync for programmatically populated args.
+     *
+     * @param {HTMLElement} el
+     */
+    syncArgVisualState(el) {
+        if (!el) return;
+
+        const group = el.closest(".form-group, .bmd-form-group");
+        if (!group) return;
+
+        let isFilled = false;
+        if (el.getAttribute("type") === "checkbox" || el.getAttribute("type") === "radio") {
+            isFilled = el.checked;
+        } else if (typeof el.value === "string") {
+            isFilled = el.value.trim().length > 0;
+        } else {
+            isFilled = Boolean(el.value);
+        }
+
+        group.classList.toggle("is-filled", isFilled);
+    }
+
+
+    /**
      * Handler for operationadd events.
      *
      * @listens Manager#operationadd
@@ -832,6 +861,7 @@ class RecipeWaiter {
 
         if (text) {
             targ.value = text;
+            this.syncArgVisualState(targ);
             return;
         }
 
@@ -840,7 +870,7 @@ class RecipeWaiter {
             const self = this;
             reader.onload = function (e) {
                 targ.value = e.target.result;
-                // Trigger floating label move
+                self.syncArgVisualState(targ);
                 const changeEvent = new Event("change");
                 targ.dispatchEvent(changeEvent);
                 window.dispatchEvent(self.manager.statechange);

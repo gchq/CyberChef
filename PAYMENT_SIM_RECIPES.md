@@ -40,6 +40,8 @@ This list targets software-only development and testing environments.
 4. Session derivation input normalization checks.
 5. Cryptogram preimage assembly validation recipes.
 6. PAN parser and network classifier recipes for Visa (`4`, typically 13/16/19 digits), Mastercard (`51`-`55`, `2221`-`2720`, 16 digits), American Express (`34`, `37`, 15 digits), and Discover (`6011`, `644`-`649`, `65`, and `622126`-`622925`, typically 16-19 digits), including Luhn validation and issuer-range explanation.
+Status:
+`Generate Test PAN` and `Parse PAN` are now implemented. Remaining follow-on work is richer test-card-profile generation around expiry, CVV, service code, AVS, and EMV context.
 
 ## AWS Payment Cryptography Candidate Recipes
 1. `EncryptData` and `DecryptData` parity vectors for AES, TDES, and RSA.

@@ -101,6 +101,8 @@ Important assumptions:
 
 ## 5) Generate / Verify Card Validation Data
 Operations:
+- `Generate Test PAN`
+- `Parse PAN`
 - `Generate Card Validation Data`
 - `Verify Card Validation Data`
 
@@ -116,6 +118,15 @@ Important assumptions:
 - CVV2 forces service code `000`
 - iCVV forces service code `999`
 - this is a clear-key software emulation of common card-validation flows
+
+Recommended chain:
+- `Generate Test PAN` -> `Parse PAN` -> `Generate Card Validation Data`
+
+Use `Generate Test PAN` when:
+- you want a Visa, Mastercard, American Express, or Discover PAN to feed into later recipes
+
+Use `Parse PAN` when:
+- you want to confirm network, IIN, length, and Luhn validity before continuing
 
 ## 6) Generate / Translate / Verify Payment PIN Data
 Operations:
@@ -273,7 +284,19 @@ Flow:
 - keep issuer validation data, PAN, PVKI, decimalization table, and PVK in the args
 - use the JSON output when you need to inspect how the verification artifact was assembled
 
-## H) AS2805 KEK Validation
+## H) Brand Test Card Setup
+Operations:
+- `Generate Test PAN`
+- `Parse PAN`
+- `Generate Card Validation Data`
+- `Generate Payment PIN Data`
+
+Flow:
+- generate a curated or locally generated brand-valid PAN
+- parse it to confirm brand and Luhn validity
+- feed the PAN into CVV, PIN, EMV, or parser recipes
+
+## I) AS2805 KEK Validation
 Operations:
 - `Generate AS2805 KEK Validation`
 - `Calculate Payment KCV`

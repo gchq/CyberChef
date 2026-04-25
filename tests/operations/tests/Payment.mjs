@@ -210,6 +210,68 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Generate Test PAN: Visa curated sample",
+        input: "",
+        expectedOutput: JSON.stringify({
+            brand: "Visa",
+            mode: "Curated sample",
+            pan: "4024140000000131",
+            source: "Public Visa test PAN published in Mastercard AVS scenario documentation.",
+            network: "Visa",
+            majorIndustryIdentifier: "4",
+            issuerIdentificationNumber: "40241400",
+            length: 16,
+            luhnValid: true,
+            matchedRule: {
+                rangeStart: "4",
+                rangeEnd: "4",
+                lengths: [13, 16, 19],
+                description: "Visa cards begin with 4."
+            }
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Generate Test PAN",
+                args: ["Visa", "Curated sample", 16, true]
+            }
+        ]
+    },
+    {
+        name: "Generate Test PAN: American Express generated sample",
+        input: "",
+        expectedOutput: "371234567890120",
+        recipeConfig: [
+            {
+                op: "Generate Test PAN",
+                args: ["American Express", "Generated valid PAN", 15, false]
+            }
+        ]
+    },
+    {
+        name: "Parse PAN: Discover sample",
+        input: "6011000991543426",
+        expectedOutput: JSON.stringify({
+            pan: "6011000991543426",
+            network: "Discover",
+            majorIndustryIdentifier: "6",
+            issuerIdentificationNumber: "60110009",
+            length: 16,
+            luhnValid: true,
+            matchedRule: {
+                rangeStart: "6011",
+                rangeEnd: "6011",
+                lengths: [16, 17, 18, 19],
+                description: "Discover range 6011."
+            }
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Parse PAN",
+                args: []
+            }
+        ]
+    },
+    {
         name: "Verify Card Validation Data: known CVV2 sample",
         input: "0123456789ABCDEFFEDCBA9876543210",
         expectedOutput: JSON.stringify({
