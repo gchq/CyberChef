@@ -13,6 +13,93 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [10.23.0] - 2026-04-06
+- Properly escape HTML entities in sampleDelim to avoid XSS issue [@GCHQDeveloper581] | [#2307]
+- chore (deps): bump lodash from 4.17.23 to 4.18.1  | [#2304]
+- chore (deps): bump @codemirror/view from 6.40.0 to 6.41.0  | [#2305]
+- chore (deps): bump the patch-updates group with 2 updates  | [#2303]
+- chore (deps): bump @xmldom/xmldom from 0.8.11 to 0.8.12  | [#2302]
+- chore (deps): bump picomatch  | [#2299]
+- chore (deps): bump node-forge from 1.3.3 to 1.4.0  | [#2297]
+- chore (deps): bump the patch-updates group with 3 updates | [#2296]
+- chore (deps) bump chromedriver from 130.0.4 to 146.0.6 [@GCHQDeveloper581] | [#2292]
+- ParseEthernetFrame - Fix vlan calculation [@Kalkran] | [#2295]
+- Add pull request template with AI usage disclosure [@C85297] | [#2279]
+- fix: return empty output for zero-length To Modhex input [@saschabuehrle] | [#2249]
+- Added tab focus to top banner and navigation to About/Support Modal [@j264415] | [#1733]
+- Add Parse Ethernet frame Operation, allow Parse IPv4 Header to cascade [@Kalkran] | [#1722]
+- Selection and Deselection of autobake checkbox using keyboard [@j264415] | [#1727]
+- chore (deps): bump @babel/runtime from 7.28.6 to 7.29.2  | [#2263]
+- Add more helpful error for when numerical ingredient is left empty [@Lamby777] [@C85297] | [#1540]
+- chore (deps): bump @codemirror/view from 6.39.17 to 6.40.0  | [#2262]
+- Bump flatted from 3.3.2 to 3.4.2 [@GCHQDeveloper581] | [#2266]
+- feat: add Raw option for Jq operation [@rtpt-romankarwacik] | [#2237]
+- chore (deps): bump core-js from 3.48.0 to 3.49.0  | [#2261]
+- chore (deps): bump the patch-updates group with 6 updates  | [#2260]
+- Add Extract Audio Metadata operation [@d0s1nt] [@GCHQDeveloper581] | [#2170]
+- Fix Jq issue [@GCHQDeveloper581] | [#2210]
+- Configure dependabot updates [@GCHQDeveloper581] | [#2259]
+- fix(A1Z26): return empty string instead of empty array for empty input [@brick-pixel] | [#2257]
+- Fix broken Docker link in README [@am-periphery] | [#2250]
+- Update some dependencies, including a number causing npm audit warnings [@GCHQDeveloper581] | [#2236]
+- Bump axios from 1.7.9 to 1.13.6  | [#2234]
+- Bump jws from 3.2.2 to 3.2.3  | [#2235]
+- Bump pbkdf2 from 3.1.2 to 3.1.5  | [#2229]
+- Bump form-data from 4.0.1 to 4.0.5  | [#2228]
+- Bump basic-ftp from 5.0.5 to 5.2.0  | [#2231]
+- feat: add ARM disassembler operation [@thomasxm] | [#2156]
+- Add Text/Integer Converter operation [@p-leriche] [@GCHQDeveloper581] | [#2213]
+- Feat/rc6 add RC6 Encrypt/Decrypt operations [@thomasxm] | [#2163]
+- [bugfix] Add Bootstrap form style for CodeMirror editor [@Swonkie] | [#2161]
+- Add Flask Session operations (Decode, Sign, Verify) [@ThePlayer372-FR] | [#2208]
+- fix: `jq-web` -> `jq-wasm`, includes `jq` version `1.8.1` [@W-Floyd] [@GCHQDeveloper581] | [#2223]
+- Bump jsonwebtoken from 8.5.1 to 9.0.0 [@GCHQDeveloper581] | [#2219]
+- Bump basic-ftp from 5.0.5 to 5.2.0  | [#2218]
+- feat: add random integer generation operation [@cktgh] | [#2151]
+- Add BigInt utility functions for number theory operations [@p-leriche] [@GCHQDeveloper581] | [#2205]
+- Improve SQL Beautify: use sql-formatter and support bind variables [@aby-jo] [@GCHQDeveloper581] | [#2071]
+- update tesseract.js to 6.0.1 [@atsiv1] | [#2133]
+- Fix hint tooltip display issues [@bartvanandel] | [#2017]
+- Simplify babel dependencies [@GCHQDeveloper581] | [#2204]
+- Dependency updates [@GCHQDeveloper581] | [#2201]
+- Fix: Move Magic checks from Escape to Unescape Unicode Characters [@fjh1997] | [#2195]
+- Paste spreadsheets as text [@C85297] | [#2200]
+- Fix Roboto Mono font [@C85297] | [#2199]
+- Fix return of buffer for PNG QR image generation [@GCHQDeveloper581] [@C85297] | [#2125]
+- Update JIMP [@C85297] | [#2171]
+- Overwrite NGINX maintainer label [@C85297] | [#2194]
+- Bump v10.22.1 [@GCHQDeveloper581] | [#2193]
+- Fix npm publish - Run "npm ci" and "npm run node" under node 18 then switch to node 24.5 [@GCHQDeveloper581] | [#2192]
+
+### [10.22.0] - 2026-02-11
+- Separate npm publish out into separate job and run with Node 24.5 [@GCHQDeveloper581] | [#2188]
+- Fixed Percent delimiter for hex encoding [@beneri] [@C85297] | [#2137]
+- Added the ability to paste one or more Images from the Clipboard [@t-martine] [@a3957273] [@C85297] | [#1876]
+- Quoted Printable - consistent reference to 'email' [@wesinator] | [#2186]
+- Fix freeze when output text decoding fails [@Raka-loah] | [#1573]
+- Update Browserslist DB [@C85297] | [#2183]
+- Add contents write permission to releases workflow [@C85297] | [#2182]
+- Fix release workflow permissions [@C85297] | [#2181]
+
+### [10.21.0] - 2026-02-05
+- Fix import operations with special chars in them [@d98762625] [@jg42526] | [#1040]
+- Remove custom CodeQL workflow [@C85297] | [#2176]
+- Fix code scanning warnings in workflows [@GCHQDeveloper581] | [#2177]
+- Use NPM trusted publishing [@C85297] [@GCHQDeveloper581] | [#2174]
+- Fix: Correctly parse xxd odd byte hexdumps [@ThomasNotTom] [@GCHQDeveloper581] | [#2058]
+- Update Sitemap URLs to Use Valid Paths in sitemap.mjs [@rbpi] [@C85297] | [#1861]
+- Use recommended GitHub Actions to build image [@AlexGustafsson] [@C85297] | [#2055]
+- Remove version 10 message from banner [@C85297] | [#2169]
+- Bump form-data from 4.0.1 to 4.0.5  | [#2175]
+- Bump node-forge from 1.3.1 to 1.3.3  | [#2173]
+- Update crypto browserify [@C85297] | [#2172]
+- Update kbpgp package (resolves #2135) [@GCHQDeveloper581] | [#2136]
+- Fix the processing of ALPNs for JA4 to align with new specification update [@tuliperis] | [#2165]
+- Add Bech32 and Bech32m encoding/decoding operations [@thomasxm] | [#2159]
+- Exclude Delete character from hex dump output [@mikecat] [@C85297] | [#2086]
+- Tiny typo fix in "To Base85" operation [@twostraws] | [#2118]
+- Bump jsonpath-plus [@C85297] | [#2166]
+
 ### [10.20.0] - 2026-01-28
 - Fixed Optical Character Recognition and added tests [@n1474335] | [ab37c1e]
 - Fixed JA4 version fallback value [@n1474335] | [7a5225c]
@@ -509,6 +596,9 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[10.23.0]: https://github.com/gchq/CyberChef/releases/tag/v10.23.0
+[10.22.0]: https://github.com/gchq/CyberChef/releases/tag/v10.22.0
+[10.21.0]: https://github.com/gchq/CyberChef/releases/tag/v10.21.0
 [10.20.0]: https://github.com/gchq/CyberChef/releases/tag/v10.20.0
 [10.19.0]: https://github.com/gchq/CyberChef/releases/tag/v10.19.0
 [10.18.0]: https://github.com/gchq/CyberChef/releases/tag/v10.18.0
@@ -754,6 +844,34 @@ All major and minor version changes will be documented in this file. Details of 
 [@remingtr]: https://github.com/remingtr
 [@0xff1ce]: https://github.com/0xff1ce
 [@starplanet]: https://github.com/starplanet
+[@C85297]: https://github.com/C85297
+[@GCHQDeveloper581]: https://github.com/GCHQDeveloper581
+[@ThomasNotTom]: https://github.com/ThomasNotTom
+[@rbpi]: https://github.com/rbpi
+[@AlexGustafsson]: https://github.com/AlexGustafsson
+[@tuliperis]: https://github.com/tuliperis
+[@thomasxm]: https://github.com/thomasxm
+[@twostraws]: https://github.com/twostraws
+[@beneri]: https://github.com/beneri
+[@t-martine]: https://github.com/t-martine
+[@wesinator]: https://github.com/wesinator
+[@Raka-loah]: https://github.com/Raka-loah
+[@Kalkran]: https://github.com/Kalkran
+[@saschabuehrle]: https://github.com/saschabuehrle
+[@j264415]: https://github.com/j264415
+[@Lamby777]: https://github.com/Lamby777
+[@rtpt-romankarwacik]: https://github.com/rtpt-romankarwacik
+[@d0s1nt]: https://github.com/d0s1nt
+[@brick-pixel]: https://github.com/brick-pixel
+[@am-periphery]: https://github.com/am-periphery
+[@p-leriche]: https://github.com/p-leriche
+[@Swonkie]: https://github.com/Swonkie
+[@ThePlayer372-FR]: https://github.com/ThePlayer372-FR
+[@W-Floyd]: https://github.com/W-Floyd
+[@cktgh]: https://github.com/cktgh
+[@aby-jo]: https://github.com/aby-jo
+[@atsiv1]: https://github.com/atsiv1
+[@fjh1997]: https://github.com/fjh1997
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
@@ -942,3 +1060,85 @@ All major and minor version changes will be documented in this file. Details of 
 [#512]: https://github.com/gchq/CyberChef/issues/512
 [#1732]: https://github.com/gchq/CyberChef/issues/1732
 [#1789]: https://github.com/gchq/CyberChef/issues/1789
+[#1040]: https://github.com/gchq/CyberChef/pull/1040
+[#2176]: https://github.com/gchq/CyberChef/pull/2176
+[#2177]: https://github.com/gchq/CyberChef/pull/2177
+[#2174]: https://github.com/gchq/CyberChef/pull/2174
+[#2058]: https://github.com/gchq/CyberChef/pull/2058
+[#1861]: https://github.com/gchq/CyberChef/pull/1861
+[#2055]: https://github.com/gchq/CyberChef/pull/2055
+[#2169]: https://github.com/gchq/CyberChef/pull/2169
+[#2175]: https://github.com/gchq/CyberChef/pull/2175
+[#2173]: https://github.com/gchq/CyberChef/pull/2173
+[#2172]: https://github.com/gchq/CyberChef/pull/2172
+[#2136]: https://github.com/gchq/CyberChef/pull/2136
+[#2165]: https://github.com/gchq/CyberChef/pull/2165
+[#2159]: https://github.com/gchq/CyberChef/pull/2159
+[#2086]: https://github.com/gchq/CyberChef/pull/2086
+[#2118]: https://github.com/gchq/CyberChef/pull/2118
+[#2166]: https://github.com/gchq/CyberChef/pull/2166
+[#2188]: https://github.com/gchq/CyberChef/pull/2188
+[#2137]: https://github.com/gchq/CyberChef/pull/2137
+[#1876]: https://github.com/gchq/CyberChef/pull/1876
+[#2186]: https://github.com/gchq/CyberChef/pull/2186
+[#1573]: https://github.com/gchq/CyberChef/pull/1573
+[#2183]: https://github.com/gchq/CyberChef/pull/2183
+[#2182]: https://github.com/gchq/CyberChef/pull/2182
+[#2181]: https://github.com/gchq/CyberChef/pull/2181
+[#2307]: https://github.com/gchq/CyberChef/pull/2307
+[#2304]: https://github.com/gchq/CyberChef/pull/2304
+[#2305]: https://github.com/gchq/CyberChef/pull/2305
+[#2303]: https://github.com/gchq/CyberChef/pull/2303
+[#2302]: https://github.com/gchq/CyberChef/pull/2302
+[#2299]: https://github.com/gchq/CyberChef/pull/2299
+[#2297]: https://github.com/gchq/CyberChef/pull/2297
+[#2296]: https://github.com/gchq/CyberChef/pull/2296
+[#2292]: https://github.com/gchq/CyberChef/pull/2292
+[#2295]: https://github.com/gchq/CyberChef/pull/2295
+[#2279]: https://github.com/gchq/CyberChef/pull/2279
+[#2249]: https://github.com/gchq/CyberChef/pull/2249
+[#1733]: https://github.com/gchq/CyberChef/pull/1733
+[#1722]: https://github.com/gchq/CyberChef/pull/1722
+[#1727]: https://github.com/gchq/CyberChef/pull/1727
+[#2263]: https://github.com/gchq/CyberChef/pull/2263
+[#1540]: https://github.com/gchq/CyberChef/pull/1540
+[#2262]: https://github.com/gchq/CyberChef/pull/2262
+[#2266]: https://github.com/gchq/CyberChef/pull/2266
+[#2237]: https://github.com/gchq/CyberChef/pull/2237
+[#2261]: https://github.com/gchq/CyberChef/pull/2261
+[#2260]: https://github.com/gchq/CyberChef/pull/2260
+[#2170]: https://github.com/gchq/CyberChef/pull/2170
+[#2210]: https://github.com/gchq/CyberChef/pull/2210
+[#2259]: https://github.com/gchq/CyberChef/pull/2259
+[#2257]: https://github.com/gchq/CyberChef/pull/2257
+[#2250]: https://github.com/gchq/CyberChef/pull/2250
+[#2236]: https://github.com/gchq/CyberChef/pull/2236
+[#2234]: https://github.com/gchq/CyberChef/pull/2234
+[#2235]: https://github.com/gchq/CyberChef/pull/2235
+[#2229]: https://github.com/gchq/CyberChef/pull/2229
+[#2228]: https://github.com/gchq/CyberChef/pull/2228
+[#2231]: https://github.com/gchq/CyberChef/pull/2231
+[#2156]: https://github.com/gchq/CyberChef/pull/2156
+[#2213]: https://github.com/gchq/CyberChef/pull/2213
+[#2163]: https://github.com/gchq/CyberChef/pull/2163
+[#2161]: https://github.com/gchq/CyberChef/pull/2161
+[#2208]: https://github.com/gchq/CyberChef/pull/2208
+[#2223]: https://github.com/gchq/CyberChef/pull/2223
+[#2219]: https://github.com/gchq/CyberChef/pull/2219
+[#2218]: https://github.com/gchq/CyberChef/pull/2218
+[#2151]: https://github.com/gchq/CyberChef/pull/2151
+[#2205]: https://github.com/gchq/CyberChef/pull/2205
+[#2071]: https://github.com/gchq/CyberChef/pull/2071
+[#2133]: https://github.com/gchq/CyberChef/pull/2133
+[#2017]: https://github.com/gchq/CyberChef/pull/2017
+[#2204]: https://github.com/gchq/CyberChef/pull/2204
+[#2201]: https://github.com/gchq/CyberChef/pull/2201
+[#2195]: https://github.com/gchq/CyberChef/pull/2195
+[#2200]: https://github.com/gchq/CyberChef/pull/2200
+[#2199]: https://github.com/gchq/CyberChef/pull/2199
+[#2125]: https://github.com/gchq/CyberChef/pull/2125
+[#2171]: https://github.com/gchq/CyberChef/pull/2171
+[#2194]: https://github.com/gchq/CyberChef/pull/2194
+[#2193]: https://github.com/gchq/CyberChef/pull/2193
+[#2192]: https://github.com/gchq/CyberChef/pull/2192
+
