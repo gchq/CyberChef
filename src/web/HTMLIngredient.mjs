@@ -27,6 +27,7 @@ class HTMLIngredient {
         this.value = config.value;
         this.disabled = config.disabled || false;
         this.hint = config.hint || false;
+        this.comment = config.comment || "";
         this.rows = config.rows || false;
         this.target = config.target;
         this.defaultIndex = config.defaultIndex || 0;
@@ -49,6 +50,7 @@ class HTMLIngredient {
     toHtml() {
         let html = "",
             i, m, eventFn;
+        const commentHtml = this.comment ? `<div class="arg-comment">${this.comment}</div>` : "";
 
         switch (this.type) {
             case "string":
@@ -66,6 +68,7 @@ class HTMLIngredient {
                         value="${this.value}"
                         ${this.disabled ? "disabled" : ""}
                         ${this.maxLength ? `maxlength="${this.maxLength}"` : ""}>
+                    ${commentHtml}
                 </div>`;
                 break;
             case "shortString":
@@ -82,6 +85,7 @@ class HTMLIngredient {
                         value="${this.value}"
                         ${this.disabled ? "disabled" : ""}
                         ${this.maxLength ? `maxlength="${this.maxLength}"` : ""}>
+                    ${commentHtml}
                 </div>`;
                 break;
             case "toggleString":
@@ -107,7 +111,7 @@ class HTMLIngredient {
                 }
                 html += `</div>
                     </div>
-
+                    ${commentHtml}
                 </div>`;
                 break;
             case "number":
@@ -125,6 +129,7 @@ class HTMLIngredient {
                         max="${this.max}"
                         step="${this.step}"
                         ${this.disabled ? "disabled" : ""}>
+                    ${commentHtml}
                 </div>`;
                 break;
             case "boolean":
@@ -141,6 +146,7 @@ class HTMLIngredient {
                                 value="${this.name}"> ${this.name}
                         </label>
                     </div>
+                    ${commentHtml}
                 </div>`;
                 break;
             case "option":
@@ -164,6 +170,7 @@ class HTMLIngredient {
                     }
                 }
                 html += `</select>
+                    ${commentHtml}
                 </div>`;
                 break;
             case "populateOption":
@@ -191,6 +198,7 @@ class HTMLIngredient {
                     }
                 }
                 html += `</select>
+                    ${commentHtml}
                 </div>`;
 
                 eventFn = this.type === "populateMultiOption" ?
@@ -225,6 +233,7 @@ class HTMLIngredient {
                 }
                 html += `</div>
                     </div>
+                    ${commentHtml}
                 </div>`;
 
                 this.manager.addDynamicListener(".editable-option-menu a", "click", this.editableOptionClick, this);
@@ -256,6 +265,7 @@ class HTMLIngredient {
                 }
                 html += `</div>
                     </div>
+                    ${commentHtml}
                 </div>`;
 
                 this.manager.addDynamicListener(".editable-option-menu a", "click", this.editableOptionClick, this);
@@ -272,6 +282,7 @@ class HTMLIngredient {
                         arg-name="${this.name}"
                         rows="${this.rows ? this.rows : 3}"
                         ${this.disabled ? "disabled" : ""}>${this.value}</textarea>
+                    ${commentHtml}
                 </div>`;
                 break;
             case "argSelector":
@@ -293,6 +304,7 @@ class HTMLIngredient {
                         </option>`;
                 }
                 html += `</select>
+                    ${commentHtml}
                 </div>`;
 
                 this.manager.addDynamicListener(".arg-selector", "change", this.argSelectorChange, this);

@@ -19,6 +19,8 @@ This fork extends **CyberChef** with a focused set of payment cryptography opera
 ### Scope
 The extensions are designed to help inspect, parse, validate, and construct common payment-industry cryptographic structures without requiring access to live HSMs or production systems.
 
+They are also intended to support software emulation of common HSM-style payment workflows for development, QA, interoperability, and integration testing.
+
 Initial focus areas include:
 - TR-31 key block parsing and encoding
 - Key metadata inspection and structural validation
@@ -34,7 +36,7 @@ Future extensions may include:
 These extensions are not intended to:
 - Facilitate fraud, card data misuse, or PIN compromise
 - Replace certified HSMs or production cryptographic controls
-- Automate end-to-end payment authorization workflows
+- Claim certification, tamper-resistance, or compliance equivalence with production HSM deployments
 
 All operations are designed to be explicit, inspectable, and composable, consistent with CyberChef’s philosophy.
 
@@ -44,6 +46,10 @@ Custom operations live under:
 src/core/operations/payment-crypto/
 
 They appear in the CyberChef UI under the **Payment Cryptography** category.
+
+Recipe starter docs:
+- [PAYMENT_RECIPES.md](PAYMENT_RECIPES.md)
+- [AWS_PAYMENT_CRYPTOGRAPHY_RECIPES.md](AWS_PAYMENT_CRYPTOGRAPHY_RECIPES.md)
 
 ## Live demo
 
