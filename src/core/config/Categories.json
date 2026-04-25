@@ -581,15 +581,22 @@
       "Calculate payment KCV",
       "Derive ECDH key material",
       "Derive DUKPT key",
+      "Encrypt payment data",
+      "Decrypt payment data",
+      "Re-encrypt payment data",
       "Generate payment MAC",
       "Verify payment MAC",
       "Generate card validation data",
       "Verify card validation data",
       "Generate EMV ARQC",
       "Generate EMV ARPC",
+      "Verify EMV ARQC",
       "Build PIN block",
       "Parse PIN block",
-      "Translate PIN block"
+      "Translate PIN block",
+      "Generate payment PIN data",
+      "Translate payment PIN data",
+      "Verify payment PIN data"
     ]
   },
   {

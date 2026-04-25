@@ -22,18 +22,18 @@ Coverage legend:
 
 | AWS operation | Coverage | Notes |
 | --- | --- | --- |
-| `EncryptData` | `Direct` / `Partial` | Direct for AES, TDES, RSA. Partial for DUKPT and EMV-derived encryption. |
-| `DecryptData` | `Direct` / `Partial` | Direct for AES, TDES, RSA. Partial for DUKPT and EMV-derived decryption. |
-| `ReEncryptData` | `Direct` / `Partial` | Direct for plain decrypt-then-encrypt workflows. Partial for DUKPT re-encryption. |
+| `EncryptData` | `Direct` / `Partial` | Direct for AES, TDES, and the implemented DUKPT-TDES wrapper profiles. Partial for EMV-derived encryption and broader AWS attribute coverage. |
+| `DecryptData` | `Direct` / `Partial` | Direct for AES, TDES, and the implemented DUKPT-TDES wrapper profiles. Partial for EMV-derived decryption and broader AWS attribute coverage. |
+| `ReEncryptData` | `Direct` / `Partial` | Direct for plain decrypt-then-encrypt workflows, including the implemented payment-facing AES/TDES wrapper flows. Partial for DUKPT re-encryption breadth and AWS-specific metadata handling. |
 | `GenerateMac` | `Direct` / `Partial` | Direct for static-key HMAC and CMAC, and direct for the implemented DUKPT CMAC wrapper modes. Partial for ISO 9797, EMV MAC, and AS2805 flows. |
 | `VerifyMac` | `Direct` / `Partial` | Direct for static-key HMAC and CMAC, and direct for the implemented DUKPT CMAC wrapper modes. Partial for ISO 9797, EMV MAC, and AS2805 flows. |
-| `VerifyAuthRequestCryptogram` | `Partial` | Usable for AES-CMAC ARQC/ARPC-style checking when session key and preimage are already known. Dedicated ARQC and ARPC generators now exist for that constrained profile. |
+| `VerifyAuthRequestCryptogram` | `Partial` | Usable for AES-CMAC ARQC/ARPC-style checking when session key and preimage are already known. Dedicated ARQC, ARPC, and ARQC verify wrappers now exist for that constrained profile. |
 | `TranslateKeyMaterial` | `Partial` | Useful for ECDH derivation and TR-31 inspection, not full HSM-side rewrap semantics. |
 | `GenerateCardValidationData` | `Direct` | Direct for software CVV/CVV2/iCVV generation when the combined CVK pair is provided as clear hex. |
 | `VerifyCardValidationData` | `Direct` | Direct for software CVV/CVV2/iCVV verification using the same clear-CVK assumptions as generation. |
-| `GeneratePinData` | `Partial` | Clear PIN-block build coverage now exists for ISO formats 0, 1, and 3. PVV, IBM3624, and encrypted-generation paths are still missing. |
-| `TranslatePinData` | `Partial` | Clear PIN-block parse and translate coverage now exists for ISO formats 0, 1, and 3. Encrypted PEK/BDK/ECDH translation is still missing. |
-| `VerifyPinData` | `Partial` | Clear PIN-block decoding exists, but PVV / IBM3624 verification behavior is still missing. |
+| `GeneratePinData` | `Partial` | Clear PIN-block wrapper coverage now exists for ISO formats 0, 1, and 3. PVV, IBM3624, and encrypted-generation paths are still missing. |
+| `TranslatePinData` | `Partial` | Clear PIN-block wrapper coverage now exists for ISO formats 0, 1, and 3. Encrypted PEK/BDK/ECDH translation is still missing. |
+| `VerifyPinData` | `Partial` | Clear PIN-block verification wrapper exists, but PVV / IBM3624 verification behavior is still missing. |
 | `GenerateMacEmvPinChange` | `Not yet implemented` | Requires issuer-script PIN-change building blocks. |
 | `GenerateAs2805KekValidation` | `Not yet implemented` | Requires AS2805-specific KEK-validation primitives. |
 
@@ -53,7 +53,16 @@ Notes:
 - AWS documents `EncryptData` as supporting symmetric `TDES` and `AES`, asymmetric `RSA`, and derived `DUKPT` or `EMV` schemes.
 - This starter directly covers only the non-derived AES, TDES, and RSA cases.
 
-## 2) AWS `DecryptData`: AES / TDES / RSA
+## 2) AWS `EncryptData`: Payment Wrapper
+Operations:
+- `Encrypt payment data`
+
+Suggested use:
+- Paste plaintext into the input field as hex.
+- Choose a payment-facing profile for AES, TDES, or the implemented DUKPT-TDES wrapper modes.
+- Provide the direct key or BDK plus KSN, and add the IV when required.
+
+## 3) AWS `DecryptData`: AES / TDES / RSA
 Operations:
 - `AES Decrypt` or `Triple DES Decrypt` or `RSA Decrypt`
 
@@ -63,7 +72,16 @@ Suggested use:
 - Paste the key into the key argument using the correct format selector.
 - Match the AWS algorithm and mode manually in the chosen CyberChef operation.
 
-## 3) AWS `ReEncryptData`: Symmetric Rewrap
+## 4) AWS `DecryptData`: Payment Wrapper
+Operations:
+- `Decrypt payment data`
+
+Suggested use:
+- Paste ciphertext into the input field as hex.
+- Choose a payment-facing profile for AES, TDES, or the implemented DUKPT-TDES wrapper modes.
+- Provide the direct key or BDK plus KSN, and add the IV when required.
+
+## 5) AWS `ReEncryptData`: Symmetric Rewrap
 Operations:
 - `AES Decrypt` or `Triple DES Decrypt`
 - `AES Encrypt` or `Triple DES Encrypt`
@@ -77,7 +95,16 @@ Notes:
 - This covers the software-visible decrypt-then-encrypt pattern.
 - It does not model AWS wrapped-key handling or HSM-side key custody.
 
-## 4) AWS `GenerateMac`: HMAC
+## 6) AWS `ReEncryptData`: Payment Wrapper
+Operations:
+- `Re-encrypt payment data`
+
+Suggested use:
+- Paste source ciphertext into the input field as hex.
+- Define the source decrypt profile and the target encrypt profile in one operation.
+- Use this as the payment-facing version of the decrypt-then-encrypt recipe chain.
+
+## 7) AWS `GenerateMac`: HMAC
 Operations:
 - `From Hex`
 - `HMAC`
@@ -89,7 +116,7 @@ Suggested use:
 - Run `HMAC` with the appropriate key and hash function.
 - If AWS truncates the MAC, use `Take bytes` to keep the leftmost bytes that match `MacLength`.
 
-## 5) AWS `GenerateMac`: CMAC
+## 8) AWS `GenerateMac`: CMAC
 Operations:
 - `From Hex`
 - `CMAC`
@@ -101,7 +128,7 @@ Suggested use:
 - Run `CMAC` with `Encryption algorithm` set to `AES` or `Triple DES`.
 - Use `Take bytes` to match the requested `MacLength` if truncation is required.
 
-## 6) AWS `VerifyMac`: Recompute And Compare
+## 9) AWS `VerifyMac`: Recompute And Compare
 Operations:
 - `Verify payment MAC`
 
@@ -113,7 +140,7 @@ Notes:
 - This covers the implemented static-key HMAC/CMAC and DUKPT-CMAC wrapper modes directly.
 - ISO 9797, EMV MAC, and AS2805-specific verification are still partial gaps.
 
-## 7) AWS `GenerateMac`: Payment Wrapper
+## 10) AWS `GenerateMac`: Payment Wrapper
 Operations:
 - `Generate payment MAC`
 
@@ -125,7 +152,7 @@ Notes:
 - This wrapper exists for usability so payment users can stay in the `Payments` category without needing to know which low-level primitive is underneath.
 - It intentionally reuses the existing generic `HMAC` and `CMAC` implementations.
 
-## 8) AWS `GenerateCardValidationData`: CVV / CVV2 / iCVV
+## 11) AWS `GenerateCardValidationData`: CVV / CVV2 / iCVV
 Operations:
 - `Generate card validation data`
 
@@ -138,7 +165,7 @@ Notes:
 - This directly covers software generation of CVV/CVV2/iCVV-style values.
 - Assumption: CVV2 forces service code `000` and iCVV forces `999`.
 
-## 9) AWS `VerifyCardValidationData`: CVV / CVV2 / iCVV
+## 12) AWS `VerifyCardValidationData`: CVV / CVV2 / iCVV
 Operations:
 - `Verify card validation data`
 
@@ -152,7 +179,7 @@ Notes:
 
 ## Partial Recipe Starters
 
-## 10) AWS `EncryptData` / `DecryptData`: DUKPT-Derived Symmetric Flows
+## 13) AWS `EncryptData` / `DecryptData`: DUKPT-Derived Symmetric Flows
 Operations:
 - `Derive DUKPT key`
 - `AES Encrypt` or `AES Decrypt` or `Triple DES Encrypt` or `Triple DES Decrypt`
@@ -165,20 +192,20 @@ Notes:
 - This is useful for offline vector work.
 - It does not claim one-to-one parity with every AWS DUKPT encryption attribute combination.
 
-## 11) AWS `VerifyAuthRequestCryptogram`: EMV ARQC Check
+## 14) AWS `VerifyAuthRequestCryptogram`: EMV ARQC Check
 Operations:
-- `Generate EMV ARQC`
+- `Verify EMV ARQC`
 
 Suggested use:
 - Paste the already-assembled EMV authorization-request preimage into the input field as hex.
 - Provide the already-derived AES session key and cryptogram length.
-- Compare the result to the incoming ARQC.
+- Provide the incoming ARQC and let the wrapper recompute and compare it.
 
 Notes:
 - This is only practical when the session key and exact preimage assembly are already known.
 - It is a good fit for AES-CMAC-based profiles, not a full generic EMV verifier.
 
-## 12) AWS `TranslateKeyMaterial`: ECDH And Wrapped-Key Inspection
+## 15) AWS `TranslateKeyMaterial`: ECDH And Wrapped-Key Inspection
 Operations:
 - `Derive ECDH key material`
 - `Parse TR-31 key block`
@@ -192,7 +219,7 @@ Notes:
 - This helps with interoperability debugging.
 - It does not recreate AWS’s HSM-side translate-and-rewrap behavior.
 
-## 13) AWS `GenerateMac`: EMV MAC Preimage Review
+## 16) AWS `GenerateMac`: EMV MAC Preimage Review
 Operations:
 - `From Hex`
 - `CMAC`
@@ -205,9 +232,9 @@ Notes:
 - AWS documents `GenerateMac` as supporting EMV MAC.
 - This fork does not yet have a dedicated EMV MAC operation, so this remains a profile-specific starter rather than a generic implementation.
 
-## 14) AWS `GeneratePinData`: Clear PIN Block Build
+## 17) AWS `GeneratePinData`: Clear PIN Block Wrapper
 Operations:
-- `Build PIN block`
+- `Generate payment PIN data`
 
 Suggested use:
 - Paste the clear PIN into the input field.
@@ -218,9 +245,9 @@ Notes:
 - This is useful for software test harnesses that need deterministic clear PIN-block construction before encryption.
 - It does not yet implement PVV generation, IBM 3624 offsets, or encrypted AWS response semantics.
 
-## 15) AWS `TranslatePinData`: Clear PIN Block Translation
+## 18) AWS `TranslatePinData`: Clear PIN Block Wrapper
 Operations:
-- `Translate PIN block`
+- `Translate payment PIN data`
 
 Suggested use:
 - Paste the source clear PIN block into the input field as hex.
@@ -231,13 +258,13 @@ Notes:
 - This is a software emulation helper for test-vector work.
 - It does not yet emulate encrypted HSM-bound translation between PEK, BDK, or ECDH-derived keys.
 
-## 16) AWS `VerifyPinData`: Clear PIN Block Inspection
+## 19) AWS `VerifyPinData`: Clear PIN Block Wrapper
 Operations:
-- `Parse PIN block`
+- `Verify payment PIN data`
 
 Suggested use:
 - Paste the clear PIN block into the input field as hex.
-- Decode the PIN-block structure and compare the recovered PIN to your expected test data.
+- Provide the expected clear PIN and let the wrapper decode and compare it.
 
 Notes:
 - This is only structural verification today.

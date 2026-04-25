@@ -256,6 +256,57 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Verify EMV ARQC: AES-CMAC profile",
+        input: "000102030405060708090A0B0C0D0E0F",
+        expectedOutput: JSON.stringify({
+            inputHex: "000102030405060708090A0B0C0D0E0F",
+            outputBytes: 8,
+            fullMacHex: "C1F732B52FB20CAAB58D5B6C78CBD514",
+            cryptogramHex: "C1F732B52FB20CAA",
+            expectedArqcHex: "C1F732B52FB20CAA",
+            valid: true
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Verify EMV ARQC",
+                args: ["00112233445566778899AABBCCDDEEFF", 8, "C1F732B52FB20CAA"]
+            }
+        ]
+    },
+    {
+        name: "Encrypt payment data: AES CBC",
+        input: "00112233445566778899AABBCCDDEEFF",
+        expectedOutput: "67423557CA0509243B9EE04A5DA3448AA397F6D29B5C8BCE065D9CDC936B7F9B",
+        recipeConfig: [
+            {
+                op: "Encrypt payment data",
+                args: ["AES CBC", "00112233445566778899AABBCCDDEEFF", "000102030405060708090A0B0C0D0E0F", "", "Data", false]
+            }
+        ]
+    },
+    {
+        name: "Decrypt payment data: AES CBC",
+        input: "67423557CA0509243B9EE04A5DA3448AA397F6D29B5C8BCE065D9CDC936B7F9B",
+        expectedOutput: "00112233445566778899AABBCCDDEEFF",
+        recipeConfig: [
+            {
+                op: "Decrypt payment data",
+                args: ["AES CBC", "00112233445566778899AABBCCDDEEFF", "000102030405060708090A0B0C0D0E0F", "", "Data", false]
+            }
+        ]
+    },
+    {
+        name: "Re-encrypt payment data: AES CBC to TDES CBC",
+        input: "67423557CA0509243B9EE04A5DA3448AA397F6D29B5C8BCE065D9CDC936B7F9B",
+        expectedOutput: "C47BC6E91A9D566F649D750BCE1CE9889FB5AE1489A16692",
+        recipeConfig: [
+            {
+                op: "Re-encrypt payment data",
+                args: ["AES CBC", "00112233445566778899AABBCCDDEEFF", "000102030405060708090A0B0C0D0E0F", "", "Data", "TDES CBC", "0123456789ABCDEFFEDCBA9876543210", "1234567890ABCDEF", "", "Data", false]
+            }
+        ]
+    },
+    {
         name: "Generate payment MAC: AES-CMAC",
         input: "1122334455667788",
         expectedOutput: "339AF1AD1650E908",
@@ -306,6 +357,63 @@ TestRegister.addTests([
             {
                 op: "Verify payment MAC",
                 args: ["Hex", "AES-CMAC", "00112233445566778899AABBCCDDEEFF", "Hex", "", "339AF1AD1650E908", true]
+            }
+        ]
+    },
+    {
+        name: "Generate payment PIN data: ISO Format 0",
+        input: "1234",
+        expectedOutput: "041215FEDCBA9876",
+        recipeConfig: [
+            {
+                op: "Generate payment PIN data",
+                args: ["ISO Format 0", "5432101234567890", false, false]
+            }
+        ]
+    },
+    {
+        name: "Translate payment PIN data: ISO Format 0 to ISO Format 1",
+        input: "041215FEDCBA9876",
+        expectedOutput: JSON.stringify({
+            source: {
+                format: "ISO Format 0",
+                pin: "1234",
+                pinLength: 4,
+                pinFieldHex: "041234FFFFFFFFFF",
+                panFieldHex: "0000210123456789",
+                blockHex: "041215FEDCBA9876",
+                fillDigitsHex: "FFFFFFFFFF"
+            },
+            target: {
+                format: "ISO Format 1",
+                blockHex: "141234FFFFFFFFFF"
+            }
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Translate payment PIN data",
+                args: ["ISO Format 0", "5432101234567890", "ISO Format 1", "", false]
+            }
+        ]
+    },
+    {
+        name: "Verify payment PIN data: ISO Format 0",
+        input: "041215FEDCBA9876",
+        expectedOutput: JSON.stringify({
+            format: "ISO Format 0",
+            pin: "1234",
+            pinLength: 4,
+            pinFieldHex: "041234FFFFFFFFFF",
+            panFieldHex: "0000210123456789",
+            blockHex: "041215FEDCBA9876",
+            fillDigitsHex: "FFFFFFFFFF",
+            expectedPin: "1234",
+            valid: true
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Verify payment PIN data",
+                args: ["ISO Format 0", "5432101234567890", "1234"]
             }
         ]
     },

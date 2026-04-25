@@ -32,7 +32,22 @@ Suggested use:
 - Derive IPEK from BDK + KSN.
 - Derive base session key and apply a variant mask (`PIN`, `MAC Request`, `MAC Response`, `Data`).
 
-## 6) PIN Block Build / Parse / Translate
+## 6) Payment Data Encrypt / Decrypt / Re-encrypt
+Operations:
+- `Encrypt payment data`
+- `Decrypt payment data`
+- `Re-encrypt payment data`
+
+Suggested use:
+- Paste the message or ciphertext into the input field as hex.
+- Choose a payment-facing cipher profile for AES, TDES, or DUKPT-derived TDES.
+- Provide the direct key or BDK plus KSN, then add the IV when the selected mode requires one.
+
+Scope note:
+- These wrappers currently cover AES CBC/CTR/ECB, TDES CBC/ECB, and DUKPT-derived TDES CBC/ECB.
+- They are intended for software test harnesses and intentionally reuse the existing generic cipher implementations underneath.
+
+## 7) PIN Block Build / Parse / Translate
 Operations:
 - `Build PIN block`
 - `Parse PIN block`
@@ -47,7 +62,21 @@ Scope note:
 - This starter currently covers clear software test blocks for ISO formats 0, 1, and 3.
 - It does not yet generate PVV, IBM 3624 offsets, or encrypted PEK/BDK translation flows by itself.
 
-## 7) Card Validation Data (CVV / CVV2 / iCVV)
+## 8) Payment PIN Data Wrappers
+Operations:
+- `Generate payment PIN data`
+- `Translate payment PIN data`
+- `Verify payment PIN data`
+
+Suggested use:
+- Use these wrappers when you want AWS-style PIN-data naming instead of the lower-level PIN-block operations.
+- They currently cover clear ISO 9564 formats 0, 1, and 3 by delegating to the existing build, translate, and parse operations.
+
+Scope note:
+- This is still clear-PIN-block coverage only.
+- Encrypted PIN data, PVV, and IBM 3624 are still future additions.
+
+## 9) Card Validation Data (CVV / CVV2 / iCVV)
 Operations:
 - `Generate card validation data`
 - `Verify card validation data`
@@ -62,7 +91,7 @@ Scope note:
 - CVV2 forces service code `000` and iCVV forces `999`.
 - It does not try to emulate scheme-specific dCVV, token CVV, or issuer-host formatting differences beyond the common decimalization flow.
 
-## 8) Payment MAC Generation And Verification
+## 10) Payment MAC Generation And Verification
 Operations:
 - `Generate payment MAC`
 - `Verify payment MAC`
@@ -77,9 +106,10 @@ Scope note:
 - Current DUKPT coverage derives TDES session keys and applies TDES-CMAC for request and response MAC variants.
 - ISO 9797, EMV session-derivation MAC, and AS2805 are still future additions.
 
-## 9) EMV ARQC Generation (AES-CMAC Profile)
+## 11) EMV ARQC Generation And Verification (AES-CMAC Profile)
 Operations:
 - `Generate EMV ARQC`
+- `Verify EMV ARQC`
 
 Suggested use:
 - Paste the already-assembled ARQC input block into the input field as hex.
@@ -90,7 +120,7 @@ Scope note:
 - This operation is intentionally limited to AES-CMAC-style EMV profiles.
 - It does not derive EMV session keys or assemble CDOL/tag data for you.
 
-## 10) EMV ARPC Generation (AES-CMAC Response Profile)
+## 12) EMV ARPC Generation (AES-CMAC Response Profile)
 Operations:
 - `Generate EMV ARPC`
 
@@ -103,7 +133,7 @@ Scope note:
 - This operation is intentionally limited to AES-CMAC response profiles where the issuer session key and exact preimage are already known.
 - Legacy 3DES EMV ARQC/ARPC flows are not covered.
 
-## 11) Combined Message Triage
+## 13) Combined Message Triage
 Operations:
 - `Parse TR-34 B9 envelope`
 - `Parse ASN.1 hex string`
