@@ -1,139 +1,283 @@
 # Payment Recipe Starters
 
-These recipe starters are designed for software-only inspection, validation, and prototyping workflows.
+These recipe starters are for software-only payment-crypto emulation, inspection, regression tests, and interoperability work.
 
-For AWS-specific mappings, see `AWS_PAYMENT_CRYPTOGRAPHY_RECIPES.md`.
+For AWS operation mapping, see `AWS_PAYMENT_CRYPTOGRAPHY_RECIPES.md`.
 
-## 1) TR-31 Header Parse
+## UI Arrangement
+
+The `Payments` category is arranged in this order:
+- payment-facing wrappers first
+- EMV and card-validation flows next
+- PIN and issuer-verification helpers after that
+- key-derivation, KCV, and parser utilities next
+- generic crypto primitives last for chaining
+
+That keeps common testing tasks near the top without hiding the underlying `HMAC`, `CMAC`, cipher, and key-wrap primitives that some chains still need.
+
+## 1) Encrypt / Decrypt / Re-Encrypt Payment Data
 Operations:
-- `Parse TR-31 key block`
+- `Encrypt Payment Data`
+- `Decrypt Payment Data`
+- `Re-Encrypt Payment Data`
 
-## 2) TR-34 B9 Envelope Split
+Use this when:
+- you want payment-facing names for AES, TDES, or the implemented DUKPT-TDES profiles
+- you want one operation for decrypt-then-encrypt rewrapping
+
+Input:
+- plaintext or ciphertext in the selected input format
+
+Important assumptions:
+- current derived-data coverage is AES, TDES, and the implemented DUKPT-TDES profiles
+- this is software emulation and does not model AWS key ARNs or HSM custody
+
+## 2) Generate / Verify Payment MAC
 Operations:
-- `Parse TR-34 B9 envelope`
+- `Generate Payment MAC`
+- `Verify Payment MAC`
 
-## 3) KCV Validation
+Supported methods:
+- `HMAC SHA-224`
+- `HMAC SHA-256`
+- `HMAC SHA-384`
+- `HMAC SHA-512`
+- `AES-CMAC`
+- `TDES-CMAC`
+- `ISO 9797-1 Algorithm 1`
+- `ISO 9797-1 Algorithm 3`
+- `AS2805-4.1`
+- `DUKPT MAC Request CMAC`
+- `DUKPT MAC Response CMAC`
+- `DUKPT ISO 9797-1 Algorithm 1`
+- `DUKPT ISO 9797-1 Algorithm 3`
+
+Use this when:
+- you want one payment-facing MAC surface instead of deciding between generic `HMAC`, `CMAC`, ISO9797, DUKPT, and AS2805 yourself
+
+Input:
+- message data in the selected input format
+
+Important assumptions:
+- ISO9797 and AS2805 methods use clear TDES keys in software
+- DUKPT methods expect a clear BDK plus full KSN
+- EMV MAC is handled by the dedicated EMV MAC operations below
+
+## 3) Generate / Verify EMV MAC
 Operations:
-- `Calculate payment KCV`
+- `Generate EMV MAC`
+- `Verify EMV MAC`
+- `Generate EMV MAC For PIN Change`
 
-## 4) ECDH Key Agreement (Software)
-Operations:
-- `Derive ECDH key material`
+Use this when:
+- you already have the EMV session integrity key
+- you want issuer-script MAC generation or verification
+- you need a dedicated offline PIN-change MAC helper
 
-Suggested use:
-- Import a local private key and peer public key.
-- Derive raw shared secret or run Concat KDF (`SHA-256` or `SHA-512`) with shared-info.
+Input:
+- issuer-script or EMV command payload as hex
 
-## 5) DUKPT Derivation (Software)
-Operations:
-- `Derive DUKPT key`
+Important assumptions:
+- these operations do not derive EMV session keys
+- they apply retail-MAC style EMV MAC generation with ISO9797 padding method 2
+- `Generate EMV MAC For PIN Change` expects the new PIN block to already be encrypted before you call it
 
-Suggested use:
-- Derive IPEK from BDK + KSN.
-- Derive base session key and apply a variant mask (`PIN`, `MAC Request`, `MAC Response`, `Data`).
-
-## 6) Payment Data Encrypt / Decrypt / Re-encrypt
-Operations:
-- `Encrypt payment data`
-- `Decrypt payment data`
-- `Re-encrypt payment data`
-
-Suggested use:
-- Paste the message or ciphertext into the input field as hex.
-- Choose a payment-facing cipher profile for AES, TDES, or DUKPT-derived TDES.
-- Provide the direct key or BDK plus KSN, then add the IV when the selected mode requires one.
-
-Scope note:
-- These wrappers currently cover AES CBC/CTR/ECB, TDES CBC/ECB, and DUKPT-derived TDES CBC/ECB.
-- They are intended for software test harnesses and intentionally reuse the existing generic cipher implementations underneath.
-
-## 7) PIN Block Build / Parse / Translate
-Operations:
-- `Build PIN block`
-- `Parse PIN block`
-- `Translate PIN block`
-
-Suggested use:
-- Build clear ISO 9564 format 0, 1, or 3 PIN blocks from a PIN and PAN.
-- Parse clear test PIN blocks back into PIN, PIN field, PAN field, and filler details.
-- Translate clear test PIN blocks between supported formats before feeding them into cipher steps.
-
-Scope note:
-- This starter currently covers clear software test blocks for ISO formats 0, 1, and 3.
-- It does not yet generate PVV, IBM 3624 offsets, or encrypted PEK/BDK translation flows by itself.
-
-## 8) Payment PIN Data Wrappers
-Operations:
-- `Generate payment PIN data`
-- `Translate payment PIN data`
-- `Verify payment PIN data`
-
-Suggested use:
-- Use these wrappers when you want AWS-style PIN-data naming instead of the lower-level PIN-block operations.
-- They currently cover clear ISO 9564 formats 0, 1, and 3 by delegating to the existing build, translate, and parse operations.
-
-Scope note:
-- This is still clear-PIN-block coverage only.
-- Encrypted PIN data, PVV, and IBM 3624 are still future additions.
-
-## 9) Card Validation Data (CVV / CVV2 / iCVV)
-Operations:
-- `Generate card validation data`
-- `Verify card validation data`
-
-Suggested use:
-- Paste the combined CVK pair into the input field as 16-byte or 24-byte hex.
-- Choose whether you want CVV/CVC, CVV2/CVC2, or iCVV behavior.
-- Provide the PAN, expiry month/year, and service-code context in the argument fields.
-
-Scope note:
-- This implementation is intended for software test harnesses.
-- CVV2 forces service code `000` and iCVV forces `999`.
-- It does not try to emulate scheme-specific dCVV, token CVV, or issuer-host formatting differences beyond the common decimalization flow.
-
-## 10) Payment MAC Generation And Verification
-Operations:
-- `Generate payment MAC`
-- `Verify payment MAC`
-
-Suggested use:
-- Paste the message data into the input field.
-- Choose whether the MAC should use static `HMAC`, static `CMAC`, or DUKPT-derived TDES-CMAC.
-- Provide either a direct MAC key or a BDK plus KSN, depending on the selected method.
-
-Scope note:
-- This wrapper intentionally reuses the existing generic `HMAC` and `CMAC` implementations instead of duplicating crypto code.
-- Current DUKPT coverage derives TDES session keys and applies TDES-CMAC for request and response MAC variants.
-- ISO 9797, EMV session-derivation MAC, and AS2805 are still future additions.
-
-## 11) EMV ARQC Generation And Verification (AES-CMAC Profile)
+## 4) Generate / Verify EMV ARQC And ARPC
 Operations:
 - `Generate EMV ARQC`
 - `Verify EMV ARQC`
-
-Suggested use:
-- Paste the already-assembled ARQC input block into the input field as hex.
-- Provide the already-derived AES session key in the argument field.
-- Choose how many leftmost CMAC bytes to keep as the final cryptogram.
-
-Scope note:
-- This operation is intentionally limited to AES-CMAC-style EMV profiles.
-- It does not derive EMV session keys or assemble CDOL/tag data for you.
-
-## 12) EMV ARPC Generation (AES-CMAC Response Profile)
-Operations:
 - `Generate EMV ARPC`
 
-Suggested use:
-- Paste the already-assembled ARPC response input block into the input field as hex.
-- Provide the already-derived issuer AES session key in the argument field.
-- Choose how many leftmost CMAC bytes to keep as the final cryptogram.
+Use this when:
+- you already know the exact preassembled EMV data block
+- you already have the derived EMV session key
 
-Scope note:
-- This operation is intentionally limited to AES-CMAC response profiles where the issuer session key and exact preimage are already known.
-- Legacy 3DES EMV ARQC/ARPC flows are not covered.
+Input:
+- preassembled EMV cryptogram input data as hex
 
-## 13) Combined Message Triage
+Important assumptions:
+- current coverage is the implemented AES-CMAC profile
+- these operations do not assemble CDOL data or derive issuer/session keys
+
+## 5) Generate / Verify Card Validation Data
 Operations:
+- `Generate Card Validation Data`
+- `Verify Card Validation Data`
+
+Profiles:
+- `CVV / CVC (use service code arg)`
+- `CVV2 / CVC2 (force 000)`
+- `iCVV (force 999)`
+
+Input:
+- combined CVK pair as clear hex
+
+Important assumptions:
+- CVV2 forces service code `000`
+- iCVV forces service code `999`
+- this is a clear-key software emulation of common card-validation flows
+
+## 6) Generate / Translate / Verify Payment PIN Data
+Operations:
+- `Generate Payment PIN Data`
+- `Translate Payment PIN Data`
+- `Verify Payment PIN Data`
+
+Use this when:
+- you want AWS-style PIN-data naming for clear ISO 9564 block flows
+
+Input:
+- `Generate Payment PIN Data`: clear PIN digits
+- `Translate Payment PIN Data`: clear PIN block hex
+- `Verify Payment PIN Data`: clear PIN block hex
+
+Important assumptions:
+- these wrappers currently cover clear ISO formats `0`, `1`, and `3`
+- encrypted PEK/BDK translation is still done by chaining lower-level steps
+
+## 7) Build / Parse / Translate PIN Block
+Operations:
+- `Build PIN Block`
+- `Parse PIN Block`
+- `Translate PIN Block`
+
+Use this when:
+- you want the lower-level clear PIN-block tools directly
+
+Input:
+- `Build PIN Block`: clear PIN digits
+- `Parse PIN Block`: clear PIN block hex
+- `Translate PIN Block`: clear PIN block hex
+
+Important assumptions:
+- current clear-block support is ISO formats `0`, `1`, and `3`
+
+## 8) Issuer PIN Verification Helpers
+Operations:
+- `Generate IBM 3624 PIN Offset`
+- `Verify IBM 3624 PIN`
+- `Generate VISA PVV`
+- `Verify VISA PVV`
+
+Use this when:
+- you need issuer-side PIN verification artifacts rather than PIN blocks
+
+Input:
+- clear PIN digits
+
+Important assumptions:
+- these helpers use clear PVKs in software
+- IBM 3624 expects a decimalization table and validation data
+- VISA PVV uses the common PAN/PVKI/PIN assembly described in the inline comments
+
+## 9) Key Derivation And Validation
+Operations:
+- `Derive DUKPT Key`
+- `Derive ECDH Key Material`
+- `Calculate Payment KCV`
+- `Generate AS2805 KEK Validation`
+
+Use this when:
+- you need transaction keys, shared secrets, KCVs, or AS2805-style KEK-validation lab values
+
+Important assumptions:
+- `Derive DUKPT Key` is TDES DUKPT, not AES DUKPT
+- `Generate AS2805 KEK Validation` is an emulation-oriented helper and explicitly documents its simplifications in the operation comments
+
+## 10) Key Container Inspection
+Operations:
+- `Parse TR-31 key block`
 - `Parse TR-34 B9 envelope`
-- `Parse ASN.1 hex string`
+
+Use this when:
+- you need to inspect inbound wrapped-key material or transport frames during testing
+
+Input:
+- full TR-31 or TR-34 payload as text or hex, depending on the operation comment
+
+## Chaining Patterns
+
+## A) DUKPT MAC
+Operations:
+- `Derive DUKPT Key`
+- `Generate Payment MAC`
+
+Flow:
+- derive the transaction key first if you want to inspect it
+- or use a DUKPT MAC method directly in `Generate Payment MAC`
+- use the same KSN and BDK on verify
+
+## B) ECDH Wrap / Unwrap
+Operations:
+- `Derive ECDH Key Material`
+- `AES Key Wrap`
+- `AES Key Unwrap`
+
+Flow:
+- derive the shared secret
+- optionally run a KDF if you need a specific KEK size
+- feed the resulting key into `AES Key Wrap` or `AES Key Unwrap`
+
+Important assumption:
+- this is not a full TR-34 or AWS `TranslateKeyMaterial` implementation by itself
+
+## C) Clear PIN Block To Encrypted PIN Data
+Operations:
+- `Generate Payment PIN Data` or `Build PIN Block`
+- `Encrypt Payment Data`
+
+Flow:
+- generate the clear ISO PIN block first
+- encrypt that block under the desired AES or TDES profile
+
+## D) Re-Encrypt Payment Data
+Operations:
+- `Re-Encrypt Payment Data`
+
+Flow:
+- define the source decrypt profile
+- define the target encrypt profile
+- keep the payload in hex end to end
+
+## E) EMV ARQC / ARPC Review
+Operations:
+- `Generate EMV ARQC`
+- `Verify EMV ARQC`
+- `Generate EMV ARPC`
+
+Flow:
+- build the exact request-data preimage outside the op
+- generate or verify the ARQC with the derived session key
+- build the response preimage and generate the ARPC
+
+## F) EMV Script MAC And PIN Change
+Operations:
+- `Generate EMV MAC`
+- `Verify EMV MAC`
+- `Generate EMV MAC For PIN Change`
+
+Flow:
+- assemble the issuer-script APDU body as hex
+- use the derived integrity key
+- append the already-encrypted PIN block when generating the PIN-change MAC
+
+## G) IBM 3624 / PVV Verification
+Operations:
+- `Generate IBM 3624 PIN Offset`
+- `Verify IBM 3624 PIN`
+- `Generate VISA PVV`
+- `Verify VISA PVV`
+
+Flow:
+- keep the clear PIN in the input field
+- keep issuer validation data, PAN, PVKI, decimalization table, and PVK in the args
+- use the JSON output when you need to inspect how the verification artifact was assembled
+
+## H) AS2805 KEK Validation
+Operations:
+- `Generate AS2805 KEK Validation`
+- `Calculate Payment KCV`
+
+Flow:
+- inspect the KEK with `Calculate Payment KCV`
+- generate request or response RandomKeySend / RandomKeyReceive values with the AS2805 helper

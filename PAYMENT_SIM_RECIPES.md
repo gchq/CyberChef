@@ -11,6 +11,7 @@ This list targets software-only development and testing environments.
 1. Header mutation recipes (usage, mode, exportability, optional block counts).
 2. Optional-block truncation and malformed-length negative tests.
 3. Prefix-normalization recipes (`R` prefix handling).
+4. Create TR-31 key block recipes for symmetric test keys and round-trip parse validation.
 
 ## TR-34 Simulation
 1. Envelope section split/rebuild recipes.
@@ -43,8 +44,8 @@ This list targets software-only development and testing environments.
 ## AWS Payment Cryptography Candidate Recipes
 1. `EncryptData` and `DecryptData` parity vectors for AES, TDES, and RSA.
 2. `ReEncryptData` parity vectors for decrypt-then-encrypt workflows.
-3. `GenerateMac` and `VerifyMac` parity vectors for HMAC and CMAC.
-4. `VerifyAuthRequestCryptogram` preimage-validation recipes for AES-CMAC EMV profiles.
+3. `GenerateMac` and `VerifyMac` parity vectors across HMAC, CMAC, ISO9797, DUKPT, AS2805, and EMV MAC profiles.
+4. `VerifyAuthRequestCryptogram` preimage-validation recipes for the implemented AES-CMAC EMV profiles.
 5. DUKPT derivation-plus-cipher recipes for AWS derived-key lab testing.
-6. ECDH and TR-31 inspection recipes for `TranslateKeyMaterial` interoperability debugging.
-7. Gap-tracking recipes for unsupported AWS flows: PVV, IBM3624, encrypted PIN block translation, issuer-script PIN change, and AS2805 KEK validation.
+6. ECDH plus wrap/unwrap plus TR-31 inspection recipes for `TranslateKeyMaterial` interoperability debugging.
+7. Remaining gap-tracking recipes for encrypted PIN translation, richer EMV session derivation, and fuller TR-31/TR-34 generation flows.

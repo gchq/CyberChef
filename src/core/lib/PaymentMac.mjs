@@ -7,6 +7,12 @@ import OperationError from "../errors/OperationError.mjs";
 import HMAC from "../operations/HMAC.mjs";
 import CMAC from "../operations/CMAC.mjs";
 import DeriveDUKPTKey from "../operations/DeriveDUKPTKey.mjs";
+import {
+    ISO9797_PADDING_METHODS,
+    generateAs2805Mac,
+    generateIso9797Algorithm1Mac,
+    generateIso9797Algorithm3Mac,
+} from "./Iso9797.mjs";
 
 const PAYMENT_MAC_METHODS = [
     "HMAC SHA-224",
@@ -15,8 +21,13 @@ const PAYMENT_MAC_METHODS = [
     "HMAC SHA-512",
     "AES-CMAC",
     "TDES-CMAC",
+    "ISO 9797-1 Algorithm 1",
+    "ISO 9797-1 Algorithm 3",
+    "AS2805-4.1",
     "DUKPT MAC Request CMAC",
     "DUKPT MAC Response CMAC",
+    "DUKPT ISO 9797-1 Algorithm 1",
+    "DUKPT ISO 9797-1 Algorithm 3",
 ];
 
 /**
@@ -41,7 +52,12 @@ function convertInputToBuffer(input, inputFormat) {
 function resolveMacKey(method, keySpec) {
     const normalizedKey = (keySpec.keyValue || "").replace(/\s+/g, "");
 
-    if (method === "DUKPT MAC Request CMAC" || method === "DUKPT MAC Response CMAC") {
+    if (
+        method === "DUKPT MAC Request CMAC" ||
+        method === "DUKPT MAC Response CMAC" ||
+        method === "DUKPT ISO 9797-1 Algorithm 1" ||
+        method === "DUKPT ISO 9797-1 Algorithm 3"
+    ) {
         if (keySpec.keyFormat !== "Hex") {
             throw new OperationError("DUKPT BDK must be provided in hex.");
         }
@@ -49,7 +65,9 @@ function resolveMacKey(method, keySpec) {
             throw new OperationError("KSN is required for DUKPT MAC methods.");
         }
 
-        const variant = method === "DUKPT MAC Request CMAC" ? "MAC Request" : "MAC Response";
+        const variant = method === "DUKPT MAC Request CMAC" ? "MAC Request" :
+            method === "DUKPT MAC Response CMAC" ? "MAC Response" :
+                "MAC Request";
         const dukpt = new DeriveDUKPTKey();
         const keyHex = dukpt.run(normalizedKey, ["Derive Session Key", keySpec.ksn, variant, false]);
 
@@ -96,9 +114,10 @@ function byteStringToHex(byteString) {
  * @param {string} keyFormat
  * @param {string} ksn
  * @param {number} outputBytes
+ * @param {string} paddingMethod
  * @returns {Object}
  */
-function generatePaymentMac(input, inputFormat, method, keyValue, keyFormat, ksn, outputBytes) {
+function generatePaymentMac(input, inputFormat, method, keyValue, keyFormat, ksn, outputBytes, paddingMethod="Method 1") {
     const normalizedOutputBytes = Math.max(1, Number(outputBytes) || 8);
     const inputBuffer = convertInputToBuffer(input, inputFormat);
     const inputHex = byteStringToHex(Utils.arrayBufferToStr(inputBuffer, false));
@@ -114,10 +133,18 @@ function generatePaymentMac(input, inputFormat, method, keyValue, keyFormat, ksn
             "HMAC SHA-512": "SHA512",
         }[method];
         fullMacHex = hmac.run(inputBuffer, [{ string: keyHex, option: "Hex" }, hashName]).toUpperCase();
-    } else {
+    } else if (method === "AES-CMAC" || method === "TDES-CMAC" || method === "DUKPT MAC Request CMAC" || method === "DUKPT MAC Response CMAC") {
         const cmac = new CMAC();
         const algorithm = method === "AES-CMAC" ? "AES" : "Triple DES";
         fullMacHex = cmac.run(inputBuffer, [{ string: keyHex, option: "Hex" }, algorithm]).toUpperCase();
+    } else if (method === "ISO 9797-1 Algorithm 1" || method === "DUKPT ISO 9797-1 Algorithm 1") {
+        fullMacHex = generateIso9797Algorithm1Mac(inputHex, keyHex, paddingMethod, 8).fullMacHex;
+    } else if (method === "ISO 9797-1 Algorithm 3" || method === "DUKPT ISO 9797-1 Algorithm 3") {
+        fullMacHex = generateIso9797Algorithm3Mac(inputHex, keyHex, paddingMethod, 8).fullMacHex;
+    } else if (method === "AS2805-4.1") {
+        fullMacHex = generateAs2805Mac(inputHex, keyHex, paddingMethod, 8).fullMacHex;
+    } else {
+        throw new OperationError("Unsupported payment MAC method.");
     }
 
     const macHex = fullMacHex.substring(0, normalizedOutputBytes * 2);
@@ -126,6 +153,7 @@ function generatePaymentMac(input, inputFormat, method, keyValue, keyFormat, ksn
         method,
         inputFormat,
         inputHex,
+        paddingMethod: method.startsWith("HMAC ") || method.includes("CMAC") ? null : paddingMethod,
         outputBytes: normalizedOutputBytes,
         fullMacHex,
         macHex,
@@ -143,9 +171,10 @@ function generatePaymentMac(input, inputFormat, method, keyValue, keyFormat, ksn
  * @param {string} keyFormat
  * @param {string} ksn
  * @param {string} expectedMac
+ * @param {string} paddingMethod
  * @returns {Object}
  */
-function verifyPaymentMac(input, inputFormat, method, keyValue, keyFormat, ksn, expectedMac) {
+function verifyPaymentMac(input, inputFormat, method, keyValue, keyFormat, ksn, expectedMac, paddingMethod="Method 1") {
     const normalizedExpected = (expectedMac || "").replace(/\s+/g, "").toUpperCase();
     if (!/^[0-9A-F]+$/.test(normalizedExpected) || normalizedExpected.length % 2 !== 0) {
         throw new OperationError("Expected MAC must be even-length hex.");
@@ -158,7 +187,8 @@ function verifyPaymentMac(input, inputFormat, method, keyValue, keyFormat, ksn, 
         keyValue,
         keyFormat,
         ksn,
-        normalizedExpected.length / 2
+        normalizedExpected.length / 2,
+        paddingMethod
     );
 
     return {
@@ -169,6 +199,7 @@ function verifyPaymentMac(input, inputFormat, method, keyValue, keyFormat, ksn, 
 }
 
 export {
+    ISO9797_PADDING_METHODS,
     PAYMENT_MAC_METHODS,
     generatePaymentMac,
     verifyPaymentMac,

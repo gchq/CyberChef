@@ -313,7 +313,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Generate Payment MAC",
-                args: ["Hex", "AES-CMAC", "00112233445566778899AABBCCDDEEFF", "Hex", "", 8, false]
+                args: ["Hex", "AES-CMAC", "00112233445566778899AABBCCDDEEFF", "Hex", "", "Method 1", 8, false]
             }
         ]
     },
@@ -324,7 +324,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Generate Payment MAC",
-                args: ["Hex", "HMAC SHA-256", "00112233445566778899AABBCCDDEEFF", "Hex", "", 8, false]
+                args: ["Hex", "HMAC SHA-256", "00112233445566778899AABBCCDDEEFF", "Hex", "", "Method 1", 8, false]
             }
         ]
     },
@@ -335,7 +335,40 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Generate Payment MAC",
-                args: ["Hex", "DUKPT MAC Request CMAC", "0123456789ABCDEFFEDCBA9876543210", "Hex", "FFFF9876543210E00008", 8, false]
+                args: ["Hex", "DUKPT MAC Request CMAC", "0123456789ABCDEFFEDCBA9876543210", "Hex", "FFFF9876543210E00008", "Method 1", 8, false]
+            }
+        ]
+    },
+    {
+        name: "Generate Payment MAC: ISO 9797-1 Algorithm 1",
+        input: "1122334455667788",
+        expectedOutput: "0C949BCDEF6FDF1D",
+        recipeConfig: [
+            {
+                op: "Generate Payment MAC",
+                args: ["Hex", "ISO 9797-1 Algorithm 1", "0123456789ABCDEFFEDCBA9876543210", "Hex", "", "Method 1", 8, false]
+            }
+        ]
+    },
+    {
+        name: "Generate Payment MAC: ISO 9797-1 Algorithm 3",
+        input: "1122334455667788",
+        expectedOutput: "7E2AEA5CF35FDC0E",
+        recipeConfig: [
+            {
+                op: "Generate Payment MAC",
+                args: ["Hex", "ISO 9797-1 Algorithm 3", "0123456789ABCDEFFEDCBA9876543210", "Hex", "", "Method 2", 8, false]
+            }
+        ]
+    },
+    {
+        name: "Generate Payment MAC: AS2805-4.1",
+        input: "1122334455667788",
+        expectedOutput: "3EB3B72576BBBE83",
+        recipeConfig: [
+            {
+                op: "Generate Payment MAC",
+                args: ["Hex", "AS2805-4.1", "0123456789ABCDEFFEDCBA9876543210", "Hex", "", "Method 1", 8, false]
             }
         ]
     },
@@ -346,6 +379,7 @@ TestRegister.addTests([
             method: "AES-CMAC",
             inputFormat: "Hex",
             inputHex: "1122334455667788",
+            paddingMethod: null,
             outputBytes: 8,
             fullMacHex: "339AF1AD1650E908A794284D91DC6D29",
             macHex: "339AF1AD1650E908",
@@ -356,7 +390,48 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Verify Payment MAC",
-                args: ["Hex", "AES-CMAC", "00112233445566778899AABBCCDDEEFF", "Hex", "", "339AF1AD1650E908", true]
+                args: ["Hex", "AES-CMAC", "00112233445566778899AABBCCDDEEFF", "Hex", "", "Method 1", "339AF1AD1650E908", true]
+            }
+        ]
+    },
+    {
+        name: "Generate EMV MAC: issuer script sample",
+        input: "8424000008999E57FD0F47CACE0007",
+        expectedOutput: "22CB48394DFD1977",
+        recipeConfig: [
+            {
+                op: "Generate EMV MAC",
+                args: ["0123456789ABCDEFFEDCBA9876543210", 8, false]
+            }
+        ]
+    },
+    {
+        name: "Verify EMV MAC: issuer script sample",
+        input: "8424000008999E57FD0F47CACE0007",
+        expectedOutput: JSON.stringify({
+            algorithm: "EMV MAC",
+            paddingMethod: "Method 2",
+            inputHex: "8424000008999E57FD0F47CACE0007",
+            fullMacHex: "22CB48394DFD1977",
+            macHex: "22CB48394DFD1977",
+            expectedMacHex: "22CB48394DFD1977",
+            valid: true
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Verify EMV MAC",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "22CB48394DFD1977", true]
+            }
+        ]
+    },
+    {
+        name: "Generate EMV MAC For PIN Change: issuer script sample",
+        input: "00A4040008A000000004101080D80500000001010A04000000000000",
+        expectedOutput: "C0F24786EF1C4522",
+        recipeConfig: [
+            {
+                op: "Generate EMV MAC For PIN Change",
+                args: ["67FB27C75580EFE7", "0123456789ABCDEFFEDCBA9876543210", 8, false]
             }
         ]
     },
@@ -393,6 +468,110 @@ TestRegister.addTests([
             {
                 op: "Translate Payment PIN Data",
                 args: ["ISO Format 0", "5432101234567890", "ISO Format 1", "", false]
+            }
+        ]
+    },
+    {
+        name: "Generate IBM 3624 PIN Offset: known sample",
+        input: "1234",
+        expectedOutput: JSON.stringify({
+            pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
+            pinValidationData: "5432101234567890",
+            pinValidationDataPadCharacter: "F",
+            pinLength: 4,
+            validationBlockHex: "5432101234567890",
+            encryptedValidationBlockHex: "8A3712EE04F010A0",
+            decimalized: "8037124404501000",
+            naturalPin: "8037",
+            pin: "1234",
+            pinOffset: "3207"
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Generate IBM 3624 PIN Offset",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", true]
+            }
+        ]
+    },
+    {
+        name: "Verify IBM 3624 PIN: known sample",
+        input: "1234",
+        expectedOutput: JSON.stringify({
+            pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
+            pinValidationData: "5432101234567890",
+            pinValidationDataPadCharacter: "F",
+            pinLength: 4,
+            validationBlockHex: "5432101234567890",
+            encryptedValidationBlockHex: "8A3712EE04F010A0",
+            decimalized: "8037124404501000",
+            naturalPin: "8037",
+            pin: "1234",
+            pinOffset: "3207",
+            expectedPinOffset: "3207",
+            valid: true
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Verify IBM 3624 PIN",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", "3207", true]
+            }
+        ]
+    },
+    {
+        name: "Generate VISA PVV: known sample",
+        input: "1234",
+        expectedOutput: JSON.stringify({
+            pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
+            pan: "5432101234567890",
+            pinVerificationKeyIndex: 1,
+            pin: "1234",
+            pvvInput: "1012345678911234",
+            encryptedPvvInputHex: "6A77E65CFE349D60",
+            pvv: "6077"
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Generate VISA PVV",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "5432101234567890", 1, true]
+            }
+        ]
+    },
+    {
+        name: "Verify VISA PVV: known sample",
+        input: "1234",
+        expectedOutput: JSON.stringify({
+            pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
+            pan: "5432101234567890",
+            pinVerificationKeyIndex: 1,
+            pin: "1234",
+            pvvInput: "1012345678911234",
+            encryptedPvvInputHex: "6A77E65CFE349D60",
+            pvv: "6077",
+            expectedPvv: "6077",
+            valid: true
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Verify VISA PVV",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "5432101234567890", 1, "6077", true]
+            }
+        ]
+    },
+    {
+        name: "Generate AS2805 KEK Validation: response sample",
+        input: "0123456789ABCDEFFEDCBA9876543210",
+        expectedOutput: JSON.stringify({
+            validationType: "KekValidationResponse",
+            deriveKeyAlgorithm: "TDES_2KEY",
+            randomKeySendVariantMask: "VARIANT_MASK_82",
+            keyCheckValue: "08D7B4",
+            randomKeySend: "9217DC67B8763BABCFDF3DADFCD0F84A",
+            randomKeyReceive: "6DE823984789C4543020C252032F07B5"
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Generate AS2805 KEK Validation",
+                args: ["KekValidationResponse", "TDES_2KEY", "VARIANT_MASK_82", "9217DC67B8763BABCFDF3DADFCD0F84A", true]
             }
         ]
     },
