@@ -256,6 +256,60 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Generate payment MAC: AES-CMAC",
+        input: "1122334455667788",
+        expectedOutput: "339AF1AD1650E908",
+        recipeConfig: [
+            {
+                op: "Generate payment MAC",
+                args: ["Hex", "AES-CMAC", "00112233445566778899AABBCCDDEEFF", "Hex", "", 8, false]
+            }
+        ]
+    },
+    {
+        name: "Generate payment MAC: HMAC SHA-256",
+        input: "1122334455667788",
+        expectedOutput: "9300E1D36DD30415",
+        recipeConfig: [
+            {
+                op: "Generate payment MAC",
+                args: ["Hex", "HMAC SHA-256", "00112233445566778899AABBCCDDEEFF", "Hex", "", 8, false]
+            }
+        ]
+    },
+    {
+        name: "Generate payment MAC: DUKPT MAC Request CMAC",
+        input: "1122334455667788",
+        expectedOutput: "3616961727FE155D",
+        recipeConfig: [
+            {
+                op: "Generate payment MAC",
+                args: ["Hex", "DUKPT MAC Request CMAC", "0123456789ABCDEFFEDCBA9876543210", "Hex", "FFFF9876543210E00008", 8, false]
+            }
+        ]
+    },
+    {
+        name: "Verify payment MAC: AES-CMAC",
+        input: "1122334455667788",
+        expectedOutput: JSON.stringify({
+            method: "AES-CMAC",
+            inputFormat: "Hex",
+            inputHex: "1122334455667788",
+            outputBytes: 8,
+            fullMacHex: "339AF1AD1650E908A794284D91DC6D29",
+            macHex: "339AF1AD1650E908",
+            keySource: "Direct key input",
+            expectedMacHex: "339AF1AD1650E908",
+            valid: true
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Verify payment MAC",
+                args: ["Hex", "AES-CMAC", "00112233445566778899AABBCCDDEEFF", "Hex", "", "339AF1AD1650E908", true]
+            }
+        ]
+    },
+    {
         name: "Derive ECDH key material: raw shared secret",
         input: ecdhPrivateKey,
         expectedOutput: "4BE993A2D1BD25C7B5A625EDEBE48D022557ACA445C60EE403ECE9BA38A41CFE",

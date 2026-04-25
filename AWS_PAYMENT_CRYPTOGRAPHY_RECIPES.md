@@ -25,8 +25,8 @@ Coverage legend:
 | `EncryptData` | `Direct` / `Partial` | Direct for AES, TDES, RSA. Partial for DUKPT and EMV-derived encryption. |
 | `DecryptData` | `Direct` / `Partial` | Direct for AES, TDES, RSA. Partial for DUKPT and EMV-derived decryption. |
 | `ReEncryptData` | `Direct` / `Partial` | Direct for plain decrypt-then-encrypt workflows. Partial for DUKPT re-encryption. |
-| `GenerateMac` | `Direct` / `Partial` | Direct for HMAC and CMAC. Partial for DUKPT MAC and EMV MAC flows. |
-| `VerifyMac` | `Direct` / `Partial` | Direct by recomputing and comparing HMAC/CMAC. Partial for DUKPT MAC and EMV MAC flows. |
+| `GenerateMac` | `Direct` / `Partial` | Direct for static-key HMAC and CMAC, and direct for the implemented DUKPT CMAC wrapper modes. Partial for ISO 9797, EMV MAC, and AS2805 flows. |
+| `VerifyMac` | `Direct` / `Partial` | Direct for static-key HMAC and CMAC, and direct for the implemented DUKPT CMAC wrapper modes. Partial for ISO 9797, EMV MAC, and AS2805 flows. |
 | `VerifyAuthRequestCryptogram` | `Partial` | Usable for AES-CMAC ARQC/ARPC-style checking when session key and preimage are already known. Dedicated ARQC and ARPC generators now exist for that constrained profile. |
 | `TranslateKeyMaterial` | `Partial` | Useful for ECDH derivation and TR-31 inspection, not full HSM-side rewrap semantics. |
 | `GenerateCardValidationData` | `Direct` | Direct for software CVV/CVV2/iCVV generation when the combined CVK pair is provided as clear hex. |
@@ -103,15 +103,29 @@ Suggested use:
 
 ## 6) AWS `VerifyMac`: Recompute And Compare
 Operations:
-- `From Hex`
-- `HMAC` or `CMAC`
-- `Take bytes`
+- `Verify payment MAC`
 
 Suggested use:
-- Recompute the MAC using the same starter as `GenerateMac`.
-- Compare the result to the AWS `Mac` value manually or with a follow-on comparison recipe.
+- Paste the message into the input field, choose the MAC method, and provide either the direct key or the DUKPT BDK plus KSN.
+- Supply the expected MAC in hex and let the wrapper recompute and compare it.
 
-## 7) AWS `GenerateCardValidationData`: CVV / CVV2 / iCVV
+Notes:
+- This covers the implemented static-key HMAC/CMAC and DUKPT-CMAC wrapper modes directly.
+- ISO 9797, EMV MAC, and AS2805-specific verification are still partial gaps.
+
+## 7) AWS `GenerateMac`: Payment Wrapper
+Operations:
+- `Generate payment MAC`
+
+Suggested use:
+- Paste the message into the input field and choose the payment MAC method that best matches the AWS attributes.
+- Use direct key input for static HMAC or CMAC modes, or provide a BDK plus KSN for the implemented DUKPT CMAC request and response modes.
+
+Notes:
+- This wrapper exists for usability so payment users can stay in the `Payments` category without needing to know which low-level primitive is underneath.
+- It intentionally reuses the existing generic `HMAC` and `CMAC` implementations.
+
+## 8) AWS `GenerateCardValidationData`: CVV / CVV2 / iCVV
 Operations:
 - `Generate card validation data`
 
@@ -124,7 +138,7 @@ Notes:
 - This directly covers software generation of CVV/CVV2/iCVV-style values.
 - Assumption: CVV2 forces service code `000` and iCVV forces `999`.
 
-## 8) AWS `VerifyCardValidationData`: CVV / CVV2 / iCVV
+## 9) AWS `VerifyCardValidationData`: CVV / CVV2 / iCVV
 Operations:
 - `Verify card validation data`
 
@@ -138,7 +152,7 @@ Notes:
 
 ## Partial Recipe Starters
 
-## 9) AWS `EncryptData` / `DecryptData`: DUKPT-Derived Symmetric Flows
+## 10) AWS `EncryptData` / `DecryptData`: DUKPT-Derived Symmetric Flows
 Operations:
 - `Derive DUKPT key`
 - `AES Encrypt` or `AES Decrypt` or `Triple DES Encrypt` or `Triple DES Decrypt`
@@ -150,20 +164,6 @@ Suggested use:
 Notes:
 - This is useful for offline vector work.
 - It does not claim one-to-one parity with every AWS DUKPT encryption attribute combination.
-
-## 10) AWS `GenerateMac` / `VerifyMac`: DUKPT MAC
-Operations:
-- `Derive DUKPT key`
-- `From Hex`
-- `CMAC` or `HMAC`
-- `Take bytes`
-
-Suggested use:
-- Derive the transaction key from BDK and KSN.
-- Convert `MessageData` from hex and generate the MAC using the derived key.
-
-Notes:
-- Treat this as a lab starter, not proof of parity with AWS’s full DUKPT MAC union attributes.
 
 ## 11) AWS `VerifyAuthRequestCryptogram`: EMV ARQC Check
 Operations:
@@ -257,6 +257,7 @@ Why:
 If you want closer AWS coverage, the highest-value missing operations are:
 1. PIN block encode/decode for ISO 9564 formats 0, 1, 3, and 4.
 2. IBM 3624 and VISA PVV generation and verification.
-3. Dedicated EMV MAC and profile-specific EMV session-derivation helpers.
-4. Clear-to-encrypted and encrypted-to-encrypted PIN translation flows.
-5. TR-31 unwrap and rewrap helpers for dynamic-key workflows.
+3. ISO 9797 and AS2805-specific MAC generation and verification.
+4. Dedicated EMV MAC and profile-specific EMV session-derivation helpers.
+5. Clear-to-encrypted and encrypted-to-encrypted PIN translation flows.
+6. TR-31 unwrap and rewrap helpers for dynamic-key workflows.

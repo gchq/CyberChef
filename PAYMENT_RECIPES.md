@@ -62,7 +62,22 @@ Scope note:
 - CVV2 forces service code `000` and iCVV forces `999`.
 - It does not try to emulate scheme-specific dCVV, token CVV, or issuer-host formatting differences beyond the common decimalization flow.
 
-## 8) EMV ARQC Generation (AES-CMAC Profile)
+## 8) Payment MAC Generation And Verification
+Operations:
+- `Generate payment MAC`
+- `Verify payment MAC`
+
+Suggested use:
+- Paste the message data into the input field.
+- Choose whether the MAC should use static `HMAC`, static `CMAC`, or DUKPT-derived TDES-CMAC.
+- Provide either a direct MAC key or a BDK plus KSN, depending on the selected method.
+
+Scope note:
+- This wrapper intentionally reuses the existing generic `HMAC` and `CMAC` implementations instead of duplicating crypto code.
+- Current DUKPT coverage derives TDES session keys and applies TDES-CMAC for request and response MAC variants.
+- ISO 9797, EMV session-derivation MAC, and AS2805 are still future additions.
+
+## 9) EMV ARQC Generation (AES-CMAC Profile)
 Operations:
 - `Generate EMV ARQC`
 
@@ -75,7 +90,7 @@ Scope note:
 - This operation is intentionally limited to AES-CMAC-style EMV profiles.
 - It does not derive EMV session keys or assemble CDOL/tag data for you.
 
-## 9) EMV ARPC Generation (AES-CMAC Response Profile)
+## 10) EMV ARPC Generation (AES-CMAC Response Profile)
 Operations:
 - `Generate EMV ARPC`
 
@@ -88,7 +103,7 @@ Scope note:
 - This operation is intentionally limited to AES-CMAC response profiles where the issuer session key and exact preimage are already known.
 - Legacy 3DES EMV ARQC/ARPC flows are not covered.
 
-## 10) Combined Message Triage
+## 11) Combined Message Triage
 Operations:
 - `Parse TR-34 B9 envelope`
 - `Parse ASN.1 hex string`

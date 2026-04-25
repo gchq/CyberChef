@@ -221,6 +221,8 @@ input.toggle-string {
     filter: brightness(100%);
 }
 
+.operation .form-group.is-filled label.bmd-label-floating,
+.operation .form-group.is-focused label.bmd-label-floating,
 .operation .bmd-form-group.is-filled label.bmd-label-floating,
 .operation .bmd-form-group.is-focused label.bmd-label-floating {
     top: 4px !important;
