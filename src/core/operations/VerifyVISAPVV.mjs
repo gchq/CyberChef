@@ -1,5 +1,6 @@
 /**
  * @license Apache-2.0
+ * @author Jacob Marks [https://jacobmarks.com]
  */
 
 import Operation from "../Operation.mjs";
@@ -17,8 +18,8 @@ class VerifyVISAPVV extends Operation {
 
         this.name = "Verify VISA PVV";
         this.module = "Payment";
-        this.description = "Paste the clear PIN into the input field and verify it against a VISA PVV.<br><br><b>Input:</b> clear PIN digits.<br><b>Arguments:</b> provide the clear PVK in hex, PAN, PVKI, and expected PVV.<br><br>Assumption: this is a clear-key software emulation of the common VISA PVV verification flow for test harnesses.";
-        this.inlineHelp = "<strong>Input:</strong> clear PIN digits.<br><strong>Args:</strong> provide PVK, PAN, PVKI, and expected PVV.";
+        this.description = "Paste the clear PIN into the input field and verify it against a VISA PVV.<br><br><b>Input:</b> clear PIN digits.<br><b>Arguments:</b> provide the clear PVK in hex, PAN, PVKI, and expected PVV.<br><br><b>Validation:</b> Partially verified. This is the verification pair for the same clear-key VISA PVV helper logic used by generation.<br><br><b>Security:</b> Clear PIN and PVK material are test-use only.";
+        this.inlineHelp = "<strong>Input:</strong> clear PIN digits.<br><strong>Args:</strong> provide PVK, PAN, PVKI, and expected PVV.<br><strong>Validation:</strong> clear-key VISA PVV verification helper.";
         this.testDataSamples = [
             {
                 name: "VISA PVV verify sample",

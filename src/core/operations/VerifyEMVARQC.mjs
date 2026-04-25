@@ -1,5 +1,6 @@
 /**
  * @license Apache-2.0
+ * @author Jacob Marks [https://jacobmarks.com]
  */
 
 import Operation from "../Operation.mjs";
@@ -17,8 +18,8 @@ class VerifyEMVARQC extends Operation {
 
         this.name = "Verify EMV ARQC";
         this.module = "Payment";
-        this.description = "Paste the already-assembled EMV authorization-request input into the input field as hex and verify an AES-CMAC-based ARQC.<br><br><b>Input:</b> preassembled ARQC input data as hex.<br><b>Arguments:</b> provide the EMV session key, cryptogram length, and expected ARQC hex value.<br><br>This operation intentionally covers only AES-CMAC-style EMV profiles where the session key and preimage are already known.";
-        this.inlineHelp = "<strong>Input:</strong> preassembled ARQC data as hex.<br><strong>Args:</strong> provide the AES session key and expected ARQC.";
+        this.description = "Paste the already-assembled EMV authorization-request input into the input field as hex and verify an AES-CMAC-based ARQC.<br><br><b>Input:</b> preassembled ARQC input data as hex.<br><b>Arguments:</b> provide the EMV session key, cryptogram length, and expected ARQC hex value.<br><br><b>Validation:</b> Partially verified. This checks the same supplied-key AES-CMAC EMV profile as generation and does not claim full scheme-level ARQC validation semantics.<br><br><b>Security:</b> Clear session keys are test-use only.";
+        this.inlineHelp = "<strong>Input:</strong> preassembled ARQC data as hex.<br><strong>Args:</strong> provide the AES session key and expected ARQC.<br><strong>Validation:</strong> same supplied-key EMV profile as generation.";
         this.testDataSamples = [
             {
                 name: "AES-CMAC ARQC verification sample",

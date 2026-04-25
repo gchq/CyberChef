@@ -1,6 +1,11 @@
 # AWS Payment Cryptography Recipe Coverage
 
+Owner:
+- Jacob Marks, `https://jacobmarks.com`
+- Fork home: `https://github.com/J8k3/CyberChef`
+
 This guide maps AWS Payment Cryptography Data Plane operations to the current payment-facing CyberChef surface.
+For validation posture, standards references, and release guardrails, see `PAYMENT_VALIDATION_AUDIT.md`.
 
 Source baseline:
 - AWS Payment Cryptography Data Plane API Reference: https://docs.aws.amazon.com/payment-cryptography/latest/DataAPIReference/Welcome.html

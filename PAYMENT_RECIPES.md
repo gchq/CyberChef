@@ -1,8 +1,13 @@
 # Payment Recipe Starters
 
+Owner:
+- Jacob Marks, `https://jacobmarks.com`
+- Fork home: `https://github.com/J8k3/CyberChef`
+
 These recipe starters are for software-only payment-crypto emulation, inspection, regression tests, and interoperability work.
 
 For AWS operation mapping, see `AWS_PAYMENT_CRYPTOGRAPHY_RECIPES.md`.
+For validation posture, standards references, and release guardrails, see `PAYMENT_VALIDATION_AUDIT.md`.
 
 ## UI Arrangement
 

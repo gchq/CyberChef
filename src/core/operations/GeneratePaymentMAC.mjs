@@ -1,5 +1,6 @@
 /**
  * @license Apache-2.0
+ * @author Jacob Marks [https://jacobmarks.com]
  */
 
 import Operation from "../Operation.mjs";
@@ -18,8 +19,8 @@ class GeneratePaymentMAC extends Operation {
 
         this.name = "Generate Payment MAC";
         this.module = "Payment";
-        this.description = "Paste the message data into the input field and generate a payment-oriented MAC using one payment-facing operation.<br><br><b>Input:</b> message data in the selected input format.<br><b>Arguments:</b> choose the MAC method, provide either a direct key or a DUKPT BDK, optionally provide a KSN for DUKPT methods, choose the ISO9797 padding rule when applicable, and choose the truncation length.<br><br>This wrapper reuses existing HMAC and CMAC primitives where possible and adds payment-specific ISO9797 / AS2805 modes for software testing.";
-        this.inlineHelp = "<strong>Input:</strong> message data.<br><strong>Args:</strong> choose the payment MAC method, then provide either a direct key or a DUKPT BDK plus KSN.";
+        this.description = "Paste the message data into the input field and generate a payment-oriented MAC using one payment-facing operation.<br><br><b>Input:</b> message data in the selected input format.<br><b>Arguments:</b> choose the MAC method, provide either a direct key or a DUKPT BDK, optionally provide a KSN for DUKPT methods, choose the ISO9797 padding rule when applicable, and choose the truncation length.<br><br><b>Validation:</b> Mixed. HMAC/CMAC rely on established primitives. ISO9797 / AS2805 and DUKPT modes are software-emulation helpers that need to be interpreted in the scope called out by each method and key context.<br><br><b>Security:</b> Uses clear key material in the recipe. Do not paste production keys into shared or untrusted environments.";
+        this.inlineHelp = "<strong>Input:</strong> message data.<br><strong>Args:</strong> choose the payment MAC method, then provide either a direct key or a DUKPT BDK plus KSN.<br><strong>Validation:</strong> primitive-backed for HMAC/CMAC; broader payment semantics are profile-specific.";
         this.testDataSamples = [
             {
                 name: "Static AES-CMAC sample",

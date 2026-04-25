@@ -1,5 +1,6 @@
 /**
  * @license Apache-2.0
+ * @author Jacob Marks [https://jacobmarks.com]
  */
 
 import Operation from "../Operation.mjs";
@@ -17,8 +18,8 @@ class VerifyIBM3624PIN extends Operation {
 
         this.name = "Verify IBM 3624 PIN";
         this.module = "Payment";
-        this.description = "Paste the clear PIN into the input field and verify it against an IBM 3624 offset.<br><br><b>Input:</b> clear PIN digits.<br><b>Arguments:</b> provide the clear PVK in hex, decimalization table, validation data, pad character, and expected offset.<br><br>Assumption: this is a clear-key software emulation of the IBM 3624 offset verification flow.";
-        this.inlineHelp = "<strong>Input:</strong> clear PIN digits.<br><strong>Args:</strong> provide PVK, decimalization table, validation data, pad character, and expected offset.";
+        this.description = "Paste the clear PIN into the input field and verify it against an IBM 3624 offset.<br><br><b>Input:</b> clear PIN digits.<br><b>Arguments:</b> provide the clear PVK in hex, decimalization table, validation data, pad character, and expected offset.<br><br><b>Validation:</b> Partially verified. This is the verification pair for the same clear-key IBM 3624 helper logic used by generation.<br><br><b>Security:</b> Clear PIN and PVK material are test-use only.";
+        this.inlineHelp = "<strong>Input:</strong> clear PIN digits.<br><strong>Args:</strong> provide PVK, decimalization table, validation data, pad character, and expected offset.<br><strong>Validation:</strong> clear-key IBM 3624 verification helper.";
         this.testDataSamples = [
             {
                 name: "IBM 3624 verify sample",

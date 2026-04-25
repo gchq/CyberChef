@@ -1,5 +1,6 @@
 /**
  * @license Apache-2.0
+ * @author Jacob Marks [https://jacobmarks.com]
  */
 
 import Operation from "../Operation.mjs";
@@ -17,8 +18,8 @@ class GenerateTestPAN extends Operation {
 
         this.name = "Generate Test PAN";
         this.module = "Payment";
-        this.description = "Generate a brand-valid payment card number for test workflows.<br><br><b>Input:</b> ignored.<br><b>Arguments:</b> choose the payment network, decide whether to use a curated sample or a locally generated brand-valid PAN, and choose the target length when the network supports multiple lengths.<br><br>This operation is intended for recipe chaining into card-validation, PIN, EMV, and parser flows.";
-        this.inlineHelp = "<strong>Input:</strong> ignored.<br><strong>Args:</strong> choose the network, sample mode, and target length.";
+        this.description = "Generate a brand-valid payment card number for test workflows.<br><br><b>Input:</b> ignored.<br><b>Arguments:</b> choose the payment network, decide whether to use a curated sample or a locally generated brand-valid PAN, and choose the target length when the network supports multiple lengths.<br><br><b>Validation:</b> Partially verified. Network classification and Luhn behavior are based on public numbering rules. Some curated samples are from public vendor docs, while generated samples are local deterministic test values rather than network-certified sandbox cards.<br><br><b>Security:</b> Test data only. Do not treat generated PANs as live accounts.";
+        this.inlineHelp = "<strong>Input:</strong> ignored.<br><strong>Args:</strong> choose the network, sample mode, and target length.<br><strong>Validation:</strong> public numbering rules + Luhn; not all curated samples are network-published official test cards.";
         this.testDataSamples = [
             {
                 name: "Visa curated sample",

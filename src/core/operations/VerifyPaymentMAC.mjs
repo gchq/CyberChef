@@ -1,5 +1,6 @@
 /**
  * @license Apache-2.0
+ * @author Jacob Marks [https://jacobmarks.com]
  */
 
 import Operation from "../Operation.mjs";
@@ -18,8 +19,8 @@ class VerifyPaymentMAC extends Operation {
 
         this.name = "Verify Payment MAC";
         this.module = "Payment";
-        this.description = "Paste the message data into the input field and verify a payment-oriented MAC using one payment-facing operation.<br><br><b>Input:</b> message data in the selected input format.<br><b>Arguments:</b> choose the MAC method, provide either a direct key or a DUKPT BDK, add the KSN for DUKPT methods, choose the ISO9797 padding rule when applicable, and supply the expected MAC as hex.<br><br>This wrapper recomputes the MAC using the same payment-specific assumptions as the generate operation.";
-        this.inlineHelp = "<strong>Input:</strong> message data.<br><strong>Args:</strong> choose the payment MAC method, provide the key context, then paste the expected MAC.";
+        this.description = "Paste the message data into the input field and verify a payment-oriented MAC using one payment-facing operation.<br><br><b>Input:</b> message data in the selected input format.<br><b>Arguments:</b> choose the MAC method, provide either a direct key or a DUKPT BDK, add the KSN for DUKPT methods, choose the ISO9797 padding rule when applicable, and supply the expected MAC as hex.<br><br><b>Validation:</b> Uses the same implementation paths and assumptions as the generate operation. Treat ISO9797, AS2805, DUKPT, and EMV-adjacent usage as profile-specific software verification rather than HSM certification.<br><br><b>Security:</b> Uses clear key material in the recipe.";
+        this.inlineHelp = "<strong>Input:</strong> message data.<br><strong>Args:</strong> choose the payment MAC method, provide the key context, then paste the expected MAC.<br><strong>Validation:</strong> same assumptions as generation.";
         this.testDataSamples = [
             {
                 name: "Static AES-CMAC verification sample",

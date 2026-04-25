@@ -1,5 +1,6 @@
 /**
  * @license Apache-2.0
+ * @author Jacob Marks [https://jacobmarks.com]
  */
 
 import Operation from "../Operation.mjs";
@@ -17,8 +18,8 @@ class GenerateEMVMACForPINChange extends Operation {
 
         this.name = "Generate EMV MAC For PIN Change";
         this.module = "Payment";
-        this.description = "Paste the issuer-script APDU command into the input field as hex and generate the MAC for an offline EMV PIN-change script.<br><br><b>Input:</b> issuer-script message data as hex.<br><b>Arguments:</b> provide the already-encrypted target PIN block in hex and the already-derived EMV session integrity key.<br><br>Assumptions: the new PIN block has already been encrypted before calling this operation, and this op appends that encrypted PIN block to the message before applying EMV retail MAC generation.";
-        this.inlineHelp = "<strong>Input:</strong> issuer-script APDU message as hex.<br><strong>Args:</strong> provide the encrypted target PIN block and derived EMV integrity key.";
+        this.description = "Paste the issuer-script APDU command into the input field as hex and generate the MAC for an offline EMV PIN-change script.<br><br><b>Input:</b> issuer-script message data as hex.<br><b>Arguments:</b> provide the already-encrypted target PIN block in hex and the already-derived EMV session integrity key.<br><br><b>Validation:</b> Emulation helper. The new PIN block must already be encrypted, and this op appends it to the supplied message before applying the same supplied-key EMV MAC profile used elsewhere in this fork.<br><br><b>Security:</b> Test-only issuer-script assembly with clear session keys in the recipe.";
+        this.inlineHelp = "<strong>Input:</strong> issuer-script APDU message as hex.<br><strong>Args:</strong> provide the encrypted target PIN block and derived EMV integrity key.<br><strong>Validation:</strong> emulation helper for PIN-change script MAC assembly.";
         this.testDataSamples = [
             {
                 name: "EMV PIN change MAC sample",

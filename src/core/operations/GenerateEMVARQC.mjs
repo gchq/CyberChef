@@ -1,5 +1,6 @@
 /**
  * @license Apache-2.0
+ * @author Jacob Marks [https://jacobmarks.com]
  */
 
 import Operation from "../Operation.mjs";
@@ -18,8 +19,8 @@ class GenerateEMVARQC extends Operation {
 
         this.name = "Generate EMV ARQC";
         this.module = "Payment";
-        this.description = "Paste the already-assembled EMV authorization-request input into the input field as hex and generate an AES-CMAC-based ARQC.<br><br><b>Input:</b> preassembled ARQC input data as hex.<br><b>Arguments:</b> provide the EMV session key in hex and choose how many bytes of the CMAC should be returned.<br><br>This operation intentionally covers only AES-CMAC-style EMV profiles where the session key and preimage are already known.";
-        this.inlineHelp = "<strong>Input:</strong> preassembled ARQC data as hex.<br><strong>Args:</strong> provide the AES session key and choose the truncated cryptogram length.";
+        this.description = "Paste the already-assembled EMV authorization-request input into the input field as hex and generate an AES-CMAC-based ARQC.<br><br><b>Input:</b> preassembled ARQC input data as hex.<br><b>Arguments:</b> provide the EMV session key in hex and choose how many bytes of the CMAC should be returned.<br><br><b>Validation:</b> Partially verified. This intentionally covers only supplied-key AES-CMAC-style EMV profiles and does not derive EMV session keys or assemble CDOL data for you.<br><br><b>Security:</b> Clear session keys are test-use only.";
+        this.inlineHelp = "<strong>Input:</strong> preassembled ARQC data as hex.<br><strong>Args:</strong> provide the AES session key and choose the truncated cryptogram length.<br><strong>Validation:</strong> supplied-key AES-CMAC profile only.";
         this.testDataSamples = [
             {
                 name: "AES-CMAC ARQC sample",

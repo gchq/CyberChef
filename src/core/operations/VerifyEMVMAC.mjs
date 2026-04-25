@@ -1,5 +1,6 @@
 /**
  * @license Apache-2.0
+ * @author Jacob Marks [https://jacobmarks.com]
  */
 
 import Operation from "../Operation.mjs";
@@ -17,8 +18,8 @@ class VerifyEMVMAC extends Operation {
 
         this.name = "Verify EMV MAC";
         this.module = "Payment";
-        this.description = "Paste the issuer-script or EMV command payload into the input field as hex and verify an EMV MAC.<br><br><b>Input:</b> message data as hex.<br><b>Arguments:</b> provide the already-derived EMV session integrity key and the expected MAC as hex.<br><br>Assumption: this operation expects the EMV session key to have been derived outside the operation and applies ISO9797-3 retail MAC with ISO9797 padding method 2.";
-        this.inlineHelp = "<strong>Input:</strong> issuer-script message data as hex.<br><strong>Args:</strong> provide the derived EMV session key and expected MAC.";
+        this.description = "Paste the issuer-script or EMV command payload into the input field as hex and verify an EMV MAC.<br><br><b>Input:</b> message data as hex.<br><b>Arguments:</b> provide the already-derived EMV session integrity key and the expected MAC as hex.<br><br><b>Validation:</b> Partially verified. This checks the same supplied-key EMV MAC profile as the generate operation and does not claim full issuer-host or scheme-specific EMV verification semantics.<br><br><b>Security:</b> Clear session keys in the recipe are test-use only.";
+        this.inlineHelp = "<strong>Input:</strong> issuer-script message data as hex.<br><strong>Args:</strong> provide the derived EMV session key and expected MAC.<br><strong>Validation:</strong> same supplied-key EMV profile as generation.";
         this.testDataSamples = [
             {
                 name: "EMV MAC verification sample",

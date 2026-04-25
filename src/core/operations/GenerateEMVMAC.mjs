@@ -1,5 +1,6 @@
 /**
  * @license Apache-2.0
+ * @author Jacob Marks [https://jacobmarks.com]
  */
 
 import Operation from "../Operation.mjs";
@@ -17,8 +18,8 @@ class GenerateEMVMAC extends Operation {
 
         this.name = "Generate EMV MAC";
         this.module = "Payment";
-        this.description = "Paste the issuer-script or EMV command payload into the input field as hex and generate an EMV MAC.<br><br><b>Input:</b> message data as hex.<br><b>Arguments:</b> provide the already-derived EMV session integrity key and choose how many leftmost MAC bytes to return.<br><br>Assumption: this operation expects the EMV session key to have been derived outside the operation and applies ISO9797-3 retail MAC with ISO9797 padding method 2.";
-        this.inlineHelp = "<strong>Input:</strong> issuer-script message data as hex.<br><strong>Args:</strong> provide the derived EMV session integrity key.";
+        this.description = "Paste the issuer-script or EMV command payload into the input field as hex and generate an EMV MAC.<br><br><b>Input:</b> message data as hex.<br><b>Arguments:</b> provide the already-derived EMV session integrity key and choose how many leftmost MAC bytes to return.<br><br><b>Validation:</b> Partially verified. This implements a retail-MAC style EMV helper with a supplied session key, not full EMV session derivation or brand-specific issuer processing.<br><br><b>Security:</b> Clear session keys in the recipe are test-use only.";
+        this.inlineHelp = "<strong>Input:</strong> issuer-script message data as hex.<br><strong>Args:</strong> provide the derived EMV session integrity key.<br><strong>Validation:</strong> supplied-key EMV MAC helper, not full EMV derivation.";
         this.testDataSamples = [
             {
                 name: "EMV MAC sample",

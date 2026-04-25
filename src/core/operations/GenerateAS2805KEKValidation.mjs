@@ -1,5 +1,6 @@
 /**
  * @license Apache-2.0
+ * @author Jacob Marks [https://jacobmarks.com]
  */
 
 import Operation from "../Operation.mjs";
@@ -48,8 +49,8 @@ class GenerateAS2805KEKValidation extends Operation {
 
         this.name = "Generate AS2805 KEK Validation";
         this.module = "Payment";
-        this.description = "Paste the clear sending KEK into the input field as hex and generate an AS2805 KEK validation request or response.<br><br><b>Input:</b> clear KEK as 16-byte or 24-byte hex.<br><b>Arguments:</b> choose request or response mode, select the random-key length, choose the variant mask label, and optionally provide the incoming RandomKeySend value.<br><br>Assumption: this software emulation returns <code>RandomKeyReceive</code> as the bytewise inverse of <code>RandomKeySend</code>, which is sufficient for lab testing but does not claim exact HSM-side AS2805 node-initialization behavior.";
-        this.inlineHelp = "<strong>Input:</strong> clear KEK hex.<br><strong>Args:</strong> choose request or response mode and provide RandomKeySend for response mode.";
+        this.description = "Paste the clear sending KEK into the input field as hex and generate an AS2805 KEK validation request or response.<br><br><b>Input:</b> clear KEK as 16-byte or 24-byte hex.<br><b>Arguments:</b> choose request or response mode, select the random-key length, choose the variant mask label, and optionally provide the incoming RandomKeySend value.<br><br><b>Validation:</b> Emulation helper. This software implementation returns <code>RandomKeyReceive</code> as the bytewise inverse of <code>RandomKeySend</code>, which is useful for lab testing but does not claim exact HSM-side AS2805 node-initialization behavior.<br><br><b>Security:</b> Clear KEKs in the recipe are test-use only.";
+        this.inlineHelp = "<strong>Input:</strong> clear KEK hex.<br><strong>Args:</strong> choose request or response mode and provide RandomKeySend for response mode.<br><strong>Validation:</strong> explicit emulation, not certified AS2805 behavior.";
         this.testDataSamples = [
             {
                 name: "AS2805 request sample",

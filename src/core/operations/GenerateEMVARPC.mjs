@@ -1,5 +1,6 @@
 /**
  * @license Apache-2.0
+ * @author Jacob Marks [https://jacobmarks.com]
  */
 
 import Operation from "../Operation.mjs";
@@ -18,8 +19,8 @@ class GenerateEMVARPC extends Operation {
 
         this.name = "Generate EMV ARPC";
         this.module = "Payment";
-        this.description = "Paste the already-assembled EMV authorization-response input into the input field as hex and generate an AES-CMAC-based ARPC.<br><br><b>Input:</b> preassembled ARPC input data as hex.<br><b>Arguments:</b> provide the issuer session key in hex and choose how many bytes of the CMAC should be returned.<br><br>This operation intentionally covers only AES-CMAC-style EMV profiles where the issuer session key and response preimage are already known.";
-        this.inlineHelp = "<strong>Input:</strong> preassembled ARPC data as hex.<br><strong>Args:</strong> provide the issuer AES session key and choose the truncated cryptogram length.";
+        this.description = "Paste the already-assembled EMV authorization-response input into the input field as hex and generate an AES-CMAC-based ARPC.<br><br><b>Input:</b> preassembled ARPC input data as hex.<br><b>Arguments:</b> provide the issuer session key in hex and choose how many bytes of the CMAC should be returned.<br><br><b>Validation:</b> Partially verified. This intentionally covers only supplied-key AES-CMAC-style EMV response profiles and does not derive issuer session keys or assemble response fields for you.<br><br><b>Security:</b> Clear session keys are test-use only.";
+        this.inlineHelp = "<strong>Input:</strong> preassembled ARPC data as hex.<br><strong>Args:</strong> provide the issuer AES session key and choose the truncated cryptogram length.<br><strong>Validation:</strong> supplied-key AES-CMAC response profile only.";
         this.testDataSamples = [
             {
                 name: "AES-CMAC ARPC sample",
