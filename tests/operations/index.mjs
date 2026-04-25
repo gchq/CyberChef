@@ -145,6 +145,7 @@ import "./tests/RAKE.mjs";
 import "./tests/Regex.mjs";
 import "./tests/Register.mjs";
 import "./tests/RegularExpression.mjs";
+import "./tests/RenderMarkdown.mjs";
 import "./tests/RisonEncodeDecode.mjs";
 import "./tests/Rotate.mjs";
 import "./tests/RSA.mjs";
