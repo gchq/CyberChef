@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import forge from "node-forge/dist/forge.min.js";
+import forge from "node-forge";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
@@ -41,8 +41,41 @@ class AESEncrypt extends Operation {
             },
             {
                 "name": "Mode",
-                "type": "option",
-                "value": ["CBC", "CFB", "OFB", "CTR", "GCM", "ECB"]
+                "type": "argSelector",
+                "value": [
+                    {
+                        name: "CBC",
+                        off: [5]
+                    },
+                    {
+                        name: "CFB",
+                        off: [5]
+                    },
+                    {
+                        name: "OFB",
+                        off: [5]
+                    },
+                    {
+                        name: "CTR",
+                        off: [5]
+                    },
+                    {
+                        name: "GCM",
+                        on: [5]
+                    },
+                    {
+                        name: "ECB",
+                        off: [5]
+                    },
+                    {
+                        name: "CBC/NoPadding",
+                        off: [5]
+                    },
+                    {
+                        name: "ECB/NoPadding",
+                        off: [5]
+                    }
+                ]
             },
             {
                 "name": "Input",
@@ -53,6 +86,12 @@ class AESEncrypt extends Operation {
                 "name": "Output",
                 "type": "option",
                 "value": ["Hex", "Raw"]
+            },
+            {
+                "name": "Additional Authenticated Data",
+                "type": "toggleString",
+                "value": "",
+                "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
             }
         ];
     }
@@ -67,9 +106,11 @@ class AESEncrypt extends Operation {
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
             iv = Utils.convertToByteString(args[1].string, args[1].option),
-            mode = args[2],
+            mode = args[2].split("/")[0],
+            noPadding =  args[2].endsWith("NoPadding"),
             inputType = args[3],
-            outputType = args[4];
+            outputType = args[4],
+            aad = Utils.convertToByteString(args[5].string, args[5].option);
 
         if ([16, 24, 32].indexOf(key.length) < 0) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -82,8 +123,20 @@ The following algorithms will be used based on the size of the key:
 
         input = Utils.convertToByteString(input, inputType);
 
+        // Handle NoPadding modes
+        if (noPadding && input.length % 16 !== 0) {
+            throw new OperationError("Input length must be a multiple of 16 bytes for NoPadding modes.");
+        }
         const cipher = forge.cipher.createCipher("AES-" + mode, key);
-        cipher.start({iv: iv});
+        cipher.start({
+            iv: iv,
+            additionalData: mode === "GCM" ? aad : undefined
+        });
+        if (noPadding) {
+            cipher.mode.pad = function(output, options) {
+                return true;
+            };
+        }
         cipher.update(forge.util.createBuffer(input));
         cipher.finish();
 

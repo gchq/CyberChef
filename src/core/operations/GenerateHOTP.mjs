@@ -5,23 +5,21 @@
  */
 
 import Operation from "../Operation.mjs";
-import otp from "otp";
-import ToBase32 from "./ToBase32.mjs";
+import * as OTPAuth from "otpauth";
 
 /**
  * Generate HOTP operation
  */
 class GenerateHOTP extends Operation {
-
     /**
-     * GenerateHOTP constructor
+     *
      */
     constructor() {
         super();
 
         this.name = "Generate HOTP";
         this.module = "Default";
-        this.description = "The HMAC-based One-Time Password algorithm (HOTP) is an algorithm that computes a one-time password from a shared secret key and an incrementing counter. It has been adopted as Internet Engineering Task Force standard RFC 4226, is the cornerstone of Initiative For Open Authentication (OATH), and is used in a number of two-factor authentication systems.<br><br>Enter the secret as the input or leave it blank for a random secret to be generated.";
+        this.description = "The HMAC-based One-Time Password algorithm (HOTP) is an algorithm that computes a one-time password from a shared secret key and an incrementing counter. It has been adopted as Internet Engineering Task Force standard RFC 4226, is the cornerstone of Initiative For Open Authentication (OAUTH), and is used in a number of two-factor authentication systems.<br><br>Enter the secret as the input or leave it blank for a random secret to be generated.";
         this.infoURL = "https://wikipedia.org/wiki/HMAC-based_One-time_Password_algorithm";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -30,11 +28,6 @@ class GenerateHOTP extends Operation {
                 "name": "Name",
                 "type": "string",
                 "value": ""
-            },
-            {
-                "name": "Key size",
-                "type": "number",
-                "value": 32
             },
             {
                 "name": "Code length",
@@ -50,21 +43,26 @@ class GenerateHOTP extends Operation {
     }
 
     /**
-     * @param {ArrayBuffer} input
-     * @param {Object[]} args
-     * @returns {string}
+     *
      */
     run(input, args) {
-        const otpObj = otp({
-            name: args[0],
-            keySize: args[1],
-            codeLength: args[2],
-            secret: (new ToBase32).run(input, []),
-        });
-        const counter = args[3];
-        return `URI: ${otpObj.hotpURL}\n\nPassword: ${otpObj.hotp(counter)}`;
-    }
+        const secretStr = new TextDecoder("utf-8").decode(input).trim();
+        const secret = secretStr ? secretStr.toUpperCase().replace(/\s+/g, "") : "";
 
+        const hotp = new OTPAuth.HOTP({
+            issuer: "",
+            label: args[0],
+            algorithm: "SHA1",
+            digits: args[1],
+            counter: args[2],
+            secret: OTPAuth.Secret.fromBase32(secret)
+        });
+
+        const uri = hotp.toString();
+        const code = hotp.generate();
+
+        return `URI: ${uri}\n\nPassword: ${code}`;
+    }
 }
 
 export default GenerateHOTP;

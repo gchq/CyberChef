@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 import moment from "moment-timezone";
 import {DATETIME_FORMATS, FORMAT_EXAMPLES} from "../lib/DateTime.mjs";
 
@@ -24,7 +25,8 @@ class TranslateDateTimeFormat extends Operation {
         this.description = "Parses a datetime string in one format and re-writes it in another.<br><br>Run with no input to see the relevant format string examples.";
         this.infoURL = "https://momentjs.com/docs/#/parsing/string-format/";
         this.inputType = "string";
-        this.outputType = "html";
+        this.outputType = "string";
+        this.presentType = "html";
         this.args = [
             {
                 "name": "Built in formats",
@@ -53,12 +55,14 @@ class TranslateDateTimeFormat extends Operation {
                 "value": ["UTC"].concat(moment.tz.names())
             }
         ];
+
+        this.invalidFormatMessage = "Invalid format.";
     }
 
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {html}
+     * @returns {string}
      */
     run(input, args) {
         const [inputFormat, inputTimezone, outputFormat, outputTimezone] = args.slice(1);
@@ -68,12 +72,22 @@ class TranslateDateTimeFormat extends Operation {
             date = moment.tz(input, inputFormat, inputTimezone);
             if (!date || date.format() === "Invalid date") throw Error;
         } catch (err) {
-            return `Invalid format.\n\n${FORMAT_EXAMPLES}`;
+            return this.invalidFormatMessage;
         }
 
-        return date.tz(outputTimezone).format(outputFormat);
+        return date.tz(outputTimezone).format(outputFormat.replace(/[<>]/g, ""));
     }
 
+    /**
+     * @param {string} data
+     * @returns {html}
+     */
+    present(data) {
+        if (data === this.invalidFormatMessage) {
+            return `${data}\n\n${FORMAT_EXAMPLES}`;
+        }
+        return Utils.escapeHtml(data);
+    }
 }
 
 export default TranslateDateTimeFormat;

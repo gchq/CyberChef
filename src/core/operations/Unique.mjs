@@ -26,9 +26,14 @@ class Unique extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Delimiter",
-                "type": "option",
-                "value": INPUT_DELIM_OPTIONS
+                name: "Delimiter",
+                type: "option",
+                value: INPUT_DELIM_OPTIONS
+            },
+            {
+                name: "Display count",
+                type: "boolean",
+                value: false
             }
         ];
     }
@@ -39,8 +44,23 @@ class Unique extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const delim = Utils.charRep(args[0]);
-        return input.split(delim).unique().join(delim);
+        const delim = Utils.charRep(args[0]),
+            count = args[1];
+
+        if (count) {
+            const valMap = input.split(delim).reduce((acc, curr) => {
+                if (Object.prototype.hasOwnProperty.call(acc, curr)) {
+                    acc[curr]++;
+                } else {
+                    acc[curr] = 1;
+                }
+                return acc;
+            }, {});
+
+            return Object.keys(valMap).map(val => `${valMap[val]} ${val}`).join(delim);
+        } else {
+            return input.split(delim).unique().join(delim);
+        }
     }
 
 }

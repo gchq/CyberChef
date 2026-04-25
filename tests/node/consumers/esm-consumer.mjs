@@ -7,8 +7,28 @@
  */
 import assert from "assert";
 import chef from "cyberchef";
+import { bake, toHex, reverse, unique, multiply } from "cyberchef";
 
-const d = chef.bake("Testing, 1 2 3", [
+const a = bake("Testing, 1 2 3", [
+    toHex,
+    reverse,
+    {
+        op: unique,
+        args: {
+            delimiter: "Space",
+        }
+    },
+    {
+        op: multiply,
+        args: {
+            delimiter: "Space",
+        }
+    }
+]);
+
+assert.equal(a.value, "630957449041920");
+
+const b = chef.bake("Testing, 1 2 3", [
     chef.toHex,
     chef.reverse,
     {
@@ -25,4 +45,4 @@ const d = chef.bake("Testing, 1 2 3", [
     }
 ]);
 
-assert.equal(d.value, "630957449041920");
+assert.equal(b.value, "630957449041920");

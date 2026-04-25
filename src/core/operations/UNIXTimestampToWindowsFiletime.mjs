@@ -34,7 +34,7 @@ class UNIXTimestampToWindowsFiletime extends Operation {
             {
                 "name": "Output format",
                 "type": "option",
-                "value": ["Decimal", "Hex"]
+                "value": ["Decimal", "Hex (big endian)", "Hex (little endian)"]
             }
         ];
     }
@@ -65,11 +65,27 @@ class UNIXTimestampToWindowsFiletime extends Operation {
 
         input = input.plus(new BigNumber("116444736000000000"));
 
-        if (format === "Hex") {
-            return input.toString(16);
+        let result;
+        if (format.startsWith("Hex")) {
+            result = input.toString(16);
         } else {
-            return input.toFixed();
+            result = input.toFixed();
         }
+
+        if (format === "Hex (little endian)") {
+            // Swap endianness
+            let flipped = "";
+            for (let i = result.length - 2; i >= 0; i -= 2) {
+                flipped += result.charAt(i);
+                flipped += result.charAt(i + 1);
+            }
+            if (result.length % 2 !== 0) {
+                flipped += "0" + result.charAt(0);
+            }
+            result = flipped;
+        }
+
+        return result;
     }
 
 }

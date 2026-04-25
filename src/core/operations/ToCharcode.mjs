@@ -52,7 +52,7 @@ class ToCharcode extends Operation {
         const delim = Utils.charRep(args[0] || "Space"),
             base = args[1];
         let output = "",
-            padding = 2,
+            padding,
             ordinal;
 
         if (base < 2 || base > 36) {

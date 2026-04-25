@@ -6,6 +6,8 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
+import {ALPHABET_OPTIONS} from "../lib/Base32.mjs";
+
 
 /**
  * From Base32 operation
@@ -27,8 +29,8 @@ class FromBase32 extends Operation {
         this.args = [
             {
                 name: "Alphabet",
-                type: "binaryString",
-                value: "A-Z2-7="
+                type: "editableOption",
+                value: ALPHABET_OPTIONS
             },
             {
                 name: "Remove non-alphabet chars",
@@ -41,6 +43,11 @@ class FromBase32 extends Operation {
                 pattern: "^(?:[A-Z2-7]{8})+(?:[A-Z2-7]{2}={6}|[A-Z2-7]{4}={4}|[A-Z2-7]{5}={3}|[A-Z2-7]{7}={1})?$",
                 flags: "",
                 args: ["A-Z2-7=", false]
+            },
+            {
+                pattern: "^(?:[0-9A-V]{8})+(?:[0-9A-V]{2}={6}|[0-9A-V]{4}={4}|[0-9A-V]{5}={3}|[0-9A-V]{7}={1})?$",
+                flags: "",
+                args: ["0-9A-V=", false]
             }
         ];
     }
@@ -84,10 +91,10 @@ class FromBase32 extends Operation {
             chr5 = ((enc7 & 7) << 5) | enc8;
 
             output.push(chr1);
-            if (enc2 & 3 !== 0 || enc3 !== 32) output.push(chr2);
-            if (enc4 & 15 !== 0 || enc5 !== 32) output.push(chr3);
-            if (enc5 & 1 !== 0 || enc6 !== 32) output.push(chr4);
-            if (enc7 & 7 !== 0 || enc8 !== 32) output.push(chr5);
+            if ((enc2 & 3) !== 0 || enc3 !== 32) output.push(chr2);
+            if ((enc4 & 15) !== 0 || enc5 !== 32) output.push(chr3);
+            if ((enc5 & 1) !== 0 || enc6 !== 32) output.push(chr4);
+            if ((enc7 & 7) !== 0 || enc8 !== 32) output.push(chr5);
         }
 
         return output;
@@ -96,3 +103,4 @@ class FromBase32 extends Operation {
 }
 
 export default FromBase32;
+

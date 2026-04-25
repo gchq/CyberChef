@@ -5,6 +5,7 @@
  */
 
 import Utils from "../../core/Utils.mjs";
+import { eolSeqToCode } from "../utils/editorUtils.mjs";
 
 
 /**
@@ -35,6 +36,11 @@ class ControlsWaiter {
             boundary: "viewport",
             trigger: "hover"
         });
+
+        // Set number of operations in various places in the DOM
+        document.querySelectorAll(".num-ops").forEach(el => {
+            el.innerHTML = Object.keys(this.app.operations).length;
+        });
     }
 
 
@@ -48,6 +54,18 @@ class ControlsWaiter {
 
         if (autoBakeCheckbox.checked !== value) {
             autoBakeCheckbox.click();
+        }
+    }
+
+    /**
+     * Checks or unchecks the Auto Bake checkbox with "Enter"
+     * @param {Event} ev
+     */
+    autoBakeKeyboardHandler(ev) {
+        const checkBox = document.getElementById("auto-bake");
+        ev.preventDefault();
+        if (ev.key === "Enter" || ev.key === " ") {
+            checkBox.checked = !checkBox.checked;
         }
     }
 
@@ -100,9 +118,9 @@ class ControlsWaiter {
         const includeRecipe = document.getElementById("save-link-recipe-checkbox").checked;
         const includeInput = document.getElementById("save-link-input-checkbox").checked;
         const saveLinkEl = document.getElementById("save-link");
-        const saveLink = this.generateStateUrl(includeRecipe, includeInput, recipeConfig);
+        const saveLink = this.generateStateUrl(includeRecipe, includeInput, null, recipeConfig);
 
-        saveLinkEl.innerHTML = Utils.truncate(saveLink, 120);
+        saveLinkEl.innerHTML = Utils.escapeHtml(Utils.truncate(saveLink, 120));
         saveLinkEl.setAttribute("href", saveLink);
     }
 
@@ -128,17 +146,28 @@ class ControlsWaiter {
         includeRecipe = includeRecipe && (recipeConfig.length > 0);
 
         // If we don't get passed an input, get it from the current URI
-        if (input === null) {
+        if (input === null && includeInput) {
             const params = this.app.getURIParams();
             if (params.input) {
                 includeInput = true;
                 input = params.input;
+            } else {
+                includeInput = false;
             }
         }
 
+        const inputChrEnc = this.manager.input.getChrEnc();
+        const outputChrEnc = this.manager.output.getChrEnc();
+        const inputEOL = eolSeqToCode[this.manager.input.getEOLSeq()];
+        const outputEOL = eolSeqToCode[this.manager.output.getEOLSeq()];
+
         const params = [
             includeRecipe ? ["recipe", recipeStr] : undefined,
-            includeInput ? ["input", input] : undefined,
+            includeInput && input.length ? ["input", Utils.escapeHtml(input)] : undefined,
+            inputChrEnc !== 0 ? ["ienc", inputChrEnc] : undefined,
+            outputChrEnc !== 0 ? ["oenc", outputChrEnc] : undefined,
+            inputEOL !== "LF" ? ["ieol", inputEOL] : undefined,
+            outputEOL !== "LF" ? ["oeol", outputEOL] : undefined
         ];
 
         const hash = params
@@ -334,12 +363,54 @@ class ControlsWaiter {
 
 
     /**
+     * Hides the arguments for all the operations in the current recipe.
+     */
+    hideRecipeArgsClick() {
+        const icon = document.getElementById("hide-icon");
+
+        if (icon.getAttribute("hide-args") === "false") {
+            icon.setAttribute("hide-args", "true");
+            icon.setAttribute("data-original-title", "Show arguments");
+            icon.children[0].innerText = "keyboard_arrow_down";
+            Array.from(document.getElementsByClassName("hide-args-icon")).forEach(function(item) {
+                item.setAttribute("hide-args", "true");
+                item.innerText = "keyboard_arrow_down";
+                item.classList.add("hide-args-selected");
+                item.parentNode.previousElementSibling.style.display = "none";
+            });
+        } else {
+            icon.setAttribute("hide-args", "false");
+            icon.setAttribute("data-original-title", "Hide arguments");
+            icon.children[0].innerText = "keyboard_arrow_up";
+            Array.from(document.getElementsByClassName("hide-args-icon")).forEach(function(item) {
+                item.setAttribute("hide-args", "false");
+                item.innerText = "keyboard_arrow_up";
+                item.classList.remove("hide-args-selected");
+                item.parentNode.previousElementSibling.style.display = "grid";
+            });
+        }
+    }
+
+
+    /**
      * Populates the bug report information box with useful technical info.
      *
      * @param {event} e
      */
     supportButtonClick(e) {
         e.preventDefault();
+        const faqs = document.getElementById("faqs");
+        const faqsAElement = faqs.getElementsByTagName("a");
+        for (let i = 0; i < faqsAElement.length; i++) {
+            faqsAElement[i].setAttribute("tabindex", "0");
+            faqsAElement[i].addEventListener("keydown", this.navigateFAQList, false);
+        }
+
+        const tabs = document.querySelectorAll('[role="tab"]');
+
+        for (let i = 0; i < tabs.length; i++) {
+            tabs[i].addEventListener("keydown", this.changeTabs, false);
+        }
 
         const reportBugInfo = document.getElementById("report-bug-info");
         const saveLink = this.generateStateUrl(true, true, null, null, "https://gchq.github.io/CyberChef/");
@@ -355,6 +426,64 @@ ${navigator.userAgent}
         }
     }
 
+
+    /**
+    * @param {Event} ev
+    */
+    changeTabs(ev) {
+        const tab = ev.target;
+        ev.preventDefault();
+        ev.stopPropagation();
+
+        if (ev.key === "ArrowRight") {
+            const nextTab = tab.parentElement;
+            if (nextTab.nextElementSibling === null) {
+                tab.parentElement.parentElement.firstElementChild.firstElementChild.focus();
+            } else {
+                nextTab.nextElementSibling.firstElementChild.focus();
+            }
+
+        } else if (ev.key === "ArrowLeft") {
+            const prevTab = tab.parentElement;
+
+            if (prevTab.previousElementSibling === null) {
+                tab.parentElement.parentElement.lastElementChild.firstElementChild.focus();
+            } else {
+                prevTab.previousElementSibling.firstElementChild.focus();
+            }
+        } else if (ev.key === "Tab" && !ev.shiftKey && ev.target === document.getElementById("tab-1")) {
+            document.getElementById("faqs").querySelector("[class='btn btn-primary']").focus();
+        } else if (ev.key === "Tab" && !ev.shiftKey && ev.target === document.getElementById("tab-2")) {
+            document.getElementById("report-bug").querySelector("[class='btn btn-primary']").focus();
+        } else if (ev.key === "Tab" && !ev.shiftKey && ev.target === document.getElementById("tab-3")) {
+            document.getElementById("about").querySelector("[href]").focus();
+        } else if (ev.key === "Tab" && !ev.shiftKey && ev.target === document.getElementById("tab-4")) {
+            const button = document.getElementById("support-modal").getElementsByClassName("modal-footer");
+            const close = button[0].firstElementChild;
+            close.focus();
+        } else if (ev.key === "Enter" || ev.key === "Space" || ev.key === " ") {
+            tab.click();
+        }
+    }
+
+    /**
+   * @param {Event} ev
+   */
+    navigateFAQList(ev) {
+
+        const el = ev.target.nextElementSibling;
+        if (ev.key === "Enter" || ev.key === "Space" || ev.key === " ") {
+            ev.preventDefault();
+            const question = el.classList;
+            if (question !== undefined && question.value) {
+                if (!question.value.includes("show")) {
+                    question.add("show");
+                } else if (question.contains("show")) {
+                    question.remove("show");
+                }
+            }
+        }
+    }
 
     /**
      * Shows the stale indicator to show that the input or recipe has changed
@@ -406,6 +535,17 @@ ${navigator.userAgent}
                 bakeButton.classList.remove("btn-warning");
                 bakeButton.classList.add("btn-success");
         }
+    }
+
+    /**
+     * Calculates the height of the controls area and adjusts the recipe
+     * height accordingly.
+     */
+    calcControlsHeight() {
+        const controls = document.getElementById("controls"),
+            recList = document.getElementById("rec-list");
+
+        recList.style.bottom = controls.clientHeight + "px";
     }
 
 }

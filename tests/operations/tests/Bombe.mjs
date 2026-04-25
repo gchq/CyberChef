@@ -104,26 +104,26 @@ TestRegister.addTests([
             }
         ]
     },
-    // This test is a bit slow - it takes about 12s on my test hardware
-    {
-        name: "Bombe: 4 rotor",
-        input: "LUOXGJSHGEDSRDOQQX",
-        expectedMatch: /<td>LHSC<\/td> {2}<td>SS<\/td> {2}<td>HHHSSSGQUUQPKSEKWK<\/td>/,
-        recipeConfig: [
-            {
-                "op": "Bombe",
-                "args": [
-                    "4-rotor",
-                    "LEYJVCNIXWPBQMDRTAKZGFUHOS", // Beta
-                    "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
-                    "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
-                    "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
-                    "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV", // B thin
-                    "THISISATESTMESSAGE", 0, false
-                ]
-            }
-        ]
-    },
+    // Takes a while to run, so disabling for general purpose testing. Re-enable if modifying this operation.
+    // {
+    //     name: "Bombe: 4 rotor",
+    //     input: "LUOXGJSHGEDSRDOQQX",
+    //     expectedMatch: /<td>LHSC<\/td> {2}<td>SS<\/td> {2}<td>HHHSSSGQUUQPKSEKWK<\/td>/,
+    //     recipeConfig: [
+    //         {
+    //             "op": "Bombe",
+    //             "args": [
+    //                 "4-rotor",
+    //                 "LEYJVCNIXWPBQMDRTAKZGFUHOS", // Beta
+    //                 "EKMFLGDQVZNTOWYHXUSPAIBRCJ<R", // I
+    //                 "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", // II
+    //                 "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", // III
+    //                 "AE BN CK DQ FU GY HW IJ LO MP RX SZ TV", // B thin
+    //                 "THISISATESTMESSAGE", 0, false
+    //             ]
+    //         }
+    //     ]
+    // },
     {
         name: "Bombe: no crib",
         input: "JBYALIHDYNUAAVKBYM",

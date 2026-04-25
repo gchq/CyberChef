@@ -6,24 +6,27 @@
  * @license Apache-2.0
  */
 
-const chef = require("cyberchef");
 const assert = require("assert");
 
-const d = chef.bake("Testing, 1 2 3", [
-    chef.toHex,
-    chef.reverse,
-    {
-        op: chef.unique,
-        args: {
-            delimiter: "Space",
-        }
-    },
-    {
-        op: chef.multiply,
-        args: {
-            delimiter: "Space",
-        }
-    }
-]);
+require("cyberchef").then(chef => {
 
-assert.equal(d.value, "630957449041920");
+    const d = chef.bake("Testing, 1 2 3", [
+        chef.toHex,
+        chef.reverse,
+        {
+            op: chef.unique,
+            args: {
+                delimiter: "Space",
+            }
+        },
+        {
+            op: chef.multiply,
+            args: {
+                delimiter: "Space",
+            }
+        }
+    ]);
+
+    assert.equal(d.value, "630957449041920");
+
+});

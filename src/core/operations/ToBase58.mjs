@@ -43,7 +43,7 @@ class ToBase58 extends Operation {
     run(input, args) {
         input = new Uint8Array(input);
         let alphabet = args[0] || ALPHABET_OPTIONS[0].value,
-            result = [0];
+            result = [];
 
         alphabet = Utils.expandAlphRange(alphabet).join("");
 
@@ -60,11 +60,9 @@ class ToBase58 extends Operation {
         }
 
         input.forEach(function(b) {
-            let carry = (result[0] << 8) + b;
-            result[0] = carry % 58;
-            carry = (carry / 58) | 0;
+            let carry = b;
 
-            for (let i = 1; i < result.length; i++) {
+            for (let i = 0; i < result.length; i++) {
                 carry += result[i] << 8;
                 result[i] = carry % 58;
                 carry = (carry / 58) | 0;

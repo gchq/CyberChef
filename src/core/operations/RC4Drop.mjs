@@ -43,9 +43,9 @@ class RC4Drop extends Operation {
                 "value": ["Latin1", "UTF8", "UTF16", "UTF16LE", "UTF16BE", "Hex", "Base64"]
             },
             {
-                "name": "Number of bytes to drop",
+                "name": "Number of dwords to drop",
                 "type": "number",
-                "value": 768
+                "value": 192
             }
         ];
     }

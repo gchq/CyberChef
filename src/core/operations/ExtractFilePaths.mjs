@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import { search } from "../lib/Extract.mjs";
+import { caseInsensitiveSort } from "../lib/Sort.mjs";
 
 /**
  * Extract file paths operation
@@ -25,19 +26,29 @@ class ExtractFilePaths extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Windows",
-                "type": "boolean",
-                "value": true
+                name: "Windows",
+                type: "boolean",
+                value: true
             },
             {
-                "name": "UNIX",
-                "type": "boolean",
-                "value": true
+                name: "UNIX",
+                type: "boolean",
+                value: true
             },
             {
-                "name": "Display total",
-                "type": "boolean",
-                "value": false
+                name: "Display total",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Sort",
+                type: "boolean",
+                value: false
+            },
+            {
+                name: "Unique",
+                type: "boolean",
+                value: false
             }
         ];
     }
@@ -48,7 +59,7 @@ class ExtractFilePaths extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [includeWinPath, includeUnixPath, displayTotal] = args,
+        const [includeWinPath, includeUnixPath, displayTotal, sort, unique] = args,
             winDrive = "[A-Z]:\\\\",
             winName = "[A-Z\\d][A-Z\\d\\- '_\\(\\)~]{0,61}",
             winExt = "[A-Z\\d]{1,6}",
@@ -65,12 +76,25 @@ class ExtractFilePaths extends Operation {
             filePaths = unixPath;
         }
 
-        if (filePaths) {
-            const regex = new RegExp(filePaths, "ig");
-            return search(input, regex, null, displayTotal);
-        } else {
+        if (!filePaths) {
             return "";
         }
+
+        const regex = new RegExp(filePaths, "ig");
+        const results = search(
+            input,
+            regex,
+            null,
+            sort ? caseInsensitiveSort : null,
+            unique
+        );
+
+        if (displayTotal) {
+            return `Total found: ${results.length}\n\n${results.join("\n")}`;
+        } else {
+            return results.join("\n");
+        }
+
     }
 
 }

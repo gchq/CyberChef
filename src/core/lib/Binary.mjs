@@ -7,38 +7,45 @@
  */
 
 import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 
 /**
  * Convert a byte array into a binary string.
  *
- * @param {Uint8Array|byteArray} data
+ * @param {Uint8Array|byteArray|number} data
  * @param {string} [delim="Space"]
  * @param {number} [padding=8]
  * @returns {string}
  *
  * @example
- * // returns "00010000 00100000 00110000"
+ * // returns "00001010 00010100 00011110"
  * toBinary([10,20,30]);
  *
- * // returns "00010000 00100000 00110000"
- * toBinary([10,20,30], ":");
+ * // returns "00001010:00010100:00011110"
+ * toBinary([10,20,30], "Colon");
+ *
+ * // returns "1010:10100:11110"
+ * toBinary([10,20,30], "Colon", 0);
  */
 export function toBinary(data, delim="Space", padding=8) {
-    if (!data) return "";
+    if (data === undefined || data === null)
+        throw new OperationError("Unable to convert to binary: Empty input data enocuntered");
 
     delim = Utils.charRep(delim);
     let output = "";
 
-    for (let i = 0; i < data.length; i++) {
-        output += data[i].toString(2).padStart(padding, "0") + delim;
-    }
-
-    if (delim.length) {
-        return output.slice(0, -delim.length);
+    if (data.length) { // array
+        for (let i = 0; i < data.length; i++) {
+            output += data[i].toString(2).padStart(padding, "0");
+            if (i !== data.length - 1) output += delim;
+        }
+    } else if (typeof data === "number") { // Single value
+        return data.toString(2).padStart(padding, "0");
     } else {
-        return output;
+        return "";
     }
+    return output;
 }
 
 
@@ -52,12 +59,15 @@ export function toBinary(data, delim="Space", padding=8) {
  *
  * @example
  * // returns [10,20,30]
- * fromBinary("00010000 00100000 00110000");
+ * fromBinary("00001010 00010100 00011110");
  *
  * // returns [10,20,30]
- * fromBinary("00010000:00100000:00110000", "Colon");
+ * fromBinary("00001010:00010100:00011110", "Colon");
  */
 export function fromBinary(data, delim="Space", byteLen=8) {
+    if (byteLen < 1 || Math.round(byteLen) !== byteLen)
+        throw new OperationError("Byte length must be a positive integer");
+
     const delimRegex = Utils.regexRep(delim);
     data = data.replace(delimRegex, "");
 

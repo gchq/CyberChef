@@ -26,9 +26,16 @@ class Whirlpool extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                "name": "Variant",
-                "type": "option",
-                "value": ["Whirlpool", "Whirlpool-T", "Whirlpool-0"]
+                name: "Variant",
+                type: "option",
+                value: ["Whirlpool", "Whirlpool-T", "Whirlpool-0"]
+            },
+            {
+                name: "Rounds",
+                type: "number",
+                value: 10,
+                min: 1,
+                max: 10
             }
         ];
     }
@@ -40,7 +47,7 @@ class Whirlpool extends Operation {
      */
     run(input, args) {
         const variant = args[0].toLowerCase();
-        return runHash(variant, input);
+        return runHash(variant, input, {rounds: args[1]});
     }
 
 }

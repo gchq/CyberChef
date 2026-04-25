@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
-import forge from "node-forge/dist/forge.min.js";
+import forge from "node-forge";
 import BigNumber from "bignumber.js";
 import { isWorkerEnvironment } from "../Utils.mjs";
 
@@ -52,8 +52,12 @@ class PseudoRandomNumberGenerator extends Operation {
         let bytes;
 
         if (isWorkerEnvironment() && self.crypto) {
-            bytes = self.crypto.getRandomValues(new Uint8Array(numBytes));
-            bytes = Utils.arrayBufferToStr(bytes.buffer);
+            bytes = new ArrayBuffer(numBytes);
+            const CHUNK_SIZE = 65536;
+            for (let i = 0; i < numBytes; i += CHUNK_SIZE) {
+                self.crypto.getRandomValues(new Uint8Array(bytes, i, Math.min(numBytes - i, CHUNK_SIZE)));
+            }
+            bytes = Utils.arrayBufferToStr(bytes);
         } else {
             bytes = forge.random.getBytesSync(numBytes);
         }

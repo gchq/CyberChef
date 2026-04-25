@@ -87,7 +87,7 @@ class ScatterChart extends Operation {
         const recordDelimiter = Utils.charRep(args[0]),
             fieldDelimiter = Utils.charRep(args[1]),
             columnHeadingsAreIncluded = args[2],
-            fillColour = args[5],
+            fillColour = Utils.escapeHtml(args[5]),
             radius = args[6],
             colourInInput = args[7],
             dimension = 500;

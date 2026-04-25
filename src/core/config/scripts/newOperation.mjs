@@ -121,7 +121,7 @@ prompt.get(schema, (err, result) => {
 
     const moduleName = result.opName.replace(/\w\S*/g, txt => {
         return txt.charAt(0).toUpperCase() + txt.substr(1);
-    }).replace(/[\s-()/./]/g, "");
+    }).replace(/[\s-()./]/g, "");
 
 
     const template = `/**
@@ -147,7 +147,7 @@ class ${moduleName} extends Operation {
         this.name = "${result.opName}";
         this.module = "${result.module}";
         this.description = "${(new EscapeString).run(result.description, ["Special chars", "Double"])}";
-        this.infoURL = "${result.infoURL}";
+        this.infoURL = "${result.infoURL}"; // Usually a Wikipedia link. Remember to remove localisation (i.e. https://wikipedia.org/etc rather than https://en.wikipedia.org/etc)
         this.inputType = "${result.inputType}";
         this.outputType = "${result.outputType}";
         this.args = [

@@ -1,6 +1,9 @@
 /**
  * Emulation of the Bombe machine.
  *
+ * Tested against the Bombe Rebuild at Bletchley Park's TNMOC
+ * using a variety of inputs and settings to confirm correctness.
+ *
  * @author s2224834
  * @copyright Crown Copyright 2019
  * @license Apache-2.0

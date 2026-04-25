@@ -64,6 +64,7 @@ class ConditionalJump extends Operation {
             jmpIndex = getLabelIndex(label, state);
 
         if (state.numJumps >= maxJumps || jmpIndex === -1) {
+            state.numJumps = 0;
             return state;
         }
 
@@ -73,6 +74,8 @@ class ConditionalJump extends Operation {
             if (!invert && strMatch || invert && !strMatch) {
                 state.progress = jmpIndex;
                 state.numJumps++;
+            } else {
+                state.numJumps = 0;
             }
         }
 

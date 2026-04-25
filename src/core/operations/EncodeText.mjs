@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import cptable from "codepage";
-import {IO_FORMAT} from "../lib/ChrEnc.mjs";
+import {CHR_ENC_CODE_PAGES} from "../lib/ChrEnc.mjs";
 
 /**
  * Encode text operation
@@ -26,7 +26,7 @@ class EncodeText extends Operation {
             "<br><br>",
             "Supported charsets are:",
             "<ul>",
-            Object.keys(IO_FORMAT).map(e => `<li>${e}</li>`).join("\n"),
+            Object.keys(CHR_ENC_CODE_PAGES).map(e => `<li>${e}</li>`).join("\n"),
             "</ul>",
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Character_encoding";
@@ -36,7 +36,7 @@ class EncodeText extends Operation {
             {
                 "name": "Encoding",
                 "type": "option",
-                "value": Object.keys(IO_FORMAT)
+                "value": Object.keys(CHR_ENC_CODE_PAGES)
             }
         ];
     }
@@ -47,7 +47,7 @@ class EncodeText extends Operation {
      * @returns {ArrayBuffer}
      */
     run(input, args) {
-        const format = IO_FORMAT[args[0]];
+        const format = CHR_ENC_CODE_PAGES[args[0]];
         const encoded = cptable.utils.encode(format, input);
         return new Uint8Array(encoded).buffer;
     }

@@ -6,32 +6,36 @@
  * @license Apache-2.0
  */
 
+import loglevelMessagePrefix from "loglevel-message-prefix";
+
+loglevelMessagePrefix(log, {
+    prefixes: [],
+    staticPrefixes: ["LoaderWorker"]
+});
+
 self.id = null;
-
-
-self.handleMessage = function(e) {
-    const r = e.data;
-    log.debug(`LoaderWorker receiving command '${r.action}'`);
-
-    switch (r.action) {
-        case "loadInput":
-            self.loadFile(r.data.file, r.data.inputNum);
-            break;
-    }
-};
 
 
 /**
  * Respond to message from parent thread.
  */
 self.addEventListener("message", function(e) {
+    // Handle message
     const r = e.data;
-    if (Object.prototype.hasOwnProperty.call(r, "file") && Object.prototype.hasOwnProperty.call(r, "inputNum")) {
-        self.loadFile(r.file, r.inputNum);
-    } else if (Object.prototype.hasOwnProperty.call(r, "file")) {
-        self.loadFile(r.file, "");
-    } else if (Object.prototype.hasOwnProperty.call(r, "id")) {
-        self.id = r.id;
+    log.debug(`Receiving command '${r.action}'`);
+
+    switch (r.action) {
+        case "setID":
+            self.id = r.data.id;
+            break;
+        case "loadFile":
+            self.loadFile(r.data.file, r.data?.inputNum ?? "");
+            break;
+        case "setLogLevel":
+            log.setLevel(r.data, false);
+            break;
+        default:
+            log.error(`Unknown action '${r.action}'.`);
     }
 });
 

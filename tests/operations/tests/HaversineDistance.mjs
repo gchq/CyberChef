@@ -11,7 +11,18 @@ TestRegister.addTests([
     {
         name: "Haversine distance",
         input: "51.487263,-0.124323, 38.9517,-77.1467",
-        expectedOutput: "5619355.701829259",
+        expectedOutput: "5902542.836307819",
+        recipeConfig: [
+            {
+                "op": "Haversine distance",
+                "args": []
+            }
+        ],
+    },
+    {
+        name: "Haversine distance, zero distance",
+        input: "51.487263,-0.124323, 51.487263,-0.124323",
+        expectedOutput: "0",
         recipeConfig: [
             {
                 "op": "Haversine distance",

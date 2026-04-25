@@ -10,12 +10,7 @@ module.exports = function(api) {
             }]
         ],
         "plugins": [
-            "dynamic-import-node",
-            [
-                "babel-plugin-transform-builtin-extend", {
-                    "globals": ["Error"]
-                }
-            ],
+            "@babel/plugin-syntax-import-assertions",
             [
                 "@babel/plugin-transform-runtime", {
                     "regenerator": true
