@@ -128,7 +128,7 @@ class DeriveECDHKeyMaterial extends Operation {
     constructor() {
         super();
 
-        this.name = "Derive ECDH key material";
+        this.name = "Derive ECDH Key Material";
         this.module = "Payment";
         this.description = "Paste your private key into the input field and paste the peer public key into the <b>Peer public key</b> argument field.<br><br><b>Input:</b> private key in PEM or PKCS#8 DER hex. PEM may be <code>BEGIN PRIVATE KEY</code> or <code>BEGIN EC PRIVATE KEY</code> when it can be normalized to PKCS#8.<br><b>Arguments:</b> choose the curve, peer public key format, optional KDF, optional shared info, output length, and output format.<br><br>Use <b>KDF = None</b> to get the raw shared secret.";
         this.inlineHelp = "<strong>Input:</strong> your private key.<br><strong>Args:</strong> pick the curve, paste the peer public key, then choose raw shared secret or KDF output.";

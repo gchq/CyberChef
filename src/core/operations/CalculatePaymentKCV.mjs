@@ -19,7 +19,7 @@ class CalculatePaymentKCV extends Operation {
     constructor() {
         super();
 
-        this.name = "Calculate payment KCV";
+        this.name = "Calculate Payment KCV";
         this.module = "Payment";
         this.description = "Paste the key into the input field and choose how that key is encoded using <b>Key format</b>.<br><br>Use <b>Method</b> to choose the KCV style: TDES, AES-CMAC, AES-ECB, or HMAC.<br><br><b>Input:</b> raw key material such as hex, UTF-8, Latin1, or Base64.<br><b>Arguments:</b> select the key format, method, and output length in hex characters.<br><br>Returns an uppercase truncated hex KCV value.";
         this.inlineHelp = "<strong>Input:</strong> key material.<br><strong>Args:</strong> tell the op how the key is encoded, choose the KCV method, then set the output length.";

@@ -16,7 +16,7 @@ class BuildPINBlock extends Operation {
     constructor() {
         super();
 
-        this.name = "Build PIN block";
+        this.name = "Build PIN Block";
         this.module = "Payment";
         this.description = "Paste the clear PIN into the input field and choose the ISO 9564 clear PIN block format to build.<br><br><b>Input:</b> clear PIN digits.<br><b>Arguments:</b> choose the target format, provide the PAN when required, and optionally randomize filler digits for formats 1 and 3.<br><br>This operation currently builds clear test PIN blocks for ISO formats 0, 1, and 3.";
         this.inlineHelp = "<strong>Input:</strong> clear PIN digits.<br><strong>Args:</strong> choose the format, add the PAN for formats 0 and 3, then decide whether format 1 or 3 filler digits should be randomized.";

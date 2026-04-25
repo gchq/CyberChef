@@ -15,7 +15,7 @@ class ReEncryptPaymentData extends Operation {
     constructor() {
         super();
 
-        this.name = "Re-encrypt payment data";
+        this.name = "Re-Encrypt Payment Data";
         this.module = "Payment";
         this.description = "Paste ciphertext into the input field as hex, decrypt it under the source key context, then re-encrypt it under the target key context.<br><br><b>Input:</b> source ciphertext hex.<br><b>Arguments:</b> choose source and target profiles, provide the corresponding key or BDK material, add IVs, and supply KSN plus DUKPT variant when using DUKPT profiles.";
         this.inlineHelp = "<strong>Input:</strong> source ciphertext hex.<br><strong>Args:</strong> define the source decrypt context, then the target encrypt context.";

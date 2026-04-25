@@ -15,7 +15,7 @@ class VerifyPaymentPINData extends Operation {
     constructor() {
         super();
 
-        this.name = "Verify payment PIN data";
+        this.name = "Verify Payment PIN Data";
         this.module = "Payment";
         this.description = "Paste a clear PIN block into the input field as hex and verify it against an expected PIN using an AWS-style wrapper.<br><br><b>Input:</b> clear PIN block hex.<br><b>Arguments:</b> choose the format, provide the PAN when required, and supply the expected clear PIN.";
         this.inlineHelp = "<strong>Input:</strong> clear PIN block hex.<br><strong>Args:</strong> define the PIN-block format, PAN context, and expected PIN.";

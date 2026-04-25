@@ -16,7 +16,7 @@ class GenerateCardValidationData extends Operation {
     constructor() {
         super();
 
-        this.name = "Generate card validation data";
+        this.name = "Generate Card Validation Data";
         this.module = "Payment";
         this.description = "Paste the combined CVK pair into the input field as hex and generate a card-verification value for software testing.<br><br><b>Input:</b> combined CVK pair as 16-byte or 24-byte hex.<br><b>Arguments:</b> select whether you are generating CVV/CVC, CVV2/CVC2, or iCVV, then provide the PAN, expiry components, and service code details.<br><br>This implementation is intended for test harnesses and assumes the common CVV decimalization flow used by payment HSM integrations.";
         this.inlineHelp = "<strong>Input:</strong> combined CVK pair hex.<br><strong>Args:</strong> choose the validation-data profile, then provide PAN, expiry, and service-code inputs.";

@@ -16,7 +16,7 @@ class VerifyPaymentMAC extends Operation {
     constructor() {
         super();
 
-        this.name = "Verify payment MAC";
+        this.name = "Verify Payment MAC";
         this.module = "Payment";
         this.description = "Paste the message data into the input field and verify a payment-oriented MAC using one payment-facing operation.<br><br><b>Input:</b> message data in the selected input format.<br><b>Arguments:</b> choose the MAC method, provide either a direct key or a DUKPT BDK, add the KSN for DUKPT methods, and supply the expected MAC as hex.<br><br>This wrapper recomputes the MAC using the same payment-specific assumptions as the generate operation.";
         this.inlineHelp = "<strong>Input:</strong> message data.<br><strong>Args:</strong> choose the payment MAC method, provide the key context, then paste the expected MAC.";

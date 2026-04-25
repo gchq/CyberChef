@@ -16,7 +16,7 @@ class TranslatePINBlock extends Operation {
     constructor() {
         super();
 
-        this.name = "Translate PIN block";
+        this.name = "Translate PIN Block";
         this.module = "Payment";
         this.description = "Paste a clear ISO 9564 PIN block into the input field as hex and translate it between supported clear block formats.<br><br><b>Input:</b> 8-byte clear PIN block as hex.<br><b>Arguments:</b> choose the source and target formats, provide source and target PAN values when required, and optionally randomize target filler digits for formats 1 and 3.<br><br>This operation currently translates clear test PIN blocks for ISO formats 0, 1, and 3.";
         this.inlineHelp = "<strong>Input:</strong> source clear PIN block hex.<br><strong>Args:</strong> choose source and target formats, then provide the source and target PAN values where the formats require them.";

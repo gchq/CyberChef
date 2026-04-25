@@ -16,7 +16,7 @@ class GeneratePaymentMAC extends Operation {
     constructor() {
         super();
 
-        this.name = "Generate payment MAC";
+        this.name = "Generate Payment MAC";
         this.module = "Payment";
         this.description = "Paste the message data into the input field and generate a payment-oriented MAC using one payment-facing operation.<br><br><b>Input:</b> message data in the selected input format.<br><b>Arguments:</b> choose the MAC method, provide either a direct key or a DUKPT BDK, optionally provide a KSN for DUKPT methods, and choose the truncation length.<br><br>This wrapper reuses existing HMAC, CMAC, and DUKPT operations instead of duplicating their crypto logic.";
         this.inlineHelp = "<strong>Input:</strong> message data.<br><strong>Args:</strong> choose the payment MAC method, then provide either a direct key or a DUKPT BDK plus KSN.";

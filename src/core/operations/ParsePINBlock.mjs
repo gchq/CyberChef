@@ -16,7 +16,7 @@ class ParsePINBlock extends Operation {
     constructor() {
         super();
 
-        this.name = "Parse PIN block";
+        this.name = "Parse PIN Block";
         this.module = "Payment";
         this.description = "Paste a clear ISO 9564 PIN block into the input field as hex and decode it into its component fields.<br><br><b>Input:</b> 8-byte clear PIN block as hex.<br><b>Arguments:</b> choose the format and provide the PAN when the format binds to PAN data.<br><br>This operation currently parses clear test PIN blocks for ISO formats 0, 1, and 3.";
         this.inlineHelp = "<strong>Input:</strong> clear PIN block hex.<br><strong>Args:</strong> choose the format and provide the PAN for formats 0 and 3 so the block can be decoded.";

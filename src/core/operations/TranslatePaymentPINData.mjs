@@ -15,7 +15,7 @@ class TranslatePaymentPINData extends Operation {
     constructor() {
         super();
 
-        this.name = "Translate payment PIN data";
+        this.name = "Translate Payment PIN Data";
         this.module = "Payment";
         this.description = "Paste a clear PIN block into the input field as hex and translate it between supported clear ISO 9564 formats using an AWS-style wrapper.<br><br><b>Input:</b> clear PIN block hex.<br><b>Arguments:</b> choose source and target formats, provide PAN values when required, and optionally randomize target filler digits.";
         this.inlineHelp = "<strong>Input:</strong> source clear PIN block hex.<br><strong>Args:</strong> define source and target format plus PAN context.";

@@ -15,7 +15,7 @@ class DecryptPaymentData extends Operation {
     constructor() {
         super();
 
-        this.name = "Decrypt payment data";
+        this.name = "Decrypt Payment Data";
         this.module = "Payment";
         this.description = "Paste ciphertext into the input field as hex and decrypt it using a payment-facing cipher wrapper.<br><br><b>Input:</b> ciphertext hex.<br><b>Arguments:</b> choose the cipher profile, provide a direct key or BDK, add IV where needed, and provide KSN plus DUKPT variant when using a DUKPT profile.";
         this.inlineHelp = "<strong>Input:</strong> ciphertext hex.<br><strong>Args:</strong> choose AES, TDES, or DUKPT-wrapped TDES, then provide key, IV, and optional KSN context.";
