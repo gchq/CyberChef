@@ -23,7 +23,7 @@ class DecryptPaymentData extends Operation {
         this.testDataSamples = [
             {
                 name: "AES CBC sample",
-                input: "76D0627DA1D290436E21A4AF7FCA94B7177C1FC94173D442E36EE79D7CA0E461",
+                input: "67423557CA0509243B9EE04A5DA3448AA397F6D29B5C8BCE065D9CDC936B7F9B",
                 args: ["AES CBC", "00112233445566778899AABBCCDDEEFF", "000102030405060708090A0B0C0D0E0F", "", "Data", false]
             }
         ];
