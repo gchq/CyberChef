@@ -119,7 +119,7 @@ TestRegister.addApiTests([
         assert.strictEqual(result[0].module, "Ciphers");
         assert.strictEqual(result[0].inputType, "string");
         assert.strictEqual(result[0].outputType, "string");
-        assert.strictEqual(result[0].description, "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.");
+        assert.strictEqual(result[0].description, "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.");
         assert.strictEqual(result[0].args.length, 5);
     }),
 
@@ -136,7 +136,7 @@ TestRegister.addApiTests([
 
     it("chef.help: returns multiple results", () => {
         const result = chef.help("base 64");
-        assert.strictEqual(result.length, 11);
+        assert.strictEqual(result.length, 13);
     }),
 
     it("chef.help: looks in description for matches too", () => {
@@ -343,6 +343,42 @@ TestRegister.addApiTests([
                 "args": [false] }
         ]);
         assert.strictEqual(result.toString(), "begin_something_aaaaaaaaaaaaaa_end_something");
+    }),
+
+    it("chef.bake: should accept operation names from Chef Website which contain forward slash", () => {
+        const result = chef.bake("I'll have the test salmon", [
+            { "op": "Find / Replace",
+                "args": [{ "option": "Regex", "string": "test" }, "good", true, false, true, false]}
+        ]);
+        assert.strictEqual(result.toString(), "I'll have the good salmon");
+    }),
+
+    it("chef.bake: should accept operation names from Chef Website which contain a hyphen", () => {
+        const result = chef.bake("I'll have the test salmon", [
+            { "op": "Adler-32 Checksum",
+                "args": [] }
+        ]);
+        assert.strictEqual(result.toString(), "6e4208f8");
+    }),
+
+    it("chef.bake: should accept operation names from Chef Website which contain a period", () => {
+        const result = chef.bake("30 13 02 01 05 16 0e 41 6e 79 62 6f 64 79 20 74 68 65 72 65 3f", [
+            { "op": "Parse ASN.1 hex string",
+                "args": [0, 32] }
+        ]);
+        assert.strictEqual(result.toString(), `SEQUENCE
+  INTEGER 05
+  IA5String 'Anybody there?'
+`);
+    }),
+
+    it("Excluded operations: throw a sensible error when you try and call one", () => {
+        try {
+            chef.fork();
+        } catch (e) {
+            assert.strictEqual(e.type, "ExcludedOperationError");
+            assert.strictEqual(e.message, "Sorry, the Fork operation is not available in the Node.js version of CyberChef.");
+        }
     }),
 
     it("chef.bake: cannot accept flowControl operations in recipe", () => {

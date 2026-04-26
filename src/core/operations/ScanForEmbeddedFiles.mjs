@@ -60,7 +60,7 @@ class ScanForEmbeddedFiles extends Operation {
   Extension:   ${type.fileDetails.extension}
   MIME type:   ${type.fileDetails.mime}\n`;
 
-                if (type.fileDetails.description && type.fileDetails.description.length) {
+                if (type?.fileDetails?.description?.length) {
                     output += `  Description: ${type.fileDetails.description}\n`;
                 }
             });

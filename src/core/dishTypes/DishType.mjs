@@ -29,9 +29,8 @@ class DishType {
 
     /**
      * convert the given value from a ArrayBuffer
-     * @param {boolean} notUTF8
      */
-    static fromArrayBuffer(notUTF8=undefined) {
+    static fromArrayBuffer() {
         throw new Error("fromArrayBuffer has not been implemented");
     }
 }

@@ -70,11 +70,15 @@ class Recipe  {
             if (o instanceof Operation) {
                 return o;
             } else {
-                const op = new modules[o.module][o.name]();
-                op.ingValues = o.ingValues;
-                op.breakpoint = o.breakpoint;
-                op.disabled = o.disabled;
-                return op;
+                try {
+                    const op = new modules[o.module][o.name]();
+                    op.ingValues = o.ingValues;
+                    op.breakpoint = o.breakpoint;
+                    op.disabled = o.disabled;
+                    return op;
+                } catch (err) {
+                    throw new Error(`Failed to hydrate operation '${o.name}': ${err}`);
+                }
             }
         });
     }
@@ -229,15 +233,14 @@ class Recipe  {
                 }
                 this.lastRunOp = op;
             } catch (err) {
+                log.error(err);
                 // Return expected errors as output
-                if (err instanceof OperationError ||
-                    (err.type && err.type === "OperationError")) {
+                if (err instanceof OperationError || err?.type === "OperationError") {
                     // Cannot rely on `err instanceof OperationError` here as extending
                     // native types is not fully supported yet.
                     dish.set(err.message, "string");
                     return i;
-                } else if (err instanceof DishError ||
-                    (err.type && err.type === "DishError")) {
+                } else if (err instanceof DishError || err?.type === "DishError") {
                     dish.set(err.message, "string");
                     return i;
                 } else {

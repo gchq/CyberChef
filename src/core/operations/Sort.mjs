@@ -7,7 +7,7 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {INPUT_DELIM_OPTIONS} from "../lib/Delim.mjs";
-import {caseInsensitiveSort, ipSort, numericSort, hexadecimalSort} from "../lib/Sort.mjs";
+import {caseInsensitiveSort, ipSort, numericSort, hexadecimalSort, lengthSort} from "../lib/Sort.mjs";
 
 /**
  * Sort operation
@@ -39,7 +39,7 @@ class Sort extends Operation {
             {
                 "name": "Order",
                 "type": "option",
-                "value": ["Alphabetical (case sensitive)", "Alphabetical (case insensitive)", "IP address", "Numeric", "Numeric (hexadecimal)"]
+                "value": ["Alphabetical (case sensitive)", "Alphabetical (case insensitive)", "IP address", "Numeric", "Numeric (hexadecimal)", "Length"]
             }
         ];
     }
@@ -65,6 +65,8 @@ class Sort extends Operation {
             sorted = sorted.sort(numericSort);
         } else if (order === "Numeric (hexadecimal)") {
             sorted = sorted.sort(hexadecimalSort);
+        } else if (order === "Length") {
+            sorted = sorted.sort(lengthSort);
         }
 
         if (sortReverse) sorted.reverse();

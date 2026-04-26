@@ -25,11 +25,11 @@ import OperationError from "../errors/OperationError.mjs";
  */
 export function toBase64(data, alphabet="A-Za-z0-9+/=") {
     if (!data) return "";
+    if (typeof data == "string") {
+        data = Utils.strToArrayBuffer(data);
+    }
     if (data instanceof ArrayBuffer) {
         data = new Uint8Array(data);
-    }
-    if (typeof data == "string") {
-        data = Utils.strToByteArray(data);
     }
 
     alphabet = Utils.expandAlphRange(alphabet).join("");

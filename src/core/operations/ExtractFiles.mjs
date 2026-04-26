@@ -39,7 +39,7 @@ class ExtractFiles extends Operation {
                 ${supportedExts.join("</li><li>")}
                 </li>
             </ul>Minimum File Size can be used to prune small false positives.`;
-        this.infoURL = "https://forensicswiki.xyz/wiki/index.php?title=File_Carving";
+        this.infoURL = "https://forensics.wiki/file_carving";
         this.inputType = "ArrayBuffer";
         this.outputType = "List<File>";
         this.presentType = "html";

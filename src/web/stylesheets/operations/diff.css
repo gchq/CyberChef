@@ -1,0 +1,8 @@
+del {
+    background-color: var(--hl3);
+}
+
+ins {
+    text-decoration: underline; /* shouldn't be needed, but Chromium doesn't copy to clipboard without it */
+    background-color: var(--hl5);
+}

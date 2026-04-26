@@ -21,7 +21,7 @@ class ExtractIPAddresses extends Operation {
 
         this.name = "Extract IP addresses";
         this.module = "Regex";
-        this.description = "Extracts all IPv4 and IPv6 addresses.<br><br>Warning: Given a string <code>710.65.0.456</code>, this will match <code>10.65.0.45</code> so always check the original input!";
+        this.description = "Extracts all IPv4 and IPv6 addresses.<br><br>Warning: Given a string <code>1.2.3.4.5.6.7.8</code>, this will match <code>1.2.3.4 and 5.6.7.8</code> so always check the original input!";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -65,8 +65,22 @@ class ExtractIPAddresses extends Operation {
      */
     run(input, args) {
         const [includeIpv4, includeIpv6, removeLocal, displayTotal, sort, unique] = args,
-            ipv4 = "(?:(?:\\d|[01]?\\d\\d|2[0-4]\\d|25[0-5])\\.){3}(?:25[0-5]|2[0-4]\\d|[01]?\\d\\d|\\d)(?:\\/\\d{1,2})?",
-            ipv6 = "((?=.*::)(?!.*::.+::)(::)?([\\dA-F]{1,4}:(:|\\b)|){5}|([\\dA-F]{1,4}:){6})((([\\dA-F]{1,4}((?!\\3)::|:\\b|(?![\\dA-F])))|(?!\\2\\3)){2}|(((2[0-4]|1\\d|[1-9])?\\d|25[0-5])\\.?\\b){4})";
+
+            // IPv4 decimal groups can have values 0 to 255. To construct a regex the following sub-regex is reused:
+            ipv4DecimalByte = "(?:25[0-5]|2[0-4]\\d|1?[0-9]\\d|\\d)",
+            ipv4OctalByte = "(?:0[1-3]?[0-7]{1,2})",
+
+            // Look behind and ahead will be used to exclude matches with additional decimal digits left and right of IP address
+            lookBehind = "(?<!\\d)",
+            lookAhead = "(?!\\d)",
+
+            // Each variant requires exactly 4 groups with literal . between.
+            ipv4Decimal = "(?:" + lookBehind + ipv4DecimalByte + "\\.){3}" + "(?:" + ipv4DecimalByte + lookAhead + ")",
+            ipv4Octal = "(?:" + lookBehind + ipv4OctalByte + "\\.){3}" + "(?:" + ipv4OctalByte + lookAhead + ")",
+
+            // Then we allow IPv4 addresses to be expressed either entirely in decimal or entirely in Octal
+            ipv4 = "(?:" + ipv4Decimal + "|" + ipv4Octal + ")",
+            ipv6 = "((?=.*::)(?!.*::.+::)(::)?([\\dA-F]{1,4}:(:|\\b)|){5}|([\\dA-F]{1,4}:){6})(([\\dA-F]{1,4}((?!\\3)::|:\\b|(?![\\dA-F])))|(?!\\2\\3)){2}";
         let ips  = "";
 
         if (includeIpv4 && includeIpv6) {

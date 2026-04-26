@@ -44,7 +44,8 @@ ul.json-dict, ol.json-array {
     display: contents;
 }
 .json-summary {
-    display: contents;
+    display: inline;
+    list-style: none;
 }
 
 /* Display object and array brackets when closed */

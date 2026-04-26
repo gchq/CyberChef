@@ -12,8 +12,9 @@ import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
 
-import process from "process";
 import { createWorker } from "tesseract.js";
+
+const OEM_MODES = ["Tesseract only", "LSTM only", "Tesseract/LSTM Combined"];
 
 /**
  * Optical Character Recognition operation
@@ -37,6 +38,12 @@ class OpticalCharacterRecognition extends Operation {
                 name: "Show confidence",
                 type: "boolean",
                 value: true
+            },
+            {
+                name: "OCR Engine Mode",
+                type: "option",
+                value: OEM_MODES,
+                defaultIndex: 1
             }
         ];
     }
@@ -47,7 +54,7 @@ class OpticalCharacterRecognition extends Operation {
      * @returns {string}
      */
     async run(input, args) {
-        const [showConfidence] = args;
+        const [showConfidence, oemChoice] = args;
 
         if (!isWorkerEnvironment()) throw new OperationError("This operation only works in a browser");
 
@@ -56,12 +63,13 @@ class OpticalCharacterRecognition extends Operation {
             throw new OperationError("Unsupported file type (supported: jpg,png,pbm,bmp) or no file provided");
         }
 
-        const assetDir = isWorkerEnvironment() ? `${self.docURL}/assets/` : `${process.cwd()}/src/core/vendor/`;
+        const assetDir = `${self.docURL}/assets/`;
+        const oem = OEM_MODES.indexOf(oemChoice);
 
         try {
             self.sendStatusMessage("Spinning up Tesseract worker...");
             const image = `data:${type};base64,${toBase64(input)}`;
-            const worker = createWorker({
+            const worker = await createWorker("eng", oem, {
                 workerPath: `${assetDir}tesseract/worker.min.js`,
                 langPath: `${assetDir}tesseract/lang-data`,
                 corePath: `${assetDir}tesseract/tesseract-core.wasm.js`,
@@ -71,11 +79,6 @@ class OpticalCharacterRecognition extends Operation {
                     }
                 }
             });
-            await worker.load();
-            self.sendStatusMessage(`Loading English language pack...`);
-            await worker.loadLanguage("eng");
-            self.sendStatusMessage("Intialising Tesseract API...");
-            await worker.initialize("eng");
             self.sendStatusMessage("Finding text...");
             const result = await worker.recognize(image);
 

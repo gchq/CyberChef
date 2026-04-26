@@ -78,6 +78,11 @@
     border-left: 2px solid var(--primary-border-colour);
 }
 
+p a:focus {
+    color: #0a6ebd;
+    text-decoration: underline;
+}
+
 .checkbox label input[type=checkbox]+.checkbox-decorator .check,
 .checkbox label input[type=checkbox]+.checkbox-decorator .check::before {
     border-color: var(--input-border-colour);
@@ -99,9 +104,11 @@
 .bmd-form-group.is-focused [class^='bmd-label'],
 .bmd-form-group.is-focused [class*=' bmd-label'],
 .bmd-form-group.is-focused label,
-.checkbox label:hover {
+.checkbox label:hover,
+.bmd-form-group.is-filled:focus-within .checkbox.option-item label {
     color: var(--input-highlight-colour);
 }
+
 
 .bmd-form-group.option-item label+.form-control{
     background-image:

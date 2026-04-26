@@ -5,6 +5,7 @@
  */
 
 import Dish from "./Dish.mjs";
+import OperationError from "./errors/OperationError.mjs";
 import Ingredient from "./Ingredient.mjs";
 
 /**
@@ -184,6 +185,7 @@ class Operation {
             if (ing.disabled) conf.disabled = ing.disabled;
             if (ing.target) conf.target = ing.target;
             if (ing.defaultIndex) conf.defaultIndex = ing.defaultIndex;
+            if (ing.maxLength) conf.maxLength = ing.maxLength;
             if (typeof ing.min === "number") conf.min = ing.min;
             if (typeof ing.max === "number") conf.max = ing.max;
             if (ing.step) conf.step = ing.step;
@@ -222,7 +224,11 @@ class Operation {
      */
     set ingValues(ingValues) {
         ingValues.forEach((val, i) => {
-            this._ingList[i].value = val;
+            try {
+                this._ingList[i].value = val;
+            } catch (err) {
+                throw new OperationError(`Failed to set value of ingredient '${this._ingList[i].name}': ${err}`);
+            }
         });
     }
 

@@ -2,7 +2,7 @@
  * GOST R 34.11-94 / GOST R 34.11-12 implementation
  * 1.76
  * 2014-2016, Rudolf Nickolaev. All rights reserved.
- * 
+ *
  * Exported for CyberChef by mshwed [m@ttshwed.com]
  */
 
@@ -18,11 +18,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *    
+ *
  * Converted to JavaScript from source https://www.streebog.net/
  * Copyright (c) 2013, Alexey Degtyarev.
  * All rights reserved.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -33,7 +33,7 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  */
 
  import GostRandom from './gostRandom.mjs';
@@ -42,12 +42,12 @@
 
 /*
     * GOST R 34.11
-    * Common methods 
-    * 
+    * Common methods
+    *
     */ // <editor-fold defaultstate="collapsed">
 
 var root = {};
-var rootCrypto = crypto 
+var rootCrypto = crypto
 
 var DataError = Error,
         NotSupportedError = Error;
@@ -113,7 +113,7 @@ function getSeed(length) {
 function buffer(d) {
     if (d instanceof ArrayBuffer)
         return d;
-    else if (d && d.buffer && d.buffer instanceof ArrayBuffer)
+    else if (d && d?.buffer instanceof ArrayBuffer)
         return d.byteOffset === 0 && d.byteLength === d.buffer.byteLength ?
                 d.buffer : new Uint8Array(new Uint8Array(d, d.byteOffset, d.byteLength)).buffer;
     else
@@ -122,16 +122,16 @@ function buffer(d) {
 
 /**
  * Algorithm name GOST R 34.11 or GOST R 34.11-12<br><br>
- * 
+ *
  * http://tools.ietf.org/html/rfc6986
- * 
+ *
  * The digest method returns digest data in according to GOST R 4311-2012.<br>
- * Size of digest also defines in algorithm name. 
+ * Size of digest also defines in algorithm name.
  *  <ul>
  *      <li>GOST R 34.11-256-12 - 256 bits digest</li>
  *      <li>GOST R 34.11-512-12 - 512 bits digest</li>
  *  </ul>
- *  
+ *
  * @memberOf GostDigest
  * @method digest
  * @instance
@@ -140,13 +140,13 @@ function buffer(d) {
  */
 var digest2012 = (function () // <editor-fold defaultstate="collapsed">
 {
-    // Constants 
-    var buffer0 = new Int32Array(16); // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];  
+    // Constants
+    var buffer0 = new Int32Array(16); // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-    var buffer512 = new Int32Array(16); // [512, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
+    var buffer512 = new Int32Array(16); // [512, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     buffer512[0] = 512;
 
-    // Constant C 
+    // Constant C
     var C = (function (s) {
         var h = new Int32Array(b64decode(s)),
                 r = new Array(12);
@@ -157,7 +157,7 @@ var digest2012 = (function () // <editor-fold defaultstate="collapsed">
             'B0Wm8lllgN0jTXTMNnR2BRXTYKQIKkKiAWlnkpHgfEv8xIV1jbhOcRbQRS5DdmovH3xlwIEvy+vp2soe2lsIsbebsSFwBHnmVs3L1xui3VXKpwrbwmG1XFiZ1hJrF7WaMQG1Fg9e1WGYKyMKcur+89e1cA9GneNPGi+dqYq1o2+yCroK9ZYemTHbeoZD9LbCCdtiYDc6ycGxnjWQ5A/i03t7KbEUderyix+cUl9e8QY1hD1qKPw5Cscvzius3HT1LtHjhLy+DCLxN+iToepTNL4DUpMzE7fYddYD7YIs16k/NV5orRxynX08XDN+hY5I3eRxXaDhSPnSZhXos98f71f+bHz9WBdg9WPqqX6iVnoWGicjtwD/36P1OiVHF82/vf8PgNc1njVKEIYWHxwVf2MjqWwMQT+amUdHraxr6ktufWRGekBo+jVPkDZyxXG/tsa+wmYf8gq0t5oct6b6z8aO8Jq0mn8YbKRCUfnEZi3AOTB6O8Okb9nTOh2urk+uk9QUOk1WhojzSjyiTEUXNQQFSiiDaUcGNyyCLcWrkgnJk3oZMz5H08mHv+bHxp45VAkkv/6GrFHsxaruFg7H9B7nAr/UDX+k' +
             '2ahRWTXCrDYvxKXRK43RaZAGm5LLK4n0msTbTTtEtIke3jaccfi3TkFBbgwCqucDp8mTTUJbH5vbWiODUURhcmAqH8uS3DgOVJwHppqKK3uxzrLbC0QKgIQJDeC3Vdk8JEKJJRs6fTreXxbs2JpMlJsiMRZUWo837ZxFmPvHtHTDtjsV0fqYNvRSdjswbB56SzNprwJn558DYTMbiuH/H9t4iv8c50GJ8/PkskjlKjhSbwWApt6+qxst84HNpMprXdhvwEpZot6Ybkd9Hc2678q5SOrvcR2KeWaEFCGAASBhB6vru2v62JT+WmPNxgIw+4nI79CezXsg1xvxSpK8SJkbstnVF/T6UijhiKqkHeeGzJEYne+AXZufITDUEiD4dx3fvDI8pM16sUkEsIAT0roxFvFn5443');
 
-    // Precalc Ax 
+    // Precalc Ax
     var Ax = (function (s) {
         return new Int32Array(b64decode(s));
     })(
@@ -201,12 +201,12 @@ var digest2012 = (function () // <editor-fold defaultstate="collapsed">
     // Variables
     var sigma, N, h;
 
-    // 64bit tools 
+    // 64bit tools
     function get8(x, i) {
         return (x[i >> 2] >> ((i & 3) << 3)) & 0xff;
     }
 
-    // 512bit tools 
+    // 512bit tools
     function add512(x, y) {
         var CF = 0, w0, w1;
         for (var i = 0; i < 16; i++) {
@@ -315,7 +315,7 @@ var digest2012 = (function () // <editor-fold defaultstate="collapsed">
 
     return function (data) {
 
-        // Cleanup 
+        // Cleanup
         sigma = new512();
         N = new512();
 
@@ -357,9 +357,9 @@ var digest2012 = (function () // <editor-fold defaultstate="collapsed">
 
 /**
  * Algorithm name GOST R 34.11-94<br><br>
- * 
+ *
  * http://tools.ietf.org/html/rfc5831
- * 
+ *
  * The digest method returns digest data in according to GOST R 34.11-94.
  * @memberOf GostDigest
  * @method digest
@@ -512,7 +512,7 @@ var digest94 = (function () // <editor-fold defaultstate="collapsed">
         var n = d.length;
         var r = n % 32, q = (n - r) / 32;
 
-        // Proccess full blocks 
+        // Proccess full blocks
         for (var i = 0; i < q; i++) {
             var b = new Uint8Array(d.buffer, i * 32, 32);
 
@@ -553,11 +553,11 @@ var digest94 = (function () // <editor-fold defaultstate="collapsed">
 
 /**
  * Algorithm name SHA-1<br><br>
- * 
+ *
  * https://tools.ietf.org/html/rfc3174
- * 
+ *
  * The digest method returns digest data in according to SHA-1.<br>
- *  
+ *
  * @memberOf GostDigest
  * @method digest
  * @instance
@@ -700,9 +700,9 @@ var digestSHA1 = (function () // <editor-fold defaultstate="collapsed">
 } // </editor-fold>
 )();
 
-/** 
+/**
  * Algorithm name GOST R 34.11-HMAC<br><br>
- * 
+ *
  * HMAC with the specified hash function.
  * @memberOf GostDigest
  * @method sign
@@ -742,9 +742,9 @@ function signHMAC(key, data) // <editor-fold defaultstate="collapsed">
 
 /**
  * Algorithm name GOST R 34.11-HMAC<br><br>
- * 
+ *
  * Verify HMAC based on GOST R 34.11 hash
- * 
+ *
  * @memberOf GostDigest
  * @method verify
  * @instance
@@ -768,9 +768,9 @@ function verifyHMAC(key, signature, data) // <editor-fold defaultstate="collapse
 
 /**
  * Algorithm name GOST R 34.11-KDF<br><br>
- * 
+ *
  * Simple generate key 256/512 bit random seed for derivation algorithms
- * 
+ *
  * @memberOf GostDigest
  * @method generateKey
  * @instance
@@ -783,7 +783,7 @@ function generateKey() // <editor-fold defaultstate="collapsed">
 
 /**
  * Algorithm name GOST R 34.11-PFXKDF<br><br>
- * 
+ *
  * Derive bits from password (PKCS12 mode)
  *  <ul>
  *      <li>algorithm.salt - random value, salt</li>
@@ -868,16 +868,16 @@ function deriveBitsPFXKDF(baseKey, length) // <editor-fold defaultstate="collaps
 
 /**
  * Algorithm name GOST R 34.11-KDF<br><br>
- * 
+ *
  * Derive bits for KEK deversification in 34.10-2012 algorithm
- * KDF(KEK, UKM, label) = HMAC256 (KEK,  0x01|label|0x00|UKM|0x01|0x00) 
- * Default label = 0x26|0xBD|0xB8|0x78 
- * 
+ * KDF(KEK, UKM, label) = HMAC256 (KEK,  0x01|label|0x00|UKM|0x01|0x00)
+ * Default label = 0x26|0xBD|0xB8|0x78
+ *
  * @memberOf GostDigest
  * @method deriveBits
  * @instance
  * @param {(ArrayBuffer|TypedArray)} baseKey base key for deriviation
- * @param {number} length output bit-length 
+ * @param {number} length output bit-length
  * @returns {ArrayBuffer} result
  */
 function deriveBitsKDF(baseKey, length) // <editor-fold defaultstate="collapsed">
@@ -907,7 +907,7 @@ function deriveBitsKDF(baseKey, length) // <editor-fold defaultstate="collapsed"
 
 /**
  * Algorithm name GOST R 34.11-PBKDF1<br><br>
- * 
+ *
  * Derive bits from password
  *  <ul>
  *      <li>algorithm.salt - random value, salt</li>
@@ -943,7 +943,7 @@ function deriveBitsPBKDF1(baseKey, length) // <editor-fold defaultstate="collaps
 
 /**
  * Algorithm name GOST R 34.11-PBKDF2<br><br>
- * 
+ *
  * Derive bits from password
  *  <ul>
  *      <li>algorithm.salt - random value, salt</li>
@@ -999,7 +999,7 @@ function deriveBitsPBKDF2(baseKey, length) // <editor-fold defaultstate="collaps
 
 /**
  * Algorithm name GOST R 34.11-CPKDF<br><br>
- * 
+ *
  * Derive bits from password. CryptoPro algorithm
  *  <ul>
  *      <li>algorithm.salt - random value, salt</li>
@@ -1074,9 +1074,9 @@ function deriveBitsCP(baseKey, length) {
 
 /**
  * Algorithm name GOST R 34.11-KDF or GOST R 34.11-PBKDF2 or other<br><br>
- * 
+ *
  * Derive key from derive bits subset
- * 
+ *
  * @memberOf GostDigest
  * @method deriveKey
  * @instance
@@ -1090,11 +1090,11 @@ function deriveKey(baseKey) // <editor-fold defaultstate="collapsed">
 
 /**
  * GOST R 34.11 Algorithm<br><br>
- * 
+ *
  * References: {@link http://tools.ietf.org/html/rfc6986} and {@link http://tools.ietf.org/html/rfc5831}<br><br>
- * 
+ *
  * Normalized algorithm identifier common parameters:
- * 
+ *
  *  <ul>
  *      <li><b>name</b> Algorithm name 'GOST R 34.11'</li>
  *      <li><b>version</b> Algorithm version
@@ -1121,9 +1121,9 @@ function deriveKey(baseKey) // <editor-fold defaultstate="collapsed">
  *      </li>
  *      <li><b>sBox</b> Paramset sBox for GOST 28147-89. Used only if version = 1994</li>
  *  </ul>
- * 
+ *
  * Supported algorithms, modes and parameters:
- * 
+ *
  *  <ul>
  *      <li>Digest HASH mode (default)</li>
  *      <li>Sign/Verify HMAC modes parameters depends on version and length
@@ -1150,7 +1150,7 @@ function deriveKey(baseKey) // <editor-fold defaultstate="collapsed">
  *          <ul>
  *              <li><b>salt</b> {@link CryptoOperationData} Random salt as input for HMAC algorithm</li>
  *              <li><b>iterations</b> Iteration count. GOST recomended value 1000 (default) or 2000</li>
- *              <li><b>diversifier</b> Deversifier, ID=1 - key material for performing encryption or decryption, 
+ *              <li><b>diversifier</b> Deversifier, ID=1 - key material for performing encryption or decryption,
  *              ID=2 - IV (Initial Value) for encryption or decryption, ID=3 - integrity key for MACing</li>
  *          </ul>
  *      </li>
@@ -1161,7 +1161,7 @@ function deriveKey(baseKey) // <editor-fold defaultstate="collapsed">
  *          </ul>
  *      </li>
  *  </ul>
- * 
+ *
  * @class GostDigest
  * @param {AlgorithmIdentifier} algorithm WebCryptoAPI algorithm identifier
  */

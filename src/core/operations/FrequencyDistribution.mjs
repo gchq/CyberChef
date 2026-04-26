@@ -91,7 +91,7 @@ Number of bytes not represented: ${256 - freq.bytesRepresented}
 
 <script>
     var canvas = document.getElementById("chart-area"),
-        parentRect = canvas.parentNode.getBoundingClientRect(),
+        parentRect = canvas.closest(".cm-scroller").getBoundingClientRect(),
         scores = ${JSON.stringify(freq.percentages)};
 
     canvas.width = parentRect.width * 0.95;

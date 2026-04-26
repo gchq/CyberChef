@@ -1,5 +1,6 @@
 {
   "src_folders": ["tests/browser"],
+  "exclude": ["tests/browser/browserUtils.js"],
   "output_folder": "tests/browser/output",
 
   "test_settings": {

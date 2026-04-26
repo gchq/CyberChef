@@ -103,3 +103,15 @@ export function hexadecimalSort(a, b) {
 
     return a.localeCompare(b);
 }
+
+/**
+ * Comparison operation for sorting by length
+ *
+ * @param {string} a
+ * @param {string} b
+ * @returns {number}
+ */
+export function lengthSort(a, b) {
+    return a.length - b.length;
+}
+

@@ -9,14 +9,12 @@ import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
-import jimplib from "jimp/es/index.js";
-const jimp = jimplib.default ? jimplib.default : jimplib;
+import { Jimp, JimpMime } from "jimp";
 
 /**
  * Invert Image operation
  */
 class InvertImage extends Operation {
-
     /**
      * InvertImage constructor
      */
@@ -45,7 +43,7 @@ class InvertImage extends Operation {
 
         let image;
         try {
-            image = await jimp.read(input);
+            image = await Jimp.read(input);
         } catch (err) {
             throw new OperationError(`Error loading image. (${err})`);
         }
@@ -55,10 +53,10 @@ class InvertImage extends Operation {
             image.invert();
 
             let imageBuffer;
-            if (image.getMIME() === "image/gif") {
-                imageBuffer = await image.getBufferAsync(jimp.MIME_PNG);
+            if (image.mime === "image/gif") {
+                imageBuffer = await image.getBuffer(JimpMime.png);
             } else {
-                imageBuffer = await image.getBufferAsync(jimp.AUTO);
+                imageBuffer = await image.getBuffer(image.mime);
             }
             return imageBuffer.buffer;
         } catch (err) {
@@ -82,7 +80,6 @@ class InvertImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default InvertImage;

@@ -5,16 +5,14 @@
  */
 
 import Operation from "../Operation.mjs";
-import otp from "otp";
-import ToBase32 from "./ToBase32.mjs";
+import * as OTPAuth from "otpauth";
 
 /**
  * Generate HOTP operation
  */
 class GenerateHOTP extends Operation {
-
     /**
-     * GenerateHOTP constructor
+     *
      */
     constructor() {
         super();
@@ -32,11 +30,6 @@ class GenerateHOTP extends Operation {
                 "value": ""
             },
             {
-                "name": "Key size",
-                "type": "number",
-                "value": 32
-            },
-            {
                 "name": "Code length",
                 "type": "number",
                 "value": 6
@@ -50,21 +43,26 @@ class GenerateHOTP extends Operation {
     }
 
     /**
-     * @param {ArrayBuffer} input
-     * @param {Object[]} args
-     * @returns {string}
+     *
      */
     run(input, args) {
-        const otpObj = otp({
-            name: args[0],
-            keySize: args[1],
-            codeLength: args[2],
-            secret: (new ToBase32).run(input, []).split("=")[0],
-        });
-        const counter = args[3];
-        return `URI: ${otpObj.hotpURL}\n\nPassword: ${otpObj.hotp(counter)}`;
-    }
+        const secretStr = new TextDecoder("utf-8").decode(input).trim();
+        const secret = secretStr ? secretStr.toUpperCase().replace(/\s+/g, "") : "";
 
+        const hotp = new OTPAuth.HOTP({
+            issuer: "",
+            label: args[0],
+            algorithm: "SHA1",
+            digits: args[1],
+            counter: args[2],
+            secret: OTPAuth.Secret.fromBase32(secret)
+        });
+
+        const uri = hotp.toString();
+        const code = hotp.generate();
+
+        return `URI: ${uri}\n\nPassword: ${code}`;
+    }
 }
 
 export default GenerateHOTP;

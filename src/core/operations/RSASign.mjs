@@ -60,7 +60,7 @@ class RSASign extends Operation {
             const privateKey = forge.pki.decryptRsaPrivateKey(key, password);
             // Generate message hash
             const md = MD_ALGORITHMS[mdAlgo].create();
-            md.update(input, "utf8");
+            md.update(input, "raw");
             // Sign message hash
             const sig = privateKey.sign(md);
             return sig;

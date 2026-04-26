@@ -27,17 +27,31 @@
 }
 
 .ingredients {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    grid-column-gap: 14px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    column-gap: 14px;
+    row-gap: 0;
 }
 
-.ingredients > div {
-    grid-column: 1 / span 3;
+.ing-very-wide {
+    flex: 4 400px;
 }
 
-.ingredients > div.inline {
-    grid-column: unset;
+.ing-wide {
+    flex: 3 200px;
+}
+
+.ing-medium {
+    flex: 2 120px;
+}
+
+.ing-short {
+    flex: 1 80px;
+}
+
+.ing-flexible {
+    flex-grow: 1;
 }
 
 .ingredients .form-group {
@@ -55,6 +69,10 @@ select.arg {
     min-width: 100px;
 }
 
+select.arg.form-control:not([size]):not([multiple]), select.custom-file-control:not([size]):not([multiple]) {
+    height: 100% !important;
+}
+
 textarea.arg {
     min-height: 74px;
     resize: vertical;
@@ -62,6 +80,11 @@ textarea.arg {
 
 div.toggle-string {
     flex: 1;
+}
+
+input.toggle-string {
+    border-top-right-radius: 0 !important;
+    height: 100%;
 }
 
 .operation [class^='bmd-label'],
@@ -160,7 +183,7 @@ div.toggle-string {
 }
 
 .input-group .form-control {
-    border-top-left-radius: 4px !important;
+    border-top-left-radius: 4px;
 }
 
 .input-group-append button {

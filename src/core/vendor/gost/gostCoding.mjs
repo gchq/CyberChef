@@ -2,7 +2,7 @@
  * Coding algorithms: Base64, Hex, Int16, Chars, BER and PEM
  * version 1.76
  * 2014-2016, Rudolf Nickolaev. All rights reserved.
- * 
+ *
  * Exported for CyberChef by mshwed [m@ttshwed.com]
  */
 
@@ -18,7 +18,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *    
+ *
  * THIS SOfTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES Of MERCHANTABILITY AND fITNESS fOR A PARTICULAR PURPOSE ARE
@@ -29,16 +29,16 @@
  * CAUSED AND ON ANY THEORY Of LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT Of THE USE
  * Of THIS SOfTWARE, EVEN If ADVISED Of THE POSSIBILITY OF SUCH DAMAGE.
- * 
+ *
  */
 
 import gostCrypto from './gostCrypto.mjs';
 
 /**
- * The Coding interface provides string converting methods: Base64, Hex, 
+ * The Coding interface provides string converting methods: Base64, Hex,
  * Int16, Chars, BER and PEM
  * @class GostCoding
- * 
+ *
  */ // <editor-fold defaultstate="collapsed">
 var root = {};
 var DataError = Error;
@@ -48,7 +48,7 @@ var Date = Date;
 function buffer(d) {
     if (d instanceof CryptoOperationData)
         return d;
-    else if (d && d.buffer && d.buffer instanceof CryptoOperationData)
+    else if (d && d?.buffer instanceof CryptoOperationData)
         return d.byteOffset === 0 && d.byteLength === d.buffer.byteLength ?
                 d.buffer : new Uint8Array(new Uint8Array(d, d.byteOffset, d.byteLength)).buffer;
     else
@@ -60,13 +60,13 @@ function GostCoding() {
 
 /**
  * BASE64 conversion
- * 
+ *
  * @class GostCoding.Base64
  */
 var Base64 = {// <editor-fold defaultstate="collapsed">
     /**
      * Base64.decode convert BASE64 string s to CryptoOperationData
-     * 
+     *
      * @memberOf GostCoding.Base64
      * @param {String} s BASE64 encoded string value
      * @returns {CryptoOperationData} Binary decoded data
@@ -100,7 +100,7 @@ var Base64 = {// <editor-fold defaultstate="collapsed">
     },
     /**
      * Base64.encode(data) convert CryptoOperationData data to BASE64 string
-     * 
+     *
      * @memberOf GostCoding.Base64
      * @param {CryptoOperationData} data Bynary data for encoding
      * @returns {String} BASE64 encoded data
@@ -129,7 +129,7 @@ var Base64 = {// <editor-fold defaultstate="collapsed">
 
 /**
  * BASE64 conversion
- * 
+ *
  * @memberOf GostCoding
  * @insnance
  * @type GostCoding.Base64
@@ -139,7 +139,7 @@ GostCoding.prototype.Base64 = Base64;
 /**
  * Text string conversion <br>
  * Methods support charsets: ascii, win1251, utf8, utf16 (ucs2, unicode), utf32 (ucs4)
- * 
+ *
  * @class GostCoding.Chars
  */
 var Chars = (function () { // <editor-fold defaultstate="collapsed">
@@ -162,8 +162,8 @@ var Chars = (function () { // <editor-fold defaultstate="collapsed">
 
     return {
         /**
-         * Chars.decode(s, charset) convert string s with defined charset to CryptoOperationData 
-         * 
+         * Chars.decode(s, charset) convert string s with defined charset to CryptoOperationData
+         *
          * @memberOf GostCoding.Chars
          * @param {string} s Javascript string
          * @param {string} charset Charset, default 'win1251'
@@ -236,7 +236,7 @@ var Chars = (function () { // <editor-fold defaultstate="collapsed">
         },
         /**
          * Chars.encode(data, charset) convert CryptoOperationData data to string with defined charset
-         * 
+         *
          * @memberOf GostCoding.Chars
          * @param {CryptoOperationData} data Binary data
          * @param {string} charset Charset, default win1251
@@ -250,15 +250,15 @@ var Chars = (function () { // <editor-fold defaultstate="collapsed">
                 if (charset === 'utf8') {
                     c = c >= 0xfc && c < 0xfe && i + 5 < n ? // six bytes
                             (c - 0xfc) * 1073741824 + (d[++i] - 0x80 << 24) + (d[++i] - 0x80 << 18) + (d[++i] - 0x80 << 12) + (d[++i] - 0x80 << 6) + d[++i] - 0x80
-                            : c >> 0xf8 && c < 0xfc && i + 4 < n ? // five bytes 
+                            : c >> 0xf8 && c < 0xfc && i + 4 < n ? // five bytes
                             (c - 0xf8 << 24) + (d[++i] - 0x80 << 18) + (d[++i] - 0x80 << 12) + (d[++i] - 0x80 << 6) + d[++i] - 0x80
-                            : c >> 0xf0 && c < 0xf8 && i + 3 < n ? // four bytes 
+                            : c >> 0xf0 && c < 0xf8 && i + 3 < n ? // four bytes
                             (c - 0xf0 << 18) + (d[++i] - 0x80 << 12) + (d[++i] - 0x80 << 6) + d[++i] - 0x80
-                            : c >= 0xe0 && c < 0xf0 && i + 2 < n ? // three bytes 
+                            : c >= 0xe0 && c < 0xf0 && i + 2 < n ? // three bytes
                             (c - 0xe0 << 12) + (d[++i] - 0x80 << 6) + d[++i] - 0x80
-                            : c >= 0xc0 && c < 0xe0 && i + 1 < n ? // two bytes 
+                            : c >= 0xc0 && c < 0xe0 && i + 1 < n ? // two bytes
                             (c - 0xc0 << 6) + d[++i] - 0x80
-                            : c; // one byte 
+                            : c; // one byte
                 } else if (charset === 'unicode' || charset === 'ucs2' || charset === 'utf16') {
                     c = (c << 8) + d[++i];
                     if (c >= 0xD800 && c < 0xE000) {
@@ -289,7 +289,7 @@ var Chars = (function () { // <editor-fold defaultstate="collapsed">
 
 /**
  * Text string conversion
- * 
+ *
  * @memberOf GostCoding
  * @insnance
  * @type GostCoding.Chars
@@ -298,20 +298,20 @@ GostCoding.prototype.Chars = Chars;
 
 /**
  * HEX conversion
- * 
+ *
  * @class GostCoding.Hex
  */
 var Hex = {// <editor-fold defaultstate="collapsed">
     /**
      * Hex.decode(s, endean) convert HEX string s to CryptoOperationData in endean mode
-     * 
+     *
      * @memberOf GostCoding.Hex
      * @param {string} s Hex encoded string
      * @param {boolean} endean Little or Big Endean, default Little
      * @returns {CryptoOperationData} Decoded binary data
      */
     decode: function (s, endean) {
-        s = s.replace(/[^A-fa-f0-9]/g, '');
+        s = s.replace(/[^A-Fa-f0-9]/g, '');
         var n = Math.ceil(s.length / 2), r = new Uint8Array(n);
         s = (s.length % 2 > 0 ? '0' : '') + s;
         if (endean && ((typeof endean !== 'string') ||
@@ -325,8 +325,8 @@ var Hex = {// <editor-fold defaultstate="collapsed">
     },
     /**
      * Hex.encode(data, endean) convert CryptoOperationData data to HEX string in endean mode
-     * 
-     * @memberOf GostCoding.Hex 
+     *
+     * @memberOf GostCoding.Hex
      * @param {CryptoOperationData} data Binary data
      * @param {boolean} endean Little/Big Endean, default Little
      * @returns {string} Hex decoded string
@@ -358,19 +358,19 @@ GostCoding.prototype.Hex = Hex;
 
 /**
  * String hex-encoded integer conversion
- * 
+ *
  * @class GostCoding.Int16
  */
 var Int16 = {// <editor-fold defaultstate="collapsed">
     /**
      * Int16.decode(s) convert hex big insteger s to CryptoOperationData
-     * 
-     * @memberOf GostCoding.Int16 
-     * @param {string} s Int16 string 
+     *
+     * @memberOf GostCoding.Int16
+     * @param {string} s Int16 string
      * @returns {CryptoOperationData} Decoded binary data
      */
     decode: function (s) {
-        s = (s || '').replace(/[^\-A-fa-f0-9]/g, '');
+        s = (s || '').replace(/[^\-A-Fa-f0-9]/g, '');
         if (s.length === 0)
             s = '0';
         // Signature
@@ -403,7 +403,7 @@ var Int16 = {// <editor-fold defaultstate="collapsed">
     },
     /**
      * Int16.encode(data) convert CryptoOperationData data to big integer hex string
-     * 
+     *
      * @memberOf GostCoding.Int16
      * @param {CryptoOperationData} data Binary data
      * @returns {string} Int16 encoded string
@@ -438,7 +438,7 @@ GostCoding.prototype.Int16 = Int16;
 
 /**
  * BER, DER, CER conversion
- * 
+ *
  * @class GostCoding.BER
  */
 var BER = (function () { // <editor-fold defaultstate="collapsed">
@@ -659,7 +659,7 @@ var BER = (function () { // <editor-fold defaultstate="collapsed">
                 case 0x1C: // UniversalString
                 case 0x1E: // BMPString
                     k = k || 0;
-                    // Split content on 1000 octet len parts 
+                    // Split content on 1000 octet len parts
                     var size = 1000;
                     var bytelen = 0, ba = [], offset = 0;
                     for (var i = k, n = content.length; i < n; i += size - k) {
@@ -777,7 +777,7 @@ var BER = (function () { // <editor-fold defaultstate="collapsed">
                 } while (buf & 0x80);
             }
 
-            // Read len        
+            // Read len
             buf = d[pos++];
             len = buf & 0x7f;
             if (len !== buf) {
@@ -979,7 +979,7 @@ var BER = (function () { // <editor-fold defaultstate="collapsed">
                             throw new DataError('Unrecognized time format "' + s + '" at offset ' + start);
                         if (shortYear) {
                             // Where YY is greater than or equal to 50, the year SHALL be interpreted as 19YY; and
-                            // Where YY is less than 50, the year SHALL be interpreted as 20YY                                
+                            // Where YY is less than 50, the year SHALL be interpreted as 20YY
                             m[1] = +m[1];
                             m[1] += (m[1] < 50) ? 2000 : 1900;
                         }
@@ -1031,12 +1031,12 @@ var BER = (function () { // <editor-fold defaultstate="collapsed">
          *   <li>CryptoOperationData - OCTET STRING</li>
          * </ul>
          * SEQUENCE or SET arrays recursively encoded for each item.<br>
-         * OCTET STRING and BIT STRING can presents as array with one item. 
+         * OCTET STRING and BIT STRING can presents as array with one item.
          * It means encapsulates encoding for child element.<br>
-         * 
-         * If CONTEXT or APPLICATION classes item presents as array with one 
+         *
+         * If CONTEXT or APPLICATION classes item presents as array with one
          * item we use EXPLICIT encoding for element, else IMPLICIT encoding.<br>
-         * 
+         *
          * @memberOf GostCoding.BER
          * @param {Object} object Object to encoding
          * @param {string} format Encoding rule: 'DER' or 'CER', default 'DER'
@@ -1048,7 +1048,7 @@ var BER = (function () { // <editor-fold defaultstate="collapsed">
         },
         /**
          * BER.encode(data) convert ASN.1 format CryptoOperationData data to javascript object<br><br>
-         * 
+         *
          * Conversion rules to javascript object:
          *  <ul>
          *      <li>BOOLEAN - Boolean object</li>
@@ -1057,7 +1057,7 @@ var BER = (function () { // <editor-fold defaultstate="collapsed">
          *      <li>OCTET STRING - Hex encoded string or Array with one item in case of incapsulates encoding</li>
          *      <li>OBJECT IDENTIFIER - String with object identifier</li>
          *      <li>SEQUENCE, SET - Array of encoded items</li>
-         *      <li>UTF8String, NumericString, PrintableString, TeletexString, VideotexString, 
+         *      <li>UTF8String, NumericString, PrintableString, TeletexString, VideotexString,
          *          IA5String, GraphicString, VisibleString, GeneralString, UniversalString,
          *          BMPString - encoded String</li>
          *      <li>UTCTime, GeneralizedTime - Date</li>
@@ -1087,7 +1087,7 @@ GostCoding.prototype.BER = BER;
 var PEM = {// <editor-fold defaultstate="collapsed">
     /**
      * PEM.encode(data, name) encode CryptoOperationData to PEM format with name label
-     * 
+     *
      * @memberOf GostCoding.PEM
      * @param {(Object|CryptoOperationData)} data Java script object or BER-encoded binary data
      * @param {string} name Name of PEM object: 'certificate', 'private key' etc.
@@ -1100,7 +1100,7 @@ var PEM = {// <editor-fold defaultstate="collapsed">
     },
     /**
      * PEM.decode(s, name, deep) decode PEM format s labeled name to CryptoOperationData or javascript object in according to deep parameter
-     * 
+     *
      * @memberOf GostCoding.PEM
      * @param {string} s PEM encoded string
      * @param {string} name Name of PEM object: 'certificate', 'private key' etc.
@@ -1151,7 +1151,7 @@ GostCoding.prototype.PEM = PEM;
 if (gostCrypto)
     /**
      * Coding algorithms: Base64, Hex, Int16, Chars, BER and PEM
-     * 
+     *
      * @memberOf gostCrypto
      * @type GostCoding
      */

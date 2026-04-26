@@ -23,11 +23,10 @@ class DishString extends DishType {
 
     /**
      * convert the given value from a ArrayBuffer
-     * @param {boolean} notUTF8
      */
-    static fromArrayBuffer(notUTF8) {
+    static fromArrayBuffer() {
         DishString.checkForValue(this.value);
-        this.value = this.value ? Utils.arrayBufferToStr(this.value, !notUTF8) : "";
+        this.value = this.value ? Utils.arrayBufferToStr(this.value) : "";
     }
 }
 

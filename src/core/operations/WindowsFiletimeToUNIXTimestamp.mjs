@@ -52,7 +52,10 @@ class WindowsFiletimeToUNIXTimestamp extends Operation {
         if (format === "Hex (little endian)") {
             // Swap endianness
             let result = "";
-            for (let i = input.length - 2; i >= 0; i -= 2) {
+            if (input.length % 2 !== 0) {
+                result += input.charAt(input.length - 1);
+            }
+            for (let i = input.length - input.length % 2 - 2; i >= 0; i -= 2) {
                 result += input.charAt(i);
                 result += input.charAt(i + 1);
             }
