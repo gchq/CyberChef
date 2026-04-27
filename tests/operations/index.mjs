@@ -72,6 +72,7 @@ import "./tests/ExtractAudioMetadata.mjs";
 import "./tests/ExtractEmailAddresses.mjs";
 import "./tests/ExtractHashes.mjs";
 import "./tests/ExtractIPAddresses.mjs";
+import "./tests/Fernet.mjs";
 import "./tests/Float.mjs";
 import "./tests/FileTree.mjs";
 import "./tests/FletcherChecksum.mjs";
