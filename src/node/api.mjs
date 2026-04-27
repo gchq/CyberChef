@@ -327,7 +327,7 @@ export function help(input) {
 export async function bake(input, recipeConfig) {
     const recipe = new NodeRecipe(recipeConfig);
     const dish = ensureIsDish(input);
-    return await recipe.execute(dish); 
+    return await recipe.execute(dish);
 }
 
 
