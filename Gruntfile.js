@@ -89,6 +89,7 @@ module.exports = function (grunt) {
     const compileYear = grunt.template.today("UTC:yyyy"),
         compileTime = grunt.template.today("UTC:dd/mm/yyyy HH:MM:ss") + " UTC",
         pkg = grunt.file.readJSON("package.json"),
+        downloadZipFilename = `CyberChef_${process.env.GITHUB_SHA || `v${pkg.version}`}.zip`,
         webpackConfig = require("./webpack.config.js"),
         BUILD_CONSTANTS = {
             COMPILE_YEAR: JSON.stringify(compileYear),
@@ -130,6 +131,7 @@ module.exports = function (grunt) {
                         compileYear: compileYear,
                         compileTime: compileTime,
                         version: pkg.version,
+                        downloadZipFilename: downloadZipFilename,
                         minify: {
                             removeComments: true,
                             collapseWhitespace: true,
@@ -245,7 +247,7 @@ module.exports = function (grunt) {
                     "!build/prod/index.html",
                     "!build/prod/BundleAnalyzerReport.html",
                 ],
-                dest: `build/prod/CyberChef_v${pkg.version}.zip`
+                dest: `build/prod/${downloadZipFilename}`
             }
         },
         connect: {
@@ -333,12 +335,12 @@ module.exports = function (grunt) {
                     switch (process.platform) {
                         case "darwin":
                             return chainCommands([
-                                `shasum -a 256 build/prod/CyberChef_v${pkg.version}.zip | awk '{print $1;}' > build/prod/sha256digest.txt`,
+                                `shasum -a 256 build/prod/${downloadZipFilename} | awk '{print $1;}' > build/prod/sha256digest.txt`,
                                 `sed -i '' -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`
                             ]);
                         default:
                             return chainCommands([
-                                `sha256sum build/prod/CyberChef_v${pkg.version}.zip | awk '{print $1;}' > build/prod/sha256digest.txt`,
+                                `sha256sum build/prod/${downloadZipFilename} | awk '{print $1;}' > build/prod/sha256digest.txt`,
                                 `sed -i -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`
                             ]);
                     }
