@@ -467,7 +467,8 @@
             "Luhn Checksum",
             "CRC Checksum",
             "TCP/IP Checksum",
-            "XOR Checksum"
+            "XOR Checksum",
+            "Parity Bit"
         ]
     },
     {
