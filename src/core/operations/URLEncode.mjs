@@ -52,7 +52,7 @@ class URLEncode extends Operation {
     encodeBytes(bytes, encodeAll) {
         const safeChars = encodeAll ?
             /^[A-Za-z0-9]$/ :
-            /^[A-Za-z0-9:/?#\[\]@!$&'\(\)*+,;=%]$/;
+            /^[A-Za-z0-9:/?#[\]@!$&'()*+,;=%]$/;
 
         let output = "";
 
