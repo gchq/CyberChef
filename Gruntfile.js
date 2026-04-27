@@ -89,7 +89,8 @@ module.exports = function (grunt) {
     const compileYear = grunt.template.today("UTC:yyyy"),
         compileTime = grunt.template.today("UTC:dd/mm/yyyy HH:MM:ss") + " UTC",
         pkg = grunt.file.readJSON("package.json"),
-        downloadZipFilename = `CyberChef_${process.env.GITHUB_SHA || `v${pkg.version}`}.zip`,
+        version = process.env.GITHUB_SHA || `v${pkg.version}`,
+        downloadZipFilename = `CyberChef_${version}.zip`,
         webpackConfig = require("./webpack.config.js"),
         BUILD_CONSTANTS = {
             COMPILE_YEAR: JSON.stringify(compileYear),
@@ -130,7 +131,8 @@ module.exports = function (grunt) {
                         chunks: ["main"],
                         compileYear: compileYear,
                         compileTime: compileTime,
-                        version: pkg.version,
+                        version: version,
+                        latestReleaseVersion: pkg.version,
                         downloadZipFilename: downloadZipFilename,
                         minify: {
                             removeComments: true,
