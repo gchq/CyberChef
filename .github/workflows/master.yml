@@ -26,8 +26,7 @@ jobs:
 
       - name: Install
         run: |
-          export DETECT_CHROMEDRIVER_VERSION=true
-          npm install
+          npm ci
           npm run setheapsize
 
       - name: Lint
