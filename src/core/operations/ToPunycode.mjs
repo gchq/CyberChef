@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import punycode from "punycode";
+import punycode from "punycode.js";
 
 /**
  * To Punycode operation
