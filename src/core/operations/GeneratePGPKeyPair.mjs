@@ -12,6 +12,7 @@ import { getSubkeySize, ASP } from "../lib/PGP.mjs";
 import { cryptNotice } from "../lib/Crypt.mjs";
 import * as es6promisify from "es6-promisify";
 const promisify = es6promisify.default ? es6promisify.default.promisify : es6promisify.promisify;
+const KEY_FLAGS = kbpgp.const.openpgp.key_flags;
 
 
 /**
@@ -73,11 +74,11 @@ class GeneratePGPKeyPair extends Operation {
         if (name) userIdentifier += name;
         if (email) userIdentifier += ` <${email}>`;
 
-        let flags = kbpgp.const.openpgp.certify_keys;
-        flags |= kbpgp.const.openpgp.sign_data;
-        flags |= kbpgp.const.openpgp.auth;
-        flags |= kbpgp.const.openpgp.encrypt_comm;
-        flags |= kbpgp.const.openpgp.encrypt_storage;
+        let flags = KEY_FLAGS.certify_keys;
+        flags |= KEY_FLAGS.sign_data;
+        flags |= KEY_FLAGS.auth;
+        flags |= KEY_FLAGS.encrypt_comm;
+        flags |= KEY_FLAGS.encrypt_storage;
 
         const keyGenerationOptions = {
             userid: userIdentifier,
@@ -89,11 +90,11 @@ class GeneratePGPKeyPair extends Operation {
             },
             subkeys: [{
                 "nbits": getSubkeySize(keySize),
-                "flags": kbpgp.const.openpgp.sign_data,
+                "flags": KEY_FLAGS.sign_data,
                 "expire_in": 86400 * 365 * 8
             }, {
                 "nbits": getSubkeySize(keySize),
-                "flags": kbpgp.const.openpgp.encrypt_comm | kbpgp.const.openpgp.encrypt_storage,
+                "flags": KEY_FLAGS.encrypt_comm | KEY_FLAGS.encrypt_storage,
                 "expire_in": 86400 * 365 * 2
             }],
             asp: ASP
