@@ -114,6 +114,7 @@ import "./tests/LuhnChecksum.mjs";
 import "./tests/LZNT1Decompress.mjs";
 import "./tests/LZString.mjs";
 import "./tests/Magic.mjs";
+import "./tests/Median.mjs";
 import "./tests/Media.mjs";
 import "./tests/MIMEDecoding.mjs";
 import "./tests/Modhex.mjs";
