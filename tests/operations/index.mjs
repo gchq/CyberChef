@@ -157,6 +157,7 @@ import "./tests/SeqUtils.mjs";
 import "./tests/SetDifference.mjs";
 import "./tests/SetIntersection.mjs";
 import "./tests/SetUnion.mjs";
+import "./tests/ShowBase64Offsets.mjs";
 import "./tests/Shuffle.mjs";
 import "./tests/SIGABA.mjs";
 import "./tests/SM2.mjs";

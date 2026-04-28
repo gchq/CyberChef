@@ -95,7 +95,11 @@ class ShowBase64Offsets extends Operation {
         }
 
         if (!showVariable) {
-            offset0 = staticSection;
+            // staticSection is derived from the input via toBase64 with a
+            // user-controlled alphabet; without escaping, a crafted alphabet
+            // (e.g. one beginning "<script>...") could land directly in the
+            // HTML output (#2344). Escape before reuse on this branch.
+            offset0 = Utils.escapeHtml(staticSection);
         }
 
 
@@ -125,7 +129,7 @@ class ShowBase64Offsets extends Operation {
         }
 
         if (!showVariable) {
-            offset1 = staticSection;
+            offset1 = Utils.escapeHtml(staticSection);
         }
 
         // Highlight offset 2
@@ -154,7 +158,7 @@ class ShowBase64Offsets extends Operation {
         }
 
         if (!showVariable) {
-            offset2 = staticSection;
+            offset2 = Utils.escapeHtml(staticSection);
         }
 
         return (showVariable ? "Characters highlighted in <span class='hl5'>green</span> could change if the input is surrounded by more data." +
