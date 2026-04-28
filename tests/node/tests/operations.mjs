@@ -532,6 +532,12 @@ Top Drawer`, {
         assert.strictEqual(chef.fromDecimal("72 101 108 108 111").toString(), "Hello");
     }),
 
+    it("From decimal with Auto delimiter", () => {
+        assert.strictEqual(chef.fromDecimal("72,101,108,108,111").toString(), "Hello");
+        assert.strictEqual(chef.fromDecimal("72:101:108:108:111").toString(), "Hello");
+        assert.strictEqual(chef.fromDecimal("72;101;108;108;111").toString(), "Hello");
+    }),
+
     it("From hex", () => {
         assert.strictEqual(chef.fromHex("52 69 6e 67 20 41 6e 79 20 42 65 6c 6c 73 3f").toString(), "Ring Any Bells?");
     }),

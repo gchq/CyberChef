@@ -24,9 +24,9 @@ import Utils from "../Utils.mjs";
  * fromDecimal("10:20:30", "Colon");
  */
 export function fromDecimal(data, delim="Auto") {
-    delim = Utils.charRep(delim);
+    const delimRegex = delim === "Auto" ? /[^\d-]+/ : Utils.charRep(delim);
     const output = [];
-    let byteStr = data.split(delim);
+    let byteStr = data.split(delimRegex);
     if (byteStr[byteStr.length-1] === "")
         byteStr = byteStr.slice(0, byteStr.length-1);
 
