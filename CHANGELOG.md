@@ -13,6 +13,22 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+## [11.0.0] - 2026-04-28
+- Revert sitemap to v8.0.X to fix build/deploy on master [@GCHQDeveloper581] | [#2348]
+- Node version update from 22 to 24 [@lzandman] [@GCHQDeveloper581] | [#2347]
+- Fix XSS in Show Base64 offsets [@C85297] | [#2346]
+- Make compatible with node >=22 [@GCHQDeveloper581] | [#2273]
+- Fix(node): enable asynchronous operation support in Node.js API [@engin0223] [@GCHQDeveloper581] | [#2342]
+- Feature: Change to nginx-unprivileged image for better kubernetes support [@hsolberg] | [#1922]
+
+Breaking changes:
+- Minimum supported node version - now v24 (was v16)
+- Change of exported port on Docker Container - now 8080 (was 80)
+- Node API now exports "bake" and "execute" functions as async.
+
+<details>
+    <summary>Click to expand v10 minor versions</summary>
+
 ### [10.24.0] - 2026-04-27
 - Update CONTRIBUTING.md [@GCHQDeveloper581] | [#2333]
 - Fix, and link, Fernet tests [@GCHQDeveloper581] | [#2335]
@@ -276,6 +292,8 @@ All major and minor version changes will be documented in this file. Details of 
 ### [10.1.0] - 2023-03-23
 - Added 'Levenshtein Distance' operation [@mikecat] | [#1498]
 - Added 'Swap case' operation [@mikecat] | [#1499]
+
+</details>
 
 ## [10.0.0] - 2023-03-22
 - [Full details explained here](https://github.com/gchq/CyberChef/wiki/Character-encoding,-EOL-separators,-and-editor-features)
@@ -620,6 +638,7 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[11.0.0]: https://github.com/gchq/CyberChef/releases/tag/v11.0.0
 [10.24.0]: https://github.com/gchq/CyberChef/releases/tag/v10.24.0
 [10.23.0]: https://github.com/gchq/CyberChef/releases/tag/v10.23.0
 [10.22.0]: https://github.com/gchq/CyberChef/releases/tag/v10.22.0
@@ -901,6 +920,9 @@ All major and minor version changes will be documented in this file. Details of 
 [@BjoernAkAManf]: https://github.com/BjoernAkAManf
 [@ko80240]: https://github.com/ko80240
 [@BigYellowHammer]: https://github.com/BigYellowHammer
+[@hsolberg]: https://github.com/hsolberg
+[@lzandman]: https://github.com/lzandman
+[@engin0223]: https://github.com/engin0223
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
@@ -1192,4 +1214,10 @@ All major and minor version changes will be documented in this file. Details of 
 [#2315]: https://github.com/gchq/CyberChef/pull/2315
 [#2313]: https://github.com/gchq/CyberChef/pull/2313
 [#2311]: https://github.com/gchq/CyberChef/pull/2311
+[#2348]: https://github.com/gchq/CyberChef/pull/2348
+[#2347]: https://github.com/gchq/CyberChef/pull/2347
+[#2346]: https://github.com/gchq/CyberChef/pull/2346
+[#2273]: https://github.com/gchq/CyberChef/pull/2273
+[#2342]: https://github.com/gchq/CyberChef/pull/2342
+[#1922]: https://github.com/gchq/CyberChef/pull/1922
 
