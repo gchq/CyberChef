@@ -27,12 +27,11 @@ jobs:
       - name: Set node version
         uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
 
       - name: Install
         run: |
-          export DETECT_CHROMEDRIVER_VERSION=true
           npm ci
           npm run setheapsize
 
@@ -107,7 +106,7 @@ jobs:
       - name: Set node version
         uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
 
       - name: Install
@@ -115,12 +114,6 @@ jobs:
 
       - name: Create machine generated files
         run: npm run node
-
-      - name: Reset node version ready for publish
-        uses: actions/setup-node@v6
-        with:
-          node-version: ^24.5
-          registry-url: "https://registry.npmjs.org"
 
       - name: Publish to NPM
         run: npm publish
