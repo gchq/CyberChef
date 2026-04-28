@@ -28,6 +28,8 @@ class HTMLOperation {
 
         this.name        = name;
         this.description = config.description;
+        this.inlineHelp  = config.inlineHelp || "";
+        this.testDataSamples = config.testDataSamples || [];
         this.infoURL     = config.infoURL;
         this.manualBake  = config.manualBake || false;
         this.config      = config;
@@ -80,7 +82,19 @@ class HTMLOperation {
      * @returns {string}
      */
     toFullHtml() {
-        let html = `<div class="op-title">${Utils.escapeHtml(this.name)}</div>
+        let html = `<div class="op-title">${Utils.escapeHtml(this.name)}</div>`;
+
+        if (this.inlineHelp) {
+            html += `<div class="op-inline-help">${this.inlineHelp}</div>`;
+        }
+
+        if (this.testDataSamples.length) {
+            html += `<div class="op-test-data">
+                <button type="button" class="btn btn-sm btn-secondary populate-test-data">Populate test data</button>
+            </div>`;
+        }
+
+        html += `
         <div class="ingredients">`;
 
         for (let i = 0; i < this.ingList.length; i++) {
