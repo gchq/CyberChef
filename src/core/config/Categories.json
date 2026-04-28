@@ -329,6 +329,7 @@
             "Find / Replace",
             "Regular expression",
             "Fuzzy Match",
+            "Generate Systemd Unit",
             "Offset checker",
             "Hamming Distance",
             "Levenshtein Distance",
