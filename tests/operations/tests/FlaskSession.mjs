@@ -14,15 +14,18 @@ const validTokenSha256 = "eyJyb2xlIjoic3VwZXJ1c2VyIiwidXNlciI6ImFkbWluIn0.aab3Ew
 const validKey = "mysecretkey";
 const wrongKey = "notTheKey";
 
-const outputObject = {
-    user: "admin",
-    role: "superuser",
-};
+const outputObject = `{
+    "role": "superuser",
+    "user": "admin"
+}`;
 
-const outputVerify = {
-    valid: true,
-    payload: outputObject,
-};
+const outputVerify = `{
+    "valid": true,
+    "payload": {
+        "role": "superuser",
+        "user": "admin"
+    }
+}`;
 
 TestRegister.addTests([
     {
