@@ -274,6 +274,6 @@ export default ${moduleName};
 4. Write your operation test code in ${colors.green(testFilename)}
 5. Write tests in ${colors.green("tests/operations/tests/")}
 6. Run ${colors.cyan("npm run lint")} and ${colors.cyan("npm run test")}
-7. Submit a Pull Request to get your operation aldded to the official CyberChef repository.`);
+7. Submit a Pull Request to get your operation added to the official CyberChef repository.`);
 
 });
