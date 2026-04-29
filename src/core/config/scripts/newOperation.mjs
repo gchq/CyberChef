@@ -155,12 +155,12 @@ import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
-        name: " ${moduleName}: test",
+        name: "${result.opName}: test",
         input: "Example input",
         expectedOutput: "Expected output",
         recipeConfig: [
             {
-                op: " ${moduleName}",
+                op: "${result.opName}",
                 args: [],
             },
         ],
