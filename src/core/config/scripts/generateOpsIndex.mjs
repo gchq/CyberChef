@@ -83,6 +83,8 @@ import {
     logTestReport,
 } from "../lib/utils.mjs";
 
+import "../lib/wasmFetchPolyfill.mjs";
+
 import TestRegister from "../lib/TestRegister.mjs";
 `;
 
