@@ -7,8 +7,9 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
-import { blake3 } from "hashes-grs/blake3";
-import { bytesToHex } from "hashes-grs/utils";
+import { blake3 } from "@noble/hashes/blake3.js";
+import { bytesToHex } from "@noble/hashes/utils.js";
+
 /**
  * BLAKE3 operation
  */
@@ -47,6 +48,7 @@ class BLAKE3 extends Operation {
         const key = args[1];
         const size = args[0];
         const opts = { dkLen: size };
+        const inputBytes = new Uint8Array(Utils.strToArrayBuffer(input));
         if (key !== "") {
             const keyBytes = new Uint8Array(Utils.strToArrayBuffer(key));
             if (keyBytes.length !== 32) {
@@ -54,7 +56,7 @@ class BLAKE3 extends Operation {
             }
             opts.key = keyBytes;
         }
-        return bytesToHex(blake3(input, opts));
+        return bytesToHex(blake3(inputBytes, opts));
     }
 
 }

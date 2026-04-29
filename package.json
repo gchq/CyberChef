@@ -104,7 +104,7 @@
     "avsc": "^5.7.9",
     "bcryptjs": "^2.4.3",
     "bignumber.js": "^9.3.1",
-    "hashes-grs": "1.2.0",
+    "@noble/hashes": "2.2.0",
     "blakejs": "^1.2.1",
     "bootstrap": "4.6.2",
     "bootstrap-colorpicker": "^3.4.0",
