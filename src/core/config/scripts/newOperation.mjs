@@ -29,7 +29,7 @@ const testDir = path.join(process.cwd() + "/tests/operations/tests/");
 const configFile = "/.gitconfig";
 let gitUserEmail, gitUserName;
 // gitconfig in root is better than global one
-let gitConfig = process.cwd() + configFile;
+let gitConfig = process.cwd() + '.git/config';
 if (!fs.existsSync(gitConfig)) {
     gitConfig = process.env.HOME +  configFile;
 }
