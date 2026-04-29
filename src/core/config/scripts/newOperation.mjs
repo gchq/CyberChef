@@ -270,10 +270,8 @@ export default ${moduleName};
     console.log(`\nNext steps:
 1. Add your operation to ${colors.green("src/core/config/Categories.json")}
 2. Write your operation code in ${colors.green(filename)}
-3. Add your operation to ${colors.green("tests/operations/index.mjs")}
-4. Write your operation test code in ${colors.green(testFilename)}
-5. Write tests in ${colors.green("tests/operations/tests/")}
-6. Run ${colors.cyan("npm run lint")} and ${colors.cyan("npm run test")}
-7. Submit a Pull Request to get your operation added to the official CyberChef repository.`);
+3. Write your operation test code in ${colors.green(testFilename)}
+4. Run ${colors.cyan("npm run lint")} and ${colors.cyan("npm run test")}
+5. Submit a Pull Request to get your operation added to the official CyberChef repository.`);
 
 });
