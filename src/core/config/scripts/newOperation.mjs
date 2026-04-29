@@ -30,7 +30,7 @@ const configFile = "/.gitconfig";
 let gitUserEmail, gitUserName;
 // gitconfig in root is better than global one
 let gitConfig = process.cwd() + configFile;
-if (!fs.existsSync()) {
+if (!fs.existsSync(gitConfig)) {
     gitConfig = process.env.HOME +  configFile;
 }
 // get user settings from git
