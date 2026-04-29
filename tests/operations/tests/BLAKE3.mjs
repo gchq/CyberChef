@@ -61,7 +61,6 @@ TestRegister.addTests([
                 "args": [16390, ""] }
         ]
     },
-
     {
         name: "BLAKE3: 16390 - key test",
         input: "test",
