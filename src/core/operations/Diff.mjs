@@ -57,6 +57,11 @@ class Diff extends Operation {
                 "type": "boolean",
                 "value": false,
                 "hint": "Relevant for word and line"
+            },
+            {
+                "name": "Show +/- notation",
+                "type": "boolean",
+                "value": false
             }
         ];
     }
@@ -73,7 +78,8 @@ class Diff extends Operation {
                 showAdded,
                 showRemoved,
                 showSubtraction,
-                ignoreWhitespace
+                ignoreWhitespace,
+                showNotation
             ] = args,
             samples = input.split(sampleDelim);
         let output = "",
@@ -118,12 +124,23 @@ class Diff extends Operation {
         }
 
         for (let i = 0; i < diff.length; i++) {
-            if (diff[i].added) {
-                if (showAdded) output += "<ins>" + Utils.escapeHtml(diff[i].value) + "</ins>";
-            } else if (diff[i].removed) {
-                if (showRemoved) output += "<del>" + Utils.escapeHtml(diff[i].value) + "</del>";
-            } else if (!showSubtraction) {
-                output += Utils.escapeHtml(diff[i].value);
+            if (showNotation) {
+                const escapedValue = Utils.escapeHtml(diff[i].value);
+                if (diff[i].added) {
+                    if (showAdded) output += "+ " + escapedValue;
+                } else if (diff[i].removed) {
+                    if (showRemoved) output += "- " + escapedValue;
+                } else if (!showSubtraction) {
+                    output += "  " + escapedValue;
+                }
+            } else {
+                if (diff[i].added) {
+                    if (showAdded) output += "<ins>" + Utils.escapeHtml(diff[i].value) + "</ins>";
+                } else if (diff[i].removed) {
+                    if (showRemoved) output += "<del>" + Utils.escapeHtml(diff[i].value) + "</del>";
+                } else if (!showSubtraction) {
+                    output += Utils.escapeHtml(diff[i].value);
+                }
             }
         }
 
