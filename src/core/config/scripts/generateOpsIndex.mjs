@@ -89,7 +89,7 @@ import TestRegister from "../lib/TestRegister.mjs";
 `;
 
 testObjs.forEach(obj => {
-    if (obj !== 'SplitColourChannels')
+    if (obj !== "SplitColourChannels")
         code += `import "./tests/${obj}.mjs";\n`;
     else
         code += `// Cannot test operations that use the File type yet
@@ -121,5 +121,3 @@ fs.writeFileSync(
     code
 );
 console.log("Written operation tests index.");
-
-

@@ -29,7 +29,7 @@ const testDir = path.join(process.cwd() + "/tests/operations/tests/");
 const configFile = "/.gitconfig";
 let gitUserEmail, gitUserName;
 // gitconfig in root is better than global one
-let gitConfig = process.cwd() + '/.git/config';
+let gitConfig = process.cwd() + "/.git/config";
 if (!fs.existsSync(gitConfig)) {
     gitConfig = process.env.HOME +  configFile;
 }
@@ -38,7 +38,7 @@ if (fs.existsSync(gitConfig)) {
     const config = iniparser.parseSync(gitConfig);
     if ("user" in config) {
         if ("email" in config.user) gitUserEmail = config.user.email;
-        if ("name" in config.user) gitUserName = config.user.name; 
+        if ("name" in config.user) gitUserName = config.user.name;
     }
 }
 
@@ -145,7 +145,7 @@ prompt.get(schema, (err, result) => {
 
     const testTemplate = `/**
 * ${moduleName} tests
-*    
+*
 * @author ${result.authorName} [${result.authorEmail}]
 * @copyright Crown Copyright ${(new Date()).getFullYear()}
 * @license Apache-2.0
