@@ -87,12 +87,14 @@ import TestRegister from "../lib/TestRegister.mjs";
 `;
 
 testObjs.forEach(obj => {
-    code += `import "./tests/${obj}.mjs";\n`;
+    if (obj !== 'SplitColourChannels')
+        code += `import "./tests/${obj}.mjs";\n`;
+    else
+        code += `// Cannot test operations that use the File type yet
+// import "./tests/SplitColourChannels.mjs";\n`;
 });
 
 code += `
-// Cannot test operations that use the File type yet
-// import "./tests/SplitColourChannels.mjs";
 
 const testStatus = {
     allTestsPassing: true,
