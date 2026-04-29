@@ -47,7 +47,7 @@ TestRegister.addTests([
     {
         name: "Fernet Encrypt: no input",
         input: "",
-        expectedMatch: /^gAAAAABce-[\w-]+={0,2}$/,
+        expectedMatch: /^gAAA[\w-]+={0,2}$/,
         recipeConfig: [
             {
                 op: "Fernet Encrypt",
@@ -69,12 +69,27 @@ TestRegister.addTests([
     {
         name: "Fernet Encrypt: valid arguments",
         input: "This is a secret message.\n",
-        expectedMatch: /^gAAAAABce-[\w-]+={0,2}$/,
+        expectedMatch: /^gAAA[\w-]+={0,2}$/,
         recipeConfig: [
             {
                 op: "Fernet Encrypt",
                 args: ["MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="]
             }
+        ],
+    },
+    {
+        name: "Fernet Encrypt/Decrypt: round trip",
+        input: "This is a secret message.\n",
+        expectedOutput: "This is a secret message.\n",
+        recipeConfig: [
+            {
+                op: "Fernet Encrypt",
+                args: ["MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="]
+            },
+            {
+                op: "Fernet Decrypt",
+                args: ["MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI="]
+            },
         ],
     }
 ]);

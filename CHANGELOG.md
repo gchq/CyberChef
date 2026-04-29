@@ -13,6 +13,46 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+## [11.0.0] - 2026-04-28
+- Revert sitemap to v8.0.X to fix build/deploy on master [@GCHQDeveloper581] | [#2348]
+- Node version update from 22 to 24 [@lzandman] [@GCHQDeveloper581] | [#2347]
+- Fix XSS in Show Base64 offsets [@C85297] | [#2346]
+- Make compatible with node >=22 [@GCHQDeveloper581] | [#2273]
+- Fix(node): enable asynchronous operation support in Node.js API [@engin0223] [@GCHQDeveloper581] | [#2342]
+- Feature: Change to nginx-unprivileged image for better kubernetes support [@hsolberg] | [#1922]
+
+Breaking changes:
+- Minimum supported node version - now v24 (was v16)
+- Change of exported port on Docker Container - now 8080 (was 80)
+- Node API now exports "bake" and "execute" functions as async.
+
+<details>
+    <summary>Click to expand v10 minor versions</summary>
+
+### [10.24.0] - 2026-04-27
+- Update CONTRIBUTING.md [@GCHQDeveloper581] | [#2333]
+- Fix, and link, Fernet tests [@GCHQDeveloper581] | [#2335]
+- [#927] added parity bit operation [@j83305] | [#1036]
+- Feature md link blanks [@BjoernAkAManf] [@GCHQDeveloper581] | [#660]
+- Accessibility - Add support for screenreaders in operations search [@mattnotmitt] | [#1862]
+- Added metadata extraction for UUID strings. [@ko80240] | [#2322]
+- chore (deps): bump the patch-updates group with 6 updates  | [#2330]
+- chore (deps): bump @codemirror/search from 6.6.0 to 6.7.0  | [#2331]
+- (Feature) Improve CI [@GCHQDeveloper581] | [#2328]
+- Update dependabot.yml [@GCHQDeveloper581] | [#2326]
+- chore (deps): bump lodash, grunt-legacy-log and grunt-legacy-util  | [#2327]
+- chore (deps): bump the patch-updates group with 6 updates [@GCHQDeveloper581] | [#2323]
+- chore (deps): bump autoprefixer from 10.4.27 to 10.5.0  | [#2324]
+- chore (deps): bump dompurify from 3.3.3 to 3.4.0  | [#2321]
+- chore (deps): bump follow-redirects from 1.15.11 to 1.16.0  | [#2320]
+- Regular Expression operation email address regex: Support IPv4 domains [@C85297] [@GCHQDeveloper581] | [#2167]
+- Rewriting fixCryptoApiImports and fixSnackbarMarkup to js to make it OS agnostic [@BigYellowHammer] | [#2298]
+- chore (deps): bump basic-ftp from 5.2.1 to 5.2.2  | [#2317]
+- chore (deps): bump axios from 1.13.6 to 1.15.0  | [#2316]
+- chore (deps): bump webpack from 5.105.4 to 5.106.0  | [#2315]
+- chore (deps): bump basic-ftp from 5.2.0 to 5.2.1  | [#2313]
+- Update vulnerable dependencies [@GCHQDeveloper581] | [#2311]
+
 ### [10.23.0] - 2026-04-06
 - Properly escape HTML entities in sampleDelim to avoid XSS issue [@GCHQDeveloper581] | [#2307]
 - chore (deps): bump lodash from 4.17.23 to 4.18.1  | [#2304]
@@ -252,6 +292,8 @@ All major and minor version changes will be documented in this file. Details of 
 ### [10.1.0] - 2023-03-23
 - Added 'Levenshtein Distance' operation [@mikecat] | [#1498]
 - Added 'Swap case' operation [@mikecat] | [#1499]
+
+</details>
 
 ## [10.0.0] - 2023-03-22
 - [Full details explained here](https://github.com/gchq/CyberChef/wiki/Character-encoding,-EOL-separators,-and-editor-features)
@@ -596,6 +638,8 @@ All major and minor version changes will be documented in this file. Details of 
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[11.0.0]: https://github.com/gchq/CyberChef/releases/tag/v11.0.0
+[10.24.0]: https://github.com/gchq/CyberChef/releases/tag/v10.24.0
 [10.23.0]: https://github.com/gchq/CyberChef/releases/tag/v10.23.0
 [10.22.0]: https://github.com/gchq/CyberChef/releases/tag/v10.22.0
 [10.21.0]: https://github.com/gchq/CyberChef/releases/tag/v10.21.0
@@ -872,6 +916,13 @@ All major and minor version changes will be documented in this file. Details of 
 [@aby-jo]: https://github.com/aby-jo
 [@atsiv1]: https://github.com/atsiv1
 [@fjh1997]: https://github.com/fjh1997
+[@j83305]: https://github.com/j83305
+[@BjoernAkAManf]: https://github.com/BjoernAkAManf
+[@ko80240]: https://github.com/ko80240
+[@BigYellowHammer]: https://github.com/BigYellowHammer
+[@hsolberg]: https://github.com/hsolberg
+[@lzandman]: https://github.com/lzandman
+[@engin0223]: https://github.com/engin0223
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
@@ -1141,4 +1192,32 @@ All major and minor version changes will be documented in this file. Details of 
 [#2194]: https://github.com/gchq/CyberChef/pull/2194
 [#2193]: https://github.com/gchq/CyberChef/pull/2193
 [#2192]: https://github.com/gchq/CyberChef/pull/2192
+[#2333]: https://github.com/gchq/CyberChef/pull/2333
+[#2335]: https://github.com/gchq/CyberChef/pull/2335
+[#1036]: https://github.com/gchq/CyberChef/pull/1036
+[#660]: https://github.com/gchq/CyberChef/pull/660
+[#1862]: https://github.com/gchq/CyberChef/pull/1862
+[#2322]: https://github.com/gchq/CyberChef/pull/2322
+[#2330]: https://github.com/gchq/CyberChef/pull/2330
+[#2331]: https://github.com/gchq/CyberChef/pull/2331
+[#2328]: https://github.com/gchq/CyberChef/pull/2328
+[#2326]: https://github.com/gchq/CyberChef/pull/2326
+[#2327]: https://github.com/gchq/CyberChef/pull/2327
+[#2323]: https://github.com/gchq/CyberChef/pull/2323
+[#2324]: https://github.com/gchq/CyberChef/pull/2324
+[#2321]: https://github.com/gchq/CyberChef/pull/2321
+[#2320]: https://github.com/gchq/CyberChef/pull/2320
+[#2167]: https://github.com/gchq/CyberChef/pull/2167
+[#2298]: https://github.com/gchq/CyberChef/pull/2298
+[#2317]: https://github.com/gchq/CyberChef/pull/2317
+[#2316]: https://github.com/gchq/CyberChef/pull/2316
+[#2315]: https://github.com/gchq/CyberChef/pull/2315
+[#2313]: https://github.com/gchq/CyberChef/pull/2313
+[#2311]: https://github.com/gchq/CyberChef/pull/2311
+[#2348]: https://github.com/gchq/CyberChef/pull/2348
+[#2347]: https://github.com/gchq/CyberChef/pull/2347
+[#2346]: https://github.com/gchq/CyberChef/pull/2346
+[#2273]: https://github.com/gchq/CyberChef/pull/2273
+[#2342]: https://github.com/gchq/CyberChef/pull/2342
+[#1922]: https://github.com/gchq/CyberChef/pull/1922
 
