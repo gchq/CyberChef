@@ -11,6 +11,7 @@
  * @license Apache-2.0
  */
 
+import "../lib/wasmFetchPolyfill.mjs";
 import { setLongTestFailure, logTestReport } from "../lib/utils.mjs";
 
 import TestRegister from "../lib/TestRegister.mjs";
