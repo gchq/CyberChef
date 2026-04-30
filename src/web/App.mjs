@@ -466,6 +466,7 @@ class App {
             const favouriteCategory = new CCategoryLi(
                 this,
                 favCatConfig,
+                "app-ccatlist-favourites",
                 this.operations,
                 isExpanded,
                 true
@@ -912,6 +913,7 @@ class App {
         const categoryList = new CCategoryList(
             this,
             this.categories,
+            "app-ccatlist",
             this.operations,
             true
         );

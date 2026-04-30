@@ -6,7 +6,7 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 const glob = require("glob");
 const path = require("path");
 
-const nodeFlags = "--experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings --no-deprecation";
+const nodeFlags = "--no-warnings --no-deprecation";
 
 /**
  * Grunt configuration for building the app in various formats.

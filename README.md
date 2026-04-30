@@ -36,7 +36,7 @@ docker build --tag cyberchef --ulimit nofile=10000 .
 ```
 2. Run the docker container
 ```bash
-docker run -it -p 8080:80 cyberchef
+docker run -it -p 8080:8080 cyberchef
 ```
 3. Navigate to `http://localhost:8080` in your browser
 
@@ -45,7 +45,7 @@ docker run -it -p 8080:80 cyberchef
 If you prefer to skip the build process, you can use the pre-built image
 
 ```bash
-docker run -it -p 8080:80 ghcr.io/gchq/cyberchef:latest
+docker run -it -p 8080:8080 ghcr.io/gchq/cyberchef:latest
 ```
 
 Just like before, navigate to `http://localhost:8080` in your browser.
@@ -121,7 +121,8 @@ CyberChef is built to support
 
 ## Node.js support
 
-CyberChef is built to fully support Node.js `v18`. For more information, see the Node API page in the project ["Node API" wiki page](https://github.com/gchq/CyberChef/wiki/Node-API)
+CyberChef is built to fully support Node.js `v24`. For more information, see the ["Node API" wiki page](https://github.com/gchq/CyberChef/wiki/Node-API)
+
 
 ## Contributing
 

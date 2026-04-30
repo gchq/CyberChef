@@ -8,6 +8,7 @@ export class COperationLi extends HTMLElement {
     /**
      * @param {App} app - The main view object for CyberChef
      * @param {string} name - The name of the operation
+     * @param {string} id - The ID of this element
      * @param {Object} icon - { class: string, innerText: string } - The optional and customizable icon displayed on the
      * right side of the operation
      * @param {Boolean} includeStarIcon - Include the left-side 'star' icon to favourite an operation
@@ -17,6 +18,7 @@ export class COperationLi extends HTMLElement {
     constructor(
         app,
         name,
+        id,
         icon,
         includeStarIcon,
         charIndicesToHighlight = []
@@ -25,6 +27,7 @@ export class COperationLi extends HTMLElement {
 
         this.app = app;
         this.operationName = name;
+        this.id = id;
         this.icon = icon;
         this.includeStarIcon = includeStarIcon;
         this.charIndicesToHighlight = charIndicesToHighlight;
@@ -205,6 +208,7 @@ export class COperationLi extends HTMLElement {
         li.appendChild(this.buildOperationName());
 
         li.setAttribute("data-name", this.operationName);
+        li.id = this.id + "-li";
         li.classList.add("operation");
 
         if (this.isFavourite) {
@@ -223,6 +227,7 @@ export class COperationLi extends HTMLElement {
             li.setAttribute("data-html", "true");
             li.setAttribute("data-boundary", "viewport");
             li.setAttribute("data-content", dataContent);
+            li.setAttribute("role", "button");
         }
 
         return li;
@@ -284,8 +289,8 @@ export class COperationLi extends HTMLElement {
      * is needed for the drag and drop functionality of the Sortable lists
      */
     cloneNode() {
-        const { app, operationName, icon, includeStarIcon, charIndicesToHighlight } = this;
-        return new COperationLi(app, operationName, icon, includeStarIcon, charIndicesToHighlight);
+        const { app, operationName, id, icon, includeStarIcon, charIndicesToHighlight } = this;
+        return new COperationLi(app, operationName, id, icon, includeStarIcon, charIndicesToHighlight);
     }
 
 

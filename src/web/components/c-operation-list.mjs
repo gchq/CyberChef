@@ -8,6 +8,7 @@ export class COperationList extends HTMLElement {
     /**
      * @param {App} app - The main view object for CyberChef
      * @param {[string, number[]]} operations - A list of operation names and indexes of characters to highlight
+     * @param {string} id - The id of the element
      * @param {Boolean} includeStarIcon - Include the left side 'star' icon to each of the c-category-li >
      * c-operation-list > c-operation-li list items in this c-category-list
      * @param {Boolean} isSortable - List items may be sorted ( reordered ). False by default
@@ -17,6 +18,7 @@ export class COperationList extends HTMLElement {
     constructor(
         app,
         operations,
+        id,
         includeStarIcon,
         isSortable = false,
         isCloneable = true,
@@ -26,6 +28,7 @@ export class COperationList extends HTMLElement {
 
         this.app = app;
         this.operations = operations;
+        this.id = id;
         this.includeStarIcon = includeStarIcon;
         this.isSortable = isSortable;
         this.isCloneable = isCloneable;
@@ -65,13 +68,14 @@ export class COperationList extends HTMLElement {
         const ul =  document.createElement("ul");
         ul.classList.add("op-list");
 
-        this.operations.forEach((([opName, charIndicesToHighlight]) => {
+        this.operations.forEach((([opName, charIndicesToHighlight], opidx) => {
             if (!this.app.operations[opName]) {
                 return;
             }
             const cOpLi = new COperationLi(
                 this.app,
                 opName,
+                this.id + "-" + opidx,
                 {
                     class: this.icon ? this.icon.class : "check-icon",
                     innerText: this.icon ? this.icon.innerText : "check"

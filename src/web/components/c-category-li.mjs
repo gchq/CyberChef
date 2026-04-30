@@ -7,6 +7,7 @@ export class CCategoryLi extends HTMLElement {
     /**
      * @param {App} app - The main view object for CyberChef
      * @param {CatConf} category - The category and operations to be populated.
+     * @param {string} id - The id of this element.
      * @param {OpConfig[]} operations - The list of operation configuration objects.
      * @param {Boolean} isExpanded - expand the category by default on init or not
      * @param {Boolean} includeOpLiStarIcon - Include the left side 'star' icon to each of the c-category-li >
@@ -15,6 +16,7 @@ export class CCategoryLi extends HTMLElement {
     constructor(
         app,
         category,
+        id,
         operations,
         isExpanded,
         includeOpLiStarIcon,
@@ -23,6 +25,7 @@ export class CCategoryLi extends HTMLElement {
 
         this.app = app;
         this.category = category; // contains a string[] of operation names under .ops
+        this.id = id;
         this.operations = operations; // opConfig[]
         this.label = category.name;
         this.isExpanded = isExpanded;
@@ -69,6 +72,7 @@ export class CCategoryLi extends HTMLElement {
         const opList = new COperationList(
             this.app,
             this.category.ops.map(op => [op]),
+            this.id + "-list",
             this.includeOpLiStarIcon,
             false,
             true

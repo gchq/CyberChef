@@ -28,12 +28,11 @@ class OperationsWaiter {
         this.singleTapAlertTimeout = null;
     }
 
-
     /**
      * Handler for search events.
      * Finds operations which match the given search term and displays them under the search box.
      *
-     * @param {Event} e
+     * @param {KeyboardEvent | ClipboardEvent | Event} e
      */
     searchOperations(e) {
         let ops, focused;
@@ -58,6 +57,26 @@ class OperationsWaiter {
             }
         }
 
+        /**
+         * Sets up the operation element with the correct attributes when focused
+         * @param {HTMLElement} element
+         */
+        const _focusOperation = (element) => {
+            element.classList.add("focused-op");
+            element.scrollIntoView({block: "nearest"});
+            $(element).popover("show");
+            e.target.setAttribute("aria-activedescendant", element.id);
+        };
+
+        /**
+         * Sets up the operation element with the correct attributes when focused
+         * @param {HTMLElement} element
+         */
+        const _defocusOperation = (element) => {
+            element.classList.remove("focused-op");
+            $(element).popover("hide");
+        };
+
         if (e.type === "click" && !e.target.value.length) {
             this.openOpsDropdown();
         } else if (e.key === "Escape") { // Escape
@@ -67,22 +86,18 @@ class OperationsWaiter {
             ops = document.querySelectorAll("#search-results c-operation-list c-operation-li li");
             if (ops.length) {
                 focused = this.getFocusedOp(ops);
-                if (focused > -1) {
-                    ops[focused].classList.remove("focused-op");
-                }
+                if (focused > -1) _defocusOperation(ops[focused]);
                 if (focused === ops.length-1) focused = -1;
-                ops[focused+1].classList.add("focused-op");
+                _focusOperation(ops[focused+1]);
             }
         } else if (e.key === "ArrowUp") { // Up
             e.preventDefault();
             ops = document.querySelectorAll("#search-results c-operation-list c-operation-li li");
             if (ops.length) {
                 focused = this.getFocusedOp(ops);
-                if (focused > -1) {
-                    ops[focused].classList.remove("focused-op");
-                }
+                if (focused > -1) _defocusOperation(ops[focused]);
                 if (focused === 0) focused = ops.length;
-                ops[focused-1].classList.add("focused-op");
+                _focusOperation(ops[focused-1]);
             }
         } else {
             const searchResultsEl = document.getElementById("search-results");
@@ -96,6 +111,8 @@ class OperationsWaiter {
                 searchResultsEl.removeChild(searchResultsEl.firstChild);
             }
 
+            document.querySelector("#search").removeAttribute("aria-activedescendant");
+
             $("#categories .show").collapse("hide");
 
             if (str) {
@@ -104,6 +121,7 @@ class OperationsWaiter {
                 const cOpList = new COperationList(
                     this.app,
                     matchedOps,
+                    "search-cop-list",
                     true,
                     false,
                     true,
@@ -198,6 +216,7 @@ class OperationsWaiter {
             const opList = new COperationList(
                 this.app,
                 favCatConfig.ops.map(op => [op]),
+                "favourites-cop-list",
                 false,
                 true,
                 false,
