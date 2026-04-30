@@ -6,7 +6,7 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 const glob = require("glob");
 const path = require("path");
 
-const nodeFlags = "--experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings --no-deprecation";
+const nodeFlags = "--no-warnings --no-deprecation";
 
 /**
  * Grunt configuration for building the app in various formats.
@@ -415,25 +415,11 @@ module.exports = function (grunt) {
                 stdout: false,
             },
             fixCryptoApiImports: {
-                command: function () {
-                    switch (process.platform) {
-                        case "darwin":
-                            return `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 sed -i '' -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`;
-                        default:
-                            return `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 sed -i -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`;
-                    }
-                },
+                command: `node ${nodeFlags} src/core/config/scripts/fixCryptoApiImports.mjs`,
                 stdout: false
             },
             fixSnackbarMarkup: {
-                command: function () {
-                    switch (process.platform) {
-                        case "darwin":
-                            return `sed -i '' 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`;
-                        default:
-                            return `sed -i 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`;
-                    }
-                },
+                command: `node ${nodeFlags} src/core/config/scripts/fixSnackBarMarkup.mjs`,
                 stdout: false
             },
         },

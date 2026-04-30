@@ -17,13 +17,12 @@ jobs:
       - name: Set node version
         uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
 
       - name: Install
         run: |
-          export DETECT_CHROMEDRIVER_VERSION=true
-          npm install
+          npm ci
           npm run setheapsize
 
       - name: Lint
@@ -38,7 +37,22 @@ jobs:
         if: success()
         run: npx grunt prod
 
+      - name: Upload Build Artefact
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          name: zipped-build
+          path: build/prod/*.zip
+          retention-days: 5
+
+      - name: UI Tests
+        if: success()
+        run: |
+          sudo apt-get install xvfb
+          xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+
       - name: Set up Docker Buildx
+        if: success()
         uses: docker/setup-buildx-action@v3
 
       - name: Set up QEMU
@@ -50,8 +64,3 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           platforms: linux/amd64,linux/arm64
-      - name: UI Tests
-        if: success()
-        run: |
-          sudo apt-get install xvfb
-          xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
