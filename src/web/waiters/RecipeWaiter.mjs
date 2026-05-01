@@ -11,6 +11,18 @@ import {escapeControlChars} from "../utils/editorUtils.mjs";
 import DOMPurify from "dompurify";
 
 
+const ECDH_TEST_PRIVATE_KEY = `-----BEGIN PRIVATE KEY-----
+MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgVPecKErSPjan5fSz
+f+jsKPKthv3Ao5N0IxkbatQNw16hRANCAARhg779GdYIpH0QnY66FmGX1nMFyybu
+sjExdXFN15BBa1+zh1Cf7Cr484KJ8Mh2ga/Qs8qKk/8VbWSj0SbLb6Os
+-----END PRIVATE KEY-----`;
+
+const ECDH_TEST_PEER_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEZWOfvFUyA5ITdtEUar7aAz308Llr
+pPVK74bCKbeq3gIA5ZN0we6T18GSkTHtCCOG266YyCGTcE2JrnswYk1f8A==
+-----END PUBLIC KEY-----`;
+
+
 /**
  * Waiter to handle events related to the recipe.
  */
@@ -213,6 +225,9 @@ class RecipeWaiter {
      */
     ingChange(e) {
         if (e && e?.target?.classList?.contains("no-state-change")) return;
+        if (e?.target?.classList?.contains("arg")) {
+            this.syncArgVisualState(e.target);
+        }
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -482,6 +497,251 @@ class RecipeWaiter {
 
 
     /**
+     * Populates the operation card and input pane with a built-in test sample.
+     *
+     * @fires Manager#statechange
+     * @param {Event} e
+     */
+    populateTestDataClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const button = e.target.closest(".populate-test-data");
+        const op = e.target.closest("li.operation");
+        if (!button || !op) return;
+
+        const opName = op.querySelector(".op-title").textContent;
+        const opConfig = this.app.operations[opName];
+        const samples = opConfig?.testDataSamples || [];
+        if (!samples.length) {
+            return;
+        }
+
+        const sampleIndex = Number(button.dataset.sampleIndex || 0) % samples.length;
+        const sample = this.resolveTestDataSample(samples[sampleIndex]);
+        button.dataset.sampleIndex = String((sampleIndex + 1) % samples.length);
+
+        if (sample.recipeConfig) {
+            this.app.setRecipeConfig(sample.recipeConfig);
+        } else {
+            this.populateRecipeOperationArgs(op, sample.args || []);
+        }
+
+        if (typeof sample.input === "string") {
+            this.app.setInput(sample.input);
+        }
+
+        window.dispatchEvent(this.manager.statechange);
+    }
+
+
+    /**
+     * Populates a recipe operation's arguments from a resolved sample.
+     *
+     * @param {HTMLElement} op
+     * @param {Array} args
+     */
+    populateRecipeOperationArgs(op, args) {
+        const ingEls = op.querySelectorAll(".arg");
+
+        for (let i = 0; i < ingEls.length; i++) {
+            if (args[i] === undefined) continue;
+
+            if (ingEls[i].getAttribute("type") === "checkbox") {
+                ingEls[i].checked = Boolean(args[i]);
+            } else if (ingEls[i].classList.contains("toggle-string")) {
+                ingEls[i].value = args[i].string;
+                ingEls[i].parentNode.parentNode.querySelector("button").innerHTML =
+                    Utils.escapeHtml(args[i].option);
+            } else {
+                ingEls[i].value = args[i];
+            }
+
+            this.syncArgVisualState(ingEls[i]);
+        }
+
+        this.triggerArgEvents(op);
+    }
+
+
+    /**
+     * Resolves placeholders inside a test-data sample.
+     *
+     * @param {Object} sample
+     * @returns {Object}
+     */
+    resolveTestDataSample(sample) {
+        return {
+            input: this.resolveTestDataValue(sample.input),
+            args: this.resolveTestDataValue(sample.args || []),
+            recipeConfig: this.resolveTestDataValue(sample.recipeConfig)
+        };
+    }
+
+
+    /**
+     * Recursively resolves test-data placeholders.
+     *
+     * @param {*} value
+     * @returns {*}
+     */
+    resolveTestDataValue(value) {
+        if (typeof value === "string") {
+            return this.resolveTestDataPlaceholder(value);
+        }
+
+        if (Array.isArray(value)) {
+            return value.map(item => this.resolveTestDataValue(item));
+        }
+
+        if (value && typeof value === "object") {
+            const resolved = {};
+            for (const [key, nestedValue] of Object.entries(value)) {
+                resolved[key] = this.resolveTestDataValue(nestedValue);
+            }
+            return resolved;
+        }
+
+        return value;
+    }
+
+
+    /**
+     * Resolves a single placeholder string into generated or canned test data.
+     *
+     * @param {string} value
+     * @returns {string}
+     */
+    resolveTestDataPlaceholder(value) {
+        switch (value) {
+            case "__RANDOM_AES_128_HEX__":
+                return this.randomHex(16);
+            case "__RANDOM_TDES_16_HEX__":
+                return this.randomHex(16);
+            case "__RANDOM_PIN_4__":
+                return this.randomDigits(4, true);
+            case "__RANDOM_PAN_16__":
+                return this.randomPan(16);
+            case "__RANDOM_KSN__":
+                return this.randomKsn();
+            case "__ECDH_TEST_PRIVATE_KEY__":
+                return ECDH_TEST_PRIVATE_KEY;
+            case "__ECDH_TEST_PEER_PUBLIC_KEY__":
+                return ECDH_TEST_PEER_PUBLIC_KEY;
+            default:
+                return value;
+        }
+    }
+
+
+    /**
+     * Generates uppercase random hex.
+     *
+     * @param {number} byteLength
+     * @returns {string}
+     */
+    randomHex(byteLength) {
+        const bytes = new Uint8Array(byteLength);
+        this.getRandomValues(bytes);
+        return Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
+    }
+
+
+    /**
+     * Generates a random numeric string.
+     *
+     * @param {number} length
+     * @param {boolean} firstNonZero
+     * @returns {string}
+     */
+    randomDigits(length, firstNonZero=false) {
+        const bytes = new Uint8Array(length);
+        this.getRandomValues(bytes);
+        let out = "";
+        for (let i = 0; i < length; i++) {
+            let digit = bytes[i] % 10;
+            if (i === 0 && firstNonZero && digit === 0) digit = 1;
+            out += String(digit);
+        }
+        return out;
+    }
+
+
+    /**
+     * Generates a valid Luhn PAN with a Mastercard-style prefix.
+     *
+     * @param {number} length
+     * @returns {string}
+     */
+    randomPan(length=16) {
+        const prefix = "543210";
+        const bodyLength = Math.max(prefix.length + 1, length) - 1;
+        let body = prefix;
+
+        if (body.length < bodyLength) {
+            body += this.randomDigits(bodyLength - body.length);
+        }
+
+        body = body.substring(0, bodyLength);
+
+        let sum = 0;
+        const parity = body.length % 2;
+        for (let i = 0; i < body.length; i++) {
+            let digit = parseInt(body.charAt(i), 10);
+            if (i % 2 === parity) {
+                digit *= 2;
+                if (digit > 9) digit -= 9;
+            }
+            sum += digit;
+        }
+
+        const checkDigit = (10 - (sum % 10)) % 10;
+        return body + String(checkDigit);
+    }
+
+
+    /**
+     * Generates a DUKPT-style 10-byte KSN hex string with a random 21-bit counter.
+     *
+     * @returns {string}
+     */
+    randomKsn() {
+        const bytes = new Uint8Array(10);
+        this.getRandomValues(bytes);
+
+        bytes[0] = 0xFF;
+        bytes[1] = 0xFF;
+        bytes[2] = 0x98;
+        bytes[3] = 0x76;
+        bytes[4] = 0x54;
+        bytes[5] = 0x32;
+        bytes[6] = 0x10;
+        bytes[7] = (bytes[7] & 0x1F) | 0xE0;
+
+        return Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("").toUpperCase();
+    }
+
+
+    /**
+     * Fills a byte array with random data.
+     *
+     * @param {Uint8Array} bytes
+     * @returns {Uint8Array}
+     */
+    getRandomValues(bytes) {
+        if (globalThis.crypto && globalThis.crypto.getRandomValues) {
+            return globalThis.crypto.getRandomValues(bytes);
+        }
+
+        for (let i = 0; i < bytes.length; i++) {
+            bytes[i] = Math.floor(Math.random() * 256);
+        }
+
+        return bytes;
+    }
+
+
+    /**
      * Triggers various change events for operation arguments that have just been initialised.
      *
      * @param {HTMLElement} op
@@ -495,6 +755,30 @@ class RecipeWaiter {
                 el.dispatchEvent(evt);
             }
         }
+    }
+
+
+    /**
+     * Keeps floating-label state in sync for programmatically populated args.
+     *
+     * @param {HTMLElement} el
+     */
+    syncArgVisualState(el) {
+        if (!el) return;
+
+        const group = el.closest(".form-group, .bmd-form-group");
+        if (!group) return;
+
+        let isFilled = false;
+        if (el.getAttribute("type") === "checkbox" || el.getAttribute("type") === "radio") {
+            isFilled = el.checked;
+        } else if (typeof el.value === "string") {
+            isFilled = el.value.trim().length > 0;
+        } else {
+            isFilled = Boolean(el.value);
+        }
+
+        group.classList.toggle("is-filled", isFilled);
     }
 
 
@@ -577,6 +861,7 @@ class RecipeWaiter {
 
         if (text) {
             targ.value = text;
+            this.syncArgVisualState(targ);
             return;
         }
 
@@ -585,7 +870,7 @@ class RecipeWaiter {
             const self = this;
             reader.onload = function (e) {
                 targ.value = e.target.result;
-                // Trigger floating label move
+                self.syncArgVisualState(targ);
                 const changeEvent = new Event("change");
                 targ.dispatchEvent(changeEvent);
                 window.dispatchEvent(self.manager.statechange);
