@@ -21,7 +21,7 @@ class URLEncode extends Operation {
         this.module = "URL";
         this.description = "Encodes problematic characters into percent-encoding, a format supported by URIs/URLs.<br><br>e.g. <code>=</code> becomes <code>%3d</code>";
         this.infoURL = "https://wikipedia.org/wiki/Percent-encoding";
-        this.inputType = "string";
+        this.inputType = "byteArray";
         this.outputType = "string";
         this.args = [
             {
@@ -33,34 +33,38 @@ class URLEncode extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
     run(input, args) {
         const encodeAll = args[0];
-        return encodeAll ? this.encodeAllChars(input) : encodeURI(input);
+        return this.encodeBytes(input, encodeAll);
     }
 
     /**
-     * Encode characters in URL outside of encodeURI() function spec
+     * Encode bytes in URL using percent encoding.
      *
-     * @param {string} str
+     * @param {byteArray} bytes
+     * @param {boolean} encodeAll
      * @returns {string}
      */
-    encodeAllChars (str) {
-        // TODO Do this programmatically
-        return encodeURIComponent(str)
-            .replace(/!/g, "%21")
-            .replace(/#/g, "%23")
-            .replace(/'/g, "%27")
-            .replace(/\(/g, "%28")
-            .replace(/\)/g, "%29")
-            .replace(/\*/g, "%2A")
-            .replace(/-/g, "%2D")
-            .replace(/\./g, "%2E")
-            .replace(/_/g, "%5F")
-            .replace(/~/g, "%7E");
+    encodeBytes(bytes, encodeAll) {
+        const safeChars = encodeAll ?
+            /^[A-Za-z0-9]$/ :
+            /^[A-Za-z0-9:/?#[\]@!$&'()*+,;=%]$/;
+
+        let output = "";
+
+        for (const byte of bytes) {
+            const char = String.fromCharCode(byte);
+
+            output += safeChars.test(char) ?
+                char :
+                "%" + byte.toString(16).toUpperCase().padStart(2, "0");
+        }
+
+        return output;
     }
 
 }
