@@ -11,6 +11,7 @@
  * @license Apache-2.0
  */
 
+import "../lib/wasmFetchPolyfill.mjs";
 import { setLongTestFailure, logTestReport } from "../lib/utils.mjs";
 
 import TestRegister from "../lib/TestRegister.mjs";
@@ -72,6 +73,7 @@ import "./tests/ExtractAudioMetadata.mjs";
 import "./tests/ExtractEmailAddresses.mjs";
 import "./tests/ExtractHashes.mjs";
 import "./tests/ExtractIPAddresses.mjs";
+import "./tests/Fernet.mjs";
 import "./tests/Float.mjs";
 import "./tests/FileTree.mjs";
 import "./tests/FletcherChecksum.mjs";
