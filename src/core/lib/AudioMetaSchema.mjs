@@ -13,32 +13,24 @@ import { ascii4, indexOfAscii } from "./AudioBytes.mjs";
 /** Builds the empty report skeleton ready for a format parser to populate. */
 export function makeEmptyReport(filename, byteLength, container) {
     return {
-        schema_version: "audio-meta-1.0",
+        schema_version: "audio-meta-1.2",
         artifact: {
             filename,
             byte_length: byteLength,
             container: { type: container.type, brand: container.brand || null, mime: container.mime || null },
         },
-        detections: { metadata_systems: [], provenance_systems: [] },
+        detections: { metadata_systems: [], provenance_systems: [], metadata_sources: [] },
         tags: {
-            common: {
-                title: null, artist: null, album: null, date: null, track: null,
-                genre: null, comment: null, composer: null, copyright: null, language: null,
-            },
+            common: {},
             raw: {},
         },
         embedded: [],
+        metadata_sources: {},
         provenance: {
             c2pa: {
                 present: false,
-                embedding: [],
-                manifest_store: { active_manifest_urn: null, instance_id: null, claim_generator: null },
+                manifest_store: {},
                 assertions: [],
-                signature: {
-                    algorithm: null, signing_time: null,
-                    certificate: { subject_cn: null, issuer_cn: null, serial_number: null },
-                },
-                validation: { validation_state: "Unknown", reasons: [], details_raw: null },
             },
         },
         errors: [],
