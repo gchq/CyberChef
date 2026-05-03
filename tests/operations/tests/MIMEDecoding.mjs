@@ -76,6 +76,39 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "UTF-8 Base64 non-ASCII",
+        input: "Subject: =?UTF-8?B?Y2Fmw6k=?=",
+        expectedOutput: "Subject: café",
+        recipeConfig: [
+            {
+                "op": "MIME Decoding",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "UTF-8 Base64 multibyte CJK",
+        input: "Subject: =?UTF-8?B?5pel5pys6Kqe?=",
+        expectedOutput: "Subject: 日本語",
+        recipeConfig: [
+            {
+                "op": "MIME Decoding",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "UTF-8 Base64 ASCII-only",
+        input: "Subject: =?UTF-8?B?aGVsbG8=?=",
+        expectedOutput: "Subject: hello",
+        recipeConfig: [
+            {
+                "op": "MIME Decoding",
+                "args": []
+            }
+        ]
+    },
+    {
         name: "ISO Decoding",
         input: "From: =?US-ASCII?Q?Keith_Moore?= <moore@cs.utk.edu>\nTo: =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?= <keld@dkuug.dk>\nCC: =?ISO-8859-1?Q?Andr=E9?= Pirard <PIRARD@vm1.ulg.ac.be>\nSubject: =?ISO-8859-1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?=\n=?ISO-8859-2?B?dSB1bmRlcnN0YW5kIHRoZSBleGFtcGxlLg==?=",
         expectedOutput: "From: Keith Moore <moore@cs.utk.edu>\nTo: Keld Jørn Simonsen <keld@dkuug.dk>\nCC: André Pirard <PIRARD@vm1.ulg.ac.be>\nSubject: If you can read this you understand the example.",
