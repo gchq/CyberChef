@@ -83,6 +83,7 @@ import "./tests/GenerateAllChecksums.mjs";
 import "./tests/GenerateAllHashes.mjs";
 import "./tests/GenerateDeBruijnSequence.mjs";
 import "./tests/GenerateQRCode.mjs";
+import "./tests/GenerateSystemdUnit.mjs";
 import "./tests/GetAllCasings.mjs";
 import "./tests/GOST.mjs";
 import "./tests/Gunzip.mjs";
