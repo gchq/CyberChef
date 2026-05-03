@@ -32,7 +32,7 @@ class TextEncodingBruteForce extends Operation {
             "</ul>"
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/Character_encoding";
-        this.inputType = "string";
+        this.inputType = "byteArray";
         this.outputType = "json";
         this.presentType = "html";
         this.args = [
@@ -45,21 +45,22 @@ class TextEncodingBruteForce extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {json}
      */
     run(input, args) {
         const output = {},
             charsets = Object.keys(CHR_ENC_CODE_PAGES),
-            mode = args[0];
+            mode = args[0],
+            stringInput = Utils.arrayBufferToStr(input);
 
         charsets.forEach(charset => {
             try {
                 if (mode === "Decode") {
                     output[charset] = cptable.utils.decode(CHR_ENC_CODE_PAGES[charset], input);
                 } else {
-                    output[charset] = Utils.arrayBufferToStr(cptable.utils.encode(CHR_ENC_CODE_PAGES[charset], input));
+                    output[charset] = Utils.arrayBufferToStr(cptable.utils.encode(CHR_ENC_CODE_PAGES[charset], stringInput));
                 }
             } catch (err) {
                 output[charset] = "Could not decode.";
