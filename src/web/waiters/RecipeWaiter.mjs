@@ -26,6 +26,7 @@ class RecipeWaiter {
         this.app = app;
         this.manager = manager;
         this.removeIntent = false;
+        this.dragInProgress = false;
     }
 
 
@@ -88,6 +89,7 @@ class RecipeWaiter {
      * @param {element} listEl - The list to initialise
      */
     createSortableSeedList(listEl) {
+        const self = this;
         Sortable.create(listEl, {
             group: {
                 name: "recipe",
@@ -99,6 +101,7 @@ class RecipeWaiter {
                 dataTransfer.setData("Text", dragEl.textContent);
             },
             onStart: function(evt) {
+                self.dragInProgress = true;
                 // Removes popover element and event bindings from the dragged operation but not the
                 // event bindings from the one left in the operations list. Without manually removing
                 // these bindings, we cannot re-initialise the popover on the stub operation.
@@ -126,6 +129,7 @@ class RecipeWaiter {
      * @param {event} evt
      */
     opSortEnd(evt) {
+        this.dragInProgress = false;
         if (this.removeIntent && evt.item.parentNode.id === "rec-list") {
             evt.item.remove();
             return;
@@ -159,7 +163,7 @@ class RecipeWaiter {
      * @param {event} e
      */
     favDragover(e) {
-        if (e.dataTransfer.effectAllowed !== "move")
+        if (!this.dragInProgress)
             return false;
 
         e.stopPropagation();
@@ -534,7 +538,7 @@ class RecipeWaiter {
      */
     textArgDragover (e) {
         // This will be set if we're dragging an operation
-        if (e.dataTransfer.effectAllowed === "move")
+        if (this.dragInProgress)
             return false;
 
         e.stopPropagation();
@@ -564,7 +568,7 @@ class RecipeWaiter {
      */
     textArgDrop(e) {
         // This will be set if we're dragging an operation
-        if (e.dataTransfer.effectAllowed === "move")
+        if (this.dragInProgress)
             return false;
 
         e.stopPropagation();
