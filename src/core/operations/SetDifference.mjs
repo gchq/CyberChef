@@ -75,9 +75,16 @@ class SetDifference extends Operation {
      * @returns {Object[]}
      */
     runSetDifference(a, b) {
+        const excluded = new Set(b);
+        const seen = new Set();
+
         return a
             .filter((item) => {
-                return b.indexOf(item) === -1;
+                if (excluded.has(item) || seen.has(item)) {
+                    return false;
+                }
+                seen.add(item);
+                return true;
             })
             .join(this.itemDelimiter);
     }
