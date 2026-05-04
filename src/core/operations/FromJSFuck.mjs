@@ -21,7 +21,7 @@ class FromJSFuck extends Operation {
         this.name = "From JSFuck";
         this.module = "Default";
         this.description = "Decodes JSFuck encoded JavaScript. JSFuck uses only 6 characters: <code>[</code>, <code>]</code>, <code>(</code>, <code>)</code>, <code>!</code> and <code>+</code>.<br><br>e.g.  <code>[][(![]+[])[+[]]+...]</code> becomes <code>alert(1)</code>";
-        this.infoURL = "https://wikipedia.org/wiki/JSFuck"; 
+        this.infoURL = "https://wikipedia.org/wiki/JSFuck";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [];
@@ -42,7 +42,7 @@ class FromJSFuck extends Operation {
         }
 
         try {
-            return String(Function('"use strict"; return (' + input + ')')());
+            return String(Function("\"use strict\"; return (" + input + ")")());
         } catch (err) {
             throw new OperationError("Unable to decode JSFuck: " + err.message);
         }
