@@ -349,7 +349,10 @@
             "Sleep",
             "File Tree",
             "Take nth bytes",
-            "Drop nth bytes"
+            "Drop nth bytes",
+            "Append",
+            "Prepend",
+            "Insert At"
         ]
     },
     {
