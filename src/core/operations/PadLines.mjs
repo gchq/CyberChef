@@ -19,8 +19,7 @@ class PadLines extends Operation {
 
         this.name = "Pad lines";
         this.module = "Default";
-        this.description = "Add the specified character to the beginning or end of each line. Operation modes for padding length are either fixed or target line length."
-        this.description = "Add the specified number of the specified character to the beginning or end of each line";
+        this.description = "Add the specified character to the start or end of each line. Padding can use either a fixed character count or a target final line length."
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
