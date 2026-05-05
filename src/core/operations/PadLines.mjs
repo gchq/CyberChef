@@ -19,7 +19,7 @@ class PadLines extends Operation {
 
         this.name = "Pad lines";
         this.module = "Default";
-        this.description = "Add the specified character to the start or end of each line. Padding can use either a fixed character count or a target final line length."
+        this.description = "Add the specified character to the start or end of each line. Padding can use either a fixed character count or a target final line length.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -54,12 +54,10 @@ class PadLines extends Operation {
     run(input, args) {
         const [position, len, chr, mode] = args,
             lines = input.split("\n");
-        let output = "",
-            i = 0;
 
         for (let i = 0; i < lines.length; i++) {
-            let line = lines[i];
-            let targetLength = mode == "Fixed Count" ? line.length + len : len;
+            const line = lines[i];
+            const targetLength = mode === "Fixed Count" ? line.length + len : len;
 
             if (position === "Start") {
                 lines[i] = line.padStart(targetLength, chr);
@@ -68,7 +66,7 @@ class PadLines extends Operation {
             }
         }
 
-        return lines.join('\n');
+        return lines.join("\n");
     }
 
 }
