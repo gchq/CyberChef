@@ -33,8 +33,6 @@ updates:
         versions: [ '>=5.0.0' ]
       - dependency-name: 'cbor'
         versions: [ '>=10.0.0' ]
-      - dependency-name: 'cspell'
-        versions: [ '>=9.0.0' ]
       - dependency-name: 'eslint'
         versions: [ '>=10.0.0' ]
       - dependency-name: 'eslint-plugin-jsdoc'
@@ -45,8 +43,6 @@ updates:
         versions: [ '>=2.0.0' ]
       - dependency-name: 'jimp'
         versions: [ '1.6.1' ]
-      - dependency-name: 'otpauth'
-        versions: [ '>=9.4.0' ]
       - dependency-name: 'webpack-dev-server'
         versions: [ '>=5.1.0' ]
     groups:
@@ -60,15 +56,15 @@ updates:
         update-types:
           - 'patch'
 
-  # Can't enable this until we are using Node 24 as the latest actions all require this version
-  # - package-ecosystem: "github-actions"
-  #   # Workflow files stored in the default location of `.github/workflows`; no need to
-  #   # specify `/.github/workflows` for `directory`
-  #   directory: '/'
-  #   schedule:
-  #     interval: 'weekly'
-  #     day: 'friday'
-  #     time: '03:00'
-  #     timezone: Europe/London
-  #   commit-message:
-  #     prefix: 'chore (deps): '
+  # Versioning on Github Actions
+  - package-ecosystem: "github-actions"
+    # Workflow files stored in the default location of `.github/workflows`; no need to
+    # specify `/.github/workflows` for `directory`
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'friday'
+      time: '03:00'
+      timezone: Europe/London
+    commit-message:
+      prefix: 'chore (deps): '
