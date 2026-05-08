@@ -52,7 +52,7 @@ jobs:
           xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
