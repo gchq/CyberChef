@@ -34,7 +34,14 @@ module.exports = {
         testOp(browser, "AES Encrypt", "test input", "e42eb8fbfb7a98fff061cd2c1a794d92", [{"option": "Hex", "string": "00112233445566778899aabbccddeeff"}, {"option": "Hex", "string": "00000000000000000000000000000000"}, "CBC", "Raw", "Hex"]);
         testOp(browser, "AND", "test input", "4$04  $044", [{ "option": "Hex", "string": "34" }]);
         testOp(browser, "Add line numbers", "test input", "1 test input");
-        testOp(browser, ["From Hex", "Add Text To Image", "To Base64"], Images.PNG_HEX, Images.PNG_CHEF_B64, [[], ["Chef", "Center", "Middle", 0, 0, 16], []]);
+        testOp(browser, ["From Hex", "Add Text To Image", "SHA2"], Images.PNG_HEX, "50cdf8ea483c55564a091650c2bccb4586f919b721e5fe9d6a61660505b4346d6ebdb2ef0cf075a7728cd84cb26ea3e477b5bd86a94a49a27d79423994afb60a", [[], ["Chef", "Center", "Middle", 0, 0, 16, "Roboto"], []]);
+        testOp(browser, ["From Hex", "Add Text To Image", "SHA2"], Images.PNG_HEX, "78b3055463d9167dd039e47f451acaf06c593d209f8e405b4e18011cdcf190dc0af5952be887d93c0ebd38738e978120c1294c71104e6b00d3f9de8d6320ec1c", [[], ["Chef", "Center", "Middle", 0, 0, 16, "Roboto Black"], []]);
+        testOp(browser, ["From Hex", "Add Text To Image", "SHA2"], Images.PNG_HEX, "4ab4d4b6cb22ad700f6cd144c2c8ecad2a094f21a1d1d5d48eb6c8f97417192f89b4512f6a78276d49668ebef5e89c3a4d14860cb79399a0dafce98c92209e07", [[], ["Chef", "Center", "Middle", 0, 0, 16, "Roboto Mono"], []]);
+        testOp(browser, ["From Hex", "Add Text To Image", "SHA2"], Images.PNG_HEX, "11490db4907516b4d9e256da1ac0b02b561fa7547971e6316a8a0b90c9c66585a11f3145672c6d972b1a221d3bfad9c8a97de7ff77fd9442ebc40f39c1ef9ef7", [[], ["Chef", "Center", "Middle", 0, 0, 16, "Roboto Slab"], []]);
+        testOp(browser, ["From Hex", "Dither Image", "SHA2"], Images.PNG_HEX, "cbf587a78915cfb14546ba83080b13e5054800802488dd0cb786b8951e7dc0b48f055260917bd0ccfc075e422b9d6aff112948562653995d74e70f0b66367ac3", [[], [], []]);
+        testOp(browser, ["From Hex", "Generate Image", "SHA2"], Images.PNG_HEX, "2c451762a6c9192fd31dc80765eab3f447be70ea51f6fdb6911ade4d89d4a98bd0a1ff00b08d76aac472faeceb54b66092e3f3be7bbf899bf3e55ca9c96a56aa", [[], [], []]);
+        testOp(browser, ["From Hex", "Image Hue/Saturation/Lightness", "SHA2"], Images.PNG_HEX, "522dfc0bbef00e05c5d6861a002039fa2952e4bbb7fe8d21d0d538ef6f9d65da82065929b4150dc5b8b49460ee6c9bef7f660b86f8d4e7442a07c61c0a152a4b", [[], [50, 50, 50], []]);
+        testOp(browser, ["From Hex", "Resize Image", "SHA2"], Images.PNG_HEX, "654bfbf0a0537c901459c4bc22c5fb0bacbf01af775a0733e3a1c46cda5b699bcc4ed85322d813c7bb9b245d62d64425c0766fe03d3d20bc63634e2a4df17626", [[], [64, 64], []]);
         testOp(browser, "Adler-32 Checksum", "test input", "16160411");
         testOp(browser, "Affine Cipher Decode", "test input", "rcqr glnsr", [1, 2]);
         testOp(browser, "Affine Cipher Encode", "test input", "gndg zoujg", [3, 1]);
@@ -43,6 +50,14 @@ module.exports = {
         testOp(browser, "Analyse hash", "0123456789abcdef", /CRC-64/);
         testOp(browser, "Atbash Cipher", "test input", "gvhg rmkfg");
         // testOp(browser, "Avro to JSON", "test input", "test_output");
+        testOp(browser,
+            [
+                "From Hex", "Avro to JSON"
+            ],
+            "4f626a0104166176726f2e736368656d6196017b2274797065223a227265636f7264222c226e616d65223a22736d616c6c222c226669656c6473223a5b7b226e616d65223a226e616d65222c2274797065223a22737472696e67227d5d7d146176726f2e636f646563086e756c6c004e0247632e3702e5b75cdab9a62f1541020e0c6d796e616d654e0247632e3702e5b75cdab9a62f1541",
+            '{"name":"myname"}\n',
+            [[], [false]]
+        );
         testOp(browser, "BLAKE2b", "test input", "33ebdc8f38177f3f3f334eeb117a84e11f061bbca4db6b8923e5cec85103f59f415551a5d5a933fdb6305dc7bf84671c2540b463dbfa08ee1895cfaa5bd780b5", ["512", "Hex", { "option": "UTF8", "string": "pass" }]);
         testOp(browser, "BLAKE2s", "test input", "defe73d61dfa6e5807e4f9643e159a09ccda6be3c26dcd65f8a9bb38bfc973a7", ["256", "Hex", { "option": "UTF8", "string": "pass" }]);
         testOp(browser, "BSON deserialise", "\u0011\u0000\u0000\u0000\u0002a\u0000\u0005\u0000\u0000\u0000test\u0000\u0000", '{\u000A  "a": "test"\u000A}');
@@ -58,7 +73,10 @@ module.exports = {
         testOp(browser, "Bit shift right", "test input", ":29:\u0010478::");
         testOp(browser, "Blowfish Decrypt", "10884e15427dd84ec35204e9c8e921ae", "test_output", [{"option": "Hex", "string": "1234567801234567"}, {"option": "Hex", "string": "0011223344556677"}, "CBC", "Hex", "Raw"]);
         testOp(browser, "Blowfish Encrypt", "test input", "f0fadbd1d90d774f714248cf26b96410", [{"option": "Hex", "string": "1234567801234567"}, {"option": "Hex", "string": "0011223344556677"}, "CBC", "Raw", "Hex"]);
-        testOp(browser, ["From Hex", "Blur Image", "To Base64"], Images.PNG_HEX, Images.PNG_BLUR_B64);
+        testOp(browser, ["From Hex", "Blur Image", "SHA2"], Images.PNG_HEX, "24f2e89f3e00cc35f551bbc48ea82e76474946ce0282183494d1ca3d3b0012c27b6102c4368ae056dc7fecb6df7886d86ff3d29b7e5965493f30c371eee9a24e");
+        testOp(browser, ["From Hex", "Blur Image", "SHA2"], Images.PNG_HEX, "2c49d89fc10c94352c9a19f82de353c37928831d6f976a6b36eb918825a0ba027980801838228a4a0da63f1886e4fa59b6666f992ad2d2b7d4622253dc034052", [[], [5, "Gaussian"], []]);
+        testOp(browser, ["From Hex", "Sharpen Image", "SHA2"], Images.PNG_HEX, "acc7027642c2eeb67d7356a80ed8a1bdce9adabf656ea1294e47723f506626a7aa41f1660fa844a1e1e83b17180017ab0d5bccd7f6a341692832020dc887eaa5");
+        testOp(browser, ["From Hex", "Contain Image", "SHA2"], Images.PNG_HEX, "cb871ad0722d487d56a2b18247b1aa30ecc244eb717e08e23a55cae78759553312dc1717196d7cb9daa04743e57c56fc3901ba92be5a68fb03c377f718e8efe7");
         testOpHtml(browser, "Bombe", "XTSYN WAEUG EZALY NRQIM AMLZX MFUOD AWXLY LZCUZ QOQBQ JLCPK NDDRW F", "table tr:last-child td:first-child", "ECG", ["3-rotor", "LEYJVCNIXWPBQMDRTAKZGFUHOS", "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", "HELLO CYBER CHEFU SER", 0, true]);
         testOp(browser, ["Bzip2 Compress", "To Hex"], "test input", "42 5a 68 39 31 41 59 26 53 59 cf 96 82 1d 00 00 03 91 80 40 00 02 21 4e 00 20 00 21 90 c2 10 c0 88 33 92 8e df 17 72 45 38 50 90 cf 96 82 1d");
         testOp(browser, ["From Hex", "Bzip2 Decompress"], "425a68393141592653597b0884b7000003038000008200ce00200021a647a4218013709517c5dc914e14241ec2212dc0", "test_output", [[], [true]]);
@@ -196,6 +214,7 @@ module.exports = {
         testOpHtml(browser, "Index of Coincidence", "test input", "", /Index of Coincidence: 0.08333333333333333/);
         testOpImage(browser, "Invert Image", "files/Hitchhikers_Guide.jpeg");
     // testOp(browser, "JPath expression", "test input", "test_output");
+        testOp(browser, "Jq", '{"a":{"b":1}}', '{"b":1}', [".a"]);
         testOpHtml(browser, "JSON Beautify", "{a:1}", ".json-dict .json-literal", "1");
         // testOp(browser, "JSON Minify", "test input", "test_output");
     // testOp(browser, "JSON to CSV", "test input", "test_output");
@@ -249,7 +268,7 @@ module.exports = {
         testOpHtml(browser, "Parse colour code", "#000", ".colorpicker-preview", "rgb(0, 0, 0)");
         testOpHtml(browser, "Parse DateTime", "01/12/2000 13:00:00", "", /Date: Friday 1st December 2000/);
         // testOp(browser, "Parse IP range", "test input", "test_output");
-        testOpHtml(browser, "Parse IPv4 header", "45 c0 00 c4 02 89 00 00 ff 11　1e 8c c0 a8 0c 01 c0 a8 0c 02", "tr:last-child td:last-child", "192.168.12.2");
+        testOpHtml(browser, "Parse IPv4 header", "45 c0 00 c4 02 89 00 00 ff 11　1e 8c c0 a8 0c 01 c0 a8 0c 02", "tr:nth-last-child(2) td:last-child", "192.168.12.2");
         // testOp(browser, "Parse IPv6 address", "test input", "test_output");
     // testOp(browser, "Parse ObjectID timestamp", "test input", "test_output");
     // testOp(browser, "Parse QR Code", "test input", "test_output");
@@ -335,6 +354,7 @@ module.exports = {
         // testOp(browser, "Tail", "test input", "test_output");
         // testOp(browser, "Take bytes", "test input", "test_output");
         testOp(browser, "Tar", "test input", /^file\.txt\x00{92}/);
+        testOp(browser, "Template", "{\"one\": 1, \"two\": 2}", "1 2", ["{{ one }} {{ two }}"]);
         testOpHtml(browser, "Text Encoding Brute Force", "test input", "tr:nth-of-type(4) td:last-child", /t\u2400e\u2400s\u2400t\u2400/);
         // testOp(browser, "To BCD", "test input", "test_output");
         // testOp(browser, "To Base", "test input", "test_output");
