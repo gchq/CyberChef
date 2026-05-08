@@ -136,9 +136,20 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "ROT13: no shift amount",
+        input: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        expectedOutput: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        recipeConfig: [
+            {
+                op: "ROT13",
+                args: [true, true, true, 0]
+            },
+        ],
+    },
+    {
         name: "ROT13: normal",
-        input: "The Quick Brown Fox Jumped Over The Lazy Dog.",
-        expectedOutput: "Gur Dhvpx Oebja Sbk Whzcrq Bire Gur Ynml Qbt.",
+        input: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        expectedOutput: "Gur Dhvpx Oebja Sbk Whzcrq Bire Gur Ynml Qbt. 3456789012",
         recipeConfig: [
             {
                 op: "ROT13",
@@ -147,9 +158,20 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "ROT13: negative shift amount",
+        input: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        expectedOutput: "Gur Dhvpx Oebja Sbk Whzcrq Bire Gur Ynml Qbt. 7890123456",
+        recipeConfig: [
+            {
+                op: "ROT13",
+                args: [true, true, true, -13]
+            },
+        ],
+    },
+    {
         name: "ROT13: full loop",
-        input: "The Quick Brown Fox Jumped Over The Lazy Dog.",
-        expectedOutput: "The Quick Brown Fox Jumped Over The Lazy Dog.",
+        input: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        expectedOutput: "The Quick Brown Fox Jumped Over The Lazy Dog. 6789012345",
         recipeConfig: [
             {
                 op: "ROT13",
@@ -158,9 +180,20 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "ROT13: full loop (negative shift amount)",
+        input: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        expectedOutput: "The Quick Brown Fox Jumped Over The Lazy Dog. 4567890123",
+        recipeConfig: [
+            {
+                op: "ROT13",
+                args: [true, true, true, -26]
+            },
+        ],
+    },
+    {
         name: "ROT13: lowercase only",
-        input: "The Quick Brown Fox Jumped Over The Lazy Dog.",
-        expectedOutput: "Tur Qhvpx Bebja Fbk Jhzcrq Oire Tur Lnml Dbt.",
+        input: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        expectedOutput: "Tur Qhvpx Bebja Fbk Jhzcrq Oire Tur Lnml Dbt. 0123456789",
         recipeConfig: [
             {
                 op: "ROT13",
@@ -170,12 +203,56 @@ TestRegister.addTests([
     },
     {
         name: "ROT13: uppercase only",
-        input: "The Quick Brown Fox Jumped Over The Lazy Dog.",
-        expectedOutput: "Ghe Duick Orown Sox Wumped Bver Ghe Yazy Qog.",
+        input: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        expectedOutput: "Ghe Duick Orown Sox Wumped Bver Ghe Yazy Qog. 0123456789",
         recipeConfig: [
             {
                 op: "ROT13",
                 args: [false, true, false, 13]
+            },
+        ],
+    },
+    {
+        name: "ROT13: numbers only",
+        input: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        expectedOutput: "The Quick Brown Fox Jumped Over The Lazy Dog. 5678901234",
+        recipeConfig: [
+            {
+                op: "ROT13",
+                args: [false, false, true, 5]
+            },
+        ],
+    },
+    {
+        name: "ROT13: numbers only (negative shift amount)",
+        input: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        expectedOutput: "The Quick Brown Fox Jumped Over The Lazy Dog. 5678901234",
+        recipeConfig: [
+            {
+                op: "ROT13",
+                args: [false, false, true, 5]
+            },
+        ],
+    },
+    {
+        name: "ROT13: numbers only loop",
+        input: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        expectedOutput: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        recipeConfig: [
+            {
+                op: "ROT13",
+                args: [false, false, true, 10]
+            },
+        ],
+    },
+    {
+        name: "ROT13: numbers only loop (negative shift amount)",
+        input: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        expectedOutput: "The Quick Brown Fox Jumped Over The Lazy Dog. 0123456789",
+        recipeConfig: [
+            {
+                op: "ROT13",
+                args: [false, false, true, -10]
             },
         ],
     },

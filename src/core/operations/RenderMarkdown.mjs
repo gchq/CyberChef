@@ -35,6 +35,11 @@ class RenderMarkdown extends Operation {
                 name: "Enable syntax highlighting",
                 type: "boolean",
                 value: true
+            },
+            {
+                name: "Open links in new tab.",
+                type: "boolean",
+                value: false
             }
         ];
     }
@@ -45,7 +50,7 @@ class RenderMarkdown extends Operation {
      * @returns {html}
      */
     run(input, args) {
-        const [convertLinks, enableHighlighting] = args,
+        const [convertLinks, enableHighlighting, openLinksBlank] = args,
             md = new MarkdownIt({
                 linkify: convertLinks,
                 html: false, // Explicitly disable HTML rendering
@@ -58,12 +63,38 @@ class RenderMarkdown extends Operation {
 
                     return "";
                 }
-            }),
-            rendered = md.render(input);
-
+            });
+        if (openLinksBlank) {
+            this.makeLinksOpenInNewTab(md);
+        }
+        const rendered = md.render(input);
         return `<div style="font-family: var(--primary-font-family)">${rendered}</div>`;
     }
 
+    /**
+     * Adds target="_blank" to links.
+     * @param {MarkdownIt} md
+     */
+    makeLinksOpenInNewTab(md) {
+        // Adapted from: https://github.com/markdown-it/markdown-it/blob/master/docs/architecture.md#renderer
+        // Remember old renderer, if overridden, or proxy to default renderer
+        const defaultRender = md.renderer.rules.link_open || function(tokens, idx, options, env, self) {
+            return self.renderToken(tokens, idx, options);
+        };
+
+        // eslint-disable-next-line camelcase
+        md.renderer.rules.link_open = function (tokens, idx, options, env, self) {
+            const token = tokens[idx];
+            if (token.attrIndex("target") >= 0) {
+                // Target attribute already set, do not replace.
+                return;
+            }
+            token.attrPush(["target", "_blank"]); // add new attribute
+
+            // pass token to default renderer.
+            return defaultRender(tokens, idx, options, env, self);
+        };
+    }
 }
 
 export default RenderMarkdown;

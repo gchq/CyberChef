@@ -54,16 +54,6 @@ LM Hash:      01FC5A6BE7BC6929AAD3B435B51404EE
 NT Hash:      0CB6948805F797BF2A82807973B89537
 SSDEEP:       3:Hn:Hn
 CTPH:         A:E:E
-
-Checksums:
-Fletcher-8:   3d
-Fletcher-16:  5dc1
-Fletcher-32:  3f5cd9e7
-Fletcher-64:  7473657474736574
-Adler-32:     045d01c1
-CRC-8:        b9
-CRC-16:       f82e
-CRC-32:       d87f7e0c
 `,
         recipeConfig: [
             {

@@ -151,8 +151,26 @@ class InputWaiter {
                 // Event handlers
                 EditorView.domEventHandlers({
                     paste(event, view) {
+                        const clipboardData = event.clipboardData;
+                        const items = clipboardData.items;
+                        let files = [];
+                        for (let i = 0; i < items.length; i++) {
+                            const item = items[i];
+                            if (item.kind === "string") {
+                                // If there are any string items they should be preferred over
+                                // files.
+                                files = [];
+                                break;
+                            } else if (item.kind === "file") {
+                                files.push(item.getAsFile());
+                            }
+                        }
+                        if (files.length > 0) {
+                            // Prevent the default paste behavior, afterPaste will load the files instead
+                            event.preventDefault();
+                        }
                         setTimeout(() => {
-                            self.afterPaste(event);
+                            self.afterPaste(files);
                         });
                     }
                 })
@@ -914,9 +932,12 @@ class InputWaiter {
      * Handler that fires just after input paste events.
      * Checks whether the EOL separator or character encoding should be updated.
      *
-     * @param {event} e
+     * @param {File[]} files - An array of any files that were included in the paste event
      */
-    afterPaste(e) {
+    afterPaste(files) {
+        if (files.length > 0) {
+            this.loadUIFiles(files);
+        }
         // If EOL has been fixed, skip this.
         if (this.eolState > 1) return;
 
@@ -1654,6 +1675,23 @@ class InputWaiter {
         this.changeTab(inputNum, this.app.options.syncTabs);
     }
 
+    /**
+     * Handler for incoming postMessages
+     * If the events data has a `type` property set to `dataSubmit`
+     * the value property is set to the current input
+     * @param {event} e
+     * @param {object} e.data
+     * @param {string} e.data.type - the type of request, currently the only value is "dataSubmit"
+     * @param {string} e.data.value - the value of the message
+     */
+    handlePostMessage(e) {
+        log.debug(e);
+        if ("data" in e && "id" in e.data && "value" in e.data) {
+            if (e.data.id === "setInput") {
+                this.setInput(e.data.value);
+            }
+        }
+    }
 }
 
 export default InputWaiter;

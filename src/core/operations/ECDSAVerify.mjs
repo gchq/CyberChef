@@ -9,6 +9,7 @@ import OperationError from "../errors/OperationError.mjs";
 import { fromBase64 } from "../lib/Base64.mjs";
 import { toHexFast } from "../lib/Hex.mjs";
 import r from "jsrsasign";
+import Utils from "../Utils.mjs";
 
 /**
  * ECDSA Verify operation
@@ -59,6 +60,11 @@ class ECDSAVerify extends Operation {
                 name: "Message",
                 type: "text",
                 value: ""
+            },
+            {
+                name: "Message format",
+                type: "option",
+                value: ["Raw", "Hex", "Base64"]
             }
         ];
     }
@@ -70,7 +76,7 @@ class ECDSAVerify extends Operation {
      */
     run(input, args) {
         let inputFormat = args[0];
-        const [, mdAlgo, keyPem, msg] = args;
+        const [, mdAlgo, keyPem, msg, msgFormat] = args;
 
         if (keyPem.replace("-----BEGIN PUBLIC KEY-----", "").length === 0) {
             throw new OperationError("Please enter a public key.");
@@ -145,7 +151,8 @@ class ECDSAVerify extends Operation {
             throw new OperationError("Provided key is not a public key.");
         }
         sig.init(key);
-        sig.updateString(msg);
+        const messageStr = Utils.convertToByteString(msg, msgFormat);
+        sig.updateString(messageStr);
         const result = sig.verify(signatureASN1Hex);
         return result ? "Verified OK" : "Verification Failure";
     }
