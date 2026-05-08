@@ -112,7 +112,7 @@ class AESDecrypt extends Operation {
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
             iv = Utils.convertToByteString(args[1].string, args[1].option),
-            mode = args[2].substring(0, 3),
+            mode = args[2].split("/")[0],
             noPadding = args[2].endsWith("NoPadding"),
             inputType = args[3],
             outputType = args[4],

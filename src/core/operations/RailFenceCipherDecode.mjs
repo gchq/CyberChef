@@ -72,7 +72,7 @@ class RailFenceCipherDecode extends Operation {
             }
         }
 
-        return plaintext.join("").trim();
+        return plaintext.join("");
     }
 
 }

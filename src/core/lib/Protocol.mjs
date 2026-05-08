@@ -26,6 +26,9 @@ export function objToTable(obj, nested=false) {
         </tr>`;
 
     for (const key in obj) {
+        if (typeof obj[key] === "function")
+            continue;
+
         html += `<tr><td style='word-wrap: break-word'>${key}</td>`;
         if (typeof obj[key] === "object")
             html += `<td style='padding: 0'>${objToTable(obj[key], true)}</td>`;

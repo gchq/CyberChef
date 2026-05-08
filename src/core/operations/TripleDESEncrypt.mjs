@@ -22,7 +22,7 @@ class TripleDESEncrypt extends Operation {
 
         this.name = "Triple DES Encrypt";
         this.module = "Ciphers";
-        this.description = "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br>DES uses a key length of 8 bytes (64 bits).<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.";
+        this.description = "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.";
         this.infoURL = "https://wikipedia.org/wiki/Triple_DES";
         this.inputType = "string";
         this.outputType = "string";
@@ -72,8 +72,7 @@ class TripleDESEncrypt extends Operation {
         if (key.length !== 24 && key.length !== 16) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
 
-Triple DES uses a key length of 24 bytes (192 bits).
-DES uses a key length of 8 bytes (64 bits).`);
+Triple DES uses a key length of 24 bytes (192 bits).`);
         }
         if (iv.length !== 8 && mode !== "ECB") {
             throw new OperationError(`Invalid IV length: ${iv.length} bytes

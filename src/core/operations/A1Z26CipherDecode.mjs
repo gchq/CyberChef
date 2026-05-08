@@ -76,7 +76,7 @@ class A1Z26CipherDecode extends Operation {
         const delim = Utils.charRep(args[0] || "Space");
 
         if (input.length === 0) {
-            return [];
+            return "";
         }
 
         const bites = input.split(delim);

@@ -1,0 +1,17 @@
+{
+    "version": "0.2",
+    "language": "en,en-gb",
+    "words": [],
+    "dictionaries": [
+      "npm",
+      "softwareTerms",
+      "node",
+      "html",
+      "css",
+      "bash",
+      "en-gb",
+      "misc"
+    ],
+    "ignorePaths": ["package.json", "package-lock.json", "node_modules"]
+  }
+  

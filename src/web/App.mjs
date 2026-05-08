@@ -60,6 +60,7 @@ class App {
 
         this.initialiseSplitter();
         this.loadLocalStorage();
+        this.manager.options.applyPreferredColorScheme();
         this.populateOperationsList();
         this.manager.setup();
         this.manager.output.saveBombe();
@@ -536,6 +537,8 @@ class App {
         // Read in theme from URI params
         if (this.uriParams.theme) {
             this.manager.options.changeTheme(Utils.escapeHtml(this.uriParams.theme));
+        } else {
+            this.manager.options.applyPreferredColorScheme();
         }
 
         window.dispatchEvent(this.manager.statechange);
@@ -647,7 +650,7 @@ class App {
 
         // const compareURL = `https://github.com/gchq/CyberChef/compare/v${prev.join(".")}...v${PKG_VERSION}`;
 
-        let compileInfo = `<a href='https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md'>Last build: ${timeSinceCompile.substr(0, 1).toUpperCase() + timeSinceCompile.substr(1)} ago</a>`;
+        let compileInfo = `<a href='https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md'>Last build: ${timeSinceCompile.substring(0, 1).toUpperCase() + timeSinceCompile.substring(1)} ago</a>`;
 
         if (window.compileMessage !== "") {
             compileInfo += " - " + window.compileMessage;

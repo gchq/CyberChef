@@ -10,7 +10,7 @@
 
 import NodeDish from "./NodeDish.mjs";
 import NodeRecipe from "./NodeRecipe.mjs";
-import OperationConfig from "../core/config/OperationConfig.json" assert {type: "json"};
+import OperationConfig from "../core/config/OperationConfig.json" with { type: "json" };
 import { sanitise, removeSubheadingsFromArray, sentenceToCamelCase } from "./apiUtils.mjs";
 import ExcludedOperationError from "../core/errors/ExcludedOperationError.mjs";
 
@@ -74,11 +74,11 @@ function transformArgs(opArgsList, newArgs) {
     return opArgs.map((arg) => {
         if (arg.type === "option") {
             // pick default option if not already chosen
-            return typeof arg.value === "string" ? arg.value : arg.value[0];
+            return typeof arg.value === "string" ? arg.value : arg.value[arg.defaultIndex ?? 0];
         }
 
         if (arg.type === "editableOption") {
-            return typeof arg.value === "string" ? arg.value : arg.value[0].value;
+            return typeof arg.value === "string" ? arg.value : arg.value[arg.defaultIndex ?? 0].value;
         }
 
         if (arg.type === "toggleString") {
@@ -324,10 +324,10 @@ export function help(input) {
  * @returns {NodeDish} of the result
  * @throws {TypeError} if invalid recipe given.
  */
-export function bake(input, recipeConfig) {
-    const recipe =  new NodeRecipe(recipeConfig);
+export async function bake(input, recipeConfig) {
+    const recipe = new NodeRecipe(recipeConfig);
     const dish = ensureIsDish(input);
-    return recipe.execute(dish);
+    return await recipe.execute(dish);
 }
 
 
