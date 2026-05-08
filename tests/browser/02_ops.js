@@ -268,7 +268,7 @@ module.exports = {
         testOpHtml(browser, "Parse colour code", "#000", ".colorpicker-preview", "rgb(0, 0, 0)");
         testOpHtml(browser, "Parse DateTime", "01/12/2000 13:00:00", "", /Date: Friday 1st December 2000/);
         // testOp(browser, "Parse IP range", "test input", "test_output");
-        testOpHtml(browser, "Parse IPv4 header", "45 c0 00 c4 02 89 00 00 ff 11　1e 8c c0 a8 0c 01 c0 a8 0c 02", "tr:last-child td:last-child", "192.168.12.2");
+        testOpHtml(browser, "Parse IPv4 header", "45 c0 00 c4 02 89 00 00 ff 11　1e 8c c0 a8 0c 01 c0 a8 0c 02", "tr:nth-last-child(2) td:last-child", "192.168.12.2");
         // testOp(browser, "Parse IPv6 address", "test input", "test_output");
     // testOp(browser, "Parse ObjectID timestamp", "test input", "test_output");
     // testOp(browser, "Parse QR Code", "test input", "test_output");
@@ -354,6 +354,7 @@ module.exports = {
         // testOp(browser, "Tail", "test input", "test_output");
         // testOp(browser, "Take bytes", "test input", "test_output");
         testOp(browser, "Tar", "test input", /^file\.txt\x00{92}/);
+        testOp(browser, "Template", "{\"one\": 1, \"two\": 2}", "1 2", ["{{ one }} {{ two }}"]);
         testOpHtml(browser, "Text Encoding Brute Force", "test input", "tr:nth-of-type(4) td:last-child", /t\u2400e\u2400s\u2400t\u2400/);
         // testOp(browser, "To BCD", "test input", "test_output");
         // testOp(browser, "To Base", "test input", "test_output");
