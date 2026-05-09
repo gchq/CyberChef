@@ -56,7 +56,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         if: success() && github.ref == 'refs/heads/master'
-        uses: crazy-max/ghaction-github-pages@v3
+        uses: crazy-max/ghaction-github-pages@v5
         with:
           target_branch: gh-pages
           build_dir: ./build/prod
