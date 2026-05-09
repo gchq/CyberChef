@@ -74,17 +74,14 @@ class ParseEthernetFrame extends Operation {
             const ethType = Utils.byteArrayToChars(input.slice(offset, offset+2));
             offset += 2;
 
-
-            if (ethType === "\x08\x00") {
-                break;
-            } else if (ethType === "\x81\x00" || ethType === "\x88\xA8") {
+            if (ethType === "\x81\x00" || ethType === "\x88\xA8") {
                 // Parse the VLAN tag:
                 // [0000] 0000 0000 0000
                 //  ^^^ PRIO  - Ignored
                 //     ^ DEI  - Ignored
                 //        ^^^^ ^^^^ ^^^^ VLAN ID
-                const vlanTag = input.slice(offset+2, offset+4);
-                vlans.push((vlanTag[0] & 0b00001111) << 4 | vlanTag[1]);
+                const vlanTag = input.slice(offset, offset+2);
+                vlans.push(((vlanTag[0] & 0b00001111) << 8) | vlanTag[1]);
 
                 offset += 2;
             } else {

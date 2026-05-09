@@ -43,17 +43,23 @@ class HTMLOperation {
     /**
      * Renders the operation in HTML as a stub operation with no ingredients.
      *
+     * @param {boolean} removeIcon - show icon for removing operation
+     * @param {string} elementId - element ID for aria usage
      * @returns {string}
      */
-    toStubHtml(removeIcon) {
+    toStubHtml(removeIcon = false, elementId = null) {
         let html = "<li class='operation'";
+
+        if (elementId) {
+            html += ` id='${elementId}'`;
+        }
 
         if (this.description) {
             const infoLink = this.infoURL ? `<hr>${titleFromWikiLink(this.infoURL)}` : "";
 
             html += ` data-container='body' data-toggle='popover' data-placement='right'
                 data-content="${this.description}${infoLink}" data-html='true' data-trigger='hover'
-                data-boundary='viewport'`;
+                data-boundary='viewport' role='button'`;
         }
 
         html += ">" + this.name;
