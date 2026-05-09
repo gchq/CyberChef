@@ -15,7 +15,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Zstd Compress",
-                args: [3]
+                args: ["3"]
             },
             {
                 op: "Zstd Decompress",
@@ -31,7 +31,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Zstd Compress",
-                args: [3]
+                args: ["3"]
             },
             {
                 op: "To Hex",
@@ -62,7 +62,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Zstd Compress",
-                args: [3]
+                args: ["3"]
             }
         ]
     },
