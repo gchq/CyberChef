@@ -22,7 +22,8 @@ let initPromise = null;
  */
 export function zstdInit() {
     if (!initPromise) {
-        initPromise = init();
+        const wasmUrl = `${self.docURL}/assets/zstd.wasm`;
+        initPromise = init(wasmUrl);
     }
     return initPromise;
 }
