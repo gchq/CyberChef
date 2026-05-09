@@ -64,7 +64,7 @@ module.exports = {
         testOp(browser, "BSON serialise", '{"a":"test"}', "\u0011\u0000\u0000\u0000\u0002a\u0000\u0005\u0000\u0000\u0000test\u0000\u0000");
         // testOp(browser, "Bacon Cipher Decode", "test input", "test_output");
         // testOp(browser, "Bacon Cipher Encode", "test input", "test_output");
-        testOp(browser, "Bcrypt", "test input", /^\$2a\$06\$.{53}$/, [6]);
+        testOp(browser, "Bcrypt", "test input", /^\$2b\$06\$.{53}$/, [6]);
         testOp(browser, "Bcrypt compare", "test input", "Match: test input", ["$2a$05$FCfBSVX7OeRkK.9kQVFCiOYu9XtwtIbePqUiroD1lkASW9q5QClzG"]);
         testOp(browser, "Bcrypt parse", "$2a$05$kXWtAIGB/R8VEzInoM5ocOTBtyc0m2YTIwFiBU/0XoW032f9QrkWW", /Rounds: 5/);
         testOp(browser, "Bifid Cipher Decode", "qblb tfovy", "test input", ["pass"]);
