@@ -28,17 +28,16 @@ class OperationsWaiter {
         this.removeIntent = false;
     }
 
-
     /**
      * Handler for search events.
      * Finds operations which match the given search term and displays them under the search box.
      *
-     * @param {event} e
+     * @param {KeyboardEvent | ClipboardEvent | Event} e
      */
     searchOperations(e) {
         let ops, selected;
 
-        if (e.type === "search" || e.keyCode === 13) { // Search or Return
+        if ((e.type === "search" && e.target.value !== "") || e.keyCode === 13) { // Search (non-empty) or Return
             e.preventDefault();
             ops = document.querySelectorAll("#search-results li");
             if (ops.length) {
@@ -49,27 +48,43 @@ class OperationsWaiter {
             }
         }
 
+        /**
+         * Sets up the operation element with the correct attributes when selected
+         * @param {HTMLElement} element
+         */
+        const _selectOperation = (element) => {
+            element.classList.add("selected-op");
+            element.scrollIntoView({block: "nearest"});
+            $(element).popover("show");
+            e.target.setAttribute("aria-activedescendant", element.id);
+        };
+
+        /**
+         * Sets up the operation element with the correct attributes when deselected
+         * @param {HTMLElement} element
+         */
+        const _deselectOperation = (element) => {
+            element.classList.remove("selected-op");
+            $(element).popover("hide");
+        };
+
         if (e.keyCode === 40) { // Down
             e.preventDefault();
             ops = document.querySelectorAll("#search-results li");
             if (ops.length) {
                 selected = this.getSelectedOp(ops);
-                if (selected > -1) {
-                    ops[selected].classList.remove("selected-op");
-                }
+                if (selected > -1) _deselectOperation(ops[selected]);
                 if (selected === ops.length-1) selected = -1;
-                ops[selected+1].classList.add("selected-op");
+                _selectOperation(ops[selected+1]);
             }
         } else if (e.keyCode === 38) { // Up
             e.preventDefault();
             ops = document.querySelectorAll("#search-results li");
             if (ops.length) {
                 selected = this.getSelectedOp(ops);
-                if (selected > -1) {
-                    ops[selected].classList.remove("selected-op");
-                }
+                if (selected > -1) _deselectOperation(ops[selected]);
                 if (selected === 0) selected = ops.length;
-                ops[selected-1].classList.add("selected-op");
+                _selectOperation(ops[selected-1]);
             }
         } else {
             const searchResultsEl = document.getElementById("search-results");
@@ -83,11 +98,13 @@ class OperationsWaiter {
                 searchResultsEl.removeChild(searchResultsEl.firstChild);
             }
 
+            document.querySelector("#search").removeAttribute("aria-activedescendant");
+
             $("#categories .show").collapse("hide");
             if (str) {
                 const matchedOps = this.filterOperations(str, true);
                 const matchedOpsHtml = matchedOps
-                    .map(v => v.toStubHtml())
+                    .map((operation, idx) => operation.toStubHtml(false, `search-result-${idx}`))
                     .join("");
 
                 searchResultsEl.innerHTML = matchedOpsHtml;
@@ -103,7 +120,7 @@ class OperationsWaiter {
      * @param {string} searchStr
      * @param {boolean} highlight - Whether or not to highlight the matching string in the operation
      *   name and description
-     * @returns {string[]}
+     * @returns {HTMLOperation[]}
      */
     filterOperations(inStr, highlight) {
         const matchedOps = [];

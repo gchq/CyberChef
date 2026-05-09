@@ -348,6 +348,7 @@
             "Pseudo-Random Number Generator",
             "Sleep",
             "File Tree",
+            "Wrap",
             "Take nth bytes",
             "Drop nth bytes"
         ]
@@ -465,7 +466,8 @@
             "Luhn Checksum",
             "CRC Checksum",
             "TCP/IP Checksum",
-            "XOR Checksum"
+            "XOR Checksum",
+            "Parity Bit"
         ]
     },
     {
