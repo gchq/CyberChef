@@ -56,6 +56,36 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Zstd compress & decompress: level 1",
+        input: "The cat sat on the mat.",
+        expectedOutput: "The cat sat on the mat.",
+        recipeConfig: [
+            {
+                op: "Zstd Compress",
+                args: ["1"]
+            },
+            {
+                op: "Zstd Decompress",
+                args: []
+            }
+        ]
+    },
+    {
+        name: "Zstd compress & decompress: level 22",
+        input: "The cat sat on the mat.",
+        expectedOutput: "The cat sat on the mat.",
+        recipeConfig: [
+            {
+                op: "Zstd Compress",
+                args: ["22"]
+            },
+            {
+                op: "Zstd Decompress",
+                args: []
+            }
+        ]
+    },
+    {
         name: "Zstd compress: empty input error",
         input: "",
         expectedOutput: "Please provide an input.",
