@@ -5,8 +5,8 @@
  * WebAssembly.instantiate is called exactly once, regardless of how many
  * operations use it or in what order they run.
  *
- * @author n1474335 [n1474335@gmail.com]
- * @copyright Crown Copyright 2024
+ * @author Leon Zandman [leon@wirwar.com]
+ * @copyright Crown Copyright 2026
  * @license Apache-2.0
  */
 
