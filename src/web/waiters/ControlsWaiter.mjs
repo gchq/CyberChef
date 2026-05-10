@@ -566,8 +566,9 @@ ${navigator.userAgent}
         this.setPaneMaximisedClasses(pane, maximise);
 
         if (maximise) {
-            pane.style.height = `${window.innerHeight - 40}px`;
+            pane.style.height = `${window.innerHeight - 30}px`;
         } else {
+            this.app.setSplitter();
             if (this.app.isMobileView()) {
                 this.app.assignAvailableHeight();
             }
