@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
           fetch-depth: 0
 
       - name: Sync upstream
@@ -20,5 +20,6 @@ jobs:
           git remote add upstream https://github.com/gchq/CyberChef.git
           git fetch upstream
           git merge upstream/master
+          git checkout HEAD -- .github/workflows/
+          git commit --amend --no-edit
           git push origin master
-          
