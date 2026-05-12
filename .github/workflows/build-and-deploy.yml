@@ -60,6 +60,16 @@ jobs:
         if: success()
         run: unzip build/prod/*.zip -d build/unpacked
 
+      - name: Install brotli
+        if: success()
+        run: sudo apt-get install -y brotli
+
+      - name: Decompress build
+        if: success()
+        run: |
+          find build/unpacked -name "*.gz" -exec sh -c 'gunzip -f "$1"' _ {} \;
+          find build/unpacked -name "*.br" -exec sh -c 'brotli -d -f "$1"' _ {} \;
+
       - name: Sync to S3
         if: success()
         run: |
