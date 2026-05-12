@@ -1,0 +1,50 @@
+name: Deploy to S3
+on:
+  workflow_run:
+    workflows: ["Master Build, Test & Deploy"]
+    types:
+      - completed
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: zipped-build
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: artifact
+
+      - name: Unzip build
+        run: unzip artifact/*.zip -d build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Sync to S3
+        run: |
+          aws s3 sync build/ s3://cyberchef.jacobmarks.com \
+            --delete \
+            --cache-control "max-age=86400"
+
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id $(aws cloudfront list-distributions \
+              --query "DistributionList.Items[?DomainName=='d2p98dntmnwbcj.cloudfront.net'].Id" \
+              --output text) \
+            --paths "/*"
