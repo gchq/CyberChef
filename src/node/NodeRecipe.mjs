@@ -88,16 +88,17 @@ class NodeRecipe {
      * @param {NodeDish} dish
      * @returns {NodeDish}
      */
-    execute(dish) {
-        return this.opList.reduce((prev, curr) => {
-            // CASE where opList item is op and args
+    async execute(dish) {
+        let prev = dish;
+        for (const curr of this.opList) {
             if (Object.prototype.hasOwnProperty.call(curr, "op") &&
                 Object.prototype.hasOwnProperty.call(curr, "args")) {
-                return curr.op(prev, curr.args);
+                prev = await curr.op(prev, curr.args);
+            } else {
+                prev = await curr(prev);
             }
-            // CASE opList item is just op.
-            return curr(prev);
-        }, dish);
+        }
+        return prev;
     }
 }
 

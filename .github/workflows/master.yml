@@ -1,18 +1,19 @@
 name: "Master Build, Test & Deploy"
 
-permissions:
-  contents: read
-
 on:
   workflow_dispatch:
   push:
     branches:
       - master
 
+permissions:
+  contents: read
+
 jobs:
   main:
     permissions:
       contents: write
+      pages: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -20,13 +21,12 @@ jobs:
       - name: Set node version
         uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
 
       - name: Install
         run: |
-          export DETECT_CHROMEDRIVER_VERSION=true
-          npm install
+          npm ci
           npm run setheapsize
 
       - name: Lint
@@ -56,7 +56,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         if: success() && github.ref == 'refs/heads/master'
-        uses: crazy-max/ghaction-github-pages@v3
+        uses: crazy-max/ghaction-github-pages@v5
         with:
           target_branch: gh-pages
           build_dir: ./build/prod
