@@ -81,7 +81,7 @@ jobs:
           push: true
           tags: ${{ steps.image-metadata.outputs.tags }}
           labels: ${{ steps.image-metadata.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
 
       - name: Upload Release Assets
         id: upload-release-assets
