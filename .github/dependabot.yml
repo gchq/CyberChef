@@ -72,4 +72,7 @@ updates:
   - package-ecosystem: docker
     directory: /
     schedule:
-      interval: daily
+      interval: 'weekly'
+      day: 'friday'
+      time: '03:00'
+      timezone: Europe/London
