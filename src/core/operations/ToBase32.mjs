@@ -43,9 +43,9 @@ class ToBase32 extends Operation {
         if (!input) return "";
         input = new Uint8Array(input);
 
-        const alphabet = args[0]
-            ? Utils.expandAlphRange(args[0]).join("")
-            : "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=";
+        const alphabet = args[0] ?
+            Utils.expandAlphRange(args[0]).join("") :
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=";
 
         // Unicode-safe alphabet handling
         // Supports BMP + non-BMP characters (emoji, Mahjong tiles, etc.)
@@ -55,7 +55,6 @@ class ToBase32 extends Operation {
             chr1, chr2, chr3, chr4, chr5,
             enc1, enc2, enc3, enc4, enc5, enc6, enc7, enc8,
             i = 0;
-            
         while (i < input.length) {
             chr1 = input[i++];
             chr2 = input[i++];
