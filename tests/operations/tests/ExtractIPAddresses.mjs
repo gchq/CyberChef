@@ -250,5 +250,104 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "ExtractIPAddress defang on + unique: plain and defanged kept distinct",
+        input: "1.1.1.1 1[.]1[.]1[.]1 1.1.1.1",
+        expectedOutput: "1.1.1.1\n1[.]1[.]1[.]1",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, true, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on + sort: plain group sorts numerically before defanged group sorts lexically",
+        input: "200.1.1.1 5.5.5.5 100[.]100[.]100[.]100 10[.]0[.]0[.]1",
+        expectedOutput: "5.5.5.5\n200.1.1.1\n10[.]0[.]0[.]1\n100[.]100[.]100[.]100",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, true, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on: IPv6 URI literal brackets stripped, inner extracted",
+        input: "Connect to [2001:db8::1]:8080 please",
+        expectedOutput: "2001:db8::1",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [false, true, false, false, false, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on: empty input",
+        input: "",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on: trailing-digit trap does not over-extend defanged IP",
+        input: "abc 192[.]168[.]1[.]1234",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on + displayTotal: count line includes defanged matches",
+        input: "1.1.1.1 2[.]2[.]2[.]2 3[.]3[.]3[.]3",
+        expectedOutput: "Total found: 3\n\n1.1.1.1\n2[.]2[.]2[.]2\n3[.]3[.]3[.]3",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, true, false, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on, IPv4 toggle off: defanged IPv4 input matches nothing",
+        input: "192[.]168[.]1[.]1",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [false, true, false, false, false, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on, IPv6 toggle off: defanged IPv6 input matches nothing",
+        input: "2001[:]db8[:][:]1",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, false, false, false, false, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on: pure ASCII text with no IPs returns empty",
+        input: "the quick brown fox jumps over the lazy dog (no addresses here)",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false, true]
+            },
+        ],
+    },
 ]);
 
