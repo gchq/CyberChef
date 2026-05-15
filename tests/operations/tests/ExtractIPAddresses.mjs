@@ -173,5 +173,49 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "ExtractIPAddress defang on: partial defang IPv4",
+        input: "192.168[.]1.1 and 1[.]2.3[.]4",
+        expectedOutput: "192.168[.]1.1\n1[.]2.3[.]4",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on: mixed plain and defanged in one input",
+        input: "plain 10.0.0.1 defanged 8[.]8[.]8[.]8",
+        expectedOutput: "10.0.0.1\n8[.]8[.]8[.]8",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on: defanged octal IPv4",
+        input: "0123[.]0177[.]0234[.]0377",
+        expectedOutput: "0123[.]0177[.]0234[.]0377",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on: partial-defang octal IPv4",
+        input: "0123.0177[.]0234[.]0377",
+        expectedOutput: "0123.0177[.]0234[.]0377",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false, true]
+            },
+        ],
+    },
 ]);
 
