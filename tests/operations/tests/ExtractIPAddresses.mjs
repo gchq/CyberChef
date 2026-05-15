@@ -129,5 +129,16 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "ExtractIPAddress backwards-compat: defang off ignores [.] defanged input",
+        input: "192[.]168[.]1[.]1 plain 10.0.0.1",
+        expectedOutput: "10.0.0.1",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false, false]
+            },
+        ],
+    },
 ]);
 
