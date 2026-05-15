@@ -217,5 +217,38 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "ExtractIPAddress defang on + removeLocal: full-defang local 10/8 filtered",
+        input: "10[.]0[.]0[.]1 public 8[.]8[.]8[.]8",
+        expectedOutput: "8[.]8[.]8[.]8",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, true, false, false, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on + removeLocal: partial-defang local 192.168 filtered",
+        input: "192.168[.]1[.]100 keeps 1.1.1.1",
+        expectedOutput: "1.1.1.1",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, true, false, false, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on + removeLocal: full-defang 172.16/12 filtered",
+        input: "172[.]16[.]0[.]1 public 9[.]9[.]9[.]9",
+        expectedOutput: "9[.]9[.]9[.]9",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, true, false, false, false, true]
+            },
+        ],
+    },
 ]);
 
