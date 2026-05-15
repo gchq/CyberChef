@@ -140,5 +140,38 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "ExtractIPAddress defang on: fully defanged IPv4",
+        input: "192[.]168[.]1[.]1",
+        expectedOutput: "192[.]168[.]1[.]1",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on: fully defanged IPv6 long form",
+        input: "2001[:]0db8[:]85a3[:]0000[:]0000[:]8a2e[:]0370[:]7343",
+        expectedOutput: "2001[:]0db8[:]85a3[:]0000[:]0000[:]8a2e[:]0370[:]7343",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [false, true, false, false, false, false, true]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress defang on: fully defanged IPv6 shorthand",
+        input: "2001[:]db8[:][:]1",
+        expectedOutput: "2001[:]db8[:][:]1",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [false, true, false, false, false, false, true]
+            },
+        ],
+    },
 ]);
 
