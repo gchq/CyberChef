@@ -54,6 +54,11 @@ class ExtractIPAddresses extends Operation {
                 name: "Unique",
                 type: "boolean",
                 value: false
+            },
+            {
+                name: "Include defanged",
+                type: "boolean",
+                value: false
             }
         ];
     }
@@ -64,7 +69,13 @@ class ExtractIPAddresses extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [includeIpv4, includeIpv6, removeLocal, displayTotal, sort, unique] = args,
+        const [includeIpv4, includeIpv6, removeLocal, displayTotal, sort, unique, includeDefanged] = args,
+
+            // Defang-aware separator patterns. When includeDefanged is false these
+            // collapse to the original literal separators, so the regex behaviour
+            // is byte-for-byte identical to the pre-change op.
+            dotSep = includeDefanged ? "(?:\\.|\\[\\.\\])" : "\\.",
+            colonSep = includeDefanged ? "(?::|\\[:\\])" : ":",
 
             // IPv4 decimal groups can have values 0 to 255. To construct a regex the following sub-regex is reused:
             ipv4DecimalByte = "(?:25[0-5]|2[0-4]\\d|1?[0-9]\\d|\\d)",
@@ -74,13 +85,16 @@ class ExtractIPAddresses extends Operation {
             lookBehind = "(?<!\\d)",
             lookAhead = "(?!\\d)",
 
-            // Each variant requires exactly 4 groups with literal . between.
-            ipv4Decimal = "(?:" + lookBehind + ipv4DecimalByte + "\\.){3}" + "(?:" + ipv4DecimalByte + lookAhead + ")",
-            ipv4Octal = "(?:" + lookBehind + ipv4OctalByte + "\\.){3}" + "(?:" + ipv4OctalByte + lookAhead + ")",
+            // Each variant requires exactly 4 groups with literal . between (or [.] when defanged).
+            ipv4Decimal = "(?:" + lookBehind + ipv4DecimalByte + dotSep + "){3}" + "(?:" + ipv4DecimalByte + lookAhead + ")",
+            ipv4Octal = "(?:" + lookBehind + ipv4OctalByte + dotSep + "){3}" + "(?:" + ipv4OctalByte + lookAhead + ")",
 
             // Then we allow IPv4 addresses to be expressed either entirely in decimal or entirely in Octal
             ipv4 = "(?:" + ipv4Decimal + "|" + ipv4Octal + ")",
-            ipv6 = "((?=.*::)(?!.*::.+::)(::)?([\\dA-F]{1,4}:(:|\\b)|){5}|([\\dA-F]{1,4}:){6})(([\\dA-F]{1,4}((?!\\3)::|:\\b|(?![\\dA-F])))|(?!\\2\\3)){2}";
+
+            // The original IPv6 pattern uses only literal ':' for separators (no regex constructs like (?:...) that would mis-match a colon), so replacing every ':' with colonSep is safe.
+            ipv6Base = "((?=.*::)(?!.*::.+::)(::)?([\\dA-F]{1,4}:(:|\\b)|){5}|([\\dA-F]{1,4}:){6})(([\\dA-F]{1,4}((?!\\3)::|:\\b|(?![\\dA-F])))|(?!\\2\\3)){2}",
+            ipv6 = includeDefanged ? ipv6Base.replace(/:/g, colonSep) : ipv6Base;
         let ips  = "";
 
         if (includeIpv4 && includeIpv6) {
@@ -95,10 +109,11 @@ class ExtractIPAddresses extends Operation {
 
         const regex = new RegExp(ips, "ig");
 
-        const ten = "10\\..+",
-            oneninetwo = "192\\.168\\..+",
-            oneseventwo = "172\\.(?:1[6-9]|2\\d|3[01])\\..+",
-            onetwoseven = "127\\..+",
+        // The removeLocal filter regex gets the same dotSep treatment so defanged local IPs (e.g. 10[.]0[.]0[.]1) are filtered when both flags are on.
+        const ten = "10" + dotSep + ".+",
+            oneninetwo = "192" + dotSep + "168" + dotSep + ".+",
+            oneseventwo = "172" + dotSep + "(?:1[6-9]|2\\d|3[01])" + dotSep + ".+",
+            onetwoseven = "127" + dotSep + ".+",
             removeRegex = new RegExp("^(?:" + ten + "|" + oneninetwo +
                 "|" + oneseventwo + "|" + onetwoseven + ")");
 
