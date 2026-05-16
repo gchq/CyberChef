@@ -25,6 +25,74 @@ pPVK74bCKbeq3gIA5ZN0we6T18GSkTHtCCOG266YyCGTcE2JrnswYk1f8A==
 
 TestRegister.addTests([
     {
+        name: "Parse Thales payShield command: header, LMK identifier, trailer",
+        input: "\u0002HEADHE0123456789ABCDEF0011223344556677%00\u0019TAIL\u0003",
+        expectedOutput: JSON.stringify({
+            rawInput: "\u0002HEADHE0123456789ABCDEF0011223344556677%00\u0019TAIL\u0003",
+            framing: {
+                stxPresent: true,
+                etxPresent: true,
+                endMessageDelimiterPresent: true
+            },
+            normalizedMessage: "HEADHE0123456789ABCDEF0011223344556677%00",
+            messageHeaderLength: 4,
+            messageHeader: "HEAD",
+            commandCode: "HE",
+            commandCodeType: "request",
+            commandNames: ["Encrypt Data Block"],
+            requestCodes: ["HE"],
+            expectedResponseCodes: ["HF"],
+            manualPages: [107],
+            payload: "0123456789ABCDEF0011223344556677",
+            payloadLength: 32,
+            lmkIdentifier: "00",
+            lmkIdentifierDelimiterPresent: true,
+            tildeDelimiterPresentBeforeLmkIdentifier: false,
+            messageTrailer: "TAIL",
+            notes: []
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Parse Thales payShield command",
+                args: [4]
+            }
+        ]
+    },
+    {
+        name: "Parse Thales payShield command: trailing tilde before LMK identifier",
+        input: "MA0123456789ABCDEFHELLO~%12",
+        expectedOutput: JSON.stringify({
+            rawInput: "MA0123456789ABCDEFHELLO~%12",
+            framing: {
+                stxPresent: false,
+                etxPresent: false,
+                endMessageDelimiterPresent: false
+            },
+            normalizedMessage: "MA0123456789ABCDEFHELLO~%12",
+            messageHeaderLength: 0,
+            messageHeader: "",
+            commandCode: "MA",
+            commandCodeType: "request",
+            commandNames: ["Generate a MAC"],
+            requestCodes: ["MA"],
+            expectedResponseCodes: ["MB"],
+            manualPages: [90],
+            payload: "0123456789ABCDEFHELLO",
+            payloadLength: 21,
+            lmkIdentifier: "12",
+            lmkIdentifierDelimiterPresent: true,
+            tildeDelimiterPresentBeforeLmkIdentifier: true,
+            messageTrailer: "",
+            notes: []
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Parse Thales payShield command",
+                args: [0]
+            }
+        ]
+    },
+    {
         name: "Parse TR-31 key block: fixed header only",
         input: "D0016D0AB00E0000",
         expectedOutput: JSON.stringify({
