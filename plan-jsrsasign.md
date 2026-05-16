@@ -4,14 +4,16 @@
 
 ## Status
 
-- [ ] PR 1 — Setup + ASN.1 utilities
+- [x] PR 1 — Setup + ASN.1 utilities
 - [ ] PR 2 — SM2 rewrite
 - [ ] PR 3 — ECDSA primitives
 - [ ] PR 4 — PEM/JWK conversion + key extraction
 - [ ] PR 5 — X.509 / CSR / CRL parsing
 - [ ] PR 6 — Removal
 
-_Notes for next session:_ (none yet)
+_Notes for next session:_
+- **PR 2 blocker:** `@noble/curves` v2 dropped the `/sm2` subpath. v2 exposes only `nist`, `secp256k1`, `bls12-381`, `bn254`, `ed25519`, `ed448` and the `abstract/*` primitives. Before starting PR 2, either pin `@noble/curves` to v1 (which still ships sm2 — but check what other v1→v2 API gaps that introduces) or build SM2 on top of the abstract Weierstrass primitive in `@noble/curves/abstract/weierstrass.js` (curve parameters published in GM/T 0003-2012).
+- **PR 5 blocker:** `@peculiar/x509` v2 needs a `reflect-metadata` polyfill at every entry point — PR 1 pinned to `^1.14.3` to avoid that. Stay on v1 unless the polyfill cost gets resolved.
 
 ## Context
 
@@ -235,6 +237,14 @@ After **PR 6:**
 ## Changelog
 
 Record deviations from the original plan here, newest at the top. One bullet per change: what changed, why, and which PR.
+
+### PR 1 — 2026-05-17
+- Pinned `@peculiar/x509` to `^1.14.3` instead of the latest (`2.x`). v2 hard-requires a `reflect-metadata` import at every entry point and the plan didn't budget for polyfilling every webpack chunk. Sticking with v1 keeps the bundle changes scoped to this PR.
+- `@noble/curves` installed at `^2.2.0`. v2 no longer exports an `/sm2` subpath — see PR 2 note in "Notes for next session" above.
+- `derToPem` was deliberately made lenient (whitespace stripped, odd length left-padded with `0`, non-hex chars treated as nibble `0`) to preserve the recipe-API tests that piped non-hex output from `To Morse Code` through `Hex to PEM`. The actual base64 emitted now follows standard byte-pair semantics, not jsrsasign's quirky `hex2b64` (3-hex-chars-→-2-base64-chars) layout — so the expected outputs in `tests/node/tests/nodeApi.mjs` for those recipe-format tests were regenerated.
+- `dumpAsn1Hex` returns a plain `ASN.1 parse error: …` string when asn1js can't make sense of the input, rather than throwing. jsrsasign produced a best-effort `UNKNOWN(<tag>) <bytes>` dump in this case; replicating that on asn1js would be a meaningful chunk of code and the operation has no automated-fixture exposure of the difference, so we accepted the drift.
+- PEM line endings switched from `\r\n` to `\n` (per the cross-PR convention in [AGENTS.md](AGENTS.md)). Updated the `Hex to PEM` and `Parse ASN.1 hex string` golden tests in `tests/node/tests/operations.mjs`.
+- New per-op fixture file [tests/operations/tests/ASN1.mjs](tests/operations/tests/ASN1.mjs) covers OID round-trips, the multi-byte OID arc edge case, PEM line wrapping, and basic ASN.1 dumps. Wired in via `tests/operations/index.mjs`.
 
 <!-- e.g.
 ### PR 2 — 2026-05-20
