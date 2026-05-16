@@ -200,16 +200,25 @@ Important assumptions:
 - `Derive DUKPT Key` is TDES DUKPT, not AES DUKPT
 - `Generate AS2805 KEK Validation` is an emulation-oriented helper and explicitly documents its simplifications in the operation comments
 
-## 10) Key Container Inspection
+## 10) Key Container And HSM Command Inspection
 Operations:
+- `Parse Thales payShield command`
+- `Parse Futurex Excrypt command`
 - `Parse TR-31 key block`
 - `Parse TR-34 B9 envelope`
 
 Use this when:
-- you need to inspect inbound wrapped-key material or transport frames during testing
+- you need to inspect vendor HSM command syntax, wrapped-key material, or transport frames during testing
 
 Input:
-- full TR-31 or TR-34 payload as text or hex, depending on the operation comment
+- `Parse Thales payShield command`: raw legacy host command or response text
+- `Parse Futurex Excrypt command`: raw bracketed Excrypt command or response text
+- `Parse TR-31 key block` / `Parse TR-34 B9 envelope`: full payload as text or hex, depending on the operation comment
+
+Important assumptions:
+- the Thales and Futurex parsers currently focus on visible message syntax, delimiters, command identification, and field splitting rather than deep per-command semantic decoding
+- `Parse Thales payShield command` expects the configured message-header length to be supplied in the op args
+- `Parse Futurex Excrypt command` treats Excrypt messages as delimiter-based tag/value fields and commonly uses the `AO` field as the command code
 
 ## Chaining Patterns
 
@@ -309,3 +318,13 @@ Operations:
 Flow:
 - inspect the KEK with `Calculate Payment KCV`
 - generate request or response RandomKeySend / RandomKeyReceive values with the AS2805 helper
+
+## J) Vendor Command Triage
+Operations:
+- `Parse Thales payShield command`
+- `Parse Futurex Excrypt command`
+
+Flow:
+- paste the raw host message first before trying to interpret the business meaning
+- use the parsed command code, delimiters, header, trailer, or tag/value split to confirm what family of command you are looking at
+- follow with lower-level payment, EMV, PIN, or key-container recipes only after the transport syntax is understood

@@ -615,6 +615,7 @@
             "Calculate Payment KCV",
             "Generate AS2805 KEK Validation",
             "Parse Thales payShield command",
+            "Parse Futurex Excrypt command",
             "Parse TR-31 key block",
             "Parse TR-34 B9 envelope",
             "HMAC",

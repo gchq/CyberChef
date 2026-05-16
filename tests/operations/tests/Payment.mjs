@@ -93,6 +93,94 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Parse Futurex Excrypt command: bracketed fields",
+        input: "[AOGMAC;FS6;RV0011223344556677;]",
+        expectedOutput: JSON.stringify({
+            rawInput: "[AOGMAC;FS6;RV0011223344556677;]",
+            openingDelimiterPresent: true,
+            closingDelimiterPresent: true,
+            body: "AOGMAC;FS6;RV0011223344556677;",
+            rawFields: [
+                "AOGMAC",
+                "FS6",
+                "RV0011223344556677"
+            ],
+            fields: [
+                {
+                    raw: "AOGMAC",
+                    tag: "AO",
+                    value: "GMAC"
+                },
+                {
+                    raw: "FS6",
+                    tag: "FS",
+                    value: "6"
+                },
+                {
+                    raw: "RV0011223344556677",
+                    tag: "RV",
+                    value: "0011223344556677"
+                }
+            ],
+            commandFieldTag: "AO",
+            commandCode: "GMAC",
+            commandName: "Generate Message Authentication Code",
+            fieldCount: 3,
+            notes: []
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Parse Futurex Excrypt command",
+                args: []
+            }
+        ]
+    },
+    {
+        name: "Parse Futurex Excrypt command: missing closing delimiter",
+        input: "[AOVMAC;FS6;RV89ABCDEF",
+        expectedOutput: JSON.stringify({
+            rawInput: "[AOVMAC;FS6;RV89ABCDEF",
+            openingDelimiterPresent: true,
+            closingDelimiterPresent: false,
+            body: "AOVMAC;FS6;RV89ABCDEF",
+            rawFields: [
+                "AOVMAC",
+                "FS6",
+                "RV89ABCDEF"
+            ],
+            fields: [
+                {
+                    raw: "AOVMAC",
+                    tag: "AO",
+                    value: "VMAC"
+                },
+                {
+                    raw: "FS6",
+                    tag: "FS",
+                    value: "6"
+                },
+                {
+                    raw: "RV89ABCDEF",
+                    tag: "RV",
+                    value: "89ABCDEF"
+                }
+            ],
+            commandFieldTag: "AO",
+            commandCode: "VMAC",
+            commandName: "Verify Message Authentication Code",
+            fieldCount: 3,
+            notes: [
+                "Message is missing one or both expected Excrypt outer delimiters."
+            ]
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Parse Futurex Excrypt command",
+                args: []
+            }
+        ]
+    },
+    {
         name: "Parse TR-31 key block: fixed header only",
         input: "D0016D0AB00E0000",
         expectedOutput: JSON.stringify({
