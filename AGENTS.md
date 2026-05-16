@@ -7,11 +7,12 @@ Read [plan-jsrsasign.md](plan-jsrsasign.md) for the full migration plan. This fi
 ## Workflow
 
 - **One PR per session.** Six PRs total — see the plan's "Phased plan" section. Don't try to fuse phases; each PR has its own test bundle that acts as the correctness gate.
+- **Stop at "ready to commit." The human handles git.** Do all the implementation, fixture updates, lint/test/build runs, and plan updates — but do NOT `git add`, `git commit`, `git push`, or `gh pr create`. Leave the working tree dirty and hand back a summary of what's staged-worthy. Leon commits and opens the PR himself.
 - **At the end of each session, update [plan-jsrsasign.md](plan-jsrsasign.md):**
   - Tick the PR in the "Status" block at the top.
   - Add an entry to the "Changelog" section at the bottom for any deviation from the original plan (chosen API differed, extra dep added, test fixture updated, gotcha discovered, scope adjusted).
   - Leave a one-line "Notes for next session" if anything is partially done or worth flagging.
-- **Per-PR verification (must all pass before opening the PR):**
+- **Per-PR verification (must all pass before handing back):**
   - `npm run lint`
   - `npm test`
   - `npm run build`
