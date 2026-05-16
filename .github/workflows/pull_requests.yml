@@ -1,5 +1,8 @@
 name: "Pull Requests"
 
+permissions:
+  contents: read
+
 on:
   workflow_dispatch:
   pull_request:
@@ -9,47 +12,55 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-    - name: Set node version
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.x'
+      - name: Set node version
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
 
-    - name: Install
-      run: |
-        export DETECT_CHROMEDRIVER_VERSION=true
-        npm install
-        npm run setheapsize
+      - name: Install
+        run: |
+          npm ci
+          npm run setheapsize
 
-    - name: Lint
-      run: npx grunt lint
+      - name: Lint
+        run: npx grunt lint
 
-    - name: Unit Tests
-      run: |
-        npm test
-        npm run testnodeconsumer
+      - name: Unit Tests
+        run: |
+          npm test
+          npm run testnodeconsumer
 
-    - name: Production Build
-      if: success()
-      run: npx grunt prod
+      - name: Production Build
+        if: success()
+        run: npx grunt prod
 
-    - name: Production Image Build
-      if: success()
-      id: build-image
-      uses: redhat-actions/buildah-build@v2
-      with:
-        # Not being uploaded to any registry, use a simple name to allow Buildah to build correctly.
-        image: cyberchef
-        containerfiles: ./Dockerfile
-        platforms: linux/amd64
-        oci: true
-        # Webpack seems to use a lot of open files, increase the max open file limit to accomodate.
-        extra-args: |
-          --ulimit nofile=10000
+      - name: Upload Build Artefact
+        if: success()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: zipped-build
+          path: build/prod/*.zip
+          retention-days: 5
 
-    - name: UI Tests
-      if: success()
-      run: |
-        sudo apt-get install xvfb
-        xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+      - name: UI Tests
+        if: success()
+        run: |
+          sudo apt-get install xvfb
+          xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+
+      - name: Set up Docker Buildx
+        if: success()
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
+
+      - name: Production Image Build
+        if: success()
+        id: build-image
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
+        with:
+          platforms: linux/amd64,linux/arm64,linux/arm/v7

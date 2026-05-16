@@ -10,18 +10,15 @@ module.exports = function(api) {
             }]
         ],
         "plugins": [
-            "dynamic-import-node",
             "@babel/plugin-syntax-import-assertions",
-            [
-                "babel-plugin-transform-builtin-extend", {
-                    "globals": ["Error"]
-                }
-            ],
             [
                 "@babel/plugin-transform-runtime", {
                     "regenerator": true
                 }
             ]
-        ]
+        ],
+        "generatorOpts": {
+            "importAttributesKeyword": "with"
+        }
     };
 };

@@ -26,6 +26,8 @@
             "From Base45",
             "To Base58",
             "From Base58",
+            "To Bech32",
+            "From Bech32",
             "To Base62",
             "From Base62",
             "To Base64",
@@ -39,6 +41,7 @@
             "From Base",
             "To BCD",
             "From BCD",
+            "Text-Integer Conversion",
             "To HTML Entity",
             "From HTML Entity",
             "URL Encode",
@@ -107,6 +110,8 @@
             "Rabbit",
             "SM4 Encrypt",
             "SM4 Decrypt",
+            "RC6 Encrypt",
+            "RC6 Decrypt",
             "GOST Encrypt",
             "GOST Decrypt",
             "GOST Sign",
@@ -162,7 +167,10 @@
             "Typex",
             "Lorenz",
             "Colossus",
-            "SIGABA"
+            "SIGABA",
+            "Flask Session Decode",
+            "Flask Session Sign",
+            "Flask Session Verify"
         ]
     },
     {
@@ -221,6 +229,9 @@
             "Multiply",
             "Divide",
             "MOD",
+            "Modular Exponentiation",
+            "Modular Inverse",
+            "Extended GCD",
             "Mean",
             "Median",
             "Standard Deviation",
@@ -239,6 +250,7 @@
             "DNS over HTTPS",
             "Strip HTTP headers",
             "Dechunk HTTP response",
+            "Parse Ethernet frame",
             "Parse User Agent",
             "Parse IP range",
             "Parse IPv6 address",
@@ -337,6 +349,7 @@
             "Pseudo-Random Number Generator",
             "Sleep",
             "File Tree",
+            "Wrap",
             "Take nth bytes",
             "Drop nth bytes"
         ]
@@ -375,6 +388,7 @@
             "CSS selector",
             "Extract EXIF",
             "Extract ID3",
+            "Extract Audio Metadata",
             "Extract Files",
             "RAKE",
             "Template"
@@ -453,7 +467,8 @@
             "Luhn Checksum",
             "CRC Checksum",
             "TCP/IP Checksum",
-            "XOR Checksum"
+            "XOR Checksum",
+            "Parity Bit"
         ]
     },
     {
@@ -504,7 +519,8 @@
             "View Bit Plane",
             "Randomize Colour Palette",
             "Extract LSB",
-            "ELF Info"
+            "ELF Info",
+            "Extract Audio Metadata"
         ]
     },
     {
@@ -537,7 +553,8 @@
             "Hex Density chart",
             "Scatter chart",
             "Series chart",
-            "Heatmap chart"
+            "Heatmap chart",
+            "Extract Audio Metadata"
         ]
     },
     {
@@ -549,7 +566,9 @@
             "Chi Square",
             "P-list Viewer",
             "Disassemble x86",
+            "Disassemble ARM",
             "Pseudo-Random Number Generator",
+            "Pseudo-Random Integer Generator",
             "Generate De Bruijn Sequence",
             "Generate UUID",
             "Analyse UUID",

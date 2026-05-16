@@ -33,7 +33,7 @@ class ToBase85 extends Operation {
                 value: ALPHABET_OPTIONS
             },
             {
-                name: "Include delimeter",
+                name: "Include delimiter",
                 type: "boolean",
                 value: false
             }

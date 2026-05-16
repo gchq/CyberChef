@@ -136,8 +136,8 @@ Tiger-128`;
     it("Bcrypt", async () => {
         const result = await chef.bcrypt("Put a Sock In It");
         const strResult = result.toString();
-        assert.equal(strResult.length, 60);
-        assert.equal(strResult.slice(0, 7), "$2a$10$");
+        assert.match(strResult, /^\$2b\$10\$[./A-Za-z0-9]{53}$/);
+        assert.equal(strResult.split("$").length, 4);
     }),
 
     it("bcryptCompare", async() => {
@@ -589,8 +589,7 @@ Password: 282760`;
     ...[1, 3, 4, 5, 6, 7].map(version => it(`Analyze UUID v${version}`, () => {
         const uuid = chef.generateUUID("", { "version": `v${version}` }).toString();
         const result = chef.analyseUUID(uuid).toString();
-        const expected = `UUID version: ${version}`;
-        assert.strictEqual(result, expected);
+        assert.ok(result.startsWith(`Version:\n${version}\n`), `Expected output to start with "Version:\\n${version}\\n", got: ${result}`);
     })),
 
     it("Generate UUID using defaults", () => {
@@ -598,7 +597,7 @@ Password: 282760`;
         assert.ok(uuid);
 
         const analysis = chef.analyseUUID(uuid).toString();
-        assert.strictEqual(analysis, "UUID version: 4");
+        assert.ok(analysis.startsWith("Version:\n4\n"), `Expected output to start with "Version:\\n4\\n", got: ${analysis}`);
     }),
 
     it("Gzip, Gunzip", () => {
@@ -867,13 +866,15 @@ pCGTErs=
     }),
 
     it("SQL Beautify", () => {
-        const result = chef.SQLBeautify(`SELECT MONTH, ID, RAIN_I, TEMP_F
-FROM STATS;`);
-        const expected = `SELECT MONTH,
-         ID,
-         RAIN_I,
-         TEMP_F
-FROM STATS;`;
+        const result = chef.SQLBeautify(`SELECT MONTH, ID, RAIN_I, TEMP_F FROM STATS;`);
+        const expected =
+`SELECT
+  MONTH,
+  ID,
+  RAIN_I,
+  TEMP_F
+FROM
+  STATS;`;
         assert.strictEqual(result.toString(), expected);
     }),
 

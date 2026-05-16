@@ -4,7 +4,7 @@
 # Modifier --platform=$BUILDPLATFORM limits the platform to "BUILDPLATFORM" during buildx multi-platform builds
 # This is because npm "chromedriver" package is not compatiable with all platforms
 # For more info see: https://docs.docker.com/build/building/multi-platform/#cross-compilation
-FROM --platform=$BUILDPLATFORM node:18-alpine AS builder
+FROM --platform=$BUILDPLATFORM node:24-alpine@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f AS builder
 
 WORKDIR /app
 
@@ -27,9 +27,8 @@ RUN npm run build
 #########################################
 # Package static build files into nginx #
 #########################################
-# We are using Github Actions: redhat-actions/buildah-build@v2 which needs manual selection of arch in base image
-# Remove TARGETARCH if docker buildx is supported in the CI release as --platform=$TARGETPLATFORM will be automatically set
-ARG TARGETPLATFORM
-FROM --platform=${TARGETPLATFORM} nginx:stable-alpine AS cyberchef
+FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:808f7846d21a9c94cf53833e8807a00a33fd0b65cc47fb05b79efe366c2d201f AS cyberchef
+
+LABEL maintainer="GCHQ <oss@gchq.gov.uk>"
 
 COPY --from=builder /app/build/prod /usr/share/nginx/html/
