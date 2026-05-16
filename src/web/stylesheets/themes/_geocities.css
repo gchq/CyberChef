@@ -50,9 +50,9 @@
     --rec-list-operation-bg-colour: purple;
     --rec-list-operation-border-colour: green;
 
-    --selected-operation-font-color: white;
-    --selected-operation-bg-colour: pink;
-    --selected-operation-border-colour: blue;
+    --focused-operation-font-color: white;
+    --focused-operation-bg-colour: pink;
+    --focused-operation-border-colour: blue;
 
     --breakpoint-font-colour: white;
     --breakpoint-bg-colour: red;

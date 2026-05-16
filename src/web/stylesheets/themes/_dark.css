@@ -50,9 +50,13 @@
     --rec-list-operation-bg-colour: #252525;
     --rec-list-operation-border-colour: #444;
 
-    --selected-operation-font-color: #c5c5c5;
+    --focused-operation-font-color: #c5c5c5;
+    --focused-operation-bg-colour: #475663;
+    --focused-operation-border-colour: #444;
+
     --selected-operation-bg-colour: #3f3f3f;
-    --selected-operation-border-colour: #444;
+
+    --checkmark-color: #47d047;
 
     --breakpoint-font-colour: #ddd;
     --breakpoint-bg-colour: #073655;

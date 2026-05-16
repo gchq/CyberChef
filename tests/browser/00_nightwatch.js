@@ -9,9 +9,10 @@
 const utils = require("./browserUtils.js");
 
 module.exports = {
+    // desktop UI
     before: browser => {
         browser
-            .resizeWindow(1280, 800)
+            .resizeWindow(1024, 800)
             .url(browser.launchUrl);
     },
 
@@ -26,12 +27,18 @@ module.exports = {
         browser.useCss();
         // Check that various important elements are loaded
         browser.expect.element("#operations").to.be.visible;
+        browser.expect.element("#operations-dropdown").to.be.visible;
+        browser.expect.element("#search").to.be.visible;
+        browser.expect.element("#categories").to.be.visible;
+        browser.expect.element("c-category-list").to.be.visible;
+        browser.expect.element("c-category-li").to.be.present;
+        browser.expect.element("c-operation-list").to.be.present;
+        browser.expect.element("c-operation-li").to.be.present;
         browser.expect.element("#recipe").to.be.visible;
-        browser.expect.element("#input").to.be.present;
-        browser.expect.element("#output").to.be.present;
-        browser.expect.element(".op-list").to.be.present;
         browser.expect.element("#rec-list").to.be.visible;
         browser.expect.element("#controls").to.be.visible;
+        browser.expect.element("#input").to.be.visible;
+        browser.expect.element("#output").to.be.visible;
         browser.expect.element("#input-text").to.be.visible;
         browser.expect.element("#output-text").to.be.visible;
     },
@@ -39,27 +46,27 @@ module.exports = {
     "Operations loaded": browser => {
         browser.useXpath();
         // Check that an operation in every category has been populated
-        browser.expect.element("//li[contains(@class, 'operation') and text()='To Base64']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='To Binary']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='AES Decrypt']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='PEM to Hex']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='Power Set']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='Parse IP range']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='Remove Diacritics']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='Sort']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='To UNIX Timestamp']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='Extract dates']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='Gzip']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='Keccak']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='JSON Beautify']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='Detect File Type']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='Play Media']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='Disassemble x86']").to.be.present;
-        browser.expect.element("//li[contains(@class, 'operation') and text()='Register']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='To Base64']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='To Binary']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='AES Decrypt']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='PEM to Hex']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Power Set']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Parse IP range']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Remove Diacritics']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Sort']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='To UNIX Timestamp']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Extract dates']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Gzip']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Keccak']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='JSON Beautify']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Detect File Type']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Play Media']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Disassemble x86']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation')]/span[text()='Register']").to.be.present;
     },
 
     "Recipe can be run": browser => {
-        const toHex = "//li[contains(@class, 'operation') and text()='To Hex']";
+        const toHex = "//li[contains(@class, 'operation')]/span[text()='To Hex']";
         const op = "#rec-list .operation .op-title";
 
         // Check that operation is visible
@@ -183,7 +190,7 @@ module.exports = {
 
     "Move around the UI": browser => {
         const otherCat = "//a[contains(@class, 'category-title') and contains(@data-target, '#catOther')]",
-            genUUID = "//li[contains(@class, 'operation') and text()='Generate UUID']";
+            genUUID = "//li[contains(@class, 'operation')]/span[text()='Generate UUID']";
 
         browser.useXpath();
 
@@ -223,7 +230,7 @@ module.exports = {
             .clearValue("#search")
             .setValue("#search", "md5")
             .useXpath()
-            .waitForElementVisible("//ul[@id='search-results']//b[text()='MD5']", 1000);
+            .waitForElementVisible("//div[@id='search-results']//strong[text()='MD5']", 1000);
     },
 
     "Alert bar": browser => {

@@ -69,9 +69,9 @@
     --rec-list-operation-bg-colour: var(--base02);
     --rec-list-operation-border-colour: var(--base01);
 
-    --selected-operation-font-color: var(--base1);
-    --selected-operation-bg-colour: var(--base02);
-    --selected-operation-border-colour: var(--base01);
+    --focused-operation-font-color: var(--base1);
+    --focused-operation-bg-colour: var(--base02);
+    --focused-operation-border-colour: var(--base01);
 
     --breakpoint-font-colour: var(--sol-red);
     --breakpoint-bg-colour: var(--base02);
