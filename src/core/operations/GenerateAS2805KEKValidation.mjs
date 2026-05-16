@@ -58,13 +58,13 @@ class GenerateAS2805KEKValidation extends Operation {
                 args: ["KekValidationRequest", "TDES_2KEY", "VARIANT_MASK_82", "", true]
             }
         ];
-        this.infoURL = "https://docs.aws.amazon.com/payment-cryptography/latest/DataAPIReference/API_GenerateAs2805KekValidation.html";
+        this.infoURL = "https://en.wikipedia.org/wiki/AS2805";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             { name: "Validation type", type: "option", value: ["KekValidationRequest", "KekValidationResponse"], comment: "Request mode creates a fresh RandomKeySend. Response mode derives RandomKeyReceive from the supplied RandomKeySend." },
             { name: "Derive key algorithm", type: "option", value: ["TDES_2KEY", "TDES_3KEY"], comment: "Controls whether RandomKeySend / RandomKeyReceive are 16 bytes or 24 bytes long." },
-            { name: "RandomKeySend variant mask", type: "option", value: ["VARIANT_MASK_82", "VARIANT_MASK_82C0"], comment: "AWS surfaces this as metadata for AS2805 KEK validation. This emulation reports the selected label but does not model HSM-side key custody." },
+            { name: "RandomKeySend variant mask", type: "option", value: ["VARIANT_MASK_82", "VARIANT_MASK_82C0"], comment: "Variant mask label used during AS2805 KEK validation. This emulation reports the selected label but does not model HSM-side key custody." },
             { name: "RandomKeySend (response only)", type: "string", value: "", comment: "Required only in response mode. Provide the incoming RandomKeySend hex value from the partner node." },
             { name: "Output as JSON", type: "boolean", value: true, comment: "When enabled, returns the KEK KCV and both RandomKeySend / RandomKeyReceive values." },
         ];

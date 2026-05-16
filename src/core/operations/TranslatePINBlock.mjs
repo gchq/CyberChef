@@ -19,7 +19,7 @@ class TranslatePINBlock extends Operation {
 
         this.name = "Translate PIN Block";
         this.module = "Payment";
-        this.description = "Paste a clear ISO 9564 PIN block into the input field as hex and translate it between supported clear block formats.<br><br><b>Input:</b> 8-byte clear PIN block as hex.<br><b>Arguments:</b> choose the source and target formats, provide source and target PAN values when required, and optionally randomize target filler digits for formats 1 and 3.<br><br>This operation currently translates clear test PIN blocks for ISO formats 0, 1, and 3.";
+        this.description = "Paste a clear ISO 9564 PIN block into the input field as hex and translate it between supported clear block formats.<br><br><b>Input:</b> 8-byte clear PIN block as hex.<br><b>Arguments:</b> choose the source and target formats, provide source and target PAN values when required, and optionally randomize target filler digits for formats 1 and 3.<br><br>This operation currently translates clear test PIN blocks for ISO formats 0, 1, and 3.<br><br><b>Important:</b> PIN translation must not change the cardholder PAN. Translating a PIN block from one PAN to a different PAN is prohibited by PCI PIN security requirements. Always supply the same PAN for both source and target when the formats require it.";
         this.inlineHelp = "<strong>Input:</strong> source clear PIN block hex.<br><strong>Args:</strong> choose source and target formats, then provide the source and target PAN values where the formats require them.";
         this.testDataSamples = [
             {
@@ -55,7 +55,7 @@ class TranslatePINBlock extends Operation {
                 name: "Target PAN",
                 type: "string",
                 value: "",
-                comment: "Required when the target format is 0 or 3. Enter digits only; the implementation uses the rightmost 12 digits excluding the check digit."
+                comment: "Required when the target format is 0 or 3. Enter digits only; the implementation uses the rightmost 12 digits excluding the check digit. The target PAN must match the source PAN — translating a PIN block to a different PAN is prohibited by PCI PIN security requirements."
             },
             {
                 name: "Randomize target fill digits",

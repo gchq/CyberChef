@@ -28,7 +28,7 @@ class VerifyPaymentMAC extends Operation {
                 args: ["Hex", "AES-CMAC", "00112233445566778899AABBCCDDEEFF", "Hex", "", "Method 1", "339AF1AD1650E908", true]
             }
         ];
-        this.infoURL = "https://docs.aws.amazon.com/payment-cryptography/latest/DataAPIReference/API_VerifyMac.html";
+        this.infoURL = "https://en.wikipedia.org/wiki/Message_authentication_code";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -42,7 +42,7 @@ class VerifyPaymentMAC extends Operation {
                 name: "MAC method",
                 type: "option",
                 value: PAYMENT_MAC_METHODS,
-                comment: "Static-key HMAC and CMAC modes reuse the existing generic primitives. ISO9797 and AS2805 modes apply TDES-based payment MAC logic. DUKPT modes derive a TDES session key first."
+                comment: "Static-key HMAC and CMAC modes reuse the existing generic primitives. ISO9797 and AS2805 modes apply TDES-based payment MAC logic. DUKPT modes derive a TDES session key first. Note: ISO 9797-1 Algorithm 1 and Algorithm 3 are legacy MAC profiles — prefer AES-CMAC for new implementations."
             },
             {
                 name: "Key / BDK",

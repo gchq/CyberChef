@@ -27,7 +27,7 @@ class EncryptPaymentData extends Operation {
                 args: ["AES CBC", "00112233445566778899AABBCCDDEEFF", "000102030405060708090A0B0C0D0E0F", "", "Data", false]
             }
         ];
-        this.infoURL = "https://docs.aws.amazon.com/payment-cryptography/latest/DataAPIReference/API_EncryptData.html";
+        this.infoURL = "https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

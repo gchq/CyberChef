@@ -18,7 +18,7 @@ class VerifyPaymentPINData extends Operation {
 
         this.name = "Verify Payment PIN Data";
         this.module = "Payment";
-        this.description = "Paste a clear PIN block into the input field as hex and verify it against an expected PIN using an AWS-style wrapper.<br><br><b>Input:</b> clear PIN block hex.<br><b>Arguments:</b> choose the format, provide the PAN when required, and supply the expected clear PIN.<br><br><b>Validation:</b> Partially verified. This wrapper currently covers clear ISO 9564 formats 0, 1, and 3 only.<br><br><b>Security:</b> Clear PIN handling is test-use only.";
+        this.description = "Paste a clear PIN block into the input field as hex and verify it against an expected PIN.<br><br><b>Input:</b> clear PIN block hex.<br><b>Arguments:</b> choose the format, provide the PAN when required, and supply the expected clear PIN.<br><br><b>Validation:</b> Partially verified. This wrapper currently covers clear ISO 9564 formats 0, 1, and 3 only.<br><br><b>Security:</b> Clear PIN handling is test-use only.";
         this.inlineHelp = "<strong>Input:</strong> clear PIN block hex.<br><strong>Args:</strong> define the PIN-block format, PAN context, and expected PIN.<br><strong>Validation:</strong> clear ISO formats 0, 1, and 3 only.";
         this.testDataSamples = [
             {
@@ -27,7 +27,7 @@ class VerifyPaymentPINData extends Operation {
                 args: ["ISO Format 0", "5432101234567890", "1234"]
             }
         ];
-        this.infoURL = "https://docs.aws.amazon.com/payment-cryptography/latest/DataAPIReference/API_VerifyPinData.html";
+        this.infoURL = "https://wikipedia.org/wiki/ISO_9564";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

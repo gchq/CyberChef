@@ -27,7 +27,7 @@ class GenerateVISAPVV extends Operation {
                 args: ["0123456789ABCDEFFEDCBA9876543210", "5432101234567890", 1, true]
             }
         ];
-        this.infoURL = "https://docs.aws.amazon.com/payment-cryptography/latest/DataAPIReference/API_VisaPinVerification.html";
+        this.infoURL = "https://en.wikipedia.org/wiki/ISO_9564";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

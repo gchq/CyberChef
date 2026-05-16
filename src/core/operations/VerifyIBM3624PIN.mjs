@@ -27,7 +27,7 @@ class VerifyIBM3624PIN extends Operation {
                 args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", "3207", true]
             }
         ];
-        this.infoURL = "https://docs.aws.amazon.com/payment-cryptography/latest/userguide/verify-pin-data.ibm3624-example.html";
+        this.infoURL = "https://en.wikipedia.org/wiki/IBM_3624";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [

@@ -28,7 +28,7 @@ class VerifyCardValidationData extends Operation {
                 args: ["CVV2 / CVC2 (force 000)", "4123456789012345", "02", "25", "MMYY", "101", "221"]
             }
         ];
-        this.infoURL = "https://docs.aws.amazon.com/payment-cryptography/latest/userguide/verify-card-data.html";
+        this.infoURL = "https://en.wikipedia.org/wiki/Card_security_code";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
