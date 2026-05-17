@@ -7,6 +7,46 @@ import OperationError from "../errors/OperationError.mjs";
 
 const PAN_BRANDS = ["Visa", "Mastercard", "American Express", "Discover"];
 
+// ── Card classification tables ────────────────────────────────────────────────
+
+const MII_DESCRIPTIONS = {
+    "0": "ISO/TC 68 — Reserved",
+    "1": "Airlines",
+    "2": "Airlines and other future industry assignments",
+    "3": "Travel and entertainment (American Express, Diners Club)",
+    "4": "Banking and financial (Visa)",
+    "5": "Banking and financial (Mastercard)",
+    "6": "Merchandising and banking (Discover, Maestro)",
+    "7": "Petroleum and other future industry assignments",
+    "8": "Healthcare, telecommunications, and other future assignments",
+    "9": "National government assignment",
+};
+
+// Best-effort card type per brand — cannot determine credit/debit/prepaid
+// from the PAN alone without a BIN database lookup.
+const BRAND_TYPE_HINTS = {
+    "Visa": {
+        likelyType: "Unknown",
+        confidence: "low",
+        note: "Visa issues credit, debit, and prepaid cards. The product type is determined by the issuer BIN, not the PAN prefix — a BIN database lookup is required.",
+    },
+    "Mastercard": {
+        likelyType: "Unknown",
+        confidence: "low",
+        note: "Mastercard issues credit, debit, and prepaid cards. The product type is determined by the issuer BIN, not the PAN prefix — a BIN database lookup is required.",
+    },
+    "American Express": {
+        likelyType: "Credit / Charge",
+        confidence: "high",
+        note: "American Express does not issue traditional debit cards. Cards in the 34/37 BIN range are charge cards or credit products.",
+    },
+    "Discover": {
+        likelyType: "Credit",
+        confidence: "medium",
+        note: "The common Discover BIN ranges (6011, 644-649, 65, 622126-622925) are predominantly credit cards. Discover does offer some debit products on separate BIN ranges.",
+    },
+};
+
 const PAN_BRAND_RULES = {
     "Visa": {
         lengths: [13, 16, 19],
@@ -173,10 +213,20 @@ function parsePan(pan) {
     const normalized = normalizePan(pan);
     const match = matchPanBrand(normalized);
 
+    const mii = normalized.charAt(0);
+    const brand = match ? match.brand : null;
+    const typeHint = brand ? BRAND_TYPE_HINTS[brand] : null;
+
     return {
         pan: normalized,
-        network: match ? match.brand : "Unknown",
-        majorIndustryIdentifier: normalized.charAt(0),
+        network: brand || "Unknown",
+        cardType: typeHint ? typeHint.likelyType : "Unknown",
+        cardTypeConfidence: typeHint ? typeHint.confidence : "low",
+        cardTypeNote: typeHint
+            ? typeHint.note
+            : "Card type cannot be determined — the PAN did not match a known network range.",
+        majorIndustryIdentifier: mii,
+        majorIndustryIdentifierDescription: MII_DESCRIPTIONS[mii] || "Unknown",
         issuerIdentificationNumber: normalized.substring(0, Math.min(8, normalized.length)),
         length: normalized.length,
         luhnValid: isLuhnValid(normalized),
@@ -184,8 +234,8 @@ function parsePan(pan) {
             rangeStart: String(match.rule.start),
             rangeEnd: String(match.rule.end),
             lengths: match.rule.lengths,
-            description: match.rule.description
-        } : null
+            description: match.rule.description,
+        } : null,
     };
 }
 
@@ -287,3 +337,4 @@ export {
     isLuhnValid,
     parsePan,
 };
+
