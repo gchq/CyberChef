@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Payment operation tests.
  *
  * @license Apache-2.0
