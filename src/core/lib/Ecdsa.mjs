@@ -72,9 +72,9 @@ export function digestBytes(algo, bytes) {
 
 /**
  * Convert a JS string to bytes by Latin-1 truncation of each code unit (i.e.
- * `charCodeAt(i) & 0xff`). This keeps signatures interoperable for inputs
- * coming out of upstream byte-producing ops, while preserving the
- * (questionable) UTF-16-truncating behaviour for free-text inputs.
+ * `charCodeAt(i) & 0xff`). This preserves the operation's byte-string
+ * semantics for inputs coming out of upstream byte-producing ops, including
+ * the questionable UTF-16 truncation for free-text inputs.
  *
  * @param {string} str
  * @returns {Uint8Array}
@@ -181,8 +181,8 @@ export function isAsn1Hex(hex) {
 /**
  * Parse an ASN.1 DER-encoded ECDSA signature and return the raw r/s INTEGER
  * bytes as hex. Preserves the DER 2's-complement leading 0x00 when present
- * (i.e. r/s may have a leading "00" pair). Existing tests assume this
- * compatibility behaviour.
+ * (i.e. r/s may have a leading "00" pair) because the raw-signature fixtures
+ * assert the INTEGER byte strings, not canonicalized scalar values.
  *
  * @param {string} asn1Hex
  * @returns {{r: string, s: string}}

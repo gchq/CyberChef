@@ -58,8 +58,8 @@ function getCurve(name) {
         Point,
         n: params.n,
         coordCharLen: params.coordCharLen,
-        // Uniform-ish random scalar in [1, n-1], matching the previous bias
-        // profile for compatibility with existing SM2 behaviour.
+        // Uniform-ish random scalar in [1, n-1]. The modulo reduction keeps
+        // the existing scalar-generation distribution for SM2 ciphertexts.
         randomScalar: () => bytesToNumberBE(dh.utils.randomSecretKey()) % (params.n - 1n) + 1n,
     };
     curveCache[name] = cached;

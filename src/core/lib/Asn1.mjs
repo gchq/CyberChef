@@ -144,7 +144,7 @@ export function derToPem(hex, label) {
 }
 
 /**
- * Walk an asn1js parse tree and produce an indented dump.
+ * Walk an asn1js parse tree and produce CyberChef's indented ASN.1 dump.
  *
  * @param {string} hex
  * @param {Object} [options]

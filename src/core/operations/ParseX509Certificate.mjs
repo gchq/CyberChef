@@ -165,8 +165,8 @@ ${extensionsText}`;
 }
 
 /**
- * Format the algorithm label for the Public Key block. Mirrors the legacy
- * labels: "EC", "DSA", "RSA".
+ * Format the algorithm label for the Public Key block. The golden fixtures
+ * use short labels for the classic key families: "EC", "DSA", "RSA".
  *
  * @param {object} spki
  * @returns {string}

@@ -369,9 +369,9 @@ function parsePkcs8(bytes) {
         return rsaPrivateFromBytes(parseRsaPrivateKey(inner));
     }
     if (alg === ID_DSA) {
-        // DSA PKCS#8 carries only x (with p/q/g in the algorithm
-        // parameters). Without y, deriving the public key is unsupported;
-        // mark the info accordingly and let derivePublicKeyInfo throw.
+        // DSA PKCS#8 carries only the private x value, with p/q/g in the
+        // algorithm parameters. It does not carry the public y value needed
+        // here, so mark the info accordingly and let derivePublicKeyInfo throw.
         return { kty: "DSA", isPrivate: true, y: null };
     }
     // EC and everything else delegate to the existing EC loader by
