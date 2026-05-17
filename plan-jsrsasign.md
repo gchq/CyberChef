@@ -7,13 +7,14 @@
 - [x] PR 1 — Setup + ASN.1 utilities
 - [x] PR 2 — SM2 rewrite
 - [x] PR 3 — ECDSA primitives
-- [ ] PR 4 — PEM/JWK conversion + key extraction
+- [x] PR 4 — PEM/JWK conversion + key extraction
 - [ ] PR 5 — X.509 / CSR / CRL parsing
 - [ ] PR 6 — Removal
 
 _Notes for next session:_
 - **PR 2 resolved:** SM2 is now built on `weierstrass(...)` + `ecdh(...)` from `@noble/curves/abstract/weierstrass.js` (curve params per GM/T 0003-2012). No `/sm2` subpath needed.
 - **PR 3 resolved:** ECDSA primitives migrated; new [src/core/lib/Ecdsa.mjs](src/core/lib/Ecdsa.mjs) is the shared helper module. Existing ECDSA fixture set passes unchanged (sign↔verify round-trips and the canned P-256 signature fixtures both verify against `lowS: false`).
+- **PR 4 resolved:** Key-conversion ops migrated; new [src/core/lib/KeyConvert.mjs](src/core/lib/KeyConvert.mjs) wraps RSA/EC/DSA PEM⇄JWK⇄SPKI/PKCS#8. DSA private-key parsing/building goes through `asn1js` directly (no peculiar `asn1-dsa` package and `node-forge` doesn't expose DSA), reusing the existing EC helpers from `Ecdsa.mjs`.
 - **PR 5 blocker:** `@peculiar/x509` v2 needs a `reflect-metadata` polyfill at every entry point — PR 1 pinned to `^1.14.3` to avoid that. Stay on v1 unless the polyfill cost gets resolved.
 
 ## Context
@@ -238,6 +239,16 @@ After **PR 6:**
 ## Changelog
 
 Record deviations from the original plan here, newest at the top. One bullet per change: what changed, why, and which PR.
+
+### PR 4 — 2026-05-17
+- New [src/core/lib/KeyConvert.mjs](src/core/lib/KeyConvert.mjs) holds the shared RSA/EC/DSA conversion helpers (`parseKeyPem`, `parseCertPublicKey`, `keyToJwk`, `keyFromJwk`, `keyInfoToPem`, `derivePublicKeyInfo`). Plan called for inlining helpers per-op; factoring them out avoided duplicating the RSA SPKI/PKCS#8 plumbing between [PEMToJWK.mjs](src/core/operations/PEMToJWK.mjs), [JWKToPem.mjs](src/core/operations/JWKToPem.mjs) and [PubKeyFromPrivKey.mjs](src/core/operations/PubKeyFromPrivKey.mjs).
+- **node-forge dropped from the migration.** The plan reserved node-forge for the DSA path in `PubKeyFromPrivKey`, but `node-forge` only ships RSA support in its `pki` module — no DSA parser/serialiser. DSA traditional `-----BEGIN DSA PRIVATE KEY-----` is parsed via `asn1js.fromBER` directly, and the SPKI is built via `new asn1js.Sequence({value: [new Integer(...), ...]}).toBER(false)`. No new dependency.
+- **RSA PEMs go through `@peculiar/asn1-rsa` schemas** (`RSAPrivateKey`, `RSAPublicKey`) plus the existing `PrivateKeyInfo` / `SubjectPublicKeyInfo` / `AlgorithmIdentifier` schemas. `id_rsaEncryption` is namespace-imported (`import * as rsaSchemas from "@peculiar/asn1-rsa"`) and aliased to `ID_RSA_ENCRYPTION` to dodge the ESLint `camelcase` rule, matching the convention PR 3 established for the EC OID constants.
+- **DER `00`/INTEGER plumbing.** Parsed INTEGER fields come out of asn1js with the DER 2's-complement leading `00` still present; `stripLeadingZero` removes it for JWK output. On the way back the helper `prefixForDerInt` re-adds the `00` byte when the magnitude's MSB is set so the serialised INTEGER stays positive. JWK base64url is hand-rolled (no padding) — `toBase64(..., "A-Za-z0-9-_")` in `Base64.mjs` requires going through `Utils.strToArrayBuffer` for string inputs, which would double-encode the bytes for non-ASCII content.
+- **PEM line endings switched from `\r\n` to `\n`** in the test fixtures for [tests/operations/tests/JWK.mjs](tests/operations/tests/JWK.mjs) and [tests/operations/tests/PubKeyFromPrivKey.mjs](tests/operations/tests/PubKeyFromPrivKey.mjs), per the cross-PR convention in [AGENTS.md](AGENTS.md). The fixtures previously did `.replace(/\n/g, "\r\n")` around every expected PEM; those are gone now.
+- **Ed25519/Ed448 error-message drift.** PubKeyFromPrivKey's "Unsupported key type" wrapper used to surface jsrsasign's `Error: malformed PKCS8 private key(code:004)`; with the EC parser now coming from `@peculiar/asn1-ecc` + `loadEcKey`, the inner error is the `OperationError("Provided key is not an EC key.")` raised inside [src/core/lib/Ecdsa.mjs](src/core/lib/Ecdsa.mjs). Updated the two `Ed25519` / `Ed448` test fixtures to expect the new message (`Unsupported key type: Error: Provided key is not an EC key.` — `OperationError`'s name field is `Error`, hence the `Error:` prefix).
+- **`Unsupported JWK key type` error now references `jwk.kty`** rather than the top-level `inputJson.kty`. The legacy op compared against `jwk.kty` but reported `inputJson.kty`, which was undefined for JWK Set / array inputs. Existing test passes either way because it uses a single-key OKP input.
+- No new dependencies; relies on the deps PR 1 already pinned (`@peculiar/asn1-rsa` etc. ship with `@peculiar/x509`).
 
 ### PR 3 — 2026-05-17
 - New [src/core/lib/Ecdsa.mjs](src/core/lib/Ecdsa.mjs) replaces the jsrsasign calls in [ECDSASign.mjs](src/core/operations/ECDSASign.mjs), [ECDSAVerify.mjs](src/core/operations/ECDSAVerify.mjs), [ECDSASignatureConversion.mjs](src/core/operations/ECDSASignatureConversion.mjs) and [GenerateECDSAKeyPair.mjs](src/core/operations/GenerateECDSAKeyPair.mjs). `loadEcKey` handles SEC1, PKCS#8 and SPKI PEMs by parsing them with `@peculiar/asn1-ecc` / `@peculiar/asn1-pkcs8` / `@peculiar/asn1-x509`. ECDSA itself is `@noble/curves`'s `p256` / `p384` / `p521` with explicit `{ prehash: false, lowS: false, format: "der" }` — see notes below.

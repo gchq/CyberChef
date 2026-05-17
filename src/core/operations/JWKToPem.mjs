@@ -4,17 +4,17 @@
  * @license Apache-2.0
  */
 
-import r from "jsrsasign";
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import { keyFromJwk, keyInfoToPem } from "../lib/KeyConvert.mjs";
 
 /**
- * PEM to JWK operation
+ * JWK to PEM operation
  */
-class PEMToJWK extends Operation {
+class JWKToPem extends Operation {
 
     /**
-     * PEMToJWK constructor
+     * JWKToPem constructor
      */
     constructor() {
         super();
@@ -45,36 +45,27 @@ class PEMToJWK extends Operation {
 
         let keys = [];
         if (Array.isArray(inputJson)) {
-            // list of keys => transform all keys
             keys = inputJson;
         } else if (Array.isArray(inputJson.keys)) {
-            // JSON Web Key Set => transform all keys
             keys = inputJson.keys;
-        } else if (typeof inputJson === "object") {
-            // single key
+        } else if (typeof inputJson === "object" && inputJson !== null) {
             keys.push(inputJson);
         } else {
             throw new OperationError("Input is not a JSON Web Key");
         }
 
         let output = "";
-        for (let i=0; i<keys.length; i++) {
-            const jwk = keys[i];
-            if (typeof jwk.kty !== "string") {
+        for (const jwk of keys) {
+            if (!jwk || typeof jwk.kty !== "string") {
                 throw new OperationError("Invalid JWK format");
-            } else if ("|RSA|EC|".indexOf(jwk.kty) === -1) {
-                throw new OperationError(`Unsupported JWK key type '${inputJson.kty}'`);
             }
-
-            const key = r.KEYUTIL.getKey(jwk);
-            const pem = key.isPrivate ? r.KEYUTIL.getPEM(key, "PKCS8PRV") : r.KEYUTIL.getPEM(key);
-
-            // PEM ends with '\n', so a new key always starts on a new line
-            output += pem;
+            if (jwk.kty !== "RSA" && jwk.kty !== "EC") {
+                throw new OperationError(`Unsupported JWK key type '${jwk.kty}'`);
+            }
+            output += keyInfoToPem(keyFromJwk(jwk));
         }
-
         return output;
     }
 }
 
-export default PEMToJWK;
+export default JWKToPem;
