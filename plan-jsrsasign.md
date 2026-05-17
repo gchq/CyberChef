@@ -8,14 +8,15 @@
 - [x] PR 2 — SM2 rewrite
 - [x] PR 3 — ECDSA primitives
 - [x] PR 4 — PEM/JWK conversion + key extraction
-- [ ] PR 5 — X.509 / CSR / CRL parsing
+- [x] PR 5 — X.509 / CSR / CRL parsing
 - [ ] PR 6 — Removal
 
 _Notes for next session:_
 - **PR 2 resolved:** SM2 is now built on `weierstrass(...)` + `ecdh(...)` from `@noble/curves/abstract/weierstrass.js` (curve params per GM/T 0003-2012). No `/sm2` subpath needed.
 - **PR 3 resolved:** ECDSA primitives migrated; new [src/core/lib/Ecdsa.mjs](src/core/lib/Ecdsa.mjs) is the shared helper module. Existing ECDSA fixture set passes unchanged (sign↔verify round-trips and the canned P-256 signature fixtures both verify against `lowS: false`).
 - **PR 4 resolved:** Key-conversion ops migrated; new [src/core/lib/KeyConvert.mjs](src/core/lib/KeyConvert.mjs) wraps RSA/EC/DSA PEM⇄JWK⇄SPKI/PKCS#8. DSA private-key parsing/building goes through `asn1js` directly (no peculiar `asn1-dsa` package and `node-forge` doesn't expose DSA), reusing the existing EC helpers from `Ecdsa.mjs`.
-- **PR 5 blocker:** `@peculiar/x509` v2 needs a `reflect-metadata` polyfill at every entry point — PR 1 pinned to `^1.14.3` to avoid that. Stay on v1 unless the polyfill cost gets resolved.
+- **PR 5 resolved:** X.509 / CSR / CRL ops migrated to `@peculiar/x509` v1, plus the matching `@peculiar/asn1-*` schemas. New [src/core/lib/X509.mjs](src/core/lib/X509.mjs) holds the shared helpers (SPKI describer, signature-OID → display-name table, SAN/GeneralName formatter, EC-signature splitter, hex wrapping). Regression coverage added for `ParseX509Certificate` ([tests/operations/tests/ParseX509Certificate.mjs](tests/operations/tests/ParseX509Certificate.mjs)).
+- **PR 5 blocker (still relevant for PR 6+):** `@peculiar/x509` v2 needs a `reflect-metadata` polyfill at every entry point — PR 1 pinned to `^1.14.3` to avoid that. Stay on v1 unless the polyfill cost gets resolved.
 
 ## Context
 
@@ -239,6 +240,20 @@ After **PR 6:**
 ## Changelog
 
 Record deviations from the original plan here, newest at the top. One bullet per change: what changed, why, and which PR.
+
+### PR 5 — 2026-05-17
+- New [src/core/lib/X509.mjs](src/core/lib/X509.mjs) holds the shared X.509 helpers (`decodeX509Input`, `sigAlgOidToName`, `describeSpki`, `parseDerEcdsaSignature`, `isDerEcdsaSignature`, `formatJsonName`, `formatGeneralName`, `formatHexByteLines`/`formatHexColonWrapped`, `asnNameToJson`). [src/core/lib/PublicKey.mjs](src/core/lib/PublicKey.mjs)'s `formatDnObj` now accepts both the legacy jsrsasign shape and `@peculiar/x509`'s `JsonName` (array-of-records) shape. Migrated ops: [ParseX509Certificate.mjs](src/core/operations/ParseX509Certificate.mjs), [PubKeyFromCert.mjs](src/core/operations/PubKeyFromCert.mjs), [ParseCSR.mjs](src/core/operations/ParseCSR.mjs), [ParseX509CRL.mjs](src/core/operations/ParseX509CRL.mjs).
+- **`X509Certificate` v1.14.3 doesn't expose `.version`.** Plan called for `cert.version`, but on the pinned v1 the property is missing. Worked around by parsing `cert.rawData` with the asn1-x509 `Certificate` schema and reading `tbsCertificate.version` + `signatureAlgorithm.algorithm` directly. The same approach is used in `ParseCSR` (with `CertificationRequest` from `@peculiar/asn1-csr`) and `ParseX509CRL` (with `CertificateList` from `@peculiar/asn1-x509`) — bypassing the WebCrypto algorithm mapping is necessary for DSA anyway (peculiar's algorithm provider doesn't know it).
+- **DSA bit-length now matches OpenSSL/jsrsasign output.** `describeSpki` strips the leading `00` byte from the DSS-Parms `p` INTEGER before computing the bit length, so `Length: 2048 bits` is reported rather than the 2056 the raw byte count would give.
+- **P-521 reports `Length: 521 bits`**, not 528. `EC_CURVE_OID_TO_NAMES` carries an explicit `bits` field per curve so the prime field size (rather than `byteLen * 8`) is reported.
+- **KeyUsage rendering order.** `KeyUsage.toJSON()` on the asn1-x509 wrapper returns the flag names in alphabetical order (`crlSign`, `dataEncipherment`, …); the existing CSR golden fixtures expect bit-position order (`digitalSignature`, `nonRepudiation`, `keyEncipherment`, …). The op now parses the BIT STRING and iterates the bits in order so the output is stable.
+- **`Public Key from Certificate` now works for Ed25519 / Ed448.** jsrsasign threw "Unsupported public key type"; `@peculiar/x509`'s `cert.publicKey.toString("pem")` handles both. Updated [tests/operations/tests/PubKeyFromCert.mjs](tests/operations/tests/PubKeyFromCert.mjs) — the previously-commented `ED25519_PUBKEY` / `ED448_PUBKEY` constants are live and the two negative test expectations were replaced with the actual PEMs.
+- **PEM line endings switched from `\r\n` to `\n` everywhere** (per the cross-PR convention in [AGENTS.md](AGENTS.md)). [tests/operations/tests/PubKeyFromCert.mjs](tests/operations/tests/PubKeyFromCert.mjs) loses its `.replace(/\r/g, "").replace(/\n/g, "\r\n")` post-processing.
+- **OtherName payload is parsed loosely.** The legacy `ParseCSR` fixture for `Other: 1.2.3.4::some value` requires extracting a UTF8String wrapped in the ANY-typed `value` field. `formatGeneralName` first tries to parse it as a primitive `UTF8String`/`BmpString`/`PrintableString`/`IA5String`, then falls back to `DirectoryString`, and finally to a hex dump. Same code path serves the CRL OtherName output (with `OtherName:` label, no space — per the CRL flavor) and the CSR/Cert SAN output (`Other: ` label, with space — per the CSR flavor).
+- **`ParseX509Certificate` no longer relies on `cert.getInfo()` string-splitting.** The legacy code grabbed the extensions block by splitting on hard-coded delimiters. Replaced with a real walker over `cert.extensions` that recognises BasicConstraints, KeyUsage, EKU, SAN, AKI, SKI, CRLDistributionPoints, IssuerAltName; everything else falls back to `<oid>:` + raw hex.
+- **Cosmetic drift in the `Certificate Signature` block for ECDSA certs.** The old code split the DER signature with hard-coded offsets (`r.ASN1HEX.getV(sig, 4)` and `getV(sig, 48)`), which only worked for 32-byte components and produced visibly-overlapping output otherwise. The new code uses the proper DER parser. The output difference is a *correction*, not a regression — but it's still drift, and means the `ParseX509Certificate` golden output now reflects the true r/s values.
+- **New regression coverage for `ParseX509Certificate`.** [tests/operations/tests/ParseX509Certificate.mjs](tests/operations/tests/ParseX509Certificate.mjs) carries golden output for an RSA cert and a P-256 cert (reusing the certs from [PubKeyFromCert.mjs](tests/operations/tests/PubKeyFromCert.mjs)), plus an empty-input test. Wired into [tests/operations/index.mjs](tests/operations/index.mjs).
+- No new dependencies — everything reuses what PR 1 already pinned.
 
 ### PR 4 — 2026-05-17
 - New [src/core/lib/KeyConvert.mjs](src/core/lib/KeyConvert.mjs) holds the shared RSA/EC/DSA conversion helpers (`parseKeyPem`, `parseCertPublicKey`, `keyToJwk`, `keyFromJwk`, `keyInfoToPem`, `derivePublicKeyInfo`). Plan called for inlining helpers per-op; factoring them out avoided duplicating the RSA SPKI/PKCS#8 plumbing between [PEMToJWK.mjs](src/core/operations/PEMToJWK.mjs), [JWKToPem.mjs](src/core/operations/JWKToPem.mjs) and [PubKeyFromPrivKey.mjs](src/core/operations/PubKeyFromPrivKey.mjs).

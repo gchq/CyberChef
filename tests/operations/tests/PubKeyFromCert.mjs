@@ -99,11 +99,9 @@ HRMBAf8EBTADAQH/MAUGAytlcANBAI/+03iVq4yJ+DaLVs61w41cVX2UxKvquSzv
 lllkpkclM9LH5dLrw4ArdTjS9zAjzY/02WkphHhICHXt3KqZTwI=
 -----END CERTIFICATE-----`;
 
-/*
 const ED25519_PUBKEY = `-----BEGIN PUBLIC KEY-----
 MCowBQYDK2VwAyEAELP6AflXwsuZ5q4NDIO0LP2iCdKRvds4nwsUmRhOw3g=
 -----END PUBLIC KEY-----`;
-*/
 
 const ED448_CERT = `-----BEGIN CERTIFICATE-----
 MIIBijCCAQqgAwIBAgIUZaCS7zEjOnQ7O4KUFym6fJF5vl8wBQYDK2VxMBUxEzAR
@@ -117,12 +115,10 @@ VkLqpoDNMRcM3Eb6h3AJpQM0oxGj8q9arjDXqJkXgaO2e0tVn8KKVfy7S8qO72Kd
 rWzZowcOjnWKhXm7JgA=
 -----END CERTIFICATE-----`;
 
-/*
 const ED448_PUBKEY = `-----BEGIN PUBLIC KEY-----
 MEMwBQYDK2VxAzoAVN8kG0TMVyGOu/OvBTe8H0Wi4HJrQAlSv4XLwJbkuoi4EeRl
 EHQwXsNYLZTtY2Jra6AWhbVYYaEA
------END PUBLIC KEY-----`
-*/
+-----END PUBLIC KEY-----`;
 
 TestRegister.addTests([
     {
@@ -141,7 +137,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Certificate: RSA",
         input: RSA_CERT,
-        expectedOutput: (RSA_PUBKEY + "\n").replace(/\r/g, "").replace(/\n/g, "\r\n"),
+        expectedOutput: (RSA_PUBKEY + "\n").replace(/\r/g, ""),
         recipeConfig: [
             {
                 op: "Public Key from Certificate",
@@ -154,7 +150,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Certificate: EC",
         input: EC_P256_CERT,
-        expectedOutput: (EC_P256_PUBKEY + "\n").replace(/\r/g, "").replace(/\n/g, "\r\n"),
+        expectedOutput: (EC_P256_PUBKEY + "\n").replace(/\r/g, ""),
         recipeConfig: [
             {
                 op: "Public Key from Certificate",
@@ -167,7 +163,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Certificate: DSA",
         input: DSA_CERT,
-        expectedOutput: (DSA_PUBKEY + "\n").replace(/\r/g, "").replace(/\n/g, "\r\n"),
+        expectedOutput: (DSA_PUBKEY + "\n").replace(/\r/g, ""),
         recipeConfig: [
             {
                 op: "Public Key from Certificate",
@@ -180,7 +176,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Certificate: Ed25519",
         input: ED25519_CERT,
-        expectedOutput: "Unsupported public key type",
+        expectedOutput: ED25519_PUBKEY + "\n",
         recipeConfig: [
             {
                 op: "Public Key from Certificate",
@@ -191,7 +187,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Certificate: Ed448",
         input: ED448_CERT,
-        expectedOutput: "Unsupported public key type",
+        expectedOutput: ED448_PUBKEY + "\n",
         recipeConfig: [
             {
                 op: "Public Key from Certificate",
@@ -204,7 +200,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Certificate: Multiple certificates",
         input: RSA_CERT + "\n" + EC_P256_CERT,
-        expectedOutput: (RSA_PUBKEY + "\n" + EC_P256_PUBKEY + "\n").replace(/\r/g, "").replace(/\n/g, "\r\n"),
+        expectedOutput: (RSA_PUBKEY + "\n" + EC_P256_PUBKEY + "\n").replace(/\r/g, ""),
         recipeConfig: [
             {
                 op: "Public Key from Certificate",

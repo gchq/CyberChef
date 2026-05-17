@@ -4,13 +4,50 @@
  * @license Apache-2.0
  */
 
-import r from "jsrsasign";
+import { X509Crl } from "@peculiar/x509";
+import { AsnParser } from "@peculiar/asn1-schema";
+import {
+    AuthorityKeyIdentifier, CertificateList, CRLDistributionPoints, CRLNumber, CRLReason,
+    InvalidityDate, IssueAlternativeName,
+} from "@peculiar/asn1-x509";
+import * as asn1X509 from "@peculiar/asn1-x509";
 import Operation from "../Operation.mjs";
-import { fromBase64 } from "../lib/Base64.mjs";
-import { toHex } from "../lib/Hex.mjs";
-import { formatDnObj } from "../lib/PublicKey.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import Utils from "../Utils.mjs";
+import { formatDnObj } from "../lib/PublicKey.mjs";
+import {
+    bytesToHex,
+    decodeX509Input,
+    formatGeneralName,
+    sigAlgOidToName,
+} from "../lib/X509.mjs";
+
+const ID_CE_AUTHORITY_KEY_IDENTIFIER = asn1X509.id_ce_authorityKeyIdentifier;
+const ID_CE_CRL_DISTRIBUTION_POINTS  = asn1X509.id_ce_cRLDistributionPoints;
+const ID_CE_CRL_NUMBER               = asn1X509.id_ce_cRLNumber;
+const ID_CE_CRL_REASONS              = asn1X509.id_ce_cRLReasons;
+const ID_CE_INVALIDITY_DATE          = asn1X509.id_ce_invalidityDate;
+const ID_CE_ISSUER_ALT_NAME          = asn1X509.id_ce_issuerAltName;
+
+const HOLD_INSTRUCTION_EXT_OID = "2.5.29.23";
+
+const CRL_REASON_TO_NAME = {
+    0: "Unspecified",
+    1: "Key Compromise",
+    2: "CA Compromise",
+    3: "Affiliation Changed",
+    4: "Superseded",
+    5: "Cessation Of Operation",
+    6: "Certificate Hold",
+    8: "Remove From CRL",
+    9: "Privilege Withdrawn",
+    10: "AA Compromise",
+};
+
+const HOLD_INSTRUCTION_OID_TO_NAME = {
+    "1.2.840.10040.2.1": "Hold Instruction None",
+    "1.2.840.10040.2.2": "Hold Instruction Call Issuer",
+    "1.2.840.10040.2.3": "Hold Instruction Reject",
+};
 
 /**
  * Parse X.509 CRL operation
@@ -48,344 +85,311 @@ class ParseX509CRL extends Operation {
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string} Human-readable description of a Certificate Revocation List (CRL).
+     * @returns {string}
      */
     run(input, args) {
-        if (!input.length) {
-            return "No input";
-        }
+        if (!input.length) return "No input";
 
         const inputFormat = args[0];
-
-        let undefinedInputFormat = false;
+        let derBytes;
         try {
-            switch (inputFormat) {
-                case "DER Hex":
-                    input = input.replace(/\s/g, "").toLowerCase();
-                    break;
-                case "PEM":
-                    break;
-                case "Base64":
-                    input = toHex(fromBase64(input, null, "byteArray"), "");
-                    break;
-                case "Raw":
-                    input = toHex(Utils.strToArrayBuffer(input), "");
-                    break;
-                default:
-                    undefinedInputFormat = true;
-            }
+            derBytes = decodeX509Input(input, inputFormat);
         } catch (e) {
-            throw "Certificate load error (non-certificate input?)";
+            throw new OperationError(`Certificate load error (non-certificate input?): ${e.message}`);
         }
-        if (undefinedInputFormat) throw "Undefined input format";
 
-        const crl = new r.X509CRL(input);
+        let crl;
+        try {
+            crl = new X509Crl(derBytes);
+        } catch (e) {
+            throw new OperationError(`Certificate load error (non-certificate input?): ${e.message}`);
+        }
+
+        const asnCrl = AsnParser.parse(new Uint8Array(crl.rawData), CertificateList);
+        const sigAlgName = sigAlgOidToName(asnCrl.signatureAlgorithm.algorithm);
 
         let out = `Certificate Revocation List (CRL):
-    Version: ${crl.getVersion() === null ? "1 (0x0)" : "2 (0x1)"}
-    Signature Algorithm: ${crl.getSignatureAlgorithmField()}
-    Issuer:\n${formatDnObj(crl.getIssuer(), 8)}
-    Last Update: ${generalizedDateTimeToUTC(crl.getThisUpdate())}
-    Next Update: ${generalizedDateTimeToUTC(crl.getNextUpdate())}\n`;
+    Version: ${crl.version === undefined || crl.version === 0 ? "1 (0x0)" : "2 (0x1)"}
+    Signature Algorithm: ${sigAlgName}
+    Issuer:\n${formatDnObj(crl.issuerName.toJSON(), 8)}
+    Last Update: ${crl.thisUpdate.toUTCString()}
+    Next Update: ${crl.nextUpdate ? crl.nextUpdate.toUTCString() : "undefined"}\n`;
 
-        if (crl.getParam().ext !== undefined) {
-            out += `\tCRL extensions:\n${formatCRLExtensions(crl.getParam().ext, 8)}\n`;
+        if (crl.extensions && crl.extensions.length > 0) {
+            out += `\tCRL extensions:\n${formatCRLExtensions(crl.extensions, 8)}\n`;
         }
 
-        out += `Revoked Certificates:\n${formatRevokedCertificates(crl.getRevCertArray(), 4)}
-Signature Value:\n${formatCRLSignature(crl.getSignatureValueHex(), 8)}`;
+        out += `Revoked Certificates:\n${formatRevokedCertificates(crl.entries, 4)}
+Signature Value:\n${formatCRLSignature(bytesToHex(new Uint8Array(crl.signature)), 8)}`;
 
         return out;
     }
 }
 
 /**
- * Generalized date time string to UTC.
- * @param {string} datetime
- * @returns UTC datetime string.
+ * Format the CRL extensions block.
+ *
+ * Extensions are emitted in OID-ascending order to match the legacy output:
+ * the old code sorted by `extname` string, but the asn1-x509 OID constants
+ * we get back from peculiar/x509 sort identically for the supported types.
+ *
+ * Unsupported extensions are listed as `<oid>:` followed by an
+ * "Unsupported CRL extension. Try openssl CLI." line — same as before.
+ *
+ * @param {object[]} extensions - peculiar/x509 Extension objects.
+ * @param {number} indentSpaces
+ * @returns {string}
  */
-function generalizedDateTimeToUTC(datetime) {
-    // Ensure the string is in the correct format
-    if (!/^\d{12,14}Z$/.test(datetime)) {
-        throw new OperationError(`failed to format datetime string ${datetime}`);
+function formatCRLExtensions(extensions, indentSpaces) {
+    if (!Array.isArray(extensions) || extensions.length === 0) {
+        return indentString("No CRL extensions.", indentSpaces);
     }
 
-    // Extract components
-    let centuary = "20";
-    if (datetime.length === 15) {
-        centuary = datetime.substring(0, 2);
-        datetime = datetime.slice(2);
+    // Sort to match the legacy alphabetical-by-extname ordering as closely
+    // as possible.  Use a synthetic name per OID.
+    const sorted = [...extensions].sort((a, b) => {
+        const an = extDisplayName(a.type);
+        const bn = extDisplayName(b.type);
+        if (an < bn) return -1;
+        if (an > bn) return 1;
+        return 0;
+    });
+
+    let out = "";
+    for (const ext of sorted) {
+        out += formatCRLExtension(ext) + "\n";
     }
-    const year = centuary + datetime.substring(0, 2);
-    const month = datetime.substring(2, 4);
-    const day = datetime.substring(4, 6);
-    const hour = datetime.substring(6, 8);
-    const minute = datetime.substring(8, 10);
-    const second = datetime.substring(10, 12);
 
-    // Construct ISO 8601 format string
-    const isoString = `${year}-${month}-${day}T${hour}:${minute}:${second}Z`;
-
-    // Parse using standard Date object
-    const isoDateTime = new Date(isoString);
-
-    return isoDateTime.toUTCString();
+    return indentString(chop(out), indentSpaces);
 }
 
 /**
- * Format CRL extensions.
- * @param {r.ExtParam[] | undefined} extensions
- * @param {Number} indent
- * @returns Formatted string detailing CRL extensions.
+ * Pick a display name for an extension OID (used only for sort stability).
+ *
+ * @param {string} oid
+ * @returns {string}
  */
-function formatCRLExtensions(extensions, indent) {
-    if (Array.isArray(extensions) === false || extensions.length === 0) {
-        return indentString(`No CRL extensions.`, indent);
+function extDisplayName(oid) {
+    switch (oid) {
+        case ID_CE_AUTHORITY_KEY_IDENTIFIER: return "authorityKeyIdentifier";
+        case ID_CE_CRL_DISTRIBUTION_POINTS:  return "cRLDistributionPoints";
+        case ID_CE_CRL_NUMBER:               return "cRLNumber";
+        case ID_CE_ISSUER_ALT_NAME:          return "issuerAltName";
+        default:                             return oid;
+    }
+}
+
+/**
+ * Format a single CRL extension.
+ *
+ * @param {object} ext - peculiar/x509 Extension
+ * @returns {string}
+ */
+function formatCRLExtension(ext) {
+    const value = new Uint8Array(ext.value);
+
+    if (ext.type === ID_CE_AUTHORITY_KEY_IDENTIFIER) {
+        let out = `X509v3 Authority Key Identifier:\n`;
+        const aki = AsnParser.parse(value, AuthorityKeyIdentifier);
+        if (aki.keyIdentifier) {
+            out += `\tkeyid:${colonHex(bytesToHex(new Uint8Array(aki.keyIdentifier.buffer))).toUpperCase()}\n`;
+        }
+        if (aki.authorityCertIssuer && aki.authorityCertIssuer.length > 0) {
+            for (const gn of aki.authorityCertIssuer) {
+                if (gn.directoryName) {
+                    out += `\tDirName:${slashName(gn.directoryName)}\n`;
+                } else {
+                    out += `\t${formatGeneralName(gn, "crl")}\n`;
+                }
+            }
+        }
+        if (aki.authorityCertSerialNumber) {
+            const serial = bytesToHex(new Uint8Array(aki.authorityCertSerialNumber)).toUpperCase();
+            out += `\tserial:${colonHex(serial)}\n`;
+        }
+        return chop(out);
     }
 
-    let out = ``;
-
-    extensions.sort((a, b) => {
-        if (!Object.hasOwn(a, "extname") || !Object.hasOwn(b, "extname")) {
-            return 0;
+    if (ext.type === ID_CE_CRL_DISTRIBUTION_POINTS) {
+        const dps = AsnParser.parse(value, CRLDistributionPoints);
+        let out = `X509v3 CRL Distribution Points:\n`;
+        for (const dp of dps) {
+            if (dp.distributionPoint && dp.distributionPoint.fullName) {
+                const fullName = `Full Name:\n${dp.distributionPoint.fullName.map(gn => `    ${formatGeneralName(gn, "crl")}`).join("\n")}`;
+                out += indentString(fullName, 4) + "\n";
+            }
         }
-        if (a.extname < b.extname) {
-            return -1;
-        } else if (a.extname === b.extname) {
-            return 0;
+        return chop(out);
+    }
+
+    if (ext.type === ID_CE_CRL_NUMBER) {
+        const num = AsnParser.parse(value, CRLNumber);
+        const hex = BigInt(num.value).toString(16).toUpperCase();
+        return `X509v3 CRL Number:\n\t${hex}`;
+    }
+
+    if (ext.type === ID_CE_ISSUER_ALT_NAME) {
+        const ian = AsnParser.parse(value, IssueAlternativeName);
+        const lines = ian.map(gn => `    ${formatGeneralName(gn, "crl")}`).join("\n");
+        return `X509v3 Issuer Alternative Name:\n${lines}`;
+    }
+
+    return `${ext.type}:\n\tUnsupported CRL extension. Try openssl CLI.`;
+}
+
+/**
+ * Format an asn1-x509 Name as the OpenSSL slash representation
+ * `/C=…/ST=…/…`.
+ *
+ * @param {object} asnName
+ * @returns {string}
+ */
+function slashName(asnName) {
+    const OID_SHORT = {
+        "2.5.4.3": "CN", "2.5.4.4": "SN", "2.5.4.5": "serialNumber",
+        "2.5.4.6": "C",  "2.5.4.7": "L",  "2.5.4.8": "ST",
+        "2.5.4.9": "street", "2.5.4.10": "O", "2.5.4.11": "OU",
+        "2.5.4.12": "T", "2.5.4.42": "G", "2.5.4.43": "I",
+        "1.2.840.113549.1.9.1": "E",
+    };
+    let out = "";
+    for (const rdn of asnName) {
+        for (const atv of rdn) {
+            const key = OID_SHORT[atv.type] || atv.type;
+            out += `/${key}=${atv.value.toString()}`;
+        }
+    }
+    return out;
+}
+
+/**
+ * Format an array of bytes as `AA:BB:CC:...`.
+ *
+ * @param {string} hex
+ * @returns {string}
+ */
+function colonHex(hex) {
+    if (hex.length % 2 !== 0) hex = "0" + hex;
+    return chop(hex.replace(/(..)/g, "$&:"));
+}
+
+/**
+ * Format the revoked certificates list.
+ *
+ * @param {readonly object[]} entries - peculiar/x509 X509CrlEntry objects.
+ * @param {number} indentSpaces
+ * @returns {string}
+ */
+function formatRevokedCertificates(entries, indentSpaces) {
+    if (!entries || entries.length === 0) {
+        return indentString("No Revoked Certificates.", indentSpaces);
+    }
+    let out = "";
+    for (const entry of entries) {
+        out += `Serial Number: ${entry.serialNumber.toUpperCase()}
+    Revocation Date: ${entry.revocationDate.toUTCString()}\n`;
+        if (entry.extensions && entry.extensions.length > 0) {
+            out += `\tCRL entry extensions:\n${indentString(formatCRLEntryExtensions(entry.extensions), 2 * indentSpaces)}\n`;
+        }
+    }
+    return indentString(chop(out), indentSpaces);
+}
+
+/**
+ * Format the CRL entry extensions for a single revoked-certificate row.
+ *
+ * @param {object[]} extensions
+ * @returns {string}
+ */
+function formatCRLEntryExtensions(extensions) {
+    let out = "";
+    for (const ext of extensions) {
+        const value = new Uint8Array(ext.value);
+        if (ext.type === ID_CE_CRL_REASONS) {
+            const reason = AsnParser.parse(value, CRLReason);
+            const code = reason.reason;
+            const name = Object.prototype.hasOwnProperty.call(CRL_REASON_TO_NAME, code) ?
+                CRL_REASON_TO_NAME[code] :
+                `invalid reason code: ${code}`;
+            out += `X509v3 CRL Reason Code:\n    ${name}\n`;
+        } else if (ext.type === HOLD_INSTRUCTION_EXT_OID) {
+            // Hold Instruction; payload is an OID
+            const oid = decodeOidValue(value);
+            const name = HOLD_INSTRUCTION_OID_TO_NAME[oid] || `${oid}: unknown hold instruction OID`;
+            out += `Hold Instruction Code:\n\t${name}\n`;
+        } else if (ext.type === ID_CE_INVALIDITY_DATE) {
+            const inv = AsnParser.parse(value, InvalidityDate);
+            out += `Invalidity Date:\n\t${inv.value.toUTCString()}\n`;
         } else {
-            return 1;
+            out += `${ext.type}:\n\tUnsupported CRL entry extension. Try openssl CLI.\n`;
         }
-    });
-
-    extensions.forEach((ext) => {
-        if (!Object.hasOwn(ext, "extname")) {
-            throw new OperationError(`CRL entry extension object missing 'extname' key: ${ext}`);
-        }
-        switch (ext.extname) {
-            case "authorityKeyIdentifier":
-                out += `X509v3 Authority Key Identifier:\n`;
-                if (Object.hasOwn(ext, "kid")) {
-                    out += `\tkeyid:${colonDelimitedHexFormatString(ext.kid.hex.toUpperCase())}\n`;
-                }
-                if (Object.hasOwn(ext, "issuer")) {
-                    out += `\tDirName:${ext.issuer.str}\n`;
-                }
-                if (Object.hasOwn(ext, "sn")) {
-                    out += `\tserial:${colonDelimitedHexFormatString(ext.sn.hex.toUpperCase())}\n`;
-                }
-                break;
-            case "cRLDistributionPoints":
-                out += `X509v3 CRL Distribution Points:\n`;
-                ext.array.forEach((distPoint) => {
-                    const fullName = `Full Name:\n${formatGeneralNames(distPoint.dpname.full, 4)}`;
-                    out += indentString(fullName, 4) + "\n";
-                });
-                break;
-            case "cRLNumber":
-                if (!Object.hasOwn(ext, "num")) {
-                    throw new OperationError(`'cRLNumber' CRL entry extension missing 'num' key: ${ext}`);
-                }
-                out += `X509v3 CRL Number:\n\t${ext.num.hex.toUpperCase()}\n`;
-                break;
-            case "issuerAltName":
-                out += `X509v3 Issuer Alternative Name:\n${formatGeneralNames(ext.array, 4)}\n`;
-                break;
-            default:
-                out += `${ext.extname}:\n`;
-                out += `\tUnsupported CRL extension. Try openssl CLI.\n`;
-                break;
-        }
-    });
-
-    return indentString(chop(out), indent);
-}
-
-/**
- * Format general names array.
- * @param {Object[]} names
- * @returns Multi-line formatted string describing all supported general name types.
- */
-function formatGeneralNames(names, indent) {
-    let out = ``;
-
-    names.forEach((name) => {
-        const key = Object.keys(name)[0];
-
-        switch (key) {
-            case "ip":
-                out += `IP:${name.ip}\n`;
-                break;
-            case "dns":
-                out += `DNS:${name.dns}\n`;
-                break;
-            case "uri":
-                out += `URI:${name.uri}\n`;
-                break;
-            case "rfc822":
-                out += `EMAIL:${name.rfc822}\n`;
-                break;
-            case "dn":
-                out += `DIR:${name.dn.str}\n`;
-                break;
-            case "other":
-                out += `OtherName:${name.other.oid}::${Object.values(name.other.value)[0].str}\n`;
-                break;
-            default:
-                out += `${key}: unsupported general name type`;
-                break;
-        }
-    });
-
-    return indentString(chop(out), indent);
-}
-
-/**
- * Colon-delimited hex formatted output.
- * @param {string} hexString Hex String
- * @returns String representing input hex string with colon delimiter.
- */
-function colonDelimitedHexFormatString(hexString) {
-    if (hexString.length % 2 !== 0) {
-        hexString = "0" + hexString;
     }
-
-    return chop(hexString.replace(/(..)/g, "$&:"));
-}
-
-/**
- * Format revoked certificates array
- * @param {r.RevokedCertificate[] | null} revokedCertificates
- * @param {Number} indent
- * @returns Multi-line formatted string output of revoked certificates array
- */
-function formatRevokedCertificates(revokedCertificates, indent) {
-    if (Array.isArray(revokedCertificates) === false || revokedCertificates.length === 0) {
-        return indentString("No Revoked Certificates.", indent);
-    }
-
-    let out=``;
-
-    revokedCertificates.forEach((revCert) => {
-        if (!Object.hasOwn(revCert, "sn") || !Object.hasOwn(revCert, "date")) {
-            throw new OperationError("invalid revoked certificate object, missing either serial number or date");
-        }
-
-        out += `Serial Number: ${revCert.sn.hex.toUpperCase()}
-    Revocation Date: ${generalizedDateTimeToUTC(revCert.date)}\n`;
-        if (Object.hasOwn(revCert, "ext") && Array.isArray(revCert.ext) && revCert.ext.length !== 0) {
-            out += `\tCRL entry extensions:\n${indentString(formatCRLEntryExtensions(revCert.ext), 2*indent)}\n`;
-        }
-    });
-
-    return indentString(chop(out), indent);
-}
-
-/**
- * Format CRL entry extensions.
- * @param {Object[]} exts
- * @returns Formatted multi-line string describing CRL entry extensions.
- */
-function formatCRLEntryExtensions(exts) {
-    let out = ``;
-
-    const crlReasonCodeToReasonMessage = {
-        0: "Unspecified",
-        1: "Key Compromise",
-        2: "CA Compromise",
-        3: "Affiliation Changed",
-        4: "Superseded",
-        5: "Cessation Of Operation",
-        6: "Certificate Hold",
-        8: "Remove From CRL",
-        9: "Privilege Withdrawn",
-        10: "AA Compromise",
-    };
-
-    const holdInstructionOIDToName = {
-        "1.2.840.10040.2.1": "Hold Instruction None",
-        "1.2.840.10040.2.2": "Hold Instruction Call Issuer",
-        "1.2.840.10040.2.3": "Hold Instruction Reject",
-    };
-
-    exts.forEach((ext) => {
-        if (!Object.hasOwn(ext, "extname")) {
-            throw new OperationError(`CRL entry extension object missing 'extname' key: ${ext}`);
-        }
-        switch (ext.extname) {
-            case "cRLReason":
-                if (!Object.hasOwn(ext, "code")) {
-                    throw new OperationError(`'cRLReason' CRL entry extension missing 'code' key: ${ext}`);
-                }
-                out += `X509v3 CRL Reason Code:
-    ${Object.hasOwn(crlReasonCodeToReasonMessage, ext.code) ? crlReasonCodeToReasonMessage[ext.code] : `invalid reason code: ${ext.code}`}\n`;
-                break;
-            case "2.5.29.23": // Hold instruction
-                out += `Hold Instruction Code:\n\t${Object.hasOwn(holdInstructionOIDToName, ext.extn.oid) ? holdInstructionOIDToName[ext.extn.oid] : `${ext.extn.oid}: unknown hold instruction OID`}\n`;
-                break;
-            case "2.5.29.24": // Invalidity Date
-                out += `Invalidity Date:\n\t${generalizedDateTimeToUTC(ext.extn.gentime.str)}\n`;
-                break;
-            default:
-                out += `${ext.extname}:\n`;
-                out += `\tUnsupported CRL entry extension. Try openssl CLI.\n`;
-                break;
-        }
-    });
-
     return chop(out);
 }
 
 /**
- * Format CRL signature.
- * @param {String} sigHex
- * @param {Number} indent
- * @returns String representing hex signature value formatted on multiple lines.
+ * Decode a DER OBJECT IDENTIFIER from raw bytes (including the 0x06 tag).
+ *
+ * @param {Uint8Array} bytes
+ * @returns {string}
  */
-function formatCRLSignature(sigHex, indent) {
-    if (sigHex.length % 2 !== 0) {
-        sigHex = "0" + sigHex;
+function decodeOidValue(bytes) {
+    if (bytes[0] !== 0x06) throw new OperationError("Expected OBJECT IDENTIFIER");
+    // Length octet(s) follow tag; for any sensible OID this is one byte.
+    let i = 1;
+    if (bytes[i] >= 0x80) i += (bytes[i] & 0x7f);
+    i += 1;
+    const first = bytes[i++];
+    const arcs = [Math.floor(first / 40).toString(), (first % 40).toString()];
+    let acc = 0n;
+    for (; i < bytes.length; i++) {
+        acc = (acc << 7n) | BigInt(bytes[i] & 0x7f);
+        if ((bytes[i] & 0x80) === 0) {
+            arcs.push(acc.toString());
+            acc = 0n;
+        }
     }
-
-    return indentString(formatMultiLine(chop(sigHex.replace(/(..)/g, "$&:"))), indent);
+    return arcs.join(".");
 }
 
 /**
- * Format string onto multiple lines.
- * @param {string} longStr
- * @returns String as a multi-line string.
+ * Format the CRL signature as colon-delimited byte pairs wrapped to 54
+ * characters per line, indented.
+ *
+ * @param {string} sigHex
+ * @param {number} indentSpaces
+ * @returns {string}
  */
-function formatMultiLine(longStr) {
+function formatCRLSignature(sigHex, indentSpaces) {
+    if (sigHex.length % 2 !== 0) sigHex = "0" + sigHex;
+    const colonHexStr = chop(sigHex.replace(/(..)/g, "$&:"));
     const lines = [];
-
-    for (let remain = longStr ; remain !== "" ; remain = remain.substring(54)) {
+    for (let remain = colonHexStr; remain !== ""; remain = remain.substring(54)) {
         lines.push(remain.substring(0, 54));
     }
-
-    return lines.join("\n");
+    return indentString(lines.join("\n"), indentSpaces);
 }
 
 /**
  * Indent a multi-line string by n spaces.
- * @param {string} input String
- * @param {number} spaces How many leading spaces
- * @returns Indented string.
+ *
+ * @param {string} input
+ * @param {number} spaces
+ * @returns {string}
  */
 function indentString(input, spaces) {
-    const indent = " ".repeat(spaces);
-    return input.replace(/^/gm, indent);
+    const pad = " ".repeat(spaces);
+    return input.replace(/^/gm, pad);
 }
 
 /**
- * Remove last character from a string.
- * @param {string} s String
- * @returns Chopped string.
+ * Remove the last character from a string.
+ *
+ * @param {string} s
+ * @returns {string}
  */
 function chop(s) {
-    if (s.length < 1) {
-        return s;
-    }
-    return s.substring(0, s.length - 1);
+    return s.length === 0 ? s : s.substring(0, s.length - 1);
 }
 
 export default ParseX509CRL;
