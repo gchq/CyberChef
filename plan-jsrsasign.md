@@ -6,13 +6,14 @@
 
 - [x] PR 1 — Setup + ASN.1 utilities
 - [x] PR 2 — SM2 rewrite
-- [ ] PR 3 — ECDSA primitives
+- [x] PR 3 — ECDSA primitives
 - [ ] PR 4 — PEM/JWK conversion + key extraction
 - [ ] PR 5 — X.509 / CSR / CRL parsing
 - [ ] PR 6 — Removal
 
 _Notes for next session:_
 - **PR 2 resolved:** SM2 is now built on `weierstrass(...)` + `ecdh(...)` from `@noble/curves/abstract/weierstrass.js` (curve params per GM/T 0003-2012). No `/sm2` subpath needed.
+- **PR 3 resolved:** ECDSA primitives migrated; new [src/core/lib/Ecdsa.mjs](src/core/lib/Ecdsa.mjs) is the shared helper module. Existing ECDSA fixture set passes unchanged (sign↔verify round-trips and the canned P-256 signature fixtures both verify against `lowS: false`).
 - **PR 5 blocker:** `@peculiar/x509` v2 needs a `reflect-metadata` polyfill at every entry point — PR 1 pinned to `^1.14.3` to avoid that. Stay on v1 unless the polyfill cost gets resolved.
 
 ## Context
@@ -237,6 +238,15 @@ After **PR 6:**
 ## Changelog
 
 Record deviations from the original plan here, newest at the top. One bullet per change: what changed, why, and which PR.
+
+### PR 3 — 2026-05-17
+- New [src/core/lib/Ecdsa.mjs](src/core/lib/Ecdsa.mjs) replaces the jsrsasign calls in [ECDSASign.mjs](src/core/operations/ECDSASign.mjs), [ECDSAVerify.mjs](src/core/operations/ECDSAVerify.mjs), [ECDSASignatureConversion.mjs](src/core/operations/ECDSASignatureConversion.mjs) and [GenerateECDSAKeyPair.mjs](src/core/operations/GenerateECDSAKeyPair.mjs). `loadEcKey` handles SEC1, PKCS#8 and SPKI PEMs by parsing them with `@peculiar/asn1-ecc` / `@peculiar/asn1-pkcs8` / `@peculiar/asn1-x509`. ECDSA itself is `@noble/curves`'s `p256` / `p384` / `p521` with explicit `{ prehash: false, lowS: false, format: "der" }` — see notes below.
+- **`lowS: false` on both sign and verify.** Noble defaults to `lowS: true` (BTC/ETH-style malleability rejection), which (a) would normalise produced signatures and could diverge from jsrsasign byte-for-byte, and (b) would reject existing jsrsasign-produced signatures whose `s` happened to be in the upper half. We disable lowS to preserve interoperability with the existing fixtures.
+- **`prehash: false`.** The operation hashes the message itself (so MD5/SHA-1 work via `@noble/hashes/legacy`); noble would otherwise re-hash with the curve's default digest. The Sign/Verify operations call `digestBytes(...)` and pass the digest in directly.
+- **Latin-1 truncation for string→bytes.** Both Sign (input string) and Verify (`Utils.convertToByteString(msg, "Raw")` → string) follow what jsrsasign did under the hood: each JS code unit is masked to its low byte. That's wrong for free-text UTF-8 but matches the existing behaviour and is what the round-trip tests assume. Encoded as `strToBytesLatin1` in `Ecdsa.mjs`.
+- **`parseAsn1SigToHexRS` keeps the DER `00` prefix.** The jsrsasign helper returned r/s as the raw INTEGER bytes (so a 32-byte r whose MSB was set came back as 33 hex bytes starting with `00`). The Raw JSON test fixture in [tests/operations/tests/ECDSA.mjs](tests/operations/tests/ECDSA.mjs) depends on that. Replicated with an inline DER reader rather than going through `bigint` (which would strip the leading zero).
+- **No fixture changes.** All 83 ECDSA tests pass unchanged: deterministic-k sign↔verify cycles, the canned P-256 SHA-256 ASN.1/P1363/JWS/JSON inputs, and the negative tests (RSA key rejected, private-where-public expected, JSON missing r/s, etc.). The Generate ECDSA Key Pair op has no fixtures; manually exercised PEM/DER/JWK output paths.
+- `id_*` OID constants from `@peculiar/asn1-ecc` are namespace-imported and re-aliased to SCREAMING_SNAKE locals because ESLint's `camelcase` rule trips on the snake_case export names.
 
 ### PR 2 — 2026-05-17
 - `@noble/curves` v2 has no `/sm2` subpath, so [src/core/lib/SM2.mjs](src/core/lib/SM2.mjs) builds the curve itself with `weierstrass(...)` from `@noble/curves/abstract/weierstrass.js` using the GM/T 0003-2012 parameter set. Curve constructor is memoised per name so repeated `new SM2(...)` calls don't rebuild it.
