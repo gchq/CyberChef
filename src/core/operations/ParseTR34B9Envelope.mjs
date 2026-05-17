@@ -39,6 +39,13 @@ const TR34_ERROR_CODES = {
 
 // ── ASN.1 helpers ─────────────────────────────────────────────────────────────
 
+/**
+ * Parses an ASN.1 length field at the given offset.
+ *
+ * @param {Uint8Array} bytes
+ * @param {number} offset
+ * @returns {{headerLength: number, valueLength: number}}
+ */
 function parseAsnLength(bytes, offset) {
     if (offset + 2 > bytes.length)
         throw new OperationError("Insufficient ASN.1 data.");
@@ -76,6 +83,12 @@ function peekAsnSequence(bytes) {
     }
 }
 
+/**
+ * Converts a Uint8Array to an uppercase hex string.
+ *
+ * @param {Uint8Array} bytes
+ * @returns {string}
+ */
 function hexStr(bytes) {
     return Array.from(bytes, b => b.toString(16).padStart(2, "0").toUpperCase()).join("");
 }
@@ -87,6 +100,9 @@ function hexStr(bytes) {
  */
 class ParseTR34B9Envelope extends Operation {
 
+    /**
+     * ParseTR34B9Envelope constructor.
+     */
     constructor() {
         super();
 
