@@ -2,7 +2,7 @@
  * Shared ECDSA helpers built on @noble/curves and @peculiar/asn1-*.
  *
  * Used by the ECDSA Sign/Verify/Signature Conversion/Generate Key Pair
- * operations. Migrated from jsrsasign.
+ * operations.
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2016
@@ -72,8 +72,7 @@ export function digestBytes(algo, bytes) {
 
 /**
  * Convert a JS string to bytes by Latin-1 truncation of each code unit (i.e.
- * `charCodeAt(i) & 0xff`). This matches how jsrsasign / CryptoJS fed strings
- * into MessageDigest.update — keeping signatures interoperable for inputs
+ * `charCodeAt(i) & 0xff`). This keeps signatures interoperable for inputs
  * coming out of upstream byte-producing ops, while preserving the
  * (questionable) UTF-16-truncating behaviour for free-text inputs.
  *
@@ -162,7 +161,7 @@ export function verifyEcdsa(keyInfo, digest, asn1Hex) {
 
 /**
  * Quick test for whether a hex string parses as a single DER-encoded ASN.1
- * value. Mirrors jsrsasign's ASN1HEX.isASN1HEX.
+ * value.
  *
  * @param {string} hex
  * @returns {boolean}
@@ -182,8 +181,8 @@ export function isAsn1Hex(hex) {
 /**
  * Parse an ASN.1 DER-encoded ECDSA signature and return the raw r/s INTEGER
  * bytes as hex. Preserves the DER 2's-complement leading 0x00 when present
- * (i.e. r/s may have a leading "00" pair) — this matches the legacy
- * jsrsasign ECDSA.parseSigHexInHexRS behaviour that existing tests assume.
+ * (i.e. r/s may have a leading "00" pair). Existing tests assume this
+ * compatibility behaviour.
  *
  * @param {string} asn1Hex
  * @returns {{r: string, s: string}}

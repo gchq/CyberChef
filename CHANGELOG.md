@@ -13,6 +13,9 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+## [Unreleased]
+- Removed the unmaintained `jsrsasign` dependency. ASN.1/OID/PEM utilities, SM2, ECDSA, PEM/JWK key conversion, and X.509/CSR/CRL parsing now use `@noble/curves`, `@peculiar/x509`, and `asn1js`; related golden text fixtures were updated during the migration for accepted cosmetic output-format drift.
+
 ## [11.0.0] - 2026-04-28
 - Revert sitemap to v8.0.X to fix build/deploy on master [@GCHQDeveloper581] | [#2348]
 - Node version update from 22 to 24 [@lzandman] [@GCHQDeveloper581] | [#2347]
@@ -1220,4 +1223,3 @@ Breaking changes:
 [#2273]: https://github.com/gchq/CyberChef/pull/2273
 [#2342]: https://github.com/gchq/CyberChef/pull/2342
 [#1922]: https://github.com/gchq/CyberChef/pull/1922
-

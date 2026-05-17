@@ -11,8 +11,8 @@ import { toHex, fromHex } from "./Hex.mjs";
 /**
  * Formats Distinguished Name (DN) objects to strings.
  *
- * Accepts either the legacy jsrsasign-style `{ array: [[{type, value}, ...], ...] }`
- * shape OR `@peculiar/x509`'s `JsonName` shape — an array of records keyed by
+ * Accepts either the legacy `{ array: [[{type, value}, ...], ...] }` shape
+ * OR `@peculiar/x509`'s `JsonName` shape — an array of records keyed by
  * RDN short-name (`[{ CN: ["foo"], OU: ["bar"] }, ...]`).
  *
  * @param {Object|Array} dnObj

@@ -2,7 +2,6 @@
  * Shared X.509 / CSR / CRL helpers built on @peculiar/x509 + @peculiar/asn1-*.
  *
  * Used by ParseX509Certificate / PubKeyFromCert / ParseCSR / ParseX509CRL.
- * Replaces the jsrsasign X.509 plumbing.
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2016
@@ -116,9 +115,9 @@ export function decodeX509Input(input, format) {
 // ----- signature algorithm --------------------------------------------------
 
 /**
- * Map a signature-algorithm OID to the jsrsasign-style display name
- * (e.g. "1.2.840.113549.1.1.11" -> "SHA256withRSA").  Falls back to the
- * raw OID if unknown.
+ * Map a signature-algorithm OID to the compact display name used by these
+ * operations (e.g. "1.2.840.113549.1.1.11" -> "SHA256withRSA"). Falls back
+ * to the raw OID if unknown.
  *
  * @param {string} oid
  * @returns {string}

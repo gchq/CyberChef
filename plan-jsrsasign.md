@@ -9,9 +9,10 @@
 - [x] PR 3 — ECDSA primitives
 - [x] PR 4 — PEM/JWK conversion + key extraction
 - [x] PR 5 — X.509 / CSR / CRL parsing
-- [ ] PR 6 — Removal
+- [x] PR 6 — Removal
 
 _Notes for next session:_
+- **PR 6 complete:** dependency removed, source tree is free of runtime references, and the remaining migration references are documentation/changelog only.
 - **PR 2 resolved:** SM2 is now built on `weierstrass(...)` + `ecdh(...)` from `@noble/curves/abstract/weierstrass.js` (curve params per GM/T 0003-2012). No `/sm2` subpath needed.
 - **PR 3 resolved:** ECDSA primitives migrated; new [src/core/lib/Ecdsa.mjs](src/core/lib/Ecdsa.mjs) is the shared helper module. Existing ECDSA fixture set passes unchanged (sign↔verify round-trips and the canned P-256 signature fixtures both verify against `lowS: false`).
 - **PR 4 resolved:** Key-conversion ops migrated; new [src/core/lib/KeyConvert.mjs](src/core/lib/KeyConvert.mjs) wraps RSA/EC/DSA PEM⇄JWK⇄SPKI/PKCS#8. DSA private-key parsing/building goes through `asn1js` directly (no peculiar `asn1-dsa` package and `node-forge` doesn't expose DSA), reusing the existing EC helpers from `Ecdsa.mjs`.
@@ -241,6 +242,11 @@ After **PR 6:**
 
 Record deviations from the original plan here, newest at the top. One bullet per change: what changed, why, and which PR.
 
+### PR 6 — 2026-05-17
+- Removed `jsrsasign` from [package.json](package.json) and [package-lock.json](package-lock.json). No runtime code changes were needed because PRs 1-5 had already moved operations to `@noble/curves`, `@peculiar/x509`, and `asn1js`.
+- Removed stale dependency-name mentions from `src/` comments so `rg -n "jsrsasign" src/` is clean. Remaining mentions are intentionally limited to migration documentation and [CHANGELOG.md](CHANGELOG.md).
+- Added a top-level [CHANGELOG.md](CHANGELOG.md) entry noting the removal and the accepted cosmetic output drift across the migrated ASN.1, ECDSA, key conversion, and X.509-family operations.
+
 ### PR 5 — 2026-05-17
 - New [src/core/lib/X509.mjs](src/core/lib/X509.mjs) holds the shared X.509 helpers (`decodeX509Input`, `sigAlgOidToName`, `describeSpki`, `parseDerEcdsaSignature`, `isDerEcdsaSignature`, `formatJsonName`, `formatGeneralName`, `formatHexByteLines`/`formatHexColonWrapped`, `asnNameToJson`). [src/core/lib/PublicKey.mjs](src/core/lib/PublicKey.mjs)'s `formatDnObj` now accepts both the legacy jsrsasign shape and `@peculiar/x509`'s `JsonName` (array-of-records) shape. Migrated ops: [ParseX509Certificate.mjs](src/core/operations/ParseX509Certificate.mjs), [PubKeyFromCert.mjs](src/core/operations/PubKeyFromCert.mjs), [ParseCSR.mjs](src/core/operations/ParseCSR.mjs), [ParseX509CRL.mjs](src/core/operations/ParseX509CRL.mjs).
 - **`X509Certificate` v1.14.3 doesn't expose `.version`.** Plan called for `cert.version`, but on the pinned v1 the property is missing. Worked around by parsing `cert.rawData` with the asn1-x509 `Certificate` schema and reading `tbsCertificate.version` + `signatureAlgorithm.algorithm` directly. The same approach is used in `ParseCSR` (with `CertificationRequest` from `@peculiar/asn1-csr`) and `ParseX509CRL` (with `CertificateList` from `@peculiar/asn1-x509`) — bypassing the WebCrypto algorithm mapping is necessary for DSA anyway (peculiar's algorithm provider doesn't know it).
@@ -294,4 +300,3 @@ Record deviations from the original plan here, newest at the top. One bullet per
 - Added `@noble/hashes` peer-dep bump (was on ^1.x, needed ^2 for the `legacy` subpath). No code impact.
 - SM2 ciphertext fixture #3 was already wrong (decoded to the wrong plaintext under jsrsasign too) — confirmed via independent SM2 implementation, regenerated fixture.
 -->
-

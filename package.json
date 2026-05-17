@@ -148,7 +148,6 @@
     "jsonpath-plus": "^10.4.0",
     "jsonwebtoken": "9.0.3",
     "jsqr": "^1.4.0",
-    "jsrsasign": "^11.1.3",
     "kbpgp": "^2.1.17",
     "libbzip2-wasm": "0.0.4",
     "libyara-wasm": "^1.2.1",

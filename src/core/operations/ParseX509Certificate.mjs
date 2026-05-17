@@ -165,8 +165,8 @@ ${extensionsText}`;
 }
 
 /**
- * Format the algorithm label for the Public Key block.  Mirrors the legacy
- * jsrsasign labelling: "EC", "DSA", "RSA".
+ * Format the algorithm label for the Public Key block. Mirrors the legacy
+ * labels: "EC", "DSA", "RSA".
  *
  * @param {object} spki
  * @returns {string}
@@ -233,8 +233,8 @@ function formatExtensions(cert) {
 }
 
 /**
- * Format a JS Date as the jsrsasign UTCTime/GeneralizedTime string
- * `yymmddHHMMSSZ` (or `yyyymmddHHMMSSZ` for dates past 2049).
+ * Format a JS Date as an ASN.1 UTCTime/GeneralizedTime string: `yymmddHHMMSSZ`
+ * or `yyyymmddHHMMSSZ` for dates past 2049.
  *
  * @param {Date} date
  * @returns {string}

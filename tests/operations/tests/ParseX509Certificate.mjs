@@ -1,8 +1,8 @@
 /**
  * Parse X.509 Certificate tests.
  *
- * Added as part of the jsrsasign → @peculiar/x509 migration (PR 5) to give
- * the operation regression coverage it previously lacked.  The certificate
+ * Added as part of the @peculiar/x509 migration (PR 5) to give the
+ * operation regression coverage it previously lacked. The certificate
  * fixtures are reused from PubKeyFromCert.mjs.
  *
  * @author n1474335 [n1474335@gmail.com]

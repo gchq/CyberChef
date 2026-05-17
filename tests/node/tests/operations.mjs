@@ -650,7 +650,7 @@ WWFkYSBZYWRh
     it("Parse ASN.1 Hex string", () => {
         // The bytes for "Mouth-watering" don't form a well-formed ASN.1 structure
         // (tag 0x4d declares length 0x6f but only 12 bytes follow), so we report
-        // a parse error rather than the partial best-effort dump jsrsasign emitted.
+        // a parse error rather than a partial best-effort dump.
         assert.strictEqual(
             chef.parseASN1HexString(chef.toHex("Mouth-watering")).toString(),
             "ASN.1 parse error: End of input reached before message was fully decoded (inconsistent offset and length values)"
@@ -1146,4 +1146,3 @@ ExifImageHeight: 57`);
 
 
 ]);
-

@@ -1,8 +1,7 @@
 /**
  * ASN.1 / OID / PEM tests.
  *
- * Covers the four operations migrated from jsrsasign to the in-house
- * Asn1.mjs helper:
+ * Covers the four operations migrated to the in-house Asn1.mjs helper:
  *   - Hex to Object Identifier
  *   - Object Identifier to Hex
  *   - Hex to PEM

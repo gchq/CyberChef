@@ -2,7 +2,7 @@
  * Asymmetric key conversion helpers built on @peculiar/asn1-* and asn1js.
  *
  * Shared by the PEM to JWK / JWK to PEM / Public Key from Private Key
- * operations.  Replaces the jsrsasign key-format-conversion plumbing.
+ * operations.
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2016
@@ -370,8 +370,7 @@ function parsePkcs8(bytes) {
     }
     if (alg === ID_DSA) {
         // DSA PKCS#8 carries only x (with p/q/g in the algorithm
-        // parameters).  jsrsasign rejected this layout because no y was
-        // present and the existing tests assert that we do the same — we
+        // parameters). Without y, deriving the public key is unsupported;
         // mark the info accordingly and let derivePublicKeyInfo throw.
         return { kty: "DSA", isPrivate: true, y: null };
     }

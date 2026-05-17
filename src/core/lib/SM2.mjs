@@ -58,8 +58,8 @@ function getCurve(name) {
         Point,
         n: params.n,
         coordCharLen: params.coordCharLen,
-        // Uniform-ish random scalar in [1, n-1] — matches the bias profile of
-        // the previous jsrsasign-based getBigRandom.
+        // Uniform-ish random scalar in [1, n-1], matching the previous bias
+        // profile for compatibility with existing SM2 behaviour.
         randomScalar: () => bytesToNumberBE(dh.utils.randomSecretKey()) % (params.n - 1n) + 1n,
     };
     curveCache[name] = cached;

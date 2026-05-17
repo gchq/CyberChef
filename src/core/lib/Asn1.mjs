@@ -1,9 +1,8 @@
 /**
  * ASN.1 / OID / PEM helpers.
  *
- * Replacements for the small jsrsasign utilities used by the
- * HexToObjectIdentifier, ObjectIdentifierToHex, HexToPEM and
- * ParseASN1HexString operations.
+ * Helpers used by the HexToObjectIdentifier, ObjectIdentifierToHex,
+ * HexToPEM and ParseASN1HexString operations.
  *
  * @author n1474335 [n1474335@gmail.com]
  * @copyright Crown Copyright 2016
@@ -109,14 +108,13 @@ export function oidIntToHex(oid) {
 /**
  * Wrap a hex-encoded DER blob in a PEM envelope.
  *
- * Uses LF line endings only (the old jsrsasign output used CRLF).
+ * Uses LF line endings only.
  *
- * Input parsing is intentionally lenient to match the previous jsrsasign
- * behaviour: whitespace is stripped, an odd-length string is left-padded
- * with a zero, and characters that are not hex digits are treated as the
- * nibble `0`. This keeps the operation usable as a generic byte-emitter
- * inside larger recipes where the upstream stage may not produce strict
- * hex.
+ * Input parsing is intentionally lenient: whitespace is stripped, an
+ * odd-length string is left-padded with a zero, and characters that are not
+ * hex digits are treated as the nibble `0`. This keeps the operation usable
+ * as a generic byte-emitter inside larger recipes where the upstream stage
+ * may not produce strict hex.
  *
  * @param {string} hex
  * @param {string} label
@@ -146,8 +144,7 @@ export function derToPem(hex, label) {
 }
 
 /**
- * Walk an asn1js parse tree and produce an indented dump similar to the
- * one jsrsasign's ASN1HEX.dump produced.
+ * Walk an asn1js parse tree and produce an indented dump.
  *
  * @param {string} hex
  * @param {Object} [options]
