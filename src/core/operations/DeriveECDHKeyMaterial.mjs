@@ -75,7 +75,10 @@ function concatBytes(parts) {
     const total = parts.reduce((sum, p) => sum + p.length, 0);
     const out = new Uint8Array(total);
     let offset = 0;
-    for (const p of parts) { out.set(p, offset); offset += p.length; }
+    for (const p of parts) {
+        out.set(p, offset);
+        offset += p.length;
+    }
     return out;
 }
 
@@ -98,7 +101,7 @@ async function concatKdf(rawSecret, sharedInfo, hashAlg, outputLen) {
             (counter >>> 24) & 0xff,
             (counter >>> 16) & 0xff,
             (counter >>>  8) & 0xff,
-             counter         & 0xff,
+            counter          & 0xff,
         ]);
         const data = concatBytes([ctr, rawSecret, sharedInfo]);
         const digest = new Uint8Array(await crypto.subtle.digest(hashAlg, data));
@@ -115,6 +118,9 @@ async function concatKdf(rawSecret, sharedInfo, hashAlg, outputLen) {
  */
 class DeriveECDHKeyMaterial extends Operation {
 
+    /**
+     * DeriveECDHKeyMaterial constructor.
+     */
     constructor() {
         super();
 
@@ -139,8 +145,8 @@ class DeriveECDHKeyMaterial extends Operation {
                 name: "P-256 raw shared secret",
                 input: "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg4HBsMvgcOvEQBrYJ\ndEXulke/dh5vYiOvfI41AToqfbWhRANCAAQgZgScW2pSpRRTOADLPL5D+8TF6xXx\nx9GDOE8V1xYj7arujDYH5935uCdVxXa84lUEw35+afHuh0bDmBDxolmx\n-----END PRIVATE KEY-----",
                 args: ["PEM", "P-256", "PEM",
-                    "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEa+FXJzzko0OZ9DcOaXpLzAkSt7bE\nXXVKQqYfsmuelH6QgH86dMR04/bvnhl4bF7YKbMWDlPRHs9haSeR/PhFNg==\n-----END PUBLIC KEY-----",
-                    "None", 32, "", "Hex"],
+                       "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEa+FXJzzko0OZ9DcOaXpLzAkSt7bE\nXXVKQqYfsmuelH6QgH86dMR04/bvnhl4bF7YKbMWDlPRHs9haSeR/PhFNg==\n-----END PUBLIC KEY-----",
+                       "None", 32, "", "Hex"],
             },
         ];
 
@@ -218,9 +224,9 @@ class DeriveECDHKeyMaterial extends Operation {
         if (!globalThis.crypto || !globalThis.crypto.subtle)
             throw new OperationError("WebCrypto is not available in this runtime.");
 
-        const privateDer = privateFmt === "PEM"
-            ? parsePrivateKey(input)
-            : parsePemOrHex(input, "HEX", "PRIVATE KEY");
+        const privateDer = privateFmt === "PEM" ?
+            parsePrivateKey(input) :
+            parsePemOrHex(input, "HEX", "PRIVATE KEY");
 
         const publicDer = parsePemOrHex(
             peerPublicKey,
@@ -235,9 +241,9 @@ class DeriveECDHKeyMaterial extends Operation {
             (sharedInfoHexNorm.length > 0 && !/^[0-9a-fA-F]+$/.test(sharedInfoHexNorm)))
             throw new OperationError("Shared info must be hex.");
 
-        const sharedInfo = sharedInfoHexNorm.length
-            ? new Uint8Array(sharedInfoHexNorm.match(/.{2}/g).map(h => parseInt(h, 16)))
-            : new Uint8Array();
+        const sharedInfo = sharedInfoHexNorm.length ?
+            new Uint8Array(sharedInfoHexNorm.match(/.{2}/g).map(h => parseInt(h, 16))) :
+            new Uint8Array();
 
         const privateKey = await crypto.subtle.importKey(
             "pkcs8", privateDer,
