@@ -9,6 +9,24 @@ const path = require("path");
 const nodeFlags = "--no-warnings --no-deprecation";
 
 /**
+ * Generates the bundle analyzer report from Webpack stats only.
+ */
+class StatsOnlyBundleAnalyzerPlugin extends BundleAnalyzerPlugin {
+    /**
+     * Prevent webpack-bundle-analyzer from reading emitted bundle files.
+     *
+     * Inline worker-loader assets are present in Webpack stats but intentionally
+     * not written to disk, so stat sizes are the most complete source for this
+     * production report.
+     *
+     * @returns {null}
+     */
+    getBundleDirFromCompiler() {
+        return null;
+    }
+}
+
+/**
  * Grunt configuration for building the app in various formats.
  *
  * @author n1474335 [n1474335@gmail.com]
@@ -137,11 +155,11 @@ module.exports = function (grunt) {
                             minifyCSS: true
                         }
                     }),
-                    new BundleAnalyzerPlugin({
+                    new StatsOnlyBundleAnalyzerPlugin({
                         analyzerMode: "static",
                         reportFilename: "BundleAnalyzerReport.html",
                         openAnalyzer: false,
-                        excludeAssets: [/Worker\.js$/]
+                        defaultSizes: "stat"
                     }),
                 ]
             };
