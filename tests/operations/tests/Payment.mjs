@@ -26,9 +26,9 @@ pPVK74bCKbeq3gIA5ZN0we6T18GSkTHtCCOG266YyCGTcE2JrnswYk1f8A==
 TestRegister.addTests([
     {
         name: "Parse Thales payShield command: header, LMK identifier, trailer",
-        input: "\u0002HEADHE0123456789ABCDEF0011223344556677%00\u0019TAIL\u0003",
+        input: "HEADHE0123456789ABCDEF0011223344556677%00TAIL",
         expectedOutput: JSON.stringify({
-            rawInput: "\u0002HEADHE0123456789ABCDEF0011223344556677%00\u0019TAIL\u0003",
+            rawInput: "HEADHE0123456789ABCDEF0011223344556677%00TAIL",
             framing: {
                 stxPresent: true,
                 etxPresent: true,
@@ -53,7 +53,7 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse Thales payShield command",
+                op: "Parse Thales payShield Command",
                 args: [4]
             }
         ]
@@ -87,7 +87,7 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse Thales payShield command",
+                op: "Parse Thales payShield Command",
                 args: [0]
             }
         ]
@@ -130,7 +130,7 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse Futurex Excrypt command",
+                op: "Parse Futurex Excrypt Command",
                 args: []
             }
         ]
@@ -175,7 +175,7 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse Futurex Excrypt command",
+                op: "Parse Futurex Excrypt Command",
                 args: []
             }
         ]
@@ -204,31 +204,49 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse TR-31 key block",
+                op: "Parse TR-31 Key Block",
                 args: [true]
             }
         ]
     },
     {
-        name: "Parse TR-34 B9 envelope: split sections",
+        name: "Parse TR-34 key transport: split sections",
         input: "001730303030423930303100112233300030303034AABBCCDD",
         expectedOutput: JSON.stringify({
             declaredLength: 23,
             actualLengthExcludingLengthField: 23,
             header: "0000",
-            responseType: "B9",
+            messageType: "B9",
+            messageDescription: "BindResponse — final key delivery; contains CMS EnvelopedData + signature",
             errorCode: "00",
-            authDataHex: "3100",
+            errorDescription: "Success",
+            authData: {
+                hex: "3100",
+                byteCount: 2,
+                asnOuter: null
+            },
             kcvHex: "112233",
-            envelopeDataHex: "3000",
+            envelopeData: {
+                hex: "3000",
+                byteCount: 2,
+                description: "CMS EnvelopedData — wrapped symmetric key (decrypt with KRD private RSA key)",
+                asnOuter: {
+                    tag: "0x30 (SEQUENCE)",
+                    headerBytes: 2,
+                    valueLength: 0,
+                    totalExpected: 2,
+                    complete: true
+                }
+            },
             signatureLengthAscii: "0004",
             signatureLength: 4,
             signatureHex: "AABBCCDD",
-            trailingHex: ""
+            trailingHex: "",
+            notes: []
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse TR-34 B9 envelope",
+                op: "Parse TR-34 Key Transport",
                 args: []
             }
         ]
