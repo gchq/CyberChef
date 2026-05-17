@@ -401,9 +401,6 @@ TestRegister.addTests([
             pan: "4024140000000131",
             source: "Public Visa test PAN published in Mastercard AVS scenario documentation.",
             network: "Visa",
-            cardType: "Unknown",
-            cardTypeConfidence: "low",
-            cardTypeNote: "Visa issues credit, debit, and prepaid cards. The product type is determined by the issuer BIN, not the PAN prefix — a BIN database lookup is required.",
             majorIndustryIdentifier: "4",
             majorIndustryIdentifierDescription: "Banking and financial (Visa)",
             issuerIdentificationNumber: "40241400",
@@ -424,13 +421,13 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "Generate Test PAN: American Express generated sample",
+        name: "Generate Test PAN: American Express curated sample",
         input: "",
-        expectedOutput: "371234567890120",
+        expectedOutput: "371449635398431",
         recipeConfig: [
             {
                 op: "Generate Test PAN",
-                args: ["American Express", "Generated valid PAN", 15, false]
+                args: ["American Express", "Curated sample", 15, false]
             }
         ]
     },

@@ -220,11 +220,11 @@ function parsePan(pan) {
     return {
         pan: normalized,
         network: brand || "Unknown",
-        cardType: typeHint ? typeHint.likelyType : "Unknown",
-        cardTypeConfidence: typeHint ? typeHint.confidence : "low",
-        cardTypeNote: typeHint ?
-            typeHint.note :
-            "Card type cannot be determined — the PAN did not match a known network range.",
+        ...(typeHint && typeHint.confidence !== "low" ? {
+            cardType: typeHint.likelyType,
+            cardTypeConfidence: typeHint.confidence,
+            cardTypeNote: typeHint.note,
+        } : {}),
         majorIndustryIdentifier: mii,
         majorIndustryIdentifierDescription: MII_DESCRIPTIONS[mii] || "Unknown",
         issuerIdentificationNumber: normalized.substring(0, Math.min(8, normalized.length)),
@@ -250,18 +250,17 @@ function finalizePan(body) {
 }
 
 /**
- * Generates a numeric filler string.
+ * Generates random filler digits.
  *
  * @param {number} length
  * @returns {string}
  */
 function fillerDigits(length) {
-    const seed = "12345678901234567890";
-    return seed.repeat(Math.ceil(length / seed.length)).substring(0, length);
+    return Array.from({ length }, () => Math.floor(Math.random() * 10)).join("");
 }
 
 /**
- * Generates a deterministic brand-valid PAN.
+ * Generates a random brand-valid PAN.
  *
  * @param {string} brand
  * @param {number} requestedLength
