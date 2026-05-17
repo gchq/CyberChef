@@ -15,8 +15,7 @@
 ## Session Start
 
 - At the start of a session, sync with `origin/master` before doing substantive work.
-- Preferred command:
-  - `git pull --rebase origin master`
+- Preferred command: `git pull --rebase origin master`
 - Only do this automatically when the worktree is clean.
 - If there are local changes already present, do not pull/rebase blindly; inspect first and avoid overwriting user work.
 
@@ -27,6 +26,15 @@
 - Otherwise group a commit around one coherent class of change, not multiple unrelated fixes or refactors.
 - Split work before committing when a reviewer would benefit from evaluating the pieces independently.
 - Only keep changes together when separating them would make the behavior harder to understand, test, or revert.
+
+## Payment Operation Maintenance
+
+When adding, renaming, or removing a payment operation:
+
+1. **Update `PAYMENT_RECIPES.md`** — add the operation to the correct numbered section and, if it introduces a new chaining pattern, add a lettered chaining pattern entry. Remove or mark deprecated any operations that are replaced.
+2. **Follow the naming convention** — all payment operation display names use Title Case. Acronyms (DUKPT, AES, EMV, MAC, PAN, TR-31, TR-34, KCV) stay upper-case. Brand names keep their canonical form (`payShield`). Pattern: `[Verb] [Optional Qualifier] [Noun]`. See the Naming Convention section in `PAYMENT_RECIPES.md`.
+3. **Keep `this.name` and file name consistent** — the CyberChef UI shows `this.name`; the file name is the class name in PascalCase. Both should reflect the same intent.
+4. **Do not rename `this.name` without updating `PAYMENT_RECIPES.md`** — stale names in the doc are confusing and break recipe search.
 
 ## Current Project Preference
 
