@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Payment operation tests.
  *
  * @license Apache-2.0
@@ -188,15 +188,24 @@ TestRegister.addTests([
             fixedHeader: {
                 raw: "D0016D0AB00E0000",
                 versionId: "D",
+                versionDescription: "ANSI X9.24-2 (2017) — AES, Key Derivation Binding Method (current PCI standard)",
                 declaredBlockLength: 16,
                 keyUsage: "D0",
+                keyUsageDescription: "Symmetric Data Encryption Key (DEK)",
                 algorithm: "A",
+                algorithmDescription: "AES",
                 modeOfUse: "B",
+                modeOfUseDescription: "Both Encrypt and Decrypt / Both Generate and Verify",
                 keyVersionNumber: "00",
                 exportability: "E",
+                exportabilityDescription: "Exportable — can be wrapped under a KEK in a trusted key block",
                 optionalBlocksDeclared: 0,
                 reserved: "00"
             },
+            compliance: [
+                "OK: Version D (AES Key Derivation) — current PCI-required format",
+                "NOTE: Exportable key — verify the wrapping KEK is a PCI-approved key block protection key"
+            ],
             optionalBlocks: [],
             bodyOffset: 16,
             remainingBody: "",
@@ -392,7 +401,11 @@ TestRegister.addTests([
             pan: "4024140000000131",
             source: "Public Visa test PAN published in Mastercard AVS scenario documentation.",
             network: "Visa",
+            cardType: "Unknown",
+            cardTypeConfidence: "low",
+            cardTypeNote: "Visa issues credit, debit, and prepaid cards. The product type is determined by the issuer BIN, not the PAN prefix — a BIN database lookup is required.",
             majorIndustryIdentifier: "4",
+            majorIndustryIdentifierDescription: "Banking and financial (Visa)",
             issuerIdentificationNumber: "40241400",
             length: 16,
             luhnValid: true,
@@ -427,7 +440,11 @@ TestRegister.addTests([
         expectedOutput: JSON.stringify({
             pan: "6011000991543426",
             network: "Discover",
+            cardType: "Credit",
+            cardTypeConfidence: "medium",
+            cardTypeNote: "The common Discover BIN ranges (6011, 644-649, 65, 622126-622925) are predominantly credit cards. Discover does offer some debit products on separate BIN ranges.",
             majorIndustryIdentifier: "6",
+            majorIndustryIdentifierDescription: "Merchandising and banking (Discover, Maestro)",
             issuerIdentificationNumber: "60110009",
             length: 16,
             luhnValid: true,
