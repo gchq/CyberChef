@@ -114,6 +114,9 @@ const OPTIONAL_BLOCK_IDS = {
  */
 class ParseTR31KeyBlock extends Operation {
 
+    /**
+     * ParseTR31KeyBlock constructor.
+     */
     constructor() {
         super();
 
