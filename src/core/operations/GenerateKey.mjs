@@ -23,6 +23,12 @@ const KEY_SPECS = {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+/**
+ * Generates n cryptographically random bytes using WebCrypto or node-forge.
+ *
+ * @param {number} n
+ * @returns {Uint8Array}
+ */
 function randomBytes(n) {
     const buf = new Uint8Array(n);
     if (typeof globalThis !== "undefined" && globalThis.crypto && globalThis.crypto.getRandomValues) {
@@ -34,14 +40,32 @@ function randomBytes(n) {
     return buf;
 }
 
+/**
+ * Converts a Uint8Array to an uppercase hex string.
+ *
+ * @param {Uint8Array} bytes
+ * @returns {string}
+ */
 function toHex(bytes) {
     return Array.from(bytes, b => b.toString(16).padStart(2, "0").toUpperCase()).join("");
 }
 
+/**
+ * Converts a Uint8Array to a byte string for use with node-forge.
+ *
+ * @param {Uint8Array} bytes
+ * @returns {string}
+ */
 function toByteStr(bytes) {
     return Array.from(bytes, b => String.fromCharCode(b)).join("");
 }
 
+/**
+ * Left-shifts a byte array by one bit.
+ *
+ * @param {Uint8Array} a
+ * @returns {Uint8Array}
+ */
 function shiftLeft1(a) {
     const out = new Uint8Array(a.length);
     for (let i = 0; i < a.length - 1; i++)
@@ -50,7 +74,13 @@ function shiftLeft1(a) {
     return out;
 }
 
-/** AES-CMAC KCV: CMAC(key, zero-block), first 3 bytes (AES-128 key). */
+/**
+ * Computes the AES CMAC KCV: CMAC(key, zero-block), first 3 bytes.
+ * Uses the PCI PIN-required method, not the legacy ECB-zeros method.
+ *
+ * @param {Uint8Array} key
+ * @returns {string}
+ */
 function aesCmacKcv(key) {
     const k = key.slice(0, 16);
     const RB = new Uint8Array(16); RB[15] = 0x87;
@@ -81,6 +111,9 @@ function aesCmacKcv(key) {
  */
 class GenerateKey extends Operation {
 
+    /**
+     * GenerateKey constructor.
+     */
     constructor() {
         super();
 
@@ -151,7 +184,7 @@ class GenerateKey extends Operation {
         if (!outputJson) return hex;
 
         const out = {
-            type:       keyType,
+            type:        keyType,
             lengthBytes: byteCount,
             lengthBits:  byteCount * 8,
             hex,
