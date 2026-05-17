@@ -222,9 +222,9 @@ function parsePan(pan) {
         network: brand || "Unknown",
         cardType: typeHint ? typeHint.likelyType : "Unknown",
         cardTypeConfidence: typeHint ? typeHint.confidence : "low",
-        cardTypeNote: typeHint
-            ? typeHint.note
-            : "Card type cannot be determined — the PAN did not match a known network range.",
+        cardTypeNote: typeHint ?
+            typeHint.note :
+            "Card type cannot be determined — the PAN did not match a known network range.",
         majorIndustryIdentifier: mii,
         majorIndustryIdentifierDescription: MII_DESCRIPTIONS[mii] || "Unknown",
         issuerIdentificationNumber: normalized.substring(0, Math.min(8, normalized.length)),
@@ -337,4 +337,3 @@ export {
     isLuhnValid,
     parsePan,
 };
-
