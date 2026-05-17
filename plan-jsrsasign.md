@@ -5,14 +5,14 @@
 ## Status
 
 - [x] PR 1 — Setup + ASN.1 utilities
-- [ ] PR 2 — SM2 rewrite
+- [x] PR 2 — SM2 rewrite
 - [ ] PR 3 — ECDSA primitives
 - [ ] PR 4 — PEM/JWK conversion + key extraction
 - [ ] PR 5 — X.509 / CSR / CRL parsing
 - [ ] PR 6 — Removal
 
 _Notes for next session:_
-- **PR 2 blocker:** `@noble/curves` v2 dropped the `/sm2` subpath. v2 exposes only `nist`, `secp256k1`, `bls12-381`, `bn254`, `ed25519`, `ed448` and the `abstract/*` primitives. Before starting PR 2, either pin `@noble/curves` to v1 (which still ships sm2 — but check what other v1→v2 API gaps that introduces) or build SM2 on top of the abstract Weierstrass primitive in `@noble/curves/abstract/weierstrass.js` (curve parameters published in GM/T 0003-2012).
+- **PR 2 resolved:** SM2 is now built on `weierstrass(...)` + `ecdh(...)` from `@noble/curves/abstract/weierstrass.js` (curve params per GM/T 0003-2012). No `/sm2` subpath needed.
 - **PR 5 blocker:** `@peculiar/x509` v2 needs a `reflect-metadata` polyfill at every entry point — PR 1 pinned to `^1.14.3` to avoid that. Stay on v1 unless the polyfill cost gets resolved.
 
 ## Context
@@ -237,6 +237,13 @@ After **PR 6:**
 ## Changelog
 
 Record deviations from the original plan here, newest at the top. One bullet per change: what changed, why, and which PR.
+
+### PR 2 — 2026-05-17
+- `@noble/curves` v2 has no `/sm2` subpath, so [src/core/lib/SM2.mjs](src/core/lib/SM2.mjs) builds the curve itself with `weierstrass(...)` from `@noble/curves/abstract/weierstrass.js` using the GM/T 0003-2012 parameter set. Curve constructor is memoised per name so repeated `new SM2(...)` calls don't rebuild it.
+- Random `k` generation: `ecdh(Point).utils.randomSecretKey()` → `bytesToNumberBE(...) % (n-1n) + 1n`, which mirrors the `[1, n-1]` distribution of the old `r.SecureRandom`-backed `getBigRandom`. The plan suggested `sm2.utils.randomPrivateKey()` directly; the abstract-Weierstrass path needs the explicit `bytes → bigint mod` step because the curve isn't pre-wrapped.
+- `Point.fromHex("04" + x + y)` validates that the coords lie on the curve and raises before `is0()` can ever run; the explicit infinity check is kept for symmetry with the previous code. Invalid-point errors are caught and rethrown as `OperationError` so user-facing error messages stay unchanged.
+- Coord padding switched from `("0000000000" + ...).slice(-charlen)` to `.padStart(charlen, "0")` per the cross-PR convention in [AGENTS.md](AGENTS.md). Output hex layout is byte-identical to before (still 64-char fields for `sm2p256v1`).
+- No fixture changes: [tests/operations/tests/SM2.mjs](tests/operations/tests/SM2.mjs) passes unchanged (the 4 hard-coded ciphertext→plaintext vectors plus the 4 encrypt→decrypt round-trips).
 
 ### PR 1 — 2026-05-17
 - Pinned `@peculiar/x509` to `^1.14.3` instead of the latest (`2.x`). v2 hard-requires a `reflect-metadata` import at every entry point and the plan didn't budget for polyfilling every webpack chunk. Sticking with v1 keeps the bundle changes scoped to this PR.
