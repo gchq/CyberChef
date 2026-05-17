@@ -12,7 +12,7 @@ import { toHexFast } from "../lib/Hex.mjs";
 
 const KEY_USAGE = {
     "IK Derivation":    0x8000,   // BDK → device Initial Key
-    "Intermediate":     0x0000,   // internal binary-tree node (not user-visible)
+    Intermediate:       0x0000,   // internal binary-tree node (not user-visible)
     "PIN Encryption":   0x1000,
     "MAC Generation":   0x2000,   // sender / request direction
     "MAC Verification": 0x2001,   // receiver / response direction
@@ -32,6 +32,14 @@ RB[15] = 0x87;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+/**
+ * Parses a hex string into a Uint8Array, validating format and byte length.
+ *
+ * @param {string} hex
+ * @param {number} expectedBytes
+ * @param {string} name
+ * @returns {Uint8Array}
+ */
 function parseHex(hex, expectedBytes, name) {
     const h = (hex || "").replace(/\s+/g, "");
     if (!/^[0-9a-fA-F]+$/.test(h) || h.length % 2 !== 0)
@@ -44,12 +52,25 @@ function parseHex(hex, expectedBytes, name) {
     return bytes;
 }
 
+/**
+ * XORs two equal-length byte arrays.
+ *
+ * @param {Uint8Array} a
+ * @param {Uint8Array} b
+ * @returns {Uint8Array}
+ */
 function xor(a, b) {
     const out = new Uint8Array(a.length);
     for (let i = 0; i < a.length; i++) out[i] = a[i] ^ b[i];
     return out;
 }
 
+/**
+ * Left-shifts a byte array by one bit.
+ *
+ * @param {Uint8Array} a
+ * @returns {Uint8Array}
+ */
 function shiftLeft1(a) {
     const out = new Uint8Array(a.length);
     for (let i = 0; i < a.length - 1; i++)
@@ -58,10 +79,22 @@ function shiftLeft1(a) {
     return out;
 }
 
+/**
+ * Converts a Uint8Array to a byte string for use with node-forge.
+ *
+ * @param {Uint8Array} bytes
+ * @returns {string}
+ */
 function toByteString(bytes) {
     return Array.from(bytes, b => String.fromCharCode(b)).join("");
 }
 
+/**
+ * Converts a Uint8Array to an uppercase hex string.
+ *
+ * @param {Uint8Array} bytes
+ * @returns {string}
+ */
 function hex(bytes) {
     return toHexFast(bytes).toUpperCase();
 }
@@ -69,10 +102,23 @@ function hex(bytes) {
 // ── AES-128 ECB single-block encrypt ─────────────────────────────────────────
 // Reuses the forge cipher object across calls (same pattern as CMAC.mjs).
 
+/**
+ * Creates a reusable AES-ECB cipher instance for a 16-byte key.
+ *
+ * @param {Uint8Array} key16
+ * @returns {Object}
+ */
 function makeEcbCipher(key16) {
     return forge.cipher.createCipher("AES-ECB", toByteString(key16));
 }
 
+/**
+ * Encrypts a single 16-byte block with the given AES-ECB cipher instance.
+ *
+ * @param {Object} cipher
+ * @param {Uint8Array} block16
+ * @returns {Uint8Array}
+ */
 function ecbBlock(cipher, block16) {
     cipher.start();
     cipher.update(forge.util.createBuffer(toByteString(block16)));
@@ -82,6 +128,13 @@ function ecbBlock(cipher, block16) {
 
 // ── AES-CMAC (RFC 4493) ───────────────────────────────────────────────────────
 
+/**
+ * Computes AES-CMAC of a message using a 16-byte AES key.
+ *
+ * @param {Uint8Array} key16
+ * @param {Uint8Array} message
+ * @returns {Uint8Array}
+ */
 function aesCmac(key16, message) {
     const cipher = makeEcbCipher(key16);
 
@@ -121,6 +174,11 @@ function aesCmac(key16, message) {
  *   [6-7]   key length      = 0x0080 (128 bits)
  *   [8-15]  IKI             (8 bytes, from KSN bytes 0-7)
  *   [16-19] counter register (4 bytes)
+ *
+ * @param {number} usage
+ * @param {Uint8Array} iki8
+ * @param {number} counterReg
+ * @returns {Uint8Array}
  */
 function derivationData(usage, iki8, counterReg) {
     const d = new Uint8Array(20);
@@ -136,7 +194,13 @@ function derivationData(usage, iki8, counterReg) {
     return d;
 }
 
-/** BDK + IKI → Initial Key loaded into the terminal. */
+/**
+ * Derives the Initial Key (IK) from a BDK and IKI using AES-CMAC.
+ *
+ * @param {Uint8Array} bdk16
+ * @param {Uint8Array} iki8
+ * @returns {Uint8Array}
+ */
 function deriveIK(bdk16, iki8) {
     return aesCmac(bdk16, derivationData(KEY_USAGE["IK Derivation"], iki8, 0));
 }
@@ -144,6 +208,11 @@ function deriveIK(bdk16, iki8) {
 /**
  * Binary-tree traversal from IK to the leaf transaction key.
  * Uses the 21 usable counter bits (bits 20-0 of the 4-byte counter field).
+ *
+ * @param {Uint8Array} ik16
+ * @param {Uint8Array} iki8
+ * @param {number} counter
+ * @returns {Uint8Array}
  */
 function deriveTransactionKey(ik16, iki8, counter) {
     const usable = counter & 0x1FFFFF;
@@ -158,13 +227,21 @@ function deriveTransactionKey(ik16, iki8, counter) {
     for (let bit = 20; bit >= 0; bit--) {
         if (usable & (1 << bit)) {
             reg |= (1 << bit);
-            key = aesCmac(key, derivationData(KEY_USAGE["Intermediate"], iki8, reg));
+            key = aesCmac(key, derivationData(KEY_USAGE.Intermediate, iki8, reg));
         }
     }
     return key;
 }
 
-/** Transaction key + purpose → purpose-specific working key. */
+/**
+ * Derives a purpose-specific working key from the transaction key.
+ *
+ * @param {Uint8Array} txKey16
+ * @param {Uint8Array} iki8
+ * @param {number} counter
+ * @param {string} purposeName
+ * @returns {Uint8Array}
+ */
 function deriveWorkingKey(txKey16, iki8, counter, purposeName) {
     return aesCmac(txKey16, derivationData(KEY_USAGE[purposeName], iki8, counter & 0x1FFFFF));
 }
@@ -176,6 +253,9 @@ function deriveWorkingKey(txKey16, iki8, counter, purposeName) {
  */
 class DeriveDUKPTAESKey extends Operation {
 
+    /**
+     * DeriveDUKPTAESKey constructor.
+     */
     constructor() {
         super();
 
@@ -288,10 +368,10 @@ class DeriveDUKPTAESKey extends Operation {
         if (outputJson) {
             const out = { inputKeyType, iki: hex(iki), counter: `0x${counter.toString(16).padStart(8, "0").toUpperCase()}` };
             if (inputKeyType === "BDK") out.bdk = hex(inputKey);
-            out.ik            = hex(ik);
+            out.ik             = hex(ik);
             out.transactionKey = hex(txKey);
-            out.purpose       = purpose;
-            out.workingKey    = hex(wkKey);
+            out.purpose        = purpose;
+            out.workingKey     = hex(wkKey);
             return JSON.stringify(out, null, 4);
         }
 
