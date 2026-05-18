@@ -29,12 +29,12 @@ class ChangeIPFormat extends Operation {
             {
                 "name": "Input format",
                 "type": "option",
-                "value": ["Dotted Decimal", "Decimal", "Octal", "Hex"]
+                "value": ["Dotted Decimal", "Decimal", "Decimal (Little Endian)", "Octal", "Octal (Little Endian)", "Hex"]
             },
             {
                 "name": "Output format",
                 "type": "option",
-                "value": ["Dotted Decimal", "Decimal", "Octal", "Hex"]
+                "value": ["Dotted Decimal", "Decimal", "Decimal (Little Endian)", "Octal", "Octal (Little Endian)", "Hex"]
             }
         ];
     }
@@ -71,8 +71,14 @@ class ChangeIPFormat extends Operation {
                 case "Decimal":
                     baIp = this.fromNumber(lines[i].toString(), 10);
                     break;
+                case "Decimal (Little Endian)":
+                    baIp = Utils.intToByteArray(parseInt(lines[i].toString(), 10), 4, "little");
+                    break;
                 case "Octal":
                     baIp = this.fromNumber(lines[i].toString(), 8);
+                    break;
+                case "Octal (Little Endian)":
+                    baIp = Utils.intToByteArray(parseInt(lines[i].toString(), 8), 4, "little");
                     break;
                 case "Hex":
                     baIp = fromHex(lines[i]);
@@ -98,8 +104,16 @@ class ChangeIPFormat extends Operation {
                     decIp = ((baIp[0] << 24) | (baIp[1] << 16) | (baIp[2] << 8) | baIp[3]) >>> 0;
                     output += decIp.toString() + "\n";
                     break;
+                case "Decimal (Little Endian)":
+                    decIp = Utils.byteArrayToInt(baIp, "little");
+                    output += decIp.toString() + "\n";
+                    break;
                 case "Octal":
                     decIp = ((baIp[0] << 24) | (baIp[1] << 16) | (baIp[2] << 8) | baIp[3]) >>> 0;
+                    output += "0" + decIp.toString(8) + "\n";
+                    break;
+                case "Octal (Little Endian)":
+                    decIp = Utils.byteArrayToInt(baIp, "little");
                     output += "0" + decIp.toString(8) + "\n";
                     break;
                 case "Hex":
