@@ -49,6 +49,7 @@
     "@codemirror/search": "^6.7.0",
     "@codemirror/state": "^6.5.4",
     "@codemirror/view": "^6.41.1",
+    "@puppeteer/browsers": "3.0.3",
     "autoprefixer": "^10.5.0",
     "babel-loader": "^10.1.1",
     "base64-loader": "^1.0.0",
