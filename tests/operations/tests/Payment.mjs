@@ -316,12 +316,12 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "Derive DUKPT Key: known IPEK vector",
+        name: "Derive DUKPT TDES Key: known IPEK vector",
         input: "0123456789ABCDEFFEDCBA9876543210",
         expectedOutput: "6AC292FAA1315B4D858AB3A3D7D5933A",
         recipeConfig: [
             {
-                op: "Derive DUKPT Key",
+                op: "Derive DUKPT TDES Key",
                 args: ["Derive IPEK", "FFFF9876543210E00008", "None", false]
             }
         ]

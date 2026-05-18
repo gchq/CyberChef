@@ -206,7 +206,7 @@ Important assumptions:
 ## 9) Key Derivation, Generation, And Validation
 
 Operations:
-- `Derive DUKPT Key` — TDES DUKPT (10-byte KSN, IPEK-based)
+- `Derive DUKPT TDES Key` — TDES DUKPT (10-byte KSN, IPEK-based)
 - `Derive DUKPT AES Key` — AES-128 DUKPT per ANSI X9.24-3 (12-byte KSN, IK-based)
 - `Derive ECDH Key Material`
 - `Generate Key` — random AES-128/192/256, TDES, or custom bytes; optional AES CMAC KCV
@@ -217,7 +217,7 @@ Use this when:
 - you need transaction keys, shared secrets, random test keys, KCVs, or AS2805-style KEK-validation lab values
 
 Important assumptions:
-- `Derive DUKPT Key` is TDES DUKPT — do not confuse IPEK (TDES) with IK (AES DUKPT)
+- `Derive DUKPT TDES Key` is TDES DUKPT — do not confuse IPEK (TDES) with IK (AES DUKPT)
 - `Derive DUKPT AES Key` implements AES-128 via AES-CMAC per ANSI X9.24-3; AES-192/256 are not yet implemented
 - `Generate Key` is for test use only — production keys must be generated in an approved HSM
 - `Generate AS2805 KEK Validation` is an emulation-oriented helper and explicitly documents its simplifications in the operation comments
@@ -250,7 +250,7 @@ Important assumptions:
 ## A) TDES DUKPT MAC
 
 Operations:
-- `Derive DUKPT Key`
+- `Derive DUKPT TDES Key`
 - `Generate Payment MAC`
 
 Flow:

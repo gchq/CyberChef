@@ -610,7 +610,7 @@
             "Verify IBM 3624 PIN",
             "Generate VISA PVV",
             "Verify VISA PVV",
-            "Derive DUKPT Key",
+            "Derive DUKPT TDES Key",
             "Derive DUKPT AES Key",
             "Generate Key",
             "Calculate Payment KCV",

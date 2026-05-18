@@ -40,7 +40,7 @@ Preferred operation:
 - `Encrypt Payment Data`
 
 Good chain:
-- `Derive DUKPT Key` -> `Triple DES Encrypt`
+- `Derive DUKPT TDES Key` -> `Triple DES Encrypt`
 - `Derive ECDH Key Material` -> KDF if needed -> `AES Encrypt`
 
 Notes:
@@ -52,7 +52,7 @@ Preferred operation:
 - `Decrypt Payment Data`
 
 Good chain:
-- `Derive DUKPT Key` -> `Triple DES Decrypt`
+- `Derive DUKPT TDES Key` -> `Triple DES Decrypt`
 - `Derive ECDH Key Material` -> KDF if needed -> `AES Decrypt`
 
 ## AWS `ReEncryptData`
