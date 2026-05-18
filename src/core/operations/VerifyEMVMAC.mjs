@@ -19,7 +19,7 @@ class VerifyEMVMAC extends Operation {
         this.name = "EMV Verify MAC";
         this.module = "Payment";
         this.description = "Paste the issuer-script or EMV command payload into the input field as hex and verify an EMV MAC.<br><br><b>Input:</b> message data as hex.<br><b>Arguments:</b> provide the already-derived EMV session integrity key and the expected MAC as hex.<br><br><b>Validation:</b> Partially verified. This checks the same supplied-key EMV MAC profile as the generate operation and does not claim full issuer-host or scheme-specific EMV verification semantics.<br><br><b>Key context:</b> In a full issuer implementation, the session integrity key used here corresponds to the secure-messaging integrity key (distinct from the confidentiality key used to encrypt data and the PIN encryption key used for PIN blocks). This operation accepts any key you supply and does not enforce that separation.<br><br><b>Security:</b> Clear session keys in the recipe are test-use only.";
-        this.inlineHelp = "<strong>Input:</strong> issuer-script message data as hex.<br><strong>Args:</strong> provide the derived EMV session key and expected MAC.<br><strong>Validation:</strong> same supplied-key EMV profile as generation.";
+        this.inlineHelp = "<strong>Input:</strong> issuer-script message data as hex.<br><strong>Args:</strong> provide the derived EMV session integrity key and expected MAC.<br><strong>Validation:</strong> same supplied-key EMV profile as generation.";
         this.testDataSamples = [
             {
                 name: "EMV MAC verification sample",

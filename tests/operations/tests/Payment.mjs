@@ -817,7 +817,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "PIN Data Verify",
-                args: ["ISO Format 0", "5432101234567890", "1234"]
+                args: ["ISO Format 0", "5432101234567890", "1234", true]
             }
         ]
     },
