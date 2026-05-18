@@ -82,7 +82,8 @@
             "Rison Decode",
             "To Modhex",
             "From Modhex",
-            "MIME Decoding"
+            "MIME Decoding",
+            "Escape Smart Characters"
         ]
     },
     {
