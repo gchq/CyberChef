@@ -36,6 +36,15 @@ When adding, renaming, or removing a payment operation:
 5. **Only operations written for this fork belong in the Payments category** — do not add upstream CyberChef ops (AES Encrypt, HMAC, CMAC, Triple DES Encrypt, AES Key Wrap, etc.) even as convenience shortcuts. If an op wasn't authored here, it stays in its own upstream category only.
 3. **Keep `this.name` and file name consistent** — the CyberChef UI shows `this.name`; the file name is the class name in PascalCase. Both should reflect the same intent.
 4. **Do not rename `this.name` without updating `PAYMENT_RECIPES.md`** — stale names in the doc are confusing and break recipe search.
+6. **Regenerate the build config after any add, rename, or delete** — three files are gitignored and auto-generated; editing `this.name` or `Categories.json` alone is not enough:
+   - `src/core/operations/index.mjs` — full op list; built by `generateOpsIndex.mjs`
+   - `src/core/config/modules/Payment.mjs` — maps `this.name` → constructor for the Payment module chunk; built by `generateConfig.mjs`
+   - `src/core/config/OperationConfig.json` — op metadata for the UI
+   Run from the project root after any op change:
+   ```
+   node src/core/config/scripts/generateOpsIndex.mjs && node src/core/config/scripts/generateConfig.mjs
+   ```
+   Or `npx grunt dev` / `npx grunt prod`, which runs both steps automatically. CI runs them on every build. **Symptom of a stale registry:** `TypeError: f[e.module][e.name] is not a constructor` at runtime.
 
 ## Current Project Preference
 
