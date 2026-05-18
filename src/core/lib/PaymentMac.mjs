@@ -66,9 +66,7 @@ function resolveMacKey(method, keySpec) {
             throw new OperationError("KSN is required for DUKPT MAC methods.");
         }
 
-        const variant = method === "DUKPT MAC Request CMAC" ? "MAC Request" :
-            method === "DUKPT MAC Response CMAC" ? "MAC Response" :
-                "MAC Request";
+        const variant = method === "DUKPT MAC Response CMAC" ? "MAC Response" : "MAC Request";
         const dukpt = new DeriveDUKPTKey();
         const keyHex = dukpt.run(normalizedKey, ["Derive Session Key", keySpec.ksn, variant, false]);
 

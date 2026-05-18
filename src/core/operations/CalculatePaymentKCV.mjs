@@ -129,7 +129,7 @@ class CalculatePaymentKCV extends Operation {
             case "HMAC SHA-384":
             case "HMAC SHA-512": {
                 const algorithmMap = {
-                    "HMAC SHA-224": forge.md.sha512.sha224.create(),
+                    "HMAC SHA-224": "sha224",
                     "HMAC SHA-256": "sha256",
                     "HMAC SHA-384": "sha384",
                     "HMAC SHA-512": "sha512"

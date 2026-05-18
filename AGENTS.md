@@ -33,10 +33,11 @@ When adding, renaming, or removing a payment operation:
 
 1. **Update `PAYMENT_RECIPES.md`** — add the operation to the correct numbered section and, if it introduces a new chaining pattern, add a lettered chaining pattern entry. Remove or mark deprecated any operations that are replaced.
 2. **Follow the naming convention** — all payment operation display names use Title Case. Acronyms (DUKPT, AES, EMV, MAC, PAN, TR-31, TR-34, KCV) stay upper-case. Brand names keep their canonical form (`payShield`). Pattern: `[Domain Prefix] [Verb] [Qualifier]` — the domain/protocol prefix comes first so operations sort and scan by topic in the UI list. Example: `EMV Verify MAC`, `DUKPT Derive TDES Key`, `PIN Block Parse`. See the Naming Convention section in `PAYMENT_RECIPES.md`.
-5. **Only operations written for this fork belong in the Payments category** — do not add upstream CyberChef ops (AES Encrypt, HMAC, CMAC, Triple DES Encrypt, AES Key Wrap, etc.) even as convenience shortcuts. If an op wasn't authored here, it stays in its own upstream category only.
-3. **Keep `this.name` and file name consistent** — the CyberChef UI shows `this.name`; the file name is the class name in PascalCase. Both should reflect the same intent.
-4. **Do not rename `this.name` without updating `PAYMENT_RECIPES.md`** — stale names in the doc are confusing and break recipe search.
-6. **Regenerate the build config after any add, rename, or delete** — three files are gitignored and auto-generated; editing `this.name` or `Categories.json` alone is not enough:
+3. **Only operations written for this fork belong in the Payments category** — do not add upstream CyberChef ops (AES Encrypt, HMAC, CMAC, Triple DES Encrypt, AES Key Wrap, etc.) even as convenience shortcuts. If an op wasn't authored here, it stays in its own upstream category only.
+4. **Keep `this.name` and file name consistent** — the CyberChef UI shows `this.name`; the file name is the class name in PascalCase. Both should reflect the same intent.
+5. **Do not rename `this.name` without updating `PAYMENT_RECIPES.md`** — stale names in the doc are confusing and break recipe search.
+6. **Review and update `this.description`, `this.inlineHelp`, and `this.testDataSamples`** whenever changing a recipe — operation descriptions, inline help text, and sample args must stay consistent with the current arg list and behavior. A renamed arg, added arg, or changed default silently breaks the tooltip if the description still references the old shape.
+7. **Regenerate the build config after any add, rename, or delete** — three files are gitignored and auto-generated; editing `this.name` or `Categories.json` alone is not enough:
    - `src/core/operations/index.mjs` — full op list; built by `generateOpsIndex.mjs`
    - `src/core/config/modules/Payment.mjs` — maps `this.name` → constructor for the Payment module chunk; built by `generateConfig.mjs`
    - `src/core/config/OperationConfig.json` — op metadata for the UI
