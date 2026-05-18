@@ -70,6 +70,7 @@ import "./tests/ECDSA.mjs";
 import "./tests/ELFInfo.mjs";
 import "./tests/Enigma.mjs";
 import "./tests/ExtractAudioMetadata.mjs";
+import "./tests/ExtendedGCD.mjs";
 import "./tests/ExtractEmailAddresses.mjs";
 import "./tests/ExtractHashes.mjs";
 import "./tests/ExtractIPAddresses.mjs";
