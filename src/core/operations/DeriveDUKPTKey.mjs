@@ -175,9 +175,11 @@ function deriveSessionBaseKey(ipek, ksn) {
     for (let shift = 20; shift >= 0; shift--) {
         const bit = 1 << shift;
         if ((counter & bit) !== 0) {
-            ksnReg[7] = (ksnReg[7] & 0xE0) | (((counter & 0x1F0000) >> 16) & 0x1F);
-            ksnReg[8] = (counter >> 8) & 0xFF;
-            ksnReg[9] = counter & 0xFF;
+            // Accumulate one bit at a time — setting the full counter here would
+            // repeat the same ksnReg on every hit and produce wrong derived keys.
+            ksnReg[7] |= (bit >> 16) & 0x1F;
+            ksnReg[8] |= (bit >> 8) & 0xFF;
+            ksnReg[9] |= bit & 0xFF;
             curKey = nonReversibleKeyGen(curKey, ksnReg);
         }
     }
