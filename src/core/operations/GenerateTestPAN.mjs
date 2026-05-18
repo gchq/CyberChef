@@ -4,7 +4,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import { PAN_BRANDS, generateTestPan } from "../lib/Pan.mjs";
+import { PAN_BRANDS, MASTERCARD_SERIES, generateTestPan } from "../lib/Pan.mjs";
 
 /**
  * Generate test PAN operation.
@@ -24,7 +24,7 @@ class GenerateTestPAN extends Operation {
             {
                 name: "Visa curated sample",
                 input: "",
-                args: ["Visa", "Curated sample", 16, true]
+                args: ["Visa", "Curated sample", 16, "Any", true]
             }
         ];
         this.infoURL = "https://en.wikipedia.org/wiki/Payment_card_number";
@@ -52,6 +52,12 @@ class GenerateTestPAN extends Operation {
                 comment: "Used only in generated mode. Networks that do not support the requested length fall back to their first supported length."
             },
             {
+                name: "Mastercard series",
+                type: "option",
+                value: MASTERCARD_SERIES,
+                comment: "Applies only when Network is Mastercard in generated mode. '5-series' restricts to the 51–55 range. '2-series' restricts to 2221–2720. 'Any' picks randomly between both ranges."
+            },
+            {
                 name: "Output as JSON",
                 type: "boolean",
                 value: true,
@@ -66,8 +72,8 @@ class GenerateTestPAN extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [brand, mode, length, outputJson] = args;
-        const result = generateTestPan(brand, mode, length);
+        const [brand, mode, length, mastercardSeries, outputJson] = args;
+        const result = generateTestPan(brand, mode, length, mastercardSeries);
         return outputJson ? JSON.stringify(result, null, 4) : result.pan;
     }
 }

@@ -416,7 +416,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "PAN Generate",
-                args: ["Visa", "Curated sample", 16, true]
+                args: ["Visa", "Curated sample", 16, "Any", true]
             }
         ]
     },
@@ -427,7 +427,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "PAN Generate",
-                args: ["American Express", "Curated sample", 15, false]
+                args: ["American Express", "Curated sample", 15, "Any", false]
             }
         ]
     },

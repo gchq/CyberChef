@@ -6,6 +6,7 @@
 import OperationError from "../errors/OperationError.mjs";
 
 const PAN_BRANDS = ["Visa", "Mastercard", "American Express", "Discover"];
+const MASTERCARD_SERIES = ["Any", "5-series (51-55)", "2-series (2221-2720)"];
 
 // ── Card classification tables ────────────────────────────────────────────────
 
@@ -264,26 +265,33 @@ function fillerDigits(length) {
  *
  * @param {string} brand
  * @param {number} requestedLength
+ * @param {string} mastercardSeries - "Any", "5-series (51-55)", or "2-series (2221-2720)"
  * @returns {{pan: string, prefixDescription: string}}
  */
-function generateBrandPan(brand, requestedLength) {
+function generateBrandPan(brand, requestedLength, mastercardSeries = "Any") {
     const config = PAN_BRAND_RULES[brand];
     if (!config) {
         throw new OperationError("Unsupported payment network.");
     }
 
     const length = config.lengths.includes(requestedLength) ? requestedLength : config.lengths[0];
-    let selectedRule = config.prefixes[0];
+    const eligibleRules = config.prefixes.filter(r => r.lengths.includes(length));
 
-    if (brand === "Mastercard" && length === 16) {
-        selectedRule = config.prefixes[1];
-    } else if (brand === "American Express") {
-        selectedRule = config.prefixes[1];
-    } else if (brand === "Discover") {
-        selectedRule = config.prefixes[0];
+    let selectedRule;
+    if (brand === "Mastercard") {
+        if (mastercardSeries === "5-series (51-55)") {
+            selectedRule = config.prefixes[0];
+        } else if (mastercardSeries === "2-series (2221-2720)") {
+            selectedRule = config.prefixes[1];
+        } else {
+            selectedRule = eligibleRules[Math.floor(Math.random() * eligibleRules.length)];
+        }
+    } else {
+        selectedRule = eligibleRules[Math.floor(Math.random() * eligibleRules.length)];
     }
 
-    const prefix = String(selectedRule.start);
+    const prefixValue = selectedRule.start + Math.floor(Math.random() * (selectedRule.end - selectedRule.start + 1));
+    const prefix = String(prefixValue);
     const bodyLength = length - 1;
     const body = `${prefix}${fillerDigits(bodyLength - prefix.length)}`.substring(0, bodyLength);
 
@@ -299,9 +307,10 @@ function generateBrandPan(brand, requestedLength) {
  * @param {string} brand
  * @param {string} mode
  * @param {number} length
+ * @param {string} mastercardSeries
  * @returns {Object}
  */
-function generateTestPan(brand, mode, length) {
+function generateTestPan(brand, mode, length, mastercardSeries = "Any") {
     const config = PAN_BRAND_RULES[brand];
     if (!config) {
         throw new OperationError("Unsupported payment network.");
@@ -318,7 +327,7 @@ function generateTestPan(brand, mode, length) {
         };
     }
 
-    const generated = generateBrandPan(brand, Number(length) || config.lengths[0]);
+    const generated = generateBrandPan(brand, Number(length) || config.lengths[0], mastercardSeries);
     const parsed = parsePan(generated.pan);
     return {
         brand,
@@ -332,6 +341,7 @@ function generateTestPan(brand, mode, length) {
 
 export {
     PAN_BRANDS,
+    MASTERCARD_SERIES,
     generateTestPan,
     isLuhnValid,
     parsePan,
