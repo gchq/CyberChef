@@ -79,7 +79,7 @@ class Argon2 extends Operation {
             "Argon2id": argon2.ArgonType.Argon2id
         };
 
-        const salt = Utils.convertToByteString(args[0].string || "", args[0].option),
+        const salt = Utils.convertToByteArray(args[0].string || "", args[0].option),
             time = args[1],
             mem = args[2],
             parallelism = args[3],
