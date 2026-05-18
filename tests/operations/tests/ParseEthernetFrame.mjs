@@ -41,5 +41,16 @@ TestRegister.addTests([
                 "args": ["Hex", "Text output"]
             }
         ]
+    },
+    {
+        name: "Parse Ethernet frame escapes packet data HTML",
+        input: "000000000000ffffffffffff08003c696d67207372633d78206f6e6572726f723d616c6572742831293e3c7363726970743e616c6572742832293c2f7363726970743e",
+        expectedOutput: "&lt;img src=x onerror=alert(1)&gt;&lt;script&gt;alert(2)&lt;/script&gt;",
+        recipeConfig: [
+            {
+                "op": "Parse Ethernet frame",
+                "args": ["Hex", "Packet data"]
+            }
+        ]
     }
 ]);
