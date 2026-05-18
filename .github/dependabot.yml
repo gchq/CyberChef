@@ -68,3 +68,11 @@ updates:
       timezone: Europe/London
     commit-message:
       prefix: 'chore (deps): '
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: 'weekly'
+      day: 'friday'
+      time: '03:00'
+      timezone: Europe/London
