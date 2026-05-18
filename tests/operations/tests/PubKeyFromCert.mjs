@@ -99,6 +99,7 @@ HRMBAf8EBTADAQH/MAUGAytlcANBAI/+03iVq4yJ+DaLVs61w41cVX2UxKvquSzv
 lllkpkclM9LH5dLrw4ArdTjS9zAjzY/02WkphHhICHXt3KqZTwI=
 -----END CERTIFICATE-----`;
 
+// Cross-checked against `openssl x509 -pubkey -noout` on ED25519_CERT.
 const ED25519_PUBKEY = `-----BEGIN PUBLIC KEY-----
 MCowBQYDK2VwAyEAELP6AflXwsuZ5q4NDIO0LP2iCdKRvds4nwsUmRhOw3g=
 -----END PUBLIC KEY-----`;
@@ -115,6 +116,8 @@ VkLqpoDNMRcM3Eb6h3AJpQM0oxGj8q9arjDXqJkXgaO2e0tVn8KKVfy7S8qO72Kd
 rWzZowcOjnWKhXm7JgA=
 -----END CERTIFICATE-----`;
 
+// Cross-checked against the SPKI extracted directly from ED448_CERT's DER
+// bytes (openssl 3.6.2 in this environment does not support Ed448).
 const ED448_PUBKEY = `-----BEGIN PUBLIC KEY-----
 MEMwBQYDK2VxAzoAVN8kG0TMVyGOu/OvBTe8H0Wi4HJrQAlSv4XLwJbkuoi4EeRl
 EHQwXsNYLZTtY2Jra6AWhbVYYaEA

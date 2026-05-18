@@ -242,6 +242,10 @@ After **PR 6:**
 
 Record deviations from the original plan here, newest at the top. One bullet per change: what changed, why, and which PR.
 
+### Post-migration test cleanup — 2026-05-18
+- **Ed25519 / Ed448 expected pubkeys in [tests/operations/tests/PubKeyFromCert.mjs](tests/operations/tests/PubKeyFromCert.mjs) cross-verified externally.** Ed25519 matches `openssl x509 -pubkey -noout` byte-for-byte; Ed448 was verified by extracting the SPKI directly from the cert's DER bytes (openssl 3.6.2 in this environment doesn't support Ed448). A short comment above each `ED*_PUBKEY` constant records the verification so the fixtures aren't read as circular snapshots of `@peculiar/x509`'s own output.
+- **[tests/node/tests/nodeApi.mjs](tests/node/tests/nodeApi.mjs) recipe-format tests no longer feed `Hex to PEM` garbage.** The three `chef.bake` tests previously piped Morse-coded output (dashes/dots) through `Hex to PEM`, which is the reason PR 1 made `derToPem` lenient about non-hex input. They now use `To Hex` → `Hex to PEM` → `To Snake case` and produce well-formed PEM of `"some input"`. Same coverage of compact JSON / clean JSON / optional-args parsing; `derToPem`'s leniency is no longer test-load-bearing (but kept for backwards compatibility).
+
 ### PR 6 — 2026-05-17
 - Removed `jsrsasign` from [package.json](package.json) and [package-lock.json](package-lock.json). No runtime code changes were needed because PRs 1-5 had already moved operations to `@noble/curves`, `@peculiar/x509`, and `asn1js`.
 - Removed stale dependency-name mentions from `src/` comments so `rg -n "jsrsasign" src/` is clean. Remaining mentions are intentionally limited to migration documentation and [CHANGELOG.md](CHANGELOG.md).
