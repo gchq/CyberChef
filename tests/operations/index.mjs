@@ -63,6 +63,7 @@ import "./tests/CRCChecksum.mjs";
 import "./tests/Crypt.mjs";
 import "./tests/CSV.mjs";
 import "./tests/DateTime.mjs";
+import "./tests/DechunkHTTPResponse.mjs";
 import "./tests/DefangIP.mjs";
 import "./tests/DisassembleARM.mjs";
 import "./tests/DropNthBytes.mjs";
