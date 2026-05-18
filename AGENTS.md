@@ -26,6 +26,7 @@
 - Otherwise group a commit around one coherent class of change, not multiple unrelated fixes or refactors.
 - Split work before committing when a reviewer would benefit from evaluating the pieces independently.
 - Only keep changes together when separating them would make the behavior harder to understand, test, or revert.
+- Prefer squash or amend for related consecutive changes — if a follow-up commit only fixes or extends the immediately preceding commit, squash them into one rather than leaving a trail of iterative noise in the log.
 
 ## Payment Operation Maintenance
 

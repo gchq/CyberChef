@@ -53,7 +53,34 @@ They appear in the CyberChef UI under the **Payments** category.
 
 Recipe starter docs:
 - [PAYMENT_RECIPES.md](PAYMENT_RECIPES.md)
-- [AWS_PAYMENT_CRYPTOGRAPHY_RECIPES.md](AWS_PAYMENT_CRYPTOGRAPHY_RECIPES.md)
+
+### Payment recipe examples
+
+Payment-specific recipe chains and standalone operations, pre-loaded at [cyberchef.jacobmarks.com][1]:
+
+ - [VISA PVV: generate PVV from clear PIN][p01]
+ - [VISA PVV: generate then verify (full chain)][p02]
+ - [IBM 3624: generate PIN offset][p03]
+ - [IBM 3624: generate then verify (full chain)][p04]
+ - [EMV: generate ARQC][p05]
+ - [EMV: generate then verify ARQC (full chain)][p06]
+ - [EMV: generate ARPC issuer response][p07]
+ - [EMV: generate issuer-script MAC][p08]
+ - [EMV: verify issuer-script MAC][p09]
+ - [Payment MAC: generate AES-CMAC][p10]
+ - [Payment MAC: verify AES-CMAC][p11]
+ - [DUKPT TDES: derive IPEK from BDK][p12]
+ - [DUKPT TDES: derive PIN session key][p13]
+ - [PIN Block: build ISO Format 0 then parse (full chain)][p14]
+ - [TR-31 key block: parse and inspect header fields][p15]
+ - [HSM: parse Thales payShield command][p16]
+ - [HSM: parse Futurex Excrypt command][p17]
+ - [Payment KCV: compute AES-CMAC key check value][p18]
+ - [Key Generate then KCV (fresh key with check value)][p19]
+ - [PAN Generate: Visa curated test card number][p20]
+ - [PAN Parse: classify a card number by network][p21]
+ - [Card validation data: generate CVV2][p22]
+ - [Card validation data: verify CVV2][p23]
 
 ## Live demo
 
@@ -193,3 +220,26 @@ CyberChef is released under the [Apache 2.0 Licence](https://www.apache.org/lice
   [10]: https://cyberchef.jacobmarks.com/#recipe=Register('(.%7B32%7D)',true,false)Drop_bytes(0,32,false)AES_Decrypt(%7B'option':'Hex','string':'1748e7179bd56570d51fa4ba287cc3e5'%7D,%7B'option':'Hex','string':'$R0'%7D,'CTR','Hex','Raw',%7B'option':'Hex','string':''%7D)&input=NTFlMjAxZDQ2MzY5OGVmNWY3MTdmNzFmNWI0NzEyYWYyMGJlNjc0YjNiZmY1M2QzODU0NjM5NmVlNjFkYWFjNDkwOGUzMTljYTNmY2Y3MDg5YmZiNmIzOGVhOTllNzgxZDI2ZTU3N2JhOWRkNmYzMTFhMzk0MjBiODk3OGU5MzAxNGIwNDJkNDQ3MjZjYWVkZjU0MzZlYWY2NTI0MjljMGRmOTRiNTIxNjc2YzdjMmNlODEyMDk3YzI3NzI3M2M3YzcyY2Q4OWFlYzhkOWZiNGEyNzU4NmNjZjZhYTBhZWUyMjRjMzRiYTNiZmRmN2FlYjFkZGQ0Nzc2MjJiOTFlNzJjOWU3MDlhYjYwZjhkYWY3MzFlYzBjYzg1Y2UwZjc0NmZmMTU1NGE1YTNlYzI5MWNhNDBmOWU2MjlhODcyNTkyZDk4OGZkZDgzNDUzNGFiYTc5YzFhZDE2NzY3NjlhN2MwMTBiZjA0NzM5ZWNkYjY1ZDk1MzAyMzcxZDYyOWQ5ZTM3ZTdiNGEzNjFkYTQ2OGYxZWQ1MzU4OTIyZDJlYTc1MmRkMTFjMzY2ZjMwMTdiMTRhYTAxMWQyYWYwM2M0NGY5NTU3OTA5OGExNWUzY2Y5YjQ0ODZmOGZmZTljMjM5ZjM0ZGU3MTUxZjZjYTY1MDBmZTRiODUwYzNmMWMwMmU4MDFjYWYzYTI0NDY0NjE0ZTQyODAxNjE1YjhmZmFhMDdhYzgyNTE0OTNmZmRhN2RlNWRkZjMzNjg4ODBjMmI5NWIwMzBmNDFmOGYxNTA2NmFkZDA3MWE2NmNmNjBlNWY0NmYzYTIzMGQzOTdiNjUyOTYzYTIxYTUzZg
   [11]: https://cyberchef.jacobmarks.com/#recipe=XOR(%7B'option':'Hex','string':'3a'%7D,'Standard',false)To_Hexdump(16,false,false)&input=VGhlIGFuc3dlciB0byB0aGUgdWx0aW1hdGUgcXVlc3Rpb24gb2YgbGlmZSwgdGhlIFVuaXZlcnNlLCBhbmQgZXZlcnl0aGluZyBpcyA0Mi4
   [12]: https://cyberchef.jacobmarks.com/#recipe=Magic(3,false,false)&input=V1VhZ3dzaWFlNm1QOGdOdENDTFVGcENwQ0IyNlJtQkRvREQ4UGFjZEFtekF6QlZqa0syUXN0RlhhS2hwQzZpVVM3UkhxWHJKdEZpc29SU2dvSjR3aGptMWFybTg2NHFhTnE0UmNmVW1MSHJjc0FhWmM1VFhDWWlmTmRnUzgzZ0RlZWpHWDQ2Z2FpTXl1QlY2RXNrSHQxc2NnSjg4eDJ0TlNvdFFEd2JHWTFtbUNvYjJBUkdGdkNLWU5xaU45aXBNcTFaVTFtZ2tkYk51R2NiNzZhUnRZV2hDR1VjOGc5M1VKdWRoYjhodHNoZVpud1RwZ3FoeDgzU1ZKU1pYTVhVakpUMnptcEM3dVhXdHVtcW9rYmRTaTg4WXRrV0RBYzFUb291aDJvSDRENGRkbU5LSldVRHBNd21uZ1VtSzE0eHdtb21jY1BRRTloTTE3MkFQblNxd3hkS1ExNzJSa2NBc3lzbm1qNWdHdFJtVk5OaDJzMzU5d3I2bVMyUVJQ
+  [p01]: https://cyberchef.jacobmarks.com/#recipe=VISA_PVV_Generate('0123456789ABCDEFFEDCBA9876543210','5432101234567890',1,false)&input=MTIzNA==
+  [p02]: https://cyberchef.jacobmarks.com/#recipe=VISA_PVV_Generate('0123456789ABCDEFFEDCBA9876543210','5432101234567890',1,false)VISA_PVV_Verify('0123456789ABCDEFFEDCBA9876543210','5432101234567890',1,'1234',true)&input=MTIzNA==
+  [p03]: https://cyberchef.jacobmarks.com/#recipe=IBM_3624_Generate_PIN_Offset('0123456789ABCDEFFEDCBA9876543210','0123456789012345','5432101234567890','F',false)&input=MTIzNA==
+  [p04]: https://cyberchef.jacobmarks.com/#recipe=IBM_3624_Generate_PIN_Offset('0123456789ABCDEFFEDCBA9876543210','0123456789012345','5432101234567890','F',false)IBM_3624_Verify_PIN('0123456789ABCDEFFEDCBA9876543210','0123456789012345','5432101234567890','F','1234',true)&input=MTIzNA==
+  [p05]: https://cyberchef.jacobmarks.com/#recipe=EMV_Generate_ARQC('00112233445566778899AABBCCDDEEFF',8,false)&input=MDAwMTAyMDMwNDA1MDYwNzA4MDkwQTBCMEMwRDBFMEY=
+  [p06]: https://cyberchef.jacobmarks.com/#recipe=EMV_Generate_ARQC('00112233445566778899AABBCCDDEEFF',8,false)EMV_Verify_ARQC('00112233445566778899AABBCCDDEEFF',8,'000102030405060708090A0B0C0D0E0F',true)&input=MDAwMTAyMDMwNDA1MDYwNzA4MDkwQTBCMEMwRDBFMEY=
+  [p07]: https://cyberchef.jacobmarks.com/#recipe=EMV_Generate_ARPC('00112233445566778899AABBCCDDEEFF',8,false)&input=MTEyMjMzNDQ1NTY2Nzc4ODk5MDBBQUJCQ0NEREVFRkY=
+  [p08]: https://cyberchef.jacobmarks.com/#recipe=EMV_Generate_MAC('0123456789ABCDEFFEDCBA9876543210',8,false)&input=ODQyNDAwMDAwODk5OUU1N0ZEMEY0N0NBQ0UwMDA3
+  [p09]: https://cyberchef.jacobmarks.com/#recipe=EMV_Verify_MAC('0123456789ABCDEFFEDCBA9876543210','22CB48394DFD1977',true)&input=ODQyNDAwMDAwODk5OUU1N0ZEMEY0N0NBQ0UwMDA3
+  [p10]: https://cyberchef.jacobmarks.com/#recipe=MAC_Generate('Hex','AES-CMAC','00112233445566778899AABBCCDDEEFF','Hex','','Method%201',8,false)&input=MTEyMjMzNDQ1NTY2Nzc4OA==
+  [p11]: https://cyberchef.jacobmarks.com/#recipe=MAC_Verify('Hex','AES-CMAC','00112233445566778899AABBCCDDEEFF','Hex','','Method%201','339AF1AD1650E908',true)&input=MTEyMjMzNDQ1NTY2Nzc4OA==
+  [p12]: https://cyberchef.jacobmarks.com/#recipe=DUKPT_Derive_TDES_Key('Derive%20IPEK','FFFF9876543210E00008','None',false)&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA=
+  [p13]: https://cyberchef.jacobmarks.com/#recipe=DUKPT_Derive_TDES_Key('Derive%20Session%20Key','FFFF9876543210E00008','PIN',false)&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA=
+  [p14]: https://cyberchef.jacobmarks.com/#recipe=PIN_Block_Build('ISO%20Format%200','5432101234567890',false)PIN_Block_Parse('ISO%20Format%200','5432101234567890')&input=MTIzNA==
+  [p15]: https://cyberchef.jacobmarks.com/#recipe=TR-31_Parse_Key_Block(false)&input=RDAxMTJQMEFFMDBFMDAwMDEwRUY5OTkwQzgwMkMzRUM3REEwNEM2OUFENjhBNzFCMjM4ODBEQzZDQTY0QjY0Q0UyRTVGMUE0RDA5NTJBM0E=
+  [p16]: https://cyberchef.jacobmarks.com/#recipe=HSM_Parse_Thales_Command()&input=SEVBREhFMDEyMzQ1Njc4OUFCQ0RFRjAwMTEyMjMzNDQ1NTY2NzclMDBUQUlM
+  [p17]: https://cyberchef.jacobmarks.com/#recipe=HSM_Parse_Futurex_Command()&input=W0FPR01BQztGUzY7UlYwMDExMjIzMzQ0NTU2Njc3O10=
+  [p18]: https://cyberchef.jacobmarks.com/#recipe=Payment_Calculate_KCV('Hex','AES-CMAC%20(Empty)',6)&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA=
+  [p19]: https://cyberchef.jacobmarks.com/#recipe=Key_Generate('AES-128%20(16%20bytes)',16,false,false)Payment_Calculate_KCV('Hex','AES-CMAC%20(Empty)',6)
+  [p20]: https://cyberchef.jacobmarks.com/#recipe=PAN_Generate('Visa','Curated%20sample',16,'Any',true)
+  [p21]: https://cyberchef.jacobmarks.com/#recipe=PAN_Parse()&input=NTQyNTIzMzQzMDEwOTkwMw==
+  [p22]: https://cyberchef.jacobmarks.com/#recipe=Card_Validation_Data_Generate('CVV2%20/%20CVC2%20(force%20000)','4123456789012345','02','25','MMYY','101',3,false)&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA=
+  [p23]: https://cyberchef.jacobmarks.com/#recipe=Card_Validation_Data_Verify('CVV2%20/%20CVC2%20(force%20000)','4123456789012345','02','25','MMYY','101','221')&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA=
