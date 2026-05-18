@@ -23,7 +23,7 @@ class GenerateVISAPVV extends Operation {
         this.testDataSamples = [
             {
                 name: "VISA PVV sample",
-                input: "1234",
+                input: "__RANDOM_PIN_4__",
                 args: ["0123456789ABCDEFFEDCBA9876543210", "5432101234567890", 1, true]
             }
         ];

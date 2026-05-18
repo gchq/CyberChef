@@ -203,7 +203,7 @@ class DeriveDUKPTKey extends Operation {
         this.testDataSamples = [
             {
                 name: "Known transaction key vector",
-                input: "0123456789ABCDEFFEDCBA9876543210",
+                input: "__RANDOM_TDES_16_HEX__",
                 args: ["Derive Session Key", "FFFF9876543210E00008", "None", false]
             }
         ];

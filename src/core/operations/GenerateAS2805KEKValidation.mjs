@@ -54,7 +54,7 @@ class GenerateAS2805KEKValidation extends Operation {
         this.testDataSamples = [
             {
                 name: "AS2805 request sample",
-                input: "0123456789ABCDEFFEDCBA9876543210",
+                input: "__RANDOM_TDES_16_HEX__",
                 args: ["KekValidationRequest", "TDES_2KEY", "VARIANT_MASK_82", "", true]
             }
         ];

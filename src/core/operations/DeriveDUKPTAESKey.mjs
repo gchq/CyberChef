@@ -292,7 +292,7 @@ class DeriveDUKPTAESKey extends Operation {
         this.testDataSamples = [
             {
                 name: "Derive IK from BDK",
-                input: "FEDCBA9876543210F1F1F1F1F1F1F1F1",
+                input: "__RANDOM_AES_128_HEX__",
                 args: ["BDK", "Derive IK", "123456789012345600000001", "PIN Encryption", false],
             },
         ];

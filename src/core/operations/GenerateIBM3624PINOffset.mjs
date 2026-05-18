@@ -23,7 +23,7 @@ class GenerateIBM3624PINOffset extends Operation {
         this.testDataSamples = [
             {
                 name: "IBM 3624 offset sample",
-                input: "1234",
+                input: "__RANDOM_PIN_4__",
                 args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", true]
             }
         ];

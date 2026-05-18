@@ -26,6 +26,13 @@ class GenerateCardValidationData extends Operation {
                 name: "Known CVV2 test sample",
                 input: "0123456789ABCDEFFEDCBA9876543210",
                 args: ["CVV2 / CVC2 (force 000)", "4123456789012345", "02", "25", "MMYY", "101", 3, false]
+            },
+            {
+                name: "Generated CVK → CVV2",
+                recipeConfig: [
+                    { op: "Key Generate", args: ["AES-128 (16 bytes)", 16, false, false] },
+                    { op: "Card Validation Data Generate", args: ["CVV2 / CVC2 (force 000)", "4123456789012345", "02", "25", "MMYY", "101", 3, false] }
+                ]
             }
         ];
         this.infoURL = "https://en.wikipedia.org/wiki/Card_security_code";

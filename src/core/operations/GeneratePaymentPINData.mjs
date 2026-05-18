@@ -23,7 +23,7 @@ class GeneratePaymentPINData extends Operation {
         this.testDataSamples = [
             {
                 name: "Format 0 sample",
-                input: "1234",
+                input: "__RANDOM_PIN_4__",
                 args: ["ISO Format 0", "5432101234567890", false, false]
             }
         ];

@@ -29,6 +29,13 @@ class CalculatePaymentKCV extends Operation {
                 name: "Random AES-CMAC sample",
                 input: "__RANDOM_AES_128_HEX__",
                 args: ["Hex", "AES-CMAC (Empty)", 6]
+            },
+            {
+                name: "Generate key then compute KCV",
+                recipeConfig: [
+                    { op: "Key Generate", args: ["AES-128 (16 bytes)", 16, false, false] },
+                    { op: "Payment Calculate KCV", args: ["Hex", "AES-CMAC (Empty)", 6] }
+                ]
             }
         ];
         this.infoURL = "https://en.wikipedia.org/wiki/Message_authentication_code";
