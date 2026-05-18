@@ -655,7 +655,7 @@ Breaking changes:
 [10.11.0]: https://github.com/gchq/CyberChef/releases/tag/v10.11.0
 [10.10.0]: https://github.com/gchq/CyberChef/releases/tag/v10.10.0
 [10.9.0]: https://github.com/gchq/CyberChef/releases/tag/v10.9.0
-[10.8.0]: https://github.com/gchq/CyberChef/releases/tag/v10.7.0
+[10.8.0]: https://github.com/gchq/CyberChef/releases/tag/v10.8.0
 [10.7.0]: https://github.com/gchq/CyberChef/releases/tag/v10.7.0
 [10.6.0]: https://github.com/gchq/CyberChef/releases/tag/v10.6.0
 [10.5.0]: https://github.com/gchq/CyberChef/releases/tag/v10.5.0

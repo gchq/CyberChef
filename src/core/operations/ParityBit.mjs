@@ -20,7 +20,7 @@ class ParityBit extends Operation {
 
         this.name = "Parity Bit";
         this.module = "Default";
-        this.description = "A parity bit, or check bit, is the simplest form of error detection. It is a bit which is added to a string of bits and represents if the number of 1's in the binary string is an even number or odd number.<br><br>If a delimiter is specified, the parity bit calculation will be performed on each 'block' of the input data, where the blocks are created by slicing the input at each occurence of the delimiter character";
+        this.description = "A parity bit, or check bit, is the simplest form of error detection. It is a bit which is added to a string of bits and represents if the number of 1's in the binary string is an even number or odd number.<br><br>If a delimiter is specified, the parity bit calculation will be performed on each 'block' of the input data, where the blocks are created by slicing the input at each occurrence of the delimiter character";
         this.infoURL = "https://wikipedia.org/wiki/Parity_bit";
         this.inputType = "string";
         this.outputType = "string";
