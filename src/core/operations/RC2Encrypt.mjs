@@ -8,7 +8,6 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import forge from "node-forge";
 
-
 /**
  * RC2 Encrypt operation
  */
@@ -32,6 +31,11 @@ class RC2Encrypt extends Operation {
                 "type": "toggleString",
                 "value": "",
                 "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
+            },
+            {
+                name: "Effective key bits",
+                type: "number",
+                value: 128
             },
             {
                 "name": "IV",
@@ -59,9 +63,10 @@ class RC2Encrypt extends Operation {
      */
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
-            iv = Utils.convertToByteString(args[1].string, args[1].option),
-            [,, inputType, outputType] = args,
-            cipher = forge.rc2.createEncryptionCipher(key);
+            effective = args[1],
+            iv = Utils.convertToByteString(args[2].string, args[2].option),
+            [,,, inputType, outputType] = args,
+            cipher = forge.rc2.createEncryptionCipher(key, effective);
 
         input = Utils.convertToByteString(input, inputType);
 

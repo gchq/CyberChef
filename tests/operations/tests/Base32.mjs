@@ -16,6 +16,10 @@ const STANDARD_OUT = "JBCUYTCPEBBECU2FGMZA====";
 const EXTENDED_INP = "HELLO BASE32 EXTENDED";
 const EXTENDED_OUT = "912KOJ2F41142KQ56CP20HAOAH2KSH258G======";
 
+// Example Crockford's alphabet Tests
+const CROCKFORD_INP = "HELLO BASE32 CROCKFORD";
+const CROCKFORD_OUT = "912MRK2F41142MT56CS20GTJ9X1MPHJFA920====";
+
 // All Bytes
 const ALL_BYTES = [
     "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
@@ -38,6 +42,9 @@ const ALL_BYTES = [
 
 const ALL_BYTES_EXTENDED_OUT = "000G40O40K30E209185GO38E1S8124GJ2GAHC5OO34D1M70T3OFI08924CI2A9H750KIKAPC5KN2UC1H68PJ8D9M6SS3IEHR7GUJSFQ085146H258P3KGIAA9D64QJIFA18L4KQKALB5EM2PB9DLONAUBTG62OJ3CHIMCPR8D5L6MR3DDPNN0SBIEDQ7ATJNF1SNKURSFLV7V041GA1O91C6GU48J2KBHI6OT3SGI699754LIQBPH6CQJEE9R7KVK2GQ58T4KMJAFA59LALQPBDELUOB3CLJMIQRDDTON6TBNF5TNQVS1GE2OF2CBHM7P34SLIUCPN7CVK6HQB9T9LEMQVCDJMMRRJETTNV0S7HE7P75SRJUHQFATFMERRNFU3OV5SVKUNRFFU7PVBTVPVFUVS======";
 const ALL_BYTES_STANDARD_OUT = "AAAQEAYEAUDAOCAJBIFQYDIOB4IBCEQTCQKRMFYYDENBWHA5DYPSAIJCEMSCKJRHFAUSUKZMFUXC6MBRGIZTINJWG44DSOR3HQ6T4P2AIFBEGRCFIZDUQSKKJNGE2TSPKBIVEU2UKVLFOWCZLJNVYXK6L5QGCYTDMRSWMZ3INFVGW3DNNZXXA4LSON2HK5TXPB4XU634PV7H7AEBQKBYJBMGQ6EITCULRSGY5D4QSGJJHFEVS2LZRGM2TOOJ3HU7UCQ2FI5EUWTKPKFJVKV2ZLNOV6YLDMVTWS23NN5YXG5LXPF5X274BQOCYPCMLRWHZDE4VS6MZXHM7UGR2LJ5JVOW27MNTWW33TO55X7A4HROHZHF43T6R2PK5PWO33XP6DY7F47U6X3PP6HZ7L57Z7P674======";
+const ALL_BYTES_CROCKFORD_OUT = "000G40R40M30E209185GR38E1W8124GK2GAHC5RR34D1P70X3RFJ08924CJ2A9H750MJMASC5MQ2YC1H68SK8D9P6WW3JEHV7GYKWFT085146H258S3MGJAA9D64TKJFA18N4MTMANB5EP2SB9DNRQAYBXG62RK3CHJPCSV8D5N6PV3DDSQQ0WBJEDT7AXKQF1WQMYVWFNZ7Z041GA1R91C6GY48K2MBHJ6RX3WGJ699754NJTBSH6CTKEE9V7MZM2GT58X4MPKAFA59NANTSBDENYRB3CNKPJTVDDXRQ6XBQF5XQTZW1GE2RF2CBHP7S34WNJYCSQ7CZM6HTB9X9NEPTZCDKPPVVKEXXQZ0W7HE7S75WVKYHTFAXFPEVVQFY3RZ5WZMYQVFFY7SZBXZSZFYZW======";
+
+const WRONG_ALPHABET = "Alphabet must be of length 33";
 
 TestRegister.addTests([
     {
@@ -59,6 +66,17 @@ TestRegister.addTests([
             {
                 op: "To Base32",
                 args: [ALPHABET_OPTIONS[1].value],
+            },
+        ],
+    },
+    {
+        name: "To Base32 Crockford: nothing",
+        input: "",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                op: "To Base32",
+                args: [ALPHABET_OPTIONS[2].value],
             },
         ],
     },
@@ -85,6 +103,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "From Base32 Crockford: nothing",
+        input: "",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
         name: "To Base32 Standard: " + STANDARD_INP,
         input: STANDARD_INP,
         expectedOutput: STANDARD_OUT,
@@ -103,6 +132,17 @@ TestRegister.addTests([
             {
                 op: "To Base32",
                 args: [ALPHABET_OPTIONS[1].value],
+            },
+        ],
+    },
+    {
+        name: "To Base32 Crockford: " + CROCKFORD_INP,
+        input: CROCKFORD_INP,
+        expectedOutput: CROCKFORD_OUT,
+        recipeConfig: [
+            {
+                op: "To Base32",
+                args: [ALPHABET_OPTIONS[2].value],
             },
         ],
     },
@@ -129,6 +169,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT,
+        input: CROCKFORD_OUT,
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
         name: "To Base32 Hex Standard: All Bytes",
         input: ALL_BYTES,
         expectedOutput: ALL_BYTES_STANDARD_OUT,
@@ -151,6 +202,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "To Base32 Crockford: All Bytes",
+        input: ALL_BYTES,
+        expectedOutput: ALL_BYTES_CROCKFORD_OUT,
+        recipeConfig: [
+            {
+                op: "To Base32",
+                args: [ALPHABET_OPTIONS[2].value],
+            },
+        ],
+    },
+    {
         name: "From Base32 Hex Standard: All Bytes",
         input: ALL_BYTES_STANDARD_OUT,
         expectedOutput: ALL_BYTES,
@@ -169,6 +231,160 @@ TestRegister.addTests([
             {
                 op: "From Base32",
                 args: [ALPHABET_OPTIONS[1].value, false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: All Bytes",
+        input: ALL_BYTES_CROCKFORD_OUT,
+        expectedOutput: ALL_BYTES,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
+        name: "To Base32 Standard: wrong alphabet",
+        input: STANDARD_INP,
+        expectedOutput: WRONG_ALPHABET,
+        recipeConfig: [
+            {
+                op: "To Base32",
+                args: [""],
+            },
+        ],
+    },
+    {
+        name: "To Base32 Hex Extended: wrong alphabet",
+        input: EXTENDED_INP,
+        expectedOutput: WRONG_ALPHABET,
+        recipeConfig: [
+            {
+                op: "To Base32",
+                args: [""],
+            },
+        ],
+    },
+    {
+        name: "To Base32 Crockford: wrong alphabet",
+        input: CROCKFORD_INP,
+        expectedOutput: WRONG_ALPHABET,
+        recipeConfig: [
+            {
+                op: "To Base32",
+                args: [""],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Standard: wrong alphabet",
+        input: STANDARD_OUT,
+        expectedOutput: WRONG_ALPHABET,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: ["", false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Hex Extended: wrong alphabet",
+        input: EXTENDED_OUT,
+        expectedOutput: WRONG_ALPHABET,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: ["", false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: wrong alphabet",
+        input: CROCKFORD_OUT,
+        expectedOutput: WRONG_ALPHABET,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: ["", false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.replaceAll("0", "o"),
+        input: CROCKFORD_OUT.replaceAll("0", "o"),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.replaceAll("0", "O"),
+        input: CROCKFORD_OUT.replaceAll("0", "O"),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.replaceAll("1", "I"),
+        input: CROCKFORD_OUT.replaceAll("1", "I"),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.replaceAll("1", "i"),
+        input: CROCKFORD_OUT.replaceAll("1", "i"),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.replaceAll("1", "L"),
+        input: CROCKFORD_OUT.replaceAll("1", "L"),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.replaceAll("1", "l"),
+        input: CROCKFORD_OUT.replaceAll("1", "l"),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
+            },
+        ],
+    },
+    {
+        name: "From Base32 Crockford: " + CROCKFORD_OUT.toLowerCase(),
+        input: CROCKFORD_OUT.toLowerCase(),
+        expectedOutput: CROCKFORD_INP,
+        recipeConfig: [
+            {
+                op: "From Base32",
+                args: [ALPHABET_OPTIONS[2].value, false],
             },
         ],
     },
