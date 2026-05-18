@@ -20,27 +20,27 @@ Coverage legend:
 
 | AWS operation | Coverage | Use |
 | --- | --- | --- |
-| `EncryptData` | `Direct` | `Encrypt Payment Data` |
-| `DecryptData` | `Direct` | `Decrypt Payment Data` |
-| `ReEncryptData` | `Direct` | `Re-Encrypt Payment Data` |
-| `GenerateMac` | `Direct` | `Generate Payment MAC` or `Generate EMV MAC` |
-| `VerifyMac` | `Direct` | `Verify Payment MAC` or `Verify EMV MAC` |
-| `VerifyAuthRequestCryptogram` | `Direct` | `Verify EMV ARQC` |
-| `GenerateCardValidationData` | `Direct` | `Generate Card Validation Data` |
-| `VerifyCardValidationData` | `Direct` | `Verify Card Validation Data` |
-| `GeneratePinData` | `Direct` / `Chained` | `Generate Payment PIN Data`, `Generate IBM 3624 PIN Offset`, `Generate VISA PVV` |
+| `EncryptData` | `Direct` | `Payment Encrypt Data` |
+| `DecryptData` | `Direct` | `Payment Decrypt Data` |
+| `ReEncryptData` | `Direct` | `Payment Re-Encrypt Data` |
+| `GenerateMac` | `Direct` | `MAC Generate` or `EMV Generate MAC` |
+| `VerifyMac` | `Direct` | `MAC Verify` or `EMV Verify MAC` |
+| `VerifyAuthRequestCryptogram` | `Direct` | `EMV Verify ARQC` |
+| `GenerateCardValidationData` | `Direct` | `Card Validation Data Generate` |
+| `VerifyCardValidationData` | `Direct` | `Card Validation Data Verify` |
+| `GeneratePinData` | `Direct` / `Chained` | `PIN Data Generate`, `IBM 3624 Generate PIN Offset`, `VISA PVV Generate` |
 | `TranslatePinData` | `Direct` / `Chained` | `Translate Payment PIN Data` or clear PIN block plus cipher chaining |
-| `VerifyPinData` | `Direct` | `Verify Payment PIN Data`, `Verify IBM 3624 PIN`, `Verify VISA PVV` |
+| `VerifyPinData` | `Direct` | `PIN Data Verify`, `IBM 3624 Verify PIN`, `VISA PVV Verify` |
 | `TranslateKeyMaterial` | `Chained` | `Derive ECDH Key Material` + wrap/unwrap + TR-31/TR-34 helpers |
-| `GenerateAs2805KekValidation` | `Emulated` | `Generate AS2805 KEK Validation` |
-| `GenerateMacEmvPinChange` | `Direct` / `Emulated` | `Generate EMV MAC For PIN Change` |
+| `GenerateAs2805KekValidation` | `Emulated` | `AS2805 Generate KEK Validation` |
+| `GenerateMacEmvPinChange` | `Direct` / `Emulated` | `EMV Generate MAC (PIN Change)` |
 
 ## AWS `EncryptData`
 Preferred operation:
-- `Encrypt Payment Data`
+- `Payment Encrypt Data`
 
 Good chain:
-- `Derive DUKPT TDES Key` -> `Triple DES Encrypt`
+- `DUKPT Derive TDES Key` -> `Triple DES Encrypt`
 - `Derive ECDH Key Material` -> KDF if needed -> `AES Encrypt`
 
 Notes:
@@ -49,23 +49,23 @@ Notes:
 
 ## AWS `DecryptData`
 Preferred operation:
-- `Decrypt Payment Data`
+- `Payment Decrypt Data`
 
 Good chain:
-- `Derive DUKPT TDES Key` -> `Triple DES Decrypt`
+- `DUKPT Derive TDES Key` -> `Triple DES Decrypt`
 - `Derive ECDH Key Material` -> KDF if needed -> `AES Decrypt`
 
 ## AWS `ReEncryptData`
 Preferred operation:
-- `Re-Encrypt Payment Data`
+- `Payment Re-Encrypt Data`
 
 Good chain:
-- `Decrypt Payment Data` -> `Encrypt Payment Data`
+- `Payment Decrypt Data` -> `Payment Encrypt Data`
 
 ## AWS `GenerateMac`
 Preferred operations:
-- `Generate Payment MAC`
-- `Generate EMV MAC`
+- `MAC Generate`
+- `EMV Generate MAC`
 
 Current MAC coverage:
 - HMAC SHA-224 / 256 / 384 / 512
@@ -79,19 +79,19 @@ Current MAC coverage:
 - DUKPT ISO 9797-1 Algorithm 3
 - EMV retail-MAC style generation with a provided session key
 
-Use `Generate EMV MAC` when:
+Use `EMV Generate MAC` when:
 - the AWS flow is EMV-session-key based rather than a static or DUKPT MAC key
 
 ## AWS `VerifyMac`
 Preferred operations:
-- `Verify Payment MAC`
-- `Verify EMV MAC`
+- `MAC Verify`
+- `EMV Verify MAC`
 
 Use the same method, padding rule, and key context as generation.
 
 ## AWS `VerifyAuthRequestCryptogram`
 Preferred operation:
-- `Verify EMV ARQC`
+- `EMV Verify ARQC`
 
 Good chain:
 - preassemble the ARQC input block
@@ -103,7 +103,7 @@ Important assumption:
 
 ## AWS `GenerateCardValidationData`
 Preferred operation:
-- `Generate Card Validation Data`
+- `Card Validation Data Generate`
 
 Profiles:
 - CVV / CVC
@@ -112,31 +112,31 @@ Profiles:
 
 ## AWS `VerifyCardValidationData`
 Preferred operation:
-- `Verify Card Validation Data`
+- `Card Validation Data Verify`
 
 ## AWS `GeneratePinData`
 Preferred operations:
-- `Generate Payment PIN Data`
-- `Generate IBM 3624 PIN Offset`
-- `Generate VISA PVV`
+- `PIN Data Generate`
+- `IBM 3624 Generate PIN Offset`
+- `VISA PVV Generate`
 
 Use:
-- `Generate Payment PIN Data` for clear ISO format `0`, `1`, and `3` PIN blocks
-- `Generate IBM 3624 PIN Offset` for issuer-host offset workflows
-- `Generate VISA PVV` for PVV workflows
+- `PIN Data Generate` for clear ISO format `0`, `1`, and `3` PIN blocks
+- `IBM 3624 Generate PIN Offset` for issuer-host offset workflows
+- `VISA PVV Generate` for PVV workflows
 
 Good chains:
-- clear PIN -> `Generate Payment PIN Data` -> `Encrypt Payment Data`
-- clear PIN -> `Generate IBM 3624 PIN Offset`
-- clear PIN -> `Generate VISA PVV`
+- clear PIN -> `PIN Data Generate` -> `Payment Encrypt Data`
+- clear PIN -> `IBM 3624 Generate PIN Offset`
+- clear PIN -> `VISA PVV Generate`
 
 ## AWS `TranslatePinData`
 Preferred operation:
 - `Translate Payment PIN Data`
 
 Good chains:
-- `Parse PIN Block` -> inspect -> `Translate PIN Block`
-- `Decrypt Payment Data` -> `Translate Payment PIN Data` -> `Encrypt Payment Data`
+- `PIN Block Parse` -> inspect -> `PIN Block Translate`
+- `Payment Decrypt Data` -> `Translate Payment PIN Data` -> `Payment Encrypt Data`
 
 Important assumption:
 - the direct wrapper is for clear ISO PIN-block translation
@@ -144,14 +144,14 @@ Important assumption:
 
 ## AWS `VerifyPinData`
 Preferred operations:
-- `Verify Payment PIN Data`
-- `Verify IBM 3624 PIN`
-- `Verify VISA PVV`
+- `PIN Data Verify`
+- `IBM 3624 Verify PIN`
+- `VISA PVV Verify`
 
 Use:
-- `Verify Payment PIN Data` for clear ISO PIN blocks
-- `Verify IBM 3624 PIN` for issuer offset checks
-- `Verify VISA PVV` for PVV checks
+- `PIN Data Verify` for clear ISO PIN blocks
+- `IBM 3624 Verify PIN` for issuer offset checks
+- `VISA PVV Verify` for PVV checks
 
 ## AWS `TranslateKeyMaterial`
 Preferred chain:
@@ -166,7 +166,7 @@ Important assumption:
 
 ## AWS `GenerateAs2805KekValidation`
 Preferred operation:
-- `Generate AS2805 KEK Validation`
+- `AS2805 Generate KEK Validation`
 
 Important assumption:
 - this is an explicit software emulation helper
@@ -174,7 +174,7 @@ Important assumption:
 
 ## AWS `GenerateMacEmvPinChange`
 Preferred operation:
-- `Generate EMV MAC For PIN Change`
+- `EMV Generate MAC (PIN Change)`
 
 Good chain:
 - build or obtain the encrypted target PIN block
@@ -187,7 +187,7 @@ Important assumption:
 ## Common Chains
 
 ## A) DUKPT Request MAC
-- `Generate Payment MAC`
+- `MAC Generate`
 
 Method:
 - `DUKPT MAC Request CMAC`
@@ -195,15 +195,15 @@ Method:
 - or `DUKPT ISO 9797-1 Algorithm 3`
 
 ## B) EMV Issuer Script MAC
-- `Generate EMV MAC`
-- `Verify EMV MAC`
+- `EMV Generate MAC`
+- `EMV Verify MAC`
 
 ## C) EMV PIN Change
-- `Generate EMV MAC For PIN Change`
+- `EMV Generate MAC (PIN Change)`
 
 ## D) Clear PIN To Encrypted PIN Data
-- `Generate Payment PIN Data`
-- `Encrypt Payment Data`
+- `PIN Data Generate`
+- `Payment Encrypt Data`
 
 ## E) ECDH-Based Key Translation Lab Flow
 - `Derive ECDH Key Material`

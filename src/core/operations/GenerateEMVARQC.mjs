@@ -17,7 +17,7 @@ class GenerateEMVARQC extends Operation {
     constructor() {
         super();
 
-        this.name = "Generate EMV ARQC";
+        this.name = "EMV Generate ARQC";
         this.module = "Payment";
         this.description = "Paste the already-assembled EMV authorization-request input into the input field as hex and generate an AES-CMAC-based ARQC.<br><br><b>Input:</b> preassembled ARQC input data as hex.<br><b>Arguments:</b> provide the EMV session key in hex and choose how many bytes of the CMAC should be returned.<br><br><b>Validation:</b> Partially verified. This intentionally covers only supplied-key AES-CMAC-style EMV profiles and does not derive EMV session keys or assemble CDOL data for you.<br><br><b>Session key derivation:</b> In a full EMV flow the session key is derived from the issuer master key using the Application Transaction Counter (ATC) and PAN sequence number. Visa and Amex use EMV Common Session Key Derivation (sometimes called Option A); Mastercard uses a different derivation (Option B). This operation expects you to supply the already-derived session key — use a separate key-derivation step before calling this operation if you need to reproduce a full end-to-end flow.<br><br><b>Security:</b> Clear session keys are test-use only.";
         this.inlineHelp = "<strong>Input:</strong> preassembled ARQC data as hex.<br><strong>Args:</strong> provide the AES session key and choose the truncated cryptogram length.<br><strong>Validation:</strong> supplied-key AES-CMAC profile only.";

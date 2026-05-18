@@ -110,7 +110,7 @@ class ParseFuturexExcryptCommand extends Operation {
     constructor() {
         super();
 
-        this.name = "Parse Futurex Excrypt Command";
+        this.name = "HSM Parse Futurex Command";
         this.module = "Payment";
         this.description = "Paste a Futurex Excrypt command or response into the input field as text.<br><br><b>General syntax:</b> Excrypt messages are enclosed by opening and closing delimiters, typically <code>[</code> and <code>]</code>. Inside the message, fields are semicolon-delimited. Each field is a tag/value pair, for example <code>AOECHO</code> where <code>AO</code> is the tag and <code>ECHO</code> is the value. The command code is commonly carried in the <code>AO</code> field.<br><br><b>Input:</b> raw Excrypt message text.<br><br>This operation parses the visible Excrypt message syntax, extracts semicolon-delimited fields, splits fields into tag/value pairs, and resolves the <code>AO</code> command code to a known payment command name when available from the Futurex payment integration guide.";
         this.inlineHelp = "<strong>Syntax:</strong> <code>[tagvalue;tagvalue;...]</code> where fields are separated by semicolons and tags are typically two characters such as <code>AO</code>.<br><strong>Input:</strong> raw Futurex Excrypt message text.";

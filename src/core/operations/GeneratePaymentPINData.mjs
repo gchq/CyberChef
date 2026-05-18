@@ -16,7 +16,7 @@ class GeneratePaymentPINData extends Operation {
     constructor() {
         super();
 
-        this.name = "Generate Payment PIN Data";
+        this.name = "PIN Data Generate";
         this.module = "Payment";
         this.description = "Paste the clear PIN into the input field and generate clear PIN-block test data.<br><br><b>Input:</b> clear PIN digits.<br><b>Arguments:</b> choose the PIN-block format, provide the PAN when required, and optionally return structured JSON.<br><br><b>Validation:</b> Partially verified. This wrapper currently covers clear ISO 9564 formats 0, 1, and 3 only.<br><br><b>Security:</b> Clear PIN handling is test-use only.";
         this.inlineHelp = "<strong>Input:</strong> clear PIN digits.<br><strong>Args:</strong> choose the block format and provide the PAN for PAN-bound formats.<br><strong>Validation:</strong> clear ISO formats 0, 1, and 3 only.";

@@ -259,7 +259,7 @@ class DeriveDUKPTAESKey extends Operation {
     constructor() {
         super();
 
-        this.name = "Derive DUKPT AES Key";
+        this.name = "DUKPT Derive AES Key";
         this.module = "Payment";
         this.description = [
             "Derives AES DUKPT working keys per <b>ANSI X9.24-3</b> (AES-128).",

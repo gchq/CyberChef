@@ -16,7 +16,7 @@ class ParsePAN extends Operation {
     constructor() {
         super();
 
-        this.name = "Parse PAN";
+        this.name = "PAN Parse";
         this.module = "Payment";
         this.description = "Paste a payment card number into the input field and classify it by public network rules.<br><br><b>Input:</b> PAN digits.<br><b>Arguments:</b> none.<br><br><b>Validation:</b> Verified for Luhn behavior and public range matching used in this fork. Classification is limited to the implemented Visa, Mastercard, American Express, and Discover ranges.<br><br><b>Security:</b> PANs may still be sensitive. Use test data wherever possible.";
         this.inlineHelp = "<strong>Input:</strong> PAN digits only.<br><strong>Args:</strong> none.<br><strong>Validation:</strong> public range matching + Luhn.";

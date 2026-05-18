@@ -13,27 +13,28 @@ For validation posture, standards references, and release guardrails, see `PAYME
 
 All payment operation display names follow **Title Case** throughout. Acronyms (DUKPT, AES, EMV, MAC, PAN, PVV, KCV, ARQC, ARPC, TR-31, TR-34) are always upper-case. Brand names retain their canonical capitalisation (`payShield`).
 
-Pattern: `[Verb] [Optional Qualifier] [Noun]`
+Pattern: `[Domain Prefix] [Verb] [Qualifier]`
+- Domain prefixes: EMV, DUKPT, PIN Block, PIN Data, PAN, Card Validation Data, VISA PVV, IBM 3624, AS2805, HSM, Payment, MAC, Key, TR-31, TR-34
 - Verbs: Generate, Verify, Parse, Build, Translate, Derive, Calculate, Encrypt, Decrypt, Re-Encrypt
+- The prefix comes first so operations sort and scan by topic in the UI list
+- Only operations authored in this fork belong in the Payments category — do not add upstream CyberChef ops
 - When adding a new payment operation, follow this pattern and update this file.
 
 ## UI Arrangement
 
 The `Payments` category is arranged in this order:
-- payment-facing wrappers first
-- EMV and card-validation flows next
-- PIN and issuer-verification helpers after that
+- payment-facing wrappers (Payment Encrypt/Decrypt/Re-Encrypt) first
+- MAC and EMV flows next
+- PAN, card, and PIN flows after that
 - key derivation, generation, KCV, and parser utilities next
-- generic crypto primitives last for chaining
-
-That keeps common testing tasks near the top without hiding the underlying `HMAC`, `CMAC`, cipher, and key-wrap primitives that some chains still need.
+- HSM command parsers last
 
 ## 1) Encrypt / Decrypt / Re-Encrypt Payment Data
 
 Operations:
-- `Encrypt Payment Data`
-- `Decrypt Payment Data`
-- `Re-Encrypt Payment Data`
+- `Payment Encrypt Data`
+- `Payment Decrypt Data`
+- `Payment Re-Encrypt Data`
 
 Use this when:
 - you want payment-facing names for AES, TDES, or the implemented DUKPT-TDES profiles
@@ -49,8 +50,8 @@ Important assumptions:
 ## 2) Generate / Verify Payment MAC
 
 Operations:
-- `Generate Payment MAC`
-- `Verify Payment MAC`
+- `MAC Generate`
+- `MAC Verify`
 
 Supported methods:
 - `HMAC SHA-224`
@@ -81,9 +82,9 @@ Important assumptions:
 ## 3) Generate / Verify EMV MAC
 
 Operations:
-- `Generate EMV MAC`
-- `Verify EMV MAC`
-- `Generate EMV MAC For PIN Change`
+- `EMV Generate MAC`
+- `EMV Verify MAC`
+- `EMV Generate MAC (PIN Change)`
 
 Use this when:
 - you already have the EMV session integrity key
@@ -96,14 +97,14 @@ Input:
 Important assumptions:
 - these operations do not derive EMV session keys
 - they apply retail-MAC style EMV MAC generation with ISO9797 padding method 2
-- `Generate EMV MAC For PIN Change` expects the new PIN block to already be encrypted before you call it
+- `EMV Generate MAC (PIN Change)` expects the new PIN block to already be encrypted before you call it
 
 ## 4) Generate / Verify EMV ARQC And ARPC
 
 Operations:
-- `Generate EMV ARQC`
-- `Verify EMV ARQC`
-- `Generate EMV ARPC`
+- `EMV Generate ARQC`
+- `EMV Verify ARQC`
+- `EMV Generate ARPC`
 
 Use this when:
 - you already know the exact preassembled EMV data block
@@ -119,10 +120,10 @@ Important assumptions:
 ## 5) Generate / Verify Card Validation Data
 
 Operations:
-- `Generate Test PAN`
-- `Parse PAN`
-- `Generate Card Validation Data`
-- `Verify Card Validation Data`
+- `PAN Generate`
+- `PAN Parse`
+- `Card Validation Data Generate`
+- `Card Validation Data Verify`
 
 Profiles:
 - `CVV / CVC (use service code arg)`
@@ -136,31 +137,31 @@ Important assumptions:
 - CVV2 forces service code `000`
 - iCVV forces service code `999`
 - this is a clear-key software emulation of common card-validation flows
-- `Parse PAN` now outputs `cardType`, `cardTypeConfidence`, and `majorIndustryIdentifierDescription` in addition to network and Luhn fields
+- `PAN Parse` now outputs `cardType`, `cardTypeConfidence`, and `majorIndustryIdentifierDescription` in addition to network and Luhn fields
 
 Recommended chain:
-- `Generate Test PAN` -> `Parse PAN` -> `Generate Card Validation Data`
+- `PAN Generate` -> `PAN Parse` -> `Card Validation Data Generate`
 
-Use `Generate Test PAN` when:
+Use `PAN Generate` when:
 - you want a Visa, Mastercard, American Express, or Discover PAN to feed into later recipes
 
-Use `Parse PAN` when:
+Use `PAN Parse` when:
 - you want to confirm network, card type hint, IIN, length, and Luhn validity before continuing
 
 ## 6) Generate / Verify Payment PIN Data
 
 Operations:
-- `Generate Payment PIN Data`
-- `Verify Payment PIN Data`
+- `PIN Data Generate`
+- `PIN Data Verify`
 
-> **Note:** `Translate Payment PIN Data` is deprecated — use `Translate PIN Block` (section 7) instead. See issue #4.
+> **Note:** `Translate Payment PIN Data` is deprecated — use `PIN Block Translate` (section 7) instead. See issue #4.
 
 Use this when:
 - you want AWS-style PIN-data naming for clear ISO 9564 block flows
 
 Input:
-- `Generate Payment PIN Data`: clear PIN digits
-- `Verify Payment PIN Data`: clear PIN block hex
+- `PIN Data Generate`: clear PIN digits
+- `PIN Data Verify`: clear PIN block hex
 
 Important assumptions:
 - these wrappers currently cover clear ISO formats `0`, `1`, and `3`
@@ -169,17 +170,17 @@ Important assumptions:
 ## 7) Build / Parse / Translate PIN Block
 
 Operations:
-- `Build PIN Block`
-- `Parse PIN Block`
-- `Translate PIN Block`
+- `PIN Block Build`
+- `PIN Block Parse`
+- `PIN Block Translate`
 
 Use this when:
 - you want the lower-level clear PIN-block tools directly
 
 Input:
-- `Build PIN Block`: clear PIN digits
-- `Parse PIN Block`: clear PIN block hex
-- `Translate PIN Block`: clear PIN block hex
+- `PIN Block Build`: clear PIN digits
+- `PIN Block Parse`: clear PIN block hex
+- `PIN Block Translate`: clear PIN block hex
 
 Important assumptions:
 - current clear-block support is ISO formats `0`, `1`, and `3`
@@ -187,10 +188,10 @@ Important assumptions:
 ## 8) Issuer PIN Verification Helpers
 
 Operations:
-- `Generate IBM 3624 PIN Offset`
-- `Verify IBM 3624 PIN`
-- `Generate VISA PVV`
-- `Verify VISA PVV`
+- `IBM 3624 Generate PIN Offset`
+- `IBM 3624 Verify PIN`
+- `VISA PVV Generate`
+- `VISA PVV Verify`
 
 Use this when:
 - you need issuer-side PIN verification artifacts rather than PIN blocks
@@ -206,27 +207,27 @@ Important assumptions:
 ## 9) Key Derivation, Generation, And Validation
 
 Operations:
-- `Derive DUKPT TDES Key` — TDES DUKPT (10-byte KSN, IPEK-based)
-- `Derive DUKPT AES Key` — AES-128 DUKPT per ANSI X9.24-3 (12-byte KSN, IK-based)
+- `DUKPT Derive TDES Key` — TDES DUKPT (10-byte KSN, IPEK-based)
+- `DUKPT Derive AES Key` — AES-128 DUKPT per ANSI X9.24-3 (12-byte KSN, IK-based)
 - `Derive ECDH Key Material`
-- `Generate Key` — random AES-128/192/256, TDES, or custom bytes; optional AES CMAC KCV
-- `Calculate Payment KCV`
-- `Generate AS2805 KEK Validation`
+- `Key Generate` — random AES-128/192/256, TDES, or custom bytes; optional AES CMAC KCV
+- `Payment Calculate KCV`
+- `AS2805 Generate KEK Validation`
 
 Use this when:
 - you need transaction keys, shared secrets, random test keys, KCVs, or AS2805-style KEK-validation lab values
 
 Important assumptions:
-- `Derive DUKPT TDES Key` is TDES DUKPT — do not confuse IPEK (TDES) with IK (AES DUKPT)
-- `Derive DUKPT AES Key` implements AES-128 via AES-CMAC per ANSI X9.24-3; AES-192/256 are not yet implemented
-- `Generate Key` is for test use only — production keys must be generated in an approved HSM
-- `Generate AS2805 KEK Validation` is an emulation-oriented helper and explicitly documents its simplifications in the operation comments
+- `DUKPT Derive TDES Key` is TDES DUKPT — do not confuse IPEK (TDES) with IK (AES DUKPT)
+- `DUKPT Derive AES Key` implements AES-128 via AES-CMAC per ANSI X9.24-3; AES-192/256 are not yet implemented
+- `Key Generate` is for test use only — production keys must be generated in an approved HSM
+- `AS2805 Generate KEK Validation` is an emulation-oriented helper and explicitly documents its simplifications in the operation comments
 
 ## 10) Key Container And HSM Command Inspection
 
 Operations:
-- `Parse Thales payShield Command`
-- `Parse Futurex Excrypt Command`
+- `HSM Parse Thales Command`
+- `HSM Parse Futurex Command`
 - `Parse TR-31 Key Block`
 - `Parse TR-34 Key Transport`
 
@@ -234,14 +235,14 @@ Use this when:
 - you need to inspect vendor HSM command syntax, wrapped-key material, or transport frames during testing
 
 Input:
-- `Parse Thales payShield Command`: raw legacy host command or response text
-- `Parse Futurex Excrypt Command`: raw bracketed Excrypt command or response text
+- `HSM Parse Thales Command`: raw legacy host command or response text
+- `HSM Parse Futurex Command`: raw bracketed Excrypt command or response text
 - `Parse TR-31 Key Block` / `Parse TR-34 Key Transport`: full payload as text or hex, depending on the operation comment
 
 Important assumptions:
 - the Thales and Futurex parsers currently focus on visible message syntax, delimiters, command identification, and field splitting rather than deep per-command semantic decoding
-- `Parse Thales payShield Command` expects the configured message-header length to be supplied in the op args
-- `Parse Futurex Excrypt Command` treats Excrypt messages as delimiter-based tag/value fields and commonly uses the `AO` field as the command code
+- `HSM Parse Thales Command` expects the configured message-header length to be supplied in the op args
+- `HSM Parse Futurex Command` treats Excrypt messages as delimiter-based tag/value fields and commonly uses the `AO` field as the command code
 - `Parse TR-31 Key Block` decodes all X9.143 header fields with descriptions and PCI compliance flags
 - `Parse TR-34 Key Transport` handles B0–B9 message types, error codes, and peeks at the outer ASN.1 SEQUENCE of the CMS envelope
 
@@ -250,18 +251,18 @@ Important assumptions:
 ## A) TDES DUKPT MAC
 
 Operations:
-- `Derive DUKPT TDES Key`
-- `Generate Payment MAC`
+- `DUKPT Derive TDES Key`
+- `MAC Generate`
 
 Flow:
 - derive the transaction key first if you want to inspect it
-- or use a DUKPT MAC method directly in `Generate Payment MAC`
+- or use a DUKPT MAC method directly in `MAC Generate`
 - use the same KSN and BDK on verify
 
 ## B) AES DUKPT Key Derivation
 
 Operations:
-- `Derive DUKPT AES Key`
+- `DUKPT Derive AES Key`
 
 Flow:
 - provide the 16-byte BDK (or IK if you already have it) as hex input
@@ -287,8 +288,8 @@ Important assumption:
 ## D) Clear PIN Block To Encrypted PIN Data
 
 Operations:
-- `Generate Payment PIN Data` or `Build PIN Block`
-- `Encrypt Payment Data`
+- `PIN Data Generate` or `PIN Block Build`
+- `Payment Encrypt Data`
 
 Flow:
 - generate the clear ISO PIN block first
@@ -297,9 +298,9 @@ Flow:
 ## E) EMV ARQC / ARPC Review
 
 Operations:
-- `Generate EMV ARQC`
-- `Verify EMV ARQC`
-- `Generate EMV ARPC`
+- `EMV Generate ARQC`
+- `EMV Verify ARQC`
+- `EMV Generate ARPC`
 
 Flow:
 - build the exact request-data preimage outside the op
@@ -309,9 +310,9 @@ Flow:
 ## F) EMV Script MAC And PIN Change
 
 Operations:
-- `Generate EMV MAC`
-- `Verify EMV MAC`
-- `Generate EMV MAC For PIN Change`
+- `EMV Generate MAC`
+- `EMV Verify MAC`
+- `EMV Generate MAC (PIN Change)`
 
 Flow:
 - assemble the issuer-script APDU body as hex
@@ -321,10 +322,10 @@ Flow:
 ## G) IBM 3624 / PVV Verification
 
 Operations:
-- `Generate IBM 3624 PIN Offset`
-- `Verify IBM 3624 PIN`
-- `Generate VISA PVV`
-- `Verify VISA PVV`
+- `IBM 3624 Generate PIN Offset`
+- `IBM 3624 Verify PIN`
+- `VISA PVV Generate`
+- `VISA PVV Verify`
 
 Flow:
 - keep the clear PIN in the input field
@@ -334,10 +335,10 @@ Flow:
 ## H) Brand Test Card Setup
 
 Operations:
-- `Generate Test PAN`
-- `Parse PAN`
-- `Generate Card Validation Data`
-- `Generate Payment PIN Data`
+- `PAN Generate`
+- `PAN Parse`
+- `Card Validation Data Generate`
+- `PIN Data Generate`
 
 Flow:
 - generate a curated or locally generated brand-valid PAN
@@ -347,18 +348,18 @@ Flow:
 ## I) AS2805 KEK Validation
 
 Operations:
-- `Generate AS2805 KEK Validation`
-- `Calculate Payment KCV`
+- `AS2805 Generate KEK Validation`
+- `Payment Calculate KCV`
 
 Flow:
-- inspect the KEK with `Calculate Payment KCV`
+- inspect the KEK with `Payment Calculate KCV`
 - generate request or response RandomKeySend / RandomKeyReceive values with the AS2805 helper
 
 ## J) Vendor Command Triage
 
 Operations:
-- `Parse Thales payShield Command`
-- `Parse Futurex Excrypt Command`
+- `HSM Parse Thales Command`
+- `HSM Parse Futurex Command`
 
 Flow:
 - paste the raw host message first before trying to interpret the business meaning
@@ -368,10 +369,10 @@ Flow:
 ## K) Generate And Verify A Test Key
 
 Operations:
-- `Generate Key`
-- `Calculate Payment KCV`
+- `Key Generate`
+- `Payment Calculate KCV`
 
 Flow:
-- use `Generate Key` with JSON output to get a random AES-128/192/256 or TDES key plus its CMAC KCV
-- cross-check the KCV with `Calculate Payment KCV` if you need to verify against an HSM-generated value
+- use `Key Generate` with JSON output to get a random AES-128/192/256 or TDES key plus its CMAC KCV
+- cross-check the KCV with `Payment Calculate KCV` if you need to verify against an HSM-generated value
 - pipe the hex key directly into derivation, MAC, or encryption recipes

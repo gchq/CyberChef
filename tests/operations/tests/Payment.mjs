@@ -53,7 +53,7 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse Thales payShield Command",
+                op: "HSM Parse Thales Command",
                 args: [4]
             }
         ]
@@ -87,7 +87,7 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse Thales payShield Command",
+                op: "HSM Parse Thales Command",
                 args: [0]
             }
         ]
@@ -130,7 +130,7 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse Futurex Excrypt Command",
+                op: "HSM Parse Futurex Command",
                 args: []
             }
         ]
@@ -175,7 +175,7 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse Futurex Excrypt Command",
+                op: "HSM Parse Futurex Command",
                 args: []
             }
         ]
@@ -261,84 +261,84 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "Calculate Payment KCV: HMAC SHA-256",
+        name: "Payment Calculate KCV: HMAC SHA-256",
         input: "00112233445566778899AABBCCDDEEFF",
         expectedOutput: "E8A065",
         recipeConfig: [
             {
-                op: "Calculate Payment KCV",
+                op: "Payment Calculate KCV",
                 args: ["Hex", "HMAC SHA-256", 6]
             }
         ]
     },
     {
-        name: "Calculate Payment KCV: AES-CMAC empty",
+        name: "Payment Calculate KCV: AES-CMAC empty",
         input: "00112233445566778899AABBCCDDEEFF",
         expectedOutput: "917737",
         recipeConfig: [
             {
-                op: "Calculate Payment KCV",
+                op: "Payment Calculate KCV",
                 args: ["Hex", "AES-CMAC (Empty)", 6]
             }
         ]
     },
     {
-        name: "Calculate Payment KCV: AES-CMAC zeros",
+        name: "Payment Calculate KCV: AES-CMAC zeros",
         input: "00112233445566778899AABBCCDDEEFF",
         expectedOutput: "53E107",
         recipeConfig: [
             {
-                op: "Calculate Payment KCV",
+                op: "Payment Calculate KCV",
                 args: ["Hex", "AES-CMAC (Zeros)", 6]
             }
         ]
     },
     {
-        name: "Calculate Payment KCV: AES-CMAC ones",
+        name: "Payment Calculate KCV: AES-CMAC ones",
         input: "00112233445566778899AABBCCDDEEFF",
         expectedOutput: "7B3046",
         recipeConfig: [
             {
-                op: "Calculate Payment KCV",
+                op: "Payment Calculate KCV",
                 args: ["Hex", "AES-CMAC (Ones)", 6]
             }
         ]
     },
     {
-        name: "Calculate Payment KCV: AES-ECB zeros",
+        name: "Payment Calculate KCV: AES-ECB zeros",
         input: "00112233445566778899AABBCCDDEEFF",
         expectedOutput: "FDE4FB",
         recipeConfig: [
             {
-                op: "Calculate Payment KCV",
+                op: "Payment Calculate KCV",
                 args: ["Hex", "AES-ECB (Zeros)", 6]
             }
         ]
     },
     {
-        name: "Derive DUKPT TDES Key: known IPEK vector",
+        name: "DUKPT Derive TDES Key: known IPEK vector",
         input: "0123456789ABCDEFFEDCBA9876543210",
         expectedOutput: "6AC292FAA1315B4D858AB3A3D7D5933A",
         recipeConfig: [
             {
-                op: "Derive DUKPT TDES Key",
+                op: "DUKPT Derive TDES Key",
                 args: ["Derive IPEK", "FFFF9876543210E00008", "None", false]
             }
         ]
     },
     {
-        name: "Build PIN Block: ISO Format 0",
+        name: "PIN Block Build: ISO Format 0",
         input: "1234",
         expectedOutput: "041215FEDCBA9876",
         recipeConfig: [
             {
-                op: "Build PIN Block",
+                op: "PIN Block Build",
                 args: ["ISO Format 0", "5432101234567890", false]
             }
         ]
     },
     {
-        name: "Parse PIN Block: ISO Format 0",
+        name: "PIN Block Parse: ISO Format 0",
         input: "041215FEDCBA9876",
         expectedOutput: JSON.stringify({
             format: "ISO Format 0",
@@ -351,13 +351,13 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse PIN Block",
+                op: "PIN Block Parse",
                 args: ["ISO Format 0", "5432101234567890"]
             }
         ]
     },
     {
-        name: "Translate PIN Block: ISO Format 0 to ISO Format 1",
+        name: "PIN Block Translate: ISO Format 0 to ISO Format 1",
         input: "041215FEDCBA9876",
         expectedOutput: JSON.stringify({
             source: {
@@ -376,24 +376,24 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Translate PIN Block",
+                op: "PIN Block Translate",
                 args: ["ISO Format 0", "5432101234567890", "ISO Format 1", "", false]
             }
         ]
     },
     {
-        name: "Generate Card Validation Data: known CVV2 sample",
+        name: "Card Validation Data Generate: known CVV2 sample",
         input: "0123456789ABCDEFFEDCBA9876543210",
         expectedOutput: "221",
         recipeConfig: [
             {
-                op: "Generate Card Validation Data",
+                op: "Card Validation Data Generate",
                 args: ["CVV2 / CVC2 (force 000)", "4123456789012345", "02", "25", "MMYY", "101", 3, false]
             }
         ]
     },
     {
-        name: "Generate Test PAN: Visa curated sample",
+        name: "PAN Generate: Visa curated sample",
         input: "",
         expectedOutput: JSON.stringify({
             brand: "Visa",
@@ -415,24 +415,24 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Generate Test PAN",
+                op: "PAN Generate",
                 args: ["Visa", "Curated sample", 16, true]
             }
         ]
     },
     {
-        name: "Generate Test PAN: American Express curated sample",
+        name: "PAN Generate: American Express curated sample",
         input: "",
         expectedOutput: "371449635398431",
         recipeConfig: [
             {
-                op: "Generate Test PAN",
+                op: "PAN Generate",
                 args: ["American Express", "Curated sample", 15, false]
             }
         ]
     },
     {
-        name: "Parse PAN: Discover sample",
+        name: "PAN Parse: Discover sample",
         input: "6011000991543426",
         expectedOutput: JSON.stringify({
             pan: "6011000991543426",
@@ -454,13 +454,13 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse PAN",
+                op: "PAN Parse",
                 args: []
             }
         ]
     },
     {
-        name: "Verify Card Validation Data: known CVV2 sample",
+        name: "Card Validation Data Verify: known CVV2 sample",
         input: "0123456789ABCDEFFEDCBA9876543210",
         expectedOutput: JSON.stringify({
             profile: "CVV2 / CVC2 (force 000)",
@@ -478,35 +478,35 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Verify Card Validation Data",
+                op: "Card Validation Data Verify",
                 args: ["CVV2 / CVC2 (force 000)", "4123456789012345", "02", "25", "MMYY", "101", "221"]
             }
         ]
     },
     {
-        name: "Generate EMV ARQC: AES-CMAC profile",
+        name: "EMV Generate ARQC: AES-CMAC profile",
         input: "000102030405060708090A0B0C0D0E0F",
         expectedOutput: "C1F732B52FB20CAA",
         recipeConfig: [
             {
-                op: "Generate EMV ARQC",
+                op: "EMV Generate ARQC",
                 args: ["00112233445566778899AABBCCDDEEFF", 8, false]
             }
         ]
     },
     {
-        name: "Generate EMV ARPC: AES-CMAC profile",
+        name: "EMV Generate ARPC: AES-CMAC profile",
         input: "11223344556677889900AABBCCDDEEFF",
         expectedOutput: "312442B1A4D64F94",
         recipeConfig: [
             {
-                op: "Generate EMV ARPC",
+                op: "EMV Generate ARPC",
                 args: ["00112233445566778899AABBCCDDEEFF", 8, false]
             }
         ]
     },
     {
-        name: "Verify EMV ARQC: AES-CMAC profile",
+        name: "EMV Verify ARQC: AES-CMAC profile",
         input: "000102030405060708090A0B0C0D0E0F",
         expectedOutput: JSON.stringify({
             inputHex: "000102030405060708090A0B0C0D0E0F",
@@ -518,112 +518,112 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Verify EMV ARQC",
+                op: "EMV Verify ARQC",
                 args: ["00112233445566778899AABBCCDDEEFF", 8, "C1F732B52FB20CAA"]
             }
         ]
     },
     {
-        name: "Encrypt Payment Data: AES CBC",
+        name: "Payment Encrypt Data: AES CBC",
         input: "00112233445566778899AABBCCDDEEFF",
         expectedOutput: "67423557CA0509243B9EE04A5DA3448AA397F6D29B5C8BCE065D9CDC936B7F9B",
         recipeConfig: [
             {
-                op: "Encrypt Payment Data",
+                op: "Payment Encrypt Data",
                 args: ["AES CBC", "00112233445566778899AABBCCDDEEFF", "000102030405060708090A0B0C0D0E0F", "", "Data", false]
             }
         ]
     },
     {
-        name: "Decrypt Payment Data: AES CBC",
+        name: "Payment Decrypt Data: AES CBC",
         input: "67423557CA0509243B9EE04A5DA3448AA397F6D29B5C8BCE065D9CDC936B7F9B",
         expectedOutput: "00112233445566778899AABBCCDDEEFF",
         recipeConfig: [
             {
-                op: "Decrypt Payment Data",
+                op: "Payment Decrypt Data",
                 args: ["AES CBC", "00112233445566778899AABBCCDDEEFF", "000102030405060708090A0B0C0D0E0F", "", "Data", false]
             }
         ]
     },
     {
-        name: "Re-Encrypt Payment Data: AES CBC to TDES CBC",
+        name: "Payment Re-Encrypt Data: AES CBC to TDES CBC",
         input: "67423557CA0509243B9EE04A5DA3448AA397F6D29B5C8BCE065D9CDC936B7F9B",
         expectedOutput: "C47BC6E91A9D566F649D750BCE1CE9889FB5AE1489A16692",
         recipeConfig: [
             {
-                op: "Re-Encrypt Payment Data",
+                op: "Payment Re-Encrypt Data",
                 args: ["AES CBC", "00112233445566778899AABBCCDDEEFF", "000102030405060708090A0B0C0D0E0F", "", "Data", "TDES CBC", "0123456789ABCDEFFEDCBA9876543210", "1234567890ABCDEF", "", "Data", false]
             }
         ]
     },
     {
-        name: "Generate Payment MAC: AES-CMAC",
+        name: "MAC Generate: AES-CMAC",
         input: "1122334455667788",
         expectedOutput: "339AF1AD1650E908",
         recipeConfig: [
             {
-                op: "Generate Payment MAC",
+                op: "MAC Generate",
                 args: ["Hex", "AES-CMAC", "00112233445566778899AABBCCDDEEFF", "Hex", "", "Method 1", 8, false]
             }
         ]
     },
     {
-        name: "Generate Payment MAC: HMAC SHA-256",
+        name: "MAC Generate: HMAC SHA-256",
         input: "1122334455667788",
         expectedOutput: "9300E1D36DD30415",
         recipeConfig: [
             {
-                op: "Generate Payment MAC",
+                op: "MAC Generate",
                 args: ["Hex", "HMAC SHA-256", "00112233445566778899AABBCCDDEEFF", "Hex", "", "Method 1", 8, false]
             }
         ]
     },
     {
-        name: "Generate Payment MAC: DUKPT MAC Request CMAC",
+        name: "MAC Generate: DUKPT MAC Request CMAC",
         input: "1122334455667788",
         expectedOutput: "3616961727FE155D",
         recipeConfig: [
             {
-                op: "Generate Payment MAC",
+                op: "MAC Generate",
                 args: ["Hex", "DUKPT MAC Request CMAC", "0123456789ABCDEFFEDCBA9876543210", "Hex", "FFFF9876543210E00008", "Method 1", 8, false]
             }
         ]
     },
     {
-        name: "Generate Payment MAC: ISO 9797-1 Algorithm 1",
+        name: "MAC Generate: ISO 9797-1 Algorithm 1",
         input: "1122334455667788",
         expectedOutput: "0C949BCDEF6FDF1D",
         recipeConfig: [
             {
-                op: "Generate Payment MAC",
+                op: "MAC Generate",
                 args: ["Hex", "ISO 9797-1 Algorithm 1", "0123456789ABCDEFFEDCBA9876543210", "Hex", "", "Method 1", 8, false]
             }
         ]
     },
     {
-        name: "Generate Payment MAC: ISO 9797-1 Algorithm 3",
+        name: "MAC Generate: ISO 9797-1 Algorithm 3",
         input: "1122334455667788",
         expectedOutput: "7E2AEA5CF35FDC0E",
         recipeConfig: [
             {
-                op: "Generate Payment MAC",
+                op: "MAC Generate",
                 args: ["Hex", "ISO 9797-1 Algorithm 3", "0123456789ABCDEFFEDCBA9876543210", "Hex", "", "Method 2", 8, false]
             }
         ]
     },
     {
-        name: "Generate Payment MAC: AS2805-4.1",
+        name: "MAC Generate: AS2805-4.1",
         input: "1122334455667788",
         expectedOutput: "3EB3B72576BBBE83",
         recipeConfig: [
             {
-                op: "Generate Payment MAC",
+                op: "MAC Generate",
                 args: ["Hex", "AS2805-4.1", "0123456789ABCDEFFEDCBA9876543210", "Hex", "", "Method 1", 8, false]
             }
         ]
     },
     {
-        name: "Verify Payment MAC: AES-CMAC",
+        name: "MAC Verify: AES-CMAC",
         input: "1122334455667788",
         expectedOutput: JSON.stringify({
             method: "AES-CMAC",
@@ -639,24 +639,24 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Verify Payment MAC",
+                op: "MAC Verify",
                 args: ["Hex", "AES-CMAC", "00112233445566778899AABBCCDDEEFF", "Hex", "", "Method 1", "339AF1AD1650E908", true]
             }
         ]
     },
     {
-        name: "Generate EMV MAC: issuer script sample",
+        name: "EMV Generate MAC: issuer script sample",
         input: "8424000008999E57FD0F47CACE0007",
         expectedOutput: "22CB48394DFD1977",
         recipeConfig: [
             {
-                op: "Generate EMV MAC",
+                op: "EMV Generate MAC",
                 args: ["0123456789ABCDEFFEDCBA9876543210", 8, false]
             }
         ]
     },
     {
-        name: "Verify EMV MAC: issuer script sample",
+        name: "EMV Verify MAC: issuer script sample",
         input: "8424000008999E57FD0F47CACE0007",
         expectedOutput: JSON.stringify({
             algorithm: "EMV MAC",
@@ -669,35 +669,35 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Verify EMV MAC",
+                op: "EMV Verify MAC",
                 args: ["0123456789ABCDEFFEDCBA9876543210", "22CB48394DFD1977", true]
             }
         ]
     },
     {
-        name: "Generate EMV MAC For PIN Change: issuer script sample",
+        name: "EMV Generate MAC (PIN Change): issuer script sample",
         input: "00A4040008A000000004101080D80500000001010A04000000000000",
         expectedOutput: "C0F24786EF1C4522",
         recipeConfig: [
             {
-                op: "Generate EMV MAC For PIN Change",
+                op: "EMV Generate MAC (PIN Change)",
                 args: ["67FB27C75580EFE7", "0123456789ABCDEFFEDCBA9876543210", 8, false]
             }
         ]
     },
     {
-        name: "Generate Payment PIN Data: ISO Format 0",
+        name: "PIN Data Generate: ISO Format 0",
         input: "1234",
         expectedOutput: "041215FEDCBA9876",
         recipeConfig: [
             {
-                op: "Generate Payment PIN Data",
+                op: "PIN Data Generate",
                 args: ["ISO Format 0", "5432101234567890", false, false]
             }
         ]
     },
     {
-        name: "Generate IBM 3624 PIN Offset: known sample",
+        name: "IBM 3624 Generate PIN Offset: known sample",
         input: "1234",
         expectedOutput: JSON.stringify({
             pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
@@ -713,13 +713,13 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Generate IBM 3624 PIN Offset",
+                op: "IBM 3624 Generate PIN Offset",
                 args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", true]
             }
         ]
     },
     {
-        name: "Verify IBM 3624 PIN: known sample",
+        name: "IBM 3624 Verify PIN: known sample",
         input: "1234",
         expectedOutput: JSON.stringify({
             pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
@@ -737,13 +737,13 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Verify IBM 3624 PIN",
+                op: "IBM 3624 Verify PIN",
                 args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", "3207", true]
             }
         ]
     },
     {
-        name: "Generate VISA PVV: known sample",
+        name: "VISA PVV Generate: known sample",
         input: "1234",
         expectedOutput: JSON.stringify({
             pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
@@ -756,13 +756,13 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Generate VISA PVV",
+                op: "VISA PVV Generate",
                 args: ["0123456789ABCDEFFEDCBA9876543210", "5432101234567890", 1, true]
             }
         ]
     },
     {
-        name: "Verify VISA PVV: known sample",
+        name: "VISA PVV Verify: known sample",
         input: "1234",
         expectedOutput: JSON.stringify({
             pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
@@ -777,13 +777,13 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Verify VISA PVV",
+                op: "VISA PVV Verify",
                 args: ["0123456789ABCDEFFEDCBA9876543210", "5432101234567890", 1, "6077", true]
             }
         ]
     },
     {
-        name: "Generate AS2805 KEK Validation: response sample",
+        name: "AS2805 Generate KEK Validation: response sample",
         input: "0123456789ABCDEFFEDCBA9876543210",
         expectedOutput: JSON.stringify({
             validationType: "KekValidationResponse",
@@ -795,13 +795,13 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Generate AS2805 KEK Validation",
+                op: "AS2805 Generate KEK Validation",
                 args: ["KekValidationResponse", "TDES_2KEY", "VARIANT_MASK_82", "9217DC67B8763BABCFDF3DADFCD0F84A", true]
             }
         ]
     },
     {
-        name: "Verify Payment PIN Data: ISO Format 0",
+        name: "PIN Data Verify: ISO Format 0",
         input: "041215FEDCBA9876",
         expectedOutput: JSON.stringify({
             format: "ISO Format 0",
@@ -816,7 +816,7 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Verify Payment PIN Data",
+                op: "PIN Data Verify",
                 args: ["ISO Format 0", "5432101234567890", "1234"]
             }
         ]

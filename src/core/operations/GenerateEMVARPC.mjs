@@ -17,7 +17,7 @@ class GenerateEMVARPC extends Operation {
     constructor() {
         super();
 
-        this.name = "Generate EMV ARPC";
+        this.name = "EMV Generate ARPC";
         this.module = "Payment";
         this.description = "Paste the already-assembled EMV authorization-response input into the input field as hex and generate an AES-CMAC-based ARPC.<br><br><b>Input:</b> preassembled ARPC input data as hex.<br><b>Arguments:</b> provide the issuer session key in hex and choose how many bytes of the CMAC should be returned.<br><br><b>Validation:</b> Partially verified. This intentionally covers only supplied-key AES-CMAC-style EMV response profiles and does not derive issuer session keys or assemble response fields for you.<br><br><b>Session key derivation:</b> The issuer session key for ARPC generation is typically derived from the same issuer master key used for ARQC verification, using the same ATC-based derivation. The ARPC input data is assembled from the ARQC value and the Authorization Response Code (ARC). This operation expects both the session key and the preimage to be assembled before calling it.<br><br><b>Security:</b> Clear session keys are test-use only.";
         this.inlineHelp = "<strong>Input:</strong> preassembled ARPC data as hex.<br><strong>Args:</strong> provide the issuer AES session key and choose the truncated cryptogram length.<br><strong>Validation:</strong> supplied-key AES-CMAC response profile only.";

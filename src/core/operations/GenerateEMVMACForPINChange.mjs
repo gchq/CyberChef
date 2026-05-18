@@ -16,7 +16,7 @@ class GenerateEMVMACForPINChange extends Operation {
     constructor() {
         super();
 
-        this.name = "Generate EMV MAC For PIN Change";
+        this.name = "EMV Generate MAC (PIN Change)";
         this.module = "Payment";
         this.description = "Paste the issuer-script APDU command into the input field as hex and generate the MAC for an offline EMV PIN-change script.<br><br><b>Input:</b> issuer-script message data as hex.<br><b>Arguments:</b> provide the already-encrypted target PIN block in hex and the already-derived EMV session integrity key.<br><br><b>Validation:</b> Emulation helper. The new PIN block must already be encrypted, and this op appends it to the supplied message before applying the same supplied-key EMV MAC profile used elsewhere in this fork.<br><br><b>Key context:</b> In a full issuer implementation, a PIN-change script involves three distinct keys: a secure-messaging integrity key (for the MAC), a secure-messaging confidentiality key (for encrypting the script data), and a PIN encryption key (for the new PIN block). This operation accepts a single session integrity key and a pre-encrypted PIN block — it does not model the full three-key separation.<br><br><b>Security:</b> Test-only issuer-script assembly with clear session keys in the recipe.";
         this.inlineHelp = "<strong>Input:</strong> issuer-script APDU message as hex.<br><strong>Args:</strong> provide the encrypted target PIN block and derived EMV integrity key.<br><strong>Validation:</strong> emulation helper for PIN-change script MAC assembly.";

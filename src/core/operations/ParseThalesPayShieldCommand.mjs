@@ -255,7 +255,7 @@ class ParseThalesPayShieldCommand extends Operation {
     constructor() {
         super();
 
-        this.name = "Parse Thales payShield Command";
+        this.name = "HSM Parse Thales Command";
         this.module = "Payment";
         this.description = "Paste a Thales payShield 10K legacy host command or response into the input field as text.<br><br><b>General syntax:</b> optional <code>STX</code>, then <code>m</code> header characters, then a 2-character command or response code, then the command payload, then optionally an LMK suffix such as <code>%nn</code> or <code>~%nn</code>, then optionally <code>X'19'</code> and a message trailer, then optional <code>ETX</code>.<br><br><b>Input:</b> raw command text, optionally including STX/ETX framing, message header, X'19' end-message delimiter, and message trailer.<br><b>Arguments:</b> provide the configured message-header length.<br><br>This operation parses the visible payShield message syntax, identifies the two-character command/response code, resolves the manual command name when known, and extracts any trailing LMK identifier and message trailer.";
         this.inlineHelp = "<strong>Syntax:</strong> <code>[STX][header m][code 2][payload][~][%nn][EM trailer-delimiter][trailer][ETX]</code>.<br><strong>Input:</strong> raw payShield command or response text.<br><strong>Args:</strong> set the message-header length configured on the HSM link.";

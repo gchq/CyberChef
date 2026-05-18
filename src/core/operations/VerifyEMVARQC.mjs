@@ -16,7 +16,7 @@ class VerifyEMVARQC extends Operation {
     constructor() {
         super();
 
-        this.name = "Verify EMV ARQC";
+        this.name = "EMV Verify ARQC";
         this.module = "Payment";
         this.description = "Paste the already-assembled EMV authorization-request input into the input field as hex and verify an AES-CMAC-based ARQC.<br><br><b>Input:</b> preassembled ARQC input data as hex.<br><b>Arguments:</b> provide the EMV session key, cryptogram length, and expected ARQC hex value.<br><br><b>Validation:</b> Partially verified. This checks the same supplied-key AES-CMAC EMV profile as generation and does not claim full scheme-level ARQC validation semantics.<br><br><b>Session key derivation:</b> In a full EMV flow the session key is derived from the issuer master key using the Application Transaction Counter (ATC) and PAN sequence number. Visa and Amex use EMV Common Session Key Derivation (Option A); Mastercard uses a different derivation (Option B). This operation expects you to supply the already-derived session key.<br><br><b>Security:</b> Clear session keys are test-use only.";
         this.inlineHelp = "<strong>Input:</strong> preassembled ARQC data as hex.<br><strong>Args:</strong> provide the AES session key and expected ARQC.<br><strong>Validation:</strong> same supplied-key EMV profile as generation.";

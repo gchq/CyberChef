@@ -32,7 +32,8 @@
 When adding, renaming, or removing a payment operation:
 
 1. **Update `PAYMENT_RECIPES.md`** — add the operation to the correct numbered section and, if it introduces a new chaining pattern, add a lettered chaining pattern entry. Remove or mark deprecated any operations that are replaced.
-2. **Follow the naming convention** — all payment operation display names use Title Case. Acronyms (DUKPT, AES, EMV, MAC, PAN, TR-31, TR-34, KCV) stay upper-case. Brand names keep their canonical form (`payShield`). Pattern: `[Verb] [Optional Qualifier] [Noun]`. See the Naming Convention section in `PAYMENT_RECIPES.md`.
+2. **Follow the naming convention** — all payment operation display names use Title Case. Acronyms (DUKPT, AES, EMV, MAC, PAN, TR-31, TR-34, KCV) stay upper-case. Brand names keep their canonical form (`payShield`). Pattern: `[Domain Prefix] [Verb] [Qualifier]` — the domain/protocol prefix comes first so operations sort and scan by topic in the UI list. Example: `EMV Verify MAC`, `DUKPT Derive TDES Key`, `PIN Block Parse`. See the Naming Convention section in `PAYMENT_RECIPES.md`.
+5. **Only operations written for this fork belong in the Payments category** — do not add upstream CyberChef ops (AES Encrypt, HMAC, CMAC, Triple DES Encrypt, AES Key Wrap, etc.) even as convenience shortcuts. If an op wasn't authored here, it stays in its own upstream category only.
 3. **Keep `this.name` and file name consistent** — the CyberChef UI shows `this.name`; the file name is the class name in PascalCase. Both should reflect the same intent.
 4. **Do not rename `this.name` without updating `PAYMENT_RECIPES.md`** — stale names in the doc are confusing and break recipe search.
 

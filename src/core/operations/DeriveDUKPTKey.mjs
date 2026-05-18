@@ -196,7 +196,7 @@ class DeriveDUKPTKey extends Operation {
     constructor() {
         super();
 
-        this.name = "Derive DUKPT TDES Key";
+        this.name = "DUKPT Derive TDES Key";
         this.module = "Payment";
         this.description = "Paste the Base Derivation Key (BDK) into the input field as a 16-byte hex value.<br><br>Put the 10-byte Key Serial Number in the <b>KSN</b> argument field.<br><br><b>Input:</b> BDK in hex.<br><b>Arguments:</b> choose whether to derive the IPEK or the transaction key, provide the KSN, choose the variant, and optionally return JSON.<br><br>This operation derives TDES DUKPT keys (ANSI X9.24 Part 1) in software for test and interoperability work. It uses a 16-byte BDK and a 10-byte KSN. AES DUKPT (ANSI X9.24 Part 3), which uses a 12-byte KSN and AES keys, is not implemented here.";
         this.inlineHelp = "<strong>Input:</strong> BDK hex.<br><strong>Args:</strong> add the KSN, choose IPEK or transaction-key derivation, then optionally apply a variant.";

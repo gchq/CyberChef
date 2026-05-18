@@ -117,7 +117,7 @@ class GenerateKey extends Operation {
     constructor() {
         super();
 
-        this.name = "Generate Key";
+        this.name = "Key Generate";
         this.module = "Payment";
         this.description = [
             "Generates a cryptographically random payment key, IV, or custom-length byte string.",

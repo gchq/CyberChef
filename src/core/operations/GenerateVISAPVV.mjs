@@ -16,7 +16,7 @@ class GenerateVISAPVV extends Operation {
     constructor() {
         super();
 
-        this.name = "Generate VISA PVV";
+        this.name = "VISA PVV Generate";
         this.module = "Payment";
         this.description = "Paste the clear PIN into the input field and generate a VISA PIN Verification Value (PVV).<br><br><b>Input:</b> clear PIN digits.<br><b>Arguments:</b> provide the clear PVK in hex, PAN, and PVKI.<br><br><b>Validation:</b> Partially verified. This is a clear-key software implementation of the common VISA PVV assembly pattern, not an HSM-certified PVV service.<br><br><b>Security:</b> Clear PIN and PVK material are test-use only.";
         this.inlineHelp = "<strong>Input:</strong> clear PIN digits.<br><strong>Args:</strong> provide PVK, PAN, and PVKI.<br><strong>Validation:</strong> clear-key VISA PVV helper.";
