@@ -697,31 +697,6 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "Translate Payment PIN Data: ISO Format 0 to ISO Format 1",
-        input: "041215FEDCBA9876",
-        expectedOutput: JSON.stringify({
-            source: {
-                format: "ISO Format 0",
-                pin: "1234",
-                pinLength: 4,
-                pinFieldHex: "041234FFFFFFFFFF",
-                panFieldHex: "0000210123456789",
-                blockHex: "041215FEDCBA9876",
-                fillDigitsHex: "FFFFFFFFFF"
-            },
-            target: {
-                format: "ISO Format 1",
-                blockHex: "141234FFFFFFFFFF"
-            }
-        }, null, 4),
-        recipeConfig: [
-            {
-                op: "Translate Payment PIN Data",
-                args: ["ISO Format 0", "5432101234567890", "ISO Format 1", "", false]
-            }
-        ]
-    },
-    {
         name: "Generate IBM 3624 PIN Offset: known sample",
         input: "1234",
         expectedOutput: JSON.stringify({

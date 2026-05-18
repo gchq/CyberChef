@@ -602,7 +602,6 @@
             "Generate Card Validation Data",
             "Verify Card Validation Data",
             "Generate Payment PIN Data",
-            "Translate Payment PIN Data",
             "Verify Payment PIN Data",
             "Build PIN Block",
             "Parse PIN Block",
