@@ -28,7 +28,12 @@ class URLEncode extends Operation {
                 "name": "Encode all special chars",
                 "type": "boolean",
                 "value": false
-            }
+            },
+            {
+                "name": "Encode all chars",
+                "type": "boolean",
+                "value": false
+            },
         ];
     }
 
@@ -38,8 +43,19 @@ class URLEncode extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const encodeAll = args[0];
-        return encodeAll ? this.encodeAllChars(input) : encodeURI(input);
+        const encodeSpecial = args[0];
+        const encodeAll = args[1];
+        return encodeAll ? this.encodeAllChars(input) : encodeSpecial ? this.encodeAllSpecialChars(input) : encodeURI(input);
+    }
+
+    /**
+     * Pads a string from the front to a given length with a given char
+     *
+     * @param {string} str
+     * @returns {string}
+     */
+    frontPad (str, length, char) {
+        return str.length >= length ? str : (char * (length - str.length)) + str;
     }
 
     /**
@@ -48,19 +64,31 @@ class URLEncode extends Operation {
      * @param {string} str
      * @returns {string}
      */
+    encodeAllSpecialChars (str) {
+        const SPECIAL_CHARS = "!#'()*-._~";
+        let encoded = "";
+        for (const char of str) {
+            if (encodeURIComponent(char) === char && SPECIAL_CHARS.includes(char)) {
+                encoded += "%" + this.frontPad(char.charCodeAt(0).toString(16).toUpperCase(), 2, "0");
+            } else {
+                encoded += encodeURIComponent(char);
+            }
+        }
+        return encoded;
+    }
+
+    /**
+     * Encode ALL characters in URL including alphanumeric based on char codes
+     *
+     * @param {string} str
+     * @returns {string}
+     */
     encodeAllChars (str) {
-        // TODO Do this programmatically
-        return encodeURIComponent(str)
-            .replace(/!/g, "%21")
-            .replace(/#/g, "%23")
-            .replace(/'/g, "%27")
-            .replace(/\(/g, "%28")
-            .replace(/\)/g, "%29")
-            .replace(/\*/g, "%2A")
-            .replace(/-/g, "%2D")
-            .replace(/\./g, "%2E")
-            .replace(/_/g, "%5F")
-            .replace(/~/g, "%7E");
+        let encoded = "";
+        for (const char of str) {
+            encoded += "%" + this.frontPad(char.charCodeAt(0).toString(16).toUpperCase(), 2, "0");
+        }
+        return encoded;
     }
 
 }
