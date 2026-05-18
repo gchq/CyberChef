@@ -507,7 +507,7 @@ TestRegister.addTests([
     },
     {
         name: "EMV Verify ARQC: AES-CMAC profile",
-        input: "000102030405060708090A0B0C0D0E0F",
+        input: "C1F732B52FB20CAA",
         expectedOutput: JSON.stringify({
             inputHex: "000102030405060708090A0B0C0D0E0F",
             outputBytes: 8,
@@ -519,7 +519,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "EMV Verify ARQC",
-                args: ["00112233445566778899AABBCCDDEEFF", 8, "C1F732B52FB20CAA"]
+                args: ["00112233445566778899AABBCCDDEEFF", 8, "000102030405060708090A0B0C0D0E0F", true]
             }
         ]
     },
@@ -720,7 +720,7 @@ TestRegister.addTests([
     },
     {
         name: "IBM 3624 Verify PIN: known sample",
-        input: "1234",
+        input: "3207",
         expectedOutput: JSON.stringify({
             pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
             pinValidationData: "5432101234567890",
@@ -738,7 +738,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "IBM 3624 Verify PIN",
-                args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", "3207", true]
+                args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", "1234", true]
             }
         ]
     },
@@ -763,7 +763,7 @@ TestRegister.addTests([
     },
     {
         name: "VISA PVV Verify: known sample",
-        input: "1234",
+        input: "6077",
         expectedOutput: JSON.stringify({
             pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
             pan: "5432101234567890",
@@ -778,7 +778,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "VISA PVV Verify",
-                args: ["0123456789ABCDEFFEDCBA9876543210", "5432101234567890", 1, "6077", true]
+                args: ["0123456789ABCDEFFEDCBA9876543210", "5432101234567890", 1, "1234", true]
             }
         ]
     },

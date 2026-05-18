@@ -18,13 +18,13 @@ class VerifyIBM3624PIN extends Operation {
 
         this.name = "IBM 3624 Verify PIN";
         this.module = "Payment";
-        this.description = "Paste the clear PIN into the input field and verify it against an IBM 3624 offset.<br><br><b>Input:</b> clear PIN digits.<br><b>Arguments:</b> provide the clear PVK in hex, decimalization table, validation data, pad character, and expected offset.<br><br><b>Validation:</b> Partially verified. This is the verification pair for the same clear-key IBM 3624 helper logic used by generation.<br><br><b>Security:</b> Clear PIN and PVK material are test-use only.";
-        this.inlineHelp = "<strong>Input:</strong> clear PIN digits.<br><strong>Args:</strong> provide PVK, decimalization table, validation data, pad character, and expected offset.<br><strong>Validation:</strong> clear-key IBM 3624 verification helper.";
+        this.description = "Paste the stored PIN offset into the input field and verify it against a clear PIN.<br><br><b>Input:</b> stored IBM 3624 PIN offset (4 to 12 decimal digits).<br><b>Arguments:</b> provide the clear PVK in hex, decimalization table, validation data, pad character, and the clear PIN to verify.<br><br>This operation re-derives the offset from the supplied PIN and keying material and compares it to the input offset. Use this directly after <b>IBM 3624 Generate PIN Offset</b> in a recipe — the offset output flows naturally into this input.<br><br><b>Validation:</b> Partially verified. This is the verification pair for the same clear-key IBM 3624 helper logic used by generation.<br><br><b>Security:</b> Clear PIN and PVK material are test-use only.";
+        this.inlineHelp = "<strong>Input:</strong> stored IBM 3624 PIN offset.<br><strong>Args:</strong> provide PVK, decimalization table, validation data, pad character, and the clear PIN to verify.<br><strong>Validation:</strong> clear-key IBM 3624 verification helper.";
         this.testDataSamples = [
             {
                 name: "IBM 3624 verify sample",
-                input: "1234",
-                args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", "3207", true]
+                input: "3207",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", "1234", true]
             }
         ];
         this.infoURL = "https://en.wikipedia.org/wiki/IBM_3624";
@@ -35,7 +35,7 @@ class VerifyIBM3624PIN extends Operation {
             { name: "Decimalization table", type: "string", value: "0123456789012345", comment: "Sixteen decimal digits used to map hex nibbles to decimal digits." },
             { name: "PIN validation data", type: "string", value: "", comment: "Issuer validation data, typically PAN-derived digits, 4 to 16 digits." },
             { name: "Pad character", type: "shortString", value: "F", comment: "Single hex nibble used to right-pad validation data to 16 nibbles." },
-            { name: "PIN offset", type: "string", value: "", comment: "Stored IBM 3624 offset value to compare against." },
+            { name: "Clear PIN", type: "string", value: "", comment: "The PIN to verify. The operation re-derives the offset from this PIN and compares it to the input offset." },
             { name: "Output as JSON", type: "boolean", value: true, comment: "When enabled, returns the recomputed offset and validity result." },
         ];
     }
@@ -46,8 +46,8 @@ class VerifyIBM3624PIN extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [pvkHex, decimalizationTable, pinValidationData, padCharacter, pinOffset, outputJson] = args;
-        const result = verifyIbm3624Pin(pvkHex, decimalizationTable, pinValidationData, padCharacter, pinOffset, input);
+        const [pvkHex, decimalizationTable, pinValidationData, padCharacter, pin, outputJson] = args;
+        const result = verifyIbm3624Pin(pvkHex, decimalizationTable, pinValidationData, padCharacter, input, pin);
         return outputJson ? JSON.stringify(result, null, 4) : String(result.valid);
     }
 }
