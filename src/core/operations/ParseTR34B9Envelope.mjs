@@ -106,7 +106,7 @@ class ParseTR34B9Envelope extends Operation {
     constructor() {
         super();
 
-        this.name = "Parse TR-34 Key Transport";
+        this.name = "TR-34 Parse Key Transport";
         this.module = "Payment";
         this.description = [
             "Parses a <b>TR-34</b> key transport message frame (hex input) and decodes each section.",

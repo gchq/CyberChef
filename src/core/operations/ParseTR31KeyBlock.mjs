@@ -120,7 +120,7 @@ class ParseTR31KeyBlock extends Operation {
     constructor() {
         super();
 
-        this.name = "Parse TR-31 Key Block";
+        this.name = "TR-31 Parse Key Block";
         this.module = "Payment";
         this.description = [
             "Parses a <b>TR-31</b> (ANSI X9.143) key block and decodes every header field into a human-readable description.",

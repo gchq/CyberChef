@@ -158,8 +158,8 @@ Preferred chain:
 - `Derive ECDH Key Material`
 - KDF if needed
 - `AES Key Wrap` or `AES Key Unwrap`
-- `Parse TR-31 key block`
-- `Parse TR-34 B9 envelope`
+- `TR-31 Parse Key Block`
+- `TR-34 Parse Key Transport`
 
 Important assumption:
 - this is a recipe chain, not a single HSM-like rewrap boundary
@@ -209,4 +209,4 @@ Method:
 - `Derive ECDH Key Material`
 - `AES Key Unwrap`
 - `AES Key Wrap`
-- `Parse TR-31 key block`
+- `TR-31 Parse Key Block`

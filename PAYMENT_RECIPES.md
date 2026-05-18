@@ -22,12 +22,7 @@ Pattern: `[Domain Prefix] [Verb] [Qualifier]`
 
 ## UI Arrangement
 
-The `Payments` category is arranged in this order:
-- payment-facing wrappers (Payment Encrypt/Decrypt/Re-Encrypt) first
-- MAC and EMV flows next
-- PAN, card, and PIN flows after that
-- key derivation, generation, KCV, and parser utilities next
-- HSM command parsers last
+The `Payments` category is sorted alphabetically. The domain-prefix naming convention means related operations naturally cluster together in the list (all EMV ops together, all PIN Block ops together, etc.).
 
 ## 1) Encrypt / Decrypt / Re-Encrypt Payment Data
 
@@ -228,8 +223,8 @@ Important assumptions:
 Operations:
 - `HSM Parse Thales Command`
 - `HSM Parse Futurex Command`
-- `Parse TR-31 Key Block`
-- `Parse TR-34 Key Transport`
+- `TR-31 Parse Key Block`
+- `TR-34 Parse Key Transport`
 
 Use this when:
 - you need to inspect vendor HSM command syntax, wrapped-key material, or transport frames during testing
@@ -237,14 +232,14 @@ Use this when:
 Input:
 - `HSM Parse Thales Command`: raw legacy host command or response text
 - `HSM Parse Futurex Command`: raw bracketed Excrypt command or response text
-- `Parse TR-31 Key Block` / `Parse TR-34 Key Transport`: full payload as text or hex, depending on the operation comment
+- `TR-31 Parse Key Block` / `TR-34 Parse Key Transport`: full payload as text or hex, depending on the operation comment
 
 Important assumptions:
 - the Thales and Futurex parsers currently focus on visible message syntax, delimiters, command identification, and field splitting rather than deep per-command semantic decoding
 - `HSM Parse Thales Command` expects the configured message-header length to be supplied in the op args
 - `HSM Parse Futurex Command` treats Excrypt messages as delimiter-based tag/value fields and commonly uses the `AO` field as the command code
-- `Parse TR-31 Key Block` decodes all X9.143 header fields with descriptions and PCI compliance flags
-- `Parse TR-34 Key Transport` handles B0–B9 message types, error codes, and peeks at the outer ASN.1 SEQUENCE of the CMS envelope
+- `TR-31 Parse Key Block` decodes all X9.143 header fields with descriptions and PCI compliance flags
+- `TR-34 Parse Key Transport` handles B0–B9 message types, error codes, and peeks at the outer ASN.1 SEQUENCE of the CMS envelope
 
 ## Chaining Patterns
 

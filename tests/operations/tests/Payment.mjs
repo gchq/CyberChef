@@ -213,7 +213,7 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse TR-31 Key Block",
+                op: "TR-31 Parse Key Block",
                 args: [true]
             }
         ]
@@ -255,7 +255,7 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "Parse TR-34 Key Transport",
+                op: "TR-34 Parse Key Transport",
                 args: []
             }
         ]
