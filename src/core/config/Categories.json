@@ -282,7 +282,9 @@
             "Decode NetBIOS Name",
             "Defang URL",
             "Fang URL",
-            "Defang IP Addresses"
+            "Defang IP Addresses",
+            "Decode DNS Wire Format",
+            "Encode DNS Wire Format"
         ]
     },
     {
