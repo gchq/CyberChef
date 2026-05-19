@@ -8,6 +8,7 @@
   - Node 24
   - `npm ci`
   - `npm test`
+- Dev server with auto-rebuild: `npm start` (port 8080). Production build: `npm run build` (output in `build/prod/`). If the production build OOMs, set `NODE_OPTIONS=--max_old_space_size=2048`.
 - Do not spend time fixing Windows-only runtime or dependency issues unless explicitly requested.
 - Do not commit repo changes whose only purpose is to make local Windows execution work.
 - If a failure appears only in the local Windows shell, do not treat it as a code regression until it reproduces in Docker/Linux.

@@ -19,7 +19,7 @@ class GenerateCardValidationData extends Operation {
 
         this.name = "Card Validation Data Generate";
         this.module = "Payment";
-        this.description = "Paste the combined CVK pair into the input field as hex and generate a card-verification value for software testing.<br><br><b>Input:</b> combined CVK pair as 16-byte or 24-byte hex.<br><b>Arguments:</b> select whether you are generating CVV/CVC, CVV2/CVC2, or iCVV, then provide the PAN, expiry components, and service code details.<br><br>This implementation is intended for test harnesses and assumes the common CVV decimalization flow used by payment HSM integrations.";
+        this.description = "Paste the combined CVK pair into the input field as hex and generate a card-verification value for software testing.<br><br><b>Input:</b> combined CVK pair as 16-byte or 24-byte hex.<br><b>Arguments:</b> select whether you are generating CVV/CVC, CVV2/CVC2, or iCVV, then provide the PAN, expiry components, and service code details.<br><br><b>Profile behaviour:</b> CVV2/CVC2 forces service code <code>000</code> regardless of the supplied service code. iCVV forces service code <code>999</code>. CVV/CVC uses the supplied service code directly.<br><br>This implementation is intended for test harnesses and assumes the common CVV decimalization flow used by payment HSM integrations.";
         this.inlineHelp = "<strong>Input:</strong> combined CVK pair hex.<br><strong>Args:</strong> choose the validation-data profile, then provide PAN, expiry, and service-code inputs.";
         this.testDataSamples = [
             {

@@ -19,7 +19,7 @@ class VerifyCardValidationData extends Operation {
 
         this.name = "Card Validation Data Verify";
         this.module = "Payment";
-        this.description = "Paste the combined CVK pair into the input field as hex and verify a CVV/CVC-style value for software testing.<br><br><b>Input:</b> combined CVK pair as 16-byte or 24-byte hex.<br><b>Arguments:</b> select the validation-data profile, provide the PAN and expiry components, then supply the expected validation data.<br><br>This operation recomputes the validation value using the same assumptions as the generate operation and reports whether the supplied value matches.";
+        this.description = "Paste the combined CVK pair into the input field as hex and verify a CVV/CVC-style value for software testing.<br><br><b>Input:</b> combined CVK pair as 16-byte or 24-byte hex.<br><b>Arguments:</b> select the validation-data profile, provide the PAN and expiry components, then supply the expected validation data.<br><br><b>Profile behaviour:</b> CVV2/CVC2 forces service code <code>000</code> and iCVV forces <code>999</code> — the service code arg is ignored for those profiles.<br><br>This operation recomputes the validation value using the same assumptions as the generate operation and reports whether the supplied value matches.";
         this.inlineHelp = "<strong>Input:</strong> combined CVK pair hex.<br><strong>Args:</strong> provide PAN, expiry, service-code context, and the validation data to check.";
         this.testDataSamples = [
             {
