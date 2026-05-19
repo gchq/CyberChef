@@ -16,9 +16,9 @@ class VerifyIBM3624PIN extends Operation {
     constructor() {
         super();
 
-        this.name = "IBM 3624 Verify PIN";
+        this.name = "PIN IBM 3624 Verify";
         this.module = "Payment";
-        this.description = "Paste the stored PIN offset into the input field and verify it against a clear PIN.<br><br><b>Input:</b> stored IBM 3624 PIN offset (4 to 12 decimal digits).<br><b>Arguments:</b> provide the clear PVK in hex, decimalization table, validation data, pad character, and the clear PIN to verify.<br><br>This operation re-derives the offset from the supplied PIN and keying material and compares it to the input offset. Use this directly after <b>IBM 3624 Generate PIN Offset</b> in a recipe — the offset output flows naturally into this input.<br><br><b>Validation:</b> Partially verified. This is the verification pair for the same clear-key IBM 3624 helper logic used by generation.<br><br><b>Security:</b> Clear PIN and PVK material are test-use only.";
+        this.description = "Paste the stored PIN offset into the input field and verify it against a clear PIN.<br><br><b>Input:</b> stored IBM 3624 PIN offset (4 to 12 decimal digits).<br><b>Arguments:</b> provide the clear PVK in hex, decimalization table, validation data, pad character, and the clear PIN to verify.<br><br>This operation re-derives the offset from the supplied PIN and keying material and compares it to the input offset. Use this directly after <b>PIN IBM 3624 Offset Generate</b> in a recipe — the offset output flows naturally into this input.<br><br><b>Validation:</b> Partially verified. This is the verification pair for the same clear-key IBM 3624 helper logic used by generation.<br><br><b>Security:</b> Clear PIN and PVK material are test-use only.";
         this.inlineHelp = "<strong>Input:</strong> stored IBM 3624 PIN offset.<br><strong>Args:</strong> provide PVK, decimalization table, validation data, pad character, and the clear PIN to verify.<br><strong>Validation:</strong> clear-key IBM 3624 verification helper.";
         this.testDataSamples = [
             {

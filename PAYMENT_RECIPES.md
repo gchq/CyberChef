@@ -12,7 +12,7 @@ These recipe starters are for software-only payment-crypto emulation, inspection
 All payment operation display names follow **Title Case** throughout. Acronyms (DUKPT, AES, EMV, MAC, PAN, PVV, KCV, ARQC, ARPC, TR-31, TR-34) are always upper-case. Brand names retain their canonical capitalisation (`payShield`).
 
 Pattern: `[Domain Prefix] [Verb] [Qualifier]`
-- Domain prefixes: EMV, DUKPT, PIN Block, PIN Data, PAN, Card Validation Data, VISA PVV, IBM 3624, AS2805, HSM, Payment, MAC, Key, TR-31, TR-34
+- Domain prefixes: EMV, DUKPT, PIN Block, PIN Data, PIN IBM 3624, PAN, Card Validation Data, VISA PVV, AS2805, HSM, Payment, MAC, Key, TR-31, TR-34
 - Verbs: Generate, Verify, Parse, Build, Translate, Derive, Calculate, Encrypt, Decrypt, Re-Encrypt
 - The prefix comes first so operations sort and scan by topic in the UI list
 - Only operations authored in this fork belong in the Payments category — do not add upstream CyberChef ops
@@ -181,8 +181,8 @@ Important assumptions:
 ## 8) Issuer PIN Verification Helpers
 
 Operations:
-- `IBM 3624 Generate PIN Offset`
-- `IBM 3624 Verify PIN`
+- `PIN IBM 3624 Offset Generate`
+- `PIN IBM 3624 Verify`
 - `VISA PVV Generate`
 - `VISA PVV Verify`
 
@@ -315,8 +315,8 @@ Flow:
 ## G) IBM 3624 / PVV Verification
 
 Operations:
-- `IBM 3624 Generate PIN Offset`
-- `IBM 3624 Verify PIN`
+- `PIN IBM 3624 Offset Generate`
+- `PIN IBM 3624 Verify`
 - `VISA PVV Generate`
 - `VISA PVV Verify`
 
@@ -404,8 +404,8 @@ Release guidance: `Publish` = safe with normal guardrails; `Publish with guardra
 | `EMV Generate ARPC` | Vendor-aligned | AWS `VerifyAuthRequestCryptogram` issuer flow | Publish with guardrails |
 | `Card Validation Data Generate` | Vendor-aligned | AWS `GenerateCardValidationData` | Publish with guardrails |
 | `Card Validation Data Verify` | Vendor-aligned | AWS `VerifyCardValidationData` | Publish with guardrails |
-| `IBM 3624 Generate PIN Offset` | Vendor-aligned | AWS IBM 3624 PIN verification object | Publish with guardrails |
-| `IBM 3624 Verify PIN` | Vendor-aligned | AWS IBM 3624 PIN verification object | Publish with guardrails |
+| `PIN IBM 3624 Offset Generate` | Vendor-aligned | AWS IBM 3624 PIN verification object | Publish with guardrails |
+| `PIN IBM 3624 Verify` | Vendor-aligned | AWS IBM 3624 PIN verification object | Publish with guardrails |
 | `VISA PVV Generate` | Vendor-aligned | AWS VISA PIN verification object | Publish with guardrails |
 | `VISA PVV Verify` | Vendor-aligned | AWS VISA PIN verification object | Publish with guardrails |
 | `AS2805 Generate KEK Validation` | Test helper | AWS `GenerateAs2805KekValidation` | Publish with guardrails |

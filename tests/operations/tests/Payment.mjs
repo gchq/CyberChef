@@ -849,7 +849,7 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "IBM 3624 Generate PIN Offset: known sample",
+        name: "PIN IBM 3624 Offset Generate: known sample",
         input: "1234",
         expectedOutput: JSON.stringify({
             pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
@@ -865,13 +865,13 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "IBM 3624 Generate PIN Offset",
+                op: "PIN IBM 3624 Offset Generate",
                 args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", true]
             }
         ]
     },
     {
-        name: "IBM 3624 Verify PIN: known sample",
+        name: "PIN IBM 3624 Verify: known sample",
         input: "3207",
         expectedOutput: JSON.stringify({
             pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
@@ -889,7 +889,7 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "IBM 3624 Verify PIN",
+                op: "PIN IBM 3624 Verify",
                 args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", "1234", true]
             }
         ]
@@ -1021,7 +1021,7 @@ TestRegister.addTests([
         ]
     },
     {
-        name: "Chain: IBM 3624 Generate PIN Offset → Verify PIN",
+        name: "Chain: PIN IBM 3624 Offset Generate → PIN Verify",
         input: "1234",
         expectedOutput: JSON.stringify({
             pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
@@ -1039,11 +1039,11 @@ TestRegister.addTests([
         }, null, 4),
         recipeConfig: [
             {
-                op: "IBM 3624 Generate PIN Offset",
+                op: "PIN IBM 3624 Offset Generate",
                 args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", false]
             },
             {
-                op: "IBM 3624 Verify PIN",
+                op: "PIN IBM 3624 Verify",
                 args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", "1234", true]
             }
         ]

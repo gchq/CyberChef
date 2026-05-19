@@ -257,7 +257,9 @@ function finalizePan(body) {
  * @returns {string}
  */
 function fillerDigits(length) {
-    return Array.from({ length }, () => Math.floor(Math.random() * 10)).join("");
+    const buf = new Uint8Array(length);
+    crypto.getRandomValues(buf);
+    return Array.from(buf, b => b % 10).join("");
 }
 
 /**
