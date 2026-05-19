@@ -36,10 +36,12 @@ Follow `CONTRIBUTING.md` coding conventions: 4-space indentation, CamelCase clas
 
 ## Payment Operation Maintenance
 
+After completing any substantive payment operation work, ask: *"Did I learn anything in this session that isn't captured in AGENTS.md?"* If yes, add it before committing.
+
 When adding, renaming, or removing a payment operation:
 
 1. **Update `PAYMENT_RECIPES.md`** — add the operation to the correct numbered section and, if it introduces a new chaining pattern, add a lettered chaining pattern entry. Remove or mark deprecated any operations that are replaced.
-2. **Follow the naming convention** — all payment operation display names use Title Case. Acronyms (DUKPT, AES, EMV, MAC, PAN, TR-31, TR-34, KCV) stay upper-case. Brand names keep their canonical form (`payShield`). Pattern: `[Domain Prefix] [Verb] [Qualifier]` — the domain/protocol prefix comes first so operations sort and scan by topic in the UI list. Example: `EMV Verify MAC`, `DUKPT Derive TDES Key`, `PIN Block Parse`. See the Naming Convention section in `PAYMENT_RECIPES.md`.
+2. **Follow the naming convention** — all payment operation display names use Title Case. Acronyms (DUKPT, AES, EMV, MAC, PAN, TR-31, TR-34, KCV) stay upper-case. Brand names keep their canonical form (`payShield`). Pattern: `[Domain Prefix] [Verb] [Qualifier]` — the domain/protocol prefix comes first so operations sort and scan by topic in the UI list. Example: `EMV Verify MAC`, `DUKPT Derive TDES Key`, `PIN Block Parse`. When a vendor name is a sub-specifier of a PIN method, embed it after the PIN domain prefix: `PIN IBM 3624 Offset Generate`, `PIN IBM 3624 Verify`. See the Naming Convention section in `PAYMENT_RECIPES.md`.
 3. **Only operations written for this fork belong in the Payments category** — do not add upstream CyberChef ops (AES Encrypt, HMAC, CMAC, Triple DES Encrypt, AES Key Wrap, etc.) even as convenience shortcuts. If an op wasn't authored here, it stays in its own upstream category only.
 4. **Keep `this.name` and file name consistent** — the CyberChef UI shows `this.name`; the file name is the class name in PascalCase. Both should reflect the same intent.
 5. **Do not rename `this.name` without updating `PAYMENT_RECIPES.md`** — stale names in the doc are confusing and break recipe search.
@@ -53,4 +55,5 @@ When adding, renaming, or removing a payment operation:
    node src/core/config/scripts/generateOpsIndex.mjs && node src/core/config/scripts/generateConfig.mjs
    ```
    Or `npx grunt dev` / `npx grunt prod`, which runs both steps automatically. CI runs them on every build. **Symptom of a stale registry:** `TypeError: f[e.module][e.name] is not a constructor` at runtime.
+   **Grunt alias:** if using grunt tasks directly, the correct task is `npx grunt exec:generateConfig`. `npx grunt exec:generateNodeIndex` is a *different* task — it only regenerates the Node API wrapper (`src/node/index.mjs`) and does NOT update `OperationConfig.json` or `modules/Payment.mjs`.
 
