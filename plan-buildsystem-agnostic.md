@@ -16,9 +16,9 @@ Stages are executed by Leon, not the agent. Tick each box once the stage is done
 - [x] 1g. Webpack output path uses `path.join` _(2026-05-19)_
 
 ### Section 2 — [package.json](package.json)
-- [ ] 2a. `setheapsize` deleted
-- [ ] 2b. `getheapsize` switched to `getHeapSize.mjs`
-- [ ] 2c. `minor` / `tag` switched to `.mjs` orchestrators
+- [x] 2a. `setheapsize` deleted _(2026-05-19)_
+- [x] 2b. `getheapsize` switched to `getHeapSize.mjs` _(2026-05-19)_
+- [x] 2c. `minor` / `tag` switched to `.mjs` orchestrators _(2026-05-19)_
 
 ### Verification
 - [ ] macOS: 7-step verification pass (see "Verification" section below)
