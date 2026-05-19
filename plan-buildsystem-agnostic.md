@@ -22,9 +22,17 @@ Stages are executed by Leon, not the agent. Tick each box once the stage is done
 
 ### Verification
 - [x] macOS: 7-step verification pass (see "Verification" section below) _(2026-05-19)_
-- [ ] Windows: 7-step verification pass (if a Windows machine is available)
+- [x] Windows: 7-step verification pass _(2026-05-19)_
 
 ### Notes / deviations
+- 2026-05-19: Windows verification executed end-to-end on a clean tree (PowerShell, Node v24.14.1, npm 11.11.0):
+  - `npm install`: 1485 packages installed, postinstall hooks (`fixCryptoApiImports`, `fixSnackbarMarkup`) both ran fine. Exit 0.
+  - `npm test`: `generateConfig` and `generateNodeIndex` custom tasks ran successfully. 243/243 Node API tests + 1935/1935 operation tests all passing.
+  - `npm run build`: **BLOCKED by pre-existing webpack errors** (same 7 errors on `master`): jimp babel-loader `Identifier 'e' has already been declared` + `Asset Modules Plugin` invalid generator (`filename` property on `asset/inline`). Confirmed identical failure on `master` branch — not introduced by our changes. `calcDownloadHash` is pure Node.js (`crypto.createHash`/`fs`) and structurally cross-platform.
+  - `npx grunt`: `repoSize` printed `925 tracked files` / `23.4M repository size`. All ESLint tasks passed.
+  - `npm run testnodeconsumer`: tmp dir created under `os.tmpdir()`, `npm link` ran, CJS + ESM consumers executed, dir removed. Exit 0.
+  - `npm run getheapsize`: printed `node heap limit = 4288 Mb` via `getHeapSize.mjs`.
+  - `npm start`: dev server reached `http://localhost:8080/`; `Invoke-WebRequest` returned HTTP 200 with 9448 bytes of CyberChef HTML. Killed cleanly.
 - 2026-05-19: macOS verification executed end-to-end on a clean tree (`rm -rf build/ node_modules/`).
   - `npm test`: 243 Node API tests + 1935 operation tests, all passing. `generateConfig` and `generateNodeIndex` custom tasks ran without shell-outs.
   - `npm run build`: `calcDownloadHash` produced [build/prod/sha256digest.txt](build/prod/sha256digest.txt) matching `shasum -a 256 build/prod/CyberChef_v11.0.0.zip`; no `DOWNLOAD_HASH_PLACEHOLDER` left in [build/prod/index.html](build/prod/index.html); hash present once. Pre-existing `webpack-bundle-analyzer` ENOENT warnings about `LoaderWorker.js`/`ZipWorker.js` are unrelated (analyzer references workers it doesn't find on disk) — not introduced by this change.
