@@ -147,7 +147,7 @@ Operations:
 - `PIN Data Generate`
 - `PIN Data Verify`
 
-> **Note:** `Translate Payment PIN Data` is deprecated — use `PIN Block Translate` (section 7) instead. See issue #4.
+> **Note:** `Translate Payment PIN Data` was removed (issue #4 — it was a duplicate of `PIN Block Translate`). Use `PIN Block Translate` (section 7) directly.
 
 Use this when:
 - you want AWS-style PIN-data naming for clear ISO 9564 block flows

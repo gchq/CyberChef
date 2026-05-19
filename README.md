@@ -22,7 +22,8 @@ They are also intended to support software emulation of common HSM-style payment
 Current coverage includes:
 - TR-31 key block parsing and TR-34 B9 envelope inspection
 - Key metadata inspection and structural validation
-- DUKPT (TDES) key derivation
+- DUKPT TDES key derivation (ANSI X9.24-1, 10-byte KSN, IPEK-based)
+- DUKPT AES key derivation (ANSI X9.24-3, 12-byte KSN, IK-based, AES-128)
 - PIN block format parsing, construction, and translation (ISO 9564 formats 0, 1, 3)
 - Payment-specific MAC and KCV utilities (HMAC, AES-CMAC, TDES-CMAC, ISO 9797-1, AS2805, DUKPT variants)
 - EMV ARQC/ARPC generation and verification
@@ -34,7 +35,6 @@ Current coverage includes:
 
 Future extensions may include:
 - TR-31 key block decryption with provided KBPKs
-- AES DUKPT derivation
 
 ### Non-goals
 These extensions are not intended to:
