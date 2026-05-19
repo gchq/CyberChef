@@ -12,7 +12,7 @@ import { toHexFast } from "../lib/Hex.mjs";
 
 const KEY_USAGE = {
     "IK Derivation":    0x8001,   // BDK → device Initial Key (X9.24-3 §6.3.1)
-    Intermediate:       0x0000,   // internal binary-tree node (not user-visible)
+    Intermediate:       0x8000,   // internal binary-tree node (X9.24-3 §6.3.2)
     "PIN Encryption":   0x1000,
     "MAC Generation":   0x2000,   // sender / request direction
     "MAC Verification": 0x2001,   // receiver / response direction
@@ -25,10 +25,6 @@ const KEY_USAGE = {
 // AES-128 wire constants
 const ALGO_CODE   = 0x0002;   // AES-128 algorithm identifier
 const KEY_LEN_VAL = 0x0080;   // 128 bits
-
-// CMAC Rb constant for 128-bit block (RFC 4493)
-const RB = new Uint8Array(16);
-RB[15] = 0x87;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -53,33 +49,6 @@ function parseHex(hex, expectedBytes, name) {
 }
 
 /**
- * XORs two equal-length byte arrays.
- *
- * @param {Uint8Array} a
- * @param {Uint8Array} b
- * @returns {Uint8Array}
- */
-function xor(a, b) {
-    const out = new Uint8Array(a.length);
-    for (let i = 0; i < a.length; i++) out[i] = a[i] ^ b[i];
-    return out;
-}
-
-/**
- * Left-shifts a byte array by one bit.
- *
- * @param {Uint8Array} a
- * @returns {Uint8Array}
- */
-function shiftLeft1(a) {
-    const out = new Uint8Array(a.length);
-    for (let i = 0; i < a.length - 1; i++)
-        out[i] = ((a[i] << 1) | (a[i + 1] >> 7)) & 0xFF;
-    out[a.length - 1] = (a[a.length - 1] << 1) & 0xFF;
-    return out;
-}
-
-/**
  * Converts a Uint8Array to a byte string for use with node-forge.
  *
  * @param {Uint8Array} bytes
@@ -100,66 +69,21 @@ function hex(bytes) {
 }
 
 // ── AES-128 ECB single-block encrypt ─────────────────────────────────────────
-// Reuses the forge cipher object across calls (same pattern as CMAC.mjs).
 
 /**
- * Creates a reusable AES-ECB cipher instance for a 16-byte key.
+ * Encrypts a single 16-byte block using AES-128-ECB.
+ * This is the primitive used by X9.24-3 for all key derivation steps.
  *
  * @param {Uint8Array} key16
- * @returns {Object}
- */
-function makeEcbCipher(key16) {
-    return forge.cipher.createCipher("AES-ECB", toByteString(key16));
-}
-
-/**
- * Encrypts a single 16-byte block with the given AES-ECB cipher instance.
- *
- * @param {Object} cipher
  * @param {Uint8Array} block16
  * @returns {Uint8Array}
  */
-function ecbBlock(cipher, block16) {
+function aesEncryptBlock(key16, block16) {
+    const cipher = forge.cipher.createCipher("AES-ECB", toByteString(key16));
     cipher.start();
     cipher.update(forge.util.createBuffer(toByteString(block16)));
     cipher.finish();
     return Uint8Array.from(cipher.output.getBytes(), c => c.charCodeAt(0)).slice(0, 16);
-}
-
-// ── AES-CMAC (RFC 4493) ───────────────────────────────────────────────────────
-
-/**
- * Computes AES-CMAC of a message using a 16-byte AES key.
- *
- * @param {Uint8Array} key16
- * @param {Uint8Array} message
- * @returns {Uint8Array}
- */
-function aesCmac(key16, message) {
-    const cipher = makeEcbCipher(key16);
-
-    // Subkey generation
-    const L  = ecbBlock(cipher, new Uint8Array(16));
-    const K1 = shiftLeft1(L);
-    if (L[0] & 0x80) for (let i = 0; i < 16; i++) K1[i] ^= RB[i];
-    const K2 = shiftLeft1(K1);
-    if (K1[0] & 0x80) for (let i = 0; i < 16; i++) K2[i] ^= RB[i];
-
-    const n    = Math.max(1, Math.ceil(message.length / 16));
-    const flag = message.length > 0 && message.length % 16 === 0;
-
-    // Prepare final block
-    const lastRaw   = message.slice((n - 1) * 16);
-    const lastBlock = new Uint8Array(16);
-    lastBlock.set(lastRaw);
-    if (!flag) lastBlock[lastRaw.length] = 0x80;   // ISO/IEC 7816-4 padding
-    const lastXored = xor(lastBlock, flag ? K1 : K2);
-
-    // CBC-MAC chain
-    let X = new Uint8Array(16);
-    for (let i = 0; i < n - 1; i++)
-        X = ecbBlock(cipher, xor(X, message.slice(i * 16, (i + 1) * 16)));
-    return ecbBlock(cipher, xor(X, lastXored));
 }
 
 // ── X9.24-3 AES-128 DUKPT derivation ─────────────────────────────────────────
@@ -223,19 +147,20 @@ function derivationData(usage, iki8, counterReg) {
 }
 
 /**
- * Derives the Initial Key (IK) from a BDK and IKI using AES-CMAC.
+ * Derives the Initial Key (IK) from a BDK and IKI using AES-ECB (X9.24-3 §6.3.1).
  *
  * @param {Uint8Array} bdk16
  * @param {Uint8Array} iki8
  * @returns {Uint8Array}
  */
 function deriveIK(bdk16, iki8) {
-    return aesCmac(bdk16, ikDerivationData(iki8));
+    return aesEncryptBlock(bdk16, ikDerivationData(iki8));
 }
 
 /**
- * Binary-tree traversal from IK to the leaf transaction key.
- * Uses the 21 usable counter bits (bits 20-0 of the 4-byte counter field).
+ * Binary-tree traversal from IK to the leaf transaction key (X9.24-3 §6.3.2).
+ * Traverses all 32 counter bits from MSB to LSB, deriving one intermediate key
+ * per set bit using AES-ECB.
  *
  * @param {Uint8Array} ik16
  * @param {Uint8Array} iki8
@@ -243,27 +168,22 @@ function deriveIK(bdk16, iki8) {
  * @returns {Uint8Array}
  */
 function deriveTransactionKey(ik16, iki8, counter) {
-    const usable = counter & 0x1FFFFF;
-    if (usable === 0) throw new OperationError(
+    if (counter === 0) throw new OperationError(
         "Counter 0 is reserved — no transactions have occurred yet."
-    );
-    if (usable === 0x1FFFFF) throw new OperationError(
-        "Counter 0x1FFFFF indicates key exhaustion — this terminal needs a new IK."
     );
     let key = Uint8Array.from(ik16);
     let reg = 0;
-    for (let bit = 20; bit >= 0; bit--) {
-        if (usable & (1 << bit)) {
-            reg |= (1 << bit);
-            key = aesCmac(key, derivationData(KEY_USAGE.Intermediate, iki8, reg));
+    for (let bit = 31; bit >= 0; bit--) {
+        if ((counter >>> bit) & 1) {
+            reg = (reg | (1 << bit)) >>> 0;
+            key = aesEncryptBlock(key, derivationData(KEY_USAGE.Intermediate, iki8, reg));
         }
     }
     return key;
 }
 
 /**
- * Derives a purpose-specific working key from the transaction key.
- * Uses the full 32-bit counter in the derivation data (not the 21-bit tree counter).
+ * Derives a purpose-specific working key from the transaction key (X9.24-3 §6.3.3).
  *
  * @param {Uint8Array} txKey16
  * @param {Uint8Array} iki8
@@ -272,7 +192,7 @@ function deriveTransactionKey(ik16, iki8, counter) {
  * @returns {Uint8Array}
  */
 function deriveWorkingKey(txKey16, iki8, counter, purposeName) {
-    return aesCmac(txKey16, derivationData(KEY_USAGE[purposeName], iki8, counter));
+    return aesEncryptBlock(txKey16, derivationData(KEY_USAGE[purposeName], iki8, counter));
 }
 
 // ── Operation class ───────────────────────────────────────────────────────────
@@ -291,7 +211,7 @@ class DeriveDUKPTAESKey extends Operation {
         this.name = "DUKPT Derive AES Key";
         this.module = "Payment";
         this.description = [
-            "Derives AES DUKPT working keys per <b>ANSI X9.24-3</b> (AES-128).",
+            "Derives AES DUKPT working keys per <b>ANSI X9.24-3</b> (AES-128). All derivation steps use AES-ECB.",
             "<br><br>",
             "<b>Input:</b> 16-byte BDK as hex, or the 16-byte Initial Key (IK) if you already have it.",
             "<br><br>",
