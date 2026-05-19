@@ -205,10 +205,9 @@
     "lint:grammar": "cspell ./src",
     "postinstall": "npx grunt exec:fixCryptoApiImports && npx grunt exec:fixSnackbarMarkup",
     "newop": "node src/core/config/scripts/newOperation.mjs",
-    "minor": "node src/core/config/scripts/newMinorVersion.mjs && npm version minor --git-tag-version=false && echo \"Updated to version v$(npm pkg get version | xargs), please create a pull request and once merged use 'npm run tag'\"",
-    "tag": "git tag -s \"v$(npm pkg get version | xargs)\" -m \"$(npm pkg get version | xargs)\" && echo \"Created v$(npm pkg get version | xargs), now check and push the tag\"",
-    "getheapsize": "node -e 'console.log(`node heap limit = ${require(\"v8\").getHeapStatistics().heap_size_limit / (1024 * 1024)} Mb`)'",
-    "setheapsize": "export NODE_OPTIONS=--max_old_space_size=2048"
+    "minor": "node src/core/config/scripts/bumpMinor.mjs",
+    "tag": "node src/core/config/scripts/tagRelease.mjs",
+    "getheapsize": "node --no-warnings src/core/config/scripts/getHeapSize.mjs"
   },
   "engines": {
     "node": ">=24 <25"

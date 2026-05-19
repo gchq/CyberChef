@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const glob = require("glob");
 const path = require("path");
+const os = require("os");
 
 const nodeFlags = "--no-warnings --no-deprecation";
 
@@ -23,25 +24,25 @@ module.exports = function (grunt) {
     // Tasks
     grunt.registerTask("dev",
         "A persistent task which creates a development build whenever source files are modified.",
-        ["clean:dev", "clean:config", "exec:generateConfig", "concurrent:dev"]);
+        ["clean:dev", "clean:config", "generateConfig", "concurrent:dev"]);
 
     grunt.registerTask("prod",
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
         [
-            "eslint", "clean:prod", "clean:config", "exec:generateConfig", "findModules", "webpack:web",
-            "copy:standalone", "zip:standalone", "clean:standalone", "exec:calcDownloadHash", "chmod"
+            "eslint", "clean:prod", "clean:config", "generateConfig", "findModules", "webpack:web",
+            "copy:standalone", "zip:standalone", "clean:standalone", "calcDownloadHash", "chmod"
         ]);
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
         [
-            "clean:node", "clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex"
+            "clean:node", "clean:config", "clean:nodeConfig", "generateConfig", "generateNodeIndex"
         ]);
 
     grunt.registerTask("configTests",
         "A task which configures config files in preparation for tests to be run. Use `npm test` to run tests.",
         [
-            "clean:config", "clean:nodeConfig", "exec:generateConfig", "exec:generateNodeIndex"
+            "clean:config", "clean:nodeConfig", "generateConfig", "generateNodeIndex"
         ]);
 
     grunt.registerTask("testui",
@@ -50,11 +51,11 @@ module.exports = function (grunt) {
 
     grunt.registerTask("testnodeconsumer",
         "A task which checks whether consuming CJS and ESM apps work with the CyberChef build",
-        ["exec:setupNodeConsumers", "exec:testCJSNodeConsumer", "exec:testESMNodeConsumer", "exec:teardownNodeConsumers"]);
+        ["setupNodeConsumers", "exec:testCJSNodeConsumer", "exec:testESMNodeConsumer", "teardownNodeConsumers"]);
 
     grunt.registerTask("default",
         "Lints the code base",
-        ["eslint", "exec:repoSize"]);
+        ["eslint", "repoSize"]);
 
     grunt.registerTask("lint", "eslint");
 
@@ -97,7 +98,7 @@ module.exports = function (grunt) {
             PKG_VERSION: JSON.stringify(pkg.version),
         },
         moduleEntryPoints = listEntryModules(),
-        nodeConsumerTestPath = "~/tmp-cyberchef",
+        nodeConsumerTestPath = path.join(os.tmpdir(), "tmp-cyberchef"),
         /**
          * Configuration for Webpack production build. Defined as a function so that it
          * can be recalculated when new modules are generated.
@@ -110,7 +111,7 @@ module.exports = function (grunt) {
                     main: "./src/web/index.js"
                 }, moduleEntryPoints),
                 output: {
-                    path: __dirname + "/build/prod",
+                    path: path.join(__dirname, "build", "prod"),
                     filename: chunkData => {
                         return chunkData.chunk.name === "main" ? "assets/[name].js": "[name].js";
                     },
@@ -162,25 +163,68 @@ module.exports = function (grunt) {
         return entryModules;
     }
 
-    /**
-     * Detects the correct delimiter to use to chain shell commands together
-     * based on the current OS.
-     *
-     * @param {string[]} cmds
-     * @returns {string}
-     */
-    function chainCommands(cmds) {
-        const win = process.platform === "win32";
-        if (!win) {
-            return cmds.join(";");
-        }
-        return cmds
-            // && means that subsequent commands will not be executed if the
-            // previous one fails. & would coninue on a fail
-            .join("&&")
-            // Windows does not support \n properly
-            .replace(/\n/g, "\\n");
-    }
+    grunt.registerTask("calcDownloadHash", "Computes the SHA256 of the standalone zip and stamps it into index.html", function () {
+        const crypto = require("crypto");
+        const fs = require("fs");
+        const zipPath = path.join("build", "prod", `CyberChef_v${pkg.version}.zip`);
+        const digestPath = path.join("build", "prod", "sha256digest.txt");
+        const indexPath = path.join("build", "prod", "index.html");
+        const hash = crypto.createHash("sha256").update(fs.readFileSync(zipPath)).digest("hex");
+        fs.writeFileSync(digestPath, hash);
+        const html = fs.readFileSync(indexPath, "utf8").replace("DOWNLOAD_HASH_PLACEHOLDER", hash);
+        fs.writeFileSync(indexPath, html);
+    });
+
+    grunt.registerTask("repoSize", "Reports tracked file count and repo size", function () {
+        const { execSync } = require("child_process");
+        const fs = require("fs");
+        const fileCount = execSync("git ls-files", { encoding: "utf8" }).trim().split("\n").length;
+        let bytes = 0;
+        const walk = (dir) => {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+                if (entry.name === ".git" || entry.name === "node_modules") continue;
+                const p = path.join(dir, entry.name);
+                if (entry.isDirectory()) walk(p);
+                else if (entry.isFile()) bytes += fs.statSync(p).size;
+            }
+        };
+        walk(".");
+        const mb = (bytes / (1024 * 1024)).toFixed(1);
+        grunt.log.writeln(`\n${fileCount}\ttracked files`);
+        grunt.log.writeln(`${mb}M\trepository size`);
+    });
+
+    grunt.registerTask("generateConfig", "Regenerates operation config files", function () {
+        const { execSync } = require("child_process");
+        const fs = require("fs");
+        grunt.log.writeln("\n--- Regenerating config files. ---");
+        fs.writeFileSync(path.join("src", "core", "config", "OperationConfig.json"), "[]\n");
+        execSync(`node ${nodeFlags} src/core/config/scripts/generateOpsIndex.mjs`, { stdio: "inherit" });
+        execSync(`node ${nodeFlags} src/core/config/scripts/generateConfig.mjs`, { stdio: "inherit" });
+        grunt.log.writeln("--- Config scripts finished. ---\n");
+    });
+
+    grunt.registerTask("generateNodeIndex", "Regenerates the node index", function () {
+        const { execSync } = require("child_process");
+        grunt.log.writeln("\n--- Regenerating node index ---");
+        execSync(`node ${nodeFlags} src/node/config/scripts/generateNodeIndex.mjs`, { stdio: "inherit" });
+        grunt.log.writeln("--- Node index generated. ---\n");
+    });
+
+    grunt.registerTask("setupNodeConsumers", "Sets up a temp dir for testing CJS/ESM consumers", function () {
+        const fs = require("fs");
+        const { execSync } = require("child_process");
+        grunt.log.writeln("\n--- Testing node consumers ---");
+        fs.mkdirSync(nodeConsumerTestPath, { recursive: true });
+        fs.cpSync("tests/node/consumers", nodeConsumerTestPath, { recursive: true });
+        execSync("npm link", { stdio: "inherit" });
+        execSync("npm link cyberchef", { stdio: "inherit", cwd: nodeConsumerTestPath });
+    });
+
+    grunt.registerTask("teardownNodeConsumers", "Removes the consumer test temp dir", function () {
+        require("fs").rmSync(nodeConsumerTestPath, { recursive: true, force: true });
+        grunt.log.writeln("\n--- Node consumer tests complete ---");
+    });
 
     grunt.initConfig({
         clean: {
@@ -318,7 +362,7 @@ module.exports = function (grunt) {
         watch: {
             config: {
                 files: ["src/core/operations/**/*", "!src/core/operations/index.mjs"],
-                tasks: ["exec:generateNodeIndex", "exec:generateConfig"]
+                tasks: ["generateNodeIndex", "generateConfig"]
             }
         },
         concurrent: {
@@ -328,29 +372,6 @@ module.exports = function (grunt) {
             }
         },
         exec: {
-            calcDownloadHash: {
-                command: function () {
-                    switch (process.platform) {
-                        case "darwin":
-                            return chainCommands([
-                                `shasum -a 256 build/prod/CyberChef_v${pkg.version}.zip | awk '{print $1;}' > build/prod/sha256digest.txt`,
-                                `sed -i '' -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`
-                            ]);
-                        default:
-                            return chainCommands([
-                                `sha256sum build/prod/CyberChef_v${pkg.version}.zip | awk '{print $1;}' > build/prod/sha256digest.txt`,
-                                `sed -i -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`
-                            ]);
-                    }
-                },
-            },
-            repoSize: {
-                command: chainCommands([
-                    "git ls-files | wc -l | xargs printf '\n%b\ttracked files\n'",
-                    "du -hs | egrep -o '^[^\t]*' | xargs printf '%b\trepository size\n'"
-                ]),
-                stderr: false
-            },
             cleanGit: {
                 command: "git gc --prune=now --aggressive"
             },
@@ -358,56 +379,17 @@ module.exports = function (grunt) {
                 command: `node ${nodeFlags} src/web/static/sitemap.mjs > build/prod/sitemap.xml`,
                 sync: true
             },
-            generateConfig: {
-                command: chainCommands([
-                    "echo '\n--- Regenerating config files. ---'",
-                    "echo [] > src/core/config/OperationConfig.json",
-                    `node ${nodeFlags} src/core/config/scripts/generateOpsIndex.mjs`,
-                    `node ${nodeFlags} src/core/config/scripts/generateConfig.mjs`,
-                    "echo '--- Config scripts finished. ---\n'"
-                ]),
-                sync: true
-            },
-            generateNodeIndex: {
-                command: chainCommands([
-                    "echo '\n--- Regenerating node index ---'",
-                    `node ${nodeFlags} src/node/config/scripts/generateNodeIndex.mjs`,
-                    "echo '--- Node index generated. ---\n'"
-                ]),
-                sync: true
-            },
             browserTests: {
                 command: "./node_modules/.bin/nightwatch --env prod"
             },
-            setupNodeConsumers: {
-                command: chainCommands([
-                    "echo '\n--- Testing node consumers ---'",
-                    "npm link",
-                    `mkdir ${nodeConsumerTestPath}`,
-                    `cp tests/node/consumers/* ${nodeConsumerTestPath}`,
-                    `cd ${nodeConsumerTestPath}`,
-                    "npm link cyberchef"
-                ]),
-                sync: true
-            },
-            teardownNodeConsumers: {
-                command: chainCommands([
-                    `rm -rf ${nodeConsumerTestPath}`,
-                    "echo '\n--- Node consumer tests complete ---'"
-                ]),
-            },
             testCJSNodeConsumer: {
-                command: chainCommands([
-                    `cd ${nodeConsumerTestPath}`,
-                    `node ${nodeFlags} cjs-consumer.js`,
-                ]),
+                command: `node ${nodeFlags} cjs-consumer.js`,
+                cwd: nodeConsumerTestPath,
                 stdout: false,
             },
             testESMNodeConsumer: {
-                command: chainCommands([
-                    `cd ${nodeConsumerTestPath}`,
-                    `node ${nodeFlags} esm-consumer.mjs`,
-                ]),
+                command: `node ${nodeFlags} esm-consumer.mjs`,
+                cwd: nodeConsumerTestPath,
                 stdout: false,
             },
             fixCryptoApiImports: {
