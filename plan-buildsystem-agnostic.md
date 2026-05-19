@@ -21,11 +21,17 @@ Stages are executed by Leon, not the agent. Tick each box once the stage is done
 - [x] 2c. `minor` / `tag` switched to `.mjs` orchestrators _(2026-05-19)_
 
 ### Verification
-- [ ] macOS: 7-step verification pass (see "Verification" section below)
+- [x] macOS: 7-step verification pass (see "Verification" section below) _(2026-05-19)_
 - [ ] Windows: 7-step verification pass (if a Windows machine is available)
 
 ### Notes / deviations
-_(Agent: log any changes from the original plan here, with date.)_
+- 2026-05-19: macOS verification executed end-to-end on a clean tree (`rm -rf build/ node_modules/`).
+  - `npm test`: 243 Node API tests + 1935 operation tests, all passing. `generateConfig` and `generateNodeIndex` custom tasks ran without shell-outs.
+  - `npm run build`: `calcDownloadHash` produced [build/prod/sha256digest.txt](build/prod/sha256digest.txt) matching `shasum -a 256 build/prod/CyberChef_v11.0.0.zip`; no `DOWNLOAD_HASH_PLACEHOLDER` left in [build/prod/index.html](build/prod/index.html); hash present once. Pre-existing `webpack-bundle-analyzer` ENOENT warnings about `LoaderWorker.js`/`ZipWorker.js` are unrelated (analyzer references workers it doesn't find on disk) — not introduced by this change.
+  - `npx grunt`: `repoSize` printed `925\ttracked files` / `256.9M\trepository size` (same shape as the old shell version; absolute size differs only because `build/` was populated).
+  - `npm run testnodeconsumer`: tmp dir created at `$TMPDIR/tmp-cyberchef`, CJS + ESM consumers ran, dir removed.
+  - `npm run getheapsize`: printed `node heap limit = 4288 Mb` via the new [src/core/config/scripts/getHeapSize.mjs](src/core/config/scripts/getHeapSize.mjs).
+  - `npm start`: dev server reached `Project is running at … http://localhost:8080/`; `curl http://localhost:8080/` returned HTTP 200 with the CyberChef HTML. Killed cleanly.
 
 ---
 
