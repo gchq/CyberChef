@@ -40,6 +40,11 @@ Stages are executed by Leon, not the agent. Tick each box once the stage is done
   - `npm run testnodeconsumer`: tmp dir created at `$TMPDIR/tmp-cyberchef`, CJS + ESM consumers ran, dir removed.
   - `npm run getheapsize`: printed `node heap limit = 4288 Mb` via the new [src/core/config/scripts/getHeapSize.mjs](src/core/config/scripts/getHeapSize.mjs).
   - `npm start`: dev server reached `Project is running at … http://localhost:8080/`; `curl http://localhost:8080/` returned HTTP 200 with the CyberChef HTML. Killed cleanly.
+- 2026-05-19: macOS re-verified after the Windows-fix regex changes in c1d638fb ([webpack.config.js](webpack.config.js) `node_modules\/` → `node_modules[/\\]`, `bmfonts\/` → `bmfonts[/\\]`, `web\/static` → `web[/\\]static`). Patterns are platform-agnostic — `/` still matches via `[/\\]` on macOS.
+  - `npm run build`: webpack compiled successfully in ~39s; all post-tasks (copy, zip, clean, calcDownloadHash, chmod) completed.
+  - Artifact integrity: [build/prod/CyberChef_v11.0.0.zip](build/prod/CyberChef_v11.0.0.zip) SHA256 matches [build/prod/sha256digest.txt](build/prod/sha256digest.txt); hash stamped once into [build/prod/index.html](build/prod/index.html); no `DOWNLOAD_HASH_PLACEHOLDER` remaining.
+  - `npm test`: 243/243 Node API tests + 1935/1935 operation tests passing.
+  - Pre-existing `webpack-bundle-analyzer` ENOENT warnings about `*Worker.js` still appear — same ones noted in the prior macOS verification entry above, unchanged by c1d638fb.
 
 ---
 
