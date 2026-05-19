@@ -812,7 +812,7 @@ TestRegister.addTests([
             pin: "1234",
             pvvInput: "1012345678911234",
             encryptedPvvInputHex: "6A77E65CFE349D60",
-            pvv: "6077"
+            pvv: "6776"
         }, null, 4),
         recipeConfig: [
             {
@@ -823,7 +823,7 @@ TestRegister.addTests([
     },
     {
         name: "VISA PVV Verify: known sample",
-        input: "6077",
+        input: "6776",
         expectedOutput: JSON.stringify({
             pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
             pan: "5432101234567890",
@@ -831,8 +831,8 @@ TestRegister.addTests([
             pin: "1234",
             pvvInput: "1012345678911234",
             encryptedPvvInputHex: "6A77E65CFE349D60",
-            pvv: "6077",
-            expectedPvv: "6077",
+            pvv: "6776",
+            expectedPvv: "6776",
             valid: true
         }, null, 4),
         recipeConfig: [
@@ -913,8 +913,8 @@ TestRegister.addTests([
             pin: "1234",
             pvvInput: "1012345678911234",
             encryptedPvvInputHex: "6A77E65CFE349D60",
-            pvv: "6077",
-            expectedPvv: "6077",
+            pvv: "6776",
+            expectedPvv: "6776",
             valid: true
         }, null, 4),
         recipeConfig: [

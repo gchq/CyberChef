@@ -168,21 +168,30 @@ function verifyIbm3624Pin(pvkHex, decimalizationTable, pinValidationData, padCha
 }
 
 /**
- * Decimalizes a PVV candidate using the common numeric-first rule.
+ * Decimalizes a PVV candidate using the standard two-pass rule:
+ * pass 1 collects decimal digits (0-9); pass 2 maps A=0 B=1 C=2 D=3 E=4 F=5.
  *
  * @param {string} hex
  * @returns {string}
  */
 function decimalizePvv(hex) {
+    const upper = hex.toUpperCase();
     let out = "";
-    for (const ch of hex.toUpperCase()) {
+
+    for (const ch of upper) {
         if (/\d/.test(ch)) {
             out += ch;
-        } else {
-            out += String((ch.charCodeAt(0) - "A".charCodeAt(0)) % 10);
+            if (out.length >= 4) return out.substring(0, 4);
         }
-        if (out.length >= 4) return out.substring(0, 4);
     }
+
+    for (const ch of upper) {
+        if (/[A-F]/.test(ch)) {
+            out += String(ch.charCodeAt(0) - "A".charCodeAt(0));
+            if (out.length >= 4) return out.substring(0, 4);
+        }
+    }
+
     return out.substring(0, 4);
 }
 

@@ -23,7 +23,7 @@ class VerifyVISAPVV extends Operation {
         this.testDataSamples = [
             {
                 name: "VISA PVV verify sample",
-                input: "6077",
+                input: "6776",
                 args: ["0123456789ABCDEFFEDCBA9876543210", "5432101234567890", 1, "1234", true]
             }
         ];
