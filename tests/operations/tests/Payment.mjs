@@ -382,6 +382,66 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "PIN Block Build: ISO Format 1 deterministic",
+        input: "1234",
+        expectedOutput: "141234FFFFFFFFFF",
+        recipeConfig: [
+            {
+                op: "PIN Block Build",
+                args: ["ISO Format 1", "", false]
+            }
+        ]
+    },
+    {
+        name: "PIN Block Parse: ISO Format 1",
+        input: "141234FFFFFFFFFF",
+        expectedOutput: JSON.stringify({
+            format: "ISO Format 1",
+            pin: "1234",
+            pinLength: 4,
+            pinFieldHex: "141234FFFFFFFFFF",
+            panFieldHex: null,
+            blockHex: "141234FFFFFFFFFF",
+            fillDigitsHex: "FFFFFFFFFF"
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "PIN Block Parse",
+                args: ["ISO Format 1", ""]
+            }
+        ]
+    },
+    {
+        name: "PIN Block Build: ISO Format 3 deterministic",
+        input: "1234",
+        expectedOutput: "341215AB89EFCD23",
+        recipeConfig: [
+            {
+                op: "PIN Block Build",
+                args: ["ISO Format 3", "5432101234567890", false]
+            }
+        ]
+    },
+    {
+        name: "PIN Block Parse: ISO Format 3",
+        input: "341215AB89EFCD23",
+        expectedOutput: JSON.stringify({
+            format: "ISO Format 3",
+            pin: "1234",
+            pinLength: 4,
+            pinFieldHex: "341234AAAAAAAAAA",
+            panFieldHex: "0000210123456789",
+            blockHex: "341215AB89EFCD23",
+            fillDigitsHex: "AAAAAAAAAA"
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "PIN Block Parse",
+                args: ["ISO Format 3", "5432101234567890"]
+            }
+        ]
+    },
+    {
         name: "Card Validation Data Generate: known CVV2 sample",
         input: "0123456789ABCDEFFEDCBA9876543210",
         expectedOutput: "221",
@@ -840,6 +900,81 @@ TestRegister.addTests([
             {
                 op: "Derive ECDH Key Material",
                 args: ["PEM", "P-256", "PEM", ecdhPeerPublicKey, "None", 32, "", "Hex"]
+            }
+        ]
+    },
+    {
+        name: "Chain: VISA PVV Generate → Verify",
+        input: "1234",
+        expectedOutput: JSON.stringify({
+            pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
+            pan: "5432101234567890",
+            pinVerificationKeyIndex: 1,
+            pin: "1234",
+            pvvInput: "1012345678911234",
+            encryptedPvvInputHex: "6A77E65CFE349D60",
+            pvv: "6077",
+            expectedPvv: "6077",
+            valid: true
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "VISA PVV Generate",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "5432101234567890", 1, false]
+            },
+            {
+                op: "VISA PVV Verify",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "5432101234567890", 1, "1234", true]
+            }
+        ]
+    },
+    {
+        name: "Chain: IBM 3624 Generate PIN Offset → Verify PIN",
+        input: "1234",
+        expectedOutput: JSON.stringify({
+            pinVerificationKeyHex: "0123456789ABCDEFFEDCBA9876543210",
+            pinValidationData: "5432101234567890",
+            pinValidationDataPadCharacter: "F",
+            pinLength: 4,
+            validationBlockHex: "5432101234567890",
+            encryptedValidationBlockHex: "8A3712EE04F010A0",
+            decimalized: "8037124404501000",
+            naturalPin: "8037",
+            pin: "1234",
+            pinOffset: "3207",
+            expectedPinOffset: "3207",
+            valid: true
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "IBM 3624 Generate PIN Offset",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", false]
+            },
+            {
+                op: "IBM 3624 Verify PIN",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "0123456789012345", "5432101234567890", "F", "1234", true]
+            }
+        ]
+    },
+    {
+        name: "Chain: EMV Generate ARQC → Verify ARQC",
+        input: "000102030405060708090A0B0C0D0E0F",
+        expectedOutput: JSON.stringify({
+            inputHex: "000102030405060708090A0B0C0D0E0F",
+            outputBytes: 8,
+            fullMacHex: "C1F732B52FB20CAAB58D5B6C78CBD514",
+            cryptogramHex: "C1F732B52FB20CAA",
+            expectedArqcHex: "C1F732B52FB20CAA",
+            valid: true
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "EMV Generate ARQC",
+                args: ["00112233445566778899AABBCCDDEEFF", 8, false]
+            },
+            {
+                op: "EMV Verify ARQC",
+                args: ["00112233445566778899AABBCCDDEEFF", 8, "000102030405060708090A0B0C0D0E0F", true]
             }
         ]
     }
