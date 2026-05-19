@@ -849,6 +849,76 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "PIN Generate: 4-digit PIN digits",
+        input: "",
+        expectedMatch: /^\d{4}$/,
+        recipeConfig: [
+            {
+                op: "PIN Generate",
+                args: [4, "PIN digits", ""]
+            }
+        ]
+    },
+    {
+        name: "PIN Generate: 6-digit PIN digits",
+        input: "",
+        expectedMatch: /^\d{6}$/,
+        recipeConfig: [
+            {
+                op: "PIN Generate",
+                args: [6, "PIN digits", ""]
+            }
+        ]
+    },
+    {
+        name: "PIN Generate: ISO Format 0 block",
+        input: "",
+        expectedMatch: /^[0-9A-F]{16}$/,
+        recipeConfig: [
+            {
+                op: "PIN Generate",
+                args: [4, "ISO Format 0 clear PIN block", "5432101234567890"]
+            }
+        ]
+    },
+    {
+        name: "PIN Generate: ISO Format 1 block",
+        input: "",
+        expectedMatch: /^[0-9A-F]{16}$/,
+        recipeConfig: [
+            {
+                op: "PIN Generate",
+                args: [4, "ISO Format 1 clear PIN block", ""]
+            }
+        ]
+    },
+    {
+        name: "PIN Generate: ISO Format 3 block",
+        input: "",
+        expectedMatch: /^[0-9A-F]{16}$/,
+        recipeConfig: [
+            {
+                op: "PIN Generate",
+                args: [4, "ISO Format 3 clear PIN block", "5432101234567890"]
+            }
+        ]
+    },
+    {
+        name: "Chain: PIN Generate → PIN Data Generate (Format 0)",
+        input: "",
+        expectedMatch: /^[0-9A-F]{16}$/,
+        recipeConfig: [
+            {
+                op: "PIN Generate",
+                args: [4, "PIN digits", ""]
+            },
+            {
+                op: "PIN Data Generate",
+                args: ["ISO Format 0", "5432101234567890", false, false]
+            }
+        ]
+    },
+    {
         name: "PIN IBM 3624 Offset Generate: known sample",
         input: "1234",
         expectedOutput: JSON.stringify({
