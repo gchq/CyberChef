@@ -11,7 +11,7 @@ import { toHexFast } from "../lib/Hex.mjs";
 // ── X9.24-3 key usage indicators (bytes 2-3 of derivation data) ───────────────
 
 const KEY_USAGE = {
-    "IK Derivation":    0x8000,   // BDK → device Initial Key
+    "IK Derivation":    0x8001,   // BDK → device Initial Key (X9.24-3 §6.3.1)
     Intermediate:       0x0000,   // internal binary-tree node (not user-visible)
     "PIN Encryption":   0x1000,
     "MAC Generation":   0x2000,   // sender / request direction
@@ -165,15 +165,42 @@ function aesCmac(key16, message) {
 // ── X9.24-3 AES-128 DUKPT derivation ─────────────────────────────────────────
 
 /**
- * Builds the 20-byte derivation data block (ANSI X9.24-3-2017).
+ * Builds the 16-byte IK derivation data block (ANSI X9.24-3-2017 §6.3.1).
+ *
+ * Layout (IK derivation only — uses full 8-byte IKI, no counter field):
+ *   [0]    version         = 0x01
+ *   [1]    key size class  = 0x01 (AES-128)
+ *   [2-3]  key usage       = 0x8001 (IK Derivation)
+ *   [4-5]  algorithm       = 0x0002 (AES-128)
+ *   [6-7]  key length      = 0x0080 (128 bits)
+ *   [8-15] IKI             (full 8 bytes)
+ *
+ * @param {Uint8Array} iki8
+ * @returns {Uint8Array}
+ */
+function ikDerivationData(iki8) {
+    const d = new Uint8Array(16);
+    d[0] = 0x01; d[1] = 0x01;
+    d[2] = (KEY_USAGE["IK Derivation"] >> 8) & 0xFF;
+    d[3] =  KEY_USAGE["IK Derivation"]       & 0xFF;
+    d[4] = (ALGO_CODE   >> 8) & 0xFF; d[5] = ALGO_CODE    & 0xFF;
+    d[6] = (KEY_LEN_VAL >> 8) & 0xFF; d[7] = KEY_LEN_VAL  & 0xFF;
+    d.set(iki8, 8);
+    return d;
+}
+
+/**
+ * Builds the 16-byte derivation data block for intermediate-node and working-key
+ * derivation (ANSI X9.24-3-2017 §6.3.2 / §6.3.3).
  *
  * Layout:
- *   [0-1]   version         = 0x0001
- *   [2-3]   key usage indicator
- *   [4-5]   algorithm       = 0x0002 (AES-128)
- *   [6-7]   key length      = 0x0080 (128 bits)
- *   [8-15]  IKI             (8 bytes, from KSN bytes 0-7)
- *   [16-19] counter register (4 bytes)
+ *   [0]    version         = 0x01
+ *   [1]    key size class  = 0x01 (AES-128)
+ *   [2-3]  key usage indicator
+ *   [4-5]  algorithm       = 0x0002 (AES-128)
+ *   [6-7]  key length      = 0x0080 (128 bits)
+ *   [8-11] last 4 bytes of IKI (IKI[4..7])
+ *   [12-15] counter register (4 bytes, big-endian)
  *
  * @param {number} usage
  * @param {Uint8Array} iki8
@@ -181,16 +208,17 @@ function aesCmac(key16, message) {
  * @returns {Uint8Array}
  */
 function derivationData(usage, iki8, counterReg) {
-    const d = new Uint8Array(20);
-    d[0] = 0x00; d[1] = 0x01;
+    const d = new Uint8Array(16);
+    d[0] = 0x01; d[1] = 0x01;
     d[2] = (usage       >> 8) & 0xFF; d[3] = usage        & 0xFF;
     d[4] = (ALGO_CODE   >> 8) & 0xFF; d[5] = ALGO_CODE    & 0xFF;
     d[6] = (KEY_LEN_VAL >> 8) & 0xFF; d[7] = KEY_LEN_VAL  & 0xFF;
-    d.set(iki8, 8);
-    d[16] = (counterReg >>> 24) & 0xFF;
-    d[17] = (counterReg >>> 16) & 0xFF;
-    d[18] = (counterReg >>>  8) & 0xFF;
-    d[19] =  counterReg         & 0xFF;
+    // last 4 bytes of 8-byte IKI
+    d[8] = iki8[4]; d[9] = iki8[5]; d[10] = iki8[6]; d[11] = iki8[7];
+    d[12] = (counterReg >>> 24) & 0xFF;
+    d[13] = (counterReg >>> 16) & 0xFF;
+    d[14] = (counterReg >>>  8) & 0xFF;
+    d[15] =  counterReg         & 0xFF;
     return d;
 }
 
@@ -202,7 +230,7 @@ function derivationData(usage, iki8, counterReg) {
  * @returns {Uint8Array}
  */
 function deriveIK(bdk16, iki8) {
-    return aesCmac(bdk16, derivationData(KEY_USAGE["IK Derivation"], iki8, 0));
+    return aesCmac(bdk16, ikDerivationData(iki8));
 }
 
 /**
@@ -235,6 +263,7 @@ function deriveTransactionKey(ik16, iki8, counter) {
 
 /**
  * Derives a purpose-specific working key from the transaction key.
+ * Uses the full 32-bit counter in the derivation data (not the 21-bit tree counter).
  *
  * @param {Uint8Array} txKey16
  * @param {Uint8Array} iki8
@@ -243,7 +272,7 @@ function deriveTransactionKey(ik16, iki8, counter) {
  * @returns {Uint8Array}
  */
 function deriveWorkingKey(txKey16, iki8, counter, purposeName) {
-    return aesCmac(txKey16, derivationData(KEY_USAGE[purposeName], iki8, counter & 0x1FFFFF));
+    return aesCmac(txKey16, derivationData(KEY_USAGE[purposeName], iki8, counter));
 }
 
 // ── Operation class ───────────────────────────────────────────────────────────
@@ -269,15 +298,17 @@ class DeriveDUKPTAESKey extends Operation {
             "The <b>KSN</b> is 12 bytes: 8-byte Initial Key Identifier (IKI) + 4-byte transaction counter.",
             "Only the low 21 bits of the counter are used for derivation (max 2,097,151 transactions per IK).",
             "<br><br>",
-            "<b>Derivation data format (X9.24-3, 20 bytes):</b>",
+            "<b>Derivation data format (X9.24-3, 16 bytes — working keys):</b>",
             "<pre>",
-            "[0-1]  version        = 0x0001\n",
+            "[0]    version        = 0x01\n",
+            "[1]    key size class = 0x01 (AES-128)\n",
             "[2-3]  key usage indicator\n",
             "[4-5]  algorithm      = 0x0002 (AES-128)\n",
             "[6-7]  key length     = 0x0080 (128 bits)\n",
-            "[8-15] IKI            (8 bytes from KSN)\n",
-            "[16-19] counter register (4 bytes)\n",
+            "[8-11] last 4 bytes of IKI\n",
+            "[12-15] transaction counter (4 bytes, full 32-bit value)\n",
             "</pre>",
+            "IK derivation uses a separate 16-byte block with full 8-byte IKI at [8-15] and usage 0x8001.",
             "<b>Key usage codes:</b> PIN Encryption=0x1000, MAC Generation=0x2000, ",
             "MAC Verification=0x2001, MAC Both Ways=0x2002, ",
             "Data Encryption=0x3000, Data Decryption=0x3001, Data Both Ways=0x3002.",

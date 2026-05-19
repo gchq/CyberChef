@@ -316,6 +316,98 @@ TestRegister.addTests([
         ]
     },
     {
+        // ── DUKPT Derive AES Key — ANSI X9.24-3-2017 official test vectors ───────
+        // BDK-128: FEDCBA9876543210F1F1F1F1F1F1F1F1
+        // KSN:     1234567890123456 (IKI) + counter
+        // Source:  https://x9.org/standards/x9-24-part-3-test-vectors/
+        name: "DUKPT Derive AES Key: IK from BDK (X9.24-3 §6.3.1)",
+        input: "FEDCBA9876543210F1F1F1F1F1F1F1F1",
+        expectedOutput: "1273671EA26AC29AFA4D1084127652A1",
+        recipeConfig: [
+            {
+                op: "DUKPT Derive AES Key",
+                args: ["BDK", "Initial Key (IK)", "123456789012345600000001", "PIN Encryption", false]
+            }
+        ]
+    },
+    {
+        name: "DUKPT Derive AES Key: PIN Encryption key, counter 1 (X9.24-3 §6.3.3)",
+        input: "FEDCBA9876543210F1F1F1F1F1F1F1F1",
+        expectedOutput: "AF8CB133A78F8DC2D1359F18527593FB",
+        recipeConfig: [
+            {
+                op: "DUKPT Derive AES Key",
+                args: ["BDK", "Working Key", "123456789012345600000001", "PIN Encryption", false]
+            }
+        ]
+    },
+    {
+        name: "DUKPT Derive AES Key: MAC Generation key, counter 1",
+        input: "FEDCBA9876543210F1F1F1F1F1F1F1F1",
+        expectedOutput: "A2DC23DE6FDE0824A2BC321E08E4B8B7",
+        recipeConfig: [
+            {
+                op: "DUKPT Derive AES Key",
+                args: ["BDK", "Working Key", "123456789012345600000001", "MAC Generation", false]
+            }
+        ]
+    },
+    {
+        name: "DUKPT Derive AES Key: Data Encryption key, counter 1",
+        input: "FEDCBA9876543210F1F1F1F1F1F1F1F1",
+        expectedOutput: "A35C412EFD41FDB98B69797C02DCD08F",
+        recipeConfig: [
+            {
+                op: "DUKPT Derive AES Key",
+                args: ["BDK", "Working Key", "123456789012345600000001", "Data Encryption", false]
+            }
+        ]
+    },
+    {
+        name: "DUKPT Derive AES Key: PIN Encryption key, counter 8",
+        input: "FEDCBA9876543210F1F1F1F1F1F1F1F1",
+        expectedOutput: "4D9DF3FBEE3448FC3E676D04320A90F5",
+        recipeConfig: [
+            {
+                op: "DUKPT Derive AES Key",
+                args: ["BDK", "Working Key", "123456789012345600000008", "PIN Encryption", false]
+            }
+        ]
+    },
+    {
+        name: "DUKPT Derive AES Key: PIN Encryption key, counter 131072 (0x20000, first skipped-bit counter)",
+        input: "FEDCBA9876543210F1F1F1F1F1F1F1F1",
+        expectedOutput: "AB828BE7B58C7EC5D5ED0D5D320A0C9D",
+        recipeConfig: [
+            {
+                op: "DUKPT Derive AES Key",
+                args: ["BDK", "Working Key", "123456789012345600020000", "PIN Encryption", false]
+            }
+        ]
+    },
+    {
+        name: "DUKPT Derive AES Key: PIN Encryption key, counter 8675309 (0x845FED, midrange)",
+        input: "FEDCBA9876543210F1F1F1F1F1F1F1F1",
+        expectedOutput: "D1DDA386AA4A556AF0119FDCB5D132C6",
+        recipeConfig: [
+            {
+                op: "DUKPT Derive AES Key",
+                args: ["BDK", "Working Key", "1234567890123456 00845FED", "PIN Encryption", false]
+            }
+        ]
+    },
+    {
+        name: "DUKPT Derive AES Key: working key from IK input, counter 1 PIN Encryption",
+        input: "1273671EA26AC29AFA4D1084127652A1",
+        expectedOutput: "AF8CB133A78F8DC2D1359F18527593FB",
+        recipeConfig: [
+            {
+                op: "DUKPT Derive AES Key",
+                args: ["Initial Key (IK)", "Working Key", "123456789012345600000001", "PIN Encryption", false]
+            }
+        ]
+    },
+    {
         name: "DUKPT Derive TDES Key: known IPEK vector",
         input: "0123456789ABCDEFFEDCBA9876543210",
         expectedOutput: "6AC292FAA1315B4D858AB3A3D7D5933A",
