@@ -16,6 +16,10 @@ Uses `@noble/curves` with `@noble/hashes/legacy` for MD5/SHA-1 digests.
 
 Uses `@peculiar/x509` for certificate, CSR, and CRL parsing and generation, with `@peculiar/asn1-*` schema packages as needed.
 
+**Version pin:** Keep `@peculiar/x509` on the `1.14.x` line.
+
+**Why pinned?** `@peculiar/x509` v2 requires a `reflect-metadata` polyfill/import at each runtime entry point. CyberChef currently avoids that cross-bundle polyfill cost and complexity, so v1 remains the project baseline unless that tradeoff is revisited.
+
 **Why not pkijs?** `@peculiar/x509` offers a cleaner API better suited to CyberChef's operation model.
 
 ### SM2: `@noble/curves/sm2`
