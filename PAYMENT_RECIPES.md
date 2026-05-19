@@ -6,8 +6,6 @@ Owner:
 
 These recipe starters are for software-only payment-crypto emulation, inspection, regression tests, and interoperability work.
 
-For AWS operation mapping, see `AWS_PAYMENT_CRYPTOGRAPHY_RECIPES.md`.
-For validation posture, standards references, and release guardrails, see `PAYMENT_VALIDATION_AUDIT.md`.
 
 ## Naming Convention
 
@@ -371,3 +369,70 @@ Flow:
 - use `Key Generate` with JSON output to get a random AES-128/192/256 or TDES key plus its CMAC KCV
 - cross-check the KCV with `Payment Calculate KCV` if you need to verify against an HSM-generated value
 - pipe the hex key directly into derivation, MAC, or encryption recipes
+
+## Validation Status
+
+Validation classes:
+- `Verified` — backed by a public standard or official vendor documentation plus deterministic local vectors
+- `Vendor-aligned` — behavior is intentionally shaped to AWS Payment Cryptography or scheme/vendor semantics; the full underlying standard is not publicly auditable here
+- `Externally cross-checked` — checked against known-good vectors or an external implementation; the governing spec is not public here
+- `Test helper` — useful for testing, parsing, or workflow emulation but not a full standards-faithful implementation
+
+Release guidance: `Publish` = safe with normal guardrails; `Publish with guardrails` = keep inline Validation/Security/Assumptions warnings visible.
+
+| Operation | Validation | Primary source(s) | Release |
+| --- | --- | --- | --- |
+| `PIN Block Build` | Vendor-aligned | AWS `GeneratePinData`; ISO 9564 | Publish with guardrails |
+| `PIN Block Parse` | Vendor-aligned | AWS `VerifyPinData`; ISO 9564 | Publish with guardrails |
+| `PIN Block Translate` | Vendor-aligned | AWS `TranslatePinData`; ISO 9564 | Publish with guardrails |
+| `PIN Data Generate` | Vendor-aligned | AWS `GeneratePinData` | Publish with guardrails |
+| `PIN Data Verify` | Vendor-aligned | AWS `VerifyPinData` | Publish with guardrails |
+| `Payment Calculate KCV` | Verified | NIST SP 800-38B; generic AES/TDES/HMAC primitives | Publish |
+| `DUKPT Derive TDES Key` | Externally cross-checked | ANSI X9.24-1; AWS DUKPT terminology | Publish with guardrails |
+| `DUKPT Derive AES Key` | Vendor-aligned | ANSI X9.24-3; AWS DUKPT terminology | Publish with guardrails |
+| `Derive ECDH Key Material` | Verified | AWS `TranslateKeyMaterial`; AWS `EcdhDerivationAttributes`; RFC 3394 | Publish |
+| `Payment Encrypt Data` | Vendor-aligned | AWS `EncryptData` | Publish with guardrails |
+| `Payment Decrypt Data` | Vendor-aligned | AWS `DecryptData` | Publish with guardrails |
+| `Payment Re-Encrypt Data` | Vendor-aligned | AWS `ReEncryptData` | Publish with guardrails |
+| `MAC Generate` | Verified (HMAC/CMAC); Vendor-aligned (ISO9797/DUKPT/AS2805) | NIST SP 800-38B; AWS MAC overview | Publish with guardrails |
+| `MAC Verify` | Verified (HMAC/CMAC); Vendor-aligned (ISO9797/DUKPT/AS2805) | NIST SP 800-38B; AWS MAC overview | Publish with guardrails |
+| `EMV Generate MAC` | Vendor-aligned | AWS EMV MAC use case | Publish with guardrails |
+| `EMV Verify MAC` | Vendor-aligned | AWS EMV MAC use case | Publish with guardrails |
+| `EMV Generate MAC (PIN Change)` | Test helper | AWS `GenerateMacEmvPinChange` | Publish with guardrails |
+| `EMV Generate ARQC` | Vendor-aligned | AWS `VerifyAuthRequestCryptogram` | Publish with guardrails |
+| `EMV Verify ARQC` | Vendor-aligned | AWS `VerifyAuthRequestCryptogram` | Publish with guardrails |
+| `EMV Generate ARPC` | Vendor-aligned | AWS `VerifyAuthRequestCryptogram` issuer flow | Publish with guardrails |
+| `Card Validation Data Generate` | Vendor-aligned | AWS `GenerateCardValidationData` | Publish with guardrails |
+| `Card Validation Data Verify` | Vendor-aligned | AWS `VerifyCardValidationData` | Publish with guardrails |
+| `IBM 3624 Generate PIN Offset` | Vendor-aligned | AWS IBM 3624 PIN verification object | Publish with guardrails |
+| `IBM 3624 Verify PIN` | Vendor-aligned | AWS IBM 3624 PIN verification object | Publish with guardrails |
+| `VISA PVV Generate` | Vendor-aligned | AWS VISA PIN verification object | Publish with guardrails |
+| `VISA PVV Verify` | Vendor-aligned | AWS VISA PIN verification object | Publish with guardrails |
+| `AS2805 Generate KEK Validation` | Test helper | AWS `GenerateAs2805KekValidation` | Publish with guardrails |
+| `PAN Generate` | Verified (Luhn/public ranges); Vendor-aligned (curated samples) | Discover public test-card page; Mastercard public AVS scenarios | Publish with guardrails |
+| `PAN Parse` | Verified | Public card numbering rules | Publish |
+| `TR-31 Parse Key Block` | Test helper | AWS `TranslateKeyMaterial` workflow context | Publish with guardrails |
+| `TR-34 Parse Key Transport` | Test helper | AWS `TranslateKeyMaterial` workflow context | Publish with guardrails |
+| `HSM Parse Thales Command` | Test helper | Thales payShield command syntax reference | Publish with guardrails |
+| `HSM Parse Futurex Command` | Test helper | Futurex Excrypt command syntax reference | Publish with guardrails |
+
+### Release Posture
+
+- Publish the current payment surface with its existing inline warnings intact
+- Do not describe the fork as a certified HSM, production key-custody platform, or PCI-scoped control surface
+- Describe it as a software emulation and interoperability tool for development, testing, and education
+
+Pre-publish checklist:
+1. Rebuild Docker and confirm updated recipe descriptions are visible in the UI
+2. Re-run the payment operation subset tests (`npm test` targeting `Payment.mjs`)
+3. Spot-check `Populate test data` on argument-heavy operations
+
+### References
+
+- AWS Payment Cryptography Data Plane API: https://docs.aws.amazon.com/payment-cryptography/latest/DataAPIReference/Welcome.html
+- AWS MAC overview: https://docs.aws.amazon.com/payment-cryptography/latest/userguide/crypto-ops-mac.html
+- NIST SP 800-38B CMAC: https://csrc.nist.gov/pubs/sp/800/38/b/upd1/final
+- RFC 3394 AES Key Wrap: https://www.rfc-editor.org/rfc/rfc3394
+- Discover public test-card page: https://www.discoverglobalnetwork.com/resources/businesses/check-your-card-reader/
+- Mastercard AVS test scenarios: https://static.developer.mastercard.com/content/mastercard-send-avs/uploads/avs-test-case-scenario-v4.pdf
+- Payment card number background: https://en.wikipedia.org/wiki/Payment_card_number

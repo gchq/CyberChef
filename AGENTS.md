@@ -11,6 +11,7 @@
 - Do not spend time fixing Windows-only runtime or dependency issues unless explicitly requested.
 - Do not commit repo changes whose only purpose is to make local Windows execution work.
 - If a failure appears only in the local Windows shell, do not treat it as a code regression until it reproduces in Docker/Linux.
+- When Docker is unavailable, restore Docker availability first rather than switching to Windows-specific debugging.
 
 ## Session Start
 
@@ -18,6 +19,10 @@
 - Preferred command: `git pull --rebase origin master`
 - Only do this automatically when the worktree is clean.
 - If there are local changes already present, do not pull/rebase blindly; inspect first and avoid overwriting user work.
+
+## Code Style
+
+Follow `CONTRIBUTING.md` coding conventions: 4-space indentation, CamelCase class identifiers, camelCase function/variable names, UNDERSCORE_UPPER_CASE constants, UTF-8 source encoding, UNIX line endings, all files end with a newline.
 
 ## Commit Scope
 
@@ -48,7 +53,3 @@ When adding, renaming, or removing a payment operation:
    ```
    Or `npx grunt dev` / `npx grunt prod`, which runs both steps automatically. CI runs them on every build. **Symptom of a stale registry:** `TypeError: f[e.module][e.name] is not a constructor` at runtime.
 
-## Current Project Preference
-
-- For this fork, validate payment-related changes through the Docker-based workflow before judging safety to commit.
-- When Docker is unavailable, fix Docker availability first rather than switching to Windows-specific debugging.
