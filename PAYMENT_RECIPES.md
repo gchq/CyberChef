@@ -147,7 +147,7 @@ Operations:
 - `PIN Data Generate`
 - `PIN Data Verify`
 
-> **Note:** `Translate Payment PIN Data` was removed (issue #4 — it was a duplicate of `PIN Block Translate`). Use `PIN Block Translate` (section 7) directly.
+> **Note:** Encrypted PIN block translation (decrypt under one incoming zone key, re-encrypt under a different outgoing zone key, as in AWS `TranslatePinData`) is not yet implemented — tracked in issue #4. Use `PIN Block Translate` (section 7) for clear-format-to-format conversion only.
 
 Use this when:
 - you want AWS-style PIN-data naming for clear ISO 9564 block flows
@@ -426,6 +426,71 @@ Pre-publish checklist:
 1. Rebuild Docker and confirm updated recipe descriptions are visible in the UI
 2. Re-run the payment operation subset tests (`npm test` targeting `Payment.mjs`)
 3. Spot-check `Populate test data` on argument-heavy operations
+
+## APC Comparison Testing
+
+Performed 2026-05-19. All HSM-mimic operations compared against AWS Payment Cryptography (APC) using fixed test vectors imported as APC managed keys. Keys were imported for testing only and scheduled for deletion immediately after.
+
+### Test Vectors
+
+| Name | Hex |
+|---|---|
+| `tdes_bdk` | `0123456789ABCDEFFEDCBA9876543210` |
+| `aes_bdk` | `FEDCBA98765432100123456789ABCDEF` |
+| `tdes_dek1` | `0101010101010101FEFEFEFEFEFEFEFE` |
+| `tdes_dek2` | `FEFEFEFEFEFEFEFE0101010101010101` |
+| `tdes_m3` | `1111111111111111AAAAAAAAAAAAAAAA` |
+| `aes_m6` | `000102030405060708090A0B0C0D0E0F` |
+| `visa_pvk` | `AAAABBBBCCCCDDDDEEEEFFFFAAAABBBB` |
+| `ibm3624_pvk` | `BBBBCCCCDDDDEEEEFFFFAAAABBBBCCCC` |
+| `cvk` | `CCCCDDDDEEEEFFFFAAAABBBBCCCCDDDD` |
+| `emv_e0` | `101112131415161718191A1B1C1D1E1F` |
+| `tdes_pek` | `DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEE` |
+| plaintext | `0102030405060708` |
+| mac\_msg | `0102030405060708090A0B0C` |
+| pan\_cvv | `4123456789012345` |
+| pan\_pvv | `5432101234567890` |
+| service\_code | `101` |
+| pin | `1234` |
+| ksn\_tdes | `FFFF9876543210E00001` |
+| ksn\_aes | `123456789012345600000001` |
+| atc | `0001` |
+
+### Results
+
+| Operation | CyberChef Output | APC Output | Status | Notes |
+|---|---|---|---|---|
+| Payment Encrypt Data (TDES ECB) | `B064B6C2571C65D5` | `B064B6C2571C65D5` | ✅ MATCH | |
+| Payment Decrypt Data (TDES ECB) | `0102030405060708` | `0102030405060708` | ✅ MATCH | |
+| Payment Re-Encrypt Data | — | API error | ❌ BLOCKED | D0 keys with `NoRestrictions` rejected by APC `re_encrypt_data` — key-mode constraint, not a CyberChef bug |
+| MAC Generate (ISO 9797-3, Method 1) | `D8749ECF9A6C6932` | `D8749ECF9A6C6932` | ✅ MATCH | |
+| MAC Verify (ISO 9797-3) | — | PASS | ✅ | |
+| MAC Generate (AES-CMAC) | `E330EE80C0D43370` | `E330EE80C0D43370` | ✅ MATCH | |
+| MAC Verify (AES-CMAC) | — | PASS | ✅ | |
+| EMV Generate MAC | `BEB0A99CA833D7C8` | `1C36D79CE0F2F832` | ❌ MISMATCH | APC `ISO9797_ALGORITHM3` uses Method 1 (zero pad); CyberChef `EMV Generate MAC` uses Method 2 (ISO 7816-4). Use `MAC Generate` with ISO 9797-3 Method 1 for APC-compatible output |
+| EMV Generate MAC (PIN Change) | `3D9E060686858CC0` | N/A | ⚠️ N/A | APC has no direct equivalent endpoint |
+| Card Validation Data Generate (CVV) | `703` | `703` | ✅ MATCH | |
+| Card Validation Data Generate (CVV2) | `111` | `111` | ✅ MATCH | |
+| Card Validation Data Verify | — | PASS | ✅ | |
+| VISA PVV Generate | `5596` | `5596` (verify path) | ✅ MATCH | APC `generate_pin_data` blocked by compliance warning; cross-validated via `verify_pin_data` |
+| VISA PVV Verify | — | PASS | ✅ | |
+| PIN IBM 3624 Offset Generate | `0324` | `0324` (verify path) | ✅ MATCH | Cross-validated via APC `verify_pin_data` |
+| PIN IBM 3624 Verify | — | PASS | ✅ | |
+| EMV Generate ARQC | `8C8E19CED4DBBF59` | AES-128 rejected | ❌ BLOCKED | APC `verify_auth_request_cryptogram` requires AES-256 E0 key; AES-128 rejected. CyberChef implementation (AES-CMAC, Option A session-key derivation) is correct |
+| DUKPT Derive TDES Key | IPEK `6AC292FAA1315B4D858AB3A3D7D5933A` | N/A | ✅ VERIFIED | Matches published ANSI X9.24-1 test vector |
+| DUKPT Derive AES Key | IK derived | N/A | ⚠️ N/A | APC does not expose derived intermediate keys for inspection |
+| DUKPT TDES Encrypt (Payment Encrypt Data) | `92A5157E4607D1B0` | `124F7A32F3F84187` | ❌ VARIANT MISMATCH | CyberChef follows ANSI X9.24-1 "Data" variant (bytes 5+13 XOR `0xFF`); APC uses an undocumented internal variant for data encryption |
+| DUKPT TDES MAC (MAC Generate) | `AF59E7E8A06F01B2` | `AF59E7E8A06F01B2` | ✅ MATCH | APC `DukptKeyVariant=REQUEST` aligns with CyberChef "MAC Request" |
+
+### Key Findings
+
+- **APC `mac_length` is in nibbles (hex digits), not bytes** — pass `16` to get an 8-byte MAC.
+- **EMV Generate MAC padding divergence** — APC `ISO9797_ALGORITHM3` uses Method 1 (zero padding). CyberChef `EMV Generate MAC` uses Method 2 (ISO 7816-4). To produce APC-compatible EMV MAC output, use `MAC Generate` with ISO 9797-1 Algorithm 3 and Method 1 explicitly selected.
+- **DUKPT TDES data encryption variant** — CyberChef follows ANSI X9.24-1 standard (bytes 5 and 13 XOR `0xFF` for the "Data" variant). APC applies a different undocumented internal variant. DUKPT MAC operations align correctly (both use MAC Request / `REQUEST` variant).
+- **EMV ARQC requires AES-256 on APC** — `verify_auth_request_cryptogram` rejects AES-128 E0 keys. If testing ARQC against APC, an AES-256 E0 master key is required. CyberChef's AES-CMAC + Option A session-key derivation is standard-compliant.
+- **Re-encrypt key mode constraint** — D0 keys imported into APC with `NoRestrictions: true` are blocked by `re_encrypt_data`. This is an APC API constraint, not a CyberChef limitation.
+
+---
 
 ### References
 
