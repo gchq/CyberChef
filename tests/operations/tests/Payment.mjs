@@ -419,6 +419,82 @@ TestRegister.addTests([
         ]
     },
     {
+        // ── DUKPT Derive TDES Key — session key variants (ANSI X9.24-1) ──────────
+        // Same BDK/KSN as IPEK test above. IPEK = 6AC292FAA1315B4D858AB3A3D7D5933A.
+        // sessionBase at counter 1 = 042666B49184CFA368DE9628D0397BC9 (confirmed
+        // empirically; variant keys are sessionBase XOR the ANSI X9.24-1 masks).
+        name: "DUKPT Derive TDES Key: session key, variant None, counter 1",
+        input: "0123456789ABCDEFFEDCBA9876543210",
+        expectedOutput: "042666B49184CFA368DE9628D0397BC9",
+        recipeConfig: [
+            {
+                op: "DUKPT Derive TDES Key",
+                args: ["Derive Session Key", "FFFF9876543210E00001", "None", false]
+            }
+        ]
+    },
+    {
+        name: "DUKPT Derive TDES Key: session key, variant PIN, counter 1",
+        input: "0123456789ABCDEFFEDCBA9876543210",
+        expectedOutput: "042666B49184CF5C68DE9628D0397B36",
+        recipeConfig: [
+            {
+                op: "DUKPT Derive TDES Key",
+                args: ["Derive Session Key", "FFFF9876543210E00001", "PIN", false]
+            }
+        ]
+    },
+    {
+        name: "DUKPT Derive TDES Key: session key, variant MAC Request, counter 1",
+        input: "0123456789ABCDEFFEDCBA9876543210",
+        expectedOutput: "042666B4918430A368DE9628D03984C9",
+        recipeConfig: [
+            {
+                op: "DUKPT Derive TDES Key",
+                args: ["Derive Session Key", "FFFF9876543210E00001", "MAC Request", false]
+            }
+        ]
+    },
+    {
+        name: "DUKPT Derive TDES Key: session key, variant MAC Response, counter 1",
+        input: "0123456789ABCDEFFEDCBA9876543210",
+        expectedOutput: "042666B46E84CFA368DE96282F397BC9",
+        recipeConfig: [
+            {
+                op: "DUKPT Derive TDES Key",
+                args: ["Derive Session Key", "FFFF9876543210E00001", "MAC Response", false]
+            }
+        ]
+    },
+    {
+        name: "DUKPT Derive TDES Key: session key, variant Data, counter 1",
+        input: "0123456789ABCDEFFEDCBA9876543210",
+        expectedOutput: "042666B4917BCFA368DE9628D0C67BC9",
+        recipeConfig: [
+            {
+                op: "DUKPT Derive TDES Key",
+                args: ["Derive Session Key", "FFFF9876543210E00001", "Data", false]
+            }
+        ]
+    },
+    {
+        name: "DUKPT Derive TDES Key: session key JSON output includes ipek and sessionBase",
+        input: "0123456789ABCDEFFEDCBA9876543210",
+        expectedOutput: JSON.stringify({
+            mode: "Derive Session Key",
+            ipek: "6AC292FAA1315B4D858AB3A3D7D5933A",
+            sessionBase: "042666B49184CFA368DE9628D0397BC9",
+            variant: "None",
+            sessionKey: "042666B49184CFA368DE9628D0397BC9"
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "DUKPT Derive TDES Key",
+                args: ["Derive Session Key", "FFFF9876543210E00001", "None", true]
+            }
+        ]
+    },
+    {
         name: "PIN Block Build: ISO Format 0",
         input: "1234",
         expectedOutput: "041215FEDCBA9876",
@@ -530,6 +606,83 @@ TestRegister.addTests([
             {
                 op: "PIN Block Parse",
                 args: ["ISO Format 3", "5432101234567890"]
+            }
+        ]
+    },
+    {
+        // ── PIN Block — edge cases ────────────────────────────────────────────────
+        // Leading-zero PAN: exercises the padStart("0",12) path in buildPanField.
+        // PAN "0000001234567890": strip check → "000000123456789", right-12 → "000123456789"
+        name: "PIN Block Build: ISO Format 0, leading-zero PAN",
+        input: "1234",
+        expectedOutput: "041234FEDCBA9876",
+        recipeConfig: [
+            {
+                op: "PIN Block Build",
+                args: ["ISO Format 0", "0000001234567890", false]
+            }
+        ]
+    },
+    {
+        name: "PIN Block Parse: ISO Format 0, leading-zero PAN",
+        input: "041234FEDCBA9876",
+        expectedOutput: JSON.stringify({
+            format: "ISO Format 0",
+            pin: "1234",
+            pinLength: 4,
+            pinFieldHex: "041234FFFFFFFFFF",
+            panFieldHex: "0000000123456789",
+            blockHex: "041234FEDCBA9876",
+            fillDigitsHex: "FFFFFFFFFF"
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "PIN Block Parse",
+                args: ["ISO Format 0", "0000001234567890"]
+            }
+        ]
+    },
+    {
+        // 12-digit PAN: strip check → 11 digits, padStart adds one leading zero.
+        // PAN "123456789012": strip check → "12345678901" (11 chars), right-12 pads to "012345678901"
+        name: "PIN Block Build: ISO Format 0, 12-digit PAN (padStart path)",
+        input: "1234",
+        expectedOutput: "041235DCBA9876FE",
+        recipeConfig: [
+            {
+                op: "PIN Block Build",
+                args: ["ISO Format 0", "123456789012", false]
+            }
+        ]
+    },
+    {
+        // 6-digit PIN: maximum PIN length per ISO 9564; length nibble = 6 and fill is 8 nibbles.
+        name: "PIN Block Build: ISO Format 0, 6-digit PIN",
+        input: "123456",
+        expectedOutput: "06121557DCBA9876",
+        recipeConfig: [
+            {
+                op: "PIN Block Build",
+                args: ["ISO Format 0", "5432101234567890", false]
+            }
+        ]
+    },
+    {
+        name: "PIN Block Parse: ISO Format 0, 6-digit PIN",
+        input: "06121557DCBA9876",
+        expectedOutput: JSON.stringify({
+            format: "ISO Format 0",
+            pin: "123456",
+            pinLength: 6,
+            pinFieldHex: "06123456FFFFFFFF",
+            panFieldHex: "0000210123456789",
+            blockHex: "06121557DCBA9876",
+            fillDigitsHex: "FFFFFFFF"
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "PIN Block Parse",
+                args: ["ISO Format 0", "5432101234567890"]
             }
         ]
     },
@@ -804,6 +957,55 @@ TestRegister.addTests([
             {
                 op: "EMV Generate MAC",
                 args: ["0123456789ABCDEFFEDCBA9876543210", 8, false]
+            }
+        ]
+    },
+    {
+        // ── EMV Generate MAC — Method 2 padding boundary cases ───────────────────
+        // Method 2: append 0x80 then zeros to next block boundary; if already
+        // block-aligned, a full extra 8-byte block is appended. These tests
+        // cover 0-byte (one block of pure padding), 1-byte (pads to 8), and
+        // 8-byte / 16-byte inputs (each triggers the full-extra-block path).
+        name: "EMV Generate MAC: Method 2, empty input (0 bytes — pure padding block)",
+        input: "",
+        expectedOutput: "F1FBCF2A56D19BA7",
+        recipeConfig: [
+            {
+                op: "EMV Generate MAC",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "Method 2", 8, false]
+            }
+        ]
+    },
+    {
+        name: "EMV Generate MAC: Method 2, 1-byte input (pads to single block)",
+        input: "FF",
+        expectedOutput: "3A8AE1947D2AD964",
+        recipeConfig: [
+            {
+                op: "EMV Generate MAC",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "Method 2", 8, false]
+            }
+        ]
+    },
+    {
+        name: "EMV Generate MAC: Method 2, 8-byte input (block-aligned — extra block appended)",
+        input: "0102030405060708",
+        expectedOutput: "59997D5B782645F9",
+        recipeConfig: [
+            {
+                op: "EMV Generate MAC",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "Method 2", 8, false]
+            }
+        ]
+    },
+    {
+        name: "EMV Generate MAC: Method 2, 16-byte input (two-block-aligned — extra block appended)",
+        input: "000102030405060708090A0B0C0D0E0F",
+        expectedOutput: "99F6CC9FB8367150",
+        recipeConfig: [
+            {
+                op: "EMV Generate MAC",
+                args: ["0123456789ABCDEFFEDCBA9876543210", "Method 2", 8, false]
             }
         ]
     },
