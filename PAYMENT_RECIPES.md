@@ -151,7 +151,7 @@ Operations:
 - `PIN Data Generate`
 - `PIN Data Verify`
 
-> **Note:** Encrypted PIN block translation (decrypt under one incoming zone key, re-encrypt under a different outgoing zone key, as in AWS `TranslatePinData`) is not yet implemented — tracked in issue #4. Use `PIN Block Translate` (section 7) for clear-format-to-format conversion only.
+> **Note:** Encrypted PIN block translation is implemented as `PIN Block Translate Encrypted` (section 7). Use `PIN Block Translate` for clear-format-to-format conversion only.
 
 Use this when:
 - you want AWS-style PIN-data naming for clear ISO 9564 block flows
@@ -170,17 +170,21 @@ Operations:
 - `PIN Block Build`
 - `PIN Block Parse`
 - `PIN Block Translate`
+- `PIN Block Translate Encrypted`
 
 Use this when:
 - you want the lower-level clear PIN-block tools directly
+- `PIN Block Translate Encrypted`: decrypt an encrypted PIN block under an incoming zone key (ZPK/PEK), optionally change format, and re-encrypt under an outgoing zone key — this is the acquirer's core PIN routing operation (issue #17)
 
 Input:
 - `PIN Block Build`: clear PIN digits
 - `PIN Block Parse`: clear PIN block hex
 - `PIN Block Translate`: clear PIN block hex
+- `PIN Block Translate Encrypted`: encrypted PIN block hex (8 bytes / 16 hex chars)
 
 Important assumptions:
 - current clear-block support is ISO formats `0`, `1`, and `3`
+- `PIN Block Translate Encrypted` uses TDES-ECB; accepts 2-key (16-byte) or 3-key (24-byte) keys
 
 ## 8) Issuer PIN Verification Helpers
 
@@ -389,6 +393,7 @@ Release guidance: `Publish` = safe with normal guardrails; `Publish with guardra
 | `PIN Block Build` | Vendor-aligned | AWS `GeneratePinData`; ISO 9564 | Publish with guardrails |
 | `PIN Block Parse` | Vendor-aligned | AWS `VerifyPinData`; ISO 9564 | Publish with guardrails |
 | `PIN Block Translate` | Vendor-aligned | AWS `TranslatePinData`; ISO 9564 | Publish with guardrails |
+| `PIN Block Translate Encrypted` | Vendor-aligned | AWS `TranslatePinData`; ISO 9564; PCI PIN Req 3-3 | Publish with guardrails |
 | `PIN Data Generate` | Vendor-aligned | AWS `GeneratePinData` | Publish with guardrails |
 | `PIN Data Verify` | Vendor-aligned | AWS `VerifyPinData` | Publish with guardrails |
 | `Payment Calculate KCV` | Verified | NIST SP 800-38B; generic AES/TDES/HMAC primitives | Publish |

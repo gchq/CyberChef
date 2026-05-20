@@ -16,7 +16,7 @@ import { toHexFast } from "./Hex.mjs";
  */
 function parseHexBytes(input, name, allowedLengths=[]) {
     const normalized = (input || "").replace(/\s+/g, "");
-    if (!/^[0-9a-fA-F]+$/.test(normalized) || normalized.length % 2 !== 0) {
+    if (!/^[0-9a-fA-F]*$/.test(normalized) || normalized.length % 2 !== 0) {
         throw new OperationError(`${name} must be hex.`);
     }
 

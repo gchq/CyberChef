@@ -611,6 +611,7 @@
             "PIN Block Build",
             "PIN Block Parse",
             "PIN Block Translate",
+            "PIN Block Translate Encrypted",
             "PIN Data Generate",
             "PIN Data Verify",
             "PIN Generate",

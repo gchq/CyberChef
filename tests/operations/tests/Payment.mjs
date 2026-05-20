@@ -956,7 +956,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "EMV Generate MAC",
-                args: ["0123456789ABCDEFFEDCBA9876543210", 8, false]
+                args: ["0123456789ABCDEFFEDCBA9876543210", "Method 2", 8, false]
             }
         ]
     },
@@ -1024,7 +1024,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "EMV Verify MAC",
-                args: ["0123456789ABCDEFFEDCBA9876543210", "22CB48394DFD1977", true]
+                args: ["0123456789ABCDEFFEDCBA9876543210", "22CB48394DFD1977", "Method 2", true]
             }
         ]
     },
@@ -1339,6 +1339,92 @@ TestRegister.addTests([
             {
                 op: "EMV Verify ARQC",
                 args: ["00112233445566778899AABBCCDDEEFF", 8, "000102030405060708090A0B0C0D0E0F", true]
+            }
+        ]
+    },
+
+    // ── PIN Block Translate Encrypted ─────────────────────────────────────────
+    // Vectors: PIN=1234, PAN=5432101234567890
+    //   clear Format 0 block : 041215FEDCBA9876
+    //   ZPK_IN  (2-key TDES) : DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEE  KCV 06332B
+    //   ZPK_OUT (2-key TDES) : AABBCCDDEEFF00112233445566778899  KCV C4F0A4
+    //   encrypted under ZPK_IN  : 7F381DBF9F6906C4
+    //   encrypted under ZPK_OUT : 06C0408B869B2CEB
+    // AWS Payment Cryptography comparison (translate_pin_data, TR31_P0_PIN_ENCRYPTION_KEY):
+    //   incoming key ARN: arn:aws:payment-cryptography:us-east-1:030716882260:key/yqictqre4fccxmzn
+    //   outgoing key ARN: arn:aws:payment-cryptography:us-east-1:030716882260:key/czgtcqq5cpspwcgk
+    {
+        name: "PIN Block Translate Encrypted: same key / same format (round-trip identity)",
+        input: "7F381DBF9F6906C4",
+        expectedOutput: "7F381DBF9F6906C4",
+        recipeConfig: [
+            {
+                op: "PIN Block Translate Encrypted",
+                args: ["DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEE", "ISO Format 0", "5432101234567890",
+                       "DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEE", "ISO Format 0", "5432101234567890", false]
+            }
+        ]
+    },
+    {
+        name: "PIN Block Translate Encrypted: ZPK-to-ZPK same format",
+        input: "7F381DBF9F6906C4",
+        expectedOutput: "06C0408B869B2CEB",
+        recipeConfig: [
+            {
+                op: "PIN Block Translate Encrypted",
+                args: ["DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEE", "ISO Format 0", "5432101234567890",
+                       "AABBCCDDEEFF00112233445566778899", "ISO Format 0", "5432101234567890", false]
+            }
+        ]
+    },
+    {
+        name: "PIN Block Translate Encrypted: ZPK-to-ZPK Format 0 to Format 1",
+        input: "7F381DBF9F6906C4",
+        expectedOutput: "CAC0E6065A56F5F3",
+        recipeConfig: [
+            {
+                op: "PIN Block Translate Encrypted",
+                args: ["DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEE", "ISO Format 0", "5432101234567890",
+                       "AABBCCDDEEFF00112233445566778899", "ISO Format 1", "", false]
+            }
+        ]
+    },
+    {
+        name: "PIN Block Translate Encrypted: JSON output mode",
+        input: "7F381DBF9F6906C4",
+        expectedOutput: JSON.stringify({
+            incoming: {
+                format: "ISO Format 0",
+                pan: "5432101234567890",
+                encryptedBlockHex: "7F381DBF9F6906C4",
+                clearBlockHex: "041215FEDCBA9876"
+            },
+            pin: "1234",
+            outgoing: {
+                format: "ISO Format 0",
+                pan: "5432101234567890",
+                clearBlockHex: "041215FEDCBA9876",
+                encryptedBlockHex: "06C0408B869B2CEB"
+            }
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "PIN Block Translate Encrypted",
+                args: ["DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEE", "ISO Format 0", "5432101234567890",
+                       "AABBCCDDEEFF00112233445566778899", "ISO Format 0", "5432101234567890", true]
+            }
+        ]
+    },
+    {
+        name: "PIN Block Translate Encrypted: 3-key TDES (48 hex) accepted",
+        input: "7F381DBF9F6906C4",
+        expectedOutput: "06C0408B869B2CEB",
+        recipeConfig: [
+            {
+                op: "PIN Block Translate Encrypted",
+                // 3-key expansion of 2-key keys: K3_IN = K2_IN + K2_IN[0..15], same for OUT
+                args: ["DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEEDDDDEEEEFFFFAAAA", "ISO Format 0", "5432101234567890",
+                       "AABBCCDDEEFF00112233445566778899AABBCCDDEEFF0011", "ISO Format 0", "5432101234567890", false]
             }
         ]
     }
