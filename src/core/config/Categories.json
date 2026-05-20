@@ -414,7 +414,9 @@
             "LZMA Compress",
             "LZ4 Decompress",
             "LZ4 Compress",
-            "LZNT1 Decompress"
+            "LZNT1 Decompress",
+            "Zstd Compress",
+            "Zstd Decompress"
         ]
     },
     {
