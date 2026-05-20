@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import r from "jsrsasign";
 import Operation from "../Operation.mjs";
+import { derToPem } from "../lib/Asn1.mjs";
 
 /**
  * Hex to PEM operation
@@ -39,7 +39,7 @@ class HexToPEM extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        return r.KJUR.asn1.ASN1Util.getPEMStringFromHex(input.replace(/\s/g, ""), args[0]);
+        return derToPem(input.replace(/\s/g, ""), args[0]);
     }
 
 }

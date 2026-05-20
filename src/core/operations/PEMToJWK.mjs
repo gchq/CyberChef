@@ -4,9 +4,9 @@
  * @license Apache-2.0
  */
 
-import r from "jsrsasign";
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import { parseKeyPem, parseCertPublicKey, keyToJwk } from "../lib/KeyConvert.mjs";
 
 /**
  * PEM to JWK operation
@@ -54,32 +54,25 @@ class PEMToJWK extends Operation {
             }
 
             const pem = input.substring(match.index, indexFooter + footer.length);
+
+            let info;
             if (match[1].indexOf("KEY") !== -1) {
                 if (header === "-----BEGIN RSA PUBLIC KEY-----") {
                     throw new OperationError("Unsupported RSA public key format. Only PKCS#8 is supported.");
                 }
-
-                const key = r.KEYUTIL.getKey(pem);
-                if (key.type === "DSA") {
-                    throw new OperationError("DSA keys are not supported for JWK");
-                }
-                const jwk = r.KEYUTIL.getJWKFromKey(key);
-                if (output.length > 0) {
-                    output += "\n";
-                }
-                output += JSON.stringify(jwk);
+                info = parseKeyPem(pem);
             } else if (match[1] === "CERTIFICATE") {
-                const cert = new r.X509();
-                cert.readCertPEM(pem);
-                const key = cert.getPublicKey();
-                const jwk = r.KEYUTIL.getJWKFromKey(key);
-                if (output.length > 0) {
-                    output += "\n";
-                }
-                output += JSON.stringify(jwk);
+                info = parseCertPublicKey(pem);
             } else {
                 throw new OperationError(`Unsupported PEM type '${match[1]}'`);
             }
+
+            if (info.kty === "DSA") {
+                throw new OperationError("DSA keys are not supported for JWK");
+            }
+
+            if (output.length > 0) output += "\n";
+            output += JSON.stringify(keyToJwk(info));
         }
         return output;
     }

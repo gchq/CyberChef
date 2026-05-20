@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import r from "jsrsasign";
 import Operation from "../Operation.mjs";
+import { oidIntToHex } from "../lib/Asn1.mjs";
 
 /**
  * Object Identifier to Hex operation
@@ -33,7 +33,7 @@ class ObjectIdentifierToHex extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        return r.KJUR.asn1.ASN1Util.oidIntToHex(input);
+        return oidIntToHex(input);
     }
 
 }

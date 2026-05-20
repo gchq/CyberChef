@@ -318,31 +318,31 @@ TestRegister.addApiTests([
     }),
 
     it("chef.bake: should take compact JSON format from Chef Website as recipe", async () => {
-        const result = await chef.bake("some input", [{"op": "To Morse Code", "args": ["Dash/Dot", "Backslash", "Comma"]}, {"op": "Hex to PEM", "args": ["SOMETHING"]}, {"op": "To Snake case", "args": [false]}]);
-        assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak_end_something");
+        const result = await chef.bake("some input", [{"op": "To Hex", "args": ["Space", 0]}, {"op": "Hex to PEM", "args": ["SOMETHING"]}, {"op": "To Snake case", "args": [false]}]);
+        assert.strictEqual(result.toString(), "begin_something_c_29_t_zs_bpbn_b_1_d_a_end_something");
     }),
 
     it("chef.bake: should accept Clean JSON format from Chef website as recipe", async () => {
         const result = await chef.bake("some input", [
-            { "op": "To Morse Code",
-                "args": ["Dash/Dot", "Backslash", "Comma"] },
+            { "op": "To Hex",
+                "args": ["Space", 0] },
             { "op": "Hex to PEM",
                 "args": ["SOMETHING"] },
             { "op": "To Snake case",
                 "args": [false] }
         ]);
-        assert.strictEqual(result.toString(), "begin_something_anananaaaaak_da_aaak_da_aaaaananaaaaaaan_da_aaaaaaanan_da_aaak_end_something");
+        assert.strictEqual(result.toString(), "begin_something_c_29_t_zs_bpbn_b_1_d_a_end_something");
     }),
 
     it("chef.bake: should accept Clean JSON format from Chef website - args optional", async () => {
         const result = await chef.bake("some input", [
-            { "op": "To Morse Code" },
+            { "op": "To Hex" },
             { "op": "Hex to PEM",
                 "args": ["SOMETHING"] },
             { "op": "To Snake case",
                 "args": [false] }
         ]);
-        assert.strictEqual(result.toString(), "begin_something_aaaaaaaaaaaaaa_end_something");
+        assert.strictEqual(result.toString(), "begin_something_c_29_t_zs_bpbn_b_1_d_a_end_something");
     }),
 
     it("chef.bake: should accept operation names from Chef Website which contain forward slash", async () => {
@@ -366,7 +366,7 @@ TestRegister.addApiTests([
             { "op": "Parse ASN.1 hex string",
                 "args": [0, 32] }
         ]);
-        assert.strictEqual(result.toString(), `SEQUENCE\n  INTEGER 05\n  IA5String 'Anybody there?'\n`);
+        assert.strictEqual(result.toString(), `SEQUENCE\n  INTEGER 5\n  IA5String "Anybody there?"`);
     }),
 
     it("Excluded operations: throw a sensible error when you try and call one", () => {
