@@ -348,6 +348,7 @@
             "Pseudo-Random Number Generator",
             "Sleep",
             "File Tree",
+            "Insert Delimiter",
             "Wrap",
             "Take nth bytes",
             "Drop nth bytes"
