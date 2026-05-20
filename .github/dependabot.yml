@@ -43,8 +43,6 @@ updates:
         versions: [ '>=2.0.0' ]
       - dependency-name: 'jimp'
         versions: [ '1.6.1' ]
-      - dependency-name: 'webpack-dev-server'
-        versions: [ '>=5.1.0' ]
     groups:
       #
       # Grouping so we don't get a seperate PR for every patch version.
