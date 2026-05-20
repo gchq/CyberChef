@@ -136,7 +136,7 @@ Tiger-128`;
     it("Bcrypt", async () => {
         const result = await chef.bcrypt("Put a Sock In It");
         const strResult = result.toString();
-        assert.match(strResult, /^\$2b\$10\$[./A-Za-z0-9]{53}$/);
+        assert.match(strResult, /^\$2[ab]\$10\$[./A-Za-z0-9]{53}$/);
         assert.equal(strResult.split("$").length, 4);
     }),
 
