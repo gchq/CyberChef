@@ -89,7 +89,11 @@ Input:
 
 Important assumptions:
 - these operations do not derive EMV session keys
-- they apply retail-MAC style EMV MAC generation with ISO9797 padding method 2
+- `EMV Generate MAC` and `EMV Verify MAC` expose a **Padding method** selector:
+  - **Method 2 (default)** — appends `0x80` then zero-pads to the next 8-byte block boundary (ISO 7816-4). Standard for EMV issuer-script MACs.
+  - **Method 1** — zero-pads to the next block boundary only (no `0x80` sentinel). Used by some host-side implementations and required when interoperating with systems that apply Method 1.
+  - Both generate and verify must use the same method or verification will always fail.
+- `EMV Generate MAC (PIN Change)` always uses Method 2 and does not expose the selector
 - `EMV Generate MAC (PIN Change)` expects the new PIN block to already be encrypted before you call it
 
 ## 4) Generate / Verify EMV ARQC And ARPC
@@ -467,7 +471,7 @@ Performed 2026-05-19. All HSM-mimic operations compared against AWS Payment Cryp
 | MAC Verify (ISO 9797-3) | — | PASS | ✅ | |
 | MAC Generate (AES-CMAC) | `E330EE80C0D43370` | `E330EE80C0D43370` | ✅ MATCH | |
 | MAC Verify (AES-CMAC) | — | PASS | ✅ | |
-| EMV Generate MAC | `BEB0A99CA833D7C8` | `1C36D79CE0F2F832` | ❌ MISMATCH | APC `ISO9797_ALGORITHM3` uses Method 1 (zero pad); CyberChef `EMV Generate MAC` uses Method 2 (ISO 7816-4). Use `MAC Generate` with ISO 9797-3 Method 1 for APC-compatible output |
+| EMV Generate MAC | `BEB0A99CA833D7C8` (Method 2) | `1C36D79CE0F2F832` | ⚠️ METHOD DEPENDENT | Default (Method 2) does not match. Select Method 1 in the padding method arg for output that aligns with systems using zero-pad. |
 | EMV Generate MAC (PIN Change) | `3D9E060686858CC0` | N/A | ⚠️ N/A | APC has no direct equivalent endpoint |
 | Card Validation Data Generate (CVV) | `703` | `703` | ✅ MATCH | |
 | Card Validation Data Generate (CVV2) | `111` | `111` | ✅ MATCH | |
@@ -485,7 +489,7 @@ Performed 2026-05-19. All HSM-mimic operations compared against AWS Payment Cryp
 ### Key Findings
 
 - **APC `mac_length` is in nibbles (hex digits), not bytes** — pass `16` to get an 8-byte MAC.
-- **EMV Generate MAC padding divergence** — APC `ISO9797_ALGORITHM3` uses Method 1 (zero padding). CyberChef `EMV Generate MAC` uses Method 2 (ISO 7816-4). To produce APC-compatible EMV MAC output, use `MAC Generate` with ISO 9797-1 Algorithm 3 and Method 1 explicitly selected.
+- **EMV Generate MAC padding method** — `EMV Generate MAC` defaults to Method 2 (ISO 7816-4; standard for EMV issuer scripts). Select Method 1 (zero pad) when the receiving system requires it. Both generate and verify must use the same method.
 - **DUKPT TDES data encryption variant** — CyberChef follows ANSI X9.24-1 standard (bytes 5 and 13 XOR `0xFF` for the "Data" variant). APC applies a different undocumented internal variant. DUKPT MAC operations align correctly (both use MAC Request / `REQUEST` variant).
 - **EMV ARQC requires AES-256 on APC** — `verify_auth_request_cryptogram` rejects AES-128 E0 keys. If testing ARQC against APC, an AES-256 E0 master key is required. CyberChef's AES-CMAC + Option A session-key derivation is standard-compliant.
 - **Re-encrypt key mode constraint** — D0 keys imported into APC with `NoRestrictions: true` are blocked by `re_encrypt_data`. This is an APC API constraint, not a CyberChef limitation.
