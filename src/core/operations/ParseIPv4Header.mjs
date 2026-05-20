@@ -138,7 +138,7 @@ class ParseIPv4Header extends Operation {
         } else if (outputFormat === "Data (hex)") {
             return toHex(data);
         } else if (outputFormat === "Data (raw)") {
-            return Utils.byteArrayToChars(data);
+            return Utils.escapeHtml(Utils.byteArrayToChars(data));
         }
     }
 
