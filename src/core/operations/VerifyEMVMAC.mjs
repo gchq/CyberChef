@@ -24,7 +24,7 @@ class VerifyEMVMAC extends Operation {
             {
                 name: "EMV MAC verification sample",
                 input: "8424000008999E57FD0F47CACE0007",
-                args: ["0123456789ABCDEFFEDCBA9876543210", "22CB48394DFD1977", true]
+                args: ["0123456789ABCDEFFEDCBA9876543210", "22CB48394DFD1977", "Method 2", true]
             }
         ];
         this.infoURL = "https://en.wikipedia.org/wiki/EMV";
@@ -33,6 +33,7 @@ class VerifyEMVMAC extends Operation {
         this.args = [
             { name: "Session integrity key (hex)", type: "string", value: "", comment: "Provide the already-derived EMV integrity session key in hex. This op does not derive EMV keys for you." },
             { name: "Expected MAC (hex)", type: "string", value: "", comment: "Issuer-script MAC to compare against, expressed as even-length hex." },
+            { name: "Padding method", type: "option", value: ["Method 2", "Method 1"], comment: "Must match the method used during generation. Method 2 appends 0x80 then zero-pads (ISO 7816-4; standard for EMV issuer scripts). Method 1 zero-pads only." },
             { name: "Output as JSON", type: "boolean", value: true, comment: "When enabled, returns the recomputed MAC and validity result." },
         ];
     }
@@ -43,8 +44,8 @@ class VerifyEMVMAC extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [sessionKeyHex, expectedMac, outputJson] = args;
-        const result = verifyEmvMac(input, sessionKeyHex, expectedMac);
+        const [sessionKeyHex, expectedMac, paddingMethod, outputJson] = args;
+        const result = verifyEmvMac(input, sessionKeyHex, expectedMac, paddingMethod);
         return outputJson ? JSON.stringify(result, null, 4) : String(result.valid);
     }
 }

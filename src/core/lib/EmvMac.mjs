@@ -12,16 +12,17 @@ import { generateIso9797Algorithm3Mac } from "./Iso9797.mjs";
  * @param {string} messageHex
  * @param {string} sessionKeyHex
  * @param {number} outputBytes
+ * @param {string} paddingMethod
  * @returns {Object}
  */
-function generateEmvMac(messageHex, sessionKeyHex, outputBytes=8) {
+function generateEmvMac(messageHex, sessionKeyHex, outputBytes=8, paddingMethod="Method 2") {
     const normalizedKey = (sessionKeyHex || "").replace(/\s+/g, "");
     if (!/^[0-9A-Fa-f]+$/.test(normalizedKey) || normalizedKey.length % 2 !== 0) {
         throw new OperationError("Session key must be hex.");
     }
 
     return {
-        ...generateIso9797Algorithm3Mac(messageHex, normalizedKey, "Method 2", outputBytes),
+        ...generateIso9797Algorithm3Mac(messageHex, normalizedKey, paddingMethod, outputBytes),
         algorithm: "EMV MAC"
     };
 }
@@ -32,15 +33,16 @@ function generateEmvMac(messageHex, sessionKeyHex, outputBytes=8) {
  * @param {string} messageHex
  * @param {string} sessionKeyHex
  * @param {string} expectedMac
+ * @param {string} paddingMethod
  * @returns {Object}
  */
-function verifyEmvMac(messageHex, sessionKeyHex, expectedMac) {
+function verifyEmvMac(messageHex, sessionKeyHex, expectedMac, paddingMethod="Method 2") {
     const normalizedExpected = (expectedMac || "").replace(/\s+/g, "").toUpperCase();
     if (!/^[0-9A-F]+$/.test(normalizedExpected) || normalizedExpected.length % 2 !== 0) {
         throw new OperationError("Expected MAC must be even-length hex.");
     }
 
-    const generated = generateEmvMac(messageHex, sessionKeyHex, normalizedExpected.length / 2);
+    const generated = generateEmvMac(messageHex, sessionKeyHex, normalizedExpected.length / 2, paddingMethod);
     return {
         ...generated,
         expectedMacHex: normalizedExpected,
