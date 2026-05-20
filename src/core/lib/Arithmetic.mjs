@@ -122,6 +122,19 @@ export function median(data) {
 
 
 /**
+ * Computes modulo of two numbers and returns the value.
+ *
+ * @param {BigNumber[]} data
+ * @returns {BigNumber}
+ */
+export function mod(data) {
+    if (data.length > 0) {
+        return data.reduce((acc, curr) => acc.mod(curr));
+    }
+}
+
+
+/**
  * Computes standard deviation of a number array and returns the value.
  *
  * @param {BigNumber[]} data

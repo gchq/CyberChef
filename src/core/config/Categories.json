@@ -228,6 +228,7 @@
             "Subtract",
             "Multiply",
             "Divide",
+            "MOD",
             "Modular Exponentiation",
             "Modular Inverse",
             "Extended GCD",
