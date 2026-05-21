@@ -24,7 +24,7 @@ import Utils from "../Utils.mjs";
  * fromDecimal("10:20:30", "Colon");
  */
 export function fromDecimal(data, delim="Auto") {
-    delim = Utils.charRep(delim);
+    delim = Utils.charRep(delim, data);
     const output = [];
     let byteStr = data.split(delim);
     if (byteStr[byteStr.length-1] === "")
