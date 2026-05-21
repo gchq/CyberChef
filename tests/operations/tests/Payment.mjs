@@ -828,6 +828,135 @@ TestRegister.addTests([
             }
         ]
     },
+    // ── EMV Build / Parse ARQC Data ───────────────────────────────────────────
+    // CDOL1 sample: Visa $10.00 USD, USA terminal, date 2026-05-21
+    //   9F02 000000001000  9F03 000000000000  9F1A 0840  95 0000000000
+    //   5F2A 0840  9A 260521  9C 00  9F37 A1B2C3D4  82 5900  9F36 0001
+    // Assembled hex (33 bytes / 66 chars):
+    //   00000000100000000000000008400000000000084026052100A1B2C3D459000001
+    {
+        name: "EMV Build ARQC Data: hex output",
+        input: "",
+        expectedOutput: "00000000100000000000000008400000000000084026052100A1B2C3D459000001",
+        recipeConfig: [
+            {
+                op: "EMV Build ARQC Data",
+                args: ["000000001000", "000000000000", "0840", "0000000000", "0840", "260521", "00", "A1B2C3D4", "5900", "0001", "Hex"]
+            }
+        ]
+    },
+    {
+        name: "EMV Build ARQC Data: JSON output",
+        input: "",
+        expectedOutput: JSON.stringify({
+            "Amount Authorised (9F02)":         "000000001000",
+            "Amount Other (9F03)":              "000000000000",
+            "Terminal Country Code (9F1A)":     "0840",
+            "TVR (95)":                         "0000000000",
+            "Transaction Currency Code (5F2A)": "0840",
+            "Transaction Date (9A)":            "260521",
+            "Transaction Type (9C)":            "00",
+            "Unpredictable Number (9F37)":      "A1B2C3D4",
+            "AIP (82)":                         "5900",
+            "ATC (9F36)":                       "0001",
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "EMV Build ARQC Data",
+                args: ["000000001000", "000000000000", "0840", "0000000000", "0840", "260521", "00", "A1B2C3D4", "5900", "0001", "JSON"]
+            }
+        ]
+    },
+    {
+        name: "EMV Build ARQC Data: annotated TLV output",
+        input: "",
+        expectedOutput: [
+            "9F02   06  000000001000  [Amount Authorised]",
+            "9F03   06  000000000000  [Amount Other]",
+            "9F1A   02  0840          [Terminal Country Code]",
+            "95     05  0000000000    [TVR]",
+            "5F2A   02  0840          [Transaction Currency Code]",
+            "9A     03  260521        [Transaction Date]",
+            "9C     01  00            [Transaction Type]",
+            "9F37   04  A1B2C3D4      [Unpredictable Number]",
+            "82     02  5900          [AIP]",
+            "9F36   02  0001          [ATC]",
+        ].join("\n"),
+        recipeConfig: [
+            {
+                op: "EMV Build ARQC Data",
+                args: ["000000001000", "000000000000", "0840", "0000000000", "0840", "260521", "00", "A1B2C3D4", "5900", "0001", "Annotated TLV"]
+            }
+        ]
+    },
+    {
+        name: "EMV Parse ARQC Data: annotated TLV",
+        input: "00000000100000000000000008400000000000084026052100A1B2C3D459000001",
+        expectedOutput: [
+            "9F02   06  000000001000  [Amount Authorised]",
+            "9F03   06  000000000000  [Amount Other]",
+            "9F1A   02  0840          [Terminal Country Code]",
+            "95     05  0000000000    [TVR]",
+            "5F2A   02  0840          [Transaction Currency Code]",
+            "9A     03  260521        [Transaction Date]",
+            "9C     01  00            [Transaction Type]",
+            "9F37   04  A1B2C3D4      [Unpredictable Number]",
+            "82     02  5900          [AIP]",
+            "9F36   02  0001          [ATC]",
+        ].join("\n"),
+        recipeConfig: [
+            {
+                op: "EMV Parse ARQC Data",
+                args: ["Annotated TLV"]
+            }
+        ]
+    },
+    {
+        name: "EMV Parse ARQC Data: JSON",
+        input: "00000000100000000000000008400000000000084026052100A1B2C3D459000001",
+        expectedOutput: JSON.stringify({
+            "Amount Authorised (9F02)":         "000000001000",
+            "Amount Other (9F03)":              "000000000000",
+            "Terminal Country Code (9F1A)":     "0840",
+            "TVR (95)":                         "0000000000",
+            "Transaction Currency Code (5F2A)": "0840",
+            "Transaction Date (9A)":            "260521",
+            "Transaction Type (9C)":            "00",
+            "Unpredictable Number (9F37)":      "A1B2C3D4",
+            "AIP (82)":                         "5900",
+            "ATC (9F36)":                       "0001",
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "EMV Parse ARQC Data",
+                args: ["JSON"]
+            }
+        ]
+    },
+    {
+        name: "EMV Build ARQC Data: bad field length throws",
+        input: "",
+        expectedError: true,
+        expectedOutput: "Error: Amount Authorised: expected 12 hex chars (6 bytes), got 4.",
+        recipeConfig: [
+            {
+                op: "EMV Build ARQC Data",
+                args: ["0001", "000000000000", "0840", "0000000000", "0840", "260521", "00", "A1B2C3D4", "5900", "0001", "Hex"]
+            }
+        ]
+    },
+    {
+        name: "EMV Parse ARQC Data: too-short input throws",
+        input: "000000001000",
+        expectedError: true,
+        expectedOutput: "Error: Standard CDOL1 requires 66 hex chars (33 bytes); got 12.",
+        recipeConfig: [
+            {
+                op: "EMV Parse ARQC Data",
+                args: ["JSON"]
+            }
+        ]
+    },
     {
         name: "Payment Encrypt Data: AES CBC",
         input: "00112233445566778899AABBCCDDEEFF",
@@ -1341,6 +1470,53 @@ TestRegister.addTests([
                 args: ["00112233445566778899AABBCCDDEEFF", 8, "000102030405060708090A0B0C0D0E0F", true]
             }
         ]
+    },
+
+    // ── Parse EMV TLV ─────────────────────────────────────────────────────────
+    {
+        name: "Parse EMV TLV: GPO Format 2 (constructed 77 > AIP + AFL)",
+        input: "770A82025900940408010401",
+        expectedOutput: JSON.stringify([
+            {
+                tag: "77", name: "Response Message Template Format 2",
+                constructed: true, class: "Application", source: "ICC", format: "b",
+                length: 10, valueHex: "82025900940408010401",
+                children: [
+                    { tag: "82", name: "Application Interchange Profile (AIP)", constructed: false, class: "Context-Specific", source: "ICC", format: "b", length: 2, valueHex: "5900" },
+                    { tag: "94", name: "Application File Locator (AFL)",        constructed: false, class: "Context-Specific", source: "ICC", format: "b", length: 4, valueHex: "08010401" },
+                ],
+            },
+        ], null, 4),
+        recipeConfig: [{ op: "Parse EMV TLV", args: [false] }]
+    },
+    {
+        name: "Parse EMV TLV: primitive tags (ARQC / CID / ATC)",
+        input: "9F2608A1B2C3D4E5F607089F2701809F360200 01",
+        expectedOutput: JSON.stringify([
+            { tag: "9F26", name: "Application Cryptogram (ARQC/TC/AAC)", constructed: false, class: "Application", source: "ICC", format: "b", length: 8,  valueHex: "A1B2C3D4E5F60708" },
+            { tag: "9F27", name: "Cryptogram Information Data (CID)",    constructed: false, class: "Application", source: "ICC", format: "b", length: 1,  valueHex: "80" },
+            { tag: "9F36", name: "Application Transaction Counter (ATC)",constructed: false, class: "Application", source: "ICC", format: "b", length: 2,  valueHex: "0001" },
+        ], null, 4),
+        recipeConfig: [{ op: "Parse EMV TLV", args: [false] }]
+    },
+    {
+        name: "Parse EMV TLV: unknown tag decoded structurally",
+        input: "FF0203AABBCC",
+        expectedMatch: /"name":\s*"Unknown"/,
+        recipeConfig: [{ op: "Parse EMV TLV", args: [false] }]
+    },
+    {
+        name: "Parse EMV TLV: dictionary mode returns tag index",
+        input: "",
+        expectedMatch: /"9F26":/,
+        recipeConfig: [{ op: "Parse EMV TLV", args: [true] }]
+    },
+    {
+        name: "Parse EMV TLV: bad hex throws",
+        input: "GG",
+        expectedError: true,
+        expectedOutput: "Error: Input is not valid hex (odd length or non-hex chars).",
+        recipeConfig: [{ op: "Parse EMV TLV", args: [false] }]
     },
 
     // ── PIN Block Translate Encrypted ─────────────────────────────────────────
