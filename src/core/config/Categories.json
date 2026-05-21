@@ -599,6 +599,8 @@
             "EMV Verify MAC",
             "HSM Parse Futurex Command",
             "HSM Parse Thales Command",
+            "Key Component Combine",
+            "Key Component Split",
             "Key Generate",
             "MAC Generate",
             "MAC Verify",

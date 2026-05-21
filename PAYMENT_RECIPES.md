@@ -212,6 +212,8 @@ Operations:
 - `DUKPT Derive AES Key` — AES-128 DUKPT per ANSI X9.24-3 (12-byte KSN, IK-based)
 - `Derive ECDH Key Material`
 - `Key Generate` — random AES-128/192/256, TDES, or custom bytes; optional AES CMAC KCV
+- `Key Component Split` — XOR-split a key into 2–8 components for key ceremony use
+- `Key Component Combine` — XOR-combine components back into the original key
 - `Payment Calculate KCV`
 - `AS2805 Generate KEK Validation`
 
@@ -219,6 +221,8 @@ Use this when:
 - you need transaction keys, shared secrets, random test keys, KCVs, or AS2805-style KEK-validation lab values
 
 Important assumptions:
+- `Key Component Split` and `Key Component Combine` use XOR shares — all N components are required to reconstruct the key (no threshold/Shamir scheme)
+- These operations are intended for testing and emulation, not production key ceremonies — production ceremonies must use a certified HSM
 - `DUKPT Derive TDES Key` is TDES DUKPT — do not confuse IPEK (TDES) with IK (AES DUKPT)
 - `DUKPT Derive AES Key` implements AES-128 via AES-CMAC per ANSI X9.24-3; AES-192/256 are not yet implemented
 - `Key Generate` is for test use only — production keys must be generated in an approved HSM
@@ -396,6 +400,8 @@ Release guidance: `Publish` = safe with normal guardrails; `Publish with guardra
 | `PIN Block Translate Encrypted` | Vendor-aligned | AWS `TranslatePinData`; ISO 9564; PCI PIN Req 3-3 | Publish with guardrails |
 | `PIN Data Generate` | Vendor-aligned | AWS `GeneratePinData` | Publish with guardrails |
 | `PIN Data Verify` | Vendor-aligned | AWS `VerifyPinData` | Publish with guardrails |
+| `Key Component Split` | Verified | XOR key split — standard PCI key ceremony primitive | Publish with guardrails |
+| `Key Component Combine` | Verified | XOR key combine — standard PCI key ceremony primitive | Publish with guardrails |
 | `Payment Calculate KCV` | Verified | NIST SP 800-38B; generic AES/TDES/HMAC primitives | Publish |
 | `DUKPT Derive TDES Key` | Externally cross-checked | ANSI X9.24-1; AWS DUKPT terminology | Publish with guardrails |
 | `DUKPT Derive AES Key` | Externally cross-checked | ANSI X9.24-3 §6.3 official test vectors (x9.org) | Publish with guardrails |

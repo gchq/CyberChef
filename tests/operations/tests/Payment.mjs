@@ -1427,5 +1427,93 @@ TestRegister.addTests([
                        "AABBCCDDEEFF00112233445566778899AABBCCDDEEFF0011", "ISO Format 0", "5432101234567890", false]
             }
         ]
+    },
+
+    // ── Key Component Split / Combine ─────────────────────────────────────────
+    // Vectors: fixed 2-component split using known components so the test is
+    // deterministic. Split is non-deterministic by design so only combine is
+    // tested with known vectors; round-trip is verified via the chain test.
+    //   Key   : 0123456789ABCDEFFEDCBA9876543210
+    //   C1    : FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    //   C2    : FEDCBA98765432100123456789ABCDEF  (= Key XOR C1)
+    {
+        name: "Key Component Combine: 2-component XOR",
+        input: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFEDCBA98765432100123456789ABCDEF",
+        expectedOutput: "0123456789ABCDEFFEDCBA9876543210",
+        recipeConfig: [
+            {
+                op: "Key Component Combine",
+                args: [false]
+            }
+        ]
+    },
+    {
+        name: "Key Component Combine: 3-component XOR",
+        // C1 XOR C2 XOR C3 = Key
+        //   C1: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        //   C2: BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+        //   C1 XOR C2: 1111111111111111 (repeated)
+        //   C3: Key XOR C1 XOR C2 = 0123... XOR 1111... = 10325476 98BADCFE EFCDAB89 67452301
+        //     01^11=10, 23^11=32, 45^11=54, 67^11=76, 89^11=98, AB^11=BA, CD^11=DC, EF^11=FE
+        //     FE^11=EF, DC^11=CD, BA^11=AB, 98^11=89, 76^11=67, 54^11=45, 32^11=23, 10^11=01
+        input: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n10325476 98BADCFE EFCDAB8967452301",
+        expectedOutput: "0123456789ABCDEFFEDCBA9876543210",
+        recipeConfig: [
+            {
+                op: "Key Component Combine",
+                args: [false]
+            }
+        ]
+    },
+    {
+        name: "Key Component Combine: JSON input from Split",
+        input: JSON.stringify({
+            algorithm: "XOR",
+            keyLengthBits: 128,
+            componentCount: 2,
+            components: [
+                "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+                "FEDCBA98765432100123456789ABCDEF"
+            ]
+        }, null, 4),
+        expectedOutput: "0123456789ABCDEFFEDCBA9876543210",
+        recipeConfig: [
+            {
+                op: "Key Component Combine",
+                args: [false]
+            }
+        ]
+    },
+    {
+        name: "Key Component Combine: JSON output mode",
+        input: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\nFEDCBA98765432100123456789ABCDEF",
+        expectedOutput: JSON.stringify({
+            algorithm: "XOR",
+            keyLengthBits: 128,
+            componentCount: 2,
+            keyHex: "0123456789ABCDEFFEDCBA9876543210"
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "Key Component Combine",
+                args: [true]
+            }
+        ]
+    },
+    {
+        name: "Chain: Key Component Split → Combine (round-trip)",
+        input: "0123456789ABCDEFFEDCBA9876543210",
+        expectedOutput: "0123456789ABCDEFFEDCBA9876543210",
+        recipeConfig: [
+            {
+                op: "Key Component Split",
+                args: [3, false]
+            },
+            {
+                op: "Key Component Combine",
+                args: [false]
+            }
+        ]
     }
 ]);
+
