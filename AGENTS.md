@@ -58,6 +58,13 @@ This check is for internal development and validation only. APC must never appea
 
 After completing any substantive payment operation work, ask: *"Did I learn anything in this session that isn't captured in AGENTS.md?"* If yes, add it before committing.
 
+**Before committing any new or changed payment operation, verify all of the following are in the same commit:**
+- `PAYMENT_RECIPES.md` updated (numbered section + lettered chaining entry if new pattern)
+- APC-agent queried for the relevant endpoint and any gap documented
+- Tests passing
+
+Do not commit the operation first and defer docs or APC check to a follow-up. If the user has to ask whether the docs were updated, the process was not followed.
+
 When adding, renaming, or removing a payment operation:
 
 1. **Update `PAYMENT_RECIPES.md`** — add the operation to the correct numbered section and, if it introduces a new chaining pattern, add a lettered chaining pattern entry. Remove or mark deprecated any operations that are replaced.
