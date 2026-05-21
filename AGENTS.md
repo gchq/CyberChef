@@ -52,6 +52,7 @@ This check is for internal development and validation only. APC must never appea
 - Continuation lines inside `args: [` must be aligned to **23 spaces**
 - All module-level functions require JSDoc (`jsdoc/require-jsdoc`)
 - No unused imports
+- No inline single-line blocks: `try { x; } catch` or `if (x) { y; }` — statement and closing brace must each be on their own line (`brace-style` rule)
 
 ## Payment Operation Maintenance
 

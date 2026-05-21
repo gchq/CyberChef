@@ -50,7 +50,9 @@ class KeyComponentCombine extends Operation {
         let hexComponents;
         if (trimmed.startsWith("{")) {
             let parsed;
-            try { parsed = JSON.parse(trimmed); } catch (e) {
+            try {
+                parsed = JSON.parse(trimmed);
+            } catch (e) {
                 throw new Error("Invalid JSON input.");
             }
             if (!Array.isArray(parsed.components) || parsed.components.length === 0) {
