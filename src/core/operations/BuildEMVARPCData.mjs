@@ -15,6 +15,7 @@ import {
  */
 class BuildEMVARPCData extends Operation {
 
+    /** @inheritdoc */
     constructor() {
         super();
 
@@ -90,9 +91,9 @@ class BuildEMVARPCData extends Operation {
     run(input, args) {
         const [method, arqc, arc, csu, pad, fmt] = args;
 
-        const { fields, hex } = method === METHOD2
-            ? buildMethod2(arqc, csu, pad)
-            : buildMethod1(arqc, arc);
+        const { fields, hex } = method === METHOD2 ?
+            buildMethod2(arqc, csu, pad) :
+            buildMethod1(arqc, arc);
 
         if (fmt === "JSON")      return formatJson(fields, method);
         if (fmt === "Annotated") return formatAnnotated(fields, method);

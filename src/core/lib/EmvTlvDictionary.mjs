@@ -32,7 +32,7 @@ const EMV_TAG_DICTIONARY = {
     // ── File Control Information ───────────────────────────────────────────────
     "6F": { name: "File Control Information (FCI) Template",     constructed: true,  source: "ICC",  format: "b",   class: "Application" },
     "A5": { name: "FCI Proprietary Template",                    constructed: true,  source: "ICC",  format: "b",   class: "Context-Specific" },
-    "BF0C":{ name: "FCI Issuer Discretionary Data",             constructed: true,  source: "ICC",  format: "b",   class: "Private" },
+    "BF0C": { name: "FCI Issuer Discretionary Data",             constructed: true,  source: "ICC",  format: "b",   class: "Private" },
 
     // ── Record / Response Templates ────────────────────────────────────────────
     "70": { name: "Record Template",                             constructed: true,  source: "ICC",  format: "b",   class: "Application" },
@@ -51,7 +51,7 @@ const EMV_TAG_DICTIONARY = {
     "9F06": { name: "Application Identifier (AID) — Terminal",  constructed: false, source: "T",    format: "b",   class: "Application" },
     "9F11": { name: "Issuer Code Table Index",                   constructed: false, source: "ICC",  format: "n",   class: "Application" },
     "9F12": { name: "Application Preferred Name",               constructed: false, source: "ICC",  format: "ans", class: "Application" },
-    "9F38": { name: "Processing Options Data Object List (PDOL)",constructed: false, source: "ICC",  format: "b",   class: "Application" },
+    "9F38": { name: "Processing Options Data Object List (PDOL)", constructed: false, source: "ICC",  format: "b",   class: "Application" },
     "9F4D": { name: "Log Entry",                                 constructed: false, source: "ICC",  format: "b",   class: "Application" },
 
     // ── Card / Cardholder Data ─────────────────────────────────────────────────
@@ -144,7 +144,7 @@ const EMV_TAG_DICTIONARY = {
     "90":   { name: "Issuer Public Key Certificate",             constructed: false, source: "ICC",  format: "b",   class: "Context-Specific" },
     "92":   { name: "Issuer Public Key Remainder",               constructed: false, source: "ICC",  format: "b",   class: "Context-Specific" },
     "93":   { name: "Signed Static Application Data",            constructed: false, source: "ICC",  format: "b",   class: "Context-Specific" },
-    "9F2D": { name: "ICC PIN Encipherment Public Key Certificate",constructed: false, source: "ICC",  format: "b",   class: "Application" },
+    "9F2D": { name: "ICC PIN Encipherment Public Key Certificate", constructed: false, source: "ICC",  format: "b",   class: "Application" },
     "9F2E": { name: "ICC PIN Encipherment Public Key Exponent",  constructed: false, source: "ICC",  format: "b",   class: "Application" },
     "9F2F": { name: "ICC PIN Encipherment Public Key Remainder",  constructed: false, source: "ICC",  format: "b",   class: "Application" },
     "9F32": { name: "Issuer Public Key Exponent",                constructed: false, source: "ICC",  format: "b",   class: "Application" },

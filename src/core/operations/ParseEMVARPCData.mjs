@@ -15,6 +15,7 @@ import {
  */
 class ParseEMVARPCData extends Operation {
 
+    /** @inheritdoc */
     constructor() {
         super();
 

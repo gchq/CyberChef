@@ -11,6 +11,7 @@ import { parseCdol1, formatJson, formatAnnotatedTlv } from "../lib/EmvCdol.mjs";
  */
 class ParseEMVARQCData extends Operation {
 
+    /** @inheritdoc */
     constructor() {
         super();
 

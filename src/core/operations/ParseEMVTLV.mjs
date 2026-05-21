@@ -11,6 +11,7 @@ import { parseEmvTlv, EMV_TAG_DICTIONARY } from "../lib/EmvTlv.mjs";
  */
 class ParseEMVTLV extends Operation {
 
+    /** @inheritdoc */
     constructor() {
         super();
 

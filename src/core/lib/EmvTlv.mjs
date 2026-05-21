@@ -113,7 +113,10 @@ function parseTlvSequence(bytes, start, end, depth) {
     let offset = start;
     while (offset < end) {
         // Skip 0x00 padding bytes (common in EMV records)
-        if (bytes[offset] === 0x00) { offset++; continue; }
+        if (bytes[offset] === 0x00) {
+            offset++;
+            continue;
+        }
 
         const tlv = readTlv(bytes, offset);
         offset = tlv.nextOffset;

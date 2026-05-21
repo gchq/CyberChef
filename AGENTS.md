@@ -52,9 +52,10 @@ This check is for internal development and validation only. APC must never appea
 ## ESLint
 
 - Continuation lines inside `args: [` must be aligned to **23 spaces**
-- All module-level functions require JSDoc (`jsdoc/require-jsdoc`)
+- All module-level functions require JSDoc (`jsdoc/require-jsdoc`). Constructors must have their own JSDoc — either `/** @inheritdoc */` or a named comment block. The class-level JSDoc does not satisfy this.
 - No unused imports
 - No inline single-line blocks: `try { x; } catch` or `if (x) { y; }` — statement and closing brace must each be on their own line (`brace-style` rule)
+- Ternary `?` and `:` must be at the **end** of the line, not the start (`operator-linebreak` rule). Write `condition ?\n    a :\n    b` not `condition\n    ? a\n    : b`.
 
 ## Payment Operation Maintenance
 

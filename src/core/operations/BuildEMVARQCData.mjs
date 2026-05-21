@@ -11,6 +11,7 @@ import { buildCdol1, formatHex, formatJson, formatAnnotatedTlv } from "../lib/Em
  */
 class BuildEMVARQCData extends Operation {
 
+    /** @inheritdoc */
     constructor() {
         super();
 
