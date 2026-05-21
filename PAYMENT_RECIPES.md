@@ -75,26 +75,38 @@ Important assumptions:
 ## 3) Generate / Verify EMV MAC
 
 Operations:
+- `EMV Build Script Data`
+- `EMV Build PIN Change Script Data`
 - `EMV Generate MAC`
 - `EMV Verify MAC`
 - `EMV Generate MAC (PIN Change)`
 
 Use this when:
+- you want to assemble an issuer-script APDU from named fields
 - you already have the EMV session integrity key
 - you want issuer-script MAC generation or verification
 - you need a dedicated offline PIN-change MAC helper
 
 Input:
-- issuer-script or EMV command payload as hex
+- `EMV Build Script Data` / `EMV Build PIN Change Script Data`: all fields supplied via args; ignores the input field — use as the first step in a chained recipe
+- `EMV Generate MAC` / `EMV Verify MAC`: issuer-script APDU as hex
+- `EMV Generate MAC (PIN Change)`: 5-byte CHANGE REFERENCE DATA header as hex (from `EMV Build PIN Change Script Data`)
 
 Important assumptions:
 - these operations do not derive EMV session keys
+- `EMV Build Script Data` assembles `CLA | INS | P1 | P2 | Lc | Data`; Lc is computed from data length
+- `EMV Build PIN Change Script Data` assembles only the 5-byte command header (`84 24 P1 P2 Lc`); the encrypted PIN block is appended by `EMV Generate MAC (PIN Change)` before computing the MAC
+- `EMV Generate MAC (PIN Change)` models a single session integrity key (E2); a full issuer implementation uses three separate keys (E2 integrity, E1 confidentiality, P0 PIN encryption)
 - `EMV Generate MAC` and `EMV Verify MAC` expose a **Padding method** selector:
   - **Method 2 (default)** — appends `0x80` then zero-pads to the next 8-byte block boundary (ISO 7816-4). Standard for EMV issuer-script MACs.
   - **Method 1** — zero-pads to the next block boundary only (no `0x80` sentinel). Used by some host-side implementations and required when interoperating with systems that apply Method 1.
   - Both generate and verify must use the same method or verification will always fail.
 - `EMV Generate MAC (PIN Change)` always uses Method 2 and does not expose the selector
 - `EMV Generate MAC (PIN Change)` expects the new PIN block to already be encrypted before you call it
+
+Recommended chain:
+- `EMV Build Script Data` → `EMV Generate MAC`
+- `EMV Build PIN Change Script Data` → `EMV Generate MAC (PIN Change)`
 
 ## 4) Generate / Verify EMV ARQC And ARPC
 
@@ -335,14 +347,16 @@ Flow:
 ## F) EMV Script MAC And PIN Change
 
 Operations:
+- `EMV Build Script Data`
+- `EMV Build PIN Change Script Data`
 - `EMV Generate MAC`
 - `EMV Verify MAC`
 - `EMV Generate MAC (PIN Change)`
 
 Flow:
-- assemble the issuer-script APDU body as hex
-- use the derived integrity key
-- append the already-encrypted PIN block when generating the PIN-change MAC
+- use `EMV Build Script Data` (slot 1) to assemble the issuer-script APDU from CLA/INS/P1/P2/Data
+- use `EMV Generate MAC` with the derived integrity key to compute and append the MAC
+- for PIN change: use `EMV Build PIN Change Script Data` (slot 1) to build the `84 24 P1 P2 Lc` header, then use `EMV Generate MAC (PIN Change)` supplying the already-encrypted PIN block as an arg
 
 ## G) IBM 3624 / PVV Verification
 
@@ -431,6 +445,8 @@ Release guidance: `Publish` = safe with normal guardrails; `Publish with guardra
 | `Payment Re-Encrypt Data` | Vendor-aligned | AWS `ReEncryptData` | Publish with guardrails |
 | `MAC Generate` | Verified (HMAC/CMAC); Vendor-aligned (ISO9797/DUKPT/AS2805) | NIST SP 800-38B; AWS MAC overview | Publish with guardrails |
 | `MAC Verify` | Verified (HMAC/CMAC); Vendor-aligned (ISO9797/DUKPT/AS2805) | NIST SP 800-38B; AWS MAC overview | Publish with guardrails |
+| `EMV Build Script Data` | Verified | ISO 7816-4 APDU structure; EMV issuer script command layout | Publish |
+| `EMV Build PIN Change Script Data` | Verified | ISO 7816-4 CHANGE REFERENCE DATA (INS=24); EMV Book 2 PIN change flow | Publish |
 | `EMV Generate MAC` | Vendor-aligned | AWS EMV MAC use case | Publish with guardrails |
 | `EMV Verify MAC` | Vendor-aligned | AWS EMV MAC use case | Publish with guardrails |
 | `EMV Generate MAC (PIN Change)` | Test helper | AWS `GenerateMacEmvPinChange` | Publish with guardrails |
