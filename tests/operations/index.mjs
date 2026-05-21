@@ -181,6 +181,7 @@ import "./tests/ToFromInsensitiveRegex.mjs";
 import "./tests/TranslateDateTimeFormat.mjs";
 import "./tests/Typex.mjs";
 import "./tests/UnescapeString.mjs";
+import "./tests/UnescapeUnicodeCharacters.mjs";
 import "./tests/Unicode.mjs";
 import "./tests/Wrap.mjs";
 import "./tests/URLEncodeDecode.mjs";
