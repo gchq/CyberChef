@@ -828,6 +828,74 @@ TestRegister.addTests([
             }
         ]
     },
+    // ── EMV Build / Parse ARPC Data ───────────────────────────────────────────
+    // Method 1 (Visa/Amex): ARQC=A1B2C3D4E5F60708, ARC=5931 → 10 bytes
+    // Method 2 (Mastercard): ARQC=A1B2C3D4E5F60708, CSU=00000000 → 12 bytes
+    {
+        name: "EMV Build ARPC Data: Method 1 hex output",
+        input: "",
+        expectedOutput: "A1B2C3D4E5F607085931",
+        recipeConfig: [{
+            op: "EMV Build ARPC Data",
+            args: ["Method 1 (Visa/Amex/Discover)", "A1B2C3D4E5F60708", "5931", "00000000", "", "Hex"]
+        }]
+    },
+    {
+        name: "EMV Build ARPC Data: Method 2 hex output (no PAD)",
+        input: "",
+        expectedOutput: "A1B2C3D4E5F6070800000000",
+        recipeConfig: [{
+            op: "EMV Build ARPC Data",
+            args: ["Method 2 (Mastercard)", "A1B2C3D4E5F60708", "5931", "00000000", "", "Hex"]
+        }]
+    },
+    {
+        name: "EMV Build ARPC Data: Method 2 hex output (with PAD)",
+        input: "",
+        expectedOutput: "A1B2C3D4E5F6070800000000AABBCCDD",
+        recipeConfig: [{
+            op: "EMV Build ARPC Data",
+            args: ["Method 2 (Mastercard)", "A1B2C3D4E5F60708", "5931", "00000000", "AABBCCDD", "Hex"]
+        }]
+    },
+    {
+        name: "EMV Parse ARPC Data: Method 1 JSON",
+        input: "A1B2C3D4E5F607085931",
+        expectedOutput: JSON.stringify({
+            method: "Method 1 (Visa/Amex/Discover)",
+            ARQC: "A1B2C3D4E5F60708",
+            ARC:  "5931",
+        }, null, 4),
+        recipeConfig: [{
+            op: "EMV Parse ARPC Data",
+            args: ["Method 1 (Visa/Amex/Discover)", "JSON"]
+        }]
+    },
+    {
+        name: "EMV Parse ARPC Data: Method 2 JSON (with PAD)",
+        input: "A1B2C3D4E5F6070800000000AABBCCDD",
+        expectedOutput: JSON.stringify({
+            method: "Method 2 (Mastercard)",
+            ARQC: "A1B2C3D4E5F60708",
+            "Card Status Update (CSU)": "00000000",
+            "Proprietary Auth Data": "AABBCCDD",
+        }, null, 4),
+        recipeConfig: [{
+            op: "EMV Parse ARPC Data",
+            args: ["Method 2 (Mastercard)", "JSON"]
+        }]
+    },
+    {
+        name: "EMV Parse ARPC Data: wrong length for Method 1 throws",
+        input: "A1B2C3D4",
+        expectedError: true,
+        expectedOutput: "Error: Method 1 preimage requires 20 hex chars (10 bytes); got 8.",
+        recipeConfig: [{
+            op: "EMV Parse ARPC Data",
+            args: ["Method 1 (Visa/Amex/Discover)", "JSON"]
+        }]
+    },
+
     // ── EMV Build / Parse ARQC Data ───────────────────────────────────────────
     // CDOL1 sample: Visa $10.00 USD, USA terminal, date 2026-05-21
     //   9F02 000000001000  9F03 000000000000  9F1A 0840  95 0000000000
