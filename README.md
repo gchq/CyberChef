@@ -1,21 +1,15 @@
-# CyberChef
+# CyberChef - Payments
+This fork extends **CyberChef** with a focused set of payment cryptography operations intended for engineering, debugging, and interoperability work in regulated payment environments. The upstream Cyberchef is automatically merged weekly to track the orign. 
 
 [![](https://github.com/J8k3/CyberChef/workflows/Build%20and%20Deploy/badge.svg)](https://github.com/gchq/CyberChef/actions?query=workflow%3A%22Master+Build%2C+Test+%26+Deploy%22)
 [![](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/gchq/CyberChef/blob/master/LICENSE)
-
-
-#### *The Cyber Swiss Army Knife*
 
 CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include simple encoding like XOR and Base64, more complex encryption like AES, DES and Blowfish, creating binary and hexdumps, compression and decompression of data, calculating hashes and checksums, IPv6 and X.509 parsing, changing character encodings, and much more.
 
 The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms. It was conceived, designed, built and incrementally improved by an analyst in their 10% innovation time over several years.
 
-## Payment Cryptography Extensions
-
-This fork extends **CyberChef** with a focused set of payment cryptography operations intended for engineering, debugging, and interoperability work in regulated payment environments.
-
 ### Scope
-The extensions are designed to help inspect, parse, validate, and construct common payment-industry cryptographic structures without requiring access to live HSMs or production systems.
+The payment extensions are designed to help inspect, parse, validate, and construct common payment-industry cryptographic structures without requiring access to live HSMs or production systems.
 
 They are also intended to support software emulation of common HSM-style payment workflows for development, QA, interoperability, and integration testing.
 
@@ -32,8 +26,6 @@ Current coverage includes:
 - IBM 3624 PIN offset and VISA PVV issuer-verification helpers
 - Test PAN generation and PAN parsing across major card networks
 - Deterministic, test-vector-driven transformations suitable for offline analysis
-
-Future extensions may include:
 - TR-31 key block decryption with provided KBPKs
 
 ### Non-goals
@@ -76,7 +68,6 @@ Payment-specific recipe chains and standalone operations, pre-loaded at [cyberch
  - [HSM: parse Thales payShield command][p16]
  - [HSM: parse Futurex Excrypt command][p17]
  - [Payment KCV: compute AES-CMAC key check value][p18]
- - [Key Generate then KCV (fresh key with check value)][p19]
  - [PAN Generate: Visa curated test card number][p20]
  - [PAN Parse: classify a card number by network][p21]
  - [Card validation data: generate CVV2][p22]
@@ -86,19 +77,18 @@ Payment-specific recipe chains and standalone operations, pre-loaded at [cyberch
 
 ## Live demo
 
-CyberChef Payments is still under active development. As a result, it shouldn't be considered a finished product. There is still testing and bug fixing to do, new features to be added and additional documentation to write.
+CyberChef Payments will always be considered an unfinshed product as it emulates functionality implemetned by Thales, Futurex, and Utimaco HSMs without a formal way to verify all edge cases for implementation specifics. The best validation we can do, and it's a pretty good option if I do say so myself, is known value testing against AWS Payment Cryptograpy and it's Futurex backed HSM fleet.
 
 Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness.
 
 [A live demo can be found at cyberchef.jacobmarks.com][1] - have fun!
 
-## Running Locally with Docker
+## Developing/Running Locally with Docker
 
 **Prerequisites**
 
 - [Docker](https://www.docker.com/products/docker-desktop/)
   - Docker Desktop must be open and running on your machine
-
 
 #### Option 1: Build the Docker Image Yourself
 
@@ -225,25 +215,24 @@ CyberChef is released under the [Apache 2.0 Licence](https://www.apache.org/lice
   [p01]: https://cyberchef.jacobmarks.com/#recipe=PIN_Generate(4,'PIN%20digits','')VISA_PVV_Generate('0123456789ABCDEFFEDCBA9876543210','5432101234567890',1,true)
   [p02]: https://cyberchef.jacobmarks.com/#recipe=PIN_Generate(4,'PIN%20digits','')VISA_PVV_Generate('0123456789ABCDEFFEDCBA9876543210','5432101234567890',1,false)VISA_PVV_Verify('0123456789ABCDEFFEDCBA9876543210','5432101234567890',1,'1234',true)
   [p03]: https://cyberchef.jacobmarks.com/#recipe=PIN_Generate(4,'PIN%20digits','')PIN_IBM_3624_Offset_Generate('0123456789ABCDEFFEDCBA9876543210','0123456789012345','5432101234567890','F',false)
-  [p04]: https://cyberchef.jacobmarks.com/#recipe=IBM_3624_Generate_PIN_Offset('0123456789ABCDEFFEDCBA9876543210','0123456789012345','5432101234567890','F',false)IBM_3624_Verify_PIN('0123456789ABCDEFFEDCBA9876543210','0123456789012345','5432101234567890','F','1234',true)&input=MTIzNA==
-  [p05]: https://cyberchef.jacobmarks.com/#recipe=EMV_Generate_ARQC('00112233445566778899AABBCCDDEEFF',8,false)&input=MDAwMTAyMDMwNDA1MDYwNzA4MDkwQTBCMEMwRDBFMEY=
-  [p06]: https://cyberchef.jacobmarks.com/#recipe=EMV_Generate_ARQC('00112233445566778899AABBCCDDEEFF',8,false)EMV_Verify_ARQC('00112233445566778899AABBCCDDEEFF',8,'000102030405060708090A0B0C0D0E0F',true)&input=MDAwMTAyMDMwNDA1MDYwNzA4MDkwQTBCMEMwRDBFMEY=
-  [p07]: https://cyberchef.jacobmarks.com/#recipe=EMV_Generate_ARPC('00112233445566778899AABBCCDDEEFF',8,false)&input=MTEyMjMzNDQ1NTY2Nzc4ODk5MDBBQUJCQ0NEREVFRkY=
-  [p08]: https://cyberchef.jacobmarks.com/#recipe=EMV_Generate_MAC('0123456789ABCDEFFEDCBA9876543210',8,false)&input=ODQyNDAwMDAwODk5OUU1N0ZEMEY0N0NBQ0UwMDA3
-  [p09]: https://cyberchef.jacobmarks.com/#recipe=EMV_Verify_MAC('0123456789ABCDEFFEDCBA9876543210','22CB48394DFD1977',true)&input=ODQyNDAwMDAwODk5OUU1N0ZEMEY0N0NBQ0UwMDA3
-  [p10]: https://cyberchef.jacobmarks.com/#recipe=MAC_Generate('Hex','AES-CMAC','00112233445566778899AABBCCDDEEFF','Hex','','Method%201',8,false)&input=MTEyMjMzNDQ1NTY2Nzc4OA==
-  [p11]: https://cyberchef.jacobmarks.com/#recipe=MAC_Verify('Hex','AES-CMAC','00112233445566778899AABBCCDDEEFF','Hex','','Method%201','339AF1AD1650E908',true)&input=MTEyMjMzNDQ1NTY2Nzc4OA==
-  [p12]: https://cyberchef.jacobmarks.com/#recipe=DUKPT_Derive_TDES_Key('Derive%20IPEK','FFFF9876543210E00008','None',false)&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA=
-  [p13]: https://cyberchef.jacobmarks.com/#recipe=DUKPT_Derive_TDES_Key('Derive%20Session%20Key','FFFF9876543210E00008','PIN',false)&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA=
-  [p14]: https://cyberchef.jacobmarks.com/#recipe=PIN_Block_Build('ISO%20Format%200','5432101234567890',false)PIN_Block_Parse('ISO%20Format%200','5432101234567890')&input=MTIzNA==
-  [p15]: https://cyberchef.jacobmarks.com/#recipe=TR-31_Parse_Key_Block(false)&input=RDAxMTJQMEFFMDBFMDAwMDEwRUY5OTkwQzgwMkMzRUM3REEwNEM2OUFENjhBNzFCMjM4ODBEQzZDQTY0QjY0Q0UyRTVGMUE0RDA5NTJBM0E=
+  [p04]: https://cyberchef.jacobmarks.com/#recipe=PIN_Generate(4,'PIN%20digits','')PIN_IBM_3624_Offset_Generate('0123456789ABCDEFFEDCBA9876543210','0123456789012345','5432101234567890','F',false)PIN_IBM_3624_Verify('0123456789ABCDEFFEDCBA9876543210','0123456789012345','5432101234567890','F','1234',true)
+  [p05]: https://cyberchef.jacobmarks.com/#recipe=EMV_Generate_ARQC('00112233445566778899AABBCCDDEEFF',8,false)&input=MDAwMTAyMDMwNDA1MDYwNzA4MDkwQTBCMEMwRDBFMEY
+  [p06]: https://cyberchef.jacobmarks.com/#recipe=EMV_Generate_ARQC('00112233445566778899AABBCCDDEEFF',8,false)EMV_Verify_ARQC('00112233445566778899AABBCCDDEEFF',8,'000102030405060708090A0B0C0D0E0F',true)&input=MDAwMTAyMDMwNDA1MDYwNzA4MDkwQTBCMEMwRDBFMEY
+  [p07]: https://cyberchef.jacobmarks.com/#recipe=EMV_Generate_ARPC('00112233445566778899AABBCCDDEEFF',8,false)&input=MTEyMjMzNDQ1NTY2Nzc4ODk5MDBBQUJCQ0NEREVFRkY
+  [p08]: https://cyberchef.jacobmarks.com/#recipe=EMV_Generate_MAC('0123456789ABCDEFFEDCBA9876543210','Method%202',8,false)&input=ODQyNDAwMDAwODk5OUU1N0ZEMEY0N0NBQ0UwMDA3
+  [p09]: https://cyberchef.jacobmarks.com/#recipe=EMV_Verify_MAC('0123456789ABCDEFFEDCBA9876543210','22CB48394DFD1977','Method%202',true)&input=ODQyNDAwMDAwODk5OUU1N0ZEMEY0N0NBQ0UwMDA3
+  [p10]: https://cyberchef.jacobmarks.com/#recipe=MAC_Generate('Hex','AES-CMAC','00112233445566778899AABBCCDDEEFF','Hex','','Method%201',8,false)&input=MTEyMjMzNDQ1NTY2Nzc4OA
+  [p11]: https://cyberchef.jacobmarks.com/#recipe=MAC_Verify('Hex','AES-CMAC','00112233445566778899AABBCCDDEEFF','Hex','','Method%201','339AF1AD1650E908',true)&input=MTEyMjMzNDQ1NTY2Nzc4OA
+  [p12]: https://cyberchef.jacobmarks.com/#recipe=Key_Generate('TDES%20Double-length%20(16%20bytes)',16,true,false)DUKPT_Derive_TDES_Key('Derive%20IPEK','FFFF9876543210E00008','None',false)
+  [p13]: https://cyberchef.jacobmarks.com/#recipe=Key_Generate('TDES%20Double-length%20(16%20bytes)',16,true,false)DUKPT_Derive_TDES_Key('Derive%20Session%20Key','FFFF9876543210E00008','PIN',false)
+  [p14]: https://cyberchef.jacobmarks.com/#recipe=PIN_Generate(4,'PIN%20digits','')PIN_Block_Build('ISO%20Format%200','5432101234567890',false)PIN_Block_Parse('ISO%20Format%200','5432101234567890')
+  [p15]: https://cyberchef.jacobmarks.com/#recipe=TR-31_Parse_Key_Block(false)&input=RDAxMTJQMEFFMDBFMDAwMDEwRUY5OTkwQzgwMkMzRUM3REEwNEM2OUFENjhBNzFCMjM4ODBEQzZDQTY0QjY0Q0UyRTVGMUE0RDA5NTJBM0E
   [p16]: https://cyberchef.jacobmarks.com/#recipe=HSM_Parse_Thales_Command()&input=SEVBREhFMDEyMzQ1Njc4OUFCQ0RFRjAwMTEyMjMzNDQ1NTY2NzclMDBUQUlM
-  [p17]: https://cyberchef.jacobmarks.com/#recipe=HSM_Parse_Futurex_Command()&input=W0FPR01BQztGUzY7UlYwMDExMjIzMzQ0NTU2Njc3O10=
-  [p18]: https://cyberchef.jacobmarks.com/#recipe=Payment_Calculate_KCV('Hex','AES-CMAC%20(Empty)',6)&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA=
-  [p19]: https://cyberchef.jacobmarks.com/#recipe=Key_Generate('AES-128%20(16%20bytes)',16,false,false)Payment_Calculate_KCV('Hex','AES-CMAC%20(Empty)',6)
+  [p17]: https://cyberchef.jacobmarks.com/#recipe=HSM_Parse_Futurex_Command()&input=W0FPR01BQztGUzY7UlYwMDExMjIzMzQ0NTU2Njc3O10
+  [p18]: https://cyberchef.jacobmarks.com/#recipe=Key_Generate('AES-128%20(16%20bytes)',16,false,false)Payment_Calculate_KCV('Hex','AES-CMAC%20(Empty)',6)
   [p20]: https://cyberchef.jacobmarks.com/#recipe=PAN_Generate('Visa','Curated%20sample',16,'Any',true)
-  [p21]: https://cyberchef.jacobmarks.com/#recipe=PAN_Parse()&input=NTQyNTIzMzQzMDEwOTkwMw==
-  [p22]: https://cyberchef.jacobmarks.com/#recipe=Card_Validation_Data_Generate('CVV2%20/%20CVC2%20(force%20000)','4123456789012345','02','25','MMYY','101',3,false)&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA=
-  [p23]: https://cyberchef.jacobmarks.com/#recipe=Card_Validation_Data_Verify('CVV2%20/%20CVC2%20(force%20000)','4123456789012345','02','25','MMYY','101','221')&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA=
-  [p24]: https://cyberchef.jacobmarks.com/#recipe=PIN_Block_Translate_Encrypted('DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEE','ISO%20Format%200','5432101234567890','AABBCCDDEEFF00112233445566778899','ISO%20Format%200','5432101234567890',false)&input=N0YzODFEQkY5RjY5MDZDNA==
-  [p25]: https://cyberchef.jacobmarks.com/#recipe=PIN_Block_Translate_Encrypted('DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEE','ISO%20Format%200','5432101234567890','AABBCCDDEEFF00112233445566778899','ISO%20Format%200','5432101234567890',true)&input=N0YzODFEQkY5RjY5MDZDNA==
+  [p21]: https://cyberchef.jacobmarks.com/#recipe=PAN_Generate('Mastercard','Curated%20sample',16,'5-series%20(51-55)',false)PAN_Parse()
+  [p22]: https://cyberchef.jacobmarks.com/#recipe=Card_Validation_Data_Generate('CVV2%20/%20CVC2%20(force%20000)','4123456789012345','02','25','MMYY','101',3,false)&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA
+  [p23]: https://cyberchef.jacobmarks.com/#recipe=Card_Validation_Data_Verify('CVV2%20/%20CVC2%20(force%20000)','4123456789012345','02','25','MMYY','101','221')&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA
+  [p24]: https://cyberchef.jacobmarks.com/#recipe=PIN_Block_Translate_Encrypted('DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEE','ISO%20Format%200','5432101234567890','AABBCCDDEEFF00112233445566778899','ISO%20Format%200','5432101234567890',false)&input=N0YzODFEQkY5RjY5MDZDNA
+  [p25]: https://cyberchef.jacobmarks.com/#recipe=PIN_Block_Translate_Encrypted('DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEE','ISO%20Format%200','5432101234567890','AABBCCDDEEFF00112233445566778899','ISO%20Format%200','5432101234567890',true)&input=N0YzODFEQkY5RjY5MDZDNA
