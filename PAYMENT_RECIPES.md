@@ -99,20 +99,34 @@ Important assumptions:
 ## 4) Generate / Verify EMV ARQC And ARPC
 
 Operations:
+- `EMV Build ARQC Data`
+- `EMV Parse ARQC Data`
 - `EMV Generate ARQC`
 - `EMV Verify ARQC`
 - `EMV Generate ARPC`
+- `EMV Build ARPC Data`
+- `EMV Parse ARPC Data`
+- `Parse EMV TLV`
 
 Use this when:
+- you want to assemble or inspect ARQC/ARPC preimage data by named field
 - you already know the exact preassembled EMV data block
 - you already have the derived EMV session key
+- you need to parse BER-TLV encoded EMV data (DE 55, ICC responses)
 
 Input:
-- preassembled EMV cryptogram input data as hex
+- `EMV Build ARQC Data` / `EMV Build ARPC Data`: all fields supplied via args; ignores the input field — use as the first step in a chained recipe
+- `EMV Parse ARQC Data` / `EMV Parse ARPC Data`: flat hex preimage
+- `EMV Generate ARQC` / `EMV Verify ARQC` / `EMV Generate ARPC`: preassembled EMV data as hex
+- `Parse EMV TLV`: BER-TLV encoded hex (DE 55, ICC response, GPO response)
 
 Important assumptions:
-- current coverage is the implemented AES-CMAC profile
-- these operations do not assemble CDOL data or derive issuer/session keys
+- CDOL1 structure is network-agnostic: the same 10-field 33-byte layout applies across Visa, Mastercard, Amex, Discover, and JCB
+- ARPC has two structural variants: Method 1 (Visa/Amex/Discover) and Method 2 (Mastercard) — select the correct method in the arg
+- current ARQC/ARPC coverage is the AES-CMAC profile; session-key derivation is not performed here
+
+Recommended chain:
+- `EMV Build ARQC Data` → `EMV Generate ARQC` → `EMV Verify ARQC`
 
 ## 5) Generate / Verify Card Validation Data
 
@@ -303,14 +317,20 @@ Flow:
 ## E) EMV ARQC / ARPC Review
 
 Operations:
+- `EMV Build ARQC Data`
+- `EMV Parse ARQC Data`
 - `EMV Generate ARQC`
 - `EMV Verify ARQC`
+- `EMV Build ARPC Data`
+- `EMV Parse ARPC Data`
 - `EMV Generate ARPC`
 
 Flow:
-- build the exact request-data preimage outside the op
-- generate or verify the ARQC with the derived session key
-- build the response preimage and generate the ARPC
+- use `EMV Build ARQC Data` (slot 1) to assemble the CDOL1 preimage from named fields
+- generate or verify the ARQC with `EMV Generate ARQC` / `EMV Verify ARQC` using the derived session key
+- use `EMV Build ARPC Data` (slot 1 of a second recipe) to assemble the ARPC preimage
+- generate the ARPC with `EMV Generate ARPC`
+- use `EMV Parse ARQC Data` / `EMV Parse ARPC Data` to reverse-parse any flat preimage hex back to named fields
 
 ## F) EMV Script MAC And PIN Change
 
@@ -414,9 +434,14 @@ Release guidance: `Publish` = safe with normal guardrails; `Publish with guardra
 | `EMV Generate MAC` | Vendor-aligned | AWS EMV MAC use case | Publish with guardrails |
 | `EMV Verify MAC` | Vendor-aligned | AWS EMV MAC use case | Publish with guardrails |
 | `EMV Generate MAC (PIN Change)` | Test helper | AWS `GenerateMacEmvPinChange` | Publish with guardrails |
+| `EMV Build ARQC Data` | Verified | CDOL1 field layout per EMV Book 3 §10.1 | Publish |
+| `EMV Parse ARQC Data` | Verified | CDOL1 field layout per EMV Book 3 §10.1 | Publish |
 | `EMV Generate ARQC` | Vendor-aligned | AWS `VerifyAuthRequestCryptogram` | Publish with guardrails |
 | `EMV Verify ARQC` | Vendor-aligned | AWS `VerifyAuthRequestCryptogram` | Publish with guardrails |
 | `EMV Generate ARPC` | Vendor-aligned | AWS `VerifyAuthRequestCryptogram` issuer flow | Publish with guardrails |
+| `EMV Build ARPC Data` | Verified | EMV Book 2 §8.2 (Method 1); Mastercard M/Chip (Method 2) | Publish |
+| `EMV Parse ARPC Data` | Verified | EMV Book 2 §8.2 (Method 1); Mastercard M/Chip (Method 2) | Publish |
+| `Parse EMV TLV` | Verified | ISO 8825-1 BER-TLV; EMV Books 1–4; EMVCo contactless Book C | Publish |
 | `Card Validation Data Generate` | Vendor-aligned | AWS `GenerateCardValidationData` | Publish with guardrails |
 | `Card Validation Data Verify` | Vendor-aligned | AWS `VerifyCardValidationData` | Publish with guardrails |
 | `PIN IBM 3624 Offset Generate` | Vendor-aligned | AWS IBM 3624 PIN verification object | Publish with guardrails |

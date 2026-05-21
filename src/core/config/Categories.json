@@ -593,6 +593,8 @@
             "DUKPT Derive TDES Key",
             "EMV Build ARPC Data",
             "EMV Build ARQC Data",
+            "EMV Build PIN Change Script Data",
+            "EMV Build Script Data",
             "EMV Generate ARPC",
             "EMV Generate ARQC",
             "EMV Parse ARPC Data",

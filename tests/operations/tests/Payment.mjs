@@ -888,8 +888,7 @@ TestRegister.addTests([
     {
         name: "EMV Parse ARPC Data: wrong length for Method 1 throws",
         input: "A1B2C3D4",
-        expectedError: true,
-        expectedOutput: "Error: Method 1 preimage requires 20 hex chars (10 bytes); got 8.",
+        expectedOutput: "Method 1 preimage requires 20 hex chars (10 bytes); got 8.",
         recipeConfig: [{
             op: "EMV Parse ARPC Data",
             args: ["Method 1 (Visa/Amex/Discover)", "JSON"]
@@ -1004,8 +1003,7 @@ TestRegister.addTests([
     {
         name: "EMV Build ARQC Data: bad field length throws",
         input: "",
-        expectedError: true,
-        expectedOutput: "Error: Amount Authorised: expected 12 hex chars (6 bytes), got 4.",
+        expectedOutput: "Amount Authorised: expected 12 hex chars (6 bytes), got 4.",
         recipeConfig: [
             {
                 op: "EMV Build ARQC Data",
@@ -1016,8 +1014,7 @@ TestRegister.addTests([
     {
         name: "EMV Parse ARQC Data: too-short input throws",
         input: "000000001000",
-        expectedError: true,
-        expectedOutput: "Error: Standard CDOL1 requires 66 hex chars (33 bytes); got 12.",
+        expectedOutput: "Standard CDOL1 requires 66 hex chars (33 bytes); got 12.",
         recipeConfig: [
             {
                 op: "EMV Parse ARQC Data",
@@ -1582,9 +1579,72 @@ TestRegister.addTests([
     {
         name: "Parse EMV TLV: bad hex throws",
         input: "GG",
-        expectedError: true,
-        expectedOutput: "Error: Input is not valid hex (odd length or non-hex chars).",
+        expectedOutput: "Input is not valid hex (odd length or non-hex chars).",
         recipeConfig: [{ op: "Parse EMV TLV", args: [false] }]
+    },
+
+    // ── EMV Build Script Data ─────────────────────────────────────────────────
+    {
+        name: "EMV Build Script Data: PUT DATA hex output",
+        input: "",
+        expectedOutput: "84DA00420A0102030405060708090A",
+        recipeConfig: [{ op: "EMV Build Script Data", args: ["84", "PUT DATA", "00", "42", "0102030405060708090A", "Hex"] }]
+    },
+    {
+        name: "EMV Build Script Data: PUT DATA JSON output",
+        input: "",
+        expectedOutput: JSON.stringify({ cla: "84", ins: "DA", p1: "00", p2: "42", lc: "0A", data: "0102030405060708090A", apdu: "84DA00420A0102030405060708090A" }, null, 4),
+        recipeConfig: [{ op: "EMV Build Script Data", args: ["84", "PUT DATA", "00", "42", "0102030405060708090A", "JSON"] }]
+    },
+    {
+        name: "EMV Build Script Data: empty data (DISABLE VERIFICATION REQUIREMENT)",
+        input: "",
+        expectedOutput: "8426000000",
+        recipeConfig: [{ op: "EMV Build Script Data", args: ["84", "DISABLE VERIFICATION REQUIREMENT", "00", "00", "", "Hex"] }]
+    },
+    {
+        name: "EMV Build Script Data: annotated output includes APDU line",
+        input: "",
+        expectedMatch: /APDU\s+84DC/,
+        recipeConfig: [{ op: "EMV Build Script Data", args: ["84", "UPDATE RECORD", "01", "04", "AABB", "Annotated"] }]
+    },
+    {
+        name: "EMV Build Script Data: bad CLA throws",
+        input: "",
+        expectedOutput: "CLA must be exactly 1 byte (2 hex chars).",
+        recipeConfig: [{ op: "EMV Build Script Data", args: ["8400", "PUT DATA", "00", "00", "", "Hex"] }]
+    },
+    {
+        name: "EMV Build Script Data: odd-length data throws",
+        input: "",
+        expectedOutput: "Data must be even-length hex.",
+        recipeConfig: [{ op: "EMV Build Script Data", args: ["84", "PUT DATA", "00", "00", "ABC", "Hex"] }]
+    },
+
+    // ── EMV Build PIN Change Script Data ──────────────────────────────────────
+    {
+        name: "EMV Build PIN Change Script Data: hex output (P1=00)",
+        input: "",
+        expectedOutput: "8424008010",
+        recipeConfig: [{ op: "EMV Build PIN Change Script Data", args: ["84", "Change with current PIN verification", "80", "10", "Hex"] }]
+    },
+    {
+        name: "EMV Build PIN Change Script Data: hex output (P1=01, no-verify)",
+        input: "",
+        expectedOutput: "8424018010",
+        recipeConfig: [{ op: "EMV Build PIN Change Script Data", args: ["84", "Change without verification", "80", "10", "Hex"] }]
+    },
+    {
+        name: "EMV Build PIN Change Script Data: JSON output",
+        input: "",
+        expectedOutput: JSON.stringify({ cla: "84", ins: "24", p1: "00", p2: "80", lc: "10", header: "8424008010" }, null, 4),
+        recipeConfig: [{ op: "EMV Build PIN Change Script Data", args: ["84", "Change with current PIN verification", "80", "10", "JSON"] }]
+    },
+    {
+        name: "EMV Build PIN Change Script Data: bad Lc throws",
+        input: "",
+        expectedOutput: "Lc must be exactly 1 byte (2 hex chars).",
+        recipeConfig: [{ op: "EMV Build PIN Change Script Data", args: ["84", "Change with current PIN verification", "80", "GG", "Hex"] }]
     },
 
     // ── PIN Block Translate Encrypted ─────────────────────────────────────────
