@@ -31,6 +31,8 @@ class Operation {
         this.name             = "";
         this.module           = "";
         this.description      = "";
+        this.inlineHelp       = "";
+        this.testDataSamples  = [];
         this.infoURL          = null;
     }
 
@@ -181,6 +183,7 @@ class Operation {
 
             if (ing.toggleValues) conf.toggleValues = ing.toggleValues;
             if (ing.hint) conf.hint = ing.hint;
+            if (ing.comment) conf.comment = ing.comment;
             if (ing.rows) conf.rows = ing.rows;
             if (ing.disabled) conf.disabled = ing.disabled;
             if (ing.target) conf.target = ing.target;

@@ -213,3 +213,4 @@ const logOpsTestReport = logTestReport.bind(null, testStatus);
     const results = await TestRegister.runTests();
     logOpsTestReport(results);
 })();
+import "./tests/Payment.mjs";
