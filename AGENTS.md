@@ -41,6 +41,8 @@ Whenever a payment cryptography question arises — algorithm behavior, key type
 
 If the data is not available via APC-agent (endpoint doesn't exist, key-mode constraint, API gap), **treat that as a documented gap** — file a GitHub issue at `J8k3/CyberChef` capturing the operation, what was tried, and what's needed to close it. Do not guess APC behavior from training data; use the live tools.
 
+**Knowledge contribution (reciprocal):** When this session surfaces new payment domain knowledge — a PCI rule, an algorithm edge case, an APC API constraint, an HSM command mapping — write it back into the MCP server in the same session: `payment-knowledge-base.md` for domain facts, `hsm_analysis.py` for HSM commands, `compliance.py` for enforcement rules. Do not defer. The two repos are a knowledge loop: CyberChef proves behavior in tests; the MCP server codifies it for LLM consumption.
+
 This check is for internal development and validation only. APC must never appear in CyberChef UI text (operation names, descriptions, inline help, arg labels).
 
 ## Security Constraint
