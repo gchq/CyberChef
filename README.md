@@ -1,5 +1,5 @@
 # CyberChef - Payments
-This fork extends **CyberChef** with a focused set of payment cryptography operations intended for engineering, debugging, and interoperability work in regulated payment environments. The upstream Cyberchef is automatically merged weekly to track the orign. 
+This fork extends **CyberChef** with a focused set of payment cryptography operations intended for engineering, debugging, and interoperability work in regulated payment environments. The upstream Cyberchef is automatically merged weekly to track the origin. 
 
 [![](https://github.com/J8k3/CyberChef/workflows/Build%20and%20Deploy/badge.svg)](https://github.com/gchq/CyberChef/actions?query=workflow%3A%22Master+Build%2C+Test+%26+Deploy%22)
 [![](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/gchq/CyberChef/blob/master/LICENSE)
@@ -13,7 +13,7 @@ The payment extensions are designed to help inspect, parse, validate, and constr
 
 They are also intended to support software emulation of common HSM-style payment workflows for development, QA, interoperability, and integration testing.
 
-Current coverage includes:
+Current coverage includes:h
 - TR-31 key block parsing and TR-34 B9 envelope inspection
 - Key metadata inspection and structural validation
 - DUKPT TDES key derivation (ANSI X9.24-1, 10-byte KSN, IPEK-based)
@@ -77,7 +77,7 @@ Payment-specific recipe chains and standalone operations, pre-loaded at [cyberch
 
 ## Live demo
 
-CyberChef Payments will always be considered an unfinshed product as it emulates functionality implemetned by Thales, Futurex, and Utimaco HSMs without a formal way to verify all edge cases for implementation specifics. The best validation we can do, and it's a pretty good option if I do say so myself, is known value testing against AWS Payment Cryptograpy and it's Futurex backed HSM fleet.
+CyberChef Payments will always be considered an unfinished product as it emulates functionality implemented by Thales, Futurex, and Utimaco HSMs without a formal way to verify all edge cases for implementation specifics. The best validation we can do  is known value testing against AWS Payment Cryptography and its Futurex backed HSM fleet.
 
 Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness.
 
@@ -101,18 +101,6 @@ docker build --tag cyberchef --ulimit nofile=10000 .
 docker run -it -p 8080:8080 cyberchef
 ```
 3. Navigate to `http://localhost:8080` in your browser
-
-#### Option 2: Use the pre-built Docker Image
-
-If you prefer to skip the build process, you can use the pre-built image
-
-```bash
-docker run -it -p 8080:8080 ghcr.io/gchq/cyberchef:latest
-```
-
-Just like before, navigate to `http://localhost:8080` in your browser.
-
-This image is built and published through our [GitHub Workflows](.github/workflows/releases.yml)
 
 ## How it works
 
@@ -195,7 +183,7 @@ An installation walkthrough, how-to guides for adding new operations and themes,
  - Submit a pull request. If you are doing this for the first time, you will be prompted to sign the [GCHQ Contributor Licence Agreement](https://cla-assistant.io/gchq/CyberChef) via the CLA assistant on the pull request. This will also ask whether you are happy for GCHQ to contact you about a token of thanks for your contribution, or about job opportunities at GCHQ.
 
 
-## Licencing
+## Licensing
 
 CyberChef is released under the [Apache 2.0 Licence](https://www.apache.org/licenses/LICENSE-2.0) and is covered by [Crown Copyright](https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/).
 
