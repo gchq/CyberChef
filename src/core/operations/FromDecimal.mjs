@@ -5,8 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import {DELIM_OPTIONS} from "../lib/Delim.mjs";
-import {fromDecimal} from "../lib/Decimal.mjs";
+import {fromDecimal, FROM_DECIMAL_DELIM_OPTIONS} from "../lib/Decimal.mjs";
 
 /**
  * From Decimal operation
@@ -28,7 +27,7 @@ class FromDecimal extends Operation {
             {
                 "name": "Delimiter",
                 "type": "option",
-                "value": DELIM_OPTIONS
+                "value": FROM_DECIMAL_DELIM_OPTIONS
             },
             {
                 "name": "Support signed values",
