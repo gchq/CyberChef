@@ -24,7 +24,7 @@ Current coverage includes:
 - Key metadata inspection and structural validation
 - DUKPT TDES key derivation (ANSI X9.24-1, 10-byte KSN, IPEK-based)
 - DUKPT AES key derivation (ANSI X9.24-3, 12-byte KSN, IK-based, AES-128)
-- PIN block format parsing, construction, and translation (ISO 9564 formats 0, 1, 3)
+- PIN block format parsing, construction, and translation — including encrypted PIN block re-keying between zone keys (ISO 9564 formats 0, 1, 3)
 - Payment-specific MAC and KCV utilities (HMAC, AES-CMAC, TDES-CMAC, ISO 9797-1, AS2805, DUKPT variants)
 - EMV ARQC/ARPC generation and verification
 - EMV issuer-script MAC generation and verification
@@ -81,6 +81,8 @@ Payment-specific recipe chains and standalone operations, pre-loaded at [cyberch
  - [PAN Parse: classify a card number by network][p21]
  - [Card validation data: generate CVV2][p22]
  - [Card validation data: verify CVV2][p23]
+ - [PIN Block Translate Encrypted: re-key between ZPKs (Format 0)][p24]
+ - [PIN Block Translate Encrypted: re-key with JSON inspection output][p25]
 
 ## Live demo
 
@@ -243,3 +245,5 @@ CyberChef is released under the [Apache 2.0 Licence](https://www.apache.org/lice
   [p21]: https://cyberchef.jacobmarks.com/#recipe=PAN_Parse()&input=NTQyNTIzMzQzMDEwOTkwMw==
   [p22]: https://cyberchef.jacobmarks.com/#recipe=Card_Validation_Data_Generate('CVV2%20/%20CVC2%20(force%20000)','4123456789012345','02','25','MMYY','101',3,false)&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA=
   [p23]: https://cyberchef.jacobmarks.com/#recipe=Card_Validation_Data_Verify('CVV2%20/%20CVC2%20(force%20000)','4123456789012345','02','25','MMYY','101','221')&input=MDEyMzQ1Njc4OUFCQ0RFRkZFRENCQTk4NzY1NDMyMTA=
+  [p24]: https://cyberchef.jacobmarks.com/#recipe=PIN_Block_Translate_Encrypted('DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEE','ISO%20Format%200','5432101234567890','AABBCCDDEEFF00112233445566778899','ISO%20Format%200','5432101234567890',false)&input=N0YzODFEQkY5RjY5MDZDNA==
+  [p25]: https://cyberchef.jacobmarks.com/#recipe=PIN_Block_Translate_Encrypted('DDDDEEEEFFFFAAAABBBBCCCCDDDDEEEE','ISO%20Format%200','5432101234567890','AABBCCDDEEFF00112233445566778899','ISO%20Format%200','5432101234567890',true)&input=N0YzODFEQkY5RjY5MDZDNA==

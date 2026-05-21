@@ -398,7 +398,7 @@ Release guidance: `Publish` = safe with normal guardrails; `Publish with guardra
 | `PIN Data Verify` | Vendor-aligned | AWS `VerifyPinData` | Publish with guardrails |
 | `Payment Calculate KCV` | Verified | NIST SP 800-38B; generic AES/TDES/HMAC primitives | Publish |
 | `DUKPT Derive TDES Key` | Externally cross-checked | ANSI X9.24-1; AWS DUKPT terminology | Publish with guardrails |
-| `DUKPT Derive AES Key` | Vendor-aligned | ANSI X9.24-3; AWS DUKPT terminology | Publish with guardrails |
+| `DUKPT Derive AES Key` | Externally cross-checked | ANSI X9.24-3 §6.3 official test vectors (x9.org) | Publish with guardrails |
 | `Derive ECDH Key Material` | Verified | AWS `TranslateKeyMaterial`; AWS `EcdhDerivationAttributes`; RFC 3394 | Publish |
 | `Payment Encrypt Data` | Vendor-aligned | AWS `EncryptData` | Publish with guardrails |
 | `Payment Decrypt Data` | Vendor-aligned | AWS `DecryptData` | Publish with guardrails |
@@ -481,13 +481,13 @@ Performed 2026-05-19. All HSM-mimic operations compared against AWS Payment Cryp
 | Card Validation Data Generate (CVV) | `703` | `703` | ✅ MATCH | |
 | Card Validation Data Generate (CVV2) | `111` | `111` | ✅ MATCH | |
 | Card Validation Data Verify | — | PASS | ✅ | |
-| VISA PVV Generate | `5596` | `5596` (verify path) | ✅ MATCH | APC `generate_pin_data` blocked by compliance warning; cross-validated via `verify_pin_data` |
-| VISA PVV Verify | — | PASS | ✅ | |
+| VISA PVV Generate | `5596` (visa_pvk) / `6776` (test key) | `5596` / `6776` (verify path) | ✅ MATCH | APC `generate_pin_data` blocked by compliance warning; cross-validated via `verify_pin_data` for both keys |
+| VISA PVV Verify | — | PASS | ✅ | Both `visa_pvk` (KCV AAAABBBB…) and test key `0123456789ABCDEF…` (KCV 08D7B4) confirmed via APC `verify_pin_data` |
 | PIN IBM 3624 Offset Generate | `0324` | `0324` (verify path) | ✅ MATCH | Cross-validated via APC `verify_pin_data` |
 | PIN IBM 3624 Verify | — | PASS | ✅ | |
 | EMV Generate ARQC | `8C8E19CED4DBBF59` | AES-128 rejected | ❌ BLOCKED | APC `verify_auth_request_cryptogram` requires AES-256 E0 key; AES-128 rejected. CyberChef implementation (AES-CMAC, Option A session-key derivation) is correct |
 | DUKPT Derive TDES Key | IPEK `6AC292FAA1315B4D858AB3A3D7D5933A` | N/A | ✅ VERIFIED | Matches published ANSI X9.24-1 test vector |
-| DUKPT Derive AES Key | IK derived | N/A | ⚠️ N/A | APC does not expose derived intermediate keys for inspection |
+| DUKPT Derive AES Key | IK/working keys derived | N/A | ✅ VERIFIED | Verified against ANSI X9.24-3 §6.3 official test vectors; APC does not expose derived intermediate keys for direct comparison |
 | DUKPT TDES Encrypt (Payment Encrypt Data) | `92A5157E4607D1B0` | `124F7A32F3F84187` | ❌ VARIANT MISMATCH | CyberChef follows ANSI X9.24-1 "Data" variant (bytes 5+13 XOR `0xFF`); APC uses an undocumented internal variant for data encryption |
 | DUKPT TDES MAC (MAC Generate) | `AF59E7E8A06F01B2` | `AF59E7E8A06F01B2` | ✅ MATCH | APC `DukptKeyVariant=REQUEST` aligns with CyberChef "MAC Request" |
 

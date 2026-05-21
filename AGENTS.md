@@ -35,6 +35,24 @@ Follow `CONTRIBUTING.md` coding conventions: 4-space indentation, CamelCase clas
 - Only keep changes together when separating them would make the behavior harder to understand, test, or revert.
 - Prefer squash or amend for related consecutive changes — if a follow-up commit only fixes or extends the immediately preceding commit, squash them into one rather than leaving a trail of iterative noise in the log.
 
+## APC Cross-Reference (Standing Instruction)
+
+Whenever a payment cryptography question arises — algorithm behavior, key types, format support, operation design, test vector validation — **first query the APC-agent MCP tools** to check what AWS Payment Cryptography exposes for that operation. Use ToolSearch to load the relevant tool before calling it.
+
+If the data is not available via APC-agent (endpoint doesn't exist, key-mode constraint, API gap), **treat that as a documented gap** — file a GitHub issue at `J8k3/CyberChef` capturing the operation, what was tried, and what's needed to close it. Do not guess APC behavior from training data; use the live tools.
+
+This check is for internal development and validation only. APC must never appear in CyberChef UI text (operation names, descriptions, inline help, arg labels).
+
+## Security Constraint
+
+**Never mention AWS, APC, or AWS Payment Cryptography in any CyberChef UI-facing text.** This includes operation names, descriptions, arg labels, inline help text, and output strings. Internal code comments and test file comments are fine.
+
+## ESLint
+
+- Continuation lines inside `args: [` must be aligned to **23 spaces**
+- All module-level functions require JSDoc (`jsdoc/require-jsdoc`)
+- No unused imports
+
 ## Payment Operation Maintenance
 
 After completing any substantive payment operation work, ask: *"Did I learn anything in this session that isn't captured in AGENTS.md?"* If yes, add it before committing.
