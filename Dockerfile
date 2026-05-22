@@ -27,7 +27,7 @@ RUN npm run build
 #########################################
 # Package static build files into nginx #
 #########################################
-FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:b9f7ba14f1f7bd3d40d7753584048f92c3aef9ccf5fab14efe4451a8d4c04d63 AS cyberchef
+FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:acc3239879a65d9e3d250b21847ec3f34f33367017394d22830242af15cf1cb0 AS cyberchef
 
 LABEL maintainer="GCHQ <oss@gchq.gov.uk>"
 
