@@ -1560,7 +1560,7 @@ TestRegister.addTests([
         expectedOutput: JSON.stringify([
             { tag: "9F26", name: "Application Cryptogram (ARQC/TC/AAC)", constructed: false, class: "Application", source: "ICC", format: "b", length: 8,  valueHex: "A1B2C3D4E5F60708" },
             { tag: "9F27", name: "Cryptogram Information Data (CID)",    constructed: false, class: "Application", source: "ICC", format: "b", length: 1,  valueHex: "80" },
-            { tag: "9F36", name: "Application Transaction Counter (ATC)",constructed: false, class: "Application", source: "ICC", format: "b", length: 2,  valueHex: "0001" },
+            { tag: "9F36", name: "Application Transaction Counter (ATC)", constructed: false, class: "Application", source: "ICC", format: "b", length: 2,  valueHex: "0001" },
         ], null, 4),
         recipeConfig: [{ op: "Parse EMV TLV", args: [false] }]
     },

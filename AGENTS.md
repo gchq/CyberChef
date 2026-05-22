@@ -8,6 +8,11 @@
   - Node 24
   - `npm ci`
   - `npm test`
+- **Before committing any JS/MJS change, run the full lint suite in Docker:**
+  ```
+  npx grunt eslint
+  ```
+  This runs all five targets: `eslint:configs`, `eslint:core`, `eslint:web`, `eslint:node`, `eslint:tests`. Running only `eslint:core` misses errors in test files and other targets. Do not push without a clean lint run.
 - Dev server with auto-rebuild: `npm start` (port 8080). Production build: `npm run build` (output in `build/prod/`). If the production build OOMs, set `NODE_OPTIONS=--max_old_space_size=2048`.
 - **Do not run `npm run build` or `npm start` on Windows.** The local Node version is not guaranteed to match CI and webpack builds will silently fail or produce wrong output. Build verification belongs in Docker/Linux CI only.
 - Do not spend time fixing Windows-only runtime or dependency issues unless explicitly requested.
@@ -34,6 +39,7 @@ Follow `CONTRIBUTING.md` coding conventions: 4-space indentation, CamelCase clas
 - Split work before committing when a reviewer would benefit from evaluating the pieces independently.
 - Only keep changes together when separating them would make the behavior harder to understand, test, or revert.
 - Prefer squash or amend for related consecutive changes — if a follow-up commit only fixes or extends the immediately preceding commit, squash them into one rather than leaving a trail of iterative noise in the log.
+- When CI flags a lint or test failure after a push, fix it locally and **amend or squash into the failing commit** (using `git push --force-with-lease`) rather than adding a new fix commit on top. A chain of "Fix lint" commits is the failure mode this rule prevents.
 
 ## APC Cross-Reference (Standing Instruction)
 
