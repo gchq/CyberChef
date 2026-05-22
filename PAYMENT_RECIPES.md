@@ -118,7 +118,7 @@ Operations:
 - `EMV Generate ARPC`
 - `EMV Build ARPC Data`
 - `EMV Parse ARPC Data`
-- `Parse EMV TLV`
+- `EMV Parse TLV`
 
 Use this when:
 - you want to assemble or inspect ARQC/ARPC preimage data by named field
@@ -130,7 +130,7 @@ Input:
 - `EMV Build ARQC Data` / `EMV Build ARPC Data`: all fields supplied via args; ignores the input field — use as the first step in a chained recipe
 - `EMV Parse ARQC Data` / `EMV Parse ARPC Data`: flat hex preimage
 - `EMV Generate ARQC` / `EMV Verify ARQC` / `EMV Generate ARPC`: preassembled EMV data as hex
-- `Parse EMV TLV`: BER-TLV encoded hex (DE 55, ICC response, GPO response)
+- `EMV Parse TLV`: BER-TLV encoded hex (DE 55, ICC response, GPO response)
 
 Important assumptions:
 - CDOL1 structure is network-agnostic: the same 10-field 33-byte layout applies across Visa, Mastercard, Amex, Discover, and JCB
@@ -457,7 +457,7 @@ Release guidance: `Publish` = safe with normal guardrails; `Publish with guardra
 | `EMV Generate ARPC` | Vendor-aligned | AWS `VerifyAuthRequestCryptogram` issuer flow | Publish with guardrails |
 | `EMV Build ARPC Data` | Verified | EMV Book 2 §8.2 (Method 1); Mastercard M/Chip (Method 2) | Publish |
 | `EMV Parse ARPC Data` | Verified | EMV Book 2 §8.2 (Method 1); Mastercard M/Chip (Method 2) | Publish |
-| `Parse EMV TLV` | Verified | ISO 8825-1 BER-TLV; EMV Books 1–4; EMVCo contactless Book C | Publish |
+| `EMV Parse TLV` | Verified | ISO 8825-1 BER-TLV; EMV Books 1–4; EMVCo contactless Book C | Publish |
 | `Card Validation Data Generate` | Vendor-aligned | AWS `GenerateCardValidationData` | Publish with guardrails |
 | `Card Validation Data Verify` | Vendor-aligned | AWS `VerifyCardValidationData` | Publish with guardrails |
 | `PIN IBM 3624 Offset Generate` | Vendor-aligned | AWS IBM 3624 PIN verification object | Publish with guardrails |

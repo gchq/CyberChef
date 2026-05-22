@@ -4,7 +4,7 @@
  *
  * EMV tag dictionary covering EMV Books 1-4, EMVCo contactless, Nexo, and
  * common acquirer/terminal tags. Each entry carries metadata used by the
- * Parse EMV TLV operation.
+ * EMV Parse TLV operation.
  *
  * Sources: EMV Book 1 §A; EMV Book 3 §A; Nexo FAST 3.x; ISO 8583 DE 55 common tags.
  */

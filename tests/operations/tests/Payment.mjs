@@ -1539,7 +1539,7 @@ TestRegister.addTests([
 
     // ── Parse EMV TLV ─────────────────────────────────────────────────────────
     {
-        name: "Parse EMV TLV: GPO Format 2 (constructed 77 > AIP + AFL)",
+        name: "EMV Parse TLV: GPO Format 2 (constructed 77 > AIP + AFL)",
         input: "770A82025900940408010401",
         expectedOutput: JSON.stringify([
             {
@@ -1552,35 +1552,35 @@ TestRegister.addTests([
                 ],
             },
         ], null, 4),
-        recipeConfig: [{ op: "Parse EMV TLV", args: [false] }]
+        recipeConfig: [{ op: "EMV Parse TLV", args: [false] }]
     },
     {
-        name: "Parse EMV TLV: primitive tags (ARQC / CID / ATC)",
+        name: "EMV Parse TLV: primitive tags (ARQC / CID / ATC)",
         input: "9F2608A1B2C3D4E5F607089F2701809F360200 01",
         expectedOutput: JSON.stringify([
             { tag: "9F26", name: "Application Cryptogram (ARQC/TC/AAC)", constructed: false, class: "Application", source: "ICC", format: "b", length: 8,  valueHex: "A1B2C3D4E5F60708" },
             { tag: "9F27", name: "Cryptogram Information Data (CID)",    constructed: false, class: "Application", source: "ICC", format: "b", length: 1,  valueHex: "80" },
             { tag: "9F36", name: "Application Transaction Counter (ATC)", constructed: false, class: "Application", source: "ICC", format: "b", length: 2,  valueHex: "0001" },
         ], null, 4),
-        recipeConfig: [{ op: "Parse EMV TLV", args: [false] }]
+        recipeConfig: [{ op: "EMV Parse TLV", args: [false] }]
     },
     {
-        name: "Parse EMV TLV: unknown tag decoded structurally",
+        name: "EMV Parse TLV: unknown tag decoded structurally",
         input: "FF0203AABBCC",
         expectedMatch: /"name":\s*"Unknown"/,
-        recipeConfig: [{ op: "Parse EMV TLV", args: [false] }]
+        recipeConfig: [{ op: "EMV Parse TLV", args: [false] }]
     },
     {
-        name: "Parse EMV TLV: dictionary mode returns tag index",
+        name: "EMV Parse TLV: dictionary mode returns tag index",
         input: "",
         expectedMatch: /"9F26":/,
-        recipeConfig: [{ op: "Parse EMV TLV", args: [true] }]
+        recipeConfig: [{ op: "EMV Parse TLV", args: [true] }]
     },
     {
-        name: "Parse EMV TLV: bad hex throws",
+        name: "EMV Parse TLV: bad hex throws",
         input: "GG",
         expectedOutput: "Input is not valid hex (odd length or non-hex chars).",
-        recipeConfig: [{ op: "Parse EMV TLV", args: [false] }]
+        recipeConfig: [{ op: "EMV Parse TLV", args: [false] }]
     },
 
     // ── EMV Build Script Data ─────────────────────────────────────────────────

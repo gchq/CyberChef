@@ -7,7 +7,7 @@ import Operation from "../Operation.mjs";
 import { parseEmvTlv, EMV_TAG_DICTIONARY } from "../lib/EmvTlv.mjs";
 
 /**
- * Parse EMV TLV operation.
+ * EMV Parse TLV operation.
  */
 class ParseEMVTLV extends Operation {
 
@@ -15,7 +15,7 @@ class ParseEMVTLV extends Operation {
     constructor() {
         super();
 
-        this.name = "Parse EMV TLV";
+        this.name = "EMV Parse TLV";
         this.module = "Payment";
         this.description = "Parse hex-encoded BER-TLV data (e.g., DE 55 field, ICC response, terminal data, ARQC preimage in TLV form) and annotate each tag using the built-in EMV tag dictionary.<br><br><b>Input:</b> hex-encoded BER-TLV data.<br><b>Output:</b> JSON tree. Each record includes the tag hex value, name from the EMV tag dictionary, source (ICC / Terminal / Host / Both), value format, length, value in hex, and — for constructed tags — a <code>children</code> array with the recursively parsed inner TLVs.<br><br><b>Tag dictionary:</b> covers EMV Books 1–4, EMVCo contactless Book C, and common Nexo/acquirer tags (~90 entries). Unknown tags are decoded structurally but marked with name <code>Unknown</code>.<br><br><b>Constructed tags:</b> tags with the constructed bit set (e.g., <code>70</code>, <code>77</code>, <code>6F</code>, <code>A5</code>, <code>BF0C</code>) are recursively parsed into child arrays.<br><br><b>Note:</b> indefinite-length BER encoding is not supported; this covers the definite short- and long-form lengths used by all standard EMV cards.";
         this.inlineHelp = "<strong>Input:</strong> hex-encoded BER-TLV (DE 55, ICC response, GPO reply, etc.). Outputs annotated JSON with EMV tag names and nested children.";

@@ -599,7 +599,7 @@
             "EMV Generate ARQC",
             "EMV Parse ARPC Data",
             "EMV Parse ARQC Data",
-            "Parse EMV TLV",
+            "EMV Parse TLV",
             "EMV Generate MAC",
             "EMV Generate MAC (PIN Change)",
             "EMV Verify ARQC",
