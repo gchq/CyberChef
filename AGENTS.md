@@ -24,8 +24,7 @@
 
 - At the start of a session, sync with `origin/master` before doing substantive work.
 - Preferred command: `git pull --rebase origin master`
-- Only do this automatically when the worktree is clean.
-- If there are local changes already present, do not pull/rebase blindly; inspect first and avoid overwriting user work.
+- Only do this automatically when the worktree is clean. If local changes are already present, inspect before rebasing.
 
 ## Code Style
 
@@ -34,12 +33,11 @@ Follow `CONTRIBUTING.md` coding conventions: 4-space indentation, CamelCase clas
 ## Commit Scope
 
 - Keep commits small and reviewable by default.
-- Prefer one commit per individual recipe change when that is practical.
-- Otherwise group a commit around one coherent class of change, not multiple unrelated fixes or refactors.
-- Split work before committing when a reviewer would benefit from evaluating the pieces independently.
-- Only keep changes together when separating them would make the behavior harder to understand, test, or revert.
-- Prefer squash or amend for related consecutive changes — if a follow-up commit only fixes or extends the immediately preceding commit, squash them into one rather than leaving a trail of iterative noise in the log.
-- When CI flags a lint or test failure after a push, fix it locally and **amend or squash into the failing commit** (using `git push --force-with-lease`) rather than adding a new fix commit on top. A chain of "Fix lint" commits is the failure mode this rule prevents.
+- Prefer one commit per logical change — a single coherent unit a reviewer can evaluate independently.
+- Group related changes (e.g., a new feature + its test + the knowledge-base entry it required) into one commit when they can't be evaluated independently.
+- Prefer squash or amend for iterative follow-ups — if a second commit only fixes or extends the immediately preceding one, squash rather than leaving noise in the log.
+- Do not split a change just to make it look smaller; split when a reviewer would genuinely benefit from evaluating the pieces independently.
+- When CI flags a lint or test failure after a push, fix locally and **amend or squash into the failing commit** (using `git push --force-with-lease`) rather than adding a new fix commit on top.
 
 ## APC Cross-Reference (Standing Instruction)
 
