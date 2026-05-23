@@ -178,7 +178,7 @@
     "snackbarjs": "^1.1.0",
     "sortablejs": "^1.15.7",
     "split.js": "^1.6.5",
-    "sql-formatter": "^15.7.4",
+    "sql-formatter": "^15.8.0",
     "ssdeep.js": "0.0.3",
     "stream-browserify": "^3.0.0",
     "tesseract.js": "^6.0.1",
