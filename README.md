@@ -1,87 +1,65 @@
 # CyberChef - Payments
-This fork extends **CyberChef** with a focused set of payment cryptography operations intended for engineering, debugging, and interoperability work in regulated payment environments. The upstream Cyberchef is automatically merged weekly to track the origin. 
+
+This fork extends CyberChef with workflow-oriented payment cryptography tooling for engineering, debugging, interoperability, development, QA, and standards exploration — including for systems built for regulated payment environments. The upstream CyberChef is merged weekly.
 
 [![](https://github.com/J8k3/CyberChef/workflows/Build%20and%20Deploy/badge.svg)](https://github.com/gchq/CyberChef/actions?query=workflow%3A%22Master+Build%2C+Test+%26+Deploy%22)
 [![](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/gchq/CyberChef/blob/master/LICENSE)
 
-CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" operations within a web browser. These operations include simple encoding like XOR and Base64, more complex encryption like AES, DES and Blowfish, creating binary and hexdumps, compression and decompression of data, calculating hashes and checksums, IPv6 and X.509 parsing, changing character encodings, and much more.
+**[cyberchef.jacobmarks.com][1]** — live demo
 
-The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms. It was conceived, designed, built and incrementally improved by an analyst in their 10% innovation time over several years.
+- Full workflow library with screenshots and recipe catalog: **[J8k3/CyberChef-Payments](https://github.com/J8k3/CyberChef-Payments)**
+- Payment domain knowledge: **[J8k3/Payments](https://github.com/J8k3/Payments)**
 
-### Scope
-The payment extensions are designed to help inspect, parse, validate, and construct common payment-industry cryptographic structures without requiring access to live HSMs or production systems.
+---
 
-They are also intended to support software emulation of common HSM-style payment workflows for development, QA, interoperability, and integration testing.
+## What this fork adds
 
-Current coverage includes:h
-- TR-31 key block parsing and TR-34 B9 envelope inspection
-- Key metadata inspection and structural validation
+All payment operations appear in the CyberChef UI under the **Payments** category. Source: `src/core/operations/`.
+
+- Pipeline-inspectable workflow tooling for EMV, PIN, DUKPT, MAC, key management, and HSM command parsing
+- Operations composable with CyberChef’s full recipe model — chain, breakpoint, share as URL
+- Local-first: all computation runs in the browser, no cloud account or HSM needed
+- Weekly upstream sync with [gchq/CyberChef](https://github.com/gchq/CyberChef)
+
+## Scope
+
+Current payment operation coverage:
+
+- EMV ARQC/ARPC generation and verification; issuer-script MAC and PIN change
+- PIN block build, parse, and encrypted translation between zone keys (ISO 9564 formats 0, 1, 3)
 - DUKPT TDES key derivation (ANSI X9.24-1, 10-byte KSN, IPEK-based)
 - DUKPT AES key derivation (ANSI X9.24-3, 12-byte KSN, IK-based, AES-128)
-- PIN block format parsing, construction, and translation — including encrypted PIN block re-keying between zone keys (ISO 9564 formats 0, 1, 3)
-- Payment-specific MAC and KCV utilities (HMAC, AES-CMAC, TDES-CMAC, ISO 9797-1, AS2805, DUKPT variants)
-- EMV ARQC/ARPC generation and verification
-- EMV issuer-script MAC generation and verification
-- Card validation data (CVV/CVC, CVV2/CVC2, iCVV) generation and verification
-- IBM 3624 PIN offset and VISA PVV issuer-verification helpers
-- Test PAN generation and PAN parsing across major card networks
-- Deterministic, test-vector-driven transformations suitable for offline analysis
-- TR-31 key block decryption with provided KBPKs
+- MAC: AES-CMAC, TDES-CMAC, HMAC, ISO 9797-1, AS2805, DUKPT variants
+- Card validation data: CVV/CVC, CVV2/CVC2, iCVV; IBM 3624 PIN offset; VISA PVV
+- PAN generation and parsing across major card networks
+- Key management: generation, KCV, component split/combine, ECDH, TR-31/TR-34 parsing
+- HSM command parsing: Thales payShield and Futurex Excrypt transport-syntax triage
 
-### Non-goals
-These extensions are not intended to:
-- Facilitate fraud, card data misuse, or PIN compromise
-- Replace certified HSMs or production cryptographic controls
-- Claim certification, tamper-resistance, or compliance equivalence with production HSM deployments
+## Validation
 
-All operations are designed to be explicit, inspectable, and composable, consistent with CyberChef’s philosophy.
-
-### Organization
-Custom operations live under:
-
-src/core/operations/
-
-They appear in the CyberChef UI under the **Payments** category.
-
-Recipe starter docs:
-- [PAYMENT_RECIPES.md](PAYMENT_RECIPES.md)
-
-### Payment recipe examples
-
-Payment-specific recipe chains and standalone operations, pre-loaded at [cyberchef.jacobmarks.com][1]:
-
- - [VISA PVV: generate PVV from clear PIN][p01]
- - [VISA PVV: generate then verify (full chain)][p02]
- - [IBM 3624: generate PIN offset][p03]
- - [IBM 3624: generate then verify (full chain)][p04]
- - [EMV: generate ARQC][p05]
- - [EMV: generate then verify ARQC (full chain)][p06]
- - [EMV: generate ARPC issuer response][p07]
- - [EMV: generate issuer-script MAC][p08]
- - [EMV: verify issuer-script MAC][p09]
- - [Payment MAC: generate AES-CMAC][p10]
- - [Payment MAC: verify AES-CMAC][p11]
- - [DUKPT TDES: derive IPEK from BDK][p12]
- - [DUKPT TDES: derive PIN session key][p13]
- - [PIN Block: build ISO Format 0 then parse (full chain)][p14]
- - [TR-31 key block: parse and inspect header fields][p15]
- - [HSM: parse Thales payShield command][p16]
- - [HSM: parse Futurex Excrypt command][p17]
- - [Payment KCV: compute AES-CMAC key check value][p18]
- - [PAN Generate: Visa curated test card number][p20]
- - [PAN Parse: classify a card number by network][p21]
- - [Card validation data: generate CVV2][p22]
- - [Card validation data: verify CVV2][p23]
- - [PIN Block Translate Encrypted: re-key between ZPKs (Format 0)][p24]
- - [PIN Block Translate Encrypted: re-key with JSON inspection output][p25]
-
-## Live demo
-
-CyberChef Payments will always be considered an unfinished product as it emulates functionality implemented by Thales, Futurex, and Utimaco HSMs without a formal way to verify all edge cases for implementation specifics. The best validation we can do  is known value testing against AWS Payment Cryptography and its Futurex backed HSM fleet.
+These extensions emulate payment HSM-style workflows and may not model every vendor-specific edge case. Validation focuses on standards alignment, known vectors, and comparison with AWS Payment Cryptography behavior where comparable APIs are available.
 
 Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness.
 
-[A live demo can be found at cyberchef.jacobmarks.com][1] - have fun!
+## Non-goals
+
+- Not a certified HSM or PCI-scoped control
+- Not a replacement for production cryptographic infrastructure
+- Not intended for use with production keys, real PANs, or live PIN blocks
+
+## Representative recipes
+
+A small selection — for the full workflow library with walkthroughs, screenshots, and cross-validation notes, see **[J8k3/CyberChef-Payments](https://github.com/J8k3/CyberChef-Payments)**.
+
+ - [EMV: generate ARQC][p05]
+ - [EMV: generate ARPC issuer response][p07]
+ - [DUKPT TDES: derive IPEK from BDK][p12]
+ - [PIN Block Translate Encrypted: re-key between ZPKs][p25]
+ - [Card validation: generate CVV2][p22]
+ - [HSM: parse Thales payShield command][p16]
+ - [TR-31: parse and inspect key block][p15]
+
+[A live demo can be found at cyberchef.jacobmarks.com][1]
 
 ## Developing/Running Locally with Docker
 
