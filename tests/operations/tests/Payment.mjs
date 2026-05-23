@@ -1168,6 +1168,68 @@ TestRegister.addTests([
         ]
     },
     {
+        // Golden-value tests: verify wrapper arg wiring and padding behaviour are
+        // stable. AES is backed by the upstream forge library; these tests catch
+        // regressions in mode selection, IV handling, and key plumbing.
+        // ISO 9797-1 method-2 padding: 16-byte input → 32-byte ciphertext (data + padding block).
+        name: "Payment Encrypt Data: AES ECB",
+        input: "00112233445566778899AABBCCDDEEFF",
+        expectedOutput: "62F679BE2BF0D931641E039CA3401BB200657EA140655A44782747705D422FAD",
+        recipeConfig: [
+            {
+                op: "Payment Encrypt Data",
+                args: ["AES ECB", "00112233445566778899AABBCCDDEEFF", "", "", "Data", false]
+            }
+        ]
+    },
+    {
+        name: "Payment Decrypt Data: AES ECB",
+        input: "62F679BE2BF0D931641E039CA3401BB200657EA140655A44782747705D422FAD",
+        expectedOutput: "00112233445566778899AABBCCDDEEFF",
+        recipeConfig: [
+            {
+                op: "Payment Decrypt Data",
+                args: ["AES ECB", "00112233445566778899AABBCCDDEEFF", "", "", "Data", false]
+            }
+        ]
+    },
+    {
+        // CTR is a stream mode — no ISO 9797-1 padding appended.
+        name: "Payment Encrypt Data: AES CTR",
+        input: "00112233445566778899AABBCCDDEEFF",
+        expectedOutput: "FDF5D99D0E5C8657676E882D535E6DD4",
+        recipeConfig: [
+            {
+                op: "Payment Encrypt Data",
+                args: ["AES CTR", "00112233445566778899AABBCCDDEEFF", "00000000000000000000000000000000", "", "Data", false]
+            }
+        ]
+    },
+    {
+        name: "Payment Decrypt Data: AES CTR",
+        input: "FDF5D99D0E5C8657676E882D535E6DD4",
+        expectedOutput: "00112233445566778899AABBCCDDEEFF",
+        recipeConfig: [
+            {
+                op: "Payment Decrypt Data",
+                args: ["AES CTR", "00112233445566778899AABBCCDDEEFF", "00000000000000000000000000000000", "", "Data", false]
+            }
+        ]
+    },
+    {
+        // DUKPT TDES CBC: same BDK/KSN as TDES ECB test; CBC chains blocks using IV.
+        // ISO 9797-1 method-2 padding appends a second block to the output.
+        name: "Payment Encrypt Data: DUKPT TDES CBC (Data variant, counter 1)",
+        input: "0102030405060708",
+        expectedOutput: "92A5157E4607D1B0D64C005667C8C4DB",
+        recipeConfig: [
+            {
+                op: "Payment Encrypt Data",
+                args: ["DUKPT TDES CBC", "0123456789ABCDEFFEDCBA9876543210", "0000000000000000", "FFFF9876543210E00001", "Data", false]
+            }
+        ]
+    },
+    {
         name: "MAC Generate: AES-CMAC",
         input: "1122334455667788",
         expectedOutput: "339AF1AD1650E908",
