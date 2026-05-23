@@ -305,8 +305,9 @@ class DeriveDUKPTAESKey extends Operation {
 
         if (deriveMode === "Initial Key (IK)") {
             if (outputJson) {
-                const out = { inputKeyType, ik: hex(ik) };
+                const out = { inputKeyType, ksn: hex(ksn), iki: hex(iki), counter: `0x${counter.toString(16).padStart(8, "0").toUpperCase()}` };
                 if (inputKeyType === "BDK") out.bdk = hex(inputKey);
+                out.ik = hex(ik);
                 return JSON.stringify(out, null, 4);
             }
             return hex(ik);
@@ -317,7 +318,7 @@ class DeriveDUKPTAESKey extends Operation {
         const wkKey  = deriveWorkingKey(txKey, iki, counter, purpose);
 
         if (outputJson) {
-            const out = { inputKeyType, iki: hex(iki), counter: `0x${counter.toString(16).padStart(8, "0").toUpperCase()}` };
+            const out = { inputKeyType, ksn: hex(ksn), iki: hex(iki), counter: `0x${counter.toString(16).padStart(8, "0").toUpperCase()}` };
             if (inputKeyType === "BDK") out.bdk = hex(inputKey);
             out.ik             = hex(ik);
             out.transactionKey = hex(txKey);

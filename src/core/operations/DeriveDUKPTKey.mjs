@@ -253,9 +253,11 @@ class DeriveDUKPTKey extends Operation {
         const ipek = deriveIpek(bdk, ksn);
         const ipekHex = toHexFast(ipek).toUpperCase();
 
+        const ksnHexOut = toHexFast(ksn).toUpperCase();
+
         if (mode === "Derive IPEK") {
             if (outputJson) {
-                return JSON.stringify({ mode, ipek: ipekHex }, null, 4);
+                return JSON.stringify({ mode, ksn: ksnHexOut, bdk: toHexFast(bdk).toUpperCase(), ipek: ipekHex }, null, 4);
             }
             return ipekHex;
         }
@@ -267,6 +269,8 @@ class DeriveDUKPTKey extends Operation {
         if (outputJson) {
             return JSON.stringify({
                 mode,
+                ksn: ksnHexOut,
+                bdk: toHexFast(bdk).toUpperCase(),
                 ipek: ipekHex,
                 sessionBase: toHexFast(sessionBase).toUpperCase(),
                 variant,

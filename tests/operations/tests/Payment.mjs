@@ -482,6 +482,8 @@ TestRegister.addTests([
         input: "0123456789ABCDEFFEDCBA9876543210",
         expectedOutput: JSON.stringify({
             mode: "Derive Session Key",
+            ksn: "FFFF9876543210E00001",
+            bdk: "0123456789ABCDEFFEDCBA9876543210",
             ipek: "6AC292FAA1315B4D858AB3A3D7D5933A",
             sessionBase: "042666B49184CFA368DE9628D0397BC9",
             variant: "None",
