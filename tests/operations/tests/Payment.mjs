@@ -408,6 +408,28 @@ TestRegister.addTests([
         ]
     },
     {
+        // ── DUKPT Derive AES Key — json=true output shape ────────────────────────
+        // Verifies that IK derivation JSON output includes ksn, iki, and counter
+        // in addition to bdk and ik. Same BDK/KSN as §6.3.1 vector above.
+        // iki = first 8 bytes of KSN; counter = last 4 bytes = 0x00000001.
+        name: "DUKPT Derive AES Key: IK JSON output includes ksn, iki, counter",
+        input: "FEDCBA9876543210F1F1F1F1F1F1F1F1",
+        expectedOutput: JSON.stringify({
+            inputKeyType: "BDK",
+            ksn:     "123456789012345600000001",
+            iki:     "1234567890123456",
+            counter: "0x00000001",
+            bdk: "FEDCBA9876543210F1F1F1F1F1F1F1F1",
+            ik:  "1273671EA26AC29AFA4D1084127652A1"
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "DUKPT Derive AES Key",
+                args: ["BDK", "Initial Key (IK)", "123456789012345600000001", "PIN Encryption", true]
+            }
+        ]
+    },
+    {
         name: "DUKPT Derive TDES Key: known IPEK vector",
         input: "0123456789ABCDEFFEDCBA9876543210",
         expectedOutput: "6AC292FAA1315B4D858AB3A3D7D5933A",
@@ -493,6 +515,25 @@ TestRegister.addTests([
             {
                 op: "DUKPT Derive TDES Key",
                 args: ["Derive Session Key", "FFFF9876543210E00001", "None", true]
+            }
+        ]
+    },
+    {
+        // ── DUKPT Derive TDES Key — IPEK json=true output shape ──────────────────
+        // Verifies that IPEK derivation JSON output includes ksn and bdk in
+        // addition to ipek. Same BDK/KSN as the known IPEK vector test above.
+        name: "DUKPT Derive TDES Key: IPEK JSON output includes ksn and bdk",
+        input: "0123456789ABCDEFFEDCBA9876543210",
+        expectedOutput: JSON.stringify({
+            mode: "Derive IPEK",
+            ksn:  "FFFF9876543210E00008",
+            bdk:  "0123456789ABCDEFFEDCBA9876543210",
+            ipek: "6AC292FAA1315B4D858AB3A3D7D5933A"
+        }, null, 4),
+        recipeConfig: [
+            {
+                op: "DUKPT Derive TDES Key",
+                args: ["Derive IPEK", "FFFF9876543210E00008", "None", true]
             }
         ]
     },
@@ -1054,6 +1095,75 @@ TestRegister.addTests([
             {
                 op: "Payment Re-Encrypt Data",
                 args: ["AES CBC", "00112233445566778899AABBCCDDEEFF", "000102030405060708090A0B0C0D0E0F", "", "Data", "TDES CBC", "0123456789ABCDEFFEDCBA9876543210", "1234567890ABCDEF", "", "Data", false]
+            }
+        ]
+    },
+    {
+        // ── Payment Encrypt / Decrypt — TDES profiles ────────────────────────────
+        // TDES ECB vector: APC cross-validated for the first block (✅ MATCH, 2026-05-19).
+        //   key = tdes_dek1 (0101…FEFE…) — D0 data-encryption key from APC test set
+        //   The operation appends an ISO 9797-1 method-2 padding block, so 8 bytes
+        //   of plaintext produces 16 bytes of ciphertext. APC compared only block 1.
+        name: "Payment Encrypt Data: TDES ECB",
+        input: "0102030405060708",
+        expectedOutput: "B064B6C2571C65D5ACB2CF1241618C8B",
+        recipeConfig: [
+            {
+                op: "Payment Encrypt Data",
+                args: ["TDES ECB", "0101010101010101FEFEFEFEFEFEFEFE", "", "", "Data", false]
+            }
+        ]
+    },
+    {
+        name: "Payment Decrypt Data: TDES ECB",
+        input: "B064B6C2571C65D5ACB2CF1241618C8B",
+        expectedOutput: "0102030405060708",
+        recipeConfig: [
+            {
+                op: "Payment Decrypt Data",
+                args: ["TDES ECB", "0101010101010101FEFEFEFEFEFEFEFE", "", "", "Data", false]
+            }
+        ]
+    },
+    {
+        // TDES CBC vectors derived from the AES→TDES re-encrypt test above:
+        // AES CBC decrypt of the re-encrypt input recovers the original plaintext,
+        // which TDES CBC then re-encrypts to the re-encrypt expected output.
+        name: "Payment Encrypt Data: TDES CBC",
+        input: "00112233445566778899AABBCCDDEEFF",
+        expectedOutput: "C47BC6E91A9D566F649D750BCE1CE9889FB5AE1489A16692",
+        recipeConfig: [
+            {
+                op: "Payment Encrypt Data",
+                args: ["TDES CBC", "0123456789ABCDEFFEDCBA9876543210", "1234567890ABCDEF", "", "Data", false]
+            }
+        ]
+    },
+    {
+        name: "Payment Decrypt Data: TDES CBC",
+        input: "C47BC6E91A9D566F649D750BCE1CE9889FB5AE1489A16692",
+        expectedOutput: "00112233445566778899AABBCCDDEEFF",
+        recipeConfig: [
+            {
+                op: "Payment Decrypt Data",
+                args: ["TDES CBC", "0123456789ABCDEFFEDCBA9876543210", "1234567890ABCDEF", "", "Data", false]
+            }
+        ]
+    },
+    {
+        // DUKPT TDES ECB: CyberChef follows ANSI X9.24-1 "Data" variant (bytes 5
+        // and 13 of the session key XOR 0xFF). APC uses a different internal
+        // variant — see PAYMENT_RECIPES.md §DUKPT TDES Encrypt for details.
+        // Derivation chain: BDK → IPEK (at E00008) → session key (at E00001).
+        // Session key (variant "Data") = 042666B4917BCFA368DE9628D0C67BC9.
+        // ISO 9797-1 method-2 padding appends a second block to the output.
+        name: "Payment Encrypt Data: DUKPT TDES ECB (Data variant, counter 1)",
+        input: "0102030405060708",
+        expectedOutput: "92A5157E4607D1B098E2F2D4660798DF",
+        recipeConfig: [
+            {
+                op: "Payment Encrypt Data",
+                args: ["DUKPT TDES ECB", "0123456789ABCDEFFEDCBA9876543210", "", "FFFF9876543210E00001", "Data", false]
             }
         ]
     },
