@@ -78,7 +78,7 @@ class ShowOnMap extends Operation {
             // uncaught TypeError in the browser.
             const coords = latLong.split(",").map(v => v.trim());
             if (coords.length !== 2 || coords.some(v => v === "" || isNaN(Number(v)))) {
-                throw new OperationError(`Could not show co-ordinates '${latLong}' on the map. Expected a latitude and longitude pair - check that the input format and delimiter are correct.`);
+                throw new OperationError(`Could not show coordinates '${latLong}' on the map. Expected a latitude and longitude pair - check that the input format and delimiter are correct.`);
             }
 
             return latLong;
