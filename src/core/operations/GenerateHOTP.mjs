@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import * as OTPAuth from "otpauth";
 
 /**
@@ -46,22 +47,29 @@ class GenerateHOTP extends Operation {
      *
      */
     run(input, args) {
-        const secretStr = new TextDecoder("utf-8").decode(input).trim();
-        const secret = secretStr ? secretStr.toUpperCase().replace(/\s+/g, "") : "";
+        try {
+            const secretStr = new TextDecoder("utf-8").decode(input).trim();
+            const secret = secretStr ? secretStr.toUpperCase().replace(/\s+/g, "") : "";
 
-        const hotp = new OTPAuth.HOTP({
-            issuer: "",
-            label: args[0],
-            algorithm: "SHA1",
-            digits: args[1],
-            counter: args[2],
-            secret: OTPAuth.Secret.fromBase32(secret)
-        });
+            const hotp = new OTPAuth.HOTP({
+                issuer: "",
+                label: args[0],
+                algorithm: "SHA1",
+                digits: args[1],
+                counter: args[2],
+                secret: OTPAuth.Secret.fromBase32(secret)
+            });
 
-        const uri = hotp.toString();
-        const code = hotp.generate();
+            const uri = hotp.toString();
+            const code = hotp.generate();
 
-        return `URI: ${uri}\n\nPassword: ${code}`;
+            return `URI: ${uri}\n\nPassword: ${code}`;
+        } catch (err) {
+            if (err instanceof TypeError) {
+                throw new OperationError("Invalid character found in input. HOTP secrets must be valid Base32 characters (A-Z, 2-7).");
+            }
+            throw err;
+        }
     }
 }
 
