@@ -71,6 +71,16 @@ class ShowOnMap extends Operation {
             }
             latLong = latLong.replace(/[,]$/, "");
             latLong = latLong.replace(/°/g, "");
+
+            // The map requires a latitude and longitude pair. If the conversion only produced a
+            // single value (e.g. because the chosen input delimiter didn't match the input), bail
+            // out with a helpful message rather than passing it on to the map, which would throw an
+            // uncaught TypeError in the browser.
+            const coords = latLong.split(",").map(v => v.trim());
+            if (coords.length !== 2 || coords.some(v => v === "" || isNaN(Number(v)))) {
+                throw new OperationError(`Could not show co-ordinates '${latLong}' on the map. Expected a latitude and longitude pair - check that the input format and delimiter are correct.`);
+            }
+
             return latLong;
         }
         return input;
