@@ -45,9 +45,17 @@ jobs:
           path: build/prod/*.zip
           retention-days: 5
 
+      - name: Setup Chrome
+        id: setup-chrome
+        if: success()
+        run: |
+          npx @puppeteer/browsers install chrome@148
+          echo chromedir=$(dirname $(find `pwd`/chrome/* -name chrome -print -quit)) >> $GITHUB_OUTPUT
+
       - name: UI Tests
         if: success()
         run: |
+          export PATH=${{ steps.setup-chrome.outputs.chromedir }}:$PATH
           sudo apt-get install xvfb
           xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
@@ -61,6 +69,6 @@ jobs:
       - name: Production Image Build
         if: success()
         id: build-image
-        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
+        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
         with:
           platforms: linux/amd64,linux/arm64,linux/arm/v7
