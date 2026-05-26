@@ -25,11 +25,7 @@ updates:
       # see issue #2214 for rationale for each of these
       - dependency-name: '@xmldom/xmldom'
         versions: [ '>=0.9.0' ]
-      - dependency-name: 'bcryptjs'
-        versions: [ '>=3.0.0' ]
       - dependency-name: 'bootstrap'
-        versions: [ '>=5.0.0' ]
-      - dependency-name: 'bson'
         versions: [ '>=5.0.0' ]
       - dependency-name: 'cbor'
         versions: [ '>=10.0.0' ]
