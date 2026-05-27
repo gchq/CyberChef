@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import bson from "bson";
+import { deserialize } from "bson";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
@@ -37,7 +37,7 @@ class BSONDeserialise extends Operation {
         if (!input.byteLength) return "";
 
         try {
-            const data = bson.deserialize(new Buffer(input));
+            const data = deserialize(new Uint8Array(input));
             return JSON.stringify(data, null, 2);
         } catch (err) {
             throw new OperationError(err.toString());
