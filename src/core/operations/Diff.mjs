@@ -60,6 +60,7 @@ class Diff extends Operation {
             },
             {
                 "name": "Show +/- notation",
+                "hint": "Works only in Line diff mode.",
                 "type": "boolean",
                 "value": false
             }
@@ -90,6 +91,34 @@ class Diff extends Operation {
 
         if (!samples || samples.length !== 2) {
             throw new OperationError("Incorrect number of samples, perhaps you need to modify the sample delimiter or add more samples?");
+        }
+
+        // +/- notation only works properly with Line diff mode
+        // For other modes, it falls back to HTML format and this option is ignored (see hint).
+        const useNotation = showNotation && diffBy === "Line";
+
+        if (useNotation) {
+            const patch = jsdiff.createTwoFilesPatch("original", "modified", samples[0], samples[1], "", "", {
+                context: Infinity,
+                ignoreWhitespace: ignoreWhitespace,
+            });
+
+            const lines = patch.split("\n");
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                if (line.startsWith("@@")) {
+                    if (showSubtraction) output += line + "\n";
+                } else if (line.startsWith("+") && !line.startsWith("+++")) {
+                    if (showAdded) output += line + "\n";
+                } else if (line.startsWith("-") && !line.startsWith("---")) {
+                    if (showRemoved) output += line + "\n";
+                } else if (line.startsWith("===") || line.startsWith("---") || line.startsWith("+++") || line.startsWith("\\")) {
+                    continue;
+                } else if (line.length > 0 && !showSubtraction) {
+                    output += line.substring(1) + "\n";
+                }
+            }
+            return output.slice(0, -1);
         }
 
         switch (diffBy) {
@@ -124,23 +153,12 @@ class Diff extends Operation {
         }
 
         for (let i = 0; i < diff.length; i++) {
-            if (showNotation) {
-                const escapedValue = Utils.escapeHtml(diff[i].value);
-                if (diff[i].added) {
-                    if (showAdded) output += "+ " + escapedValue;
-                } else if (diff[i].removed) {
-                    if (showRemoved) output += "- " + escapedValue;
-                } else if (!showSubtraction) {
-                    output += "  " + escapedValue;
-                }
-            } else {
-                if (diff[i].added) {
-                    if (showAdded) output += "<ins>" + Utils.escapeHtml(diff[i].value) + "</ins>";
-                } else if (diff[i].removed) {
-                    if (showRemoved) output += "<del>" + Utils.escapeHtml(diff[i].value) + "</del>";
-                } else if (!showSubtraction) {
-                    output += Utils.escapeHtml(diff[i].value);
-                }
+            if (diff[i].added) {
+                if (showAdded) output += "<ins>" + Utils.escapeHtml(diff[i].value) + "</ins>";
+            } else if (diff[i].removed) {
+                if (showRemoved) output += "<del>" + Utils.escapeHtml(diff[i].value) + "</del>";
+            } else if (!showSubtraction) {
+                output += Utils.escapeHtml(diff[i].value);
             }
         }
 
