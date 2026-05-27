@@ -75,7 +75,7 @@ class SetDifference extends Operation {
      * @returns {Object[]}
      */
     runSetDifference(a, b) {
-        return a
+        return [...new Set(a)]
             .filter((item) => {
                 return b.indexOf(item) === -1;
             })
