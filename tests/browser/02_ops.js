@@ -219,7 +219,7 @@ module.exports = {
         // testOp(browser, "JSON Minify", "test input", "test_output");
     // testOp(browser, "JSON to CSV", "test input", "test_output");
     // testOp(browser, "JWT Decode", "test input", "test_output");
-    // testOp(browser, "JWT Sign", "test input", "test_output");
+        testOp(browser, "JWT Sign", '{"a":{"b":1}}', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhIjp7ImIiOjF9fQ.5PSBsZ9_B-qZa8H3l9tRAEV6qt8NgEHNJaoyjVcnTsU", ["A-key-of-256-bits-or-larger-as-per-RFC7518", "HS256", "{}"]);
     // testOp(browser, "JWT Verify", "test input", "test_output");
     // testOp(browser, "JavaScript Beautify", "test input", "test_output");
     // testOp(browser, "JavaScript Minify", "test input", "test_output");
