@@ -54,6 +54,10 @@ class GenerateDeBruijnSequence extends Operation {
             throw new OperationError("Invalid alphabet size, required to be integer.");
         }
 
+        if (!Number.isInteger(n)) {
+            throw new OperationError("Invalid key length, required to be integer.");
+        }
+
         if (n < 2) {
             throw new OperationError("Invalid key length, required to be at least 2.");
         }
