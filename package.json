@@ -142,7 +142,7 @@
     "js-sha3": "^0.9.3",
     "jsesc": "^3.1.0",
     "json5": "^2.2.3",
-    "jsonata": "^2.1.0",
+    "jsonata": "^2.2.1",
     "jsonpath-plus": "^10.4.0",
     "jsonwebtoken": "9.0.3",
     "jsqr": "^1.4.0",
