@@ -5,10 +5,9 @@
  */
 import Operation from "../Operation.mjs";
 import { SignJWT, importPKCS8 } from "jose";
-import { createPrivateKey } from "crypto";
 import OperationError from "../errors/OperationError.mjs";
 import {JWT_ALGORITHMS} from "../lib/JWT.mjs";
-
+import {pkcs1ToPkcs8} from "../lib/RSA.mjs";
 
 /**
  * JWT Sign operation
@@ -57,7 +56,7 @@ class JWTSign extends Operation {
         let secret;
         try {
             if (key.startsWith("-----BEGIN RSA PRIVATE KEY-----")) {
-                secret = await createPrivateKey(key);
+                secret = await importPKCS8(pkcs1ToPkcs8(key), algorithm);
             } else if (key.startsWith("-----BEGIN PRIVATE KEY-----")) {
                 secret = await importPKCS8(key, algorithm);
             } else {
