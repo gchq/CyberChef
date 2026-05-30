@@ -88,14 +88,12 @@ If your operation does not rely on a library, just leave this blank and it will 
         authorName: {
             description: "Your name or username will be added to the @author tag for this operation.",
             example: "n1474335",
-            default: "",
             prompt: "Username",
             type: "string"
         },
         authorEmail: {
             description: "Your email address will also be added to the @author tag for this operation.",
             example: "n1474335@gmail.com",
-            default: "",
             prompt: "Email",
             type: "string"
         }
