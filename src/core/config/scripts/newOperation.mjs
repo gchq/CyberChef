@@ -14,7 +14,6 @@ import process from "process";
 import fs from "fs";
 import path from "path";
 import EscapeString from "../../operations/EscapeString.mjs";
-import iniparser from "iniparser";
 
 
 const dir = path.join(process.cwd() + "/src/core/operations/");
@@ -25,23 +24,6 @@ if (!fs.existsSync(dir)) {
     process.exit(1);
 }
 const testDir = path.join(process.cwd() + "/tests/operations/tests/");
-
-const configFile = "/.gitconfig";
-let gitUserEmail, gitUserName;
-// gitconfig in root is better than global one
-let gitConfig = process.cwd() + "/.git/config";
-if (!fs.existsSync(gitConfig)) {
-    gitConfig = process.env.HOME +  configFile;
-}
-// get user settings from git
-if (fs.existsSync(gitConfig)) {
-    const config = iniparser.parseSync(gitConfig);
-    if ("user" in config) {
-        if ("email" in config.user) gitUserEmail = config.user.email;
-        if ("name" in config.user) gitUserName = config.user.name;
-    }
-}
-
 const ioTypes = ["string", "byteArray", "number", "html", "ArrayBuffer", "BigNumber", "JSON", "File", "List<File>"];
 
 const schema = {
@@ -106,14 +88,14 @@ If your operation does not rely on a library, just leave this blank and it will 
         authorName: {
             description: "Your name or username will be added to the @author tag for this operation.",
             example: "n1474335",
-            default: gitUserName,
+            default: "",
             prompt: "Username",
             type: "string"
         },
         authorEmail: {
             description: "Your email address will also be added to the @author tag for this operation.",
             example: "n1474335@gmail.com",
-            default: gitUserEmail,
+            default: "",
             prompt: "Email",
             type: "string"
         }
