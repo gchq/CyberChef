@@ -64,6 +64,13 @@ class GenerateQRCode extends Operation {
     run(input, args) {
         const [format, size, margin, errorCorrection] = args;
 
+        if (!Number.isFinite(size) || size < 1) {
+            throw new OperationError("Module size must be greater than 0.");
+        }
+        if (!Number.isFinite(margin) || margin < 0) {
+            throw new OperationError("Margin must be greater than or equal to 0.");
+        }
+
         return generateQrCode(input, format, size, margin, errorCorrection);
     }
 

@@ -64,4 +64,26 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "Generate QR Code: negative module size",
+        input: "a",
+        expectedOutput: "Module size must be greater than 0.",
+        recipeConfig: [
+            {
+                "op": "Generate QR Code",
+                "args": ["PNG", -5, 4, "Medium"]
+            },
+        ],
+    },
+    {
+        name: "Generate QR Code: negative margin",
+        input: "a",
+        expectedOutput: "Margin must be greater than or equal to 0.",
+        recipeConfig: [
+            {
+                "op": "Generate QR Code",
+                "args": ["PNG", 5, -4, "Medium"]
+            },
+        ],
+    },
 ]);

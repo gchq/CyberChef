@@ -142,6 +142,7 @@ import "./tests/ParityBit.mjs";
 import "./tests/PHPSerialize.mjs";
 import "./tests/PowerSet.mjs";
 import "./tests/Protobuf.mjs";
+import "./tests/PseudoRandom.mjs";
 import "./tests/PubKeyFromCert.mjs";
 import "./tests/PubKeyFromPrivKey.mjs";
 import "./tests/Rabbit.mjs";

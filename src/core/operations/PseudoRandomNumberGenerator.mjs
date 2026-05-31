@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import forge from "node-forge";
 import BigNumber from "bignumber.js";
@@ -48,6 +49,10 @@ class PseudoRandomNumberGenerator extends Operation {
      */
     run(input, args) {
         const [numBytes, outputAs] = args;
+
+        if (!Number.isSafeInteger(numBytes) || numBytes < 0) {
+            throw new OperationError("Number of bytes must be a non-negative integer.");
+        }
 
         let bytes;
 

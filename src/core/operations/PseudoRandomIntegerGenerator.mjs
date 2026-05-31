@@ -80,6 +80,10 @@ class PseudoRandomIntegerGenerator extends Operation {
 
         if (minInt === null || maxInt === null) return "";
 
+        if (!Number.isSafeInteger(numInts) || numInts < 1) {
+            throw new OperationError("Number of Integers must be a positive integer.");
+        }
+
         const min = Math.ceil(minInt);
         const max = Math.floor(maxInt);
         const delim = Utils.charRep(delimiter || "Space");
