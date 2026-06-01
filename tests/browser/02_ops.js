@@ -30,7 +30,7 @@ module.exports = {
         testOp(browser, "A1Z26 Cipher Decode", "20 5 19 20 15 21 20 16 21 20", "testoutput");
         testOp(browser, "A1Z26 Cipher Encode", "test input", "20 5 19 20 9 14 16 21 20");
         testOp(browser, "ADD", "test input", "Ê»ÉÊv¿ÄÆËÊ", [{ "option": "Hex", "string": "56" }]);
-        testOp(browser, "AES Decrypt", "b443f7f7c16ac5396a34273f6f639caa", "test output", [{ "option": "Hex", "string": "00112233445566778899aabbccddeeff" }, { "option": "Hex", "string": "00000000000000000000000000000000" }, 16, "Start of input", "CBC", "Hex", "Raw", { "option": "Hex", "string": "" }, { "option": "Hex", "string": "" }, "Off"]);
+        testOp(browser, "AES Decrypt", "b443f7f7c16ac5396a34273f6f639caa", "test output", [{ "option": "Hex", "string": "00112233445566778899aabbccddeeff" }, { "option": "Hex", "string": "00000000000000000000000000000000" }, 16, "CBC", "Hex", "Raw", { "option": "Hex", "string": "" }, { "option": "Hex", "string": "" }, "Off"]);
         testOp(browser, "AES Encrypt", "test input", "e42eb8fbfb7a98fff061cd2c1a794d92", [{"option": "Hex", "string": "00112233445566778899aabbccddeeff"}, {"option": "Hex", "string": "00000000000000000000000000000000"}, "CBC", "Raw", "Hex", "Off"]);
         testOp(browser, "AND", "test input", "4$04  $044", [{ "option": "Hex", "string": "34" }]);
         testOp(browser, "Add line numbers", "test input", "1 test input");

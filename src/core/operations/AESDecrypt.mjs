@@ -45,45 +45,40 @@ class AESDecrypt extends Operation {
                 "value": 16
             },
             {
-                "name": "IV Location",
-                "type": "option",
-                "value": ["Start of input", "End of input"],
-            },
-            {
                 "name": "Mode",
                 "type": "argSelector",
                 "value": [
                     {
                         name: "CBC",
-                        off: [7, 8]
+                        off: [6, 7]
                     },
                     {
                         name: "CFB",
-                        off: [7, 8]
+                        off: [6, 7]
                     },
                     {
                         name: "OFB",
-                        off: [7, 8]
+                        off: [6, 7]
                     },
                     {
                         name: "CTR",
-                        off: [7, 8]
+                        off: [6, 7]
                     },
                     {
                         name: "GCM",
-                        on: [7, 8]
+                        on: [6, 7]
                     },
                     {
                         name: "ECB",
-                        off: [7, 8]
+                        off: [6, 7]
                     },
                     {
                         name: "CBC/NoPadding",
-                        off: [7, 8]
+                        off: [6, 7]
                     },
                     {
                         name: "ECB/NoPadding",
-                        off: [7, 8]
+                        off: [6, 7]
                     }
                 ]
             },
@@ -116,11 +111,15 @@ class AESDecrypt extends Operation {
                     {
                         name: "Off",
                         on: [1],
-                        off: [2, 3]
+                        off: [2]
                     },
                     {
-                        name: "On",
-                        on: [2, 3],
+                        name: "From start",
+                        on: [2],
+                        off: [1]
+                    }, {
+                        name: "From end",
+                        on: [2],
                         off: [1]
                     }
                 ]
@@ -140,14 +139,13 @@ class AESDecrypt extends Operation {
 
         const key = Utils.convertToByteString(args[0].string, args[0].option),
             ivLength = args[2],
-            ivFromStart = args[3] === "Start of input",
-            mode = args[4].split("/")[0],
-            noPadding = args[4].endsWith("NoPadding"),
-            inputType = args[5],
-            outputType = args[6],
-            gcmTag = Utils.convertToByteString(args[7].string, args[7].option),
-            aad = Utils.convertToByteString(args[8].string, args[8].option),
-            ivFromInput = args[9] === "On";
+            mode = args[3].split("/")[0],
+            noPadding = args[3].endsWith("NoPadding"),
+            inputType = args[4],
+            outputType = args[5],
+            gcmTag = Utils.convertToByteString(args[6].string, args[6].option),
+            aad = Utils.convertToByteString(args[7].string, args[7].option),
+            ivFromInput = args[8];
 
 
         if ([16, 24, 32].indexOf(key.length) < 0) {
@@ -161,12 +159,12 @@ The following algorithms will be used based on the size of the key:
 
         input = Utils.convertToByteString(input, inputType);
 
-        if (ivFromInput) {
+        if (ivFromInput !== "Off") {
             if (input.length <= ivLength) {
                 throw new OperationError(`Input is too short to contain an IV of ${ivLength} bytes.`);
             }
 
-            if (ivFromStart) {
+            if (ivFromInput === "From start") {
                 iv = input.substr(0, ivLength);
                 input = input.substr(ivLength);
             } else {
@@ -181,7 +179,7 @@ The following algorithms will be used based on the size of the key:
 
         /* Allow for a "no padding" mode */
         if (noPadding) {
-            decipher.mode.unpad = function(output, options) {
+            decipher.mode.unpad = function (output, options) {
                 return true;
             };
         }

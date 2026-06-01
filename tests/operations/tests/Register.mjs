@@ -60,7 +60,6 @@ TestRegister.addTests([
                         "string": "$R0"
                     },
                     16,
-                    "Start of input",
                     "CTR", "Hex", "Raw",
                     {
                         "option": "Hex",
