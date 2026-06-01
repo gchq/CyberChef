@@ -194,7 +194,7 @@ The following algorithms will be used based on the size of the key:
         decipher.update(forge.util.createBuffer(input));
         const result = decipher.finish();
 
-        if (result && decipher.output.length() > 0) {
+        if (result) {
             return outputType === "Hex" ? decipher.output.toHex() : decipher.output.getBytes();
         } else {
             throw new OperationError("Unable to decrypt input with these parameters.");

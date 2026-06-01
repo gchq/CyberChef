@@ -74,7 +74,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": ""},
                     {"option": "Hex", "string": ""},
                     "CBC", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -90,7 +91,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CBC", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -106,7 +108,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00000000000000000000000000000000"},
                     "CTR", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -122,7 +125,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CBC", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -138,7 +142,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CFB", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -154,7 +159,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "OFB", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -170,7 +176,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     "CTR", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -186,7 +193,8 @@ The following algorithms will be used based on the size of the key:
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
                     "ECB", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -204,7 +212,8 @@ Tag: 16a3e732a605cc9ca29108f742ca0743`,
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": ""},
                     "GCM", "Raw", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -222,7 +231,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                     {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
                     {"option": "Hex", "string": "ffeeddccbbaa99887766554433221100"},
                     "GCM", "Raw", "Hex",
-                    {"option": "UTF8", "string": "additional data"}
+                    {"option": "UTF8", "string": "additional data"},
+                    "Off"
                 ]
             }
         ],
@@ -238,7 +248,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -254,7 +265,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -270,7 +282,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -286,7 +299,8 @@ Tag: 3b5378917f67b0aade9891fc6c291646`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -304,7 +318,8 @@ Tag: 70fad2ca19412c20f40fd06918736e56`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -322,7 +337,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "UTF8", "string": "additional data"}
+                    {"option": "UTF8", "string": "additional data"},
+                    "Off"
                 ]
             }
         ],
@@ -338,7 +354,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                     {"option": "Hex", "string": "51e201d463698ef5f717f71f5b4712af"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -354,7 +371,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -370,7 +388,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -386,7 +405,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -402,7 +422,8 @@ Tag: 61cc4b70809452b0b3e38f913fa0a109`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -420,7 +441,8 @@ Tag: 86db597d5302595223cadbd990f1309b`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -438,7 +460,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "UTF8", "string": "additional data"}
+                    {"option": "UTF8", "string": "additional data"},
+                    "Off"
                 ]
             }
         ],
@@ -454,7 +477,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                     {"option": "Hex", "string": "6801ed503c9d96ee5f9d78b07ab1b295dba3c2adf81c7816"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -470,7 +494,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CBC", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -486,7 +511,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CFB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -502,7 +528,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "OFB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -518,7 +545,8 @@ Tag: aeedf3e6ca4201577c0cf3e9ce58159d`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "CTR", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -536,7 +564,8 @@ Tag: 821b1e5f32dad052e502775a523d957a`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
                 ]
             }
         ],
@@ -554,7 +583,8 @@ Tag: a8f04c4d93bbef82bef61a103371aef9`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "GCM", "Hex", "Hex",
-                    {"option": "UTF8", "string": "additional data"}
+                    {"option": "UTF8", "string": "additional data"},
+                    "Off"
                 ]
             }
         ],
@@ -570,7 +600,46 @@ Tag: a8f04c4d93bbef82bef61a103371aef9`,
                     {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
                     {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
                     "ECB", "Hex", "Hex",
-                    {"option": "Hex", "string": ""}
+                    {"option": "Hex", "string": ""},
+                    "Off"
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Encrypt: AES-256-GCM, Binary, AAD, prepend IV to output",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: `1748e7179bd56570d51fa4ba287cc3e51287f188ad4d7ab0d9ff69b3c29cb11f861389532d8cb9337181da2e8cfc74a84927e8c0dd7a28a32fd485afe694259a63c199b199b95edd87c7aa95329feac340f2b78b72956a85f367044d821766b1b7135815571df44900695f1518cf3ae38ecb650f
+
+Tag: a8f04c4d93bbef82bef61a103371aef9`,
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
+                    {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
+                    "GCM", "Hex", "Hex",
+                    {"option": "UTF8", "string": "additional data"},
+                    "Prepend"
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Encrypt: AES-256-GCM, Binary, AAD, append IV to output",
+        input: "7a0e643132750e96d805d11e9e48e281fa39a41039286423cc1c045e5442b40bf1c3f2822bded3f9c8ef11cb25da64dda9c7ab87c246bd305385150c98f31465c2a6180fe81d31ea289b916504d5a12e1de26cb10adba84a0cb0c86f94bc14bc554f3018",
+        expectedOutput: `1287f188ad4d7ab0d9ff69b3c29cb11f861389532d8cb9337181da2e8cfc74a84927e8c0dd7a28a32fd485afe694259a63c199b199b95edd87c7aa95329feac340f2b78b72956a85f367044d821766b1b7135815571df44900695f1518cf3ae38ecb650f1748e7179bd56570d51fa4ba287cc3e5
+
+Tag: a8f04c4d93bbef82bef61a103371aef9`,
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "2d767f6e9333d1c77581946e160b2b7368c2cdd5e2b80f04ca09d64e02afbfe1"},
+                    {"option": "Hex", "string": "1748e7179bd56570d51fa4ba287cc3e5"},
+                    "GCM", "Hex", "Hex",
+                    {"option": "UTF8", "string": "additional data"},
+                    "Append"
                 ]
             }
         ],
