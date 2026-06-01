@@ -80,7 +80,6 @@ TestRegister.addApiTests([
                 option: "utf8",
             },
             ivLength: 16,
-            ivLocation: "Start of input",
             mode: "OFB",
             inputType: "Hex",
             outputType: "Raw",
@@ -108,7 +107,6 @@ TestRegister.addApiTests([
                 option: "Hex",
             },
             ivLength: 16,
-            ivLocation: "End of input",
             mode: "OFB",
             inputType: "Hex",
             outputType: "Raw",
@@ -120,7 +118,7 @@ TestRegister.addApiTests([
                 option: "Hex",
                 string: ""
             },
-            ivFromInput: "On"
+            ivFromInput: "From end"
         });
         assert.equal(result.toString(), "a slightly longer sampleinput?");
     }),
