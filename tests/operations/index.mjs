@@ -11,6 +11,7 @@
  * @license Apache-2.0
  */
 
+import "../lib/wasmFetchPolyfill.mjs";
 import { setLongTestFailure, logTestReport } from "../lib/utils.mjs";
 
 import TestRegister from "../lib/TestRegister.mjs";
@@ -125,6 +126,7 @@ import "./tests/NormaliseUnicode.mjs";
 import "./tests/NTLM.mjs";
 import "./tests/OTP.mjs";
 import "./tests/ParseEthernetFrame.mjs";
+import "./tests/ParseIPv4Header.mjs";
 import "./tests/ParseIPRange.mjs";
 import "./tests/ParseObjectIDTimestamp.mjs";
 import "./tests/ParseQRCode.mjs";
@@ -180,6 +182,7 @@ import "./tests/TranslateDateTimeFormat.mjs";
 import "./tests/Typex.mjs";
 import "./tests/UnescapeString.mjs";
 import "./tests/Unicode.mjs";
+import "./tests/Wrap.mjs";
 import "./tests/URLEncodeDecode.mjs";
 import "./tests/RSA.mjs";
 import "./tests/CBOREncode.mjs";
