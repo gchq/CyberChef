@@ -13,8 +13,7 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Remove ANSI Escape Codes",
-                "args": [
-                ],
+                "args": [],
             },
         ],
     },
@@ -25,8 +24,7 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Remove ANSI Escape Codes",
-                "args": [
-                ],
+                "args": [],
             },
         ],
     },
@@ -37,12 +35,10 @@ TestRegister.addTests([
         "recipeConfig": [
             {
                 "op": "Remove ANSI Escape Codes",
-                "args": [
-                ],
+                "args": [],
             },
         ],
     },
-
     {
         "name": "Remove ANSI Escape Codes: text containing javascript escape representation of ansi escape codes",
         // input/output expressed in hex to avoid accidental interpretation of Javascript escapes and to make the test case explicit
@@ -63,5 +59,4 @@ TestRegister.addTests([
             }
         ],
     },
-
 ]);
