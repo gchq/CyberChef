@@ -7,8 +7,8 @@ import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
-        "name": "Remove ANSI Escape Codes: x1b escape code",
-        "input": "\\x1b[31;1;3;4;9mHello, \\x1b[31;1;3;4;9mWorld!",
+        "name": "Remove ANSI Escape Codes: text using x1b escape code",
+        "input": "\x1b[31mHello, \x1b[31mWorld!",
         "expectedOutput": "Hello, World!",
         "recipeConfig": [
             {
@@ -19,9 +19,9 @@ TestRegister.addTests([
         ],
     },
     {
-        "name": "Remove ANSI Escape Codes: 033 escape code",
-        "input": "\\033[32;1;3;4;9mHello, \\033[32;1;3;4;9mWorld!",
-        "expectedOutput": "Hello, World!",
+        "name": "Remove ANSI Escape Codes: text with incomplete codes",
+        "input": "\x1b[31 Hello, World!",
+        "expectedOutput": "ello, World!",
         "recipeConfig": [
             {
                 "op": "Remove ANSI Escape Codes",
@@ -31,8 +31,8 @@ TestRegister.addTests([
         ],
     },
     {
-        "name": "Remove ANSI Escape Codes: e escape code",
-        "input": "\\e[32;1;3;4;9mHello, \\e[32;1;3;4;9mWorld!",
+        "name": "Remove ANSI Escape Codes: cursor commands and clear screen",
+        "input": "\x1b[2J\x1b[H\x1b[3BHello, World!",
         "expectedOutput": "Hello, World!",
         "recipeConfig": [
             {
