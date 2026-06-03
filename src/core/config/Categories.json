@@ -571,6 +571,7 @@
             "Pseudo-Random Number Generator",
             "Pseudo-Random Integer Generator",
             "Generate De Bruijn Sequence",
+            "Generate Password",
             "Generate UUID",
             "Analyse UUID",
             "Generate TOTP",
