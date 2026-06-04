@@ -22,6 +22,15 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Bit shift left rejects negative amount",
+        input: "a",
+        expectedOutput: "Amount must be non-negative.",
+        recipeConfig: [
+            { "op": "Bit shift left",
+                "args": [-1] }
+        ]
+    },
+    {
         name: "Bit shift right: Logical shift",
         input: "01010101 10101010 11111111 00000000 11110000 00001111 00110011 11001100",
         expectedOutput: "00101010 01010101 01111111 00000000 01111000 00000111 00011001 01100110",

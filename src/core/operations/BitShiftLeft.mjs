@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * Bit shift left operation
@@ -27,7 +28,8 @@ class BitShiftLeft extends Operation {
             {
                 "name": "Amount",
                 "type": "number",
-                "value": 1
+                "value": 1,
+                "min": 0
             }
         ];
     }
@@ -39,6 +41,9 @@ class BitShiftLeft extends Operation {
      */
     run(input, args) {
         const amount = args[0];
+        if (amount < 0) {
+            throw new OperationError("Amount must be non-negative.");
+        }
         input = new Uint8Array(input);
 
         return input.map(b => {
