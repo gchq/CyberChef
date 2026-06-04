@@ -9,6 +9,7 @@
 import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
+export const MAX_BINARY_PADDING = 65536;
 
 /**
  * Convert a byte array into a binary string.
@@ -31,6 +32,10 @@ import OperationError from "../errors/OperationError.mjs";
 export function toBinary(data, delim="Space", padding=8) {
     if (data === undefined || data === null)
         throw new OperationError("Unable to convert to binary: Empty input data enocuntered");
+
+    padding = Number(padding);
+    if (!Number.isFinite(padding) || padding < 0 || Math.round(padding) !== padding || padding > MAX_BINARY_PADDING)
+        throw new OperationError(`Byte length must be an integer between 0 and ${MAX_BINARY_PADDING}`);
 
     delim = Utils.charRep(delim);
     let output = "";
@@ -77,4 +82,3 @@ export function fromBinary(data, delim="Space", byteLen=8) {
     }
     return output;
 }
-

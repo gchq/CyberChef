@@ -7,7 +7,7 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import {BIN_DELIM_OPTIONS} from "../lib/Delim.mjs";
-import {toBinary} from "../lib/Binary.mjs";
+import {MAX_BINARY_PADDING, toBinary} from "../lib/Binary.mjs";
 
 /**
  * To Binary operation
@@ -35,6 +35,8 @@ class ToBinary extends Operation {
             {
                 "name": "Byte Length",
                 "type": "number",
+                "min": 1,
+                "max": MAX_BINARY_PADDING,
                 "value": 8
             }
         ];
