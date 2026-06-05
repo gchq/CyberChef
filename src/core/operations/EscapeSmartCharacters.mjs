@@ -119,11 +119,11 @@ const SMART_MAP = {
     "·": ".",    // ·
 
     // Non-ASCII spaces
-    " ": " ",    // NBSP
-    " ": " ",    // en space
-    " ": " ",    // em space
-    " ": " ",    // thin space
-    " ": " "     // hair space
+    "\u00A0": " ",    // NBSP
+    "\u2002": " ",    // en space
+    "\u2003": " ",    // em space
+    "\u2009": " ",    // thin space
+    "\u200A": " "     // hair space
 };
 
 export default EscapeSmartCharacters;
