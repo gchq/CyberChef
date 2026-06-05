@@ -47,6 +47,11 @@ class BLAKE3 extends Operation {
     run(input, args) {
         const key = args[1];
         const size = args[0];
+
+        if (!Number.isInteger(size) || size < 0) {
+            throw new OperationError("Size must be a non-negative integer");
+        }
+
         const opts = { dkLen: size };
         const inputBytes = new Uint8Array(Utils.strToArrayBuffer(input));
         if (key !== "") {
