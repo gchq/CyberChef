@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import CryptoApi from "crypto-api/src/crypto-api.mjs";
 
 /**
@@ -67,6 +68,10 @@ class HMAC extends Operation {
      * @returns {string}
      */
     run(input, args) {
+        if (!args[1]) {
+            throw new OperationError("Hashing function must be selected.");
+        }
+
         const key = Utils.convertToByteString(args[0].string || "", args[0].option),
             hashFunc = args[1].toLowerCase(),
             msg = Utils.arrayBufferToStr(input, false),
