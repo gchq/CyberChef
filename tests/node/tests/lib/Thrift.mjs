@@ -336,11 +336,11 @@ TestRegister.addApiTests([
     // ===== buildBinaryStruct tests =====
     it("Thrift: buildBinaryStruct - simple struct", () => {
         const bytes = [];
-        // eslint-disable camelcase
+        /* eslint-disable camelcase */
         const jsonStruct = {
             field_1: { type: "I32", value: 42 }
         };
-        // eslint-enable camelcase
+        /* eslint-enable camelcase */
         buildBinaryStruct(jsonStruct, bytes);
         const expected = [
             8, 0, 1, // field type (I32), field id = 1
@@ -352,12 +352,12 @@ TestRegister.addApiTests([
 
     it("Thrift: buildBinaryStruct - multiple fields", () => {
         const bytes = [];
-        // eslint-disable camelcase
+        /* eslint-disable camelcase */
         const jsonStruct = {
             field_1: { type: "I32", value: 42 },
             field_2: { type: "BINARY", value: "hello" }
         };
-        // eslint-enable camelcase
+        /* eslint-enable camelcase */
         buildBinaryStruct(jsonStruct, bytes);
         // Should end with T_STOP
         assert.strictEqual(bytes[bytes.length - 1], 0);
@@ -365,11 +365,11 @@ TestRegister.addApiTests([
 
     it("Thrift: buildBinaryStruct - BOOL field", () => {
         const bytes = [];
-        // eslint-disable camelcase
+        /* eslint-disable camelcase */
         const jsonStruct = {
             field_1: { type: "BOOL", value: true }
         };
-        // eslint-enable camelcase
+        /* eslint-enable camelcase */
         buildBinaryStruct(jsonStruct, bytes);
         const expected = [
             2, 0, 1, // field type (BOOL), field id = 1
@@ -381,7 +381,7 @@ TestRegister.addApiTests([
 
     it("Thrift: buildBinaryStruct - nested struct", () => {
         const bytes = [];
-        // eslint-disable camelcase
+        /* eslint-disable camelcase */
         const jsonStruct = {
             field_1: {
                 type: "STRUCT",
@@ -390,7 +390,7 @@ TestRegister.addApiTests([
                 }
             }
         };
-        // eslint-enable camelcase
+        /* eslint-enable camelcase */
         buildBinaryStruct(jsonStruct, bytes);
         // Should contain nested structure with T_STOP markers
         assert.ok(bytes.length > 0);
@@ -399,12 +399,12 @@ TestRegister.addApiTests([
 
     it("Thrift: buildBinaryStruct - invalid field ID skipped", () => {
         const bytes = [];
-        // eslint-disable camelcase
+        /* eslint-disable camelcase */
         const jsonStruct = {
             invalid_field: { type: "I32", value: 42 },
             field_1: { type: "I32", value: 10 }
         };
-        // eslint-enable camelcase
+        /* eslint-enable camelcase */
         buildBinaryStruct(jsonStruct, bytes);
         // Should skip invalid_field and only process field_1
         assert.strictEqual(bytes[0], 8); // field type
