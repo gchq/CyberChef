@@ -148,6 +148,7 @@ import "./tests/Rabbit.mjs";
 import "./tests/RAKE.mjs";
 import "./tests/Regex.mjs";
 import "./tests/Register.mjs";
+import "./tests/RemoveANSIEscapeCodes.mjs";
 import "./tests/RegularExpression.mjs";
 import "./tests/RenderMarkdown.mjs";
 import "./tests/RisonEncodeDecode.mjs";
