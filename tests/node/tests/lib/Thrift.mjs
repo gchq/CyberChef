@@ -336,6 +336,7 @@ TestRegister.addApiTests([
     // ===== buildBinaryStruct tests =====
     it("Thrift: buildBinaryStruct - simple struct", () => {
         const bytes = [];
+        // eslint-disable-next-line camelcase
         const jsonStruct = {
             field_1: { type: "I32", value: 42 }
         };
@@ -350,6 +351,7 @@ TestRegister.addApiTests([
 
     it("Thrift: buildBinaryStruct - multiple fields", () => {
         const bytes = [];
+        // eslint-disable-next-line camelcase
         const jsonStruct = {
             field_1: { type: "I32", value: 42 },
             field_2: { type: "BINARY", value: "hello" }
@@ -361,6 +363,7 @@ TestRegister.addApiTests([
 
     it("Thrift: buildBinaryStruct - BOOL field", () => {
         const bytes = [];
+        // eslint-disable-next-line camelcase
         const jsonStruct = {
             field_1: { type: "BOOL", value: true }
         };
@@ -375,6 +378,7 @@ TestRegister.addApiTests([
 
     it("Thrift: buildBinaryStruct - nested struct", () => {
         const bytes = [];
+        // eslint-disable-next-line camelcase
         const jsonStruct = {
             field_1: {
                 type: "STRUCT",
@@ -391,6 +395,7 @@ TestRegister.addApiTests([
 
     it("Thrift: buildBinaryStruct - invalid field ID skipped", () => {
         const bytes = [];
+        // eslint-disable-next-line camelcase
         const jsonStruct = {
             invalid_field: { type: "I32", value: 42 },
             field_1: { type: "I32", value: 10 }
