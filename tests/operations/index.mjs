@@ -174,6 +174,7 @@ import "./tests/StripTCPHeader.mjs";
 import "./tests/StripUDPHeader.mjs";
 import "./tests/Subsection.mjs";
 import "./tests/SwapCase.mjs";
+import "./tests/SwapEndianness.mjs";
 import "./tests/SymmetricDifference.mjs";
 import "./tests/TakeNthBytes.mjs";
 import "./tests/Template.mjs";
