@@ -408,7 +408,7 @@ TestRegister.addApiTests([
         buildBinaryStruct(jsonStruct, bytes);
         // Should skip invalid_field and only process field_1
         assert.strictEqual(bytes[0], 8); // field type
-        assert.strictEqual(bytes[3], 10); // field value
+        assert.strictEqual(bytes[6], 10); // field value
     }),
 
     // ===== readBinaryType tests =====
@@ -521,7 +521,7 @@ TestRegister.addApiTests([
         const data = new DataView(bytes.buffer);
         const result = readBinaryType(data, 0, 13);
         assert.deepStrictEqual(result.value, [{ key: 1, val: "key" }]);
-        assert.strictEqual(result.offset, 13);
+        assert.strictEqual(result.offset, 17);
     }),
 
     // ===== parseBinaryProtocol tests =====
@@ -587,7 +587,7 @@ TestRegister.addApiTests([
 
     it("Thrift: readCompactType - I32 zigzag", () => {
         // ZigZag of 100 is 200
-        const bytes = new Uint8Array([200]);
+        const bytes = new Uint8Array([200, 1]);
         const data = new DataView(bytes.buffer);
         const result = readCompactType(data, 0, 5);
         assert.strictEqual(result.value, 100n);
@@ -636,7 +636,7 @@ TestRegister.addApiTests([
         ]);
         const data = new DataView(bytes.buffer);
         const result = parseCompactProtocol(data, 0);
-        assert.strictEqual(result.result.field_1.type, "BOOLEAN_TRUE");
+        assert.strictEqual(result.result.field_1.type, "BOOL");
         assert.strictEqual(result.result.field_1.value, true);
     }),
 
@@ -647,7 +647,7 @@ TestRegister.addApiTests([
         ]);
         const data = new DataView(bytes.buffer);
         const result = parseCompactProtocol(data, 0);
-        assert.strictEqual(result.result.field_1.type, "BOOLEAN_FALSE");
+        assert.strictEqual(result.result.field_1.type, "BOOL");
         assert.strictEqual(result.result.field_1.value, false);
     }),
 
