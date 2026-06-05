@@ -356,7 +356,7 @@ module.exports = {
         testOp(browser, "Tar", "test input", /^file\.txt\x00{92}/);
         testOp(browser, "Template", "{\"one\": 1, \"two\": 2}", "1 2", ["{{ one }} {{ two }}"]);
         testOp(browser, ["Thrift Serialize", "To Hex"], "{\"field_1\": { \"type\": \"I32\", \"value\": 100 }}", "08 00 01 00 00 00 64 00");
-        testOpHtml(browser, ["From Hex", "Thrift Deserialize"], "08 00 01 00 00 00 64 00", ".json-dict .json-literal", "100", [["Auto"], ["TBinaryProtocol"]]);
+        testOpHtml(browser, ["From Hex", "Thrift Deserialize", "JSON Beautify"], "08 00 01 00 00 00 64 00", ".json-dict .json-literal", "100", [["Auto"], ["TBinaryProtocol"], []]);
         testOpHtml(browser, "Text Encoding Brute Force", "test input", "tr:nth-of-type(4) td:last-child", /t\u2400e\u2400s\u2400t\u2400/);
         // testOp(browser, "To BCD", "test input", "test_output");
         // testOp(browser, "To Base", "test input", "test_output");
