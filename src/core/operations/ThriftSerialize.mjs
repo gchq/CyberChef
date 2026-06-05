@@ -6,7 +6,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import { 
+import {
     buildBinaryStruct
 } from "../lib/Thrift.mjs";
 
