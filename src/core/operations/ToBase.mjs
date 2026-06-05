@@ -43,7 +43,7 @@ class ToBase extends Operation {
             throw new OperationError("Error: Input must be a number");
         }
         const radix = args[0];
-        if (radix < 2 || radix > 36) {
+        if (!Number.isInteger(radix) || radix < 2 || radix > 36) {
             throw new OperationError("Error: Radix argument must be between 2 and 36");
         }
         return input.toString(radix);
