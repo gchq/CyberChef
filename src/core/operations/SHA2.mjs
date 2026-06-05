@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import {runHash} from "../lib/Hash.mjs";
 
 /**
@@ -83,6 +84,11 @@ class SHA2 extends Operation {
      */
     run(input, args) {
         const size = args[0];
+
+        if (!this.args[0].value.some(option => option.name === size)) {
+            throw new OperationError("Invalid SHA2 size");
+        }
+
         const rounds = (size === "256" || size === "224") ? args[1] : args[2];
         return runHash("sha" + size, input, {rounds: rounds});
     }
