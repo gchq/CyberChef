@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import {runHash} from "../lib/Hash.mjs";
 
 /**
@@ -30,7 +31,7 @@ class Snefru extends Operation {
                 type: "number",
                 value: 128,
                 min: 32,
-                max: 480,
+                max: 448,
                 step: 32
             },
             {
@@ -47,8 +48,14 @@ class Snefru extends Operation {
      * @returns {string}
      */
     run(input, args) {
+        const size = args[0];
+
+        if (!Number.isInteger(size) || size < 32 || size > 448 || size % 32 !== 0) {
+            throw new OperationError("Size must be a multiple of 32 between 32 and 448");
+        }
+
         return runHash("snefru", input, {
-            length: args[0],
+            length: size,
             rounds: args[1]
         });
     }
