@@ -70,6 +70,10 @@ class FromBCD extends Operation {
             inputFormat = args[3],
             nibbles = [];
 
+        if (!encoding) {
+            throw new OperationError("Invalid BCD encoding scheme");
+        }
+
         let output = "",
             byteArray;
 
