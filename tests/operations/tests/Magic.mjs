@@ -77,6 +77,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Magic: yEnc",
+        input: "before\r\n=ybegin line=128 size=3 name=test.bin\r\nklm\r\n=yend size=3\r\nafter",
+        expectedMatch: /#recipe=From_yEnc\(\)"/,
+        recipeConfig: [
+            {
+                op: "Magic",
+                args: [1, false, false]
+            }
+        ],
+    },
+    {
         name: "Magic Chain: Hex -> Hexdump -> Base64",
         input: "MDAwMDAwMDAgIDM3IDM0IDIwIDM2IDM1IDIwIDM3IDMzIDIwIDM3IDM0IDIwIDMyIDMwIDIwIDM3ICB8NzQgNjUgNzMgNzQgMjAgN3wKMDAwMDAwMTAgIDMzIDIwIDM3IDM0IDIwIDM3IDMyIDIwIDM2IDM5IDIwIDM2IDY1IDIwIDM2IDM3ICB8MyA3NCA3MiA2OSA2ZSA2N3w=",
         expectedMatch: /From_Base64\('A-Za-z0-9\+\/=',true,false\)\nFrom_Hexdump\(\)\nFrom_Hex\('Space'\)/,

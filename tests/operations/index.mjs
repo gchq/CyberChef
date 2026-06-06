@@ -197,6 +197,7 @@ import "./tests/JSONtoYAML.mjs";
 // Cannot test operations that use the File type yet
 // import "./tests/SplitColourChannels.mjs";
 import "./tests/YARA.mjs";
+import "./tests/YEnc.mjs";
 import "./tests/ParseCSR.mjs";
 import "./tests/XXTEA.mjs";
 

@@ -52,6 +52,8 @@
             "Escape Smart Characters",
             "To Quoted Printable",
             "From Quoted Printable",
+            "To yEnc",
+            "From yEnc",
             "To Punycode",
             "From Punycode",
             "AMF Encode",
