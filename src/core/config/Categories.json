@@ -324,6 +324,7 @@
             "Filter",
             "Head",
             "Tail",
+            "String index lookup",
             "Count occurrences",
             "Expand alphabet range",
             "Drop bytes",

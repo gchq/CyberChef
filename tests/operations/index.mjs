@@ -169,6 +169,7 @@ import "./tests/RC6.mjs";
 // import "./tests/SplitColourChannels.mjs"; // Cannot test operations that use the File type yet
 import "./tests/SQLBeautify.mjs";
 import "./tests/StrUtils.mjs";
+import "./tests/StringIndexLookup.mjs";
 import "./tests/StripIPv4Header.mjs";
 import "./tests/StripTCPHeader.mjs";
 import "./tests/StripUDPHeader.mjs";
