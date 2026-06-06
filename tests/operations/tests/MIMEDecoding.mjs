@@ -1,5 +1,5 @@
 /**
- * MIME Header Decoding tests
+ * MIME Header Encoding and Decoding tests
  *
  * @author mshwed [m@ttshwed.com]
  * @copyright Crown Copyright 2019
@@ -9,6 +9,65 @@
 import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
+    {
+        name: "MIME Encoding: UTF-8 Base64",
+        input: "Éric <eric@example.org>",
+        expectedOutput: "=?UTF-8?B?w4lyaWMgPGVyaWNAZXhhbXBsZS5vcmc+?=",
+        recipeConfig: [
+            {
+                "op": "MIME Encoding",
+                "args": ["UTF-8", "Base64"]
+            }
+        ]
+    },
+    {
+        name: "MIME Encoding: UTF-8 Q-encoding",
+        input: "Éric <eric@example.org>",
+        expectedOutput: "=?UTF-8?Q?=C3=89ric_<eric@example.org>?=",
+        recipeConfig: [
+            {
+                "op": "MIME Encoding",
+                "args": ["UTF-8", "Q-encoding"]
+            }
+        ]
+    },
+    {
+        name: "MIME Encoding: ISO-8859-1 Q-encoding",
+        input: "Keld Jørn Simonsen",
+        expectedOutput: "=?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?=",
+        recipeConfig: [
+            {
+                "op": "MIME Encoding",
+                "args": ["ISO-8859-1", "Q-encoding"]
+            }
+        ]
+    },
+    {
+        name: "MIME Encoding: long Q-encoded header round trip",
+        input: "This is a deliberately long MIME header value with Éric and Anaïs in it.",
+        expectedOutput: "This is a deliberately long MIME header value with Éric and Anaïs in it.",
+        recipeConfig: [
+            {
+                "op": "MIME Encoding",
+                "args": ["UTF-8", "Q-encoding"]
+            },
+            {
+                "op": "MIME Decoding",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "MIME Encoding: long Base64 header is folded",
+        input: "This is a deliberately long MIME header value with Eric and Anais in it.",
+        expectedOutput: "=?US-ASCII?B?VGhpcyBpcyBhIGRlbGliZXJhdGVseSBsb25nIE1JTUUgaGVhZGVyIHZhbHVl?=\r\n =?US-ASCII?B?IHdpdGggRXJpYyBhbmQgQW5haXMgaW4gaXQu?=",
+        recipeConfig: [
+            {
+                "op": "MIME Encoding",
+                "args": ["US-ASCII", "Base64"]
+            }
+        ]
+    },
     {
         name: "Encoded comments",
         input: "(=?ISO-8859-1?Q?a?=)",

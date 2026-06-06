@@ -681,6 +681,13 @@ WWFkYSBZYWRh\r
         assert.strictEqual(chef.LZNT1Decompress("\x1a\xb0\x00compress\x00edtestda\x04ta\x07\x88alot").toString(), "compressedtestdatacompressedalot");
     }),
 
+    it("MIME Encoding", () => {
+        assert.strictEqual(chef.MIMEEncoding("Keld Jørn Simonsen", {
+            charset: "ISO-8859-1",
+            transferEncoding: "Q-encoding",
+        }).toString(), "=?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?=");
+    }),
+
     it("MD6", () => {
         assert.strictEqual(chef.MD6("Head Over Heels", {key: "arty"}).toString(), "d8f7fe4931fbaa37316f76283d5f615f50ddd54afdc794b61da522556aee99ad");
     }),
@@ -1178,4 +1185,3 @@ ExifImageHeight: 57`);
 
 
 ]);
-
