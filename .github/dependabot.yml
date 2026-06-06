@@ -41,6 +41,8 @@ updates:
         versions: [ '>=2.0.0' ]
       - dependency-name: 'jimp'
         versions: [ '1.6.1' ]
+      - dependency-name: 'jq-web'
+        versions: [ '>=0.6.0' ]
     groups:
       #
       # Grouping so patch version updates are batched together in a single PR 
