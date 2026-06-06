@@ -60,6 +60,7 @@ import "./tests/ConvertCoordinateFormat.mjs";
 import "./tests/ConvertLeetSpeak.mjs";
 import "./tests/ConvertToNATOAlphabet.mjs";
 import "./tests/CRCChecksum.mjs";
+import "./tests/CronExpression.mjs";
 import "./tests/Crypt.mjs";
 import "./tests/CSV.mjs";
 import "./tests/DateTime.mjs";

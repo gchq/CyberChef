@@ -366,6 +366,7 @@
             "Windows Filetime to UNIX Timestamp",
             "UNIX Timestamp to Windows Filetime",
             "DateTime Delta",
+            "Cron Expression",
             "Extract dates",
             "Get Time",
             "Sleep"
