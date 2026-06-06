@@ -6,6 +6,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import {
     buildBinaryStruct
 } from "../lib/Thrift.mjs";
@@ -42,7 +43,7 @@ class ThriftSerialize extends Operation {
         try {
             parsedInput = JSON.parse(input);
         } catch (e) {
-            throw new Error("Input must be valid JSON.");
+            throw new OperationError("Input must be valid JSON.");
         }
 
         const bytes = [];

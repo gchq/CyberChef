@@ -6,6 +6,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import {
     parseBinaryProtocol,
     parseCompactProtocol
@@ -56,7 +57,7 @@ class ThriftDeserialize extends Operation {
             }
             return JSON.stringify(decodedObject, null, 4);
         } catch (err) {
-            return `Error decoding Thrift payload: ${err.message}\n\nPartial output:\n${JSON.stringify(decodedObject, null, 4)}`;
+            throw new OperationError(`Error decoding Thrift payload: ${err.message}\n\nPartial output:\n${JSON.stringify(decodedObject, null, 4)}`);
         }
     }
 }
