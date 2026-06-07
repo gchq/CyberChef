@@ -119,5 +119,18 @@ TestRegister.addTests([
             { op: "From Hex", args: ["Auto"] },
             { op: "Thrift Deserialize", args: ["TCompactProtocol"] }
         ]
+    },
+    {
+        name: "Thrift Deserialize/Serialize: TBinaryProtocol List round-trip",
+        // Validates that a TBinaryProtocal LIST is successfully deserialised
+        // and that the result can be Serialized back into the original binary data
+        input: "0f 00 0b 08 00 00 00 03 00 00 00 01 00 00 00 02 00 00 00 03 00",
+        expectedOutput: "0f 00 0b 08 00 00 00 03 00 00 00 01 00 00 00 02 00 00 00 03 00",
+        recipeConfig: [
+            { "op": "From Hex", "args": ["Auto"] },
+            { "op": "Thrift Deserialize", "args": ["TBinaryProtocol"] },
+            { "op": "Thrift Serialize", "args": [] },
+            { "op": "To Hex", "args": ["Space", 0] }
+        ]
     }
 ]);
