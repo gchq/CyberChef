@@ -179,6 +179,7 @@ import "./tests/TakeNthBytes.mjs";
 import "./tests/Template.mjs";
 import "./tests/TextEncodingBruteForce.mjs";
 import "./tests/TextIntegerConverter.mjs";
+import "./tests/Thrift.mjs";
 import "./tests/ToFromInsensitiveRegex.mjs";
 import "./tests/TranslateDateTimeFormat.mjs";
 import "./tests/Typex.mjs";
