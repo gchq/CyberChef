@@ -71,7 +71,7 @@ class SwapEndianness extends Operation {
                 data = Utils.strToByteArray(input);
                 break;
             default:
-                data = input;
+                throw new OperationError("Data format must be Hex or Raw");
         }
 
         // Split up into words
