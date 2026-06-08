@@ -353,7 +353,8 @@
             "File Tree",
             "Wrap",
             "Take nth bytes",
-            "Drop nth bytes"
+            "Drop nth bytes",
+            "Word Count"
         ]
     },
     {
