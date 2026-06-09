@@ -13,6 +13,7 @@ import * as asn1X509 from "@peculiar/asn1-x509";
 import * as ecc from "@peculiar/asn1-ecc";
 import * as rsaSchemas from "@peculiar/asn1-rsa";
 import { fromBER, Utf8String, BmpString, PrintableString, IA5String } from "asn1js";
+import { bytesToHex } from "@noble/hashes/utils.js";
 import OperationError from "../errors/OperationError.mjs";
 import { fromBase64 } from "./Base64.mjs";
 import { fromHex } from "./Hex.mjs";
@@ -425,17 +426,9 @@ export function asnNameToJson(asnName) {
 
 // ----- byte helpers ---------------------------------------------------------
 
-/**
- * Convert a Uint8Array to a lowercase hex string.
- *
- * @param {Uint8Array} bytes
- * @returns {string}
- */
-export function bytesToHex(bytes) {
-    let out = "";
-    for (const b of bytes) out += b.toString(16).padStart(2, "0");
-    return out;
-}
+// bytesToHex is re-exported from @noble/hashes/utils (imported above) so
+// operations can continue importing it from this module.
+export { bytesToHex };
 
 /**
  * Strip a single leading 0x00 byte from a buffer when it's only present to

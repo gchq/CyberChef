@@ -130,6 +130,20 @@ export function derToPem(hex, label) {
         bytes[i] = Number.isNaN(v) ? 0 : v;
     }
 
+    return derBytesToPem(bytes, label);
+}
+
+/**
+ * Wrap raw DER bytes in a PEM envelope with LF line endings.
+ *
+ * Canonical helper shared by the key/ECDSA conversion modules; the hex-input
+ * {@link derToPem} above delegates here after parsing.
+ *
+ * @param {Uint8Array} bytes
+ * @param {string} label
+ * @returns {string}
+ */
+export function derBytesToPem(bytes, label) {
     let b64;
     if (typeof Buffer !== "undefined") {
         b64 = Buffer.from(bytes).toString("base64");

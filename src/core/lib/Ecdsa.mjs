@@ -13,7 +13,9 @@ import { p256, p384, p521 } from "@noble/curves/nist.js";
 import { DER } from "@noble/curves/abstract/weierstrass.js";
 import { md5, sha1 } from "@noble/hashes/legacy.js";
 import { sha256, sha384, sha512 } from "@noble/hashes/sha2.js";
+import { bytesToHex, hexToBytes } from "@noble/hashes/utils.js";
 import { AsnParser, AsnSerializer, OctetString } from "@peculiar/asn1-schema";
+import { derBytesToPem } from "./Asn1.mjs";
 import * as ecc from "@peculiar/asn1-ecc";
 const { ECPrivateKey, ECParameters } = ecc;
 const ID_EC_PUBLIC_KEY = ecc.id_ecPublicKey;
@@ -303,7 +305,7 @@ export function publicKeyToSpkiPem(pair) {
         }),
         subjectPublicKey: pair.publicKey.slice().buffer,
     });
-    return derToPem(new Uint8Array(AsnSerializer.serialize(spki)), "PUBLIC KEY");
+    return derBytesToPem(new Uint8Array(AsnSerializer.serialize(spki)), "PUBLIC KEY");
 }
 
 /**
@@ -328,7 +330,7 @@ export function privateKeyToPkcs8Pem(pair) {
         }),
         privateKey: new OctetString(AsnSerializer.serialize(ecKey)),
     });
-    return derToPem(new Uint8Array(AsnSerializer.serialize(pkcs8)), "PRIVATE KEY");
+    return derBytesToPem(new Uint8Array(AsnSerializer.serialize(pkcs8)), "PRIVATE KEY");
 }
 
 
@@ -549,47 +551,3 @@ function readLength(bytes, offset) {
     return { value, next: offset + 1 + n };
 }
 
-/**
- * Convert a hex string to a Uint8Array.
- *
- * @param {string} hex
- * @returns {Uint8Array}
- */
-function hexToBytes(hex) {
-    if (hex.length % 2 !== 0) throw new OperationError("Hex string has odd length");
-    const out = new Uint8Array(hex.length / 2);
-    for (let i = 0; i < out.length; i++) out[i] = parseInt(hex.substr(i * 2, 2), 16);
-    return out;
-}
-
-/**
- * Convert a Uint8Array to a lowercase hex string.
- *
- * @param {Uint8Array} bytes
- * @returns {string}
- */
-function bytesToHex(bytes) {
-    let out = "";
-    for (const b of bytes) out += b.toString(16).padStart(2, "0");
-    return out;
-}
-
-/**
- * Wrap raw DER bytes in a PEM envelope with LF line endings.
- *
- * @param {Uint8Array} bytes
- * @param {string} label
- * @returns {string}
- */
-function derToPem(bytes, label) {
-    let b64;
-    if (typeof Buffer !== "undefined") {
-        b64 = Buffer.from(bytes).toString("base64");
-    } else {
-        let bin = "";
-        for (const b of bytes) bin += String.fromCharCode(b);
-        b64 = btoa(bin);
-    }
-    const lines = b64.match(/.{1,64}/g) || [""];
-    return `-----BEGIN ${label}-----\n${lines.join("\n")}\n-----END ${label}-----\n`;
-}

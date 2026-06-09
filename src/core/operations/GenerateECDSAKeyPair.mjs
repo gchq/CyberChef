@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import { bytesToHex } from "@noble/hashes/utils.js";
 import { cryptNotice } from "../lib/Crypt.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import {
@@ -100,18 +101,6 @@ class GenerateECDSAKeyPair extends Operation {
  */
 function b64url(bytes) {
     return toBase64(bytes, "A-Za-z0-9-_");
-}
-
-/**
- * Convert a byte array to a lowercase hex string.
- *
- * @param {Uint8Array} bytes
- * @returns {string}
- */
-function bytesToHex(bytes) {
-    let out = "";
-    for (const b of bytes) out += b.toString(16).padStart(2, "0");
-    return out;
 }
 
 export default GenerateECDSAKeyPair;

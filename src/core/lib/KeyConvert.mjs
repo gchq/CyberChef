@@ -15,6 +15,8 @@ import { PrivateKeyInfo } from "@peculiar/asn1-pkcs8";
 import { AlgorithmIdentifier, SubjectPublicKeyInfo } from "@peculiar/asn1-x509";
 import { Sequence, Integer, fromBER } from "asn1js";
 import OperationError from "../errors/OperationError.mjs";
+import { toBase64, fromBase64 } from "./Base64.mjs";
+import { derBytesToPem } from "./Asn1.mjs";
 import {
     getCurveByName,
     loadEcKey,
@@ -29,8 +31,6 @@ const ID_DSA = "1.2.840.10040.4.1";
 // DER NULL — used as the `parameters` field of the rsaEncryption algorithm
 // identifier in RSA SPKI/PKCS#8 envelopes.
 const DER_NULL = new Uint8Array([0x05, 0x00]).buffer;
-
-const BASE64URL_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
 
 // ----- public API -----------------------------------------------------------
@@ -97,6 +97,14 @@ export function parseCertPublicKey(certPem) {
 /**
  * Convert normalised key info to a JWK object (built in the canonical
  * field order so `JSON.stringify` emits a deterministic string).
+ *
+ * The JWK fields are marshalled by hand rather than via a library: the
+ * conversion spans both RSA (including the CRT private params p/q/dp/dq/qi)
+ * and EC keys, and no current dependency covers both. `@noble/curves` is
+ * EC-only, and Web Crypto's JWK export is async and unavailable for the
+ * MD5/SHA-1 code paths this module supports. Adding a JOSE library purely
+ * for this base64url field mapping would enlarge the dependency surface for
+ * no real benefit. The per-field encoding is delegated to {@link b64url}.
  *
  * @param {object} info
  * @returns {object}
@@ -377,7 +385,7 @@ function parsePkcs8(bytes) {
     // EC and everything else delegate to the existing EC loader by
     // re-wrapping the bytes as a PKCS#8 PEM.  loadEcKey will surface its
     // own "not an EC key" error for unsupported algorithms.
-    return ecInfoFromLoad(loadEcKey(derToPem(bytes, "PRIVATE KEY")));
+    return ecInfoFromLoad(loadEcKey(derBytesToPem(bytes, "PRIVATE KEY")));
 }
 
 /**
@@ -405,7 +413,7 @@ function parseSpki(bytes) {
         const y = parseIntegerBitString(abufToBytes(spki.subjectPublicKey));
         return { kty: "DSA", isPrivate: false, p, q, g, y };
     }
-    return ecInfoFromLoad(loadEcKey(derToPem(bytes, "PUBLIC KEY")));
+    return ecInfoFromLoad(loadEcKey(derBytesToPem(bytes, "PUBLIC KEY")));
 }
 
 /**
@@ -504,7 +512,7 @@ function rsaPkcs8Pem(info) {
         }),
         privateKey: new OctetString(AsnSerializer.serialize(rsa)),
     });
-    return derToPem(new Uint8Array(AsnSerializer.serialize(pkcs8)), "PRIVATE KEY");
+    return derBytesToPem(new Uint8Array(AsnSerializer.serialize(pkcs8)), "PRIVATE KEY");
 }
 
 /**
@@ -525,7 +533,7 @@ function rsaSpkiPem(info) {
         }),
         subjectPublicKey: AsnSerializer.serialize(rsa),
     });
-    return derToPem(new Uint8Array(AsnSerializer.serialize(spki)), "PUBLIC KEY");
+    return derBytesToPem(new Uint8Array(AsnSerializer.serialize(spki)), "PUBLIC KEY");
 }
 
 /**
@@ -544,7 +552,7 @@ function dsaSpkiPem(info) {
         }),
         subjectPublicKey: innerY,
     });
-    return derToPem(new Uint8Array(AsnSerializer.serialize(spki)), "PUBLIC KEY");
+    return derBytesToPem(new Uint8Array(AsnSerializer.serialize(spki)), "PUBLIC KEY");
 }
 
 /**
@@ -604,25 +612,6 @@ export function pemToDer(pem) {
     };
 }
 
-/**
- * Wrap raw DER bytes in a PEM envelope with LF line endings.
- *
- * @param {Uint8Array} bytes
- * @param {string} label
- * @returns {string}
- */
-export function derToPem(bytes, label) {
-    let b64;
-    if (typeof Buffer !== "undefined") {
-        b64 = Buffer.from(bytes).toString("base64");
-    } else {
-        let bin = "";
-        for (const b of bytes) bin += String.fromCharCode(b);
-        b64 = btoa(bin);
-    }
-    const lines = b64.match(/.{1,64}/g) || [""];
-    return `-----BEGIN ${label}-----\n${lines.join("\n")}\n-----END ${label}-----\n`;
-}
 
 /**
  * Encode a byte array as base64url (no padding).
@@ -632,40 +621,18 @@ export function derToPem(bytes, label) {
  */
 export function b64url(bytes) {
     if (!(bytes instanceof Uint8Array)) bytes = new Uint8Array(bytes);
-    let out = "";
-    let i = 0;
-    while (i < bytes.length) {
-        const b1 = bytes[i++];
-        const b2 = i < bytes.length ? bytes[i++] : -1;
-        const b3 = i < bytes.length ? bytes[i++] : -1;
-        out += BASE64URL_ALPHABET[b1 >> 2];
-        out += BASE64URL_ALPHABET[((b1 & 0x03) << 4) | (b2 < 0 ? 0 : (b2 >> 4))];
-        if (b2 < 0) break;
-        out += BASE64URL_ALPHABET[((b2 & 0x0f) << 2) | (b3 < 0 ? 0 : (b3 >> 6))];
-        if (b3 < 0) break;
-        out += BASE64URL_ALPHABET[b3 & 0x3f];
-    }
-    return out;
+    return toBase64(bytes, "A-Za-z0-9-_");
 }
 
 /**
- * Decode a base64url-encoded string to bytes.  Strips standard base64
+ * Decode a base64url-encoded string to bytes.  Tolerates standard base64
  * padding if present.
  *
  * @param {string} str
  * @returns {Uint8Array}
  */
 export function b64urlToBytes(str) {
-    const cleaned = str.replace(/-/g, "+").replace(/_/g, "/").replace(/=+$/, "");
-    const pad = cleaned.length % 4 === 0 ? "" : "=".repeat(4 - (cleaned.length % 4));
-    const padded = cleaned + pad;
-    if (typeof Buffer !== "undefined") {
-        return new Uint8Array(Buffer.from(padded, "base64"));
-    }
-    const bin = atob(padded);
-    const out = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
-    return out;
+    return new Uint8Array(fromBase64(str, "A-Za-z0-9-_", "byteArray"));
 }
 
 /**
