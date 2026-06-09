@@ -7,7 +7,7 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import { toHex } from "../lib/Hex.mjs";
-import OperationError from "../errors/OperationError.mjs"; // 1. Added import
+import OperationError from "../errors/OperationError.mjs"; // 1. Added import for error message 
 
 /**
  * XOR Checksum operation
