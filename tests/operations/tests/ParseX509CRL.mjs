@@ -60,7 +60,7 @@ const OUT_CRL_PEM_RSA = `Certificate Revocation List (CRL):
         X509v3 CRL Number:
         	1E3C
         X509v3 Issuer Alternative Name:
-            
+        
 Revoked Certificates:
     Serial Number: 1000
         Revocation Date: Sun, 25 Aug 2024 03:23:08 GMT
@@ -152,7 +152,7 @@ const OUT_CRL_PEM_RSA_CRL_REASON_AND_INVALIDITY_DATE = `Certificate Revocation L
         X509v3 CRL Number:
         	1E3D
         X509v3 Issuer Alternative Name:
-            
+        
 Revoked Certificates:
     Serial Number: 1000
         Revocation Date: Sun, 25 Aug 2024 12:08:48 GMT

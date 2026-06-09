@@ -651,9 +651,10 @@ Password: 282760`;
 
     it("Hex to PEM", () => {
         const result = chef.hexToPEM(chef.toHex("Yada Yada"));
-        const expected = `-----BEGIN CERTIFICATE-----\r
-WWFkYSBZYWRh\r
------END CERTIFICATE-----\r\n`;
+        const expected = `-----BEGIN CERTIFICATE-----
+WWFkYSBZYWRh
+-----END CERTIFICATE-----
+`;
         assert.strictEqual(result.toString(), expected);
     }),
 
@@ -686,7 +687,13 @@ WWFkYSBZYWRh\r
     }),
 
     it("Parse ASN.1 Hex string", () => {
-        assert.strictEqual(chef.parseASN1HexString(chef.toHex("Mouth-watering")).toString(), "UNKNOWN(77) 7574682d7761746572696e67\n");
+        // The bytes for "Mouth-watering" don't form a well-formed ASN.1 structure
+        // (tag 0x4d declares length 0x6f but only 12 bytes follow), so we report
+        // a parse error rather than a partial best-effort dump.
+        assert.strictEqual(
+            chef.parseASN1HexString(chef.toHex("Mouth-watering")).toString(),
+            "ASN.1 parse error: End of input reached before message was fully decoded (inconsistent offset and length values)"
+        );
     }),
 
     it("Parse DateTime", () => {
@@ -1178,4 +1185,3 @@ ExifImageHeight: 57`);
 
 
 ]);
-

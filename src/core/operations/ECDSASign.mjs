@@ -8,7 +8,14 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { fromHex } from "../lib/Hex.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import r from "jsrsasign";
+import {
+    loadEcKey,
+    digestBytes,
+    signEcdsa,
+    strToBytesLatin1,
+    asn1SigToConcatHex,
+    parseAsn1SigToHexRS,
+} from "../lib/Ecdsa.mjs";
 
 /**
  * ECDSA Sign operation
@@ -69,38 +76,28 @@ class ECDSASign extends Operation {
             throw new OperationError("Please enter a private key.");
         }
 
-        const internalAlgorithmName = mdAlgo.replace("-", "") + "withECDSA";
-        const sig = new r.KJUR.crypto.Signature({ alg: internalAlgorithmName });
-        const key = r.KEYUTIL.getKey(keyPem);
-        if (key.type !== "EC") {
-            throw new OperationError("Provided key is not an EC key.");
-        }
+        const key = loadEcKey(keyPem);
         if (!key.isPrivate) {
             throw new OperationError("Provided key is not a private key.");
         }
-        sig.init(key);
-        const signatureASN1Hex = sig.signString(input);
 
-        let result;
+        const digest = digestBytes(mdAlgo, strToBytesLatin1(input));
+        const signatureASN1Hex = signEcdsa(key, digest);
+
         switch (outputFormat) {
             case "ASN.1 HEX":
-                result = signatureASN1Hex;
-                break;
+                return signatureASN1Hex;
             case "P1363 HEX":
-                result = r.KJUR.crypto.ECDSA.asn1SigToConcatSig(signatureASN1Hex);
-                break;
-            case "JSON Web Signature":
-                result = r.KJUR.crypto.ECDSA.asn1SigToConcatSig(signatureASN1Hex);
-                result = toBase64(fromHex(result), "A-Za-z0-9-_");  // base64url
-                break;
-            case "Raw JSON": {
-                const signatureRS = r.KJUR.crypto.ECDSA.parseSigHexInHexRS(signatureASN1Hex);
-                result = JSON.stringify(signatureRS);
-                break;
+                return asn1SigToConcatHex(signatureASN1Hex);
+            case "JSON Web Signature": {
+                const concat = asn1SigToConcatHex(signatureASN1Hex);
+                return toBase64(fromHex(concat), "A-Za-z0-9-_");  // base64url
             }
+            case "Raw JSON":
+                return JSON.stringify(parseAsn1SigToHexRS(signatureASN1Hex));
+            default:
+                throw new OperationError(`Unsupported output format: ${outputFormat}`);
         }
-
-        return result;
     }
 }
 

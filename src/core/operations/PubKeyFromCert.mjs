@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import r from "jsrsasign";
+import { X509Certificate } from "@peculiar/x509";
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
@@ -39,27 +39,31 @@ class PubKeyFromCert extends Operation {
         let match;
         const regex = /-----BEGIN CERTIFICATE-----/g;
         while ((match = regex.exec(input)) !== null) {
-            // find corresponding end tag
             const indexBase64 = match.index + match[0].length;
             const footer = "-----END CERTIFICATE-----";
             const indexFooter = input.indexOf(footer, indexBase64);
             if (indexFooter === -1) {
                 throw new OperationError(`PEM footer '${footer}' not found`);
             }
-
             const certPem = input.substring(match.index, indexFooter + footer.length);
-            const cert = new r.X509();
-            cert.readCertPEM(certPem);
-            let pubKey;
+
+            let cert;
             try {
-                pubKey = cert.getPublicKey();
+                cert = new X509Certificate(certPem);
             } catch {
                 throw new OperationError("Unsupported public key type");
             }
-            const pubKeyPem = r.KEYUTIL.getPEM(pubKey);
 
-            // PEM ends with '\n', so a new key always starts on a new line
-            output += pubKeyPem;
+            let pubKeyPem;
+            try {
+                pubKeyPem = cert.publicKey.toString("pem");
+            } catch {
+                throw new OperationError("Unsupported public key type");
+            }
+
+            // Normalise to LF endings + trailing newline so multi-cert input
+            // produces a clean separator between successive keys.
+            output += pubKeyPem.replace(/\r\n/g, "\n").replace(/\n?$/, "\n");
         }
         return output;
     }

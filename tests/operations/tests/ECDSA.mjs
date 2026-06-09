@@ -287,6 +287,22 @@ TestRegister.addTests([
         ]
     },
     {
+        // Published known-answer test pinning correctness against the spec
+        // (not against the previous jsrsasign output). RFC 6979 Appendix
+        // A.2.5: curve P-256 (prime256v1), message "sample", SHA-256. The
+        // public key below is the SPKI form of the (Ux, Uy) point from the
+        // RFC; the r||s signature is the deterministic signature it lists.
+        name: "ECDSA Verify: RFC 6979 A.2.5 P-256/SHA-256 known-answer vector",
+        input: "efd48b2aacb6a8fd1140dd9cd45e81d69d2c877b56aaf991c34d0ea84eaf3716f7cb1c942d657c41d436c7a1b6e29f65f3e900dbb9aff4064dc4ab2f843acda8",
+        expectedOutput: "Verified OK",
+        recipeConfig: [
+            {
+                "op": "ECDSA Verify",
+                "args": ["Auto", "SHA-256", "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEYP7UuiVanTHJYet0xjVtaMBJuJI7\nYfps5mliLmDyn7Z5A/4QCLi8maQa6elWKLxk8vGyDC1+n1F3o8KU1EYimQ==\n-----END PUBLIC KEY-----", "sample", "Raw"]
+            }
+        ]
+    },
+    {
         name: "ECDSA Verify: JSON signature missing r",
         input: JSON.stringify({s: JSON.parse(P256.signature.sha256.json).s}),
         expectedOutput: 'No "r" value in the signature JSON',

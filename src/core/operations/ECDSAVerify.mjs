@@ -8,8 +8,16 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { fromBase64 } from "../lib/Base64.mjs";
 import { toHexFast } from "../lib/Hex.mjs";
-import r from "jsrsasign";
 import Utils from "../Utils.mjs";
+import {
+    loadEcKey,
+    digestBytes,
+    verifyEcdsa,
+    strToBytesLatin1,
+    concatHexToAsn1Sig,
+    hexRSToAsn1Sig,
+    isAsn1Hex,
+} from "../lib/Ecdsa.mjs";
 
 /**
  * ECDSA Verify operation
@@ -96,7 +104,7 @@ class ECDSAVerify extends Operation {
         if (inputFormat === "Auto") {
             const hexRegex = /^[a-f\d]{2,}$/gi;
             if (hexRegex.test(input)) {
-                if (input.substring(0, 2) === "30" && r.ASN1HEX.isASN1HEX(input)) {
+                if (input.substring(0, 2) === "30" && isAsn1Hex(input)) {
                     inputFormat = "ASN.1 HEX";
                 } else {
                     inputFormat = "P1363 HEX";
@@ -121,11 +129,11 @@ class ECDSAVerify extends Operation {
                 signatureASN1Hex = input;
                 break;
             case "P1363 HEX":
-                signatureASN1Hex = r.KJUR.crypto.ECDSA.concatSigToASN1Sig(input);
+                signatureASN1Hex = concatHexToAsn1Sig(input);
                 break;
             case "JSON Web Signature":
                 if (!inputBase64) inputBase64 = fromBase64(input, "A-Za-z0-9-_");
-                signatureASN1Hex = r.KJUR.crypto.ECDSA.concatSigToASN1Sig(toHexFast(inputBase64));
+                signatureASN1Hex = concatHexToAsn1Sig(toHexFast(inputBase64));
                 break;
             case "Raw JSON": {
                 if (!inputJson) inputJson = JSON.parse(input);
@@ -135,26 +143,20 @@ class ECDSAVerify extends Operation {
                 if (!inputJson.s) {
                     throw new OperationError('No "s" value in the signature JSON');
                 }
-                signatureASN1Hex = r.KJUR.crypto.ECDSA.hexRSSigToASN1Sig(inputJson.r, inputJson.s);
+                signatureASN1Hex = hexRSToAsn1Sig(inputJson.r, inputJson.s);
                 break;
             }
         }
 
-        // verify signature
-        const internalAlgorithmName = mdAlgo.replace("-", "") + "withECDSA";
-        const sig = new r.KJUR.crypto.Signature({ alg: internalAlgorithmName });
-        const key = r.KEYUTIL.getKey(keyPem);
-        if (key.type !== "EC") {
-            throw new OperationError("Provided key is not an EC key.");
-        }
+        const key = loadEcKey(keyPem);
         if (!key.isPublic) {
             throw new OperationError("Provided key is not a public key.");
         }
-        sig.init(key);
+
         const messageStr = Utils.convertToByteString(msg, msgFormat);
-        sig.updateString(messageStr);
-        const result = sig.verify(signatureASN1Hex);
-        return result ? "Verified OK" : "Verification Failure";
+        const digest = digestBytes(mdAlgo, strToBytesLatin1(messageStr));
+        const ok = verifyEcdsa(key, digest, signatureASN1Hex);
+        return ok ? "Verified OK" : "Verification Failure";
     }
 }
 

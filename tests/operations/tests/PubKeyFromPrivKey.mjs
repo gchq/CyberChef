@@ -147,7 +147,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Private Key: RSA PKCS#1",
         input: RSA_PRIVKEY_PKCS1,
-        expectedOutput: (RSA_PUBKEY + "\n").replace(/\r/g, "").replace(/\n/g, "\r\n"),
+        expectedOutput: (RSA_PUBKEY + "\n"),
         recipeConfig: [
             {
                 op: "Public Key from Private Key",
@@ -158,7 +158,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Private Key: RSA PKCS#8",
         input: RSA_PRIVKEY_PKCS8,
-        expectedOutput: (RSA_PUBKEY + "\n").replace(/\r/g, "").replace(/\n/g, "\r\n"),
+        expectedOutput: (RSA_PUBKEY + "\n"),
         recipeConfig: [
             {
                 op: "Public Key from Private Key",
@@ -171,7 +171,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Private Key: EC SEC1",
         input: EC_P256_PRIVKEY_SEC1,
-        expectedOutput: (EC_P256_PUBKEY + "\n").replace(/\r/g, "").replace(/\n/g, "\r\n"),
+        expectedOutput: (EC_P256_PUBKEY + "\n"),
         recipeConfig: [
             {
                 op: "Public Key from Private Key",
@@ -182,7 +182,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Private Key: EC PKCS#8",
         input: EC_P256_PRIVKEY_PKCS8,
-        expectedOutput: (EC_P256_PUBKEY + "\n").replace(/\r/g, "").replace(/\n/g, "\r\n"),
+        expectedOutput: (EC_P256_PUBKEY + "\n"),
         recipeConfig: [
             {
                 op: "Public Key from Private Key",
@@ -195,7 +195,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Private Key: DSA Traditional",
         input: DSA_PRIVKEY_TRAD,
-        expectedOutput: (DSA_PUBKEY + "\n").replace(/\r/g, "").replace(/\n/g, "\r\n"),
+        expectedOutput: (DSA_PUBKEY + "\n"),
         recipeConfig: [
             {
                 op: "Public Key from Private Key",
@@ -219,7 +219,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Private Key: Ed25519",
         input: ED25519_PRIVKEY,
-        expectedOutput: "Unsupported key type: Error: malformed PKCS8 private key(code:004)",
+        expectedOutput: "Unsupported key type: Error: Provided key is not an EC key.",
         recipeConfig: [
             {
                 op: "Public Key from Private Key",
@@ -230,7 +230,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Private Key: Ed448",
         input: ED448_PRIVKEY,
-        expectedOutput: "Unsupported key type: Error: malformed PKCS8 private key(code:004)",
+        expectedOutput: "Unsupported key type: Error: Provided key is not an EC key.",
         recipeConfig: [
             {
                 op: "Public Key from Private Key",
@@ -243,7 +243,7 @@ TestRegister.addTests([
     {
         name: "Public Key from Private Key: Multiple keys",
         input: RSA_PRIVKEY_PKCS8 + "\n" + EC_P256_PRIVKEY_PKCS8,
-        expectedOutput: (RSA_PUBKEY + "\n" + EC_P256_PUBKEY + "\n").replace(/\r/g, "").replace(/\n/g, "\r\n"),
+        expectedOutput: (RSA_PUBKEY + "\n" + EC_P256_PUBKEY + "\n"),
         recipeConfig: [
             {
                 op: "Public Key from Private Key",

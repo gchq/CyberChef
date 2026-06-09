@@ -11,28 +11,38 @@ import { toHex, fromHex } from "./Hex.mjs";
 /**
  * Formats Distinguished Name (DN) objects to strings.
  *
- * @param {Object} dnObj
+ * Accepts either the legacy `{ array: [[{type, value}, ...], ...] }` shape
+ * OR `@peculiar/x509`'s `JsonName` shape — an array of records keyed by
+ * RDN short-name (`[{ CN: ["foo"], OU: ["bar"] }, ...]`).
+ *
+ * @param {Object|Array} dnObj
  * @param {number} indent
  * @returns {string}
  */
 export function formatDnObj(dnObj, indent) {
-    let output = "";
+    const rows = [];
 
-    const maxKeyLen = dnObj.array.reduce((max, item) => {
-        return item[0].type.length > max ? item[0].type.length : max;
-    }, 0);
-
-    for (let i = 0; i < dnObj.array.length; i++) {
-        if (!dnObj.array[i].length) continue;
-
-        const key = dnObj.array[i][0].type;
-        const value = dnObj.array[i][0].value;
-        const str = `${key.padEnd(maxKeyLen, " ")} = ${value}\n`;
-
-        output += str.padStart(indent + str.length, " ");
+    if (Array.isArray(dnObj)) {
+        for (const rdn of dnObj) {
+            for (const key of Object.keys(rdn)) {
+                for (const value of rdn[key]) rows.push({ key, value });
+            }
+        }
+    } else if (dnObj && Array.isArray(dnObj.array)) {
+        for (const rdn of dnObj.array) {
+            if (!rdn || !rdn.length) continue;
+            rows.push({ key: rdn[0].type, value: rdn[0].value });
+        }
+    } else {
+        return "";
     }
 
-    return output.slice(0, -1);
+    if (rows.length === 0) return "";
+
+    const maxKeyLen = rows.reduce((max, r) => Math.max(max, r.key.length), 0);
+    const pad = " ".repeat(indent);
+
+    return rows.map(({ key, value }) => `${pad}${key.padEnd(maxKeyLen, " ")} = ${value}`).join("\n");
 }
 
 

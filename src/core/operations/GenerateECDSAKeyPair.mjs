@@ -5,8 +5,14 @@
  */
 
 import Operation from "../Operation.mjs";
+import { bytesToHex } from "@noble/hashes/utils.js";
 import { cryptNotice } from "../lib/Crypt.mjs";
-import r from "jsrsasign";
+import { toBase64 } from "../lib/Base64.mjs";
+import {
+    generateEcKeyPair,
+    publicKeyToSpkiPem,
+    privateKeyToPkcs8Pem,
+} from "../lib/Ecdsa.mjs";
 
 /**
  * Generate ECDSA Key Pair operation
@@ -54,49 +60,47 @@ class GenerateECDSAKeyPair extends Operation {
      */
     async run(input, args) {
         const [curveName, outputFormat] = args;
+        const pair = generateEcKeyPair(curveName);
 
-        return new Promise((resolve, reject) => {
-            let internalCurveName;
-            switch (curveName) {
-                case "P-256":
-                    internalCurveName = "secp256r1";
-                    break;
-                case "P-384":
-                    internalCurveName = "secp384r1";
-                    break;
-                case "P-521":
-                    internalCurveName = "secp521r1";
-                    break;
+        switch (outputFormat) {
+            case "PEM":
+                return publicKeyToSpkiPem(pair) + privateKeyToPkcs8Pem(pair);
+            case "DER":
+                return bytesToHex(pair.d);
+            case "JWK": {
+                const pubJwk = {
+                    kty: "EC",
+                    crv: curveName,
+                    x: b64url(pair.x),
+                    y: b64url(pair.y),
+                    "key_ops": ["verify"],
+                    kid: "PublicKey",
+                };
+                const privJwk = {
+                    kty: "EC",
+                    crv: curveName,
+                    x: b64url(pair.x),
+                    y: b64url(pair.y),
+                    d: b64url(pair.d),
+                    "key_ops": ["sign"],
+                    kid: "PrivateKey",
+                };
+                return JSON.stringify({ keys: [privJwk, pubJwk] }, null, 4);
             }
-            const keyPair = r.KEYUTIL.generateKeypair("EC", internalCurveName);
-
-            let pubKey;
-            let privKey;
-            let result;
-            switch (outputFormat) {
-                case "PEM":
-                    pubKey = r.KEYUTIL.getPEM(keyPair.pubKeyObj).replace(/\r/g, "");
-                    privKey = r.KEYUTIL.getPEM(keyPair.prvKeyObj, "PKCS8PRV").replace(/\r/g, "");
-                    result = pubKey + "\n" + privKey;
-                    break;
-                case "DER":
-                    result = keyPair.prvKeyObj.prvKeyHex;
-                    break;
-                case "JWK":
-                    pubKey = r.KEYUTIL.getJWKFromKey(keyPair.pubKeyObj);
-                    pubKey.key_ops = ["verify"]; // eslint-disable-line camelcase
-                    pubKey.kid = "PublicKey";
-                    privKey = r.KEYUTIL.getJWKFromKey(keyPair.prvKeyObj);
-                    privKey.key_ops = ["sign"]; // eslint-disable-line camelcase
-                    privKey.kid = "PrivateKey";
-                    result = JSON.stringify({keys: [privKey, pubKey]}, null, 4);
-                    break;
-            }
-
-            resolve(result);
-        });
+            default:
+                throw new Error(`Unsupported output format: ${outputFormat}`);
+        }
     }
+}
 
+/**
+ * Base64url-encode a byte array (no padding, URL-safe alphabet).
+ *
+ * @param {Uint8Array} bytes
+ * @returns {string}
+ */
+function b64url(bytes) {
+    return toBase64(bytes, "A-Za-z0-9-_");
 }
 
 export default GenerateECDSAKeyPair;

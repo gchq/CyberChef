@@ -4,8 +4,8 @@
  * @license Apache-2.0
  */
 
-import r from "jsrsasign";
 import Operation from "../Operation.mjs";
+import { dumpAsn1Hex } from "../lib/Asn1.mjs";
 
 /**
  * Parse ASN.1 hex string operation
@@ -45,9 +45,10 @@ class ParseASN1HexString extends Operation {
      */
     run(input, args) {
         const [index, truncateLen] = args;
-        return r.ASN1HEX.dump(input.replace(/\s/g, "").toLowerCase(), {
-            "ommit_long_octet": truncateLen
-        }, index);
+        return dumpAsn1Hex(input.replace(/\s/g, "").toLowerCase(), {
+            truncate: truncateLen,
+            startIndex: index,
+        });
     }
 
 }

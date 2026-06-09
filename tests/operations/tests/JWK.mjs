@@ -290,7 +290,7 @@ TestRegister.addTests([
     {
         name: "JWK to PEM: RSA Private Key",
         input: JSON.stringify(RSA_512.private.jwk),
-        expectedOutput: RSA_512.private.pem8.replace(/\r/g, "").replace(/\n/g, "\r\n")+"\r\n",
+        expectedOutput: RSA_512.private.pem8+"\n",
         recipeConfig: [
             {
                 op: "JWK to PEM",
@@ -301,7 +301,7 @@ TestRegister.addTests([
     {
         name: "JWK to PEM: RSA Public Key",
         input: JSON.stringify(RSA_512.public.jwk),
-        expectedOutput: RSA_512.public.pem8.replace(/\r/g, "").replace(/\n/g, "\r\n")+"\r\n",
+        expectedOutput: RSA_512.public.pem8+"\n",
         recipeConfig: [
             {
                 op: "JWK to PEM",
@@ -314,7 +314,7 @@ TestRegister.addTests([
     {
         name: "JWK to PEM: EC Private Key",
         input: JSON.stringify(EC_P256.private.jwk),
-        expectedOutput: EC_P256.private.pem8.replace(/\r/g, "").replace(/\n/g, "\r\n")+"\r\n",
+        expectedOutput: EC_P256.private.pem8+"\n",
         recipeConfig: [
             {
                 op: "JWK to PEM",
@@ -325,7 +325,7 @@ TestRegister.addTests([
     {
         name: "JWK to PEM: EC Public Key",
         input: JSON.stringify(EC_P256.public.jwk),
-        expectedOutput: EC_P256.public.pem8.replace(/\r/g, "").replace(/\n/g, "\r\n")+"\r\n",
+        expectedOutput: EC_P256.public.pem8+"\n",
         recipeConfig: [
             {
                 op: "JWK to PEM",
@@ -337,7 +337,7 @@ TestRegister.addTests([
     {
         name: "JWK to PEM: Array of keys",
         input: JSON.stringify([RSA_512.public.jwk, EC_P256.public.jwk]),
-        expectedOutput: (RSA_512.public.pem8 + "\n" + EC_P256.public.pem8 + "\n").replace(/\r/g, "").replace(/\n/g, "\r\n"),
+        expectedOutput: (RSA_512.public.pem8 + "\n" + EC_P256.public.pem8 + "\n"),
         recipeConfig: [
             {
                 op: "JWK to PEM",
@@ -348,7 +348,7 @@ TestRegister.addTests([
     {
         name: "JWK to PEM: JSON Web Key Set",
         input: JSON.stringify({"keys": [RSA_512.public.jwk, EC_P256.public.jwk]}),
-        expectedOutput: (RSA_512.public.pem8 + "\n" + EC_P256.public.pem8 + "\n").replace(/\r/g, "").replace(/\n/g, "\r\n"),
+        expectedOutput: (RSA_512.public.pem8 + "\n" + EC_P256.public.pem8 + "\n"),
         recipeConfig: [
             {
                 op: "JWK to PEM",
