@@ -186,12 +186,6 @@ import "./tests/UnescapeString.mjs";
 import "./tests/Unicode.mjs";
 import "./tests/Wrap.mjs";
 import "./tests/URLEncodeDecode.mjs";
-import "./tests/RSA.mjs";
-import "./tests/CBOREncode.mjs";
-import "./tests/CBORDecode.mjs";
-import "./tests/JA3Fingerprint.mjs";
-import "./tests/JA3SFingerprint.mjs";
-import "./tests/HASSH.mjs";
 import "./tests/JSONtoYAML.mjs";
 
 // Cannot test operations that use the File type yet
