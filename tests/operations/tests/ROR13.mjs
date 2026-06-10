@@ -16,7 +16,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROR13",
-                args: [false]
+                args: []
             },
         ],
     },
@@ -27,7 +27,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROR13",
-                args: [false]
+                args: []
             },
         ],
     },
@@ -38,7 +38,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "ROR13",
-                args: [false]
+                args: []
             },
         ],
     },

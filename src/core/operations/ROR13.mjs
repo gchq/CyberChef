@@ -50,7 +50,6 @@ class ROR13 extends Operation {
 
         for (let i = 0; i < input.length; i++) {
             const chr = input[i] & 0xFF;
-
             hash = this.ror(hash, 13);
             hash = (hash + chr) >>> 0;
         }
