@@ -8,11 +8,13 @@
   - Node 24
   - `npm ci`
   - `npm test`
-- **Before committing any JS/MJS change, run the full lint suite in Docker:**
+- **Before committing any JS/MJS change, run the full lint suite:**
   ```
   npx grunt eslint
   ```
   This runs all five targets: `eslint:configs`, `eslint:core`, `eslint:web`, `eslint:node`, `eslint:tests`. Running only `eslint:core` misses errors in test files and other targets. Do not push without a clean lint run.
+- ESLint is pure JS and runs fine via local Node on Windows — Docker is not required for lint. (`W:\` is an SMB share to `\\nas.marks.local\Files\Jacob\workspace`, and Docker Desktop's WSL2 bind mount cannot see `node_modules` through it. Don't waste time trying.)
+- Docker/Linux remains required for builds and tests (webpack output, native deps, postinstall behavior).
 - Dev server with auto-rebuild: `npm start` (port 8080). Production build: `npm run build` (output in `build/prod/`). If the production build OOMs, set `NODE_OPTIONS=--max_old_space_size=2048`.
 - **Do not run `npm run build` or `npm start` on Windows.** The local Node version is not guaranteed to match CI and webpack builds will silently fail or produce wrong output. Build verification belongs in Docker/Linux CI only.
 - Do not spend time fixing Windows-only runtime or dependency issues unless explicitly requested.
