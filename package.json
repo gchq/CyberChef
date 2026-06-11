@@ -2,7 +2,7 @@
   "name": "cyberchef",
   "version": "11.0.0",
   "description": "The Cyber Swiss Army Knife for encryption, encoding, compression and data analysis.",
-  "author": "n1474335 <n1474335@gmail.com>",
+  "author": "GCHQ <CyberChef@gchq.gov.uk>",
   "homepage": "https://gchq.github.io/CyberChef",
   "copyright": "Crown copyright 2016",
   "license": "Apache-2.0",
