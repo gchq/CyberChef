@@ -49,6 +49,7 @@
             "Escape Unicode Characters",
             "Unescape Unicode Characters",
             "Normalise Unicode",
+            "Escape Smart Characters",
             "To Quoted Printable",
             "From Quoted Printable",
             "To Punycode",
@@ -118,6 +119,7 @@
             "GOST Verify",
             "GOST Key Wrap",
             "GOST Key Unwrap",
+            "ROR13",
             "ROT13",
             "ROT13 Brute Force",
             "ROT47",
@@ -239,6 +241,7 @@
             "Bit shift right",
             "Rotate left",
             "Rotate right",
+            "ROR13",
             "ROT13",
             "ROT8000"
         ]
@@ -304,6 +307,7 @@
             "Diff",
             "Remove whitespace",
             "Remove null bytes",
+            "Remove ANSI Escape Codes",
             "To Upper case",
             "To Lower case",
             "Swap case",
