@@ -199,6 +199,8 @@
             "RSA Verify",
             "RSA Encrypt",
             "RSA Decrypt",
+            "RSA Encrypt Private Key",
+            "RSA Decrypt Public Key",
             "Generate ECDSA Key Pair",
             "ECDSA Signature Conversion",
             "ECDSA Sign",
