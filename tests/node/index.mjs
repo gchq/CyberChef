@@ -18,6 +18,7 @@ import {
 import TestRegister from "../lib/TestRegister.mjs";
 import "./tests/nodeApi.mjs";
 import "./tests/operations.mjs";
+import "./tests/PGP.mjs";
 import "./tests/File.mjs";
 import "./tests/Dish.mjs";
 import "./tests/NodeDish.mjs";
