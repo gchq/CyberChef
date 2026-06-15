@@ -41,6 +41,7 @@
             "From Base",
             "To BCD",
             "From BCD",
+            "Text-Integer Conversion",
             "To HTML Entity",
             "From HTML Entity",
             "URL Encode",
@@ -48,6 +49,7 @@
             "Escape Unicode Characters",
             "Unescape Unicode Characters",
             "Normalise Unicode",
+            "Escape Smart Characters",
             "To Quoted Printable",
             "From Quoted Printable",
             "To Punycode",
@@ -109,12 +111,15 @@
             "Rabbit",
             "SM4 Encrypt",
             "SM4 Decrypt",
+            "RC6 Encrypt",
+            "RC6 Decrypt",
             "GOST Encrypt",
             "GOST Decrypt",
             "GOST Sign",
             "GOST Verify",
             "GOST Key Wrap",
             "GOST Key Unwrap",
+            "ROR13",
             "ROT13",
             "ROT13 Brute Force",
             "ROT47",
@@ -164,7 +169,10 @@
             "Typex",
             "Lorenz",
             "Colossus",
-            "SIGABA"
+            "SIGABA",
+            "Flask Session Decode",
+            "Flask Session Sign",
+            "Flask Session Verify"
         ]
     },
     {
@@ -182,6 +190,7 @@
             "Generate PGP Key Pair",
             "PGP Encrypt",
             "PGP Decrypt",
+            "PGP Sign",
             "PGP Verify",
             "PGP Encrypt and Sign",
             "PGP Decrypt and Verify",
@@ -222,6 +231,9 @@
             "Subtract",
             "Multiply",
             "Divide",
+            "Modular Exponentiation",
+            "Modular Inverse",
+            "Extended GCD",
             "Mean",
             "Median",
             "Standard Deviation",
@@ -229,6 +241,7 @@
             "Bit shift right",
             "Rotate left",
             "Rotate right",
+            "ROR13",
             "ROT13",
             "ROT8000"
         ]
@@ -240,6 +253,7 @@
             "DNS over HTTPS",
             "Strip HTTP headers",
             "Dechunk HTTP response",
+            "Parse Ethernet frame",
             "Parse User Agent",
             "Parse IP range",
             "Parse IPv6 address",
@@ -293,6 +307,7 @@
             "Diff",
             "Remove whitespace",
             "Remove null bytes",
+            "Remove ANSI Escape Codes",
             "To Upper case",
             "To Lower case",
             "Swap case",
@@ -338,6 +353,7 @@
             "Pseudo-Random Number Generator",
             "Sleep",
             "File Tree",
+            "Wrap",
             "Take nth bytes",
             "Drop nth bytes"
         ]
@@ -376,6 +392,7 @@
             "CSS selector",
             "Extract EXIF",
             "Extract ID3",
+            "Extract Audio Metadata",
             "Extract Files",
             "RAKE",
             "Template"
@@ -454,7 +471,8 @@
             "Luhn Checksum",
             "CRC Checksum",
             "TCP/IP Checksum",
-            "XOR Checksum"
+            "XOR Checksum",
+            "Parity Bit"
         ]
     },
     {
@@ -505,7 +523,8 @@
             "View Bit Plane",
             "Randomize Colour Palette",
             "Extract LSB",
-            "ELF Info"
+            "ELF Info",
+            "Extract Audio Metadata"
         ]
     },
     {
@@ -540,6 +559,7 @@
             "Series chart",
             "Heatmap chart",
             "Render PDF"
+            "Extract Audio Metadata"
         ]
     },
     {
@@ -551,7 +571,9 @@
             "Chi Square",
             "P-list Viewer",
             "Disassemble x86",
+            "Disassemble ARM",
             "Pseudo-Random Number Generator",
+            "Pseudo-Random Integer Generator",
             "Generate De Bruijn Sequence",
             "Generate UUID",
             "Analyse UUID",
