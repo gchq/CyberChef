@@ -43,7 +43,7 @@ class XORChecksum extends Operation {
     run(input, args) {
         const blocksize = args[0];
 
-        // 2. Added validation check
+    
         if (!Number.isInteger(blocksize) || blocksize <= 0) {
             throw new OperationError("Blocksize must be a positive integer.");
         }
