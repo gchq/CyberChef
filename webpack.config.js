@@ -99,6 +99,9 @@ module.exports = {
                     context: "node_modules/node-forge/dist",
                     from: "prime.worker.min.js",
                     to: "assets/forge/"
+                }, {
+                    from: "src/web/index_assets/",
+                    to: "assets/index_assets/"
                 }
             ]
         }),
@@ -202,7 +205,10 @@ module.exports = {
             },
             {
                 test: /\.svg$/,
-                type: "asset/inline",
+                type: "asset/resource",
+                generator: {
+                    filename: "assets/[hash][ext]"
+                }
             },
             { // Store font .fnt and .png files in a separate fonts folder
                 test: /(\.fnt$|bmfonts\/.+\.png$)/,
@@ -219,10 +225,13 @@ module.exports = {
                     filename: "images/[name][ext]"
                 }
             },
-            { // Third party images are inlined
+            { // Third party images served as files
                 test: /\.(png|jpg|gif)$/,
                 exclude: /web\/static/,
-                type: "asset/inline",
+                type: "asset/resource",
+                generator: {
+                    filename: "assets/[hash][ext]"
+                }
             },
         ]
     },
