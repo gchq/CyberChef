@@ -104,7 +104,7 @@ class RenderImage extends Operation {
         // Add image data to URI
         dataURI += "base64," + toBase64(data);
 
-        return "<img src='" + dataURI + "' alt='Rendered image'>";
+        return "<img src='" + dataURI + "'>";
     }
 
 }
