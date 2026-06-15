@@ -193,6 +193,8 @@ export function _wrap(OpClass) {
         wrapped = async (input, args=null) => {
             const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
 
+            opInstance.validateIngredients(transformedArgs);
+
             // SPECIAL CASE for Magic. Other flowControl operations will
             // not work because the opList is not passed in.
             if (isFlowControl) {
@@ -229,6 +231,7 @@ export function _wrap(OpClass) {
          */
         wrapped = (input, args=null) => {
             const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
+            opInstance.validateIngredients(transformedArgs);
             const result = opInstance.run(transformedInput, transformedArgs);
             return new NodeDish({
                 value: result,
