@@ -91,13 +91,15 @@ function encryptPaymentData(inputHex, profile, keyHex, ivHex, ksn, dukptVariant)
     if (profile.startsWith("AES ")) {
         const aes = new AESEncrypt();
         const mode = profile.substring(4);
+        // AESEncrypt args: [key, iv, mode, inputType, outputType, AAD, includeIV]
         ciphertextHex = aes.run(plaintextHex, [
             { string: effectiveKeyHex, option: "Hex" },
             { string: normalizedIv, option: "Hex" },
             mode,
             "Hex",
             "Hex",
-            { string: "", option: "Hex" }
+            { string: "", option: "Hex" },
+            "Off"
         ]).toUpperCase();
     } else {
         const tdes = new TripleDESEncrypt();
@@ -140,14 +142,18 @@ function decryptPaymentData(inputHex, profile, keyHex, ivHex, ksn, dukptVariant)
     if (profile.startsWith("AES ")) {
         const aes = new AESDecrypt();
         const mode = profile.substring(4);
+        // AESDecrypt args: [key, iv, ivLength, mode, inputType, outputType, GCM tag, AAD, ivFromInput].
+        // ivLength is unused here because the IV is supplied explicitly (ivFromInput "Off").
         plaintextHex = aes.run(ciphertextHex, [
             { string: effectiveKeyHex, option: "Hex" },
             { string: normalizedIv, option: "Hex" },
+            16,
             mode,
             "Hex",
             "Hex",
             { string: "", option: "Hex" },
-            { string: "", option: "Hex" }
+            { string: "", option: "Hex" },
+            "Off"
         ]).toUpperCase();
     } else {
         const tdes = new TripleDESDecrypt();
