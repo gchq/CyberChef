@@ -10,7 +10,7 @@ import Dish from "../../core/Dish.mjs";
 import {isUTF8, CHR_ENC_SIMPLE_REVERSE_LOOKUP} from "../../core/lib/ChrEnc.mjs";
 import {detectFileType} from "../../core/lib/FileType.mjs";
 import FileSaver from "file-saver";
-import ZipWorker from "worker-loader?inline=no-fallback!../workers/ZipWorker.mjs";
+import ZipWorker from "worker-loader!../workers/ZipWorker.mjs";
 
 import {
     EditorView,
