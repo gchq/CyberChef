@@ -6,8 +6,14 @@
 
 import Operation from "../Operation.mjs";
 
+/**
+ * Automated validation test operation
+ */
 class AutomatedValidationTestOp extends Operation {
 
+    /**
+     * AutomatedValidationTestOp constructor
+     */
     constructor() {
         super();
 
@@ -58,6 +64,11 @@ class AutomatedValidationTestOp extends Operation {
         ];
     }
 
+    /**
+     * @param {string} input
+     * @param {Object[]} args
+     * @returns {string}
+     */
     run(input, args) {
         return "Success";
     }

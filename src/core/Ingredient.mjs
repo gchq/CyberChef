@@ -66,6 +66,12 @@ class Ingredient {
     }
 
 
+    /**
+     * Validates the given value against the constraints of this ingredient.
+     *
+     * @param {*} val
+     * @returns {boolean}
+     */
     validate(val) {
         if (this.disabled) return true;
 
