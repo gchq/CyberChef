@@ -8,5 +8,8 @@ TestRegister.addApiTests([
         const dish = new Dish();
         assert(dish.presentAs);
     }),
-
+    it("Disk - valid: should not err on serialized big_number", () => {
+        const dish = new Dish({ c: 0, e: 0, s: 0 }, Dish.BIG_NUMBER);
+        assert(dish.valid());
+    })
 ]);

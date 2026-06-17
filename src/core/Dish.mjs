@@ -292,7 +292,7 @@ class Dish {
                     and reinitialise it as a BigNumber object.
                 */
                 if (Object.keys(this.value).sort().equals(["c", "e", "s"])) {
-                    const temp = new BigNumber();
+                    const temp = new BigNumber(NaN);
                     temp.c = this.value.c;
                     temp.e = this.value.e;
                     temp.s = this.value.s;
