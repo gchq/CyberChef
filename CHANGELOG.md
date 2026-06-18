@@ -13,6 +13,17 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [11.2.0] - 2026-06-17
+This release includes a security fix ([#2569])
+- Security: Chart operation prototype protection [@C85297] | [#2569]
+- Update website references [@C85297] | [#2566]
+- Fix: Add input validation for XOR Checksum blocksize (#2537) [@dweep-js] | [#2542]
+- Fix: Reverse highlights unwind incorrectly [@kendallgoto] [@C85297] | [#2022]
+- Fix Uint8Array concat crash in Parse IPv4 header [@Zish19] | [#2409]
+- Fix typos and documentation errors (bytes→bits, wrong release link, spelling) [@qa2me] [@GCHQDeveloper581] | [#2404]
+- Add integer check for alphabet size [@heapframe] [@GCHQDeveloper581] | [#2458]
+- fix: validate hexdump width upper bound [@skyswordw] | [#2514]
+
 ### [11.1.0] - 2026-06-13
 This release includes a security fix ([#2557])
 - Security: Add fix, and tests, for Lorem Ipsum DoS issue [@GCHQDeveloper581] | [#2557]
@@ -707,6 +718,7 @@ Breaking changes:
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[11.2.0]: https://github.com/gchq/CyberChef/releases/tag/v11.2.0
 [11.1.0]: https://github.com/gchq/CyberChef/releases/tag/v11.1.0
 [11.0.0]: https://github.com/gchq/CyberChef/releases/tag/v11.0.0
 [10.24.0]: https://github.com/gchq/CyberChef/releases/tag/v10.24.0
@@ -1001,6 +1013,11 @@ Breaking changes:
 [@Louis-Ladd]: https://github.com/Louis-Ladd
 [@Blank0120]: https://github.com/Blank0120
 [@zachbowden]: https://github.com/zachbowden
+[@dweep-js]: https://github.com/dweep-js
+[@Zish19]: https://github.com/Zish19
+[@qa2me]: https://github.com/qa2me
+[@heapframe]: https://github.com/heapframe
+[@skyswordw]: https://github.com/skyswordw
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
@@ -1364,4 +1381,12 @@ Breaking changes:
 [#2332]: https://github.com/gchq/CyberChef/pull/2332
 [#2353]: https://github.com/gchq/CyberChef/pull/2353
 [#2351]: https://github.com/gchq/CyberChef/pull/2351
+[#2569]: https://github.com/gchq/CyberChef/pull/2569
+[#2566]: https://github.com/gchq/CyberChef/pull/2566
+[#2542]: https://github.com/gchq/CyberChef/pull/2542
+[#2022]: https://github.com/gchq/CyberChef/pull/2022
+[#2409]: https://github.com/gchq/CyberChef/pull/2409
+[#2404]: https://github.com/gchq/CyberChef/pull/2404
+[#2458]: https://github.com/gchq/CyberChef/pull/2458
+[#2514]: https://github.com/gchq/CyberChef/pull/2514
 
