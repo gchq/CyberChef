@@ -212,6 +212,8 @@ class Recipe  {
                     self.sendProgressMessage(i + 1, this.opList.length);
                 }
 
+                op.validateIngredients(op.ingValues);
+
                 if (op.flowControl) {
                     // Package up the current state
                     let state = {
