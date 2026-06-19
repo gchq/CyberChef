@@ -75,7 +75,7 @@ class SetIntersection extends Operation {
      * @returns {Object[]}
      */
     runIntersect(a, b) {
-        return a
+        return [...new Set(a)]
             .filter((item) => {
                 return b.indexOf(item) > -1;
             })

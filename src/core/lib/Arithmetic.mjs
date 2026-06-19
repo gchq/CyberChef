@@ -108,10 +108,11 @@ export function mean(data) {
  * @returns {BigNumber}
  */
 export function median(data) {
-    if ((data.length % 2) === 0 && data.length > 0) {
-        data.sort(function(a, b) {
-            return a.minus(b);
-        });
+    if (data.length === 0) return data[0];
+    data.sort(function(a, b) {
+        return a.minus(b);
+    });
+    if ((data.length % 2) === 0) {
         const first = data[Math.floor(data.length / 2)];
         const second = data[Math.floor(data.length / 2) - 1];
         return mean([first, second]);
