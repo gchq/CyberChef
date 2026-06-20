@@ -42,6 +42,14 @@ class App {
         this.progress      = 0;
         this.ingId         = 0;
 
+        // stateChangeId increments on every statechange dispatch; bakeStateId records
+        // the stateChangeId captured when the most recent bake started. autoBake uses
+        // these to decide whether the output is genuinely stale, so a debounced
+        // autoBake firing shortly after a manual bake doesn't clobber the bake's
+        // hideStaleIndicator with a redundant showStaleIndicator.
+        this.stateChangeId = 0;
+        this.bakeStateId   = -1;
+
         this.appLoaded     = false;
         this.workerLoaded  = false;
         this.waitersLoaded = false;
@@ -136,6 +144,9 @@ class App {
     bake(step=false) {
         if (this.baking) return;
 
+        // Record which state version this bake is covering.
+        this.bakeStateId = this.stateChangeId;
+
         // Reset attemptHighlight flag
         this.options.attemptHighlight = true;
 
@@ -166,7 +177,10 @@ class App {
                 nums: [this.manager.tabs.getActiveTab("input")],
                 step: false
             });
-        } else {
+        } else if (this.bakeStateId < this.stateChangeId) {
+            // Only show stale-indicator if the most recent bake didn't cover the
+            // current state. Without this guard, a debounced autoBake firing after
+            // a manual bake completed would re-show the indicator on fresh output.
             this.manager.controls.showStaleIndicator();
         }
     }
@@ -768,6 +782,10 @@ class App {
      * @param {event} e
      */
     stateChange(e) {
+        // Bump the state-change counter synchronously so a manual bake invoked between
+        // here and the debounced autoBake firing can record it via bakeStateId.
+        this.stateChangeId++;
+
         debounce(function() {
             this.progress = 0;
             this.autoBake();

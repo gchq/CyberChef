@@ -99,7 +99,7 @@ class OffsetChecker extends Operation {
             }
         }
 
-        return outputs.join(sampleDelim);
+        return outputs.join(Utils.escapeHtml(sampleDelim));
     }
 
 }

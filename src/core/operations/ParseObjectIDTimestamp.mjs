@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import BSON from "bson";
+import { ObjectId } from "bson";
 
 /**
  * Parse ObjectID timestamp operation
@@ -35,7 +35,7 @@ class ParseObjectIDTimestamp extends Operation {
      */
     run(input, args) {
         try {
-            const objectId = new BSON.ObjectID(input);
+            const objectId = new ObjectId(input);
             return objectId.getTimestamp().toISOString();
         } catch (err) {
             throw new OperationError(err);
