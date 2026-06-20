@@ -6,7 +6,10 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import { blake3 } from "hash-wasm";
+import Utils from "../Utils.mjs";
+import { blake3 } from "@noble/hashes/blake3.js";
+import { bytesToHex } from "@noble/hashes/utils.js";
+
 /**
  * BLAKE3 operation
  */
@@ -44,13 +47,16 @@ class BLAKE3 extends Operation {
     run(input, args) {
         const key = args[1];
         const size = args[0];
-        // Check if the user want a key hash or not
-        if (key === "") {
-            return blake3(input, size*8);
-        } if (key.length !== 32) {
-            throw new OperationError("The key must be exactly 32 bytes long");
+        const opts = { dkLen: size };
+        const inputBytes = new Uint8Array(Utils.strToArrayBuffer(input));
+        if (key !== "") {
+            const keyBytes = new Uint8Array(Utils.strToArrayBuffer(key));
+            if (keyBytes.length !== 32) {
+                throw new OperationError("The key must be exactly 32 bytes long");
+            }
+            opts.key = keyBytes;
         }
-        return blake3(input, size*8, key);
+        return bytesToHex(blake3(inputBytes, opts));
     }
 
 }
