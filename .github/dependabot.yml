@@ -15,6 +15,8 @@ updates:
       day: 'friday'
       time: '03:00'
       timezone: Europe/London
+    cooldown:
+      default-days: 2
     commit-message:
       prefix: 'chore (deps): '
     ignore:
@@ -25,11 +27,7 @@ updates:
       # see issue #2214 for rationale for each of these
       - dependency-name: '@xmldom/xmldom'
         versions: [ '>=0.9.0' ]
-      - dependency-name: 'bcryptjs'
-        versions: [ '>=3.0.0' ]
       - dependency-name: 'bootstrap'
-        versions: [ '>=5.0.0' ]
-      - dependency-name: 'bson'
         versions: [ '>=5.0.0' ]
       - dependency-name: 'cbor'
         versions: [ '>=10.0.0' ]
@@ -43,11 +41,12 @@ updates:
         versions: [ '>=2.0.0' ]
       - dependency-name: 'jimp'
         versions: [ '1.6.1' ]
-      - dependency-name: 'webpack-dev-server'
-        versions: [ '>=5.1.0' ]
+      - dependency-name: 'jq-web'
+        versions: [ '>=0.6.0' ]
     groups:
       #
-      # Grouping so we don't get a seperate PR for every patch version.
+      # Grouping so patch version updates are batched together in a single PR 
+      # and similarly with minor version updates
       #
       patch-updates:
         applies-to: version-updates
@@ -55,6 +54,12 @@ updates:
           - '*'
         update-types:
           - 'patch'
+      minor-updates:
+        applies-to: version-updates
+        patterns:
+          - '*'
+        update-types:
+          - 'minor'
 
   # Versioning on Github Actions
   - package-ecosystem: "github-actions"
@@ -66,5 +71,27 @@ updates:
       day: 'friday'
       time: '03:00'
       timezone: Europe/London
+    cooldown:
+      default-days: 4
     commit-message:
       prefix: 'chore (deps): '
+    groups:
+      actions-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: 'weekly'
+      day: 'friday'
+      time: '03:00'
+      timezone: Europe/London
+    cooldown:
+      default-days: 4
+    commit-message:
+      prefix: 'chore (deps): '
+    groups:
+      docker-dependencies:
+        patterns:
+          - "*"

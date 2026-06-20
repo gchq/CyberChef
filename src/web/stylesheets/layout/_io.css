@@ -24,6 +24,14 @@
     height: 100%;
     user-select: auto;
 }
+
+#output-html > img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+}
+
 #output-text.html-output .cm-line .cm-widgetBuffer,
 #output-text.html-output .cm-line>br {
     display: none;

@@ -79,7 +79,46 @@ TestRegister.addApiTests([
                 string: "some iv some iv1",
                 option: "utf8",
             },
+            ivLength: 16,
             mode: "OFB",
+            inputType: "Hex",
+            outputType: "Raw",
+            gcmTag: {
+                option: "Hex",
+                string: ""
+            },
+            aad: {
+                option: "Hex",
+                string: ""
+            },
+            ivFromInput: "Off"
+        });
+        assert.equal(result.toString(), "a slightly longer sampleinput?");
+    }),
+
+    it("AES decrypt: IV from input", () => {
+        const result = AESDecrypt("4a123af235a507bbc9d5871721d61b98504d569a9a5a7847e2d78315fec7736f6d6520697620736f6d6520697631", {
+            key: {
+                string: "some longer key1",
+                option: "utf8",
+            },
+            iv: {
+                string: "",
+                option: "Hex",
+            },
+            ivLength: 16,
+            mode: "OFB",
+            inputType: "Hex",
+            outputType: "Raw",
+            gcmTag: {
+                option: "Hex",
+                string: ""
+            },
+            aad: {
+                option: "Hex",
+                string: ""
+            },
+            ivFromInput: "From end"
         });
         assert.equal(result.toString(), "a slightly longer sampleinput?");
     }),
@@ -136,8 +175,8 @@ Tiger-128`;
     it("Bcrypt", async () => {
         const result = await chef.bcrypt("Put a Sock In It");
         const strResult = result.toString();
-        assert.equal(strResult.length, 60);
-        assert.equal(strResult.slice(0, 7), "$2a$10$");
+        assert.match(strResult, /^\$2b\$10\$[./A-Za-z0-9]{53}$/);
+        assert.equal(strResult.split("$").length, 4);
     }),
 
     it("bcryptCompare", async() => {
