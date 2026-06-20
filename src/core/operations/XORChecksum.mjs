@@ -7,12 +7,12 @@
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import { toHex } from "../lib/Hex.mjs";
+import OperationError from "../errors/OperationError.mjs"; 
 
 /**
  * XOR Checksum operation
  */
 class XORChecksum extends Operation {
-
     /**
      * XORChecksum constructor
      */
@@ -21,7 +21,8 @@ class XORChecksum extends Operation {
 
         this.name = "XOR Checksum";
         this.module = "Crypto";
-        this.description = "XOR Checksum splits the input into blocks of a configurable size and performs the XOR operation on these blocks.";
+        this.description =
+            "XOR Checksum splits the input into blocks of a configurable size and performs the XOR operation on these blocks.";
         this.infoURL = "https://wikipedia.org/wiki/XOR";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -29,7 +30,7 @@ class XORChecksum extends Operation {
             {
                 name: "Blocksize",
                 type: "number",
-                value: 4
+                value: 4,
             },
         ];
     }
@@ -41,6 +42,12 @@ class XORChecksum extends Operation {
      */
     run(input, args) {
         const blocksize = args[0];
+
+    
+        if (!Number.isInteger(blocksize) || blocksize <= 0) {
+            throw new OperationError("Blocksize must be a positive integer.");
+        }
+
         input = new Uint8Array(input);
 
         const res = Array(blocksize);

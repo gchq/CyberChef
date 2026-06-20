@@ -144,7 +144,8 @@ module.exports = function (grunt) {
                     new BundleAnalyzerPlugin({
                         analyzerMode: "static",
                         reportFilename: "BundleAnalyzerReport.html",
-                        openAnalyzer: false
+                        openAnalyzer: false,
+                        excludeAssets: /.*Worker.js/
                     }),
                 ]
             };

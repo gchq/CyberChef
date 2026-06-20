@@ -119,6 +119,7 @@
             "GOST Verify",
             "GOST Key Wrap",
             "GOST Key Unwrap",
+            "ROR13",
             "ROT13",
             "ROT13 Brute Force",
             "ROT47",
@@ -240,6 +241,7 @@
             "Bit shift right",
             "Rotate left",
             "Rotate right",
+            "ROR13",
             "ROT13",
             "ROT8000"
         ]
@@ -556,7 +558,7 @@
             "Scatter chart",
             "Series chart",
             "Heatmap chart",
-            "Extract Audio Metadata"
+            "Render PDF"
         ]
     },
     {
@@ -582,7 +584,8 @@
             "HTML To Text",
             "Generate Lorem Ipsum",
             "Numberwang",
-            "XKCD Random Number"
+            "XKCD Random Number",
+            "Automated Validation Test Op"
         ]
     },
     {
