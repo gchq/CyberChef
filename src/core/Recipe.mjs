@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import OperationConfig from "./config/OperationConfig.json" assert {type: "json"};
+import OperationConfig from "./config/OperationConfig.json" with { type: "json" };
 import OperationError from "./errors/OperationError.mjs";
 import Operation from "./Operation.mjs";
 import DishError from "./errors/DishError.mjs";
@@ -211,6 +211,8 @@ class Recipe  {
                     self.sendStatusMessage(`Baking... (${i+1}/${this.opList.length})`);
                     self.sendProgressMessage(i + 1, this.opList.length);
                 }
+
+                op.validateIngredients(op.ingValues);
 
                 if (op.flowControl) {
                     // Package up the current state
