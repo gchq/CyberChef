@@ -51,16 +51,16 @@ const OUT_CRL_PEM_RSA = `Certificate Revocation List (CRL):
         	DirName:/C=UK/ST=London/O=BB/CN=Test Root CA
         	serial:37:5D:4B:F6:BD:7C:11:7C:CC:46:1A:FF:D7:2F:2C:26:F8:1E:4B:3D
         X509v3 CRL Distribution Points:
-        	Full Name:
-        		URI:http://example.com/full-crl
-        	Full Name:
-        		URI:ldap://example.com/full-crl
-        	Full Name:
-        		IP:127.0.0.1
+            Full Name:
+                URI:http://example.com/full-crl
+            Full Name:
+                URI:ldap://example.com/full-crl
+            Full Name:
+                IP:127.0.0.1
         X509v3 CRL Number:
         	1E3C
-        issuerAltName:
-        	Unsupported CRL extension. Try openssl CLI.
+        X509v3 Issuer Alternative Name:
+            
 Revoked Certificates:
     Serial Number: 1000
         Revocation Date: Sun, 25 Aug 2024 03:23:08 GMT
@@ -143,16 +143,16 @@ const OUT_CRL_PEM_RSA_CRL_REASON_AND_INVALIDITY_DATE = `Certificate Revocation L
         	DirName:/C=UK/ST=London/O=BB/CN=Test Root CA
         	serial:37:5D:4B:F6:BD:7C:11:7C:CC:46:1A:FF:D7:2F:2C:26:F8:1E:4B:3D
         X509v3 CRL Distribution Points:
-        	Full Name:
-        		URI:http://example.com/full-crl
-        	Full Name:
-        		URI:ldap://example.com/full-crl
-        	Full Name:
-        		IP:127.0.0.1
+            Full Name:
+                URI:http://example.com/full-crl
+            Full Name:
+                URI:ldap://example.com/full-crl
+            Full Name:
+                IP:127.0.0.1
         X509v3 CRL Number:
         	1E3D
-        issuerAltName:
-        	Unsupported CRL extension. Try openssl CLI.
+        X509v3 Issuer Alternative Name:
+            
 Revoked Certificates:
     Serial Number: 1000
         Revocation Date: Sun, 25 Aug 2024 12:08:48 GMT

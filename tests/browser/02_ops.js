@@ -30,8 +30,8 @@ module.exports = {
         testOp(browser, "A1Z26 Cipher Decode", "20 5 19 20 15 21 20 16 21 20", "testoutput");
         testOp(browser, "A1Z26 Cipher Encode", "test input", "20 5 19 20 9 14 16 21 20");
         testOp(browser, "ADD", "test input", "Ê»ÉÊv¿ÄÆËÊ", [{ "option": "Hex", "string": "56" }]);
-        testOp(browser, "AES Decrypt", "b443f7f7c16ac5396a34273f6f639caa", "test output", [{ "option": "Hex", "string": "00112233445566778899aabbccddeeff" }, { "option": "Hex", "string": "00000000000000000000000000000000" }, "CBC", "Hex", "Raw", { "option": "Hex", "string": "" }]);
-        testOp(browser, "AES Encrypt", "test input", "e42eb8fbfb7a98fff061cd2c1a794d92", [{"option": "Hex", "string": "00112233445566778899aabbccddeeff"}, {"option": "Hex", "string": "00000000000000000000000000000000"}, "CBC", "Raw", "Hex"]);
+        testOp(browser, "AES Decrypt", "b443f7f7c16ac5396a34273f6f639caa", "test output", [{ "option": "Hex", "string": "00112233445566778899aabbccddeeff" }, { "option": "Hex", "string": "00000000000000000000000000000000" }, 16, "CBC", "Hex", "Raw", { "option": "Hex", "string": "" }, { "option": "Hex", "string": "" }, "Off"]);
+        testOp(browser, "AES Encrypt", "test input", "e42eb8fbfb7a98fff061cd2c1a794d92", [{"option": "Hex", "string": "00112233445566778899aabbccddeeff"}, {"option": "Hex", "string": "00000000000000000000000000000000"}, "CBC", "Raw", "Hex", "Off"]);
         testOp(browser, "AND", "test input", "4$04  $044", [{ "option": "Hex", "string": "34" }]);
         testOp(browser, "Add line numbers", "test input", "1 test input");
         testOp(browser, ["From Hex", "Add Text To Image", "SHA2"], Images.PNG_HEX, "50cdf8ea483c55564a091650c2bccb4586f919b721e5fe9d6a61660505b4346d6ebdb2ef0cf075a7728cd84cb26ea3e477b5bd86a94a49a27d79423994afb60a", [[], ["Chef", "Center", "Middle", 0, 0, 16, "Roboto"], []]);
@@ -64,7 +64,7 @@ module.exports = {
         testOp(browser, "BSON serialise", '{"a":"test"}', "\u0011\u0000\u0000\u0000\u0002a\u0000\u0005\u0000\u0000\u0000test\u0000\u0000");
         // testOp(browser, "Bacon Cipher Decode", "test input", "test_output");
         // testOp(browser, "Bacon Cipher Encode", "test input", "test_output");
-        testOp(browser, "Bcrypt", "test input", /^\$2a\$06\$.{53}$/, [6]);
+        testOp(browser, "Bcrypt", "test input", /^\$2b\$06\$.{53}$/, [6]);
         testOp(browser, "Bcrypt compare", "test input", "Match: test input", ["$2a$05$FCfBSVX7OeRkK.9kQVFCiOYu9XtwtIbePqUiroD1lkASW9q5QClzG"]);
         testOp(browser, "Bcrypt parse", "$2a$05$kXWtAIGB/R8VEzInoM5ocOTBtyc0m2YTIwFiBU/0XoW032f9QrkWW", /Rounds: 5/);
         testOp(browser, "Bifid Cipher Decode", "qblb tfovy", "test input", ["pass"]);
@@ -80,8 +80,8 @@ module.exports = {
         testOpHtml(browser, "Bombe", "XTSYN WAEUG EZALY NRQIM AMLZX MFUOD AWXLY LZCUZ QOQBQ JLCPK NDDRW F", "table tr:last-child td:first-child", "ECG", ["3-rotor", "LEYJVCNIXWPBQMDRTAKZGFUHOS", "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", "HELLO CYBER CHEFU SER", 0, true]);
         testOp(browser, ["Bzip2 Compress", "To Hex"], "test input", "42 5a 68 39 31 41 59 26 53 59 cf 96 82 1d 00 00 03 91 80 40 00 02 21 4e 00 20 00 21 90 c2 10 c0 88 33 92 8e df 17 72 45 38 50 90 cf 96 82 1d");
         testOp(browser, ["From Hex", "Bzip2 Decompress"], "425a68393141592653597b0884b7000003038000008200ce00200021a647a4218013709517c5dc914e14241ec2212dc0", "test_output", [[], [true]]);
-    // testOp(browser, "CBOR Decode", "test input", "test output");
-    // testOp(browser, "CBOR Encode", "test input", "test output");
+        testOp(browser, ["From Hex", "CBOR Decode"], "f9 3e 00", "1.5");
+        testOp(browser, ["CBOR Encode", "To Hex"], "1.5", "f9 3e 00");
         testOp(browser, "CRC Checksum", "test input", "77c7", ["CRC-16"]);
         testOp(browser, "CRC Checksum", "test input", "29822bc8", ["CRC-32"]);
         testOp(browser, "CRC Checksum", "test input", "9d", ["CRC-8"]);
@@ -278,11 +278,11 @@ module.exports = {
         testOpHtml(browser, "Parse UDP", "04 89 00 35 00 2c 01 01", "tr:last-child td:last-child", "0x0101");
         // testOp(browser, "Parse UNIX file permissions", "test input", "test_output");
         // testOp(browser, "Parse URI", "test input", "test_output");
-    // testOp(browser, "Parse User Agent", "test input", "test_output");
+        testOp(browser, "Parse User Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 ", /Architecture: amd64/);
         // testOp(browser, "Parse X.509 certificate", "test input", "test_output");
         testOpFile(browser, "Play Media", "files/mp3example.mp3", "audio", "");
         // testOp(browser, "Power Set", "test input", "test_output");
-    // testOp(browser, "Protobuf Decode", "test input", "test_output");
+        testOp(browser, ["From Hex", "Protobuf Decode"], "0d1c0000001203596f751a024d65202b2a0a0a066162633132331200", /"1": "abc123"/, [[], ["", false, false]]);
         // testOp(browser, "Pseudo-Random Number Generator", "test input", "test_output");
     // testOp(browser, "RC2 Decrypt", "test input", "test_output");
     // testOp(browser, "RC2 Encrypt", "test input", "test_output");
@@ -354,6 +354,7 @@ module.exports = {
         // testOp(browser, "Tail", "test input", "test_output");
         // testOp(browser, "Take bytes", "test input", "test_output");
         testOp(browser, "Tar", "test input", /^file\.txt\x00{92}/);
+        testOp(browser, "Template", "{\"one\": 1, \"two\": 2}", "1 2", ["{{ one }} {{ two }}"]);
         testOpHtml(browser, "Text Encoding Brute Force", "test input", "tr:nth-of-type(4) td:last-child", /t\u2400e\u2400s\u2400t\u2400/);
         // testOp(browser, "To BCD", "test input", "test_output");
         // testOp(browser, "To Base", "test input", "test_output");
@@ -491,7 +492,22 @@ function testOpImage(browser, opName, filename, args=[]) {
 
     browser
         .waitForElementVisible("#output-html img")
-        .expect.element("#output-html img").to.have.css("width").which.matches(/^[^0]\d*px/);
+        .expect.element("#output-html img").to.have.css("width").which.matches(/^(?!0+(?:\.0+)?px$)\d+(?:\.\d+)?px$/);
+
+    browser.execute(function() {
+        const output = document.getElementById("output-html");
+        const img = output.querySelector("img");
+        const outputRect = output.getBoundingClientRect();
+        const imgRect = img.getBoundingClientRect();
+
+        return {
+            imageFitsWidth: imgRect.width <= outputRect.width,
+            imageFitsHeight: imgRect.height <= outputRect.height,
+        };
+    }, [], function({value}) {
+        browser.expect(value.imageFitsWidth).to.be.equal(true);
+        browser.expect(value.imageFitsHeight).to.be.equal(true);
+    });
 }
 
 /** @function
