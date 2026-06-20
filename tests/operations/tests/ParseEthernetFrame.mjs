@@ -23,7 +23,7 @@ TestRegister.addTests([
     {
         name: "Parse Ethernet frame with one VLAN tag (802.1q)",
         input: "01000ccdcdd00013c3dfae188100a0760165aaaa",
-        expectedOutput: "Source MAC: 00:13:c3:df:ae:18\nDestination MAC: 01:00:0c:cd:cd:d0\nVLAN: 117\nData:\naa aa",
+        expectedOutput: "Source MAC: 00:13:c3:df:ae:18\nDestination MAC: 01:00:0c:cd:cd:d0\nVLAN: 118\nData:\naa aa",
         recipeConfig: [
             {
                 "op": "Parse Ethernet frame",
@@ -34,11 +34,22 @@ TestRegister.addTests([
     {
         name: "Parse Ethernet frame with two VLAN tags (802.1ad)",
         input: "0019aa7de688002155c8f13c810000d18100001408004500",
-        expectedOutput: "Source MAC: 00:21:55:c8:f1:3c\nDestination MAC: 00:19:aa:7d:e6:88\nVLAN: 16, 128\nData:\n45 00",
+        expectedOutput: "Source MAC: 00:21:55:c8:f1:3c\nDestination MAC: 00:19:aa:7d:e6:88\nVLAN: 209, 20\nData:\n45 00",
         recipeConfig: [
             {
                 "op": "Parse Ethernet frame",
                 "args": ["Hex", "Text output"]
+            }
+        ]
+    },
+    {
+        name: "Parse Ethernet frame escapes packet data HTML",
+        input: "000000000000ffffffffffff08003c696d67207372633d78206f6e6572726f723d616c6572742831293e3c7363726970743e616c6572742832293c2f7363726970743e",
+        expectedOutput: "&lt;img src=x onerror=alert(1)&gt;&lt;script&gt;alert(2)&lt;/script&gt;",
+        recipeConfig: [
+            {
+                "op": "Parse Ethernet frame",
+                "args": ["Hex", "Packet data"]
             }
         ]
     }
