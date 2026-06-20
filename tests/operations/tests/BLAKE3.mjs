@@ -51,5 +51,23 @@ TestRegister.addTests([
             { "op": "BLAKE3",
                 "args": [8, "ThiskeyisexactlythirtytwoByteslo"] }
         ]
+    },
+    {
+        name: "BLAKE3: 16390 - test",
+        input: "test",
+        expectedMatch: /4878.{32760}555fe06b242738d5/,
+        recipeConfig: [
+            { "op": "BLAKE3",
+                "args": [16390, ""] }
+        ]
+    },
+    {
+        name: "BLAKE3: 16390 - key test",
+        input: "test",
+        expectedMatch: /a8d0.{32760}19ccd9b9726b46ae/,
+        recipeConfig: [
+            { "op": "BLAKE3",
+                "args": [16390, "ThiskeyisexactlythirtytwoBytesLo"] }
+        ]
     }
 ]);
