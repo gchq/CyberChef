@@ -218,6 +218,7 @@ module.exports = {
         testOpHtml(browser, "JSON Beautify", "{a:1}", ".json-dict .json-literal", "1");
         // testOp(browser, "JSON Minify", "test input", "test_output");
     // testOp(browser, "JSON to CSV", "test input", "test_output");
+        testOp(browser, "Jsonata Query", '{"a": "SGVsbG8gV29ybGQh"}', '"Hello World!"', ["$base64decode($.a)"]);
     // testOp(browser, "JWT Decode", "test input", "test_output");
     // testOp(browser, "JWT Sign", "test input", "test_output");
     // testOp(browser, "JWT Verify", "test input", "test_output");
@@ -492,7 +493,22 @@ function testOpImage(browser, opName, filename, args=[]) {
 
     browser
         .waitForElementVisible("#output-html img")
-        .expect.element("#output-html img").to.have.css("width").which.matches(/^[^0]\d*px/);
+        .expect.element("#output-html img").to.have.css("width").which.matches(/^(?!0+(?:\.0+)?px$)\d+(?:\.\d+)?px$/);
+
+    browser.execute(function() {
+        const output = document.getElementById("output-html");
+        const img = output.querySelector("img");
+        const outputRect = output.getBoundingClientRect();
+        const imgRect = img.getBoundingClientRect();
+
+        return {
+            imageFitsWidth: imgRect.width <= outputRect.width,
+            imageFitsHeight: imgRect.height <= outputRect.height,
+        };
+    }, [], function({value}) {
+        browser.expect(value.imageFitsWidth).to.be.equal(true);
+        browser.expect(value.imageFitsHeight).to.be.equal(true);
+    });
 }
 
 /** @function

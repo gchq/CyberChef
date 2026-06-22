@@ -58,9 +58,10 @@ class HTMLOperation {
 
         if (this.description) {
             const infoLink = this.infoURL ? `<hr>${titleFromWikiLink(this.infoURL)}` : "";
+            const content = Utils.escapeHtml(this.description + infoLink);
 
             html += ` data-container='body' data-toggle='popover' data-placement='right'
-                data-content="${this.description}${infoLink}" data-html='true' data-trigger='hover'
+                data-content="${content}" data-html='true' data-trigger='hover'
                 data-boundary='viewport' role='button'`;
         }
 
