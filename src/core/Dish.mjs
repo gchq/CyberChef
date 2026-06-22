@@ -37,17 +37,18 @@ class Dish {
     constructor(dishOrInput=null, type = null) {
         this.value = new ArrayBuffer(0);
         this.type = Dish.ARRAY_BUFFER;
+        const hasInput = Boolean(dishOrInput) || dishOrInput === 0;
 
         // Case: dishOrInput is dish object
-        if (dishOrInput &&
+        if (hasInput &&
             Object.prototype.hasOwnProperty.call(dishOrInput, "value") &&
             Object.prototype.hasOwnProperty.call(dishOrInput, "type")) {
             this.set(dishOrInput.value, dishOrInput.type);
         // input and type defined separately
-        } else if (dishOrInput && type !== null) {
+        } else if (hasInput && type !== null) {
             this.set(dishOrInput, type);
         // No type declared, so infer it.
-        } else if (dishOrInput) {
+        } else if (hasInput) {
             const inferredType = Dish.typeEnum(dishOrInput.constructor.name);
             this.set(dishOrInput, inferredType);
         }

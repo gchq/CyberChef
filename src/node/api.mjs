@@ -98,7 +98,7 @@ function transformArgs(opArgsList, newArgs) {
  * @param input
  */
 function ensureIsDish(input) {
-    if (!input) {
+    if (!input && input !== 0) {
         return new NodeDish();
     }
 

@@ -59,6 +59,13 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "7");
     }),
 
+    it("ADD: preserves numeric zero input", () => {
+        const result = chef.ADD(0, {
+            key: "4",
+        });
+        assert.strictEqual(result.toString(), "4");
+    }),
+
     it("addLineNumbers: No arguments", () => {
         const result = addLineNumbers("sample input");
         assert.equal(result.toString(), "1 sample input");
