@@ -11,7 +11,7 @@
 class DishType {
 
     /**
-     * Warn translations dont work without value from bind
+     * Warn translations don't work without value from bind
      */
     static checkForValue(value) {
         if (value === undefined) {
