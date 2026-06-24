@@ -142,7 +142,7 @@ module.exports = {
         rules: [
             {
                 test: /\.m?js$/,
-                exclude: /node_modules\/(?!crypto-api|bootstrap)/,
+                exclude: /node_modules[\\/](?!crypto-api|bootstrap)/,
                 options: {
                     configFile: path.resolve(__dirname, "babel.config.js"),
                     cacheDirectory: true,
@@ -211,18 +211,20 @@ module.exports = {
                     filename: "assets/fonts/[name][ext]"
                 }
             },
-            { // First party images are saved as files to be cached
+            {
                 test: /\.(png|jpg|gif)$/,
-                exclude: /(node_modules|bmfonts)/,
-                type: "asset/resource",
-                generator: {
-                    filename: "images/[name][ext]"
-                }
-            },
-            { // Third party images are inlined
-                test: /\.(png|jpg|gif)$/,
-                exclude: /web\/static/,
-                type: "asset/inline",
+                oneOf: [
+                    {
+                        exclude: /(node_modules|bmfonts)/,
+                        type: "asset/resource",
+                        generator: {
+                            filename: "images/[name][ext]"
+                        }
+                    },
+                    {
+                        type: "asset/inline"
+                    }
+                ]
             },
         ]
     },
