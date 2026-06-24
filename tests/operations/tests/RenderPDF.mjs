@@ -40,22 +40,7 @@ TestRegister.addTests([
     {
         name: "RenderPDF followed by Generate QR Code error returns plain text",
         input: oversizedPdfLikeInput,
-        expectedMatch: /^Error generating QR code\. \(/,
-        recipeConfig: [
-            {
-                "op": "Render PDF",
-                "args": ["Raw"]
-            },
-            {
-                "op": "Generate QR Code",
-                "args": ["PNG", 1, 0, "High"]
-            }
-        ],
-    },
-    {
-        name: "RenderPDF followed by Generate QR Code error does not render iframe",
-        input: oversizedPdfLikeInput,
-        unexpectedMatch: /<iframe/i,
+        expectedOutput: "Error generating QR code. (Error: Too much data)",
         recipeConfig: [
             {
                 "op": "Render PDF",
