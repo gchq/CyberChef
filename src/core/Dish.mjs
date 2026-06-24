@@ -37,7 +37,7 @@ class Dish {
     constructor(dishOrInput=null, type = null) {
         this.value = new ArrayBuffer(0);
         this.type = Dish.ARRAY_BUFFER;
-        const hasInput = Boolean(dishOrInput) || dishOrInput === 0;
+        const hasInput = dishOrInput !== undefined && dishOrInput !== null;
 
         // Case: dishOrInput is dish object
         if (hasInput &&

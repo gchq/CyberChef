@@ -59,7 +59,7 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "7");
     }),
 
-    it("ADD: preserves numeric zero input", () => {
+    it("ADD: processes numeric zero input", () => {
         const result = chef.ADD(0, {
             key: "4",
         });
@@ -1185,4 +1185,3 @@ ExifImageHeight: 57`);
 
 
 ]);
-

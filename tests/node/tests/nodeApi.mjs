@@ -97,7 +97,7 @@ TestRegister.addApiTests([
         assert(result instanceof NodeDish);
     }),
 
-    it("should preserve numeric zero input", () => {
+    it("should process numeric zero input", () => {
         const result = chef.toHex(0);
         assert.strictEqual(result.toString(), "30");
     }),
@@ -185,7 +185,7 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "ONXW2ZJANFXHA5LU");
     }),
 
-    it("chef.bake: should preserve numeric zero input", async () => {
+    it("chef.bake: should process numeric zero input", async () => {
         const result = await chef.bake(0, "to hex");
         assert.strictEqual(result.toString(), "30");
     }),
