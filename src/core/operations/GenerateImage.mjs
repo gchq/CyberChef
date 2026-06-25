@@ -76,6 +76,10 @@ class GenerateImage extends Operation {
 
         const bytesPerPixel = bytePerPixelMap[mode];
 
+        if (bytesPerPixel === undefined) {
+            throw new OperationError(`Unsupported Mode: (${mode})`);
+        }
+
         if (bytesPerPixel > 0 && input.length % bytesPerPixel !== 0) {
             throw new OperationError(
                 `Number of bytes is not a divisor of ${bytesPerPixel}`,
