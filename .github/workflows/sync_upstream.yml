@@ -1,0 +1,69 @@
+name: Sync Upstream
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # weekly, Monday 6am UTC
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          fetch-depth: 0
+
+      - name: Sync upstream
+        run: |
+          set -eo pipefail
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git remote add upstream https://github.com/gchq/CyberChef.git
+          git fetch upstream
+
+          # Merge without committing so we can post-process the result before
+          # creating a single merge commit:
+          #   - auto-resolve the conflicts this fork hits every week,
+          #   - keep the fork's own workflow files (HEAD stays the pre-merge
+          #     fork commit while --no-commit is in effect).
+          git merge --no-commit --no-ff upstream/master || true
+
+          if ! git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+            echo "Already up to date with upstream."
+            exit 0
+          fi
+
+          # Resolve known, recurring conflicts; bail out loudly on anything
+          # unexpected so we never push a half-resolved tree to master.
+          unresolved=""
+          for f in $(git diff --name-only --diff-filter=U); do
+            if [ "$f" = "README.md" ]; then
+              # The fork's README intentionally diverges (jacobmarks.com
+              # branding + extra demo links); keep our version.
+              git checkout --ours -- "$f"
+              git add -- "$f"
+              echo "Resolved $f -> kept fork version"
+            elif ! git cat-file -e "upstream/master:$f" 2>/dev/null \
+                 && git check-ignore -q --no-index "$f"; then
+              # Generated/gitignored file that upstream has deleted (e.g.
+              # tests/operations/index.mjs is now produced by grunt
+              # configTests); honour the deletion.
+              git rm -q -- "$f"
+              echo "Resolved $f -> honoured upstream deletion (generated file)"
+            else
+              unresolved="$unresolved $f"
+            fi
+          done
+
+          if [ -n "$unresolved" ]; then
+            echo "::error::Unresolved merge conflicts need manual resolution:$unresolved"
+            git merge --abort
+            exit 1
+          fi
+
+          # Keep the fork's own workflow files instead of adopting upstream's.
+          git checkout HEAD -- .github/workflows/
+          git add -A .github/workflows/
+
+          git commit --no-edit
+          git push origin master

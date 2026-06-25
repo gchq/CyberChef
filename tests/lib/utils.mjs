@@ -82,7 +82,8 @@ export function logTestReport(testStatus, results) {
  * Fail if the process takes longer than 60 seconds.
  */
 export function setLongTestFailure() {
-    const timeLimit = 120;
+    const configuredTimeLimit = parseInt(process.env.CYBERCHEF_TEST_TIMEOUT_SECONDS || "", 10);
+    const timeLimit = Number.isFinite(configuredTimeLimit) && configuredTimeLimit > 0 ? configuredTimeLimit : 120;
     setTimeout(function() {
         console.log(`Tests took longer than ${timeLimit} seconds to run, returning.`);
         process.exit(1);

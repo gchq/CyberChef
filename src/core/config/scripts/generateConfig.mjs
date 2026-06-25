@@ -37,6 +37,8 @@ for (const opObj in Ops) {
     operationConfig[op.name] = {
         module:      op.module,
         description: op.description,
+        inlineHelp:  op.inlineHelp,
+        testDataSamples: op.testDataSamples,
         infoURL:     op.infoURL,
         inputType:   op.inputType,
         outputType:  op.presentType,

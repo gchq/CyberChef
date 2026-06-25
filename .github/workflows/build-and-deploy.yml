@@ -1,0 +1,85 @@
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set node version
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install
+        run: |
+          npm ci
+          npm run setheapsize
+
+      - name: Lint
+        run: npx grunt lint
+
+      - name: Unit Tests
+        run: |
+          npm test
+          npm run testnodeconsumer
+
+      - name: Production Build
+        if: success()
+        run: npx grunt prod
+
+      - name: Upload Build Artifact
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zipped-build
+          path: build/prod/*.zip
+          retention-days: 1
+
+      - name: Configure AWS credentials
+        if: success()
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Unzip build
+        if: success()
+        run: unzip build/prod/*.zip -d build/unpacked
+
+      - name: Install brotli
+        if: success()
+        run: sudo apt-get install -y brotli
+
+      - name: Decompress build
+        if: success()
+        run: |
+          find build/unpacked -name "*.gz" -exec sh -c 'gunzip -f "$1"' _ {} \;
+          find build/unpacked -name "*.br" -exec sh -c 'brotli -d -f "$1"' _ {} \;
+
+      - name: Sync to S3
+        if: success()
+        run: |
+          aws s3 sync build/unpacked/ s3://${{ secrets.S3_BUCKET_NAME }} \
+            --delete \
+            --cache-control "max-age=86400"
+
+      - name: Invalidate CloudFront
+        if: success()
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
