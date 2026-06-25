@@ -74,6 +74,10 @@ class GenerateImage extends Operation {
             Bits: 1 / 8,
         };
 
+        if (!Object.hasOwn(bytePerPixelMap, mode)) {
+            throw new OperationError(`Unsupported Mode: (${mode})`);
+        }
+
         const bytesPerPixel = bytePerPixelMap[mode];
 
         if (bytesPerPixel > 0 && input.length % bytesPerPixel !== 0) {
