@@ -11,6 +11,7 @@ import {fromBase64, toBase64} from "./lib/Base64.mjs";
 import {fromHex} from "./lib/Hex.mjs";
 import {fromDecimal} from "./lib/Decimal.mjs";
 import {fromBinary} from "./lib/Binary.mjs";
+import OperationError from "./errors/OperationError.mjs";
 
 /**
  * Utility functions for use in operations, the core framework and the stage.
@@ -322,6 +323,48 @@ class Utils {
 
 
     /**
+     * Validates that a string contains only characters valid for the given format type.
+     * Recognised delimiters (spaces, commas, colons, 0x prefix, etc.) are always
+     * permitted in Hex and Binary formats.
+     * Throws an OperationError if genuinely invalid characters are found.
+     *
+     * @param {string} str
+     * @param {string} type - One of "Hex", "Base64", "Binary", "UTF8", "Latin1", etc.
+     * @throws {OperationError}
+     */
+    static validateFormatInput(str, type) {
+        if (!str) return;
+        switch (type.toLowerCase()) {
+            case "hex": {
+                const stripped = str.replace(/0x|\\x|%|[\s,;:\n\r]/gi, "");
+                const invalid = stripped.match(/[^0-9a-fA-F]/);
+                if (invalid) throw new OperationError(
+                    `Invalid character '${invalid[0]}' in Hex input. ` +
+                    `Hex accepts 0-9, a-f, A-F, and delimiters (space, comma, colon, 0x prefix).`
+                );
+                break;
+            }
+            case "base64": {
+                const invalid = str.replace(/[\s]/g, "").match(/[^A-Za-z0-9+/=]/);
+                if (invalid) throw new OperationError(
+                    `Invalid character '${invalid[0]}' in Base64 input. ` +
+                    `Base64 accepts A-Z, a-z, 0-9, +, /, and = (padding).`
+                );
+                break;
+            }
+            case "binary": {
+                const stripped = str.replace(/[\s,;:\n\r]/g, "");
+                const invalid = stripped.match(/[^01]/);
+                if (invalid) throw new OperationError(
+                    `Invalid character '${invalid[0]}' in Binary input. Binary accepts only 0 and 1.`
+                );
+                break;
+            }
+        }
+    }
+
+
+    /**
      * Coverts data of varying types to a byteArray.
      * Accepts hex, Base64, UTF8 and Latin1 strings.
      *
@@ -340,6 +383,7 @@ class Utils {
      * Utils.convertToByteArray("0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1", "base64");
      */
     static convertToByteArray(str, type) {
+        Utils.validateFormatInput(str, type);
         switch (type.toLowerCase()) {
             case "binary":
                 return fromBinary(str);
@@ -377,6 +421,7 @@ class Utils {
      * Utils.convertToByteString("0JfQtNGA0LDQstGB0YLQstGD0LnRgtC1", "base64");
      */
     static convertToByteString(str, type) {
+        Utils.validateFormatInput(str, type);
         switch (type.toLowerCase()) {
             case "binary":
                 return Utils.byteArrayToChars(fromBinary(str));
