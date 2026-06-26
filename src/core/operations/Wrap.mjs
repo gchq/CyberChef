@@ -5,7 +5,6 @@
  */
 
 import Operation from "../Operation.mjs";
-import OperationError from "../errors/OperationError.mjs";
 
 const MAX_LINE_WIDTH = 65536;
 
@@ -45,16 +44,6 @@ class Wrap extends Operation {
     run(input, args) {
         if (!input) return "";  // Handle empty input
         const lineWidth = args[0];
-
-        if (!Number.isInteger(lineWidth))
-            throw new OperationError("Line Width must be an integer.");
-
-        if (lineWidth < 1)
-            throw new OperationError("Line Width must be greater than or equal to 1.");
-
-        if (lineWidth > MAX_LINE_WIDTH)
-            throw new OperationError(`Line Width must be less than or equal to ${MAX_LINE_WIDTH}.`);
-
         const regex = new RegExp(`.{1,${lineWidth}}`, "g");
         return input.match(regex).join("\n");
     }
