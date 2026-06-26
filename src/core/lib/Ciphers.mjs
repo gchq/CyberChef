@@ -13,6 +13,7 @@
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
 import CryptoJS from "crypto-js";
+import { fromHex, toHexFast } from "./Hex.mjs";
 
 /**
  * Affine Cipher Encode operation.
@@ -86,3 +87,22 @@ export const format = {
     "UTF16BE": CryptoJS.enc.Utf16BE,
     "Latin1":  CryptoJS.enc.Latin1,
 };
+
+
+/**
+ * Parses a user-entered string in a given CryptoJS format, normalising common
+ * hex delimiter conventions (commas, spaces, 0x prefix, etc.) before parsing.
+ *
+ * Use this instead of format[name].parse() for user-supplied passphrase/key inputs.
+ *
+ * @param {string} str
+ * @param {string} formatName - Key into the format map (e.g. "Hex", "UTF8")
+ * @returns {CryptoJS.lib.WordArray}
+ */
+export function parseFormatString(str, formatName) {
+    Utils.validateFormatInput(str, formatName);
+    if (formatName === "Hex") {
+        return CryptoJS.enc.Hex.parse(toHexFast(fromHex(str)));
+    }
+    return format[formatName].parse(str);
+}
