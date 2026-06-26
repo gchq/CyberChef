@@ -127,6 +127,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "To Hexdump: Width too large",
+        input: "H",
+        expectedOutput: "Width must be less than or equal to 65536.",
+        recipeConfig: [
+            {
+                op: "To Hexdump",
+                args: [155555555555555, false, false, false]
+            }
+        ],
+    },
+    {
         name: "From Hexdump: xxd",
         input: `00000000: 0001 0203 0405 0607 0809 0a0b 0c0d 0e0f  ................
 00000010: 1011 1213 1415 1617 1819 1a1b 1c1d 1e1f  ................
