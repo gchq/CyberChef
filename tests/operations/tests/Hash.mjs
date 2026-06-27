@@ -141,6 +141,17 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "SHA2: invalid size",
+        input: "hi",
+        expectedOutput: "Invalid SHA2 size",
+        recipeConfig: [
+            {
+                "op": "SHA2",
+                "args": ["", 64, 13]
+            }
+        ]
+    },
+    {
         name: "SHA3 224",
         input: "Hello, World!",
         expectedOutput: "853048fb8b11462b6100385633c0cc8dcdc6e2b8e376c28102bc84f2",
