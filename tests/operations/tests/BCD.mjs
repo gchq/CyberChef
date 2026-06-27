@@ -86,6 +86,17 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "From BCD: invalid encoding scheme",
+        input: "1000",
+        expectedOutput: "Invalid BCD encoding scheme",
+        recipeConfig: [
+            {
+                "op": "From BCD",
+                "args": ["", true, false, "Nibbles"]
+            }
+        ]
+    },
+    {
         name: "BCD: raw 4 2 2 1, packed, signed",
         input: "1234567890",
         expectedOutput: "1234567890",
