@@ -339,6 +339,17 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Whirlpool: invalid variant",
+        input: "a",
+        expectedOutput: "Invalid Whirlpool variant",
+        recipeConfig: [
+            {
+                "op": "Whirlpool",
+                "args": ["", 10]
+            }
+        ]
+    },
+    {
         name: "Snefru 2 128",
         input: "Hello, World!",
         expectedOutput: "a4ad2b8848580511d0884fb4233a7e7a",
