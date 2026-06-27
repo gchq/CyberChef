@@ -57,6 +57,55 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Generate Image: valid integer pixels per row",
+        input: "00010203",
+        expectedMatch: /89504e470d0a1a0a/,
+        recipeConfig: [
+            {
+                op: "From Hex",
+                args: ["None"]
+            },
+            {
+                op: "Generate Image",
+                args: ["Greyscale", 1, 2]
+            },
+            {
+                op: "To Hex",
+                args: ["None"]
+            }
+        ]
+    },
+    {
+        name: "Generate Image: pixel scale factor must be an integer",
+        input: "00010203",
+        expectedOutput: "Pixel Scale Factor must be an integer.",
+        recipeConfig: [
+            {
+                op: "From Hex",
+                args: ["None"]
+            },
+            {
+                op: "Generate Image",
+                args: ["Greyscale", 1.2, 2]
+            }
+        ]
+    },
+    {
+        name: "Generate Image: pixels per row must be an integer",
+        input: "00010203",
+        expectedOutput: "Pixels per row must be an integer.",
+        recipeConfig: [
+            {
+                op: "From Hex",
+                args: ["None"]
+            },
+            {
+                op: "Generate Image",
+                args: ["Greyscale", 1, 1024.4]
+            }
+        ]
+    },
+    {
         name: "Extract EXIF: nothing",
         input: "",
         expectedOutput: "Found 0 tags.\n",

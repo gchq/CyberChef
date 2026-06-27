@@ -40,11 +40,13 @@ class GenerateImage extends Operation {
                 name: "Pixel Scale Factor",
                 type: "number",
                 value: 8,
+                integer: true,
             },
             {
                 name: "Pixels per row",
                 type: "number",
                 value: 64,
+                integer: true,
             },
         ];
     }
