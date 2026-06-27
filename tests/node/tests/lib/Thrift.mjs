@@ -496,7 +496,7 @@ TestRegister.addApiTests([
         ]);
         const data = new DataView(bytes.buffer);
         const result = readBinaryType(data, 0, 15);
-        assert.deepStrictEqual(result.value, { elementType: 'I32', elements: [ 1, 2 ] });
+        assert.deepStrictEqual(result.value, { elementType: "I32", elements: [1, 2] });
         assert.strictEqual(result.offset, 13);
     }),
 
@@ -504,7 +504,7 @@ TestRegister.addApiTests([
         const bytes = new Uint8Array([8, 0, 0, 0, 0]);
         const data = new DataView(bytes.buffer);
         const result = readBinaryType(data, 0, 15);
-        assert.deepStrictEqual(result.value, { elementType: 'I32', elements: [] });
+        assert.deepStrictEqual(result.value, { elementType: "I32", elements: [] });
         assert.strictEqual(result.offset, 5);
     }),
 
@@ -520,7 +520,7 @@ TestRegister.addApiTests([
         ]);
         const data = new DataView(bytes.buffer);
         const result = readBinaryType(data, 0, 13);
-        assert.deepStrictEqual(result.value, { keyType: 'I32', valType: 'BINARY', elements: [{ key: 1, val: "key" }] });
+        assert.deepStrictEqual(result.value, { keyType: "I32", valType: "BINARY", elements: [{ key: 1, val: "key" }] });
         assert.strictEqual(result.offset, 17);
     }),
 
