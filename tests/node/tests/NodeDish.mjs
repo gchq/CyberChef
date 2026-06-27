@@ -38,6 +38,9 @@ TestRegister.addApiTests([
         const numberDish = new Dish(333);
         assert.strictEqual(numberDish.type, 2);
 
+        const zeroDish = new Dish(0);
+        assert.strictEqual(zeroDish.type, 2);
+
         const arrayBufferDish = new Dish(Buffer.from("some buffer input").buffer);
         assert.strictEqual(arrayBufferDish.type, 4);
 
