@@ -661,6 +661,22 @@ WWFkYSBZYWRh\r
         assert.strictEqual(chef.HMAC("On Cloud Nine", {key: "idea"}).toString(), "e15c268b4ee755c9e52db094ed50add7");
     }),
 
+    it("HMAC rejects an empty hashing function", () => {
+        assert.throws(
+            () => chef.HMAC("hi", {
+                key: {
+                    option: "UTF8",
+                    string: "",
+                },
+                hashingFunction: "",
+            }),
+            {
+                type: "OperationError",
+                message: "Hashing function must be selected.",
+            }
+        );
+    }),
+
     it("JPathExpression", () => {
         assert.strictEqual(chef.JPathExpression("{\"key\" : \"value\"}", {query: "$.key"}).toString(), "\"value\"");
     }),
@@ -1178,4 +1194,3 @@ ExifImageHeight: 57`);
 
 
 ]);
-
