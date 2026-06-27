@@ -53,6 +53,17 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "To BCD: invalid scheme",
+        input: "43",
+        expectedOutput: "Invalid BCD encoding scheme",
+        recipeConfig: [
+            {
+                "op": "To BCD",
+                "args": ["", true, false, "Nibbles"]
+            }
+        ]
+    },
+    {
         name: "From BCD: default 0",
         input: "0000",
         expectedOutput: "0",
