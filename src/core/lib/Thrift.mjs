@@ -193,29 +193,34 @@ export function readBinaryType(data, offset, type) {
         case 13: { // MAP
             const keyType = data.getUint8(offset++);
             const valType = data.getUint8(offset++);
+            const keyTypeName = getBinaryTypeName(keyType);
+            const valTypeName = getBinaryTypeName(valType);
             const mapSize = data.getInt32(offset);
             offset += 4;
-            value = [];
+            const elements = [];
             for (let i = 0; i < mapSize; i++) {
                 const k = readBinaryType(data, offset, keyType);
                 offset = k.offset;
                 const v = readBinaryType(data, offset, valType);
                 offset = v.offset;
-                value.push({ key: k.value, val: v.value });
+                elements.push({ key: k.value, val: v.value });
             }
+            value = { keyType: keyTypeName, valType: valTypeName, elements: elements };
             break;
         }
         case 14: // SET
         case 15: { // LIST
             const elemType = data.getUint8(offset++);
+            const elemTypeName = getBinaryTypeName(elemType);
             const listSize = data.getInt32(offset);
             offset += 4;
-            value = [];
+            const elements = [];
             for (let i = 0; i < listSize; i++) {
                 const elem = readBinaryType(data, offset, elemType);
-                value.push(elem.value);
+                elements.push(elem.value);
                 offset = elem.offset;
             }
+            value = { elementType: elemTypeName, elements: elements };
             break;
         }
         default:
@@ -298,10 +303,18 @@ export function readCompactType(data, offset, type) {
             value = data.getInt8(offset++);
             break;
         case 4: // I16
+            varintParsed = readVarint(data, offset);
+            value = Number(fromZigZag(varintParsed.value));
+            offset = varintParsed.offset;
+            break;
         case 5: // I32
+            varintParsed = readVarint(data, offset);
+            value = Number(fromZigZag(varintParsed.value));
+            offset = varintParsed.offset;
+            break;
         case 6: // I64
             varintParsed = readVarint(data, offset);
-            value = fromZigZag(varintParsed.value); // Decodes ZigZag
+            value = fromZigZag(varintParsed.value).toString();
             offset = varintParsed.offset;
             break;
         case 7: // DOUBLE

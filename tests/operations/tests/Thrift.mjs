@@ -28,7 +28,7 @@ TestRegister.addTests([
         // STOP: 00
         expectedOutput: "08 00 01 00 00 05 39 0b 00 02 00 00 00 04 54 65 73 74 02 00 03 01 00",
         recipeConfig: [
-            { op: "Thrift Serialize", args: ["TBinaryProtocol"] },
+            { op: "Thrift Serialize", args: [] },
             { op: "To Hex", args: ["Space", 0] }
         ]
     },
@@ -50,7 +50,30 @@ TestRegister.addTests([
         // STOP: 00
         expectedOutput: "0f 00 01 08 00 00 00 02 00 00 00 0a 00 00 00 14 00",
         recipeConfig: [
-            { op: "Thrift Serialize", args: ["TBinaryProtocol"] },
+            { op: "Thrift Serialize", args: [] },
+            { op: "To Hex", args: ["Space", 0] }
+        ]
+    },
+
+    {
+        name: "Thrift Serialize: TBinaryProtocol (Set of BINARY)",
+        input: JSON.stringify({
+            "field_1": {
+                "type": "SET",
+                "value": {
+                    "elementType": "BINARY",
+                    "elements": ["a", "b"]
+                }
+            }
+        }),
+        // Hex breakdown:
+        // Field 1 (SET): 0e 00 01
+        // Element Type (BINARY = 0b), Size (2 = 00 00 00 02)
+        // Values: 00 00 00 01 61, 00 00 00 01 62
+        // STOP: 00
+        expectedOutput: "0e 00 01 0b 00 00 00 02 00 00 00 01 61 00 00 00 01 62 00",
+        recipeConfig: [
+            { op: "Thrift Serialize", args: [] },
             { op: "To Hex", args: ["Space", 0] }
         ]
     },
@@ -77,7 +100,10 @@ TestRegister.addTests([
         expectedOutput: formatJson({
             "field_1": {
                 "type": "LIST",
-                "value": [10, 20]
+                "value": {
+                    "elementType": "I32",
+                    "elements": [10, 20]
+                }
             }
         }),
         recipeConfig: [
@@ -126,6 +152,32 @@ TestRegister.addTests([
         // and that the result can be Serialized back into the original binary data
         input: "0f 00 0b 08 00 00 00 03 00 00 00 01 00 00 00 02 00 00 00 03 00",
         expectedOutput: "0f 00 0b 08 00 00 00 03 00 00 00 01 00 00 00 02 00 00 00 03 00",
+        recipeConfig: [
+            { "op": "From Hex", "args": ["Auto"] },
+            { "op": "Thrift Deserialize", "args": ["TBinaryProtocol"] },
+            { "op": "Thrift Serialize", "args": [] },
+            { "op": "To Hex", "args": ["Space", 0] }
+        ]
+    },
+    {
+        name: "Thrift Deserialize/Serialize: TBinaryProtocol Set round-trip",
+        // Validates that a TBinaryProtocal SET is successfully deserialised
+        // and that the result can be Serialized back into the original binary data
+        input: "0e 00 01 0b 00 00 00 02 00 00 00 01 61 00 00 00 01 62 00",
+        expectedOutput: "0e 00 01 0b 00 00 00 02 00 00 00 01 61 00 00 00 01 62 00",
+        recipeConfig: [
+            { "op": "From Hex", "args": ["Auto"] },
+            { "op": "Thrift Deserialize", "args": ["TBinaryProtocol"] },
+            { "op": "Thrift Serialize", "args": [] },
+            { "op": "To Hex", "args": ["Space", 0] }
+        ]
+    },
+    {
+        name: "Thrift Deserialize/Serialize: TBinaryProtocol Map round-trip",
+        // Validates that a TBinaryProtocal MAP is successfully deserialised
+        // and that the result can be Serialized back into the original binary data
+        input: "0d 00 01 08 0b 00 00 00 01 00 00 00 01 00 00 00 01 61 00",
+        expectedOutput: "0d 00 01 08 0b 00 00 00 01 00 00 00 01 00 00 00 01 61 00",
         recipeConfig: [
             { "op": "From Hex", "args": ["Auto"] },
             { "op": "Thrift Deserialize", "args": ["TBinaryProtocol"] },
