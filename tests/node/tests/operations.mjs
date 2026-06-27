@@ -728,6 +728,18 @@ Arguments:
         assert.strictEqual(result.toString(), expected);
     }),
 
+    it("Parse URI with constructor and __proto__ arguments", () => {
+        const result = chef.parseURI("https://example.com/?constructor=ok&__proto__=hello");
+        const expected = `Protocol:	https:
+Hostname:	example.com
+Path name:	/
+Arguments:
+\tconstructor = ok
+\t__proto__   = hello
+`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
     it("Parse user agent", () => {
         const result = chef.parseUserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 ");
         const expected = `Browser
