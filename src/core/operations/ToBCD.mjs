@@ -67,6 +67,9 @@ class ToBCD extends Operation {
             signed = args[2],
             outputFormat = args[3];
 
+        if (encoding === undefined)
+            throw new OperationError("Invalid encoding scheme");
+
         // Split input number up into separate digits
         const digits = input.toFixed().split("");
 

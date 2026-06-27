@@ -100,4 +100,26 @@ TestRegister.addTests([
             }
         ]
     },
+    {
+        name: "To BCD: invalid (empty) encoding scheme",
+        input: "43",
+        expectedOutput: "Invalid encoding scheme",
+        recipeConfig: [
+            {
+                "op": "To BCD",
+                "args": ["", true, false, "Nibbles"]
+            }
+        ]
+    },
+    {
+        name: "From BCD: invalid (empty) encoding scheme",
+        input: "0100 0011",
+        expectedOutput: "Invalid encoding scheme",
+        recipeConfig: [
+            {
+                "op": "From BCD",
+                "args": ["", true, false, "Nibbles"]
+            }
+        ]
+    },
 ]);
