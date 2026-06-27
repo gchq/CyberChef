@@ -433,4 +433,15 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "Luhn Checksum on invalid radix character",
+        input: "o",
+        expectedOutput: "Character: o is not valid in radix 4.",
+        recipeConfig: [
+            {
+                op: "Luhn Checksum",
+                args: [4]
+            },
+        ],
+    },
 ]);
