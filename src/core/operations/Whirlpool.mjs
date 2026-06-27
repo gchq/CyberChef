@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import {runHash} from "../lib/Hash.mjs";
 
 /**
@@ -46,8 +47,13 @@ class Whirlpool extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const variant = args[0].toLowerCase();
-        return runHash(variant, input, {rounds: args[1]});
+        const variant = args[0].toLowerCase(),
+            rounds = args[1] ?? 10;
+
+        if (!Number.isInteger(rounds) || rounds < 1 || rounds > 10)
+            throw new OperationError("Rounds must be an integer between 1 and 10");
+
+        return runHash(variant, input, {rounds});
     }
 
 }
