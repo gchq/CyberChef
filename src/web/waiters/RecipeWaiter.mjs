@@ -517,6 +517,7 @@ class RecipeWaiter {
         log.debug(`'${e.target.querySelector(".op-title").textContent}' added to recipe`);
 
         this.triggerArgEvents(e.target);
+        this._updateJWTHighlight();
         window.dispatchEvent(this.manager.statechange);
     }
 
@@ -530,7 +531,20 @@ class RecipeWaiter {
      */
     opRemove(e) {
         log.debug("Operation removed from recipe");
+        this._updateJWTHighlight();
         window.dispatchEvent(this.manager.statechange);
+    }
+
+
+    /**
+     * Enables JWT input highlighting when the sole recipe operation is
+     * "JWT Decode and Verify", disables it otherwise.
+     */
+    _updateJWTHighlight() {
+        const ops = document.querySelectorAll("#rec-list .op-title");
+        const isJWT = ops.length === 1 &&
+            ops[0].textContent.trim() === "JWT Decode and Verify";
+        this.manager.input.setJWTHighlight(isJWT);
     }
 
 
