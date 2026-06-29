@@ -46,6 +46,17 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Generate Image: empty mode",
+        input: "",
+        expectedOutput: "Unsupported Mode: ()",
+        recipeConfig: [
+            {
+                op: "Generate Image",
+                args: ["", 8, 64]
+            }
+        ]
+    },
+    {
         name: "Extract EXIF: nothing",
         input: "",
         expectedOutput: "Found 0 tags.\n",

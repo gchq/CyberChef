@@ -218,6 +218,7 @@ module.exports = {
         testOpHtml(browser, "JSON Beautify", "{a:1}", ".json-dict .json-literal", "1");
         // testOp(browser, "JSON Minify", "test input", "test_output");
     // testOp(browser, "JSON to CSV", "test input", "test_output");
+        testOp(browser, "Jsonata Query", '{"a": "SGVsbG8gV29ybGQh"}', '"Hello World!"', ["$base64decode($.a)"]);
     // testOp(browser, "JWT Decode", "test input", "test_output");
     // testOp(browser, "JWT Sign", "test input", "test_output");
     // testOp(browser, "JWT Verify", "test input", "test_output");
@@ -345,8 +346,8 @@ module.exports = {
         // testOp(browser, "Strip HTTP headers", "test input", "test_output");
         // testOp(browser, "Subsection", "test input", "test_output");
         // testOp(browser, "Substitute", "test input", "test_output");
-        // testOp(browser, "Subtract", "test input", "test_output");
-    // testOp(browser, "Sum", "test input", "test_output");
+        testOp(browser, "Subtract", "321,123,test", "198", ["Comma"]);
+        testOp(browser, "Sum", "321,123,test", "444", ["Comma"]);
         // testOp(browser, "Swap endianness", "test input", "test_output");
         // testOp(browser, "Symmetric Difference", "test input", "test_output");
         testOpHtml(browser, "Syntax highlighter", "var a = [4,5,6]", ".hljs-selector-attr", "[4,5,6]");
