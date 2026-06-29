@@ -166,6 +166,7 @@ class HTMLIngredient {
                         id="${this.id}"
                         tabindex="${this.tabIndex}"
                         arg-name="${this.name}"
+                        data-target="${this.target}"
                         ${this.disabled ? "disabled" : ""}>`;
                 for (i = 0; i < this.value.length; i++) {
                     if ((m = this.value[i].name.match(/\[([a-z0-9 -()^]+)\]/i))) {
