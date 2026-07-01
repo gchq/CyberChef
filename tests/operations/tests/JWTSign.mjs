@@ -90,6 +90,19 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "JWT Sign: HS256, invalid header",
+        input: inputObject,
+        expectedOutput: `Header must be a valid (or empty) json object.
+
+SyntaxError: Unexpected token 'h', "this is not JSON" is not valid JSON`,
+        recipeConfig: [
+            {
+                op: "JWT Sign",
+                args: [hsKey, "HS256", "this is not JSON"],
+            }
+        ],
+    },
+    {
         name: "JWT Sign: HS256 with custom header",
         input: inputObject,
         expectedOutput: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImN1c3RvbS5rZXkifQ.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.kXln8btJburfRlND8IDZAQ8NZGFFZhvHyooHa6N9za8",
@@ -142,7 +155,7 @@ TestRegister.addTests([
         input: inputObject,
         expectedOutput: `Error: Have you entered the key correctly? The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.
 
-Error: "alg" parameter "ES384" requires curve "secp384r1".`,
+DataError: Named curve mismatch`,
         recipeConfig: [
             {
                 op: "JWT Sign",
@@ -189,7 +202,7 @@ Error: "alg" parameter "ES384" requires curve "secp384r1".`,
         input: inputObject,
         expectedOutput: `Error: Have you entered the key correctly? The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.
 
-Error: secretOrPrivateKey has a minimum key size of 2048 bits for RS256`,
+TypeError: RS256 requires key modulusLength to be 2048 bits or larger`,
         recipeConfig: [
             {
                 op: "JWT Sign",
