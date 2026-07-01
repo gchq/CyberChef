@@ -76,8 +76,15 @@ class Ingredient {
         if (this.disabled) return true;
 
         let checkVal = val;
-        if (this.type === "toggleString" && val && typeof val === "object" && "string" in val) {
-            checkVal = val.string;
+        if (checkVal === null || checkVal === undefined) {
+            checkVal = this.defaultValue;
+        }
+
+        if (this.type === "toggleString" && checkVal && typeof checkVal === "object" && "string" in checkVal) {
+            checkVal = checkVal.string;
+        }
+        if (this.type === "option" && Array.isArray(checkVal)) {
+            checkVal = checkVal[this.defaultIndex ?? 0];
         }
 
         // 1. check if empty
@@ -89,7 +96,11 @@ class Ingredient {
         }
 
         if (isEmpty) {
-            if (this.allowEmpty === false) {
+            let isAllowedOptionEmpty = false;
+            if (this.type === "option" && Array.isArray(this.defaultValue)) {
+                isAllowedOptionEmpty = this.defaultValue.includes("");
+            }
+            if (this.allowEmpty === false || (this.type === "option" && !isAllowedOptionEmpty)) {
                 throw new OperationError(`${this.name} cannot be empty.`);
             }
             return true;
@@ -110,17 +121,32 @@ class Ingredient {
 
         // 3. number checks
         if (this.type === "number") {
-            if (val === null || val === undefined || isNaN(val)) {
+            if (checkVal === null || checkVal === undefined || isNaN(checkVal)) {
                 throw new OperationError(`${this.name} must be a number.`);
             }
-            if (this.integer && !Number.isInteger(val)) {
+            if (this.integer && !Number.isInteger(checkVal)) {
                 throw new OperationError(`${this.name} must be an integer.`);
             }
-            if (typeof this.min === "number" && val < this.min) {
+            if (typeof this.min === "number" && checkVal < this.min) {
                 throw new OperationError(`${this.name} must be greater than or equal to ${this.min}.`);
             }
-            if (typeof this.max === "number" && val > this.max) {
+            if (typeof this.max === "number" && checkVal > this.max) {
                 throw new OperationError(`${this.name} must be less than or equal to ${this.max}.`);
+            }
+        }
+
+        // 4. option checks
+        if (this.type === "option") {
+            if (Array.isArray(this.defaultValue)) {
+                const permittedOptions = this.defaultValue.filter(opt => {
+                    if (typeof opt !== "string") return false;
+                    return !opt.match(/^\[\/?[a-z0-9 -()^]+\]$/i);
+                });
+                const valStr = (checkVal !== null && checkVal !== undefined) ? String(checkVal).toLowerCase() : "";
+                const matchedOption = permittedOptions.find(opt => opt.toLowerCase() === valStr);
+                if (!matchedOption) {
+                    throw new OperationError(`${this.name} must be one of the following: ${permittedOptions.join(", ")}`);
+                }
             }
         }
 

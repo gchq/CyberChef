@@ -15,7 +15,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Automated Validation Test Op",
-                args: [5, 1.5, "hello", "", { "option": "Option A", "string": "test" }]
+                args: [5, 1.5, "hello", "", { "option": "Option A", "string": "test" }, "Option 1"]
             }
         ]
     },
@@ -26,7 +26,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Automated Validation Test Op",
-                args: [4, 1.5, "hello", "", { "option": "Option A", "string": "test" }]
+                args: [4, 1.5, "hello", "", { "option": "Option A", "string": "test" }, "Option 1"]
             }
         ]
     },
@@ -37,7 +37,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Automated Validation Test Op",
-                args: [11, 1.5, "hello", "", { "option": "Option A", "string": "test" }]
+                args: [11, 1.5, "hello", "", { "option": "Option A", "string": "test" }, "Option 1"]
             }
         ]
     },
@@ -48,7 +48,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Automated Validation Test Op",
-                args: [5.5, 1.5, "hello", "", { "option": "Option A", "string": "test" }]
+                args: [5.5, 1.5, "hello", "", { "option": "Option A", "string": "test" }, "Option 1"]
             }
         ]
     },
@@ -59,7 +59,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Automated Validation Test Op",
-                args: [5, 1.4, "hello", "", { "option": "Option A", "string": "test" }]
+                args: [5, 1.4, "hello", "", { "option": "Option A", "string": "test" }, "Option 1"]
             }
         ]
     },
@@ -70,7 +70,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Automated Validation Test Op",
-                args: [5, 5.6, "hello", "", { "option": "Option A", "string": "test" }]
+                args: [5, 5.6, "hello", "", { "option": "Option A", "string": "test" }, "Option 1"]
             }
         ]
     },
@@ -81,7 +81,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Automated Validation Test Op",
-                args: [5, 1.5, "helloooo", "", { "option": "Option A", "string": "test" }]
+                args: [5, 1.5, "helloooo", "", { "option": "Option A", "string": "test" }, "Option 1"]
             }
         ]
     },
@@ -92,7 +92,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Automated Validation Test Op",
-                args: [5, 1.5, "", "", { "option": "Option A", "string": "test" }]
+                args: [5, 1.5, "", "", { "option": "Option A", "string": "test" }, "Option 1"]
             }
         ]
     },
@@ -103,7 +103,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Automated Validation Test Op",
-                args: [5, 1.5, "hello", "", { "option": "Option A", "string": "test" }]
+                args: [5, 1.5, "hello", "", { "option": "Option A", "string": "test" }, "Option 1"]
             }
         ]
     },
@@ -114,7 +114,40 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Automated Validation Test Op",
-                args: [5, 1.5, "hello", "", { "option": "Option A", "string": "" }]
+                args: [5, 1.5, "hello", "", { "option": "Option A", "string": "" }, "Option 1"]
+            }
+        ]
+    },
+    {
+        name: "Automated Validation: Invalid Option value",
+        input: "test",
+        expectedOutput: "Option Ingredient must be one of the following: Option 1, Option 2, Option 3",
+        recipeConfig: [
+            {
+                op: "Automated Validation Test Op",
+                args: [5, 1.5, "hello", "", { "option": "Option A", "string": "test" }, "Option 4"]
+            }
+        ]
+    },
+    {
+        name: "Automated Validation: Option value as optgroup heading (invalid)",
+        input: "test",
+        expectedOutput: "Option Ingredient must be one of the following: Option 1, Option 2, Option 3",
+        recipeConfig: [
+            {
+                op: "Automated Validation Test Op",
+                args: [5, 1.5, "hello", "", { "option": "Option A", "string": "test" }, "[Group 1]"]
+            }
+        ]
+    },
+    {
+        name: "Automated Validation: Option value empty (invalid)",
+        input: "test",
+        expectedOutput: "Option Ingredient cannot be empty.",
+        recipeConfig: [
+            {
+                op: "Automated Validation Test Op",
+                args: [5, 1.5, "hello", "", { "option": "Option A", "string": "test" }, ""]
             }
         ]
     }
