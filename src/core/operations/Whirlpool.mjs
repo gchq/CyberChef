@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import {runHash} from "../lib/Hash.mjs";
 
 /**
@@ -46,8 +47,13 @@ class Whirlpool extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const variant = args[0].toLowerCase();
-        return runHash(variant, input, {rounds: args[1]});
+        const variant = args[0];
+
+        if (!this.args[0].value.includes(variant)) {
+            throw new OperationError("Invalid Whirlpool variant");
+        }
+
+        return runHash(variant.toLowerCase(), input, {rounds: args[1]});
     }
 
 }
