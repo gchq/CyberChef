@@ -73,6 +73,9 @@ class FromBCD extends Operation {
         let output = "",
             byteArray;
 
+        if (encoding === undefined)
+            throw new OperationError("Invalid encoding scheme");
+
         // Normalise the input
         switch (inputFormat) {
             case "Nibbles":
