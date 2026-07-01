@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import bcrypt from "bcryptjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
 
@@ -41,13 +42,17 @@ class Bcrypt extends Operation {
      */
     async run(input, args) {
         const rounds = args[0];
-        const salt = await bcrypt.genSalt(rounds);
+        try {
+            const salt = await bcrypt.genSalt(rounds);
 
-        return await bcrypt.hash(input, salt, undefined, p => {
-            // Progress callback
-            if (isWorkerEnvironment())
-                self.sendStatusMessage(`Progress: ${(p * 100).toFixed(0)}%`);
-        });
+            return await bcrypt.hash(input, salt, undefined, p => {
+                // Progress callback
+                if (isWorkerEnvironment())
+                    self.sendStatusMessage(`Progress: ${(p * 100).toFixed(0)}%`);
+            });
+        } catch (err) {
+            throw new OperationError(err.toString());
+        }
 
     }
 
