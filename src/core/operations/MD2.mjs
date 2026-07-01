@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import {runHash} from "../lib/Hash.mjs";
+import OperationError from "../errors/OperationError.mjs";
 
 /**
  * MD2 operation
@@ -40,7 +41,12 @@ class MD2 extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        return runHash("md2", input, {rounds: args[0]});
+        const rounds = args[0] ?? 18;
+
+        if (!Number.isInteger(rounds) || rounds < 0)
+            throw new OperationError("Rounds must be a non-negative integer");
+
+        return runHash("md2", input, {rounds});
     }
 
 }
