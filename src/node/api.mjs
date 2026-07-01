@@ -74,7 +74,7 @@ function transformArgs(opArgsList, newArgs) {
     return opArgs.map((arg) => {
         if (arg.type === "option") {
             // pick default option if not already chosen
-            return typeof arg.value === "string" ? arg.value : arg.value[arg.defaultIndex ?? 0];
+            return !Array.isArray(arg.value) ? arg.value : arg.value[arg.defaultIndex ?? 0];
         }
 
         if (arg.type === "editableOption") {

@@ -79,6 +79,9 @@ class Ingredient {
         if (this.type === "toggleString" && val && typeof val === "object" && "string" in val) {
             checkVal = val.string;
         }
+        if (this.type === "option" && Array.isArray(checkVal)) {
+            checkVal = checkVal[this.defaultIndex ?? 0];
+        }
 
         // 1. check if empty
         let isEmpty = false;
@@ -121,6 +124,21 @@ class Ingredient {
             }
             if (typeof this.max === "number" && val > this.max) {
                 throw new OperationError(`${this.name} must be less than or equal to ${this.max}.`);
+            }
+        }
+
+        // 4. option checks
+        if (this.type === "option") {
+            if (Array.isArray(this.defaultValue)) {
+                const permittedOptions = this.defaultValue.filter(opt => {
+                    if (typeof opt !== "string") return false;
+                    return !opt.match(/^\[\/?[a-z0-9 -()^]+\]$/i);
+                });
+                const valStr = (checkVal !== null && checkVal !== undefined) ? String(checkVal).toLowerCase() : "";
+                const matchedOption = permittedOptions.find(opt => opt.toLowerCase() === valStr);
+                if (!matchedOption) {
+                    throw new OperationError(`${this.name} must be one of the following: ${permittedOptions.join(", ")}`);
+                }
             }
         }
 

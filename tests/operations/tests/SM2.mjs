@@ -113,7 +113,7 @@ TestRegister.addTests([
             },
             {
                 "op": "SM2 Decrypt",
-                "args": [PRIVATE_K, "C1C2C2", CURVE]
+                "args": [PRIVATE_K, "C1C2C3", CURVE]
             }
         ]
     },
