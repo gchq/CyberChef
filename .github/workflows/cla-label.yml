@@ -20,19 +20,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Sync "awaiting cla" label
-        uses: actions/github-script@v7
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9.0.0
         env:
           AWAITING_LABEL: 'awaiting cla'
           # Bot login that posts the CLA comment. Common values:
           #   'github-actions[bot]', 'CLAassistant', 'cla-assistant[bot]'
-          CLA_BOT_LOGINS: 'CLAassistant,cla-assistant[bot],github-actions[bot]'
+          CLA_BOT_LOGINS: 'CLAassistant'
           # Regex (case-insensitive) that matches an UNSIGNED CLA comment
-          NOT_SIGNED_REGEX: 'have not signed|has not signed|please sign|we need.*sign|\[ \]'
+          NOT_SIGNED_REGEX: 'cla-assistant.io/pull/badge/not_signed'
           # Regex (case-insensitive) that matches a SIGNED CLA comment
-          SIGNED_REGEX: 'all committers have signed|all contributors have signed|has signed the cla|have signed the cla'
+          SIGNED_REGEX: 'cla-assistant.io/pull/badge/signed'
         with:
           script: |
-            const { AWAITING_LABEL } = process.env;
+            const awaitingLabel = process.env.AWAITING_LABEL;
             const botLogins = process.env.CLA_BOT_LOGINS.split(',').map(s => s.trim().toLowerCase());
             const notSigned = new RegExp(process.env.NOT_SIGNED_REGEX, 'i');
             const signed = new RegExp(process.env.SIGNED_REGEX, 'i');
@@ -69,19 +69,19 @@ jobs:
               owner, repo, issue_number: prNumber,
             });
             const hasLabel = issue.labels.some(l =>
-              (typeof l === 'string' ? l : l.name) === AWAITING_LABEL
+              (typeof l === 'string' ? l : l.name) === awaitingLabel
             );
 
             if (isSigned && hasLabel) {
               await github.rest.issues.removeLabel({
-                owner, repo, issue_number: prNumber, name: AWAITING_LABEL,
+                owner, repo, issue_number: prNumber, name: awaitingLabel,
               }).catch(e => core.warning(`removeLabel failed: ${e.message}`));
-              core.info(`Removed "${AWAITING_LABEL}".`);
+              core.info(`Removed "${awaitingLabel}".`);
             } else if (!isSigned && !hasLabel) {
               await github.rest.issues.addLabels({
-                owner, repo, issue_number: prNumber, labels: [AWAITING_LABEL],
+                owner, repo, issue_number: prNumber, labels: [awaitingLabel],
               });
-              core.info(`Added "${AWAITING_LABEL}".`);
+              core.info(`Added "${awaitingLabel}".`);
             } else {
               core.info('Label already in the correct state.');
             }
