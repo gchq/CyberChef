@@ -59,6 +59,12 @@ class ViewBitPlane extends Operation {
             colourIndex = COLOUR_OPTIONS.indexOf(colour),
             bitIndex = 7 - bit;
 
+        if (colourIndex === -1) {
+            throw new OperationError(
+                `Error: Colour argument must be one of ${COLOUR_OPTIONS.join(", ")}`,
+            );
+        }
+
         if (bit < 0 || bit > 7) {
             throw new OperationError(
                 "Error: Bit argument must be between 0 and 7",
