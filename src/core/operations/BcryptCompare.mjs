@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import bcrypt from "bcryptjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
 
@@ -43,13 +44,17 @@ class BcryptCompare extends Operation {
     async run(input, args) {
         const hash = args[0];
 
-        const match = await bcrypt.compare(input, hash, undefined, p => {
-            // Progress callback
-            if (isWorkerEnvironment())
-                self.sendStatusMessage(`Progress: ${(p * 100).toFixed(0)}%`);
-        });
+        try {
+            const match = await bcrypt.compare(input, hash, undefined, p => {
+                // Progress callback
+                if (isWorkerEnvironment())
+                    self.sendStatusMessage(`Progress: ${(p * 100).toFixed(0)}%`);
+            });
 
-        return match ? "Match: " + input : "No match";
+            return match ? "Match: " + input : "No match";
+        } catch (err) {
+            throw new OperationError(err.toString());
+        }
 
     }
 
