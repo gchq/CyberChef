@@ -145,7 +145,7 @@ class Ingredient {
                 const valStr = (checkVal !== null && checkVal !== undefined) ? String(checkVal).toLowerCase() : "";
                 const matchedOption = permittedOptions.find(opt => opt.toLowerCase() === valStr);
                 if (!matchedOption) {
-                    throw new OperationError(`${this.name} must be one of the following: ${permittedOptions.join(", ")}`);
+                    throw new OperationError(`${this.name} must be one of the following: ${permittedOptions.join(", ")}.`);
                 }
             }
         }

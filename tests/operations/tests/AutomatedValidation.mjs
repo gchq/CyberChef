@@ -121,7 +121,7 @@ TestRegister.addTests([
     {
         name: "Automated Validation: Invalid Option value",
         input: "test",
-        expectedOutput: "Option Ingredient must be one of the following: Option 1, Option 2, Option 3",
+        expectedOutput: "Option Ingredient must be one of the following: Option 1, Option 2, Option 3.",
         recipeConfig: [
             {
                 op: "Automated Validation Test Op",
@@ -132,7 +132,7 @@ TestRegister.addTests([
     {
         name: "Automated Validation: Option value as optgroup heading (invalid)",
         input: "test",
-        expectedOutput: "Option Ingredient must be one of the following: Option 1, Option 2, Option 3",
+        expectedOutput: "Option Ingredient must be one of the following: Option 1, Option 2, Option 3.",
         recipeConfig: [
             {
                 op: "Automated Validation Test Op",
