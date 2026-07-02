@@ -658,7 +658,7 @@ WWFkYSBZYWRh\r
     }),
 
     it("HMAC", () => {
-        assert.strictEqual(chef.HMAC("On Cloud Nine", {key: {string: "idea", option: "Latin1"}}).toString(), "b128b48ec0d6b0f1a27220c396d0f3e5");
+        assert.strictEqual(chef.HMAC("On Cloud Nine", {key: "idea"}).toString(), "e15c268b4ee755c9e52db094ed50add7");
     }),
 
     it("JPathExpression", () => {
@@ -882,8 +882,8 @@ pCGTErs=
 
     it("Scrypt", () => {
         assert.strictEqual(
-            chef.scrypt("Playing For Keeps", {salt: {string: "salty", option: "UTF8"}}).toString(),
-            "2f1417e682a7bf008c60abf8e8b8dc33bde9eead9290f9f03d83a8acb49392cfd22ad1425db88f821c67f06a12bb203ccdd47ca5109b8364451d6ebf2215bbdf");
+            chef.scrypt("Playing For Keeps", {salt: {string: "salty", option: "Hex"}}).toString(),
+            "5446b6d86d88515894a163201765bceed0bc39610b1506cdc4d939ffc638bc46e051bce756e2865165d89d955a43a7eb5504502567dea8bfc9e7d49aaa894c07");
     }),
 
     it("SHA3", () => {

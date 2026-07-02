@@ -90,6 +90,48 @@ export const format = {
 
 
 /**
+ * Validates that a passphrase/key string contains only characters valid for the
+ * given format. Recognised delimiters (spaces, commas, colons, 0x prefix, etc.)
+ * are always permitted in Hex and Binary formats.
+ * Throws an OperationError if genuinely invalid characters are found.
+ *
+ * @param {string} str
+ * @param {string} type - One of "Hex", "Base64", "Binary", "UTF8", "Latin1", etc.
+ * @throws {OperationError}
+ */
+function validateFormatInput(str, type) {
+    if (!str) return;
+    switch (type.toLowerCase()) {
+        case "hex": {
+            const stripped = str.replace(/0x|\\x|%|[\s,;:\n\r]/gi, "");
+            const invalid = stripped.match(/[^0-9a-fA-F]/);
+            if (invalid) throw new OperationError(
+                `Invalid character '${invalid[0]}' in Hex input. ` +
+                `Hex accepts 0-9, a-f, A-F, and delimiters (space, comma, colon, 0x prefix).`
+            );
+            break;
+        }
+        case "base64": {
+            const invalid = str.replace(/[\s]/g, "").match(/[^A-Za-z0-9+/=]/);
+            if (invalid) throw new OperationError(
+                `Invalid character '${invalid[0]}' in Base64 input. ` +
+                `Base64 accepts A-Z, a-z, 0-9, +, /, and = (padding).`
+            );
+            break;
+        }
+        case "binary": {
+            const stripped = str.replace(/[\s,;:\n\r]/g, "");
+            const invalid = stripped.match(/[^01]/);
+            if (invalid) throw new OperationError(
+                `Invalid character '${invalid[0]}' in Binary input. Binary accepts only 0 and 1.`
+            );
+            break;
+        }
+    }
+}
+
+
+/**
  * Parses a user-entered string in a given CryptoJS format, normalising common
  * hex delimiter conventions (commas, spaces, 0x prefix, etc.) before parsing.
  *
@@ -100,7 +142,7 @@ export const format = {
  * @returns {CryptoJS.lib.WordArray}
  */
 export function parseFormatString(str, formatName) {
-    Utils.validateFormatInput(str, formatName);
+    validateFormatInput(str, formatName);
     if (formatName === "Hex") {
         return CryptoJS.enc.Hex.parse(toHexFast(fromHex(str)));
     }
