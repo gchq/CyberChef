@@ -27,17 +27,23 @@ class GenerateHOTP extends Operation {
             {
                 "name": "Name",
                 "type": "string",
-                "value": ""
+                "value": "Account",
+                "allowEmpty": false
             },
             {
                 "name": "Code length",
                 "type": "number",
-                "value": 6
+                "value": 6,
+                "min": 6,
+                "max": 8,
+                "integer": true
             },
             {
                 "name": "Counter",
                 "type": "number",
-                "value": 0
+                "value": 0,
+                "min": 0,
+                "integer": true
             }
         ];
     }
@@ -47,7 +53,9 @@ class GenerateHOTP extends Operation {
      */
     run(input, args) {
         const secretStr = new TextDecoder("utf-8").decode(input).trim();
-        const secret = secretStr ? secretStr.toUpperCase().replace(/\s+/g, "") : "";
+        const secret = secretStr ?
+            OTPAuth.Secret.fromBase32(secretStr.toUpperCase().replace(/\s+/g, "")) :
+            new OTPAuth.Secret();
 
         const hotp = new OTPAuth.HOTP({
             issuer: "",
@@ -55,7 +63,7 @@ class GenerateHOTP extends Operation {
             algorithm: "SHA1",
             digits: args[1],
             counter: args[2],
-            secret: OTPAuth.Secret.fromBase32(secret)
+            secret
         });
 
         const uri = hotp.toString();
