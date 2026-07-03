@@ -1,0 +1,61 @@
+name: Close Stale Unsigned CLA PRs
+
+on:
+  schedule:
+    # Runs daily at 01:30 UTC.
+    - cron: '30 1 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+# Configurable intervals (days).
+#   INTERVAL_1 = grace period before the warning comment.
+#   INTERVAL_2 = further period after the warning before closing.
+env:
+  INTERVAL_1: 14
+  INTERVAL_2: 14
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close stale unsigned-CLA PRs
+        uses: actions/stale@v9
+        with:
+          # ---- Guards: only act on PRs carrying the CLA label ----
+          only-labels: 'awaiting cla'
+
+          # Never touch issues — PRs only.
+          days-before-issue-stale: -1
+          days-before-issue-close: -1
+
+          # ---- Timing ----
+          # INTERVAL_1: days of inactivity before the warning comment.
+          days-before-pr-stale: ${{ env.INTERVAL_1 }}
+          # INTERVAL_2: days after being marked stale before closing.
+          days-before-pr-close: ${{ env.INTERVAL_2 }}
+
+          # ---- Warning comment (posted once when marked stale) ----
+          stale-pr-message: >
+            This PR will be automatically closed if the CLA is not signed
+            within ${{ env.INTERVAL_2 }} days.
+
+          # ---- Close comment ----
+          close-pr-message: >
+            This PR has been automatically closed as the CLA has not been
+            signed. We are happy to have it reopened if the CLA is signed
+            subsequently.
+
+          # A dedicated marker label so we can track stale state without
+          # interfering with the "awaiting cla" label.
+          stale-pr-label: 'cla-stale'
+
+          # If the PR is updated after being marked stale, remove the marker
+          # so the warning-then-close cycle restarts cleanly.
+          remove-pr-stale-when-updated: true
+
+          # Process enough PRs per run for busy repos.
+          operations-per-run: 200
