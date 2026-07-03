@@ -26,22 +26,30 @@ class GenerateTOTP extends Operation {
             {
                 "name": "Name",
                 "type": "string",
-                "value": ""
+                "value": "Account",
+                "allowEmpty": false
             },
             {
                 "name": "Code length",
                 "type": "number",
-                "value": 6
+                "value": 6,
+                "min": 6,
+                "max": 8,
+                "integer": true
             },
             {
                 "name": "Epoch offset (T0)",
                 "type": "number",
-                "value": 0
+                "value": 0,
+                "min": 0,
+                "integer": true
             },
             {
                 "name": "Interval (T1)",
                 "type": "number",
-                "value": 30
+                "value": 30,
+                "min": 1,
+                "integer": true
             }
         ];
     }
