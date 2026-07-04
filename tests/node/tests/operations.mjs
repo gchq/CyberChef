@@ -605,8 +605,9 @@ Top Drawer`, {
 
     it("Generate HOTP", () => {
         const result = chef.generateHOTP("JBSWY3DPEHPK3PXP", {
+            name: "Account",
         });
-        const expected = `URI: otpauth://hotp/?secret=JBSWY3DPEHPK3PXP&algorithm=SHA1&digits=6&counter=0
+        const expected = `URI: otpauth://hotp/Account?secret=JBSWY3DPEHPK3PXP&algorithm=SHA1&digits=6&counter=0
 
 Password: 282760`;
         assert.strictEqual(result.toString(), expected);

@@ -7,6 +7,9 @@
 import TestRegister from "../../lib/TestRegister.mjs";
 
 
+const oversizedPdfLikeInput = "%PDF-1.0\n" + "A".repeat(5000);
+
+
 TestRegister.addTests([
     {
         name: "RenderPDF",
@@ -31,6 +34,21 @@ TestRegister.addTests([
             {
                 "op": "Render PDF",
                 "args": ["Raw"]
+            }
+        ],
+    },
+    {
+        name: "RenderPDF followed by Generate QR Code error returns plain text",
+        input: oversizedPdfLikeInput,
+        expectedOutput: "Error generating QR code. (Error: Too much data)",
+        recipeConfig: [
+            {
+                "op": "Render PDF",
+                "args": ["Raw"]
+            },
+            {
+                "op": "Generate QR Code",
+                "args": ["PNG", 1, 0, "High"]
             }
         ],
     },
