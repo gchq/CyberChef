@@ -1,0 +1,87 @@
+name: CLA Label Sync
+
+on:
+  issue_comment:
+    types: [created, edited]
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  issues: write
+  contents: read
+
+jobs:
+  sync-label:
+    # Only run for PRs (issue_comment fires for issues too)
+    if: >-
+      github.event_name == 'pull_request_target' ||
+      (github.event.issue.pull_request != null)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync "awaiting cla" label
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9.0.0
+        env:
+          AWAITING_LABEL: 'awaiting cla'
+          # Bot login that posts the CLA comment. Common values:
+          #   'github-actions[bot]', 'CLAassistant', 'cla-assistant[bot]'
+          CLA_BOT_LOGINS: 'CLAassistant'
+          # Regex (case-insensitive) that matches an UNSIGNED CLA comment
+          NOT_SIGNED_REGEX: 'cla-assistant.io/pull/badge/not_signed'
+          # Regex (case-insensitive) that matches a SIGNED CLA comment
+          SIGNED_REGEX: 'cla-assistant.io/pull/badge/signed'
+        with:
+          script: |
+            const awaitingLabel = process.env.AWAITING_LABEL;
+            const botLogins = process.env.CLA_BOT_LOGINS.split(',').map(s => s.trim().toLowerCase());
+            const notSigned = new RegExp(process.env.NOT_SIGNED_REGEX, 'i');
+            const signed = new RegExp(process.env.SIGNED_REGEX, 'i');
+
+            // Resolve PR number for either trigger
+            const prNumber = context.eventName === 'pull_request_target'
+              ? context.payload.pull_request.number
+              : context.payload.issue.number;
+
+            const { owner, repo } = context.repo;
+
+            // Pull the full comment history to find the latest CLA bot comment
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner, repo, issue_number: prNumber, per_page: 100,
+            });
+
+            const claComments = comments.filter(c =>
+              botLogins.includes((c.user?.login || '').toLowerCase()) &&
+              (notSigned.test(c.body) || signed.test(c.body))
+            );
+
+            if (claComments.length === 0) {
+              core.info('No CLA Assistant comment found yet; nothing to do.');
+              return;
+            }
+
+            const latest = claComments[claComments.length - 1];
+            const isSigned = signed.test(latest.body) && !notSigned.test(latest.body);
+
+            core.info(`Latest CLA comment (id ${latest.id}) => signed=${isSigned}`);
+
+            // Current labels
+            const { data: issue } = await github.rest.issues.get({
+              owner, repo, issue_number: prNumber,
+            });
+            const hasLabel = issue.labels.some(l =>
+              (typeof l === 'string' ? l : l.name) === awaitingLabel
+            );
+
+            if (isSigned && hasLabel) {
+              await github.rest.issues.removeLabel({
+                owner, repo, issue_number: prNumber, name: awaitingLabel,
+              }).catch(e => core.warning(`removeLabel failed: ${e.message}`));
+              core.info(`Removed "${awaitingLabel}".`);
+            } else if (!isSigned && !hasLabel) {
+              await github.rest.issues.addLabels({
+                owner, repo, issue_number: prNumber, labels: [awaitingLabel],
+              });
+              core.info(`Added "${awaitingLabel}".`);
+            } else {
+              core.info('Label already in the correct state.');
+            }
