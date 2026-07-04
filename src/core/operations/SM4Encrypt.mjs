@@ -43,7 +43,7 @@ class SM4Encrypt extends Operation {
             {
                 "name": "Mode",
                 "type": "option",
-                "value": ["CBC", "CFB", "OFB", "CTR", "ECB"]
+                "value": ["CBC", "CFB", "OFB", "CTR", "ECB", "CBC/NoPadding", "ECB/NoPadding"]
             },
             {
                 "name": "Input",

@@ -48,7 +48,7 @@ TestRegister.addTests([
     {
         name: "Generate Image: empty mode",
         input: "",
-        expectedOutput: "Unsupported Mode: ()",
+        expectedOutput: "Mode cannot be empty.",
         recipeConfig: [
             {
                 op: "Generate Image",
