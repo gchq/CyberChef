@@ -1,5 +1,5 @@
 /**
- * @author Medjedtxm 
+ * @author Medjedtxm
  * @copyright Crown Copyright 2025
  * @license Apache-2.0
  */
