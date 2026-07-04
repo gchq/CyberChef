@@ -115,12 +115,15 @@
             "SM4 Decrypt",
             "RC6 Encrypt",
             "RC6 Decrypt",
+            "Ascon Encrypt",
+            "Ascon Decrypt",
             "GOST Encrypt",
             "GOST Decrypt",
             "GOST Sign",
             "GOST Verify",
             "GOST Key Wrap",
             "GOST Key Unwrap",
+            "ROR13",
             "ROT13",
             "ROT13 Brute Force",
             "ROT47",
@@ -242,6 +245,7 @@
             "Bit shift right",
             "Rotate left",
             "Rotate right",
+            "ROR13",
             "ROT13",
             "ROT8000"
         ]
@@ -446,6 +450,8 @@
             "BLAKE2b",
             "BLAKE2s",
             "BLAKE3",
+            "Ascon Hash",
+            "Ascon MAC",
             "GOST Hash",
             "Streebog",
             "SSDEEP",
@@ -558,7 +564,7 @@
             "Scatter chart",
             "Series chart",
             "Heatmap chart",
-            "Extract Audio Metadata"
+            "Render PDF"
         ]
     },
     {
@@ -584,7 +590,8 @@
             "HTML To Text",
             "Generate Lorem Ipsum",
             "Numberwang",
-            "XKCD Random Number"
+            "XKCD Random Number",
+            "Automated Validation Test Op"
         ]
     },
     {

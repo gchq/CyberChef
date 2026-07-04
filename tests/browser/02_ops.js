@@ -80,8 +80,8 @@ module.exports = {
         testOpHtml(browser, "Bombe", "XTSYN WAEUG EZALY NRQIM AMLZX MFUOD AWXLY LZCUZ QOQBQ JLCPK NDDRW F", "table tr:last-child td:first-child", "ECG", ["3-rotor", "LEYJVCNIXWPBQMDRTAKZGFUHOS", "BDFHJLCPRTXVZNYEIWGAKMUSQO<W", "AJDKSIRUXBLHWTMCQGZNPYFVOE<F", "ESOVPZJAYQUIRHXLNFTGKDCMWB<K", "AY BR CU DH EQ FS GL IP JX KN MO TZ VW", "HELLO CYBER CHEFU SER", 0, true]);
         testOp(browser, ["Bzip2 Compress", "To Hex"], "test input", "42 5a 68 39 31 41 59 26 53 59 cf 96 82 1d 00 00 03 91 80 40 00 02 21 4e 00 20 00 21 90 c2 10 c0 88 33 92 8e df 17 72 45 38 50 90 cf 96 82 1d");
         testOp(browser, ["From Hex", "Bzip2 Decompress"], "425a68393141592653597b0884b7000003038000008200ce00200021a647a4218013709517c5dc914e14241ec2212dc0", "test_output", [[], [true]]);
-    // testOp(browser, "CBOR Decode", "test input", "test output");
-    // testOp(browser, "CBOR Encode", "test input", "test output");
+        testOp(browser, ["From Hex", "CBOR Decode"], "f9 3e 00", "1.5");
+        testOp(browser, ["CBOR Encode", "To Hex"], "1.5", "f9 3e 00");
         testOp(browser, "CRC Checksum", "test input", "77c7", ["CRC-16"]);
         testOp(browser, "CRC Checksum", "test input", "29822bc8", ["CRC-32"]);
         testOp(browser, "CRC Checksum", "test input", "9d", ["CRC-8"]);
@@ -218,6 +218,7 @@ module.exports = {
         testOpHtml(browser, "JSON Beautify", "{a:1}", ".json-dict .json-literal", "1");
         // testOp(browser, "JSON Minify", "test input", "test_output");
     // testOp(browser, "JSON to CSV", "test input", "test_output");
+        testOp(browser, "Jsonata Query", '{"a": "SGVsbG8gV29ybGQh"}', '"Hello World!"', ["$base64decode($.a)"]);
     // testOp(browser, "JWT Decode", "test input", "test_output");
     // testOp(browser, "JWT Sign", "test input", "test_output");
     // testOp(browser, "JWT Verify", "test input", "test_output");
@@ -277,12 +278,12 @@ module.exports = {
         // testOp(browser, "Parse TLV", "test input", "test_output");
         testOpHtml(browser, "Parse UDP", "04 89 00 35 00 2c 01 01", "tr:last-child td:last-child", "0x0101");
         // testOp(browser, "Parse UNIX file permissions", "test input", "test_output");
-        // testOp(browser, "Parse URI", "test input", "test_output");
-    // testOp(browser, "Parse User Agent", "test input", "test_output");
+        testOp(browser, "Parse URI", "https://example.com/?constructor=ok&__proto__=hello", /Arguments:\s+constructor = ok\s+__proto__\s+= hello/);
+        testOp(browser, "Parse User Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 ", /Architecture: amd64/);
         // testOp(browser, "Parse X.509 certificate", "test input", "test_output");
         testOpFile(browser, "Play Media", "files/mp3example.mp3", "audio", "");
         // testOp(browser, "Power Set", "test input", "test_output");
-    // testOp(browser, "Protobuf Decode", "test input", "test_output");
+        testOp(browser, ["From Hex", "Protobuf Decode"], "0d1c0000001203596f751a024d65202b2a0a0a066162633132331200", /"1": "abc123"/, [[], ["", false, false]]);
         // testOp(browser, "Pseudo-Random Number Generator", "test input", "test_output");
     // testOp(browser, "RC2 Decrypt", "test input", "test_output");
     // testOp(browser, "RC2 Encrypt", "test input", "test_output");
@@ -345,8 +346,8 @@ module.exports = {
         // testOp(browser, "Strip HTTP headers", "test input", "test_output");
         // testOp(browser, "Subsection", "test input", "test_output");
         // testOp(browser, "Substitute", "test input", "test_output");
-        // testOp(browser, "Subtract", "test input", "test_output");
-    // testOp(browser, "Sum", "test input", "test_output");
+        testOp(browser, "Subtract", "321,123,test", "198", ["Comma"]);
+        testOp(browser, "Sum", "321,123,test", "444", ["Comma"]);
         // testOp(browser, "Swap endianness", "test input", "test_output");
         // testOp(browser, "Symmetric Difference", "test input", "test_output");
         testOpHtml(browser, "Syntax highlighter", "var a = [4,5,6]", ".hljs-selector-attr", "[4,5,6]");
@@ -494,7 +495,22 @@ function testOpImage(browser, opName, filename, args=[]) {
 
     browser
         .waitForElementVisible("#output-html img")
-        .expect.element("#output-html img").to.have.css("width").which.matches(/^[^0]\d*px/);
+        .expect.element("#output-html img").to.have.css("width").which.matches(/^(?!0+(?:\.0+)?px$)\d+(?:\.\d+)?px$/);
+
+    browser.execute(function() {
+        const output = document.getElementById("output-html");
+        const img = output.querySelector("img");
+        const outputRect = output.getBoundingClientRect();
+        const imgRect = img.getBoundingClientRect();
+
+        return {
+            imageFitsWidth: imgRect.width <= outputRect.width,
+            imageFitsHeight: imgRect.height <= outputRect.height,
+        };
+    }, [], function({value}) {
+        browser.expect(value.imageFitsWidth).to.be.equal(true);
+        browser.expect(value.imageFitsHeight).to.be.equal(true);
+    });
 }
 
 /** @function
