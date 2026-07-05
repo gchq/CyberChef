@@ -1,5 +1,5 @@
 /**
- * Custom error type for handling operation that isnt included in node.js API
+ * Custom error type for handling operation that isn't included in node.js API
  *
  * @author d98762625 [d98762625@gmail.com]
  * @copyright Crown Copyright 2018

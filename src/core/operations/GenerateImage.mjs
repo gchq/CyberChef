@@ -7,16 +7,23 @@
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import Utils from "../Utils.mjs";
-import {isImage} from "../lib/FileType.mjs";
-import {toBase64} from "../lib/Base64.mjs";
-import {isWorkerEnvironment} from "../Utils.mjs";
-import Jimp from "jimp/es/index.js";
+import { isImage } from "../lib/FileType.mjs";
+import { toBase64 } from "../lib/Base64.mjs";
+import { isWorkerEnvironment } from "../Utils.mjs";
+import { Jimp, JimpMime, ResizeStrategy, rgbaToInt } from "jimp";
+
+// arbitrary limits to prevent resource exhaustion
+// scale factor of 64 is big enough to likely result in scaling in the display
+// window anyway
+// pixels per row is harder to come up with a figure that won't inconvenience
+// someone. 2048 feels like a reasonable compromise
+const MAX_PIXEL_SCALE_FACTOR = 64;
+const MAX_PIXELS_PER_ROW = 2048;
 
 /**
  * Generate Image operation
  */
 class GenerateImage extends Operation {
-
     /**
      * GenerateImage constructor
      */
@@ -25,27 +32,34 @@ class GenerateImage extends Operation {
 
         this.name = "Generate Image";
         this.module = "Image";
-        this.description = "Generates an image using the input as pixel values.";
+        this.description =
+            "Generates an image using the input as pixel values.";
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
         this.presentType = "html";
         this.args = [
             {
-                "name": "Mode",
-                "type": "option",
-                "value": ["Greyscale", "RG", "RGB", "RGBA", "Bits"]
+                name: "Mode",
+                type: "option",
+                value: ["Greyscale", "RG", "RGB", "RGBA", "Bits"],
             },
             {
-                "name": "Pixel Scale Factor",
-                "type": "number",
-                "value": 8,
+                name: "Pixel Scale Factor",
+                type: "number",
+                value: 8,
+                integer: true,
+                min: 1,
+                max: MAX_PIXEL_SCALE_FACTOR,
             },
             {
-                "name": "Pixels per row",
-                "type": "number",
-                "value": 64,
-            }
+                name: "Pixels per row",
+                type: "number",
+                value: 64,
+                integer: true,
+                min: 1,
+                max: MAX_PIXELS_PER_ROW,
+            },
         ];
     }
 
@@ -58,30 +72,28 @@ class GenerateImage extends Operation {
         const [mode, scale, width] = args;
         input = new Uint8Array(input);
 
-        if (scale <= 0) {
-            throw new OperationError("Pixel Scale Factor needs to be > 0");
-        }
-
-        if (width <= 0) {
-            throw new OperationError("Pixels per Row needs to be > 0");
-        }
-
         const bytePerPixelMap = {
-            "Greyscale": 1,
-            "RG": 2,
-            "RGB": 3,
-            "RGBA": 4,
-            "Bits": 1/8,
+            Greyscale: 1,
+            RG: 2,
+            RGB: 3,
+            RGBA: 4,
+            Bits: 1 / 8,
         };
+
+        if (!Object.hasOwn(bytePerPixelMap, mode)) {
+            throw new OperationError(`Unsupported Mode: (${mode})`);
+        }
 
         const bytesPerPixel = bytePerPixelMap[mode];
 
-        if (bytesPerPixel > 0 && input.length % bytesPerPixel  !== 0) {
-            throw new OperationError(`Number of bytes is not a divisor of ${bytesPerPixel}`);
+        if (bytesPerPixel > 0 && input.length % bytesPerPixel !== 0) {
+            throw new OperationError(
+                `Number of bytes is not a divisor of ${bytesPerPixel}`,
+            );
         }
 
         const height = Math.ceil(input.length / bytesPerPixel / width);
-        const image = await new Jimp(width, height, (err, image) => {});
+        const image = new Jimp({ width, height });
 
         if (isWorkerEnvironment())
             self.sendStatusMessage("Generating image from data...");
@@ -94,8 +106,8 @@ class GenerateImage extends Operation {
                     const x = index % width;
                     const y = Math.floor(index / width);
 
-                    const value = curByte[k] === "0" ? 0xFF : 0x00;
-                    const pixel = Jimp.rgbaToInt(value, value, value, 0xFF);
+                    const value = curByte[k] === "0" ? 0xff : 0x00;
+                    const pixel = rgbaToInt(value, value, value, 0xff);
                     image.setPixelColor(pixel, x, y);
                 }
             }
@@ -109,7 +121,7 @@ class GenerateImage extends Operation {
                 let red = 0x00;
                 let green = 0x00;
                 let blue = 0x00;
-                let alpha = 0xFF;
+                let alpha = 0xff;
 
                 switch (mode) {
                     case "Greyscale":
@@ -139,10 +151,12 @@ class GenerateImage extends Operation {
                 }
 
                 try {
-                    const pixel = Jimp.rgbaToInt(red, green, blue, alpha);
+                    const pixel = rgbaToInt(red, green, blue, alpha);
                     image.setPixelColor(pixel, x, y);
                 } catch (err) {
-                    throw new OperationError(`Error while generating image from pixel values. (${err})`);
+                    throw new OperationError(
+                        `Error while generating image from pixel values. (${err})`,
+                    );
                 }
             }
         }
@@ -151,12 +165,18 @@ class GenerateImage extends Operation {
             if (isWorkerEnvironment())
                 self.sendStatusMessage("Scaling image...");
 
-            image.scaleToFit(width*scale, height*scale, Jimp.RESIZE_NEAREST_NEIGHBOR);
+            image.scaleToFit({
+                w: width * scale,
+                h: height * scale,
+                mode: ResizeStrategy.NEAREST_NEIGHBOR,
+            });
         }
 
         try {
-            const imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
-            return imageBuffer.buffer;
+            // see https://nodejs.org/docs/latest-v24.x/api/buffer.html#bufbyteoffset
+            // for why we can't just return result.buffer
+            const result = await image.getBuffer(JimpMime.png);
+            return result.buffer.slice(result.byteOffset, result.byteOffset + result.byteLength);
         } catch (err) {
             throw new OperationError(`Error generating image. (${err})`);
         }
@@ -178,7 +198,6 @@ class GenerateImage extends Operation {
 
         return `<img src="data:${type};base64,${toBase64(dataArray)}">`;
     }
-
 }
 
 export default GenerateImage;

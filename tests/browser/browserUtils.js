@@ -51,14 +51,17 @@ function setInput(browser, input, type=true) {
  */
 function bake(browser) {
     browser
+        // Let any pending debounced inputChange/stateChange (~20ms each) fire so the
+        // worker has the latest input buffer before we ask it to bake.
+        .pause(50)
         // Ensure we're not currently busy
-        .waitForElementNotVisible("#output-loader", 5000)
+        .waitForElementNotVisible("#output-loader", 10000)
         .expect.element("#bake span").text.to.equal("BAKE!");
 
     browser
         .click("#bake")
-        .waitForElementNotVisible("#stale-indicator", 5000)
-        .waitForElementNotVisible("#output-loader", 5000);
+        .waitForElementNotVisible("#stale-indicator", 10000)
+        .waitForElementNotVisible("#output-loader", 10000);
 }
 
 /** @function

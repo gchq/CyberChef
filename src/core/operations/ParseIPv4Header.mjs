@@ -33,6 +33,12 @@ class ParseIPv4Header extends Operation {
                 "name": "Input format",
                 "type": "option",
                 "value": ["Hex", "Raw"]
+            },
+            {
+                "name": "Output format",
+                "type": "option",
+                "value": ["Table", "Data (hex)", "Data (raw)"],
+                defaultIndex: 0,
             }
         ];
     }
@@ -44,6 +50,8 @@ class ParseIPv4Header extends Operation {
      */
     run(input, args) {
         const format = args[0];
+        const outputFormat = args[1];
+
         let output;
 
         if (format === "Hex") {
@@ -66,7 +74,7 @@ class ParseIPv4Header extends Operation {
             checksum = input[10] << 8 | input[11],
             srcIP = input[12] << 24 | input[13] << 16 | input[14] << 8 | input[15],
             dstIP = input[16] << 24 | input[17] << 16 | input[18] << 8 | input[19],
-            checksumHeader = input.slice(0, 10).concat([0, 0]).concat(input.slice(12, 20));
+            checksumHeader = [...input.slice(0, 10), 0, 0, ...input.slice(12, 20)];
         let version = (input[0] >>> 4) & 0x0f,
             options = [];
 
@@ -98,7 +106,10 @@ class ParseIPv4Header extends Operation {
             checksumResult = givenChecksum + " (incorrect, should be " + correctChecksum + ")";
         }
 
-        output = `<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Field</th><th>Value</th></tr>
+        const data = input.slice(ihl * 4);
+
+        if (outputFormat === "Table") {
+            output = `<table class='table table-hover table-sm table-bordered table-nonfluid'><tr><th>Field</th><th>Value</th></tr>
 <tr><td>Version</td><td>${version}</td></tr>
 <tr><td>Internet Header Length (IHL)</td><td>${ihl} (${ihl * 4} bytes)</td></tr>
 <tr><td>Differentiated Services Code Point (DSCP)</td><td>${dscp}</td></tr>
@@ -116,13 +127,19 @@ class ParseIPv4Header extends Operation {
 <tr><td>Protocol</td><td>${protocol}, ${protocolInfo.protocol} (${protocolInfo.keyword})</td></tr>
 <tr><td>Header checksum</td><td>${checksumResult}</td></tr>
 <tr><td>Source IP address</td><td>${ipv4ToStr(srcIP)}</td></tr>
-<tr><td>Destination IP address</td><td>${ipv4ToStr(dstIP)}</td></tr>`;
+<tr><td>Destination IP address</td><td>${ipv4ToStr(dstIP)}</td></tr>
+<tr><td>Data (hex)</td><td>${toHex(data)}</td></tr>`;
 
-        if (ihl > 5) {
-            output += `<tr><td>Options</td><td>${toHex(options)}</td></tr>`;
+            if (ihl > 5) {
+                output += `<tr><td>Options</td><td>${toHex(options)}</td></tr>`;
+            }
+
+            return output + "</table>";
+        } else if (outputFormat === "Data (hex)") {
+            return toHex(data);
+        } else if (outputFormat === "Data (raw)") {
+            return Utils.escapeHtml(Utils.byteArrayToChars(data));
         }
-
-        return output + "</table>";
     }
 
 }
