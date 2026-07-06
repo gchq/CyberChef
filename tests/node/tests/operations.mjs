@@ -980,6 +980,18 @@ smothering ampersand abreast`;
         assert.strictEqual(result.toString(), "73:6f:6d:65:20:69:6e:70:75:74");
     }),
 
+    it("toHex: Latin-1 text input uses UTF-8", () => {
+        const result = toHex("á", {
+            delimiter: "Space",
+        });
+        assert.strictEqual(result.toString(), "c3 a1");
+    }),
+
+    it("bake: byte-first Latin-1 text input uses UTF-8", async () => {
+        const result = await chef.bake("á", "to hex");
+        assert.strictEqual(result.toString(), "c3 a1");
+    }),
+
     it("To Kebab case", () => {
         assert.strictEqual(chef.toKebabCase("Elfin Gold").toString(), "elfin-gold");
     }),

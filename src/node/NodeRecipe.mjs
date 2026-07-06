@@ -83,6 +83,13 @@ class NodeRecipe {
         this.opList = recipeConfig.map((ing) => this._validateIngredient(ing));
     }
 
+    firstActiveInputType() {
+        const first = this.opList[0];
+        if (!first) return null;
+        const op = Object.prototype.hasOwnProperty.call(first, "op") ? first.op : first;
+        return op.inputType || null;
+    }
+
     /**
      * Run the dish through each operation, one at a time.
      * @param {NodeDish} dish

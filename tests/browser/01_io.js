@@ -125,7 +125,7 @@ module.exports = {
         browser.waitForElementVisible("#input-text .cm-status-bar .stats-lines-value")
             .expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("1");
         browser.waitForElementVisible("#input-text .cm-status-bar .chr-enc-value")
-            .expect.element("#input-text .cm-status-bar .chr-enc-value").text.to.equal("Raw Bytes");
+            .expect.element("#input-text .cm-status-bar .chr-enc-value").text.to.equal("UTF-8");
         browser.waitForElementVisible("#input-text .cm-status-bar .eol-value")
             .expect.element("#input-text .cm-status-bar .eol-value").text.to.equal("LF");
 
@@ -149,7 +149,7 @@ module.exports = {
 
         browser.expect.element("#input-text .cm-status-bar .stats-length-value").text.to.equal("301");
         browser.expect.element("#input-text .cm-status-bar .stats-lines-value").text.to.equal("3");
-        browser.expect.element("#input-text .cm-status-bar .chr-enc-value").text.to.equal("Raw Bytes");
+        browser.expect.element("#input-text .cm-status-bar .chr-enc-value").text.to.equal("UTF-8");
         browser.expect.element("#input-text .cm-status-bar .eol-value").text.to.equal("LF");
 
         browser.expect.element("#output-text .cm-status-bar .stats-length-value").text.to.equal("0");
@@ -165,6 +165,22 @@ module.exports = {
         browser.expect.element("#output-text .cm-status-bar .baking-time-info").text.to.contain("ms");
         browser.expect.element("#output-text .cm-status-bar .chr-enc-value").text.to.equal("Raw Bytes");
         browser.expect.element("#output-text .cm-status-bar .eol-value").text.to.equal("LF");
+    },
+
+    "Manual input To Hex uses selected encoding": browser => {
+        utils.loadRecipe(browser, "To Hex", "á", ["Space", 0]);
+        utils.bake(browser);
+        utils.expectOutput(browser, "c3 a1", true);
+
+        utils.setChrEnc(browser, "input", "Raw Bytes");
+        browser.execute(text => {
+            window.app.setInput(text);
+        }, ["á"]);
+        utils.expectInput(browser, "á");
+        utils.bake(browser);
+        utils.expectOutput(browser, "e1", true);
+
+        utils.setChrEnc(browser, "input", "UTF-8");
     },
 
     "Autobaking the latest input": browser => {
@@ -433,7 +449,7 @@ module.exports = {
         browser
             .click("#btn-new-tab")
             .waitForElementVisible("#input-tabs li:nth-of-type(2).active-input-tab");
-        browser.expect.element("#input-text .chr-enc-value").text.that.equals("Raw Bytes");
+        browser.expect.element("#input-text .chr-enc-value").text.that.equals("UTF-8");
         browser.expect.element("#output-text .chr-enc-value").text.that.equals("Raw Bytes");
 
         utils.setChrEnc(browser, "input", "UTF-7");
