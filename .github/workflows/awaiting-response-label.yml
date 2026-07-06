@@ -7,6 +7,9 @@ on:
   # Fires when the PR author pushes new commits
   pull_request_target:
     types: [synchronize]
+  # Fires when someone comments on a PR (also fires for plain issues, filtered out below)
+  issue_comment:
+    types: [created]
 
 permissions:
   pull-requests: write
@@ -15,6 +18,10 @@ permissions:
 
 jobs:
   sync-label:
+    # issue_comment fires for issues too, so only run it for PR comments
+    if: >-
+      github.event_name != 'issue_comment' ||
+      github.event.issue.pull_request != null
     runs-on: ubuntu-latest
     steps:
       - name: Sync "awaiting response" label
@@ -24,7 +31,10 @@ jobs:
         with:
           script: |
             const awaitingLabel = process.env.AWAITING_LABEL;
-            const prNumber = context.payload.pull_request.number;
+            // Resolve the PR number for whichever event triggered this run
+            const prNumber = context.eventName === 'issue_comment'
+              ? context.payload.issue.number
+              : context.payload.pull_request.number;
             const { owner, repo } = context.repo;
 
             // Check whether the label is already on the PR, so we don't add it twice or
@@ -50,6 +60,16 @@ jobs:
             } else if (context.eventName === 'pull_request_target' && context.payload.action === 'synchronize') {
               if (hasLabel) {
                 // If the label was already gone for some reason, that's fine, not an error
+                await github.rest.issues.removeLabel({
+                  owner, repo, issue_number: prNumber, name: awaitingLabel,
+                }).catch(e => core.warning(`removeLabel failed: ${e.message}`));
+                core.info(`Removed "${awaitingLabel}".`);
+              } else {
+                core.info('Label not present; nothing to do.');
+              }
+            // The PR author left a comment -> treat any reply from them as a response
+            } else if (context.eventName === 'issue_comment' && context.payload.comment.user.login === context.payload.issue.user.login) {
+              if (hasLabel) {
                 await github.rest.issues.removeLabel({
                   owner, repo, issue_number: prNumber, name: awaitingLabel,
                 }).catch(e => core.warning(`removeLabel failed: ${e.message}`));
