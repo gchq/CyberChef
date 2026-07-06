@@ -70,7 +70,7 @@ class BLAKE2b extends Operation {
             case "Raw":
                 return Utils.arrayBufferToStr(blakejs.blake2b(input, key, outSize / 8).buffer);
             default:
-                return new OperationError("Unsupported Output Type");
+                throw new OperationError("Unsupported Output Type");
         }
     }
 

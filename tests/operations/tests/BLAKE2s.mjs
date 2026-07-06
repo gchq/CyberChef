@@ -43,5 +43,14 @@ TestRegister.addTests([
             { "op": "BLAKE2s",
                 "args": ["128", "Hex", {string: "", option: "UTF8"}] }
         ]
+    },
+    {
+        name: "BLAKE2s: missing output encoding",
+        input: "hello",
+        expectedOutput: "Unsupported Output Type",
+        recipeConfig: [
+            { "op": "BLAKE2s",
+                "args": ["256", "", {string: "", option: "UTF8"}] }
+        ]
     }
 ]);
