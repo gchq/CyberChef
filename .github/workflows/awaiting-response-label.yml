@@ -1,0 +1,62 @@
+name: Awaiting Response Label Sync
+
+on:
+  # Fires when someone finishes reviewing a PR (e.g. picks "Request changes")
+  pull_request_review:
+    types: [submitted]
+  # Fires when the PR author pushes new commits
+  pull_request_target:
+    types: [synchronize]
+
+permissions:
+  pull-requests: write
+  issues: write
+  contents: read
+
+jobs:
+  sync-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync "awaiting response" label
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9.0.0
+        env:
+          AWAITING_LABEL: 'awaiting response'
+        with:
+          script: |
+            const awaitingLabel = process.env.AWAITING_LABEL;
+            const prNumber = context.payload.pull_request.number;
+            const { owner, repo } = context.repo;
+
+            // Check whether the label is already on the PR, so we don't add it twice or
+            // try to remove something that isn't there
+            const { data: issue } = await github.rest.issues.get({
+              owner, repo, issue_number: prNumber,
+            });
+            const hasLabel = issue.labels.some(l =>
+              (typeof l === 'string' ? l : l.name) === awaitingLabel
+            );
+
+            // A reviewer chose "Request changes" -> the author needs to respond
+            if (context.eventName === 'pull_request_review' && context.payload.review.state === 'changes_requested') {
+              if (!hasLabel) {
+                await github.rest.issues.addLabels({
+                  owner, repo, issue_number: prNumber, labels: [awaitingLabel],
+                });
+                core.info(`Added "${awaitingLabel}".`);
+              } else {
+                core.info('Label already applied.');
+              }
+            // The author pushed new commits -> treat that as their response and clear the label
+            } else if (context.eventName === 'pull_request_target' && context.payload.action === 'synchronize') {
+              if (hasLabel) {
+                // If the label was already gone for some reason, that's fine, not an error
+                await github.rest.issues.removeLabel({
+                  owner, repo, issue_number: prNumber, name: awaitingLabel,
+                }).catch(e => core.warning(`removeLabel failed: ${e.message}`));
+                core.info(`Removed "${awaitingLabel}".`);
+              } else {
+                core.info('Label not present; nothing to do.');
+              }
+            } else {
+              core.info('Event does not require a label change.');
+            }
