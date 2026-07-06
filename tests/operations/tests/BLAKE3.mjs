@@ -35,6 +35,24 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "BLAKE3: negative size",
+        input: "hello",
+        expectedOutput: "Size must be a non-negative integer",
+        recipeConfig: [
+            { "op": "BLAKE3",
+                "args": [-6, ""] }
+        ]
+    },
+    {
+        name: "BLAKE3: fractional size",
+        input: "hello",
+        expectedOutput: "Size must be a non-negative integer",
+        recipeConfig: [
+            { "op": "BLAKE3",
+                "args": [1.2, ""] }
+        ]
+    },
+    {
         name: "BLAKE3: Key Test",
         input: "Hello world",
         expectedOutput: "59dd23ac9d025690",
