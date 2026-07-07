@@ -33,7 +33,7 @@ class ParseURI extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const uri = url.parse(input, true);
+        const uri = url.parse(input, false);
 
         let output = "";
 
@@ -43,7 +43,20 @@ class ParseURI extends Operation {
         if (uri.port) output += "Port:\t\t" + uri.port + "\n";
         if (uri.pathname) output += "Path name:\t" + uri.pathname + "\n";
         if (uri.query) {
-            const keys = Object.keys(uri.query);
+            const queryObj = Object.create(null);
+            for (const [key, value] of new URLSearchParams(uri.query)) {
+                if (Object.prototype.hasOwnProperty.call(queryObj, key)) {
+                    if (Array.isArray(queryObj[key])) {
+                        queryObj[key].push(value);
+                    } else {
+                        queryObj[key] = [queryObj[key], value];
+                    }
+                } else {
+                    queryObj[key] = value;
+                }
+            }
+
+            const keys = Object.keys(queryObj);
             let padding = 0;
 
             keys.forEach(k => {
@@ -51,10 +64,10 @@ class ParseURI extends Operation {
             });
 
             output += "Arguments:\n";
-            for (const key in uri.query) {
+            for (const key in queryObj) {
                 output += "\t" + key.padEnd(padding, " ");
-                if (uri.query[key].length) {
-                    output += " = " + uri.query[key] + "\n";
+                if (queryObj[key].length) {
+                    output += " = " + queryObj[key] + "\n";
                 } else {
                     output += "\n";
                 }
