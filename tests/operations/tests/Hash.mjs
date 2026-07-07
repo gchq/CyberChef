@@ -339,6 +339,28 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Whirlpool rejects negative rounds",
+        input: "Hello, World!",
+        expectedOutput: "Rounds must be an integer between 1 and 10",
+        recipeConfig: [
+            {
+                "op": "Whirlpool",
+                "args": ["Whirlpool", -1]
+            }
+        ]
+    },
+    {
+        name: "Whirlpool rejects fractional rounds",
+        input: "Hello, World!",
+        expectedOutput: "Rounds must be an integer between 1 and 10",
+        recipeConfig: [
+            {
+                "op": "Whirlpool",
+                "args": ["Whirlpool", 1.2]
+            }
+        ]
+    },
+    {
         name: "Snefru 2 128",
         input: "Hello, World!",
         expectedOutput: "a4ad2b8848580511d0884fb4233a7e7a",
