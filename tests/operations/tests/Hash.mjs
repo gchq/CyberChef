@@ -20,6 +20,28 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "MD2 rejects negative rounds",
+        input: "Hello, World!",
+        expectedOutput: "Rounds must be a non-negative integer",
+        recipeConfig: [
+            {
+                "op": "MD2",
+                "args": [-1]
+            }
+        ]
+    },
+    {
+        name: "MD2 rejects fractional rounds",
+        input: "Hello, World!",
+        expectedOutput: "Rounds must be a non-negative integer",
+        recipeConfig: [
+            {
+                "op": "MD2",
+                "args": [1.2]
+            }
+        ]
+    },
+    {
         name: "MD4",
         input: "Hello, World!",
         expectedOutput: "94e3cb0fa9aa7a5ee3db74b79e915989",
