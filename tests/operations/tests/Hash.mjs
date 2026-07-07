@@ -405,6 +405,28 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Snefru rejects negative size",
+        input: "hello",
+        expectedOutput: "Size must be a multiple of 32 between 32 and 448",
+        recipeConfig: [
+            {
+                "op": "Snefru",
+                "args": [-32, "8"]
+            }
+        ]
+    },
+    {
+        name: "Snefru rejects out-of-range size",
+        input: "hello",
+        expectedOutput: "Size must be a multiple of 32 between 32 and 448",
+        recipeConfig: [
+            {
+                "op": "Snefru",
+                "args": [480, "8"]
+            }
+        ]
+    },
+    {
         name: "SM3 256 64",
         input: "Hello, World!",
         expectedOutput: "7ed26cbf0bee4ca7d55c1e64714c4aa7d1f163089ef5ceb603cd102c81fbcbc5",
