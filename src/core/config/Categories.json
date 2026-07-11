@@ -466,6 +466,7 @@
             "Compare CTPH hashes",
             "HMAC",
             "CMAC",
+            "Key Check Value",
             "Bcrypt",
             "Bcrypt compare",
             "Bcrypt parse",
