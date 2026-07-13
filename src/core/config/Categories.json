@@ -108,6 +108,7 @@
             "ChaCha",
             "Salsa20",
             "XSalsa20",
+            "ZUC",
             "Rabbit",
             "SM4 Encrypt",
             "SM4 Decrypt",
