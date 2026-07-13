@@ -872,6 +872,16 @@ pCGTErs=
             "7d17e60d9bc94b7f4095851c729e69a2");
     }),
 
+    it("ZUC", () => {
+        // Using standard test vectors for ZUC
+        assert.strictEqual(
+            chef.ZUC("00000000000000000000000000000000", {key: {string: "00000000000000000000000000000000", option: "Hex"}, iv: {string: "00000000000000000000000000000000", option: "Hex"}, inputFormat: "Hex", outputFormat: "Hex"}).toString(),
+            "27bede74018082da87d4e5b69f18bf66");
+        assert.strictEqual(
+            chef.ZUC("00000000000000000000000000000000", {key: {string: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", option: "Hex"}, iv: {string: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", option: "Hex"}, inputFormat: "Hex", outputFormat: "Hex"}).toString(),
+            "0657cfa07096398b734b6cb4883eedf4");
+    }),
+
     it("RC4 Drop", () => {
         assert.strictEqual(
             chef.RC4Drop("Go Out On a Limb", {passphrase: {string: "Under Your Nose", option: "UTF8"}, inputFormat: "UTF8", outputFormat: "Hex"}).toString(),
