@@ -83,6 +83,10 @@ class NodeRecipe {
         this.opList = recipeConfig.map((ing) => this._validateIngredient(ing));
     }
 
+    /**
+     * Returns the inputType of the first operation in the opList
+     * @returns String
+     */
     firstActiveInputType() {
         const first = this.opList[0];
         if (!first) return null;
