@@ -27,6 +27,7 @@ class HTMLOperation {
         this.manager     = manager;
 
         this.name        = name;
+        this.originalName = name;
         this.description = config.description;
         this.infoURL     = config.infoURL;
         this.manualBake  = config.manualBake || false;
@@ -86,11 +87,11 @@ class HTMLOperation {
             return "";
         }
 
-        // Find all categories this operation belongs to, excluding Favourites
+        // Use originalName because this.name may have been modified by highlightSearchStrings
         const categories = [];
         for (let i = 0; i < this.app.categories.length; i++) {
             const cat = this.app.categories[i];
-            if (cat.name !== "Favourites" && cat.ops.includes(this.name)) {
+            if (cat.name !== "Favourites" && cat.ops.includes(this.originalName)) {
                 categories.push(cat.name);
             }
         }
@@ -99,11 +100,12 @@ class HTMLOperation {
             return "";
         }
 
-        // Build the category links
-        const categoryLinks = categories.map(catName => {
-            const catId = "cat" + catName.replace(/[\s/\-:_]/g, "");
-            return `<a class="op-category-link" data-category="${catId}">${catName}</a>`;
-        }).join(", ");
+        // Build the category links. Note that Bootstrap's popover sanitizer strips
+        // custom data-* attributes, so the category name is carried in the link text
+        // and resolved to a category ID by OperationsWaiter.categoryLinkClick.
+        const categoryLinks = categories.map(catName =>
+            `<a href='#' class='op-category-link'>${Utils.escapeHtml(catName)}</a>`
+        ).join(", ");
 
         return `<hr>Category: ${categoryLinks}`;
     }

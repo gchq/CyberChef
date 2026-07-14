@@ -354,8 +354,12 @@ class OperationsWaiter {
         e.preventDefault();
         e.stopPropagation();
 
-        const categoryId = e.target.dataset.category;
-        if (!categoryId) return;
+        // Bootstrap's popover sanitizer strips custom data-* attributes, so the
+        // category ID is derived from the link text using the same scheme as
+        // HTMLCategory.toHtml()
+        const catName = e.target.textContent;
+        if (!catName) return;
+        const categoryId = "cat" + catName.replace(/[\s/\-:_]/g, "");
 
         // Hide all popovers
         $("[data-toggle=popover]").popover("hide");
@@ -377,12 +381,15 @@ class OperationsWaiter {
             }
         }
 
-        // Close all categories and open the target one
-        $("#categories .collapse").collapse("hide");
-        $(`#${categoryId}`).collapse("show");
+        // Open the target category. The accordion behaviour (data-parent) closes
+        // any other open category automatically. Calling "show" on an already
+        // open category would toggle-close it mid-transition, so skip it.
+        const categoryElement = document.getElementById(categoryId);
+        if (categoryElement && !categoryElement.classList.contains("show")) {
+            $(categoryElement).collapse("show");
+        }
 
         // Scroll the category into view
-        const categoryElement = document.getElementById(categoryId);
         if (categoryElement) {
             categoryElement.scrollIntoView({behavior: "smooth", block: "nearest"});
         }
