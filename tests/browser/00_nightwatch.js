@@ -252,6 +252,79 @@ module.exports = {
             .waitForElementVisible("//ul[@id='search-results']//b[text()='MD5']", 1000);
     },
 
+    "Operation category in popover": browser => {
+        const op = "//ul[@id='search-results']//li[contains(@class, 'operation') and contains(., 'MD5')]";
+
+        // Search for an operation
+        browser
+            .useCss()
+            .clearValue("#search")
+            .setValue("#search", "md5")
+            .useXpath()
+            .waitForElementVisible(op, 1000);
+
+        // Hover over the operation to show popover
+        browser
+            .moveToElement(op, 10, 10)
+            .useCss()
+            .waitForElementVisible(".popover-body", 1000);
+
+        // Assert that Category line appears in popover
+        browser
+            .expect.element(".popover-body").text.to.contain("Category:");
+
+        // Click the category link
+        browser
+            .click(".popover-body .op-category-link");
+
+        // Assert that search is cleared
+        browser
+            .useCss()
+            .expect.element("#search").value.to.equal("");
+
+        // Assert that the Hashing category is now visible
+        browser
+            .expect.element("#catHashing").to.be.visible;
+
+        // Toggle the option off
+        browser
+            .click("#options");
+
+        browser
+            .waitForElementVisible("#options-modal", 1000)
+            .click("#showOpCategories")
+            .pause(500)
+            .click("#options-modal .modal-footer .btn-secondary[data-dismiss='modal']")
+            .waitForElementNotVisible("#options-modal", 1000);
+
+        // Search again and verify category line doesn't appear
+        browser
+            .clearValue("#search")
+            .setValue("#search", "md5")
+            .useXpath()
+            .waitForElementVisible(op, 1000)
+            .moveToElement(op, 10, 10)
+            .useCss()
+            .waitForElementVisible(".popover-body", 1000);
+
+        // Assert that Category line does not appear
+        browser
+            .expect.element(".popover-body").text.to.not.contain("Category:");
+
+        // Reset option back to enabled
+        browser
+            .click("#options")
+            .waitForElementVisible("#options-modal", 1000)
+            .click("#showOpCategories")
+            .pause(500)
+            .click("#options-modal .modal-footer .btn-secondary[data-dismiss='modal']")
+            .waitForElementNotVisible("#options-modal", 1000);
+
+        // Clear search
+        browser
+            .clearValue("#search");
+    },
+
     "Alert bar": browser => {
         // Bake nothing to create an empty output which can be copied
         utils.clear(browser);

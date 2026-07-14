@@ -56,7 +56,8 @@ class HTMLOperation {
 
         if (this.description) {
             const infoLink = this.infoURL ? `<hr>${titleFromWikiLink(this.infoURL)}` : "";
-            const content = Utils.escapeHtml(this.description + infoLink);
+            const categoryInfo = this.getCategoryInfo();
+            const content = Utils.escapeHtml(this.description + infoLink + categoryInfo);
 
             html += ` data-container='body' data-toggle='popover' data-placement='right'
                 data-content="${content}" data-html='true' data-trigger='hover'
@@ -72,6 +73,39 @@ class HTMLOperation {
         html += "</li>";
 
         return html;
+    }
+
+
+    /**
+     * Gets the category information for this operation as an HTML string.
+     *
+     * @returns {string}
+     */
+    getCategoryInfo() {
+        if (!this.app.options.showOpCategories) {
+            return "";
+        }
+
+        // Find all categories this operation belongs to, excluding Favourites
+        const categories = [];
+        for (let i = 0; i < this.app.categories.length; i++) {
+            const cat = this.app.categories[i];
+            if (cat.name !== "Favourites" && cat.ops.includes(this.name)) {
+                categories.push(cat.name);
+            }
+        }
+
+        if (categories.length === 0) {
+            return "";
+        }
+
+        // Build the category links
+        const categoryLinks = categories.map(catName => {
+            const catId = "cat" + catName.replace(/[\s/\-:_]/g, "");
+            return `<a class="op-category-link" data-category="${catId}">${catName}</a>`;
+        }).join(", ");
+
+        return `<hr>Category: ${categoryLinks}`;
     }
 
 

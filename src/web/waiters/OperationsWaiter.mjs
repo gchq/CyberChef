@@ -326,6 +326,68 @@ class OperationsWaiter {
         }
     }
 
+
+    /**
+     * Handler for toggling the display of operation categories in popovers.
+     * Repopulates the operations list to show/hide category information.
+     */
+    toggleOpCategories() {
+        // Repopulate operations list to apply the option change
+        this.app.populateOperationsList();
+        this.manager.recipe.initialiseOperationDragNDrop();
+
+        // Refresh search results if search is active
+        const searchInput = document.getElementById("search");
+        if (searchInput && searchInput.value) {
+            this.searchOperations({target: searchInput});
+        }
+    }
+
+
+    /**
+     * Handler for clicking a category link in an operation popover.
+     * Clears the search and opens the clicked category.
+     *
+     * @param {event} e
+     */
+    categoryLinkClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const categoryId = e.target.dataset.category;
+        if (!categoryId) return;
+
+        // Hide all popovers
+        $("[data-toggle=popover]").popover("hide");
+
+        // Clear search
+        const searchInput = document.getElementById("search");
+        if (searchInput) {
+            searchInput.value = "";
+        }
+
+        // Clear search results
+        const searchResults = document.getElementById("search-results");
+        if (searchResults) {
+            while (searchResults.firstChild) {
+                try {
+                    $(searchResults.firstChild).popover("dispose");
+                } catch (err) {}
+                searchResults.removeChild(searchResults.firstChild);
+            }
+        }
+
+        // Close all categories and open the target one
+        $("#categories .collapse").collapse("hide");
+        $(`#${categoryId}`).collapse("show");
+
+        // Scroll the category into view
+        const categoryElement = document.getElementById(categoryId);
+        if (categoryElement) {
+            categoryElement.scrollIntoView({behavior: "smooth", block: "nearest"});
+        }
+    }
+
 }
 
 export default OperationsWaiter;
