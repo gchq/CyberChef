@@ -24,9 +24,19 @@ import Utils from "../Utils.mjs";
  * fromDecimal("10:20:30", "Colon");
  */
 export function fromDecimal(data, delim="Auto") {
-    delim = Utils.charRep(delim);
-    const output = [];
-    let byteStr = data.split(delim);
+   const output = [];
+    let byteStr = [];
+    
+    // 1. Handle the "Auto" delimiter using CyberChef's built-in guesser
+    if (delim === "Auto") {
+        const search = Utils.detectDelim(data);
+        byteStr = data.split(search);
+    } else {
+        // 2. If it's a specific delimiter, use the original logic
+        delim = Utils.charRep(delim);
+        byteStr = data.split(delim);
+    }
+
     if (byteStr[byteStr.length-1] === "")
         byteStr = byteStr.slice(0, byteStr.length-1);
 
@@ -35,3 +45,4 @@ export function fromDecimal(data, delim="Auto") {
     }
     return output;
 }
+    
