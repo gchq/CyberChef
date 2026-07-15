@@ -5,6 +5,7 @@
  */
 
 import Dish from "./Dish.mjs";
+import OperationError from "./errors/OperationError.mjs";
 import Ingredient from "./Ingredient.mjs";
 
 /**
@@ -188,8 +189,27 @@ class Operation {
             if (typeof ing.min === "number") conf.min = ing.min;
             if (typeof ing.max === "number") conf.max = ing.max;
             if (ing.step) conf.step = ing.step;
+            if (typeof ing.integer !== "undefined") conf.integer = ing.integer;
+            if (typeof ing.allowEmpty !== "undefined") conf.allowEmpty = ing.allowEmpty;
             return conf;
         });
+    }
+
+
+    /**
+     * Validates the operation's ingredients against their defined constraints.
+     *
+     * @param {Object[]} [args] - Optional list of argument values to validate. If not provided, validates the current ingredient values.
+     * @returns {boolean} - True if valid, throws an OperationError if invalid.
+     */
+    validateIngredients(args) {
+        const values = args || this.ingValues;
+        this._ingList.forEach((ing, i) => {
+            if (i < values.length) {
+                ing.validate(values[i]);
+            }
+        });
+        return true;
     }
 
 
@@ -223,7 +243,11 @@ class Operation {
      */
     set ingValues(ingValues) {
         ingValues.forEach((val, i) => {
-            this._ingList[i].value = val;
+            try {
+                this._ingList[i].value = val;
+            } catch (err) {
+                throw new OperationError(`Failed to set value of ingredient '${this._ingList[i].name}': ${err}`);
+            }
         });
     }
 

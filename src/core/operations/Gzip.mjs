@@ -74,13 +74,11 @@ class Gzip extends Operation {
         }
         if (comment.length) {
             options.flags.comment = true;
+            options.flags.fcomment = true;
             options.comment = comment;
         }
         const gzipObj = new Zlib.Gzip(new Uint8Array(input), options);
         const compressed = new Uint8Array(gzipObj.compress());
-        if (options.flags.comment && !(compressed[3] & 0x10)) {
-            compressed[3] |= 0x10;
-        }
         return compressed.buffer;
     }
 
