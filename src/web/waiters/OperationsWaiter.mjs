@@ -385,13 +385,23 @@ class OperationsWaiter {
         // any other open category automatically. Calling "show" on an already
         // open category would toggle-close it mid-transition, so skip it.
         const categoryElement = document.getElementById(categoryId);
-        if (categoryElement && !categoryElement.classList.contains("show")) {
-            $(categoryElement).collapse("show");
-        }
+        if (!categoryElement) return;
 
-        // Scroll the category into view
-        if (categoryElement) {
+        const showCategory = function() {
+            if (!categoryElement.classList.contains("show")) {
+                $(categoryElement).collapse("show");
+            }
             categoryElement.scrollIntoView({behavior: "smooth", block: "nearest"});
+        };
+
+        // Bootstrap ignores "show" while another panel in the accordion is still
+        // mid-transition (e.g. a category collapsed by the search box a moment
+        // earlier), so wait for any in-progress transition to finish first.
+        const transitioning = document.querySelector("#categories .collapsing");
+        if (transitioning) {
+            $(transitioning).one("hidden.bs.collapse shown.bs.collapse", showCategory);
+        } else {
+            showCategory();
         }
     }
 

@@ -286,13 +286,14 @@ module.exports = {
         browser
             .expect.element("#catHashing").to.be.visible;
 
-        // Toggle the option off
+        // Toggle the option off. The checkbox input is restyled by Bootstrap
+        // Material Design and is not directly interactable, so click its label.
         browser
             .click("#options");
 
         browser
             .waitForElementVisible("#options-modal", 1000)
-            .click("#showOpCategories")
+            .click("label[for='showOpCategories']")
             .pause(500)
             .click("#options-modal .modal-footer .btn-secondary[data-dismiss='modal']")
             .waitForElementNotVisible("#options-modal", 1000);
@@ -315,7 +316,7 @@ module.exports = {
         browser
             .click("#options")
             .waitForElementVisible("#options-modal", 1000)
-            .click("#showOpCategories")
+            .click("label[for='showOpCategories']")
             .pause(500)
             .click("#options-modal .modal-footer .btn-secondary[data-dismiss='modal']")
             .waitForElementNotVisible("#options-modal", 1000);
