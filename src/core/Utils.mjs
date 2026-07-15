@@ -1288,8 +1288,8 @@ class Utils {
      * @param {string} token
      * @returns {string}
      */
-    static charRep(token) {
-        return {
+    static charRep(token, data="Auto") {
+        const charMap = {
             "Space":         " ",
             "Percent":       "%",
             "Comma":         ",",
@@ -1304,7 +1304,11 @@ class Utils {
             "\\x":           "\\x",
             "Nothing (separate chars)": "",
             "None":          "",
-        }[token];
+        };
+        if(token === "Auto" && data !== "Auto") {
+            return Object.values(charMap).find(char => data.includes(char));
+        }
+        return charMap[token];
     }
 
 
