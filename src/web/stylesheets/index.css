@@ -34,6 +34,7 @@
 @import "./layout/_operations.css";
 @import "./layout/_recipe.css";
 @import "./layout/_structure.css";
+@import "./layout/_responsive.css";
 
 /* Operations */
 @import "./operations/diff.css";

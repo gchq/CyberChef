@@ -1531,6 +1531,13 @@ class OutputWaiter {
      * Resizes the output frame to be as large as possible, or restores it to its original size.
      */
     maximiseOutputClick(e) {
+        if (this.manager.responsive && this.manager.responsive.isTouchLayout()) {
+            // On phone/tablet, switch to the Data/Output view instead of Split.js maximise.
+            this.manager.responsive.showMobilePane("data");
+            this.manager.responsive.showDataSegment("output");
+            return;
+        }
+
         const el = e.target.id === "maximise-output" ? e.target : e.target.parentNode;
 
         if (el.getAttribute("data-original-title").indexOf("Maximise") === 0) {

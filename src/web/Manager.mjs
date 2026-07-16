@@ -18,6 +18,7 @@ import BindingsWaiter from "./waiters/BindingsWaiter.mjs";
 import BackgroundWorkerWaiter from "./waiters/BackgroundWorkerWaiter.mjs";
 import TabWaiter from "./waiters/TabWaiter.mjs";
 import TimingWaiter from "./waiters/TimingWaiter.mjs";
+import ResponsiveLayoutWaiter from "./waiters/ResponsiveLayoutWaiter.mjs";
 
 
 /**
@@ -74,6 +75,7 @@ class Manager {
         this.seasonal    = new SeasonalWaiter(this.app, this);
         this.bindings    = new BindingsWaiter(this.app, this);
         this.background  = new BackgroundWorkerWaiter(this.app, this);
+        this.responsive  = new ResponsiveLayoutWaiter(this.app, this);
 
         // Object to store dynamic handlers to fire on elements that may not exist yet
         this.dynamicHandlers = {};
@@ -95,6 +97,7 @@ class Manager {
         this.bindings.updateKeybList();
         this.background.registerChefWorker();
         this.seasonal.load();
+        this.responsive.setup();
 
         this.confirmWaitersLoaded();
     }
@@ -148,6 +151,7 @@ class Manager {
         // Operations
         this.addMultiEventListener("#search", "keyup paste search", this.ops.searchOperations, this.ops);
         this.addDynamicListener(".op-list li.operation", "dblclick", this.ops.operationDblclick, this.ops);
+        this.addDynamicListener(".op-list li.operation", "click", this.ops.operationClick, this.ops);
         document.getElementById("edit-favourites").addEventListener("click", this.ops.editFavouritesClick.bind(this.ops));
         document.getElementById("save-favourites").addEventListener("click", this.ops.saveFavouritesClick.bind(this.ops));
         document.getElementById("reset-favourites").addEventListener("click", this.ops.resetFavouritesClick.bind(this.ops));
@@ -160,6 +164,8 @@ class Manager {
         this.addDynamicListener(".hide-args-icon", "click", this.recipe.hideArgsClick, this.recipe);
         this.addDynamicListener(".disable-icon", "click", this.recipe.disableClick, this.recipe);
         this.addDynamicListener(".breakpoint", "click", this.recipe.breakpointClick, this.recipe);
+        this.addDynamicListener(".op-reorder-up", "click", this.recipe.moveOpUp, this.recipe);
+        this.addDynamicListener(".op-reorder-down", "click", this.recipe.moveOpDown, this.recipe);
         this.addDynamicListener("#rec-list li.operation", "dblclick", this.recipe.operationDblclick, this.recipe);
         this.addDynamicListener("#rec-list li.operation > div", "dblclick", this.recipe.operationChildDblclick, this.recipe);
         this.addDynamicListener("#rec-list .dropdown-menu.toggle-dropdown a", "click", this.recipe.dropdownToggleClick, this.recipe);

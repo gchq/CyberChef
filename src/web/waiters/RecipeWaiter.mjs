@@ -464,6 +464,36 @@ class RecipeWaiter {
 
 
     /**
+     * Move a recipe operation one step up (touch layout affordance).
+     *
+     * @param {event} e
+     */
+    moveOpUp(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const li = e.target.closest("li.operation");
+        if (!li || !li.previousElementSibling) return;
+        li.parentNode.insertBefore(li, li.previousElementSibling);
+        window.dispatchEvent(this.manager.statechange);
+    }
+
+
+    /**
+     * Move a recipe operation one step down (touch layout affordance).
+     *
+     * @param {event} e
+     */
+    moveOpDown(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const li = e.target.closest("li.operation");
+        if (!li || !li.nextElementSibling) return;
+        li.parentNode.insertBefore(li.nextElementSibling, li);
+        window.dispatchEvent(this.manager.statechange);
+    }
+
+
+    /**
      * Handler for operation dropdown events from toggleString arguments.
      * Sets the selected option as the name of the button.
      *

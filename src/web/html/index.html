@@ -24,6 +24,7 @@
     <head>
         <meta charset="UTF-8">
         <title>CyberChef</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
         <meta name="copyright" content="Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %>" />
         <meta name="description" content="The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis" />
@@ -145,7 +146,10 @@
         <button type="button" aria-label="Edit Favourites" class="btn btn-warning bmd-btn-icon" id="edit-favourites" data-toggle="tooltip" title="Edit favourites">
             <i class="material-icons" aria-hidden="true">star</i>
         </button>
-        <div tabindex="0" id="content-wrapper">
+        <div tabindex="0" id="content-wrapper" class="cyberchef-root" data-layout="desktop" data-mobile-pane="recipe" data-data-segment="input">
+            <div id="ops-overlay" hidden aria-hidden="true">
+                <div id="ops-scrim"></div>
+            </div>
             <div id="banner" class="row">
                 <div class="col" style="text-align: left; padding-left: 10px;">
                     <a href="#" data-toggle="modal" data-target="#download-modal" data-help-title="Downloading CyberChef" data-help="<p>CyberChef can be downloaded to run locally or hosted within your own network. It has no server-side component so all that is required is that the ZIP file is uncompressed and the files are accessible.</p><p>As a user, it is worth noting that unofficial versions of CyberChef could have been modified to introduce Input and/or Recipe exfiltration. We recommend always using the official, open source, up-to-date version of CyberChef hosted at <a href='https://gchq.github.io/CyberChef'>https://gchq.github.io/CyberChef</a> if accessible.</p><p>The Network tab in your browser's Developer console (F12) can be used to inspect the network requests made by a website. This can confirm that no data is uploaded when a CyberChef recipe is baked.</p>">Download CyberChef <i class="material-icons">file_download</i></a>
@@ -163,12 +167,26 @@
                     </span>
                 </div>
                 <div class="col" style="text-align: right; padding-right: 0;">
+                    <button type="button" id="tablet-ops-toggle" class="btn btn-primary btn-sm tablet-only" aria-label="Open operations" aria-expanded="false" aria-controls="operations">
+                        <i class="material-icons" aria-hidden="true">menu</i> Ops
+                    </button>
                     <a href="#" id="options" data-help-title="Options and Settings" data-help="Configurable options to change how CyberChef behaves. These settings are stored in your browser's local storage, meaning they will persist between sessions that use the same browser profile.">Options <i class="material-icons">settings</i></a>
                     <a href="#" id="support" data-toggle="modal" data-target="#support-modal" data-help-title="About / Support" data-help="This pane provides information about the CyberChef web app, how to use some of the features, and how to raise bug reports.">About / Support <i class="material-icons">help</i></a>
                 </div>
             </div>
             <div id="workspace-wrapper">
-                <div id="operations" class="split split-horizontal no-select">
+                <div id="operations" class="split split-horizontal no-select" role="dialog" aria-label="Operations">
+                    <div id="ops-sheet-header" class="mobile-only responsive-chrome">
+                        <div style="width:100%;">
+                            <div class="ops-handle" aria-hidden="true"></div>
+                            <div style="display:flex;align-items:center;justify-content:space-between;">
+                                <strong>Operations</strong>
+                                <button type="button" id="ops-close" class="btn btn-primary bmd-btn-icon" aria-label="Close operations">
+                                    <i class="material-icons" aria-hidden="true">close</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="title no-select" data-help-title="Operations list" data-help="<p>The Operations list contains all the operations in CyberChef arranged into categories. Some operations may be present in multiple categories. You can search for operations using the search box.</p><p>To use an operation, either double click it, or drag it into the Recipe pane. You will then be able to configure its arguments (or 'Ingredients' in CyberChef terminology).</p>">
                         Operations
                         <span class="op-count"></span>
@@ -222,6 +240,10 @@
                 </div>
 
                 <div class="split split-horizontal" id="IO">
+                    <div id="data-segment-bar" class="mobile-only" role="tablist" aria-label="Input and output">
+                        <button type="button" id="seg-input" role="tab" aria-selected="true" class="active">Input</button>
+                        <button type="button" id="seg-output" role="tab" aria-selected="false">Output</button>
+                    </div>
                     <div id="input" class="split no-select" data-help-title="Input pane" data-help="<p>Input data can be entered by typing it in, pasting it in, dragging it in, or using the 'Load file' or 'Load folder' buttons.</p><p>CyberChef does its best to represent data as accurately as possible to ensure you know exactly what you are working with. Non-printable characters are represented using control character pictures, for example a null byte (0x00) is displayed like this: <span title='Control character null' aria-label='Control character null' class='cm-specialChar'>␀</span>.</p>">
                         <div class="title no-select">
                             <label for="input-text">Input</label>
@@ -341,6 +363,19 @@
                     </div>
                 </div>
             </div>
+            <nav id="mobile-nav" class="mobile-only" role="tablist" aria-label="Main navigation">
+                <button type="button" id="nav-recipe" role="tab" aria-selected="true" class="active" data-pane="recipe">
+                    <i class="material-icons" aria-hidden="true">list_alt</i>
+                    Recipe
+                </button>
+                <button type="button" id="nav-ops-fab" aria-label="Add operation" aria-expanded="false" aria-controls="operations">
+                    <i class="material-icons" aria-hidden="true">add</i>
+                </button>
+                <button type="button" id="nav-data" role="tab" aria-selected="false" data-pane="data">
+                    <i class="material-icons" aria-hidden="true">swap_horiz</i>
+                    Data
+                </button>
+            </nav>
         </div>
 
         <div class="modal fade" id="save-modal" tabindex="-1" role="dialog">

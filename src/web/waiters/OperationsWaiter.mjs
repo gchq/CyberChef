@@ -229,9 +229,46 @@ class OperationsWaiter {
      * @param {event} e
      */
     operationDblclick(e) {
-        const li = e.target;
+        const li = e.target.closest("li.operation");
+        if (!li) return;
 
-        this.manager.recipe.addOperation(li.textContent);
+        this.manager.recipe.addOperation(this.operationNameFromListItem(li));
+    }
+
+
+    /**
+     * Tap-to-add on phone/tablet layouts (single click).
+     * Desktop keeps double-click / drag-and-drop.
+     *
+     * @param {event} e
+     */
+    operationClick(e) {
+        if (!this.manager.responsive || !this.manager.responsive.isTouchLayout()) {
+            return;
+        }
+
+        // Ignore clicks on remove icons (favourites editor)
+        if (e.target.closest(".remove-icon")) return;
+
+        const li = e.target.closest("li.operation");
+        if (!li || !li.closest(".op-list")) return;
+
+        e.preventDefault();
+        this.manager.recipe.addOperation(this.operationNameFromListItem(li));
+        this.manager.responsive.afterOperationAdded();
+    }
+
+
+    /**
+     * Extract operation name from a list item without icon ligature text.
+     *
+     * @param {Element} li
+     * @returns {string}
+     */
+    operationNameFromListItem(li) {
+        const clone = li.cloneNode(true);
+        clone.querySelectorAll("i").forEach(icon => icon.remove());
+        return clone.textContent.trim();
     }
 
 

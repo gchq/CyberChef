@@ -66,6 +66,8 @@ class App {
     setup() {
         document.dispatchEvent(this.manager.appstart);
 
+        // Splitters are created for desktop; ResponsiveLayoutWaiter destroys them
+        // immediately when the container is phone/tablet sized.
         this.initialiseSplitter();
         this.loadLocalStorage();
         this.manager.options.applyPreferredColorScheme();
@@ -310,13 +312,46 @@ class App {
 
 
     /**
+     * Destroys Split.js instances and removes leftover gutters.
+     * Used when switching to mobile/tablet layouts.
+     */
+    destroySplitters() {
+        if (this.columnSplitter) {
+            this.columnSplitter.destroy();
+            this.columnSplitter = null;
+        }
+        if (this.ioSplitter) {
+            this.ioSplitter.destroy();
+            this.ioSplitter = null;
+        }
+
+        document.querySelectorAll("#workspace-wrapper > .gutter, #IO > .gutter").forEach(g => g.remove());
+
+        // Clear inline sizes Split.js may have left behind
+        ["operations", "recipe", "IO", "input", "output"].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.style.width = "";
+                el.style.height = "";
+                el.style.flex = "";
+            }
+        });
+    }
+
+
+    /**
      * Sets up the adjustable splitter to allow the user to resize areas of the page.
      *
      * @param {boolean} [minimise=false] - Set this flag if attempting to minimise frames to 0 width
      */
     initialiseSplitter(minimise=false) {
-        if (this.columnSplitter) this.columnSplitter.destroy();
-        if (this.ioSplitter) this.ioSplitter.destroy();
+        this.destroySplitters();
+
+        // Do not create splitters while in a touch layout — CSS owns the layout.
+        if (this.manager.responsive && this.manager.responsive.isTouchLayout()) {
+            this.adjustComponentSizes();
+            return;
+        }
 
         this.columnSplitter = Split(["#operations", "#recipe", "#IO"], {
             sizes: [20, 30, 50],
@@ -629,6 +664,10 @@ class App {
      * Resets the splitter positions to default.
      */
     resetLayout() {
+        if (!this.columnSplitter || !this.ioSplitter) {
+            this.adjustComponentSizes();
+            return;
+        }
         this.columnSplitter.setSizes([20, 30, 50]);
         this.ioSplitter.setSizes([50, 50]);
         this.adjustComponentSizes();

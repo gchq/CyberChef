@@ -1,0 +1,382 @@
+/**
+ * Responsive phone / tablet layout for CyberChef.
+ * Driven by [data-layout] on #content-wrapper (set via ResizeObserver).
+ *
+ * @author blepman
+ * @license Apache-2.0
+ */
+
+/* ---- Chrome defaults (hidden on desktop) ---- */
+
+.responsive-chrome,
+.mobile-only,
+.tablet-only,
+.responsive-only {
+    display: none !important;
+}
+
+#ops-overlay {
+    display: none;
+}
+
+/* ---- Shared non-desktop ---- */
+
+[data-layout="mobile"] .responsive-only,
+[data-layout="tablet"] .responsive-only {
+    display: inline-flex !important;
+}
+
+[data-layout="mobile"] .gutter,
+[data-layout="tablet"] .gutter {
+    display: none !important;
+}
+
+[data-layout="mobile"] #workspace-wrapper,
+[data-layout="tablet"] #workspace-wrapper {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+[data-layout="mobile"] #operations.split,
+[data-layout="mobile"] #recipe.split,
+[data-layout="mobile"] #IO.split,
+[data-layout="tablet"] #operations.split,
+[data-layout="tablet"] #recipe.split,
+[data-layout="tablet"] #IO.split {
+    float: none;
+    width: auto;
+    height: auto;
+}
+
+[data-layout="mobile"] #banner .col:first-child,
+[data-layout="tablet"] #banner .col:first-child {
+    display: none;
+}
+
+[data-layout="mobile"] #banner,
+[data-layout="tablet"] #banner {
+    min-height: 40px;
+    align-items: center;
+}
+
+[data-layout="mobile"] #workspace-wrapper,
+[data-layout="tablet"] #workspace-wrapper {
+    top: 40px;
+}
+
+/* Reorder / touch affordances */
+.op-reorder-up,
+.op-reorder-down {
+    cursor: pointer;
+    font-size: 20px !important;
+    margin-left: 2px;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.op-list li.operation {
+    position: relative;
+}
+
+/* ---- Tablet (768–1023) ---- */
+
+[data-layout="tablet"] .tablet-only {
+    display: inline-flex !important;
+}
+
+[data-layout="tablet"] #recipe {
+    flex: 1 1 45%;
+    min-width: 0;
+    height: 100%;
+    border-right: 1px solid var(--primary-border-colour);
+}
+
+[data-layout="tablet"] #IO {
+    flex: 1 1 55%;
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+[data-layout="tablet"] #IO #input,
+[data-layout="tablet"] #IO #output {
+    flex: 1 1 50%;
+    width: 100%;
+    height: 50%;
+    min-height: 0;
+}
+
+[data-layout="tablet"] #operations {
+    position: fixed;
+    top: 40px;
+    left: 0;
+    bottom: 0;
+    width: min(360px, 90%);
+    z-index: 1200;
+    background: var(--primary-background-colour);
+    border-right: 1px solid var(--primary-border-colour);
+    transform: translateX(-105%);
+    transition: transform 0.2s ease;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
+}
+
+[data-layout="tablet"].ops-open #operations,
+body[data-layout="tablet"] #content-wrapper.ops-open #operations {
+    transform: translateX(0);
+}
+
+[data-layout="tablet"] #ops-overlay:not([hidden]) {
+    display: block;
+    position: fixed;
+    inset: 40px 0 0 0;
+    z-index: 1100;
+}
+
+[data-layout="tablet"] #ops-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+[data-layout="tablet"] #tablet-ops-toggle {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+    margin-right: 8px;
+    min-height: 44px;
+    padding: 0 12px;
+}
+
+[data-layout="tablet"] #data-segment-bar,
+[data-layout="tablet"] #mobile-nav {
+    display: none !important;
+}
+
+/* ---- Mobile (<768) ---- */
+
+[data-layout="mobile"] .mobile-only {
+    display: flex !important;
+}
+
+[data-layout="mobile"] #workspace-wrapper {
+    flex-direction: column;
+    bottom: 56px;
+}
+
+[data-layout="mobile"] #recipe,
+[data-layout="mobile"] #IO {
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+}
+
+[data-layout="mobile"][data-mobile-pane="recipe"] #recipe,
+#content-wrapper[data-layout="mobile"][data-mobile-pane="recipe"] #recipe {
+    display: flex;
+}
+
+[data-layout="mobile"][data-mobile-pane="data"] #IO,
+#content-wrapper[data-layout="mobile"][data-mobile-pane="data"] #IO {
+    display: flex;
+}
+
+[data-layout="mobile"] #IO #input,
+[data-layout="mobile"] #IO #output {
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    display: none;
+    flex-direction: column;
+}
+
+[data-layout="mobile"][data-data-segment="input"] #IO #input,
+#content-wrapper[data-layout="mobile"][data-data-segment="input"] #IO #input {
+    display: flex;
+}
+
+[data-layout="mobile"][data-data-segment="output"] #IO #output,
+#content-wrapper[data-layout="mobile"][data-data-segment="output"] #IO #output {
+    display: flex;
+}
+
+[data-layout="mobile"] #data-segment-bar {
+    display: flex !important;
+    flex: 0 0 auto;
+    gap: 0;
+    border-bottom: 1px solid var(--primary-border-colour);
+    background: var(--secondary-background-colour);
+}
+
+[data-layout="mobile"] #data-segment-bar button {
+    flex: 1;
+    min-height: 44px;
+    border: 0;
+    background: transparent;
+    color: var(--primary-font-colour);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+[data-layout="mobile"] #data-segment-bar button.active {
+    border-bottom: 3px solid var(--primary-font-colour);
+    background: var(--primary-background-colour);
+}
+
+[data-layout="mobile"][data-mobile-pane="recipe"] #data-segment-bar {
+    display: none !important;
+}
+
+/* Sticky Bake bar sits above bottom nav */
+[data-layout="mobile"] #controls,
+[data-layout="mobile"] #controls.mobile-controls-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 56px;
+    z-index: 900;
+    padding: 8px 4px;
+    width: 100%;
+}
+
+[data-layout="mobile"] #rec-list {
+    padding-bottom: 88px;
+}
+
+[data-layout="mobile"] #IO #input-wrapper,
+[data-layout="mobile"] #IO #output-wrapper {
+    padding-bottom: 88px;
+}
+
+[data-layout="mobile"] #operations {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    height: 85dvh;
+    max-height: 85vh;
+    z-index: 1300;
+    background: var(--primary-background-colour);
+    border-radius: 12px 12px 0 0;
+    transform: translateY(105%);
+    transition: transform 0.25s ease;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
+    width: 100%;
+}
+
+[data-layout="mobile"].ops-open #operations,
+#content-wrapper[data-layout="mobile"].ops-open #operations {
+    transform: translateY(0);
+}
+
+[data-layout="mobile"] #ops-overlay:not([hidden]) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+}
+
+[data-layout="mobile"] #ops-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+[data-layout="mobile"] #ops-sheet-header {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--primary-border-colour);
+    min-height: 48px;
+}
+
+[data-layout="mobile"] #ops-sheet-header .ops-handle {
+    width: 40px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--secondary-border-colour);
+    margin: 4px auto 8px;
+}
+
+[data-layout="mobile"] #mobile-nav {
+    display: flex !important;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 56px;
+    z-index: 1000;
+    background: var(--secondary-background-colour);
+    border-top: 1px solid var(--primary-border-colour);
+    align-items: stretch;
+    justify-content: space-around;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+[data-layout="mobile"] #mobile-nav button {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    color: var(--primary-font-colour);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+[data-layout="mobile"] #mobile-nav button.active {
+    color: var(--input-highlight-colour, #4caf50);
+}
+
+[data-layout="mobile"] #mobile-nav .material-icons {
+    font-size: 22px;
+}
+
+[data-layout="mobile"] #nav-ops-fab {
+    flex: 0 0 56px;
+    width: 56px;
+    height: 56px;
+    margin-top: -12px;
+    border-radius: 50%;
+    background: var(--primary-font-colour);
+    color: var(--primary-background-colour);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-layout="mobile"] #nav-ops-fab .material-icons {
+    font-size: 28px;
+}
+
+[data-layout="mobile"] #tablet-ops-toggle {
+    display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    [data-layout="mobile"] #operations,
+    [data-layout="tablet"] #operations {
+        transition: none;
+    }
+}
+
+/* Fallback when container queries are unsupported: mirror via body attribute already set */
+@supports (container-type: inline-size) {
+    #content-wrapper.cyberchef-root {
+        container-type: inline-size;
+        container-name: cyberchef;
+    }
+}
