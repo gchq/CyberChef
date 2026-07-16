@@ -210,4 +210,73 @@ TestRegister.addTests([
             }
         ]
     },
+    {
+        name: "Public Key To Address: P2TR (BIP86 Test Vectors 1)",
+        input: "xpub6H3W6JmYJXN49h5TfcVjLC3onS6uPeUTTJoVvRC8oG9vsTn2J8LwigLzq5tHbrwAzH9DGo6ThGUdWsqce8dGfwHVBxSbixjDADGGdzF7t2B",
+        expectedOutput: "bc1p5cyxnuxmeuwuvkwfem96lqzszd02n6xdcjrs20cac6yqjjwudpxqkedrcr",
+        recipeConfig: [
+            {
+                "op": "Deserialize Extended Key",
+                "args": [true]
+            },
+            {
+                "op": "JPath expression",
+                "args": ["$['masterkey']", "\\n"]
+            },
+            {
+                "op": "Find / Replace",
+                "args": [{ "option": "Regex", "string": "\"" }, "", true, false, true, false]
+            },
+            {
+                "op": "Public Key To Bitcoin-Like Address",
+                "args": ["BTC", "Taproot (P2TR bc1p Addresses)"]
+            }
+        ]
+    },
+    {
+        name: "Public Key To Address: P2TR (BIP86 Test Vectors 2)",
+        input: "xpub6H3W6JmYJXN4CCKUSnriaiQRCZmG6aq4sCMDqTu1ACyngw7HShf59hAxYjXgKDuuHThVEUzdHrc3aXCr9kfvQvZPit5dnD3K9xVRBzjK3rX",
+        expectedOutput: "bc1p4qhjn9zdvkux4e44uhx8tc55attvtyu358kutcqkudyccelu0was9fqzwh",
+        recipeConfig: [
+            {
+                "op": "Deserialize Extended Key",
+                "args": [true]
+            },
+            {
+                "op": "JPath expression",
+                "args": ["$['masterkey']", "\\n"]
+            },
+            {
+                "op": "Find / Replace",
+                "args": [{ "option": "Regex", "string": "\"" }, "", true, false, true, false]
+            },
+            {
+                "op": "Public Key To Bitcoin-Like Address",
+                "args": ["BTC", "Taproot (P2TR bc1p Addresses)"]
+            }
+        ]
+    },
+    {
+        name: "Public Key To Address: P2TR (BIP86 Test Vectors 3)",
+        input: "xpub6GL8SnQwRCGDhB59LEz9HMyM6sRYoByXBzXK3iEKWgCz8XrZNHUzd9L3AUBELW5NzA7dEFvMas1F84TuPH3xqdUA5tumaGWFgihJzWytXe3",
+        expectedOutput: "bc1p3qkhfews2uk44qtvauqyr2ttdsw7svhkl9nkm9s9c3x4ax5h60wqwruhk7",
+        recipeConfig: [
+            {
+                "op": "Deserialize Extended Key",
+                "args": [true]
+            },
+            {
+                "op": "JPath expression",
+                "args": ["$['masterkey']", "\\n"]
+            },
+            {
+                "op": "Find / Replace",
+                "args": [{ "option": "Regex", "string": "\"" }, "", true, false, true, false]
+            },
+            {
+                "op": "Public Key To Bitcoin-Like Address",
+                "args": ["BTC", "Taproot (P2TR bc1p Addresses)"]
+            }
+        ]
+    },
 ]);
