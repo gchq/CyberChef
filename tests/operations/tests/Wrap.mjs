@@ -40,5 +40,49 @@ TestRegister.addTests([
                 "args": [10]
             },
         ],
+    },
+    {
+        name: "Wrap rejects zero line width",
+        input: "hello",
+        expectedOutput: "Line Width must be greater than or equal to 1.",
+        recipeConfig: [
+            {
+                "op": "Wrap",
+                "args": [0]
+            },
+        ],
+    },
+    {
+        name: "Wrap rejects negative line width",
+        input: "hello",
+        expectedOutput: "Line Width must be greater than or equal to 1.",
+        recipeConfig: [
+            {
+                "op": "Wrap",
+                "args": [-1]
+            },
+        ],
+    },
+    {
+        name: "Wrap rejects non-integer line width",
+        input: "hello",
+        expectedOutput: "Line Width must be an integer.",
+        recipeConfig: [
+            {
+                "op": "Wrap",
+                "args": [1.1]
+            },
+        ],
+    },
+    {
+        name: "Wrap rejects excessive line width",
+        input: "hello",
+        expectedOutput: "Line Width must be less than or equal to 65536.",
+        recipeConfig: [
+            {
+                "op": "Wrap",
+                "args": [65537]
+            },
+        ],
     }
 ]);
