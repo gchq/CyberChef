@@ -29,4 +29,4 @@ RUN npm run build
 #########################################
 FROM nginx:stable-alpine AS cyberchef
 
-COPY --from=build ./build/prod /usr/share/nginx/html/
+COPY --from=builder /app/build/prod /usr/share/nginx/html/
