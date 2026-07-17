@@ -605,8 +605,9 @@ Top Drawer`, {
 
     it("Generate HOTP", () => {
         const result = chef.generateHOTP("JBSWY3DPEHPK3PXP", {
+            name: "Account",
         });
-        const expected = `URI: otpauth://hotp/?secret=JBSWY3DPEHPK3PXP&algorithm=SHA1&digits=6&counter=0
+        const expected = `URI: otpauth://hotp/Account?secret=JBSWY3DPEHPK3PXP&algorithm=SHA1&digits=6&counter=0
 
 Password: 282760`;
         assert.strictEqual(result.toString(), expected);
@@ -724,6 +725,18 @@ Hostname:	www.google.co.uk
 Path name:	/search
 Arguments:
 \tq = almonds
+`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("Parse URI with constructor and __proto__ arguments", () => {
+        const result = chef.parseURI("https://example.com/?constructor=ok&__proto__=hello");
+        const expected = `Protocol:	https:
+Hostname:	example.com
+Path name:	/
+Arguments:
+\tconstructor = ok
+\t__proto__   = hello
 `;
         assert.strictEqual(result.toString(), expected);
     }),
