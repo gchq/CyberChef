@@ -4,7 +4,8 @@
  * operations.
  *
  * The data is derived from the vendored WHATWG named character reference set
- * (htmlEntities.json, from https://html.spec.whatwg.org/entities.json) so the
+ * (src/core/vendor/htmlEntities/entity.json, from
+ * https://html.spec.whatwg.org/entities.json) so the
  * two operations cannot drift apart and every entity is spec-conformant:
  *
  *   - HTML_ENTITY_REVERSE_LOOKUP (decode) is every single-code-point spec name.
@@ -34,7 +35,8 @@ if (!fs.existsSync(path.join(process.cwd(), "src/core/lib"))) {
     process.exit(1);
 }
 
-const SPEC = JSON.parse(fs.readFileSync(path.join(scriptDir, "htmlEntities.json"), "utf8"));
+const SPEC = JSON.parse(fs.readFileSync(
+    path.join(scriptDir, "..", "..", "vendor", "htmlEntities", "entity.json"), "utf8"));
 
 // Build code point -> [spec names] for single-code-point, semicolon-terminated
 // references (the representable subset; multi-code-point entities are skipped).
@@ -97,7 +99,8 @@ const code = `/**
  * HTML entity lookup tables shared by the "To HTML Entity" and "From HTML Entity"
  * operations, derived from the WHATWG named character reference set
  * (https://html.spec.whatwg.org/entities.json). Do not edit by hand — change the
- * vendored htmlEntities.json or htmlEntityOverrides.mjs and regenerate.
+ * vendored src/core/vendor/htmlEntities/entity.json or htmlEntityOverrides.mjs
+ * and regenerate.
  *
  * @author roberson-io [michaelroberson@gmail.com]
  * @copyright Crown Copyright ${new Date().getUTCFullYear()}

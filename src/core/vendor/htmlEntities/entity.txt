@@ -1,0 +1,14 @@
+entity.json is the WHATWG named character reference set, retrieved verbatim from:
+
+    https://html.spec.whatwg.org/entities.json
+
+It is used by src/core/config/scripts/generateHTMLEntities.mjs to generate the
+shared HTML entity lookup tables (src/core/lib/HTMLEntities.mjs) consumed by the
+"To HTML Entity" and "From HTML Entity" operations.
+
+Source: HTML Standard — 13.5 Named character references
+    https://html.spec.whatwg.org/multipage/named-characters.html
+
+Copyright and licence
+---------------------
+Copyright © WHATWG (Apple, Google, Mozilla, Microsoft). This work is licensed under a Creative Commons Attribution 4.0 International License. To the extent portions of it are incorporated into source code, such portions in the source code are licensed under the BSD 3-Clause License instead.

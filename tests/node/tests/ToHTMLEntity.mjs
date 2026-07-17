@@ -11,7 +11,7 @@ import path from "path";
 // Vendored WHATWG named character reference set (https://html.spec.whatwg.org/entities.json).
 const SPEC = JSON.parse(readFileSync(path.join(
     path.dirname(fileURLToPath(import.meta.url)),
-    "../../../src/core/config/scripts/htmlEntities.json"), "utf8"));
+    "../../../src/core/vendor/htmlEntities/entity.json"), "utf8"));
 const specByName = {};
 for (const [key, val] of Object.entries(SPEC))
     if (key.endsWith(";")) specByName[key.slice(1, -1)] = val.codepoints;
