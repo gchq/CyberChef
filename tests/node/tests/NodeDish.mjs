@@ -65,6 +65,42 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "493e8136b759370a415ef2cf2f7a69690441ff86592aba082bc2e2e0");
     }),
 
+    it("Composable Dish: toBase32 should support non-BMP Unicode alphabets", () => {
+        const alphabet = "🀇🀈🀉🀊🀋🀌🀍🀎🀏🀙🀚🀛🀜🀝🀞🀟🀠🀡🀐🀑🀒🀓🀔🀕🀖🀗🀘🀀🀁🀂🀃🀅";
+
+        const result = new Dish("hello")
+            .apply(toBase32, {alphabet})
+            .toString();
+
+        // Should not contain replacement characters
+        assert.equal(result.includes("�"), false);
+
+        // Should contain only symbols from the alphabet
+        for (const ch of Array.from(result)) {
+            assert.ok(Array.from(alphabet).includes(ch));
+        }
+
+        // "hello" => 8 Base32 symbols
+        assert.equal(Array.from(result).length, 8);
+    }),
+
+    it("Composable Dish: toBase32 should omit padding for 32-character Unicode alphabets", () => {
+        const alphabet = "🀇🀈🀉🀊🀋🀌🀍🀎🀏🀙🀚🀛🀜🀝🀞🀟🀠🀡🀐🀑🀒🀓🀔🀕🀖🀗🀘🀀🀁🀂🀃🀅";
+
+        const result = new Dish("hell")
+            .apply(toBase32, {alphabet})
+            .toString();
+
+        // Should not leak undefined from array indexing
+        assert.equal(result.includes("undefined"), false);
+
+        // Should not contain replacement characters
+        assert.equal(result.includes("�"), false);
+
+        // Unpadded Base32 output for 4-byte input should be 7 symbols
+        assert.equal(Array.from(result).length, 7);
+    }),
+
     it("Dish translation: ArrayBuffer to ArrayBuffer", () => {
         const dish = new Dish(new ArrayBuffer(10), 4);
         dish.get("array buffer");

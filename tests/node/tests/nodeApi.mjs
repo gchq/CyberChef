@@ -109,6 +109,38 @@ TestRegister.addApiTests([
         assert.equal(3 + result, 35);
     }),
 
+    it("toBase32: should support non-BMP Unicode alphabets", () => {
+        const alphabet = "🀇🀈🀉🀊🀋🀌🀍🀎🀏🀙🀚🀛🀜🀝🀞🀟🀠🀡🀐🀑🀒🀓🀔🀕🀖🀗🀘🀀🀁🀂🀃🀅";
+
+        const result = chef.toBase32("hello", {alphabet}).toString();
+
+        // Should not contain replacement characters
+        assert.equal(result.includes("�"), false);
+
+        // Should contain only symbols from the alphabet
+        for (const ch of Array.from(result)) {
+            assert.ok(Array.from(alphabet).includes(ch));
+        }
+
+        // "hello" => 8 Base32 symbols
+        assert.equal(Array.from(result).length, 8);
+    }),
+
+    it("toBase32: should omit padding for 32-character Unicode alphabets", () => {
+        const alphabet = "🀇🀈🀉🀊🀋🀌🀍🀎🀏🀙🀚🀛🀜🀝🀞🀟🀠🀡🀐🀑🀒🀓🀔🀕🀖🀗🀘🀀🀁🀂🀃🀅";
+
+        const result = chef.toBase32("hell", {alphabet}).toString();
+
+        // Should not leak undefined from array indexing
+        assert.equal(result.includes("undefined"), false);
+
+        // Should not contain replacement characters
+        assert.equal(result.includes("�"), false);
+
+        // Unpadded Base32 output for 4-byte input should be 7 symbols
+        assert.equal(Array.from(result).length, 7);
+    }),
+
     it("chef.help: should exist", () => {
         assert(chef.help);
     }),
@@ -136,7 +168,7 @@ TestRegister.addApiTests([
 
     it("chef.help: returns multiple results", () => {
         const result = chef.help("base 64");
-        assert.strictEqual(result.length, 13);
+        assert.strictEqual(result.length, 14);
     }),
 
     it("chef.help: looks in description for matches too", () => {
