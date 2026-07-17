@@ -212,6 +212,8 @@ class Recipe  {
                     self.sendProgressMessage(i + 1, this.opList.length);
                 }
 
+                op.validateIngredients(op.ingValues);
+
                 if (op.flowControl) {
                     // Package up the current state
                     let state = {
@@ -239,9 +241,11 @@ class Recipe  {
                     // Cannot rely on `err instanceof OperationError` here as extending
                     // native types is not fully supported yet.
                     dish.set(err.message, "string");
+                    this.lastRunOp = null;
                     return i;
                 } else if (err instanceof DishError || err?.type === "DishError") {
                     dish.set(err.message, "string");
+                    this.lastRunOp = null;
                     return i;
                 } else {
                     const e = typeof err == "string" ? { message: err } : err;
