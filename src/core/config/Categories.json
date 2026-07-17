@@ -115,6 +115,12 @@
             "SM4 Decrypt",
             "RC6 Encrypt",
             "RC6 Decrypt",
+            "Ascon Encrypt",
+            "Ascon Decrypt",
+            "PRESENT Encrypt",
+            "PRESENT Decrypt",
+            "Twofish Encrypt",
+            "Twofish Decrypt",
             "GOST Encrypt",
             "GOST Decrypt",
             "GOST Sign",
@@ -131,6 +137,10 @@
             "XOR Brute Force",
             "Vigenère Encode",
             "Vigenère Decode",
+            "TEA Encrypt",
+            "TEA Decrypt",
+            "XTEA Encrypt",
+            "XTEA Decrypt",
             "XXTEA Encrypt",
             "XXTEA Decrypt",
             "To Morse Code",
@@ -448,6 +458,8 @@
             "BLAKE2b",
             "BLAKE2s",
             "BLAKE3",
+            "Ascon Hash",
+            "Ascon MAC",
             "GOST Hash",
             "Streebog",
             "SSDEEP",
@@ -560,7 +572,7 @@
             "Scatter chart",
             "Series chart",
             "Heatmap chart",
-            "Extract Audio Metadata"
+            "Render PDF"
         ]
     },
     {
@@ -586,7 +598,8 @@
             "HTML To Text",
             "Generate Lorem Ipsum",
             "Numberwang",
-            "XKCD Random Number"
+            "XKCD Random Number",
+            "Automated Validation Test Op"
         ]
     },
     {
