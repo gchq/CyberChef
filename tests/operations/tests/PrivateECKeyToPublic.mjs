@@ -17,7 +17,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Private EC Key to Public Key",
-                "args": [true],
+                "args": [true, "secp256k1", "Public Key Only"]
             },
         ],
     },
@@ -28,7 +28,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Private EC Key to Public Key",
-                "args": [false],
+                "args": [false, "secp256k1", "Public Key Only"]
             },
         ],
     },
@@ -43,7 +43,7 @@ TestRegister.addTests([
             },
             {
                 "op": "Private EC Key to Public Key",
-                "args": [true],
+                "args": [true, "secp256k1", "Public Key Only"]
             },
         ],
     },
@@ -54,7 +54,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Private EC Key to Public Key",
-                "args": [false],
+                "args": [false, "secp256k1", "Public Key Only"]
             },
         ],
     },
@@ -69,7 +69,7 @@ TestRegister.addTests([
             },
             {
                 "op": "Private EC Key to Public Key",
-                "args": [true],
+                "args": [false, "secp256k1", "Public Key Only"]
             },
         ],
     }
