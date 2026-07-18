@@ -206,6 +206,7 @@ import "./tests/ETHTRXConversion.mjs";
 import "./tests/KeyToExtendedKey.mjs";
 import "./tests/PrivateExtendedKeyToPublic.mjs";
 import "./tests/SeedToAddress.mjs";
+import "./tests/Base58Check.mjs";
 import "./tests/GetAllCasings.mjs";
 import "./tests/SIGABA.mjs";
 import "./tests/ELFInfo.mjs";

@@ -381,7 +381,9 @@
             "Public Key To TRX Style Address",
             "ETH / TRX Conversion",
             "Key To Extended Key",
-            "Private Extended Key To Public"
+            "Private Extended Key To Public",
+            "From Base58Check",
+            "To Base58Check"
         ]
     },
     {
