@@ -68,7 +68,7 @@ TestRegister.addTests([
             },
             {
                 "op": "Private EC Key to Public Key",
-                "args": [true]
+                "args": [true, "secp256k1", "Public Key Only"]
             },
             {
                 "op": "Public Key To Bitcoin-Like Address",
@@ -134,7 +134,7 @@ TestRegister.addTests([
             },
             {
                 "op": "Private EC Key to Public Key",
-                "args": [true]
+                "args": [true, "secp256k1", "Public Key Only"]
             },
             {
                 "op": "Public Key To Bitcoin-Like Address",
@@ -200,7 +200,7 @@ TestRegister.addTests([
             },
             {
                 "op": "Private EC Key to Public Key",
-                "args": [true]
+                "args": [true, "secp256k1", "Public Key Only"]
             },
             {
                 "op": "Public Key To Bitcoin-Like Address",
@@ -266,7 +266,7 @@ TestRegister.addTests([
             },
             {
                 "op": "Private EC Key to Public Key",
-                "args": [true]
+                "args": [true, "secp256k1", "Public Key Only"]
             },
             {
                 "op": "Public Key To Bitcoin-Like Address",
@@ -332,7 +332,7 @@ TestRegister.addTests([
             },
             {
                 "op": "Private EC Key to Public Key",
-                "args": [true]
+                "args": [true, "secp256k1", "Public Key Only"]
             },
             {
                 "op": "Public Key To ETH Style Address",
@@ -398,7 +398,7 @@ TestRegister.addTests([
             },
             {
                 "op": "Private EC Key to Public Key",
-                "args": [true]
+                "args": [true, "secp256k1", "Public Key Only"]
             },
             {
                 "op": "Public Key To TRX Style Address",

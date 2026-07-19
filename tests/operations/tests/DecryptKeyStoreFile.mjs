@@ -31,7 +31,7 @@ TestRegister.addTests([
             },
             {
                 "op": "Private EC Key to Public Key",
-                "args": [false]
+                "args": [false, "secp256k1", "Public Key Only"]
             },
             {
                 "op": "Public Key To ETH Style Address",
