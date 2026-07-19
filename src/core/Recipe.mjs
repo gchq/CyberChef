@@ -4,7 +4,7 @@
  * @license Apache-2.0
  */
 
-import OperationConfig from "./config/OperationConfig.json" assert {type: "json"};
+import OperationConfig from "./config/OperationConfig.json" with { type: "json" };
 import OperationError from "./errors/OperationError.mjs";
 import Operation from "./Operation.mjs";
 import DishError from "./errors/DishError.mjs";
@@ -70,11 +70,15 @@ class Recipe  {
             if (o instanceof Operation) {
                 return o;
             } else {
-                const op = new modules[o.module][o.name]();
-                op.ingValues = o.ingValues;
-                op.breakpoint = o.breakpoint;
-                op.disabled = o.disabled;
-                return op;
+                try {
+                    const op = new modules[o.module][o.name]();
+                    op.ingValues = o.ingValues;
+                    op.breakpoint = o.breakpoint;
+                    op.disabled = o.disabled;
+                    return op;
+                } catch (err) {
+                    throw new Error(`Failed to hydrate operation '${o.name}': ${err}`);
+                }
             }
         });
     }
@@ -208,6 +212,8 @@ class Recipe  {
                     self.sendProgressMessage(i + 1, this.opList.length);
                 }
 
+                op.validateIngredients(op.ingValues);
+
                 if (op.flowControl) {
                     // Package up the current state
                     let state = {
@@ -235,9 +241,11 @@ class Recipe  {
                     // Cannot rely on `err instanceof OperationError` here as extending
                     // native types is not fully supported yet.
                     dish.set(err.message, "string");
+                    this.lastRunOp = null;
                     return i;
                 } else if (err instanceof DishError || err?.type === "DishError") {
                     dish.set(err.message, "string");
+                    this.lastRunOp = null;
                     return i;
                 } else {
                     const e = typeof err == "string" ? { message: err } : err;

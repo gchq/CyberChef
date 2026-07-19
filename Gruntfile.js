@@ -6,7 +6,7 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 const glob = require("glob");
 const path = require("path");
 
-const nodeFlags = "--experimental-modules --experimental-json-modules --experimental-specifier-resolution=node --no-warnings --no-deprecation";
+const nodeFlags = "--no-warnings --no-deprecation";
 
 /**
  * Grunt configuration for building the app in various formats.
@@ -89,6 +89,8 @@ module.exports = function (grunt) {
     const compileYear = grunt.template.today("UTC:yyyy"),
         compileTime = grunt.template.today("UTC:dd/mm/yyyy HH:MM:ss") + " UTC",
         pkg = grunt.file.readJSON("package.json"),
+        version = process.env.GITHUB_SHA || `v${pkg.version}`,
+        downloadZipFilename = `CyberChef_${version}.zip`,
         webpackConfig = require("./webpack.config.js"),
         BUILD_CONSTANTS = {
             COMPILE_YEAR: JSON.stringify(compileYear),
@@ -129,7 +131,9 @@ module.exports = function (grunt) {
                         chunks: ["main"],
                         compileYear: compileYear,
                         compileTime: compileTime,
-                        version: pkg.version,
+                        version: version,
+                        latestReleaseVersion: pkg.version,
+                        downloadZipFilename: downloadZipFilename,
                         minify: {
                             removeComments: true,
                             collapseWhitespace: true,
@@ -140,7 +144,8 @@ module.exports = function (grunt) {
                     new BundleAnalyzerPlugin({
                         analyzerMode: "static",
                         reportFilename: "BundleAnalyzerReport.html",
-                        openAnalyzer: false
+                        openAnalyzer: false,
+                        excludeAssets: /.*Worker.js/
                     }),
                 ]
             };
@@ -245,7 +250,7 @@ module.exports = function (grunt) {
                     "!build/prod/index.html",
                     "!build/prod/BundleAnalyzerReport.html",
                 ],
-                dest: `build/prod/CyberChef_v${pkg.version}.zip`
+                dest: `build/prod/${downloadZipFilename}`
             }
         },
         connect: {
@@ -333,12 +338,12 @@ module.exports = function (grunt) {
                     switch (process.platform) {
                         case "darwin":
                             return chainCommands([
-                                `shasum -a 256 build/prod/CyberChef_v${pkg.version}.zip | awk '{print $1;}' > build/prod/sha256digest.txt`,
+                                `shasum -a 256 build/prod/${downloadZipFilename} | awk '{print $1;}' > build/prod/sha256digest.txt`,
                                 `sed -i '' -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`
                             ]);
                         default:
                             return chainCommands([
-                                `sha256sum build/prod/CyberChef_v${pkg.version}.zip | awk '{print $1;}' > build/prod/sha256digest.txt`,
+                                `sha256sum build/prod/${downloadZipFilename} | awk '{print $1;}' > build/prod/sha256digest.txt`,
                                 `sed -i -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`
                             ]);
                     }
@@ -362,6 +367,7 @@ module.exports = function (grunt) {
                 command: chainCommands([
                     "echo '\n--- Regenerating config files. ---'",
                     "echo [] > src/core/config/OperationConfig.json",
+                    `node ${nodeFlags} src/core/config/scripts/generateHTMLEntities.mjs`,
                     `node ${nodeFlags} src/core/config/scripts/generateOpsIndex.mjs`,
                     `node ${nodeFlags} src/core/config/scripts/generateConfig.mjs`,
                     "echo '--- Config scripts finished. ---\n'"
@@ -411,25 +417,11 @@ module.exports = function (grunt) {
                 stdout: false,
             },
             fixCryptoApiImports: {
-                command: function () {
-                    switch (process.platform) {
-                        case "darwin":
-                            return `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 sed -i '' -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`;
-                        default:
-                            return `find ./node_modules/crypto-api/src/ \\( -type d -name .git -prune \\) -o -type f -print0 | xargs -0 sed -i -e '/\\.mjs/!s/\\(from "\\.[^"]*\\)";/\\1.mjs";/g'`;
-                    }
-                },
+                command: `node ${nodeFlags} src/core/config/scripts/fixCryptoApiImports.mjs`,
                 stdout: false
             },
             fixSnackbarMarkup: {
-                command: function () {
-                    switch (process.platform) {
-                        case "darwin":
-                            return `sed -i '' 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`;
-                        default:
-                            return `sed -i 's/<div id=snackbar-container\\/>/<div id=snackbar-container>/g' ./node_modules/snackbarjs/src/snackbar.js`;
-                    }
-                },
+                command: `node ${nodeFlags} src/core/config/scripts/fixSnackBarMarkup.mjs`,
                 stdout: false
             },
         },

@@ -9,6 +9,11 @@ import {DELIM_OPTIONS} from "../lib/Delim.mjs";
 import {fromDecimal} from "../lib/Decimal.mjs";
 
 /**
+ * From Decimal delimiters, plus auto-detection. 
+ */
+const FROM_DECIMAL_DELIM_OPTIONS = [...DELIM_OPTIONS, "Auto"];
+
+/**
  * From Decimal operation
  */
 class FromDecimal extends Operation {
@@ -28,7 +33,7 @@ class FromDecimal extends Operation {
             {
                 "name": "Delimiter",
                 "type": "option",
-                "value": DELIM_OPTIONS
+                "value": FROM_DECIMAL_DELIM_OPTIONS
             },
             {
                 "name": "Support signed values",
