@@ -1,7 +1,7 @@
 /**
  * Kolmar Cipher tests.
  *
- * @author Alexei Baranov
+ * @author Alexei Baranov [alex022003@mail.ru]
  *
  * @copyright Crown Copyright 2024
  * @license Apache-2.0
@@ -123,7 +123,8 @@ TestRegister.addTests([
     {
         name: "Kolmar Cipher: encode full demo (3 code words, multiline)",
         input: "не стоит называть кольмара кальмаром ведь он обидится и умрет от печали",
-        expectedOutput: "но еиавкь стз тны\nаомр т ьлаалмрм\nкьаов а\nен дои ьбдсим о\nия т\nуроеаи\nет тпчл",
+        expectedOutput:
+            "но еиавкь стз тны\nаомр т ьлаалмрм\nкьаов а\nен дои ьбдсим о\nия т\nуроеаи\nет тпчл",
         recipeConfig: [
             {
                 op: "Kolmar Cipher",
@@ -134,7 +135,8 @@ TestRegister.addTests([
     {
         name: "Kolmar Cipher: decode full demo (3 code words, multiline)",
         input: "но еиавкь стз тны\nаомр т ьлаалмрм\nкьаов а\nен дои ьбдсим о\nия т\nуроеаи\nет тпчл",
-        expectedOutput: "нестоитназыватькольмаракальмаромведьонобидитсяиумретотпечали",
+        expectedOutput:
+            "нестоитназыватькольмаракальмаромведьонобидитсяиумретотпечали",
         recipeConfig: [
             {
                 op: "Kolmar Cipher",
@@ -254,7 +256,8 @@ TestRegister.addTests([
     {
         name: "Kolmar Cipher: round-trip Russian full demo",
         input: "не стоит называть кольмара кальмаром ведь он обидится и умрет от печали",
-        expectedOutput: "нестоитназыватькольмаракальмаромведьонобидитсяиумретотпечали",
+        expectedOutput:
+            "нестоитназыватькольмаракальмаромведьонобидитсяиумретотпечали",
         recipeConfig: [
             {
                 op: "Kolmar Cipher",
@@ -273,11 +276,21 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "Kolmar Cipher",
-                args: ["programming languages are wonderful", "English", "Encode", true],
+                args: [
+                    "programming languages are wonderful",
+                    "English",
+                    "Encode",
+                    true,
+                ],
             },
             {
                 op: "Kolmar Cipher",
-                args: ["programming languages are wonderful", "English", "Decode", false],
+                args: [
+                    "programming languages are wonderful",
+                    "English",
+                    "Decode",
+                    false,
+                ],
             },
         ],
     },

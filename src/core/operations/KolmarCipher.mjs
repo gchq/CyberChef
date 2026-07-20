@@ -1,5 +1,6 @@
 /**
- * @author Alexei Baranov
+ * @author Alexei Baranov [alex022003@mail.ru]
+ * @author blevotish
  * @copyright Crown Copyright 2024
  * @license Apache-2.0
  */
@@ -21,13 +22,13 @@ const ALPHABETS = {
     Russian: {
         alpha: "абвгдеёжзийклмнопрстуфхцчшщъыьэюя",
         vowels: "аеёиоуыэюя",
-        sonor: "йлмнрь"
+        sonor: "йлмнрь",
     },
     English: {
         alpha: "abcdefghijklmnopqrstuvwxyz",
         vowels: "aeiou",
-        sonor: "lmnrwy"
-    }
+        sonor: "lmnrwy",
+    },
 };
 
 /**
@@ -39,7 +40,8 @@ const ALPHABETS = {
  * @returns {string} "Russian" or "English"
  */
 function detectAlphabet(codeWords) {
-    let ru = 0, en = 0;
+    let ru = 0,
+        en = 0;
     for (const ch of codeWords.toLowerCase()) {
         if (ALPHABETS.Russian.alpha.indexOf(ch) >= 0) ru++;
         else if (ALPHABETS.English.alpha.indexOf(ch) >= 0) en++;
@@ -84,11 +86,11 @@ function letterValue(letter, alpha) {
 function syllables(word, ab) {
     word = word.toLowerCase();
     if (word.indexOf("-") >= 0) {
-        return word.split("-").filter(s => s.length > 0);
+        return word.split("-").filter((s) => s.length > 0);
     }
 
-    const isVowel = ch => ab.vowels.indexOf(ch) >= 0;
-    const isSonor = ch => ab.sonor.indexOf(ch) >= 0;
+    const isVowel = (ch) => ab.vowels.indexOf(ch) >= 0;
+    const isSonor = (ch) => ab.sonor.indexOf(ch) >= 0;
 
     const result = [];
     let cur = "";
@@ -138,13 +140,16 @@ function syllables(word, ab) {
  * @returns {Object[][]} rows - array of rows, each an array of {cap}
  */
 function buildRows(codeWordsStr, ab) {
-    const words = codeWordsStr.trim().split(/\s+/).filter(w => w.length > 0);
+    const words = codeWordsStr
+        .trim()
+        .split(/\s+/)
+        .filter((w) => w.length > 0);
     const rows = [];
     for (const word of words) {
         for (const syllable of syllables(word, ab)) {
             const boxes = [];
             for (const letter of syllable) {
-                boxes.push({cap: letterValue(letter, ab.alpha)});
+                boxes.push({ cap: letterValue(letter, ab.alpha) });
             }
             if (boxes.length > 0) rows.push(boxes);
         }
@@ -166,7 +171,7 @@ function layout(n, rows) {
     if (rows.length === 0) return order;
 
     // Per-box fill counters.
-    const counts = rows.map(row => row.map(() => 0));
+    const counts = rows.map((row) => row.map(() => 0));
 
     // Rows are "born" in order; only born rows participate.
     const aliveRows = [];
@@ -182,7 +187,7 @@ function layout(n, rows) {
     const aliveBoxes = () => {
         const list = [];
         for (const r of aliveRows) {
-            for (let b = 0; b < rows[r].length; b++) list.push({r, b});
+            for (let b = 0; b < rows[r].length; b++) list.push({ r, b });
         }
         return list;
     };
@@ -195,7 +200,7 @@ function layout(n, rows) {
         let openCount = 0;
         let onlyOpen = -1;
         for (let idx = 0; idx < boxes.length; idx++) {
-            const {r, b} = boxes[idx];
+            const { r, b } = boxes[idx];
             if (counts[r][b] < rows[r][b].cap) {
                 openCount++;
                 onlyOpen = idx;
@@ -237,7 +242,7 @@ function layout(n, rows) {
         let found = -1;
         for (let step = 1; step <= m; step++) {
             const idx = (cur + step) % m;
-            const {r, b} = boxes[idx];
+            const { r, b } = boxes[idx];
             if (counts[r][b] < rows[r][b].cap) {
                 found = idx;
                 break;
@@ -272,7 +277,6 @@ function clean(text, alpha) {
  * Kolmar Cipher operation.
  */
 class KolmarCipher extends Operation {
-
     /**
      * KolmarCipher constructor
      */
@@ -281,30 +285,31 @@ class KolmarCipher extends Operation {
 
         this.name = "Kolmar Cipher";
         this.module = "Ciphers";
-        this.description = "A custom transposition cipher driven by one or more code words, working on either the Russian or English alphabet.<br><br>Each code word is split into syllables (use a hyphen to divide syllables manually, e.g. <code>коль-мар</code> / <code>ho-tel</code>); every syllable defines a row of boxes and every letter's alphabet position gives the capacity of a box. The cleaned text (letters of the chosen alphabet only, everything else is dropped) is dealt into the boxes row by row, birthing new rows as boxes fill up, and read back out box by box to form the cipher text.<br><br>With <code>Alphabet</code> set to <code>Auto</code> the alphabet is inferred from the code words. Decoding reverses the layout, returning the run-together plaintext (spaces are not restored because they are never encoded).";
+        this.description =
+            "A custom transposition cipher driven by one or more code words, working on either the Russian or English alphabet.<br><br>Each code word is split into syllables (use a hyphen to divide syllables manually, e.g. <code>коль-мар</code> / <code>ho-tel</code>); every syllable defines a row of boxes and every letter's alphabet position gives the capacity of a box. The cleaned text (letters of the chosen alphabet only, everything else is dropped) is dealt into the boxes row by row, birthing new rows as boxes fill up, and read back out box by box to form the cipher text.<br><br>With <code>Alphabet</code> set to <code>Auto</code> the alphabet is inferred from the code words. Decoding reverses the layout, returning the run-together plaintext (spaces are not restored because they are never encoded).";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
             {
                 name: "Code words",
                 type: "string",
-                value: ""
+                value: "",
             },
             {
                 name: "Alphabet",
                 type: "option",
-                value: ["Auto", "Russian", "English"]
+                value: ["Auto", "Russian", "English"],
             },
             {
                 name: "Mode",
                 type: "option",
-                value: ["Encode", "Decode"]
+                value: ["Encode", "Decode"],
             },
             {
                 name: "Squash to single line",
                 type: "boolean",
-                value: false
-            }
+                value: false,
+            },
         ];
     }
 
@@ -316,7 +321,8 @@ class KolmarCipher extends Operation {
     run(input, args) {
         const [codeWords, alphabetArg, mode, squash] = args;
 
-        const lang = alphabetArg === "Auto" ? detectAlphabet(codeWords) : alphabetArg;
+        const lang =
+            alphabetArg === "Auto" ? detectAlphabet(codeWords) : alphabetArg;
         const ab = ALPHABETS[lang] || ALPHABETS.Russian;
 
         const rows = buildRows(codeWords, ab);
@@ -344,7 +350,7 @@ class KolmarCipher extends Operation {
         const order = layout(cleaned.length, rows);
 
         // Deal the letters into their boxes, preserving insertion order.
-        const boxLetters = rows.map(row => row.map(() => []));
+        const boxLetters = rows.map((row) => row.map(() => []));
         for (let k = 0; k < order.length; k++) {
             boxLetters[order[k].r][order[k].b].push(cleaned[k]);
         }
@@ -354,7 +360,8 @@ class KolmarCipher extends Operation {
         for (let r = 0; r < rows.length; r++) {
             const parts = [];
             for (let b = 0; b < rows[r].length; b++) {
-                if (boxLetters[r][b].length > 0) parts.push(boxLetters[r][b].join(""));
+                if (boxLetters[r][b].length > 0)
+                    parts.push(boxLetters[r][b].join(""));
             }
             if (parts.length > 0) lines.push(parts.join(" "));
         }
@@ -377,7 +384,7 @@ class KolmarCipher extends Operation {
         const order = layout(cipher.length, rows);
 
         // For each box, the original indices of the letters it holds, in order.
-        const boxPositions = rows.map(row => row.map(() => []));
+        const boxPositions = rows.map((row) => row.map(() => []));
         for (let k = 0; k < order.length; k++) {
             boxPositions[order[k].r][order[k].b].push(k);
         }
@@ -396,7 +403,6 @@ class KolmarCipher extends Operation {
 
         return plain.join("");
     }
-
 }
 
 export default KolmarCipher;
