@@ -367,6 +367,7 @@ module.exports = function (grunt) {
                 command: chainCommands([
                     "echo '\n--- Regenerating config files. ---'",
                     "echo [] > src/core/config/OperationConfig.json",
+                    `node ${nodeFlags} src/core/config/scripts/generateHTMLEntities.mjs`,
                     `node ${nodeFlags} src/core/config/scripts/generateOpsIndex.mjs`,
                     `node ${nodeFlags} src/core/config/scripts/generateConfig.mjs`,
                     "echo '--- Config scripts finished. ---\n'"
