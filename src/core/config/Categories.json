@@ -155,6 +155,7 @@
             "Rail Fence Cipher Encode",
             "Rail Fence Cipher Decode",
             "Atbash Cipher",
+            "Kolmar Cipher",
             "CipherSaber2 Encrypt",
             "CipherSaber2 Decrypt",
             "Cetacean Cipher Encode",
