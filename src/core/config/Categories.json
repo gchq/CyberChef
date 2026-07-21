@@ -49,6 +49,7 @@
             "Escape Unicode Characters",
             "Unescape Unicode Characters",
             "Normalise Unicode",
+            "Escape Smart Characters",
             "To Quoted Printable",
             "From Quoted Printable",
             "To Punycode",
@@ -82,7 +83,9 @@
             "Rison Decode",
             "To Modhex",
             "From Modhex",
-            "MIME Decoding"
+            "MIME Decoding",
+            "To COBS",
+            "From COBS"
         ]
     },
     {
@@ -112,12 +115,19 @@
             "SM4 Decrypt",
             "RC6 Encrypt",
             "RC6 Decrypt",
+            "Ascon Encrypt",
+            "Ascon Decrypt",
+            "PRESENT Encrypt",
+            "PRESENT Decrypt",
+            "Twofish Encrypt",
+            "Twofish Decrypt",
             "GOST Encrypt",
             "GOST Decrypt",
             "GOST Sign",
             "GOST Verify",
             "GOST Key Wrap",
             "GOST Key Unwrap",
+            "ROR13",
             "ROT13",
             "ROT13 Brute Force",
             "ROT47",
@@ -127,6 +137,10 @@
             "XOR Brute Force",
             "Vigenère Encode",
             "Vigenère Decode",
+            "TEA Encrypt",
+            "TEA Decrypt",
+            "XTEA Encrypt",
+            "XTEA Decrypt",
             "XXTEA Encrypt",
             "XXTEA Decrypt",
             "To Morse Code",
@@ -161,6 +175,7 @@
             "AES Key Wrap",
             "AES Key Unwrap",
             "Pseudo-Random Number Generator",
+            "Pseudo-Random Prime Generator",
             "Enigma",
             "Bombe",
             "Multiple Bombe",
@@ -188,6 +203,7 @@
             "Generate PGP Key Pair",
             "PGP Encrypt",
             "PGP Decrypt",
+            "PGP Sign",
             "PGP Verify",
             "PGP Encrypt and Sign",
             "PGP Decrypt and Verify",
@@ -229,9 +245,8 @@
             "Multiply",
             "Divide",
             "MOD",
-            "Modular Exponentiation",
-            "Modular Inverse",
             "Extended GCD",
+            "Modular Inverse",
             "Mean",
             "Median",
             "Standard Deviation",
@@ -239,6 +254,7 @@
             "Bit shift right",
             "Rotate left",
             "Rotate right",
+            "ROR13",
             "ROT13",
             "ROT8000"
         ]
@@ -304,6 +320,7 @@
             "Diff",
             "Remove whitespace",
             "Remove null bytes",
+            "Remove ANSI Escape Codes",
             "To Upper case",
             "To Lower case",
             "Swap case",
@@ -442,6 +459,8 @@
             "BLAKE2b",
             "BLAKE2s",
             "BLAKE3",
+            "Ascon Hash",
+            "Ascon MAC",
             "GOST Hash",
             "Streebog",
             "SSDEEP",
@@ -554,7 +573,7 @@
             "Scatter chart",
             "Series chart",
             "Heatmap chart",
-            "Extract Audio Metadata"
+            "Render PDF"
         ]
     },
     {
@@ -580,7 +599,8 @@
             "HTML To Text",
             "Generate Lorem Ipsum",
             "Numberwang",
-            "XKCD Random Number"
+            "XKCD Random Number",
+            "Automated Validation Test Op"
         ]
     },
     {

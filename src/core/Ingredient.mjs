@@ -32,6 +32,8 @@ class Ingredient {
         this.min = null;
         this.max = null;
         this.step = 1;
+        this.integer = false;
+        this.allowEmpty = true;
 
         if (ingredientConfig) {
             this._parseConfig(ingredientConfig);
@@ -59,6 +61,96 @@ class Ingredient {
         this.min = ingredientConfig.min;
         this.max = ingredientConfig.max;
         this.step = ingredientConfig.step;
+        this.integer = typeof ingredientConfig.integer !== "undefined" ? !!ingredientConfig.integer : false;
+        this.allowEmpty = typeof ingredientConfig.allowEmpty !== "undefined" ? !!ingredientConfig.allowEmpty : true;
+    }
+
+
+    /**
+     * Validates the given value against the constraints of this ingredient.
+     *
+     * @param {*} val
+     * @returns {boolean}
+     */
+    validate(val) {
+        if (this.disabled) return true;
+
+        let checkVal = val;
+        if (checkVal === null || checkVal === undefined) {
+            checkVal = this.defaultValue;
+        }
+
+        if (this.type === "toggleString" && checkVal && typeof checkVal === "object" && "string" in checkVal) {
+            checkVal = checkVal.string;
+        }
+        if (this.type === "option" && Array.isArray(checkVal)) {
+            checkVal = checkVal[this.defaultIndex ?? 0];
+        }
+
+        // 1. check if empty
+        let isEmpty = false;
+        if (checkVal === null || checkVal === undefined || checkVal === "") {
+            isEmpty = true;
+        } else if (typeof checkVal.length === "number" && checkVal.length === 0) {
+            isEmpty = true;
+        }
+
+        if (isEmpty) {
+            let isAllowedOptionEmpty = false;
+            if (this.type === "option" && Array.isArray(this.defaultValue)) {
+                isAllowedOptionEmpty = this.defaultValue.includes("");
+            }
+            if (this.allowEmpty === false || (this.type === "option" && !isAllowedOptionEmpty)) {
+                throw new OperationError(`${this.name} cannot be empty.`);
+            }
+            return true;
+        }
+
+        // 2. maxLength check
+        if (typeof this.maxLength === "number" && checkVal !== null && checkVal !== undefined) {
+            if (typeof checkVal === "string" && checkVal.length > this.maxLength) {
+                throw new OperationError(`${this.name} length cannot exceed ${this.maxLength}.`);
+            }
+            if (Array.isArray(checkVal) && checkVal.length > this.maxLength) {
+                throw new OperationError(`${this.name} length cannot exceed ${this.maxLength}.`);
+            }
+            if (checkVal instanceof Uint8Array && checkVal.length > this.maxLength) {
+                throw new OperationError(`${this.name} length cannot exceed ${this.maxLength}.`);
+            }
+        }
+
+        // 3. number checks
+        if (this.type === "number") {
+            if (checkVal === null || checkVal === undefined || isNaN(checkVal)) {
+                throw new OperationError(`${this.name} must be a number.`);
+            }
+            if (this.integer && !Number.isInteger(checkVal)) {
+                throw new OperationError(`${this.name} must be an integer.`);
+            }
+            if (typeof this.min === "number" && checkVal < this.min) {
+                throw new OperationError(`${this.name} must be greater than or equal to ${this.min}.`);
+            }
+            if (typeof this.max === "number" && checkVal > this.max) {
+                throw new OperationError(`${this.name} must be less than or equal to ${this.max}.`);
+            }
+        }
+
+        // 4. option checks
+        if (this.type === "option") {
+            if (Array.isArray(this.defaultValue)) {
+                const permittedOptions = this.defaultValue.filter(opt => {
+                    if (typeof opt !== "string") return false;
+                    return !opt.match(/^\[\/?[a-z0-9 -()^]+\]$/i);
+                });
+                const valStr = (checkVal !== null && checkVal !== undefined) ? String(checkVal).toLowerCase() : "";
+                const matchedOption = permittedOptions.find(opt => opt.toLowerCase() === valStr);
+                if (!matchedOption) {
+                    throw new OperationError(`${this.name} must be one of the following: ${permittedOptions.join(", ")}.`);
+                }
+            }
+        }
+
+        return true;
     }
 
 

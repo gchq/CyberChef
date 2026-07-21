@@ -6,6 +6,8 @@
 
 import Operation from "../Operation.mjs";
 
+const MAX_LINE_WIDTH = 65536;
+
 /**
  * Wrap operation
  */
@@ -27,6 +29,9 @@ class Wrap extends Operation {
                 "name": "Line Width",
                 "type": "number",
                 "value": 64,
+                "min": 1,
+                "max": MAX_LINE_WIDTH,
+                "integer": true,
             },
         ];
     }
