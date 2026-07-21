@@ -828,7 +828,7 @@ class App {
 
 
     /**
-     * Handler for the history popstate event.
+     * Handler for history popstate and hashchange events.
      * Reloads parameters from the URL.
      *
      * @param {event} e
