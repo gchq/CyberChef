@@ -521,7 +521,8 @@
             "BSON deserialise",
             "To MessagePack",
             "From MessagePack",
-            "Render Markdown"
+            "Render Markdown",
+            "From JS6Chars"
         ]
     },
     {
