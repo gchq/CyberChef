@@ -298,7 +298,8 @@
             "Decode NetBIOS Name",
             "Defang URL",
             "Fang URL",
-            "Defang IP Addresses"
+            "Defang IP Addresses",
+            "Fang IP Addresses"
         ]
     },
     {
