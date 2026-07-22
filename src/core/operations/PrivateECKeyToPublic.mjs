@@ -24,12 +24,16 @@ const OUTPUT_OPTIONS = ["Public Key Only", "Private,Public", "Public,Private"];
  * @returns
  */
 function formatOutput(privateKey, publicKey, option) {
-    if (option === "Public Key Only") {
-        return publicKey;
-    } else if (option === "Private,Public") {
-        return privateKey+","+publicKey;
-    } else if (option === "Public,Private") {
-        return publicKey+","+privateKey;
+    switch (option) {
+        case "Public Key Only":
+            return publicKey;
+        case "Private,Public":
+            return privateKey+","+publicKey;
+        case "Public,Private":
+            return publicKey+","+privateKey;
+        default:
+            throw OperationError("Invalid output format option: " + option + ".");
+
     }
 }
 /**
@@ -105,6 +109,8 @@ class PrivateECKeyToPublic extends Operation {
             const ed = new ec.eddsa("ed25519");
             const publicKeyHex = ed.keyFromSecret(processedInput).getPublic("hex");
             return formatOutput(processedInput, publicKeyHex, args[2]);
+        } else {
+            throw OperationError("Unexpected curve selection: " + args[1] + ".");
         }
 
 
