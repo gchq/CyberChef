@@ -77,6 +77,10 @@ function transformArgs(opArgsList, newArgs) {
             return !Array.isArray(arg.value) ? arg.value : arg.value[arg.defaultIndex ?? 0];
         }
 
+        if (arg.type === "argSelector") {
+            return !Array.isArray(arg.value) ? arg.value : (arg.value[arg.defaultIndex ?? 0]?.name || "");
+        }
+
         if (arg.type === "editableOption") {
             return typeof arg.value === "string" ? arg.value : arg.value[arg.defaultIndex ?? 0].value;
         }

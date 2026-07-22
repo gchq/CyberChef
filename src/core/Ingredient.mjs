@@ -86,6 +86,9 @@ class Ingredient {
         if (this.type === "option" && Array.isArray(checkVal)) {
             checkVal = checkVal[this.defaultIndex ?? 0];
         }
+        if (this.type === "argSelector" && Array.isArray(checkVal)) {
+            checkVal = checkVal[this.defaultIndex ?? 0]?.name || "";
+        }
 
         // 1. check if empty
         let isEmpty = false;
@@ -99,8 +102,10 @@ class Ingredient {
             let isAllowedOptionEmpty = false;
             if (this.type === "option" && Array.isArray(this.defaultValue)) {
                 isAllowedOptionEmpty = this.defaultValue.includes("");
+            } else if (this.type === "argSelector" && Array.isArray(this.defaultValue)) {
+                isAllowedOptionEmpty = this.defaultValue.some(opt => opt.name === "");
             }
-            if (this.allowEmpty === false || (this.type === "option" && !isAllowedOptionEmpty)) {
+            if (this.allowEmpty === false || ((this.type === "option" || this.type === "argSelector") && !isAllowedOptionEmpty)) {
                 throw new OperationError(`${this.name} cannot be empty.`);
             }
             return true;
@@ -142,6 +147,23 @@ class Ingredient {
                     if (typeof opt !== "string") return false;
                     return !opt.match(/^\[\/?[a-z0-9 -()^]+\]$/i);
                 });
+                const valStr = (checkVal !== null && checkVal !== undefined) ? String(checkVal).toLowerCase() : "";
+                const matchedOption = permittedOptions.find(opt => opt.toLowerCase() === valStr);
+                if (!matchedOption) {
+                    throw new OperationError(`${this.name} must be one of the following: ${permittedOptions.join(", ")}.`);
+                }
+            }
+        }
+
+        // 5. argSelector checks
+        if (this.type === "argSelector") {
+            if (Array.isArray(this.defaultValue)) {
+                const permittedOptions = this.defaultValue
+                    .map(opt => opt.name)
+                    .filter(optName => {
+                        if (typeof optName !== "string") return false;
+                        return !optName.match(/^\[\/?[a-z0-9 -()^]+\]$/i);
+                    });
                 const valStr = (checkVal !== null && checkVal !== undefined) ? String(checkVal).toLowerCase() : "";
                 const matchedOption = permittedOptions.find(opt => opt.toLowerCase() === valStr);
                 if (!matchedOption) {
