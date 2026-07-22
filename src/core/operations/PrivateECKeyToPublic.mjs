@@ -48,13 +48,13 @@ class PrivateECKeyToPublic extends Operation {
 
         this.name = "Private EC Key to Public Key";
         this.module = "Default";
-        this.description = "Turns a private key to the appropriate ECC public key. Right now assumes the private key is a private key to the Secp256k1 curve.";
+        this.description = "Turns a private key to the appropriate ECC public key. Covers secp256k1 and ed25519 curves. For secp256k1 curves we can output either compressed or uncompressed public keys. ED25519 keys are slightly different, in this case we differentiate between clamped scalar multiplication (used most often) or unclamped (less frequently used, though used in Monero addresses).";
         this.inputType = "string";
         this.outputType = "string";
         this.infoURL = "https://en.bitcoin.it/wiki/Secp256k1";
         this.args = [
             {
-                "name": "Compressed",
+                "name": "Compressed/Clamped",
                 "type": "boolean",
                 "value": true
             },
@@ -106,9 +106,18 @@ class PrivateECKeyToPublic extends Operation {
             const pubkey = key.getPublic(args[0], "hex");
             return formatOutput(processedInput, pubkey, args[2]);
         } else if (args[1] === "ed25519") {
-            const ed = new ec.eddsa("ed25519");
-            const publicKeyHex = ed.keyFromSecret(processedInput).getPublic("hex");
-            return formatOutput(processedInput, publicKeyHex, args[2]);
+            if (args[0]) {
+                const ed = new ec.eddsa("ed25519");
+                const publicKeyHex = ed.keyFromSecret(processedInput).getPublic("hex");
+                return formatOutput(processedInput, publicKeyHex, args[2]);
+            } else {
+                const ed = new ec.eddsa("ed25519");
+                const scalarBytes = Buffer.from(processedInput, "hex");
+                const scalar = ed.decodeInt([...scalarBytes]);
+                const point = ed.g.mul(scalar);
+                const encodedPoint = Buffer.from(ed.encodePoint(point));
+                return encodedPoint.toString("hex");
+            }
         } else {
             throw OperationError("Unexpected curve selection: " + args[1] + ".");
         }
