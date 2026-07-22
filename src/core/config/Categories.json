@@ -531,6 +531,7 @@
             "Scan for Embedded Files",
             "Extract Files",
             "YARA Rules",
+            "YARA-X Scan",
             "Remove EXIF",
             "Extract EXIF",
             "Extract RGBA",
