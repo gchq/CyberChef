@@ -257,6 +257,28 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "ROT13 Brute Force: includes pass-through",
+        input: "Abc123",
+        expectedMatch: /^Amount = {2}0: Abc123\nAmount = {2}1:/,
+        recipeConfig: [
+            {
+                op: "ROT13 Brute Force",
+                args: [true, true, true, 100, 0, true, ""]
+            },
+        ],
+    },
+    {
+        name: "ROT13 Brute Force: filters a pass-through sample",
+        input: "__Ab1__",
+        expectedOutput: "Ab1",
+        recipeConfig: [
+            {
+                op: "ROT13 Brute Force",
+                args: [true, true, true, 3, 2, false, "ab1"]
+            },
+        ],
+    },
+    {
         name: "ROT47: nothing",
         input: "",
         expectedOutput: "",
