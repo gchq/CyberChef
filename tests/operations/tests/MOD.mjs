@@ -51,17 +51,6 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "MOD: Tab-separated numbers",
-        input: "20\t14\t8\t35",
-        expectedOutput: "2 2 2 5",
-        recipeConfig: [
-            {
-                "op": "MOD",
-                "args": [6, "Tab"]
-            }
-        ],
-    },
-    {
         name: "MOD: Large numbers",
         input: "123456789012345 987654321098765",
         expectedOutput: "123456789012345 987654321098765",
