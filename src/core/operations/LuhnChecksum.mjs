@@ -81,8 +81,15 @@ class LuhnChecksum extends Operation {
             throw new OperationError("Error: Radix argument must be divisible by 2");
         }
 
-        const checkSum = this.checksum(input, radix).toString(radix);
-        let checkDigit = this.checksum(input + "0", radix);
+        let checkSum, checkDigit;
+
+        try {
+            checkSum = this.checksum(input, radix).toString(radix);
+            checkDigit = this.checksum(input + "0", radix);
+        } catch (err) {
+            throw new OperationError(err.message);
+        }
+
         checkDigit = checkDigit === 0 ? 0 : (radix - checkDigit);
         checkDigit = checkDigit.toString(radix);
 
