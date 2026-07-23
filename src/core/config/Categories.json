@@ -245,6 +245,7 @@
             "Subtract",
             "Multiply",
             "Divide",
+            "MOD",
             "Extended GCD",
             "Modular Inverse",
             "Mean",
