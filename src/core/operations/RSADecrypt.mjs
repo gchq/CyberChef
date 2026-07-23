@@ -24,8 +24,8 @@ class RSADecrypt extends Operation {
         this.module = "Ciphers";
         this.description = "Decrypt an RSA encrypted message with a PEM encoded private key.";
         this.infoURL = "https://wikipedia.org/wiki/RSA_(cryptosystem)";
-        this.inputType = "string";
-        this.outputType = "string";
+        this.inputType = "byteArray";
+        this.outputType = "byteArray";
         this.args = [
             {
                 name: "RSA Private Key (PEM)",
@@ -63,9 +63,9 @@ class RSADecrypt extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      */
     run(input, args) {
         const [pemKey, password, scheme, md] = args;
@@ -74,8 +74,9 @@ class RSADecrypt extends Operation {
         }
         try {
             const privKey = forge.pki.decryptRsaPrivateKey(pemKey, password);
-            const dMsg = privKey.decrypt(input, scheme, {md: MD_ALGORITHMS[md].create()});
-            return forge.util.decodeUtf8(dMsg);
+            const encryptedBytes = forge.util.binary.raw.encode(Uint8Array.from(input));
+            const dMsg = privKey.decrypt(encryptedBytes, scheme, {md: MD_ALGORITHMS[md].create()});
+            return Array.from(forge.util.binary.raw.decode(dMsg));
         } catch (err) {
             throw new OperationError(err);
         }
