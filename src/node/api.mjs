@@ -10,6 +10,8 @@
 
 import NodeDish from "./NodeDish.mjs";
 import NodeRecipe from "./NodeRecipe.mjs";
+import Dish from "../core/Dish.mjs";
+import Utils from "../core/Utils.mjs";
 import OperationConfig from "../core/config/OperationConfig.json" with { type: "json" };
 import { sanitise, removeSubheadingsFromArray, sentenceToCamelCase } from "./apiUtils.mjs";
 import ExcludedOperationError from "../core/errors/ExcludedOperationError.mjs";
@@ -118,7 +120,9 @@ function ensureIsDish(input) {
  * @param args - operation args
  */
 function prepareOp(opInstance, input, args) {
-    const dish = ensureIsDish(input);
+    const dish = typeof input === "string" && opInstance.inputType === "ArrayBuffer" ?
+        new NodeDish(Utils.strToUtf8ArrayBuffer(input), Dish.ARRAY_BUFFER) :
+        ensureIsDish(input);
     // Transform object-style args to original args array
     const transformedArgs = transformArgs(opInstance.args, args);
     const transformedInput = dish.get(opInstance.inputType);
@@ -242,6 +246,7 @@ export function _wrap(OpClass) {
 
     // used in chef.help
     wrapped.opName = OpClass.name;
+    wrapped.inputType = opInstance.inputType;
     wrapped.args = createArgInfo(opInstance);
     // Used in NodeRecipe to check for flowControl ops
     wrapped.flowControl = isFlowControl;
@@ -329,7 +334,9 @@ export function help(input) {
  */
 export async function bake(input, recipeConfig) {
     const recipe = new NodeRecipe(recipeConfig);
-    const dish = ensureIsDish(input);
+    const dish = typeof input === "string" && recipe.firstActiveInputType() === "ArrayBuffer" ?
+        new NodeDish(Utils.strToUtf8ArrayBuffer(input), Dish.ARRAY_BUFFER) :
+        ensureIsDish(input);
     return await recipe.execute(dish);
 }
 
