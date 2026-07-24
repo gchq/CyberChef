@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import { format } from "../lib/Ciphers.mjs";
+import { format, parseFormatString } from "../lib/Ciphers.mjs";
 import CryptoJS from "crypto-js";
 
 /**
@@ -57,7 +57,7 @@ class RC4Drop extends Operation {
      */
     run(input, args) {
         const message = format[args[1]].parse(input),
-            passphrase = format[args[0].option].parse(args[0].string),
+            passphrase = parseFormatString(args[0].string, args[0].option),
             drop = args[3],
             encrypted = CryptoJS.RC4Drop.encrypt(message, passphrase, { drop: drop });
 
