@@ -83,7 +83,9 @@
             "Rison Decode",
             "To Modhex",
             "From Modhex",
-            "MIME Decoding"
+            "MIME Decoding",
+            "To COBS",
+            "From COBS"
         ]
     },
     {
@@ -173,6 +175,7 @@
             "AES Key Wrap",
             "AES Key Unwrap",
             "Pseudo-Random Number Generator",
+            "Pseudo-Random Prime Generator",
             "Enigma",
             "Bombe",
             "Multiple Bombe",
@@ -241,9 +244,9 @@
             "Subtract",
             "Multiply",
             "Divide",
-            "Modular Exponentiation",
-            "Modular Inverse",
+            "MOD",
             "Extended GCD",
+            "Modular Inverse",
             "Mean",
             "Median",
             "Standard Deviation",
