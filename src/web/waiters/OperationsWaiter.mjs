@@ -326,6 +326,85 @@ class OperationsWaiter {
         }
     }
 
+
+    /**
+     * Handler for toggling the display of operation categories in popovers.
+     * Repopulates the operations list to show/hide category information.
+     */
+    toggleOpCategories() {
+        // Repopulate operations list to apply the option change
+        this.app.populateOperationsList();
+        this.manager.recipe.initialiseOperationDragNDrop();
+
+        // Refresh search results if search is active
+        const searchInput = document.getElementById("search");
+        if (searchInput && searchInput.value) {
+            this.searchOperations({target: searchInput});
+        }
+    }
+
+
+    /**
+     * Handler for clicking a category link in an operation popover.
+     * Clears the search and opens the clicked category.
+     *
+     * @param {event} e
+     */
+    categoryLinkClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Bootstrap's popover sanitizer strips custom data-* attributes, so the
+        // category ID is derived from the link text using the same scheme as
+        // HTMLCategory.toHtml()
+        const catName = e.target.textContent;
+        if (!catName) return;
+        const categoryId = "cat" + catName.replace(/[\s/\-:_]/g, "");
+
+        // Hide all popovers
+        $("[data-toggle=popover]").popover("hide");
+
+        // Clear search
+        const searchInput = document.getElementById("search");
+        if (searchInput) {
+            searchInput.value = "";
+        }
+
+        // Clear search results
+        const searchResults = document.getElementById("search-results");
+        if (searchResults) {
+            while (searchResults.firstChild) {
+                try {
+                    $(searchResults.firstChild).popover("dispose");
+                } catch (err) {}
+                searchResults.removeChild(searchResults.firstChild);
+            }
+        }
+
+        // Open the target category. The accordion behaviour (data-parent) closes
+        // any other open category automatically. Calling "show" on an already
+        // open category would toggle-close it mid-transition, so skip it.
+        const categoryElement = document.getElementById(categoryId);
+        if (!categoryElement) return;
+
+        const showCategory = function() {
+            if (!categoryElement.classList.contains("show")) {
+                $(categoryElement).collapse("show");
+            }
+            categoryElement.scrollIntoView({behavior: "smooth", block: "nearest"});
+        };
+
+        // Bootstrap ignores "show" while another panel in the accordion is still
+        // mid-transition (e.g. a category collapsed by the search box a moment
+        // earlier), so wait for any in-progress transition to finish first.
+        const transitioning = document.querySelector("#categories .collapsing");
+        if (transitioning) {
+            $(transitioning).one("hidden.bs.collapse shown.bs.collapse", showCategory);
+        } else {
+            showCategory();
+        }
+    }
+
 }
 
 export default OperationsWaiter;
