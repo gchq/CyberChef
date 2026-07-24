@@ -165,6 +165,7 @@
             "Derive PBKDF2 key",
             "Derive EVP key",
             "Derive HKDF key",
+            "Generate NTLMv2 SMB Session Key",
             "Bcrypt",
             "Scrypt",
             "JWT Sign",
