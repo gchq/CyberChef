@@ -193,6 +193,14 @@
     "xregexp": "^5.1.2",
     "zlibjs": "^0.3.1"
   },
+  "allowScripts": {
+    "@nightwatch/nightwatch-inspector@1.0.1": true,
+    "chromedriver@150.0.3": true,
+    "core-js": false,
+    "core-js-pure": false,
+    "fsevents": false,
+    "tesseract.js": false
+  },
   "scripts": {
     "start": "npx grunt dev",
     "build": "npx grunt prod",
