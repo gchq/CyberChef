@@ -52,9 +52,15 @@ class ViewBitPlane extends Operation {
         if (!isImage(input))
             throw new OperationError("Please enter a valid image file.");
 
-        const [colour, bit] = args,
-            parsedImage = await Jimp.read(input),
-            width = parsedImage.bitmap.width,
+        const [colour, bit] = args;
+        let parsedImage;
+        try {
+            parsedImage = await Jimp.read(input);
+        } catch (err) {
+            throw new OperationError(`Error loading image. (${err})`);
+        }
+
+        const width = parsedImage.bitmap.width,
             height = parsedImage.bitmap.height,
             colourIndex = COLOUR_OPTIONS.indexOf(colour),
             bitIndex = 7 - bit;

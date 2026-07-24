@@ -8,6 +8,8 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
+const MAX_WIDTH = 65536;
+
 /**
  * To Hexdump operation
  */
@@ -30,7 +32,8 @@ class ToHexdump extends Operation {
                 "name": "Width",
                 "type": "number",
                 "value": 16,
-                "min": 1
+                "min": 1,
+                "max": MAX_WIDTH
             },
             {
                 "name": "Upper case hex",
@@ -62,6 +65,9 @@ class ToHexdump extends Operation {
 
         if (length < 1 || Math.round(length) !== length)
             throw new OperationError("Width must be a positive integer");
+
+        if (length > MAX_WIDTH)
+            throw new OperationError(`Width must be no more than ${MAX_WIDTH}`);
 
         const lines = [];
         for (let i = 0; i < data.length; i += length) {

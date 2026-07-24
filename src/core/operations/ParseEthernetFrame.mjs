@@ -92,7 +92,7 @@ class ParseEthernetFrame extends Operation {
         const packetData = input.slice(offset);
 
         if (outputFormat === "Packet data") {
-            return Utils.byteArrayToChars(packetData);
+            return Utils.escapeHtml(Utils.byteArrayToChars(packetData));
         } else if (outputFormat === "Packet data (hex)") {
             return toHex(packetData);
         } else if (outputFormat === "Text output") {

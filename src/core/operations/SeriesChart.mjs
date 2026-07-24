@@ -16,6 +16,20 @@ const d3 = d3temp.default ? d3temp.default : d3temp;
 const nodom = nodomtemp.default ? nodomtemp.default: nodomtemp;
 
 /**
+ * Removes D3's internal bound data from a nodom tree before serialization.
+ * nodom serializes enumerable expando properties such as __data__ as attributes,
+ * so leaving them on attacker-controlled values can create executable markup.
+ *
+ * @param {Object} node
+ */
+function clearD3BoundData(node) {
+    delete node.__data__;
+
+    if (!node.childNodes) return;
+    node.childNodes.forEach(clearD3BoundData);
+}
+
+/**
  * Series chart operation
  */
 class SeriesChart extends Operation {
@@ -221,6 +235,8 @@ class SeriesChart extends Operation {
                 .attr("transform", "rotate(-90)")
                 .text(serie.name);
         });
+
+        clearD3BoundData(svg.node());
 
         return svg._groups[0][0].outerHTML;
     }

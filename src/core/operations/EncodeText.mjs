@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import cptable from "codepage";
 import {CHR_ENC_CODE_PAGES} from "../lib/ChrEnc.mjs";
 
@@ -48,6 +49,9 @@ class EncodeText extends Operation {
      */
     run(input, args) {
         const format = CHR_ENC_CODE_PAGES[args[0]];
+        if (!format) {
+            throw new OperationError("Invalid encoding");
+        }
         const encoded = cptable.utils.encode(format, input);
         return new Uint8Array(encoded).buffer;
     }

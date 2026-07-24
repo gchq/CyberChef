@@ -59,6 +59,7 @@ TestRegister.addTests([
                         "option": "Hex",
                         "string": "$R0"
                     },
+                    16,
                     "CTR", "Hex", "Raw",
                     {
                         "option": "Hex",
@@ -67,7 +68,8 @@ TestRegister.addTests([
                     {
                         "option": "Hex",
                         "string": ""
-                    }
+                    },
+                    "Off"
                 ]
             }
         ]

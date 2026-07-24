@@ -1,0 +1,62 @@
+name: Close Stale Unsigned CLA PRs
+
+on:
+  schedule:
+    # Runs daily at 01:30 UTC.
+    - cron: '30 1 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+# Configurable intervals (days).
+#   DAYS_BEFORE_WARNING = grace period before the warning comment.
+#   DAYS_BEFORE_CLOSURE = further period after the warning before closing.
+env:
+  DAYS_BEFORE_WARNING: 7
+  DAYS_BEFORE_CLOSURE: 21
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Close stale unsigned-CLA PRs
+        uses: actions/stale@1e223db275d687790206a7acac4d1a11bd6fe629 #v10.4.0
+        with:
+          # ---- Guards: only act on PRs carrying the CLA label ----
+          only-labels: 'awaiting cla'
+
+          # Never touch issues — PRs only.
+          days-before-issue-stale: -1
+          days-before-issue-close: -1
+
+          # ---- Timing ----
+          # DAYS_BEFORE_WARNING: days of inactivity before the warning comment.
+          days-before-pr-stale: ${{ env.DAYS_BEFORE_WARNING }}
+          # DAYS_BEFORE_CLOSURE: days after being marked stale before closing.
+          days-before-pr-close: ${{ env.DAYS_BEFORE_CLOSURE }}
+
+          # ---- Warning comment (posted once when marked stale) ----
+          stale-pr-message: >
+            As we are unable to accept contributions unless the CLA has
+            been signed, this PR will be automatically closed if the CLA
+            is not signed within ${{ env.DAYS_BEFORE_CLOSURE }} days.
+
+          # ---- Close comment ----
+          close-pr-message: >
+            This PR has been automatically closed as the CLA remains
+            unsigned. We will be happy to have it reopened if the CLA
+            is signed subsequently.
+
+          # A dedicated marker label so we can track stale state without
+          # interfering with the "awaiting cla" label.
+          stale-pr-label: 'cla-stale'
+
+          # If the PR is updated after being marked stale, remove the marker
+          # so the warning-then-close cycle restarts cleanly.
+          remove-pr-stale-when-updated: true
+
+          # Process enough PRs per run for busy repos.
+          operations-per-run: 200

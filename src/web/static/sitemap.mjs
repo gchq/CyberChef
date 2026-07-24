@@ -1,4 +1,4 @@
-import sm from "sitemap";
+import { SitemapStream, streamToPromise } from "sitemap";
 import OperationConfig from "../../core/config/OperationConfig.json" with { type: "json" };
 
 /**
@@ -11,7 +11,7 @@ import OperationConfig from "../../core/config/OperationConfig.json" with { type
 
 const baseUrl = "https://gchq.github.io/CyberChef/";
 
-const smStream = new sm.SitemapStream({});
+const smStream = new SitemapStream({});
 
 smStream.write({
     url: baseUrl,
@@ -28,6 +28,6 @@ for (const op in OperationConfig) {
 }
 smStream.end();
 
-sm.streamToPromise(smStream).then(
+streamToPromise(smStream).then(
     (buffer) => console.log(buffer.toString()), // eslint-disable-line no-console
 );

@@ -42,6 +42,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Series chart escapes x-axis values in serialized SVG",
+        input: `s,x"><script>globalThis.seriesChartInjected=1</script><g a=",1`,
+        unexpectedMatch: /<script>|__data__=/,
+        recipeConfig: [
+            {
+                "op": "Series chart",
+                "args": ["Line feed", "Comma", "", 1, "red"]
+            }
+        ],
+    },
+    {
         name: "Heatmap chart",
         input: "100 100\n200 200\n300 300\n400 400\n500 500",
         expectedMatch: /^<svg width/,
