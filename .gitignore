@@ -15,4 +15,5 @@ tests/operations/index.mjs
 **/*.DS_Store
 tests/browser/output/*
 .node-version
+build.sh
 chrome

@@ -96,6 +96,7 @@
   "dependencies": {
     "@alexaltea/capstone-js": "^3.0.5",
     "@astronautlabs/amf": "^0.0.6",
+    "@bitcoinerlab/secp256k1": "^1.2.0",
     "@blu3r4y/lzma": "^2.3.3",
     "@noble/hashes": "2.2.0",
     "@wavesenterprise/crypto-gost-js": "^2.1.0-RC1",
@@ -106,6 +107,7 @@
     "avsc": "^5.7.9",
     "bcryptjs": "^3.0.3",
     "bignumber.js": "^11.1.5",
+    "bip32": "^5.0.1",
     "blakejs": "^1.2.1",
     "bootstrap": "4.6.2",
     "bootstrap-colorpicker": "^3.4.0",

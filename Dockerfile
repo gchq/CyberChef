@@ -29,6 +29,4 @@ RUN npm run build
 #########################################
 FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:fd3314e343bad2de4e1127ef58be122abbfa7e09572fa46ae62fcddb6b3f21c5 AS cyberchef
 
-LABEL maintainer="GCHQ <oss@gchq.gov.uk>"
-
 COPY --from=builder /app/build/prod /usr/share/nginx/html/

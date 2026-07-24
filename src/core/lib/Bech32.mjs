@@ -369,3 +369,31 @@ export function decode(str, encoding = "Auto-detect") {
         witnessVersion: witnessVersion
     };
 }
+
+
+/**
+ * Exported function to test if a string is a valid Bech32 encoded item.
+ * @param {*} test_string
+ * @returns
+ */
+export function segwitChecksum(testString) {
+    try {
+        decode(testString);
+        return true;
+    } catch (error) {
+        return false;
+    }
+
+}
+
+/**
+ * Exported function to create an address given the specific data.
+ * @param {*} hrp
+ * @param {*} version
+ * @param {*} program
+ */
+export function encodeProgramToSegwit(hrp, version, program) {
+    const encoding = version > 0 ? "Bech32m": "Bech32";
+    return encode(hrp, program, encoding, true);
+
+}
