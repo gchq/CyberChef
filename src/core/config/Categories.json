@@ -246,6 +246,7 @@
             "Divide",
             "MOD",
             "Extended GCD",
+            "Modular Exponentiation",
             "Modular Inverse",
             "Mean",
             "Median",
