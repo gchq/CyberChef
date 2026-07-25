@@ -16,7 +16,7 @@ updates:
       time: '03:00'
       timezone: Europe/London
     cooldown:
-      default-days: 2
+      default-days: 7
     commit-message:
       prefix: 'chore (deps): '
     ignore:
@@ -72,7 +72,7 @@ updates:
       time: '03:00'
       timezone: Europe/London
     cooldown:
-      default-days: 4
+      default-days: 7
     commit-message:
       prefix: 'chore (deps): '
     groups:
@@ -88,7 +88,7 @@ updates:
       time: '03:00'
       timezone: Europe/London
     cooldown:
-      default-days: 4
+      default-days: 7
     commit-message:
       prefix: 'chore (deps): '
     groups:
