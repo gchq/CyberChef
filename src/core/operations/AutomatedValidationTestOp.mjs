@@ -66,6 +66,23 @@ class AutomatedValidationTestOp extends Operation {
                 "type": "option",
                 "value": ["[Group 1]", "Option 1", "Option 2", "[/Group 1]", "[Group 2]", "Option 3", "[/Group 2]"],
                 "allowEmpty": false
+            },
+            {
+                "name": "Arg Selector Ingredient",
+                "type": "argSelector",
+                "value": [
+                    {
+                        name: "Option 1",
+                        on: [0],
+                        off: [1]
+                    },
+                    {
+                        name: "Option 2",
+                        on: [1],
+                        off: [0]
+                    }
+                ],
+                "allowEmpty": false
             }
         ];
     }
