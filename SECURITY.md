@@ -1,10 +1,12 @@
 # Security Policy
 
-## Supported Versions
+## Support
 
 CyberChef is supported on a best endeavours basis.
 Patches will be applied to the latest version rather than retroactively to older versions.
 To ensure you are using the most secure version of CyberChef, please make sure you have the [latest release](https://github.com/gchq/CyberChef/releases/latest). [The official website](https://gchq.github.io/CyberChef/) is always up to date.
+
+No guarantee is offered for the correctness or security of CyberChef. In paticular, the security of cryptographic operations should not be relied upon.
 
 ## Reporting a Vulnerability
 

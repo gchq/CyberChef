@@ -28,7 +28,10 @@ class ToBase extends Operation {
             {
                 "name": "Radix",
                 "type": "number",
-                "value": 36
+                "value": 36,
+                "min": 2,
+                "max": 36,
+                "integer": true,
             }
         ];
     }
@@ -43,9 +46,6 @@ class ToBase extends Operation {
             throw new OperationError("Error: Input must be a number");
         }
         const radix = args[0];
-        if (radix < 2 || radix > 36) {
-            throw new OperationError("Error: Radix argument must be between 2 and 36");
-        }
         return input.toString(radix);
     }
 

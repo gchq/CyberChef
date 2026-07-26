@@ -51,6 +51,18 @@ class JsonataQuery extends Operation {
 
         try {
             const expression = jsonata(query);
+            // Override built-in base64 functions which fail in Web Worker
+            // context where `window` is undefined. The jsonata library falls
+            // back to `global.Buffer` which also does not exist in workers.
+            // `atob`/`btoa` are available in both browser and worker scopes.
+            expression.registerFunction("base64decode", (str) => {
+                if (typeof str === "undefined") return undefined;
+                return atob(str);
+            }, "<s-:s>");
+            expression.registerFunction("base64encode", (str) => {
+                if (typeof str === "undefined") return undefined;
+                return btoa(str);
+            }, "<s-:s>");
             result = await expression.evaluate(jsonObj);
         } catch (err) {
             throw new OperationError(

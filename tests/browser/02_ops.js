@@ -218,6 +218,7 @@ module.exports = {
         testOpHtml(browser, "JSON Beautify", "{a:1}", ".json-dict .json-literal", "1");
         // testOp(browser, "JSON Minify", "test input", "test_output");
     // testOp(browser, "JSON to CSV", "test input", "test_output");
+        testOp(browser, "Jsonata Query", '{"a": "SGVsbG8gV29ybGQh"}', '"Hello World!"', ["$base64decode($.a)"]);
     // testOp(browser, "JWT Decode", "test input", "test_output");
     // testOp(browser, "JWT Sign", "test input", "test_output");
     // testOp(browser, "JWT Verify", "test input", "test_output");
@@ -277,7 +278,7 @@ module.exports = {
         // testOp(browser, "Parse TLV", "test input", "test_output");
         testOpHtml(browser, "Parse UDP", "04 89 00 35 00 2c 01 01", "tr:last-child td:last-child", "0x0101");
         // testOp(browser, "Parse UNIX file permissions", "test input", "test_output");
-        // testOp(browser, "Parse URI", "test input", "test_output");
+        testOp(browser, "Parse URI", "https://example.com/?constructor=ok&__proto__=hello", /Arguments:\s+constructor = ok\s+__proto__\s+= hello/);
         testOp(browser, "Parse User Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 ", /Architecture: amd64/);
         // testOp(browser, "Parse X.509 certificate", "test input", "test_output");
         testOpFile(browser, "Play Media", "files/mp3example.mp3", "audio", "");
@@ -345,8 +346,8 @@ module.exports = {
         // testOp(browser, "Strip HTTP headers", "test input", "test_output");
         // testOp(browser, "Subsection", "test input", "test_output");
         // testOp(browser, "Substitute", "test input", "test_output");
-        // testOp(browser, "Subtract", "test input", "test_output");
-    // testOp(browser, "Sum", "test input", "test_output");
+        testOp(browser, "Subtract", "321,123,test", "198", ["Comma"]);
+        testOp(browser, "Sum", "321,123,test", "444", ["Comma"]);
         // testOp(browser, "Swap endianness", "test input", "test_output");
         // testOp(browser, "Symmetric Difference", "test input", "test_output");
         testOpHtml(browser, "Syntax highlighter", "var a = [4,5,6]", ".hljs-selector-attr", "[4,5,6]");
@@ -492,7 +493,22 @@ function testOpImage(browser, opName, filename, args=[]) {
 
     browser
         .waitForElementVisible("#output-html img")
-        .expect.element("#output-html img").to.have.css("width").which.matches(/^[^0]\d*px/);
+        .expect.element("#output-html img").to.have.css("width").which.matches(/^(?!0+(?:\.0+)?px$)\d+(?:\.\d+)?px$/);
+
+    browser.execute(function() {
+        const output = document.getElementById("output-html");
+        const img = output.querySelector("img");
+        const outputRect = output.getBoundingClientRect();
+        const imgRect = img.getBoundingClientRect();
+
+        return {
+            imageFitsWidth: imgRect.width <= outputRect.width,
+            imageFitsHeight: imgRect.height <= outputRect.height,
+        };
+    }, [], function({value}) {
+        browser.expect(value.imageFitsWidth).to.be.equal(true);
+        browser.expect(value.imageFitsHeight).to.be.equal(true);
+    });
 }
 
 /** @function

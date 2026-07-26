@@ -548,4 +548,27 @@ TestRegister.addTests([
             },
         ],
     },
+    // Base64 functions (issue #2063)
+    {
+        name: "Jsonata: $base64decode",
+        input: "{}",
+        expectedOutput: '"Hello World!"',
+        recipeConfig: [
+            {
+                op: "Jsonata Query",
+                args: ['$base64decode("SGVsbG8gV29ybGQh")'],
+            },
+        ],
+    },
+    {
+        name: "Jsonata: $base64encode",
+        input: "{}",
+        expectedOutput: '"SGVsbG8gV29ybGQh"',
+        recipeConfig: [
+            {
+                op: "Jsonata Query",
+                args: ['$base64encode("Hello World!")'],
+            },
+        ],
+    },
 ]);

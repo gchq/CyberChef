@@ -12,13 +12,9 @@ CyberChef is a simple, intuitive web app for carrying out all manner of "cyber" 
 
 The tool is designed to enable both technical and non-technical analysts to manipulate data in complex ways without having to deal with complex tools or algorithms. It was conceived, designed, built and incrementally improved by an analyst in their 10% innovation time over several years.
 
-## Live demo
+## Official website
 
-CyberChef is still under active development. As a result, it shouldn't be considered a finished product. There is still testing and bug fixing to do, new features to be added and additional documentation to write. Please contribute!
-
-Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness.
-
-[A live demo can be found here][1] - have fun!
+[CyberChef's official website can be found here][1] - have fun!
 
 ## Running Locally with Docker
 
@@ -122,6 +118,11 @@ CyberChef is built to support
 ## Node.js support
 
 CyberChef is built to fully support Node.js `v24`. For more information, see the ["Node API" wiki page](https://github.com/gchq/CyberChef/wiki/Node-API)
+
+
+## Security
+
+Please see the [CyberChef security policy](./SECURITY.md).
 
 
 ## Contributing
