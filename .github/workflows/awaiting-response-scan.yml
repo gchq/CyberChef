@@ -47,23 +47,15 @@ jobs:
                 continue;
               }
 
-              // The list endpoint doesn't include merge state, so fetch the full PR
+              // A reviewer requested changes and the author hasn't responded.
+              // (Merge conflicts are intentionally not labelled here: maintainers
+              // usually know the reason and clean these up as part of the merge
+              // process, or leave a review comment asking the author to resolve
+              // it, which is then caught by the check below.)
               const { data: pr } = await github.rest.pulls.get({
                 owner, repo, pull_number: prSummary.number,
               });
 
-              // Case 1: merge conflict -> the author needs to resolve it.
-              // mergeable_state can be temporarily "unknown" while GitHub computes
-              // it; those PRs are picked up on a later run instead of retrying now.
-              if (pr.mergeable_state === 'dirty') {
-                await github.rest.issues.addLabels({
-                  owner, repo, issue_number: pr.number, labels: [awaitingLabel],
-                });
-                core.info(`#${pr.number}: added "${awaitingLabel}" (merge conflict).`);
-                continue;
-              }
-
-              // Case 2: a reviewer requested changes and the author hasn't responded.
               const reviews = await github.paginate(github.rest.pulls.listReviews, {
                 owner, repo, pull_number: pr.number, per_page: 100,
               });
