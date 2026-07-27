@@ -66,10 +66,9 @@ class PGPSign extends Operation {
         const privKey = await importPrivateKey(privateKey, passphrase);
 
         try {
-            signedMessage = await promisify(kbpgp.box)({
+            signedMessage = await promisify(kbpgp.clearsign)({
                 "msg": message,
-                "sign_with": privKey,
-                "asp": ASP
+                "signing_key": privKey,
             });
         } catch (err) {
             throw new OperationError(`Couldn't sign message: ${err}`);
