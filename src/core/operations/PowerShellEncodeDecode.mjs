@@ -5,12 +5,11 @@
  */
 
 import Operation from "../Operation.mjs";
-import OperationError from "../errors/OperationError.mjs";
 import cptable from "codepage";
 import {toBase64, fromBase64} from "../lib/Base64.mjs";
 
 // PowerShell -EncodedCommand uses UTF-16LE (code page 1200)
-const UTF16LE = 1200;
+const UTF_16LE = 1200;
 
 /**
  * PowerShell -e Encode/Decode operation
@@ -56,14 +55,11 @@ class PowerShellEncodeDecode extends Operation {
         const [mode] = args;
 
         if (mode === "Encode") {
-            const encoded = cptable.utils.encode(UTF16LE, input);
+            const encoded = cptable.utils.encode(UTF_16LE, input);
             return toBase64(new Uint8Array(encoded).buffer);
-        } else if (mode === "Decode") {
-            const bytes = fromBase64(input, "A-Za-z0-9+/=", "byteArray");
-            return cptable.utils.decode(UTF16LE, new Uint8Array(bytes));
-        } else {
-            throw new OperationError("Invalid mode");
         }
+        const bytes = fromBase64(input, "A-Za-z0-9+/=", "byteArray");
+        return cptable.utils.decode(UTF_16LE, new Uint8Array(bytes));
     }
 
 }

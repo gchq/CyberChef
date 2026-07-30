@@ -57,4 +57,30 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "PowerShell -e Encode/Decode: round trip with non-ASCII characters",
+        input: "Write-Host \"café ☕\"",
+        expectedOutput: "Write-Host \"café ☕\"",
+        recipeConfig: [
+            {
+                op: "PowerShell -e Encode/Decode",
+                args: ["Encode"],
+            },
+            {
+                op: "PowerShell -e Encode/Decode",
+                args: ["Decode"],
+            },
+        ],
+    },
+    {
+        name: "PowerShell -e Encode/Decode: decode ignores characters outside the Base64 alphabet",
+        input: "!!!@@@###",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                op: "PowerShell -e Encode/Decode",
+                args: ["Decode"],
+            },
+        ],
+    },
 ]);
