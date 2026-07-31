@@ -75,17 +75,23 @@ module.exports = function (grunt) {
         });
 
     grunt.registerTask("calcDownloadHash", "Compute download hash", function () {
-        const computeDigest = p => {
-            const content = fs.readFileSync(p);
-            const hash = crypto.hash("sha256", content);
-            return hash;
-        };
+        const done = this.async();
 
-        const digest = computeDigest(`build/prod/${downloadZipFilename}`);
-        fs.writeFileSync("build/prod/sha256digest.txt", `${digest}\n`, { encoding: "utf8" });
+        const hash = crypto.createHash("sha256");
 
-        const index = fs.readFileSync("build/prod/index.html", { encoding: "utf8" });
-        fs.writeFileSync("build/prod/index.html", index.replace(/DOWNLOAD_HASH_PLACEHOLDER/g, digest), { encoding: "utf8" });
+        // Use online algorithm to calculate hash, prevents reading the entire 75+ MB zip file into memory
+        fs.createReadStream(`build/prod/${downloadZipFilename}`)
+            .on("data", (chunk) => hash.update(chunk))
+            .on("end", () => {
+                const digest = hash.digest("hex");
+                fs.writeFileSync("build/prod/sha256digest.txt", `${digest}\n`, { encoding: "utf8" });
+
+                const index = fs.readFileSync("build/prod/index.html", { encoding: "utf8" });
+                fs.writeFileSync("build/prod/index.html", index.replace(/DOWNLOAD_HASH_PLACEHOLDER/g, digest), { encoding: "utf8" });
+
+                done(true);
+            })
+            .on("error", (err) => done(false));
     });
 
 
