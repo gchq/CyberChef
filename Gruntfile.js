@@ -1,22 +1,15 @@
 "use strict";
 
+const crypto = require("node:crypto");
+const fs = require("node:fs");
+const path = require("node:path");
+
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const glob = require("glob");
-const path = require("node:path");
-const cp = require("node:child_process");
 
 const nodeFlags = "--no-warnings --no-deprecation";
-
-// Prepare platform-dependent commands
-
-// Older MacOS versions don't come with `sha256sum`, but they all come with `shasum`
-const sha256sumCmd = process.platform === "darwin" ? "shasum -a 256" : "sha256sum";
-
-// MacOS (and FreeBSD, but not OpenBSD) require an argument to `-i`.
-// However, users may have installed GNU sed, so let's check what `sed` says itself.
-const sedCmd = cp.execSync("sed -i 2>&1 | head -n1").toString().includes("option requires an argument") ? "sed -i ''" : "sed -i";
 
 /**
  * Grunt configuration for building the app in various formats.
@@ -39,7 +32,7 @@ module.exports = function (grunt) {
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
         [
             "eslint", "clean:prod", "clean:config", "exec:generateConfig", "findModules", "webpack:web",
-            "copy:standalone", "zip:standalone", "clean:standalone", "exec:calcDownloadHash", "chmod"
+            "copy:standalone", "zip:standalone", "clean:standalone", "calcDownloadHash", "chmod"
         ]);
 
     grunt.registerTask("node",
@@ -80,6 +73,20 @@ module.exports = function (grunt) {
                     main: "./src/web/index.js"
                 }, moduleEntryPoints));
         });
+
+    grunt.registerTask("calcDownloadHash", "Compute download hash", function () {
+        const computeDigest = p => {
+            const content = fs.readFileSync(p);
+            const hash = crypto.hash("sha256", content);
+            return hash;
+        };
+
+        const digest = computeDigest(`build/prod/${downloadZipFilename}`);
+        fs.writeFileSync("build/prod/sha256digest.txt", `${digest}\n`, { encoding: "utf8" });
+
+        const index = fs.readFileSync("build/prod/index.html", { encoding: "utf8" });
+        fs.writeFileSync("build/prod/index.html", index.replace(/DOWNLOAD_HASH_PLACEHOLDER/g, digest), { encoding: "utf8" });
+    });
 
 
     // Load tasks provided by each plugin
@@ -343,12 +350,6 @@ module.exports = function (grunt) {
             }
         },
         exec: {
-            calcDownloadHash: {
-                command: chainCommands([
-                    `${sha256sumCmd} build/prod/${downloadZipFilename} | awk '{print $1;}' > build/prod/sha256digest.txt`,
-                    `${sedCmd} -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`,
-                ]),
-            },
             repoSize: {
                 command: chainCommands([
                     "git ls-files | wc -l | xargs printf '\n%b\ttracked files\n'",
