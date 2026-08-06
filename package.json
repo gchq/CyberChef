@@ -197,7 +197,7 @@
   },
   "allowScripts": {
     "@nightwatch/nightwatch-inspector@1.0.1": true,
-    "chromedriver@150.0.3": true,
+    "chromedriver@150.0.4": true,
     "core-js": false,
     "core-js-pure": false,
     "fsevents": false,
