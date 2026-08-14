@@ -1,7 +1,7 @@
 /**
  * XPRESS (MS-XCA) decompression.
  *
- * @author MP Gowtham [mpgowtham@users.noreply.github.com]
+ * @author MP Gowtham [gowthamrockerzzz@gmail.com]
  * @copyright Crown Copyright 2026
  * @license Apache-2.0
  *
@@ -15,8 +15,9 @@
 
 import OperationError from "../errors/OperationError.mjs";
 
-/** Maximum output per call (Windows limits XPRESS blocks to 1 MiB). */
-const MAX_DECOMPRESSED = 1000000;
+/** Maximum output per call (Windows sizes XPRESS blocks at up to
+ *  32 MiB for WIM chunks and up to 1 MiB for WOF chunks). */
+const MAX_DECOMPRESSED = 32 * 1024 * 1024;
 
 /**
  * Decompress an XPRESS plain-LZ77 stream.
@@ -200,7 +201,7 @@ export function decompressHuffman(input, decompressedSize) {
             // End of data; mid-stream it decodes as a match(3, 1).
             if (out.length === decompressedSize)
                 break;
-            if (decompressedSize - out.length < 3)
+            if (out.length === 0 || decompressedSize - out.length < 3)
                 throw new OperationError("XPRESS: corrupt end-of-data marker");
             const start = out.length - 1;
             for (let j = 0; j < 3; j++)
