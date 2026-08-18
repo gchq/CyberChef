@@ -53,4 +53,26 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "Time Difference Positive",
+        input: "03/05/2024 13:03:22;03/06/2025 13:14:50",
+        expectedOutput: "Years:1 Months:1 Days:0 Hours:0 Minutes:11 Seconds:28",
+        recipeConfig: [
+            {
+                op: "Time Difference",
+                args: ["Standard date and time", "DD/MM/YYYY HH:mm:ss", "Semi-colon"],
+            },
+        ],
+    },
+    {
+        name: "Time Difference Negative",
+        input: "03/05/2024 13:03:22,03/05/2024 11:30:15",
+        expectedOutput: "Years:0 Months:0 Days:0 Hours:-1 Minutes:-33 Seconds:-7",
+        recipeConfig: [
+            {
+                op: "Time Difference",
+                args: ["Standard date and time", "DD/MM/YYYY HH:mm:ss", "Comma"],
+            },
+        ],
+    },
 ]);
