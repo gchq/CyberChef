@@ -170,6 +170,17 @@ class Recipe  {
 
 
     /**
+     * Returns the input type for the first active operation in the recipe.
+     *
+     * @returns {string|null}
+     */
+    firstActiveInputType() {
+        const firstActiveOp = this.opList.find(op => !op.disabled);
+        return firstActiveOp ? OperationConfig[firstActiveOp.name]?.inputType || null : null;
+    }
+
+
+    /**
      * Executes each operation in the recipe over the given Dish.
      *
      * @param {Dish} dish

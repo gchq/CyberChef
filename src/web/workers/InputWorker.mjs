@@ -756,7 +756,7 @@ self.addInput = function(
         file: null,
         status: "pending",
         progress: 0,
-        encoding: 0,
+        encoding: type === "userinput" ? 65001 : 0,
         eolSequence: "\u000a"
     };
 
