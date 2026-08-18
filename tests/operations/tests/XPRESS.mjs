@@ -9,7 +9,7 @@ import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
 
-    // MS-XCA section 3.1 worked example (plain LZ77).
+    // MS-XCA section 3.1 worked example (plain LZ77, all literals).
     {
         name: "XPRESS Decompress: worked example",
         input: "0000000047484f53542f2f5245434f5645522064617461207265636f7665727920656e67ffffff07696e652e0a",
@@ -26,9 +26,12 @@ TestRegister.addTests([
         ]
     },
 
-    // Matches with shared nibbles, raw lengths and 64 MiB of output.
+    // MS-XCA section 3.1 worked example (plain LZ77): literals, then a
+    // shared-nibble match with an LE16 raw length. The low nibble of
+    // 0x0f selects the raw length and its high nibble feeds the next
+    // match, which reads the trailing LE16 (0x0126).
     {
-        name: "XPRESS Decompress: repeated string compression",
+        name: "XPRESS Decompress: shared nibble and LE16 length",
         input: "ffffff1f61626317000fff2601",
         expectedOutput: "abc".repeat(100),
         recipeConfig: [
@@ -43,19 +46,73 @@ TestRegister.addTests([
         ]
     },
 
-    // Literals plus 65536-byte offset matches (anchor example).
+    // Shared-nibble form without a raw length: nibble 13 + 10.
     {
-        name: "XPRESS Decompress: anchor example",
-        input: "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 30 23 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 20 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 a8 dc 00 00 ff 26 01",
-        expectedOutput: "abc".repeat(100),
+        name: "XPRESS Decompress: nibble length",
+        input: "ffffff7f6e07000d",
+        expectedOutput: "n".repeat(24),
         recipeConfig: [
             {
                 "op": "From Hex",
                 "args": ["Space"]
             },
             {
-                "op": "XPRESS LZ77+Huffman Decompress",
-                "args": [300]
+                "op": "XPRESS Decompress",
+                "args": []
+            }
+        ]
+    },
+
+    // The shared-nibble half-byte survives literal runs: the low nibble
+    // of 0x21 gives the first match its length, the literal 'B' does not
+    // clear it, and the second match uses the high nibble.
+    {
+        name: "XPRESS Decompress: shared half-byte across a literal",
+        input: "ffffff5f41070021420700",
+        expectedOutput: "A".repeat(12) + "B".repeat(13),
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Space"]
+            },
+            {
+                "op": "XPRESS Decompress",
+                "args": []
+            }
+        ]
+    },
+
+    // One-byte raw length form: byte 0xd7 + 25 = 240.
+    {
+        name: "XPRESS Decompress: one-byte raw length",
+        input: "ffff0000413142324333443445354636473748387f000fd7",
+        expectedOutput: "A1B2C3D4E5F6G7H8".repeat(16),
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Space"]
+            },
+            {
+                "op": "XPRESS Decompress",
+                "args": []
+            }
+        ]
+    },
+
+    // LE16 raw lengths: 0xfffc + 3 = 65535, then a shared-nibble match
+    // with LE16 0x116d + 3 = 4464, for 70000 bytes total.
+    {
+        name: "XPRESS Decompress: LE16 raw lengths",
+        input: "ffffff7f570700fffffcffffffff6d11",
+        expectedOutput: "W".repeat(70000),
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Space"]
+            },
+            {
+                "op": "XPRESS Decompress",
+                "args": []
             }
         ]
     },

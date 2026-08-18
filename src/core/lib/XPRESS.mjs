@@ -98,12 +98,14 @@ export function decompress(input) {
                              (input[i + 2] << 16) | (input[i + 3] << 24)) >>> 0;
                         i += 4;
                     }
+                    if (v < 22)
+                        throw new OperationError("XPRESS: invalid match length");
+                    mlen = v + 3;
+                } else {
+                    mlen = v + 25;
                 }
-                if (v < 22)
-                    throw new OperationError("XPRESS: invalid match length");
-                mlen = v + 3;
             } else {
-                mlen = nib + 3;
+                mlen = nib + 10;
             }
         }
 
@@ -179,7 +181,7 @@ export function decompressHuffman(input, decompressedSize) {
     }
 
     const out = [];
-    while (out.length < decompressedSize) {
+    for (;;) {
         while (nbits < 15) {
             if (input.length - i < 2)
                 throw new OperationError("XPRESS: truncated bit stream");
@@ -194,6 +196,8 @@ export function decompressHuffman(input, decompressedSize) {
 
         if (sym < 256) {
             out.push(sym);
+            if (out.length > decompressedSize)
+                throw new OperationError("XPRESS: output exceeds declared size");
             continue;
         }
 
@@ -255,6 +259,8 @@ export function decompressHuffman(input, decompressedSize) {
             throw new OperationError("XPRESS: match offset out of range");
         if (out.length + mlen > MAX_DECOMPRESSED)
             throw new OperationError("XPRESS: decompression ratio too large");
+        if (out.length + mlen > decompressedSize)
+            throw new OperationError("XPRESS: output exceeds declared size");
 
         const start = out.length - moff;
         for (let j = 0; j < mlen; j++)
