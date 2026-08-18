@@ -19,7 +19,7 @@ class PadLines extends Operation {
 
         this.name = "Pad lines";
         this.module = "Default";
-        this.description = "Add the specified number of the specified character to the beginning or end of each line";
+        this.description = "Add the specified character to the start or end of each line. Padding can use either a fixed character count or a target final line length.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
@@ -37,6 +37,11 @@ class PadLines extends Operation {
                 "name": "Character",
                 "type": "binaryShortString",
                 "value": " "
+            },
+            {
+                "name": "Mode",
+                "type": "option",
+                "value": ["Fixed Count", "Target Length"]
             }
         ];
     }
@@ -47,22 +52,21 @@ class PadLines extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [position, len, chr] = args,
+        const [position, len, chr, mode] = args,
             lines = input.split("\n");
-        let output = "",
-            i = 0;
 
-        if (position === "Start") {
-            for (i = 0; i < lines.length; i++) {
-                output += lines[i].padStart(lines[i].length+len, chr) + "\n";
-            }
-        } else if (position === "End") {
-            for (i = 0; i < lines.length; i++) {
-                output += lines[i].padEnd(lines[i].length+len, chr) + "\n";
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const targetLength = mode === "Fixed Count" ? line.length + len : len;
+
+            if (position === "Start") {
+                lines[i] = line.padStart(targetLength, chr);
+            } else if (position === "End") {
+                lines[i] = line.padEnd(targetLength, chr);
             }
         }
 
-        return output.slice(0, output.length-1);
+        return lines.join("\n");
     }
 
 }
