@@ -114,7 +114,7 @@
     "browserify-zlib": "^0.2.0",
     "bson": "^7.3.2",
     "buffer": "^6.0.3",
-    "cbor": "10.0.12",
+    "cbor2": "2.3.0",
     "chi-squared": "^1.1.0",
     "codepage": "^1.15.0",
     "crypto-api": "^0.8.5",
@@ -222,6 +222,6 @@
     "setheapsize": "export NODE_OPTIONS=--max_old_space_size=2048"
   },
   "engines": {
-    "node": ">=24 <25"
+    "node": ">=24 <27"
   }
 }
