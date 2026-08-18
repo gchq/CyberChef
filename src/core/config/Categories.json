@@ -83,7 +83,9 @@
             "Rison Decode",
             "To Modhex",
             "From Modhex",
-            "MIME Decoding"
+            "MIME Decoding",
+            "To COBS",
+            "From COBS"
         ]
     },
     {
@@ -173,6 +175,7 @@
             "AES Key Wrap",
             "AES Key Unwrap",
             "Pseudo-Random Number Generator",
+            "Pseudo-Random Prime Generator",
             "Enigma",
             "Bombe",
             "Multiple Bombe",
@@ -241,9 +244,10 @@
             "Subtract",
             "Multiply",
             "Divide",
+            "MOD",
+            "Extended GCD",
             "Modular Exponentiation",
             "Modular Inverse",
-            "Extended GCD",
             "Mean",
             "Median",
             "Standard Deviation",
@@ -429,7 +433,9 @@
             "LZMA Compress",
             "LZ4 Decompress",
             "LZ4 Compress",
-            "LZNT1 Decompress"
+            "LZNT1 Decompress",
+            "XPRESS Decompress",
+            "XPRESS LZ77+Huffman Decompress"
         ]
     },
     {
