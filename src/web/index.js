@@ -46,7 +46,7 @@ function main() {
         showErrors:          true,
         errorTimeout:        4000,
         attemptHighlight:    true,
-        theme:               "classic",
+        theme:               undefined,
         useMetaKey:          false,
         logLevel:            "info",
         autoMagic:           true,
