@@ -9,6 +9,7 @@
  */
 
 import { readFile } from "fs/promises";
+import { fileURLToPath } from "url";
 
 if (globalThis.fetch) {
     const originalFetch = globalThis.fetch;
@@ -21,6 +22,13 @@ if (globalThis.fetch) {
         // Intercept bare filesystem paths (absolute POSIX or Windows)
         if (urlStr.startsWith("/") || /^[A-Za-z]:[/\\]/.test(urlStr)) {
             const buffer = await readFile(urlStr);
+            return new Response(buffer, {
+                status: 200,
+                headers: { "Content-Type": "application/wasm" },
+            });
+        }
+        if (urlStr.startsWith("file:")) {
+            const buffer = await readFile(fileURLToPath(urlStr));
             return new Response(buffer, {
                 status: 200,
                 headers: { "Content-Type": "application/wasm" },
