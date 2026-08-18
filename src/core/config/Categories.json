@@ -433,7 +433,9 @@
             "LZMA Compress",
             "LZ4 Decompress",
             "LZ4 Compress",
-            "LZNT1 Decompress"
+            "LZNT1 Decompress",
+            "XPRESS Decompress",
+            "XPRESS LZ77+Huffman Decompress"
         ]
     },
     {
