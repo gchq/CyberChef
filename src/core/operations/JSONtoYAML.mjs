@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import YAML from "yaml";
+import { dump } from "js-yaml";
 
 /**
  * JSON to YAML operation
@@ -35,9 +35,9 @@ class JSONtoYAML extends Operation {
      */
     run(input, args) {
         try {
-            return YAML.stringify(input);
+            return dump(input);
         } catch (err) {
-            throw new OperationError("Test");
+            throw new OperationError("Unable to stringify YAML: " + err);
         }
     }
 

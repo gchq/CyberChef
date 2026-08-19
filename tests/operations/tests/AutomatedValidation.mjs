@@ -150,5 +150,38 @@ TestRegister.addTests([
                 args: [5, 1.5, "hello", "", { "option": "Option A", "string": "test" }, ""]
             }
         ]
+    },
+    {
+        name: "Automated Validation: Valid Arg Selector value",
+        input: "test",
+        expectedOutput: "Success",
+        recipeConfig: [
+            {
+                op: "Automated Validation Test Op",
+                args: [5, 1.5, "hello", "", { "option": "Option A", "string": "test" }, "Option 1", "Option 2"]
+            }
+        ]
+    },
+    {
+        name: "Automated Validation: Invalid Arg Selector value",
+        input: "test",
+        expectedOutput: "Arg Selector Ingredient must be one of the following: Option 1, Option 2.",
+        recipeConfig: [
+            {
+                op: "Automated Validation Test Op",
+                args: [5, 1.5, "hello", "", { "option": "Option A", "string": "test" }, "Option 1", "Option 3"]
+            }
+        ]
+    },
+    {
+        name: "Automated Validation: Arg Selector value empty (invalid)",
+        input: "test",
+        expectedOutput: "Arg Selector Ingredient cannot be empty.",
+        recipeConfig: [
+            {
+                op: "Automated Validation Test Op",
+                args: [5, 1.5, "hello", "", { "option": "Option A", "string": "test" }, "Option 1", ""]
+            }
+        ]
     }
 ]);
