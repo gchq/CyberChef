@@ -15,13 +15,19 @@ jobs:
       contents: write
       pages: write
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Node 24 is the officially supported version; Node 26 is tested
+        # ahead of it becoming the active LTS release (see #2397)
+        node-version: [24, 26]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set node version
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 24
+          node-version: ${{ matrix.node-version }}
           registry-url: "https://registry.npmjs.org"
 
       - name: Install
@@ -59,11 +65,11 @@ jobs:
           xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
       - name: Prepare for GitHub Pages
-        if: success()
+        if: success() && matrix.node-version == 24
         run: npx grunt copy:ghPages
 
       - name: Deploy to GitHub Pages
-        if: success() && github.ref == 'refs/heads/master'
+        if: success() && github.ref == 'refs/heads/master' && matrix.node-version == 24
         uses: crazy-max/ghaction-github-pages@1d6ee9b181a81033a16bd707a1401afa978daab4 # v5.0.0
         with:
           target_branch: gh-pages
