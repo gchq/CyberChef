@@ -1,0 +1,64 @@
+name: Awaiting Response Label Sync
+
+on:
+  # Fires when the PR author pushes new commits
+  pull_request_target:
+    types: [synchronize]
+  # Fires when someone comments on a PR (also fires for plain issues, filtered out below)
+  issue_comment:
+    types: [created]
+
+permissions:
+  pull-requests: write
+  issues: write
+  contents: read
+
+jobs:
+  sync-label:
+    # issue_comment fires for issues too, so only run it for PR comments
+    if: >-
+      github.event_name != 'issue_comment' ||
+      github.event.issue.pull_request != null
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clear "awaiting response" label on author response
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 #v9.0.0
+        env:
+          AWAITING_LABEL: 'awaiting response'
+        with:
+          script: |
+            const awaitingLabel = process.env.AWAITING_LABEL;
+            // Resolve the PR number for whichever event triggered this run
+            const prNumber = context.eventName === 'issue_comment'
+              ? context.payload.issue.number
+              : context.payload.pull_request.number;
+            const { owner, repo } = context.repo;
+
+            // Check whether the label is already on the PR, so we don't try to
+            // remove something that isn't there
+            const { data: issue } = await github.rest.issues.get({
+              owner, repo, issue_number: prNumber,
+            });
+            const hasLabel = issue.labels.some(l =>
+              (typeof l === 'string' ? l : l.name) === awaitingLabel
+            );
+
+            if (!hasLabel) {
+              core.info('Label not present; nothing to do.');
+              return;
+            }
+
+            // The author pushed new commits -> treat that as their response and clear the label
+            const authorPushed = context.eventName === 'pull_request_target' && context.payload.action === 'synchronize';
+            // The PR author left a comment -> treat any reply from them as a response too
+            const authorCommented = context.eventName === 'issue_comment' && context.payload.comment.user.login === context.payload.issue.user.login;
+
+            if (authorPushed || authorCommented) {
+              // If the label was already gone for some reason, that's fine, not an error
+              await github.rest.issues.removeLabel({
+                owner, repo, issue_number: prNumber, name: awaitingLabel,
+              }).catch(e => core.warning(`removeLabel failed: ${e.message}`));
+              core.info(`Removed "${awaitingLabel}".`);
+            } else {
+              core.info('Event does not require a label change.');
+            }
