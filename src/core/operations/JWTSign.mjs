@@ -4,10 +4,10 @@
  * @license Apache-2.0
  */
 import Operation from "../Operation.mjs";
-import jwt from "jsonwebtoken";
+import { SignJWT, importPKCS8 } from "jose";
 import OperationError from "../errors/OperationError.mjs";
 import {JWT_ALGORITHMS} from "../lib/JWT.mjs";
-
+import {pkcs1ToPkcs8} from "../lib/RSA.mjs";
 
 /**
  * JWT Sign operation
@@ -50,21 +50,47 @@ class JWTSign extends Operation {
      * @param {Object[]} args
      * @returns {string}
      */
-    run(input, args) {
+    async run(input, args) {
         const [key, algorithm, header] = args;
 
+        let secret;
         try {
-            return jwt.sign(input, key, {
-                algorithm: algorithm === "None" ? "none" : algorithm,
-                header: JSON.parse(header || "{}")
-            });
+            if (key.startsWith("-----BEGIN RSA PRIVATE KEY-----")) {
+                secret = await importPKCS8(pkcs1ToPkcs8(key), algorithm);
+            } else if (key.startsWith("-----BEGIN PRIVATE KEY-----")) {
+                secret = await importPKCS8(key, algorithm);
+            } else {
+                secret = new TextEncoder().encode(key);
+            }
         } catch (err) {
             throw new OperationError(`Error: Have you entered the key correctly? The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.
 
 ${err}`);
         }
-    }
 
+        const fullHeader = { alg: algorithm, typ: "JWT" };
+        try {
+            if (header !== "{}") {
+                Object.assign(fullHeader, JSON.parse(header));
+            }
+        } catch (err) {
+            throw new OperationError(`Header must be a valid (or empty) json object.
+
+${err}`);
+        }
+
+        try {
+            const token = await new SignJWT(input)
+                .setProtectedHeader(fullHeader)
+                .sign(secret);
+
+            return token;
+        } catch (err) {
+            throw new OperationError(`Error: Have you entered the key correctly? The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.
+
+${err}`);
+        }
+    };
 }
 
 export default JWTSign;
