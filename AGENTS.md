@@ -13,7 +13,7 @@ Core principles for changes:
 
 ## Commands
 
-CyberChef expects Node.js `>=24 <25`.
+CyberChef expects Node.js `>=24 <27` (v24 is the officially supported version; v26 is also tested).
 
 - Install: `npm install`
 - Development server: `npm start`
