@@ -9,6 +9,34 @@ import * as disassemble from "../vendor/DisassembleX86-64.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
+ * Parses a hexadecimal address value used by the disassembler.
+ *
+ * The underlying disassembler interprets both the code segment and the offset as
+ * hexadecimal, and renders them back as hexadecimal, so these arguments accept the
+ * common ways of writing a hex literal: bare (`ABC`), prefixed (`0xABC`) or suffixed
+ * (`ABCh`).
+ *
+ * @param {string} value
+ * @param {string} name - Argument name, used in the error message.
+ * @param {number} [padTo=0] - Left-pad the result with zeroes to this many digits.
+ * @returns {string} The bare hex digits, ready to be passed to SetBasePosition.
+ *
+ * @throws {OperationError} if the value is not a valid hexadecimal number.
+ */
+function parseHexAddress(value, name, padTo = 0) {
+    const trimmed = value.toString().trim();
+    const hex = trimmed.replace(/^0x/i, "").replace(/h$/i, "");
+
+    if (hex === "" || !/^[\da-f]+$/i.test(hex)) {
+        throw new OperationError(`Invalid ${name}: '${trimmed}' is not a hexadecimal number.`);
+    }
+
+    // SetBasePosition reads the code segment from the last four characters it is given,
+    // so shorter values must be padded to avoid losing their leading digits.
+    return hex.padStart(padTo, "0");
+}
+
+/**
  * Disassemble x86 operation
  */
 class DisassembleX86 extends Operation {
@@ -46,13 +74,15 @@ class DisassembleX86 extends Operation {
             },
             {
                 "name": "Code Segment (CS)",
-                "type": "number",
-                "value": 16
+                "type": "string",
+                "value": "16",
+                "hint": "Hexadecimal, e.g. 16, 0xABC or ABCh"
             },
             {
                 "name": "Offset (IP)",
-                "type": "number",
-                "value": 0
+                "type": "string",
+                "value": "0",
+                "hint": "Hexadecimal, e.g. 0, 0x1000 or 1000h"
             },
             {
                 "name": "Show instruction hex",
@@ -122,7 +152,10 @@ class DisassembleX86 extends Operation {
                 break;
         }
 
-        disassemble.SetBasePosition(codeSegment + ":" + offset);
+        disassemble.SetBasePosition(
+            parseHexAddress(codeSegment, "Code Segment (CS)", 4) + ":" +
+            parseHexAddress(offset, "Offset (IP)")
+        );
         disassemble.setShowInstructionHex(showInstructionHex);
         disassemble.setShowInstructionPos(showInstructionPos);
         disassemble.LoadBinCode(input.replace(/\s/g, ""));
