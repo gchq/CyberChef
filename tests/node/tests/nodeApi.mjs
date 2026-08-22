@@ -97,6 +97,11 @@ TestRegister.addApiTests([
         assert(result instanceof NodeDish);
     }),
 
+    it("should process numeric zero input", () => {
+        const result = chef.toHex(0);
+        assert.strictEqual(result.toString(), "30");
+    }),
+
     it("should coerce to a string as you expect", () => {
         const result = chef.fromBase32(chef.toBase32("something"));
         assert.equal(String(result), "something");
@@ -210,6 +215,11 @@ TestRegister.addApiTests([
     it("chef.bake: should take an input and an op name and perform it", async () => {
         const result = await chef.bake("some input", "to base 32");
         assert.strictEqual(result.toString(), "ONXW2ZJANFXHA5LU");
+    }),
+
+    it("chef.bake: should process numeric zero input", async () => {
+        const result = await chef.bake(0, "to hex");
+        assert.strictEqual(result.toString(), "30");
     }),
 
     it("chef.bake: should complain if recipe isnt a valid object", async () => {
