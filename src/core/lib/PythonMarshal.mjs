@@ -81,6 +81,12 @@ class PythonMarshal {
 
 }
 
+/**
+ * Parses a Python marshal byte stream into JSON-compatible values.
+ *
+ * The reader tracks its position and marshal reference table while rejecting
+ * unsupported Python-only types, malformed references and oversized values.
+ */
 class Reader {
 
     /**
@@ -337,8 +343,18 @@ class Reader {
 
 }
 
+/**
+ * Serialises JSON-compatible values into a Python marshal byte stream.
+ *
+ * Python integers and byte strings that JSON cannot represent natively are
+ * accepted through the tagged object forms produced by Reader.
+ */
 class Writer {
 
+    /**
+     * Initialises byte chunks that finish() concatenates in a single pass,
+     * avoiding repeated allocation as nested values are serialised.
+     */
     constructor() {
         this.parts = [];
     }
