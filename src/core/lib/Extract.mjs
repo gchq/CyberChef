@@ -46,8 +46,38 @@ export function search(input, searchRegex, removeRegex=null, sortBy=null, unique
 }
 
 /**
- * Email regular expression
+ * Runs search operation across the input data using the regular expressions. Filters using the filterFunc.
+ * @param {string} input
+ * @param {RegExp} searchRegex
+ * @param {RegExp} removeRegex
+ * @param {func} filterFunc
+ * @param {boolean} includeTotal
+ * @returns {string}
  */
+export function searchAndFilter(input, searchRegex, removeRegex, filterFunc, includeTotal) {
+    let output = "",
+        total = 0,
+        match;
+
+    while ((match = searchRegex.exec(input))) {
+        // Moves pointer when an empty string is matched (prevents infinite loop)
+        if (match.index === searchRegex.lastIndex) {
+            searchRegex.lastIndex++;
+        }
+        if (removeRegex && removeRegex.test(match[0]))
+            continue;
+        if (filterFunc && !filterFunc(match[0]))
+            continue;
+        total++;
+        output += match[0] + "\n";
+    }
+
+    if (includeTotal)
+        output = "Total found: " + total + "\n\n" + output;
+
+    return output;
+}
+
 export const EMAIL_REGEX = /(?:[\u00A0-\uD7FF\uE000-\uFFFFa-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[\u00A0-\uD7FF\uE000-\uFFFFa-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[\u00A0-\uD7FF\uE000-\uFFFFa-z0-9](?:[\u00A0-\uD7FF\uE000-\uFFFFa-z0-9-]*[\u00A0-\uD7FF\uE000-\uFFFFa-z0-9])?\.)+[\u00A0-\uD7FF\uE000-\uFFFFa-z0-9](?:[\u00A0-\uD7FF\uE000-\uFFFFa-z0-9-]*[\u00A0-\uD7FF\uE000-\uFFFFa-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\])/ig;
 
 
