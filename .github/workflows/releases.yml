@@ -49,12 +49,7 @@ jobs:
       - name: Setup Chrome
         id: setup-chrome
         if: success()
-        run: |
-          rm -rf chrome/
-          rm -f node_modules/chromedriver/lib/chromedriver/chrome
-          npx @puppeteer/browsers install chrome@152
-          chromepath=$(find `pwd`/chrome/* -name chrome -print -quit)
-          ln -s $chromepath node_modules/chromedriver/lib/chromedriver/chrome
+        uses: ./.github/actions/setup-chrome
 
       - name: UI Tests
         if: success()
