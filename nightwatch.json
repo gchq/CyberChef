@@ -14,7 +14,10 @@
         "log_path": "tests/browser/output"
       },
       "desiredCapabilities": {
-        "browserName": "chrome"
+        "browserName": "chrome",
+        "chromeOptions": {
+              "args" : ["no-sandbox"]
+        }
       },
       "enable_fail_fast": true
     },
