@@ -50,13 +50,15 @@ jobs:
         id: setup-chrome
         if: success()
         run: |
-          npx @puppeteer/browsers install chrome@148
-          echo chromedir=$(dirname $(find `pwd`/chrome/* -name chrome -print -quit)) >> $GITHUB_OUTPUT
+          rm -rf chrome/
+          rm -f node_modules/chromedriver/lib/chromedriver/chrome
+          npx @puppeteer/browsers install chrome@152
+          chromepath=$(find `pwd`/chrome/* -name chrome -print -quit)
+          ln -s $chromepath node_modules/chromedriver/lib/chromedriver/chrome
 
       - name: UI Tests
         if: success()
         run: |
-          export PATH=${{ steps.setup-chrome.outputs.chromedir }}:$PATH
           sudo apt-get install xvfb
           xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
