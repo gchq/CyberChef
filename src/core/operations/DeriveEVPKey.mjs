@@ -8,6 +8,10 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import CryptoJS from "crypto-js";
 
+// arbitrary max limits to prevent resource exhaustion
+const MAX_KEY_SIZE=16384;
+const MAX_ITERATIONS=100000;
+
 /**
  * Derive EVP key operation
  */
@@ -35,12 +39,18 @@ class DeriveEVPKey extends Operation {
             {
                 "name": "Key size",
                 "type": "number",
-                "value": 128
+                "value": 128,
+                "min": 8,
+                "max": MAX_KEY_SIZE,
+                "integer": true
             },
             {
                 "name": "Iterations",
                 "type": "number",
-                "value": 1
+                "value": 1,
+                "min": 1,
+                "max": MAX_ITERATIONS,
+                "integer": true
             },
             {
                 "name": "Hashing function",
