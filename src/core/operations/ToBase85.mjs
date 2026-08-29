@@ -68,7 +68,8 @@ class ToBase85 extends Operation {
                 ((input[i + 3] || 0))
             ) >>> 0;
 
-            if (encoding !== "Standard" || block > 0) {
+            // A decoder reads 'z' as four zero bytes, so a short final group cannot use it.
+            if (encoding !== "Standard" || block > 0 || input.length < i + 4) {
                 let digits = [];
                 for (let j = 0; j < 5; j++) {
                     digits.push(block % 85);
