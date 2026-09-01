@@ -71,7 +71,35 @@ ${err}`);
         const fullHeader = { alg: algorithm, typ: "JWT" };
         try {
             if (header !== "{}") {
-                Object.assign(fullHeader, JSON.parse(header));
+                const parsed = JSON.parse(header);
+
+                if (
+                    parsed === null ||
+                    typeof parsed !== "object" ||
+                    Array.isArray(parsed)
+                ) {
+                    throw new Error("Header must be a JSON object.");
+                }
+
+                for (const [key, value] of Object.entries(parsed)) {
+                    if (
+                        key === "__proto__" ||
+                        key === "constructor" ||
+                        key === "prototype"
+                    ) {
+                        throw new Error(
+                            `Header contains prohibited property: ${key}`
+                        );
+                    }
+
+                    if (key === "alg" || key === "typ") {
+                        throw new Error(
+                            `Header may not override '${key}'`
+                        );
+                    }
+
+                    fullHeader[key] = value;
+                }
             }
         } catch (err) {
             throw new OperationError(`Header must be a valid (or empty) json object.
