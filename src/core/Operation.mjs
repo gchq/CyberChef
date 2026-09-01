@@ -244,7 +244,12 @@ class Operation {
     set ingValues(ingValues) {
         ingValues.forEach((val, i) => {
             try {
-                this._ingList[i].value = val;
+                const ingredient = this._ingList[i],
+                    value = ingredient.type === "number" && Number.isNaN(val) ?
+                        ingredient.defaultValue :
+                        val;
+
+                ingredient.value = value;
             } catch (err) {
                 throw new OperationError(`Failed to set value of ingredient '${this._ingList[i].name}': ${err}`);
             }
