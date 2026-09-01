@@ -264,6 +264,18 @@ Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
         assert.strictEqual(result.toString(), "Fit as a Fiddle");
     }),
 
+    it("Bzip2 Compress: round-trips through the Node API", async () => {
+        const compressed = await chef.bzip2Compress("The quick brown fox.");
+        const result = await chef.bzip2Decompress(compressed);
+        assert.strictEqual(result.toString(), "The quick brown fox.");
+    }),
+
+    it("Avro to JSON: decodes an object container file through the Node API", async () => {
+        const avro = chef.fromHex("4f626a0104166176726f2e736368656d6196017b2274797065223a227265636f7264222c226e616d65223a22736d616c6c222c226669656c6473223a5b7b226e616d65223a226e616d65222c2274797065223a22737472696e67227d5d7d146176726f2e636f646563086e756c6c004e0247632e3702e5b75cdab9a62f1541020e0c6d796e616d654e0247632e3702e5b75cdab9a62f1541");
+        const result = await chef.avroToJSON(avro);
+        assert.strictEqual(result.toString(), "{\n    \"name\": \"myname\"\n}");
+    }),
+
     it("cartesianProduct: binary string", () => {
         const result = cartesianProduct("1:2\\n\\n3:4", {
             itemDelimiter: ":",
@@ -605,8 +617,9 @@ Top Drawer`, {
 
     it("Generate HOTP", () => {
         const result = chef.generateHOTP("JBSWY3DPEHPK3PXP", {
+            name: "Account",
         });
-        const expected = `URI: otpauth://hotp/?secret=JBSWY3DPEHPK3PXP&algorithm=SHA1&digits=6&counter=0
+        const expected = `URI: otpauth://hotp/Account?secret=JBSWY3DPEHPK3PXP&algorithm=SHA1&digits=6&counter=0
 
 Password: 282760`;
         assert.strictEqual(result.toString(), expected);
@@ -724,6 +737,18 @@ Hostname:	www.google.co.uk
 Path name:	/search
 Arguments:
 \tq = almonds
+`;
+        assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("Parse URI with constructor and __proto__ arguments", () => {
+        const result = chef.parseURI("https://example.com/?constructor=ok&__proto__=hello");
+        const expected = `Protocol:	https:
+Hostname:	example.com
+Path name:	/
+Arguments:
+\tconstructor = ok
+\t__proto__   = hello
 `;
         assert.strictEqual(result.toString(), expected);
     }),

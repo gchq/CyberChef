@@ -218,6 +218,7 @@ module.exports = {
         testOpHtml(browser, "JSON Beautify", "{a:1}", ".json-dict .json-literal", "1");
         // testOp(browser, "JSON Minify", "test input", "test_output");
     // testOp(browser, "JSON to CSV", "test input", "test_output");
+        testOp(browser, "Jsonata Query", '{"a": "SGVsbG8gV29ybGQh"}', '"Hello World!"', ["$base64decode($.a)"]);
     // testOp(browser, "JWT Decode", "test input", "test_output");
         testOp(browser, "JWT Sign", '{"a":{"b":1}}', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhIjp7ImIiOjF9fQ.5PSBsZ9_B-qZa8H3l9tRAEV6qt8NgEHNJaoyjVcnTsU", ["A-key-of-256-bits-or-larger-as-per-RFC7518", "HS256", "{}"]);
     // testOp(browser, "JWT Verify", "test input", "test_output");
@@ -271,13 +272,22 @@ module.exports = {
         testOpHtml(browser, "Parse IPv4 header", "45 c0 00 c4 02 89 00 00 ff 11　1e 8c c0 a8 0c 01 c0 a8 0c 02", "tr:nth-last-child(2) td:last-child", "192.168.12.2");
         // testOp(browser, "Parse IPv6 address", "test input", "test_output");
     // testOp(browser, "Parse ObjectID timestamp", "test input", "test_output");
+        testOp(
+            browser,
+            "Parse PGP Key",
+            `-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xjMEU/NfCxYJKwYBBAHaRw8BAQdAPwmJlL3ZFu1AUxl5NOSofIBzOhKA1i+AEJku
+Q+47JAY=
+-----END PGP PUBLIC KEY BLOCK-----`,
+            /Curve {9}: ed25519Legacy/);
     // testOp(browser, "Parse QR Code", "test input", "test_output");
         // testOp(browser, "Parse SSH Host Key", "test input", "test_output");
         testOpHtml(browser, "Parse TCP", "c2eb0050a138132e70dc9fb9501804025ea70000", "tr:nth-of-type(2) td:last-child", "49899");
         // testOp(browser, "Parse TLV", "test input", "test_output");
         testOpHtml(browser, "Parse UDP", "04 89 00 35 00 2c 01 01", "tr:last-child td:last-child", "0x0101");
         // testOp(browser, "Parse UNIX file permissions", "test input", "test_output");
-        // testOp(browser, "Parse URI", "test input", "test_output");
+        testOp(browser, "Parse URI", "https://example.com/?constructor=ok&__proto__=hello", /Arguments:\s+constructor = ok\s+__proto__\s+= hello/);
         testOp(browser, "Parse User Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0 ", /Architecture: amd64/);
         // testOp(browser, "Parse X.509 certificate", "test input", "test_output");
         testOpFile(browser, "Play Media", "files/mp3example.mp3", "audio", "");
@@ -345,8 +355,8 @@ module.exports = {
         // testOp(browser, "Strip HTTP headers", "test input", "test_output");
         // testOp(browser, "Subsection", "test input", "test_output");
         // testOp(browser, "Substitute", "test input", "test_output");
-        // testOp(browser, "Subtract", "test input", "test_output");
-    // testOp(browser, "Sum", "test input", "test_output");
+        testOp(browser, "Subtract", "321,123,test", "198", ["Comma"]);
+        testOp(browser, "Sum", "321,123,test", "444", ["Comma"]);
         // testOp(browser, "Swap endianness", "test input", "test_output");
         // testOp(browser, "Symmetric Difference", "test input", "test_output");
         testOpHtml(browser, "Syntax highlighter", "var a = [4,5,6]", ".hljs-selector-attr", "[4,5,6]");
@@ -492,7 +502,22 @@ function testOpImage(browser, opName, filename, args=[]) {
 
     browser
         .waitForElementVisible("#output-html img")
-        .expect.element("#output-html img").to.have.css("width").which.matches(/^[^0]\d*px/);
+        .expect.element("#output-html img").to.have.css("width").which.matches(/^(?!0+(?:\.0+)?px$)\d+(?:\.\d+)?px$/);
+
+    browser.execute(function() {
+        const output = document.getElementById("output-html");
+        const img = output.querySelector("img");
+        const outputRect = output.getBoundingClientRect();
+        const imgRect = img.getBoundingClientRect();
+
+        return {
+            imageFitsWidth: imgRect.width <= outputRect.width,
+            imageFitsHeight: imgRect.height <= outputRect.height,
+        };
+    }, [], function({value}) {
+        browser.expect(value.imageFitsWidth).to.be.equal(true);
+        browser.expect(value.imageFitsHeight).to.be.equal(true);
+    });
 }
 
 /** @function

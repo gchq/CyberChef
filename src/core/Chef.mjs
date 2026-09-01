@@ -138,6 +138,8 @@ class Chef {
 
         if (!highlights) return false;
 
+        if (direction === "reverse") highlights.reverse();
+
         for (let i = 0; i < highlights.length; i++) {
             // Remove multiple highlights before processing again
             pos = [pos[0]];

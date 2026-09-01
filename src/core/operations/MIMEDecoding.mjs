@@ -87,7 +87,7 @@ class MIMEDecoding extends Operation {
             end = cur + j + "?=".length;
 
             if (encoding.toLowerCase() === "b") {
-                text = fromBase64(text);
+                text = fromBase64(text, undefined, "byteArray");
             } else if (encoding.toLowerCase() === "q") {
                 text = this.parseQEncodedWord(text);
             } else {
