@@ -12,6 +12,14 @@ import { toBase64 } from "../lib/Base64.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
 import { Jimp, JimpMime, ResizeStrategy, rgbaToInt } from "jimp";
 
+// arbitrary limits to prevent resource exhaustion
+// scale factor of 64 is big enough to likely result in scaling in the display
+// window anyway
+// pixels per row is harder to come up with a figure that won't inconvenience
+// someone. 2048 feels like a reasonable compromise
+const MAX_PIXEL_SCALE_FACTOR = 64;
+const MAX_PIXELS_PER_ROW = 2048;
+
 /**
  * Generate Image operation
  */
@@ -40,11 +48,17 @@ class GenerateImage extends Operation {
                 name: "Pixel Scale Factor",
                 type: "number",
                 value: 8,
+                integer: true,
+                min: 1,
+                max: MAX_PIXEL_SCALE_FACTOR,
             },
             {
                 name: "Pixels per row",
                 type: "number",
                 value: 64,
+                integer: true,
+                min: 1,
+                max: MAX_PIXELS_PER_ROW,
             },
         ];
     }
@@ -58,14 +72,6 @@ class GenerateImage extends Operation {
         const [mode, scale, width] = args;
         input = new Uint8Array(input);
 
-        if (scale <= 0) {
-            throw new OperationError("Pixel Scale Factor needs to be > 0");
-        }
-
-        if (width <= 0) {
-            throw new OperationError("Pixels per Row needs to be > 0");
-        }
-
         const bytePerPixelMap = {
             Greyscale: 1,
             RG: 2,
@@ -73,6 +79,10 @@ class GenerateImage extends Operation {
             RGBA: 4,
             Bits: 1 / 8,
         };
+
+        if (!Object.hasOwn(bytePerPixelMap, mode)) {
+            throw new OperationError(`Unsupported Mode: (${mode})`);
+        }
 
         const bytesPerPixel = bytePerPixelMap[mode];
 
@@ -163,8 +173,10 @@ class GenerateImage extends Operation {
         }
 
         try {
-            const imageBuffer = await image.getBuffer(JimpMime.png);
-            return imageBuffer.buffer;
+            // see https://nodejs.org/docs/latest-v24.x/api/buffer.html#bufbyteoffset
+            // for why we can't just return result.buffer
+            const result = await image.getBuffer(JimpMime.png);
+            return result.buffer.slice(result.byteOffset, result.byteOffset + result.byteLength);
         } catch (err) {
             throw new OperationError(`Error generating image. (${err})`);
         }

@@ -36,7 +36,8 @@ class ShowOnMap extends Operation {
             {
                 name: "Input Format",
                 type: "option",
-                value: ["Auto"].concat(FORMATS)
+                value: ["Auto"].concat(FORMATS),
+                allowEmpty: false
             },
             {
                 name: "Input Delimiter",
@@ -49,7 +50,8 @@ class ShowOnMap extends Operation {
                     "Comma",
                     "Semi-colon",
                     "Colon"
-                ]
+                ],
+                allowEmpty: false
             }
         ];
     }

@@ -36,4 +36,26 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "Show on map: empty input format is rejected",
+        input: "1, 24",
+        expectedOutput: "Input Format cannot be empty.",
+        recipeConfig: [
+            {
+                op: "Show on map",
+                args: [13, "", "Auto"]
+            },
+        ],
+    },
+    {
+        name: "Show on map: empty input delimiter is rejected",
+        input: "1, 24",
+        expectedOutput: "Input Delimiter cannot be empty.",
+        recipeConfig: [
+            {
+                op: "Show on map",
+                args: [13, "Auto", ""]
+            },
+        ],
+    },
 ]);

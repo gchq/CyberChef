@@ -309,5 +309,75 @@ A common mistake that people make when trying to design something completely foo
                 "args": [ALICE_PUBLIC]
             }
         ]
-    }
+    },
+    {
+        name: "Parse PGP Key: Alice Public",
+        input: ALICE_PUBLIC,
+        expectedOutput: `Public Key Information
+======================
+Version       : 4
+Creation Date : 2026-05-27T16:41:49.000Z
+Key ID        : 1B75204B2ADF8D8C
+Fingerprint   : 7AFE93FF7614167C3FE831FE1B75204B2ADF8D8C
+Algorithm     : RSA (Encrypt or Sign)
+Key Size      : 1024 bits\n`,
+        recipeConfig: [
+            {
+                "op": "Parse PGP Key",
+                "args": [],
+            }
+        ]
+    },
+    {
+        name: "Parse PGP Key: RFC9580 legacy V4 (A.1)",
+        input: `-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xjMEU/NfCxYJKwYBBAHaRw8BAQdAPwmJlL3ZFu1AUxl5NOSofIBzOhKA1i+AEJku
+Q+47JAY=
+-----END PGP PUBLIC KEY BLOCK-----`,
+        expectedOutput: `Public Key Information
+======================
+Version       : 4
+Creation Date : 2014-08-19T14:28:27.000Z
+Key ID        : 8CFDE12197965A9A
+Fingerprint   : C959BDBAFA32A2F89A153B678CFDE12197965A9A
+Algorithm     : EdDSA
+Curve         : ed25519Legacy\n`,
+        recipeConfig: [
+            {
+                "op": "Parse PGP Key",
+                "args": [],
+            }
+        ]
+    },
+    {
+        name: "Parse PGP Key: RFC9580 v6 (A.3)",
+        input: `-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xioGY4d/4xsAAAAg+U2nu0jWCmHlZ3BqZYfQMxmZu52JGggkLq2EVD34laPCsQYf
+GwoAAABCBYJjh3/jAwsJBwUVCg4IDAIWAAKbAwIeCSIhBssYbE8GCaaX5NUt+mxy
+KwwfHifBilZwj2Ul7Ce62azJBScJAgcCAAAAAK0oIBA+LX0ifsDm185Ecds2v8lw
+gyU2kCcUmKfvBXbAf6rhRYWzuQOwEn7E/aLwIwRaLsdry0+VcallHhSu4RN6HWaE
+QsiPlR4zxP/TP7mhfVEe7XWPxtnMUMtf15OyA51YBM4qBmOHf+MZAAAAIIaTJINn
++eUBXbki+PSAld2nhJh/LVmFsS+60WyvXkQ1wpsGGBsKAAAALAWCY4d/4wKbDCIh
+BssYbE8GCaaX5NUt+mxyKwwfHifBilZwj2Ul7Ce62azJAAAAAAQBIKbpGG2dWTX8
+j+VjFM21J0hqWlEg+bdiojWnKfA5AQpWUWtnNwDEM0g12vYxoWM8Y81W+bHBw805
+I8kWVkXU6vFOi+HWvv/ira7ofJu16NnoUkhclkUrk0mXubZvyl4GBg==
+-----END PGP PUBLIC KEY BLOCK-----`,
+        expectedOutput: `Public Key Information
+======================
+Version       : 6
+Creation Date : 2022-11-30T16:08:03.000Z
+Key ID        : CB186C4F0609A697
+Fingerprint   : CB186C4F0609A697E4D52DFA6C722B0C1F1E27C18A56708F6525EC27BAD9ACC9
+Algorithm     : Ed25519
+Curve         : Ed25519\n`,
+        recipeConfig: [
+            {
+                "op": "Parse PGP Key",
+                "args": [],
+            }
+        ]
+    },
+
 ]);

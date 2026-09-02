@@ -83,7 +83,9 @@
             "Rison Decode",
             "To Modhex",
             "From Modhex",
-            "MIME Decoding"
+            "MIME Decoding",
+            "To COBS",
+            "From COBS"
         ]
     },
     {
@@ -113,6 +115,12 @@
             "SM4 Decrypt",
             "RC6 Encrypt",
             "RC6 Decrypt",
+            "Ascon Encrypt",
+            "Ascon Decrypt",
+            "PRESENT Encrypt",
+            "PRESENT Decrypt",
+            "Twofish Encrypt",
+            "Twofish Decrypt",
             "GOST Encrypt",
             "GOST Decrypt",
             "GOST Sign",
@@ -129,6 +137,10 @@
             "XOR Brute Force",
             "Vigenère Encode",
             "Vigenère Decode",
+            "TEA Encrypt",
+            "TEA Decrypt",
+            "XTEA Encrypt",
+            "XTEA Decrypt",
             "XXTEA Encrypt",
             "XXTEA Decrypt",
             "To Morse Code",
@@ -163,6 +175,7 @@
             "AES Key Wrap",
             "AES Key Unwrap",
             "Pseudo-Random Number Generator",
+            "Pseudo-Random Prime Generator",
             "Enigma",
             "Bombe",
             "Multiple Bombe",
@@ -194,6 +207,7 @@
             "PGP Verify",
             "PGP Encrypt and Sign",
             "PGP Decrypt and Verify",
+            "Parse PGP Key",
             "Generate RSA Key Pair",
             "RSA Sign",
             "RSA Verify",
@@ -231,9 +245,10 @@
             "Subtract",
             "Multiply",
             "Divide",
+            "MOD",
+            "Extended GCD",
             "Modular Exponentiation",
             "Modular Inverse",
-            "Extended GCD",
             "Mean",
             "Median",
             "Standard Deviation",
@@ -419,7 +434,9 @@
             "LZMA Compress",
             "LZ4 Decompress",
             "LZ4 Compress",
-            "LZNT1 Decompress"
+            "LZNT1 Decompress",
+            "XPRESS Decompress",
+            "XPRESS LZ77+Huffman Decompress"
         ]
     },
     {
@@ -446,6 +463,8 @@
             "BLAKE2b",
             "BLAKE2s",
             "BLAKE3",
+            "Ascon Hash",
+            "Ascon MAC",
             "GOST Hash",
             "Streebog",
             "SSDEEP",
