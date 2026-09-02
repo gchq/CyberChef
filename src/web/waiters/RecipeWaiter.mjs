@@ -26,6 +26,9 @@ class RecipeWaiter {
         this.app = app;
         this.manager = manager;
         this.removeIntent = false;
+        // Set whenever an operation is being dragged, from either the operations list or the recipe
+        // list. Both Sortable instances must maintain it: several drop targets rely on it to tell an
+        // operation drag apart from a file or text drag.
         this.dragInProgress = false;
     }
 
@@ -47,7 +50,11 @@ class RecipeWaiter {
             setData: function(dataTransfer, dragEl) {
                 dataTransfer.setData("Text", dragEl.querySelector(".op-title").textContent);
             },
+            onStart: function() {
+                this.dragInProgress = true;
+            }.bind(this),
             onEnd: function(evt) {
+                this.dragInProgress = false;
                 if (this.removeIntent) {
                     evt.item.remove();
                     evt.target.dispatchEvent(this.manager.operationremove);
