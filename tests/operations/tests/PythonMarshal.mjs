@@ -64,6 +64,50 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "From Python Marshal: reject null marker in collection",
+        input: hexToString("5b0100000030"),
+        expectedError: true,
+        recipeConfig: [
+            {
+                op: "From Python Marshal",
+                args: [],
+            },
+        ],
+    },
+    {
+        name: "From Python Marshal: null marker terminates dictionary value",
+        input: hexToString("7b75010000007830750100000079e90100000030"),
+        expectedOutput: "{}",
+        recipeConfig: [
+            {
+                op: "From Python Marshal",
+                args: [],
+            },
+        ],
+    },
+    {
+        name: "From Python Marshal: reject out-of-range long digit",
+        input: hexToString("6c010000000080"),
+        expectedError: true,
+        recipeConfig: [
+            {
+                op: "From Python Marshal",
+                args: [],
+            },
+        ],
+    },
+    {
+        name: "From Python Marshal: reject unnormalised long",
+        input: hexToString("6c0200000001000000"),
+        expectedError: true,
+        recipeConfig: [
+            {
+                op: "From Python Marshal",
+                args: [],
+            },
+        ],
+    },
+    {
         name: "From Python Marshal: documented value types",
         input: hexToString("fbda046e6f6e654eda0566616c736546da047472756554da05696e743332e9d6ffffffda07696e7465676572ec040000000000000000000001da05666c6f6174e70000000000000c40da056279746573f30200000000ffda0474657874f508000000ce93ceb5ceb9ceacda046c6973745b02000000e901000000da0374776fda057475706c65a902720f0000007210000000da037365743c02000000720f000000e902000000da0a64696374696f6e6172797bda066e6573746564da0576616c75653030"),
         expectedOutput: "{\n    \"none\": null,\n    \"false\": false,\n    \"true\": true,\n    \"int32\": -42,\n    \"integer\": {\n        \"_pythonMarshalType\": \"int\",\n        \"value\": \"9007199254740992\"\n    },\n    \"float\": 3.5,\n    \"bytes\": {\n        \"_pythonMarshalType\": \"bytes\",\n        \"hex\": \"00ff\"\n    },\n    \"text\": \"Γειά\",\n    \"list\": [\n        1,\n        \"two\"\n    ],\n    \"tuple\": [\n        1,\n        \"two\"\n    ],\n    \"set\": [\n        1,\n        2\n    ],\n    \"dictionary\": {\n        \"nested\": \"value\"\n    }\n}",

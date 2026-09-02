@@ -282,7 +282,12 @@ class Reader {
         let value = 0n;
         for (let i = 0; i < digitCount; i++) {
             const bytes = this.readBytes(2);
-            const digit = BigInt(bytes[0] | (bytes[1] << 8));
+            const digitValue = bytes[0] | (bytes[1] << 8);
+            if (digitValue > 0x7fff) throw new OperationError("Python marshal integer digit is out of range");
+            if (i === digitCount - 1 && digitValue === 0) {
+                throw new OperationError("Python marshal integer is not normalised");
+            }
+            const digit = BigInt(digitValue);
             value |= digit << BigInt(i * 15);
         }
         return this.toJsonInteger(size < 0 ? -value : value);
@@ -324,7 +329,11 @@ class Reader {
      */
     readSequence(value, length, depth) {
         if (length > MAX_ITEMS) throw new OperationError("Python marshal collection has too many items");
-        for (let i = 0; i < length; i++) value.push(this.readValue(depth + 1));
+        for (let i = 0; i < length; i++) {
+            const item = this.readValue(depth + 1);
+            if (item === NULL) throw new OperationError("Unexpected null marker in Python marshal collection");
+            value.push(item);
+        }
     }
 
     /**
@@ -336,7 +345,9 @@ class Reader {
             const key = this.readValue(depth + 1);
             if (key === NULL) return;
             if (typeof key !== "string") throw new OperationError("Python marshal dictionaries with non-string keys are not representable as JSON");
-            value[key] = this.readValue(depth + 1);
+            const item = this.readValue(depth + 1);
+            if (item === NULL) return;
+            value[key] = item;
         }
         throw new OperationError("Python marshal dictionary has too many items");
     }
