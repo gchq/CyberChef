@@ -129,6 +129,111 @@ module.exports = {
             .waitForElementNotPresent(op);
     },
 
+    /**
+     * Dragging an operation that is already in the recipe fires the same dragover and drop events on
+     * any text argument it passes over as a text drag from outside the app does. Only the
+     * dragInProgress flag tells the two apart, so if the recipe list Sortable stops maintaining it,
+     * the operation's title silently overwrites the argument.
+     */
+    "Recipe operation dragged over a text argument": browser => {
+        const secondArg = "#rec-list li.operation:nth-of-type(2) textarea.arg";
+
+        // Two operations, each with a text argument to drop onto
+        browser
+            .useCss()
+            .click("#clr-recipe")
+            .urlHash("recipe=JWT_Verify('secret')JWT_Verify('secret')")
+            .waitForElementVisible(secondArg, 2000);
+
+        // Control: a text drag from outside the app is still written into the argument, proving the
+        // drop handler is reached at all
+        browser.execute(function() {
+            const arg = document.querySelector("#rec-list li.operation textarea.arg"),
+                dataTransfer = new DataTransfer();
+
+            dataTransfer.setData("Text", "dropped text");
+            arg.dispatchEvent(new DragEvent("dragover", {bubbles: true, cancelable: true, dataTransfer: dataTransfer}));
+            arg.dispatchEvent(new DragEvent("drop", {bubbles: true, cancelable: true, dataTransfer: dataTransfer}));
+            return arg.value;
+        }, [], function({value}) {
+            browser.expect(value).to.equal("dropped text");
+        });
+
+        // Start a genuine Sortable drag on the second operation. Sortable itself picks the drag up
+        // from the pointerdown and dragstart pair, and fills the dataTransfer from its setData.
+        browser.execute(function() {
+            const ops = document.querySelectorAll("#rec-list li.operation"),
+                handle = ops[1].querySelector(".op-title"),
+                rect = handle.getBoundingClientRect();
+
+            window.dragTest = {
+                op: ops[1],
+                arg: ops[0].querySelector("textarea.arg"),
+                dataTransfer: new DataTransfer()
+            };
+            window.dragTest.arg.value = "not overwritten";
+
+            handle.dispatchEvent(new PointerEvent("pointerdown", {
+                bubbles: true,
+                cancelable: true,
+                pointerType: "mouse",
+                button: 0,
+                buttons: 1,
+                clientX: rect.left + 5,
+                clientY: rect.top + 5
+            }));
+            window.dragTest.op.dispatchEvent(new DragEvent("dragstart", {
+                bubbles: true,
+                cancelable: true,
+                dataTransfer: window.dragTest.dataTransfer,
+                clientX: rect.left + 5,
+                clientY: rect.top + 5
+            }));
+        });
+
+        // Sortable raises its start event a tick after the dragstart
+        browser
+            .pause(100)
+            .execute(function() {
+                return window.app.manager.recipe.dragInProgress;
+            }, [], function({value}) {
+                browser.expect(value).to.equal(true);
+            });
+
+        // Drag the operation over the other operation's argument and drop it there
+        browser.execute(function() {
+            const op = window.dragTest.op,
+                arg = window.dragTest.arg,
+                dataTransfer = window.dragTest.dataTransfer,
+                rect = arg.getBoundingClientRect(),
+                init = {
+                    bubbles: true,
+                    cancelable: true,
+                    dataTransfer: dataTransfer,
+                    clientX: rect.left + 5,
+                    clientY: rect.top + 5
+                };
+
+            arg.dispatchEvent(new DragEvent("dragover", init));
+            arg.dispatchEvent(new DragEvent("drop", init));
+            op.dispatchEvent(new DragEvent("dragend", init));
+
+            return {
+                argValue: arg.value,
+                dragText: dataTransfer.getData("Text"),
+                dragInProgress: window.app.manager.recipe.dragInProgress
+            };
+        }, [], function({value}) {
+            // The operation title is what would have been written if the drop were not ignored
+            browser.expect(value.dragText).to.equal("JWT Verify");
+            browser.expect(value.argValue).to.equal("not overwritten");
+            browser.expect(value.dragInProgress).to.equal(false);
+        });
+
+        browser
+            .click("#clr-recipe")
+            .waitForElementNotPresent("#rec-list li.operation");
+    },
     "Test every module": browser => {
         browser.useCss();
 
