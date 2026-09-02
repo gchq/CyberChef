@@ -56,6 +56,32 @@ module.exports = {
         browser.expect.element("//li[contains(@class, 'operation') and text()='Play Media']").to.be.present;
         browser.expect.element("//li[contains(@class, 'operation') and text()='Disassemble x86']").to.be.present;
         browser.expect.element("//li[contains(@class, 'operation') and text()='Register']").to.be.present;
+        browser.expect.element("//li[contains(@class, 'operation') and text()='Escape Smart Characters']").to.be.present;
+    },
+
+    "Operation popover descriptions render HTML safely": browser => {
+        const favouritesCat = "//a[contains(@class, 'category-title') and contains(@data-target, '#catFavourites')]",
+            op = "//ul[@id='search-results']//li[contains(@class, 'operation') and contains(., 'Escape Smart Characters')]";
+
+        browser
+            .useCss()
+            .clearValue("#search")
+            .setValue("#search", "Escape Smart Characters")
+            .useXpath()
+            .waitForElementVisible(op, 1000)
+            .moveToElement(op, 10, 10)
+            .useCss()
+            .waitForElementVisible(".popover-body code:last-of-type", 1000)
+            .expect.element(".popover-body code:last-of-type").text.to.contain("\"Hello\" -- world...");
+
+        browser
+            .useCss()
+            .moveToElement("#operations .title", 1, 1)
+            .waitForElementNotPresent(".popover-body", 1000)
+            .clearValue("#search")
+            .useXpath()
+            .getLocationInView(favouritesCat)
+            .click(favouritesCat);
     },
 
     "Recipe can be run": browser => {

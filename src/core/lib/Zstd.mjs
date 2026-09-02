@@ -22,9 +22,9 @@ let initPromise = null;
  */
 export function zstdInit() {
     if (!initPromise) {
-        const wasmUrl = typeof self !== "undefined" && self.docURL
-            ? `${self.docURL}/assets/zstd.wasm`
-            : undefined;
+        const wasmUrl = typeof self !== "undefined" && self.docURL ?
+            `${self.docURL}/assets/zstd.wasm` :
+            undefined;
         initPromise = init(wasmUrl);
     }
     return initPromise;

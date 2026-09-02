@@ -88,8 +88,8 @@ module.exports = {
                     from: "tesseract/**/*",
                     to: "assets/"
                 }, {
-                    context: "node_modules/tesseract.js/",
-                    from: "dist/worker.min.js",
+                    context: "node_modules/tesseract.js/dist",
+                    from: "worker.min.js",
                     to: "assets/tesseract"
                 }, {
                     context: "node_modules/tesseract.js-core/",
@@ -121,7 +121,7 @@ module.exports = {
                     // whether a path was passed in. Webpack's `publicPath: ""`
                     // makes that base URL invalid and the constructor throws.
                     // Neuter the offending line; we always pass a path from Zstd.mjs.
-                    test: /@bokuweb[\/\\]zstd-wasm[\/\\]dist[\/\\]web[\/\\]index\.web\.js$/,
+                    test: /@bokuweb[/\\]zstd-wasm[/\\]dist[/\\]web[/\\]index\.web\.js$/,
                     operations: [
                         new ReplaceOperation("once", "new URL(`./zstd.wasm`, import.meta.url).href", "''")
                     ]
@@ -236,7 +236,7 @@ module.exports = {
             },
             { // Third party images are inlined
                 test: /\.(png|jpg|gif)$/,
-                exclude: /web\/static/,
+                include: /node_modules/,
                 type: "asset/inline",
             },
         ]

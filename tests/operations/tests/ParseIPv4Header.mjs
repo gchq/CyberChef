@@ -19,5 +19,16 @@ TestRegister.addTests([
                 args: ["Hex", "Data (raw)"]
             }
         ]
+    },
+    {
+        name: "Parse IPv4 header: regression for Uint8Array.concat crash on truncated raw input",
+        input: "\x45\x00\x00\x14\x00\x00\x00\x00\x40\x06\x00\x00",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                op: "Parse IPv4 header",
+                args: ["Raw", "Data (raw)"]
+            }
+        ]
     }
 ]);

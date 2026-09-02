@@ -153,7 +153,7 @@ export function getSeriesValues(input, recordDelimiter, fieldDelimiter, columnHe
     );
 
     let xValues = new Set();
-    const series = {};
+    const series = Object.create(null);
 
     values.forEach(row => {
         const serie = row[0],
@@ -163,14 +163,14 @@ export function getSeriesValues(input, recordDelimiter, fieldDelimiter, columnHe
         if (Number.isNaN(val)) throw new OperationError("Values must be numbers in base 10.");
 
         xValues.add(xVal);
-        if (typeof series[serie] === "undefined") series[serie] = {};
+        if (typeof series[serie] === "undefined") series[serie] = Object.create(null);
         series[serie][xVal] = val;
     });
 
     xValues = new Array(...xValues);
 
     const seriesList = [];
-    for (const seriesName in series) {
+    for (const seriesName of Object.keys(series)) {
         const serie = series[seriesName];
         seriesList.push({name: seriesName, data: serie});
     }
