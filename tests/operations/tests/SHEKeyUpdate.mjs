@@ -1,7 +1,12 @@
 /**
  * SHE Key Update tests.
  *
- * Test vectors are taken from the AUTOSAR SHE memory update protocol examples.
+ * The zero-flag vectors are the AUTOSAR SHE memory update protocol examples.
+ * AUTOSAR publishes no flag-bearing example, so those vectors are derived from
+ * the specified field concatenation, CID (28 bits) | FID (5 bits for SHE, 6 for
+ * SHE+) | zero fill | KEY_NEW, built as a bit string rather than through the
+ * operation's own packing. They pin the flag bit positions: WRITE_PROTECTION at
+ * bit 28 through WILDCARD at bit 32, and VERIFY_ONLY at bit 33 under SHE+.
  *
  * @author MannXo [prmma23@gmail.com]
  * @copyright Crown Copyright 2026
@@ -93,6 +98,93 @@ TestRegister.addTests([
                     1,
                     "SHE+",
                     false, false, false, false, false, false
+                ]
+            }
+        ]
+    },
+    {
+        name: "SHE Key Update: WRITE_PROTECTION flag (basic SHE)",
+        input: "0f0e0d0c0b0a09080706050403020100",
+        expectedOutput: [
+            "M1: 00000000000000000000000000000011",
+            "M2: 7353dd885b971e09686842f169041ac858b7a8db4cb1ebf676755c95cd0586a3",
+            "M3: 093a96fcf3c998f2fa788cae477ffa57",
+            "M4: 00000000000000000000000000000011b472e8d8727d70d57295e74849a27917",
+            "M5: ec4a8474b925eaae19feef74620fad7f",
+        ].join("\n"),
+        recipeConfig: [
+            {
+                op: "From Hex",
+                args: ["None"]
+            },
+            {
+                op: "SHE Key Update",
+                args: [
+                    {option: "Hex", string: "000102030405060708090a0b0c0d0e0f"},
+                    {option: "Hex", string: "000000000000000000000000000000"},
+                    "MASTER_ECU_KEY",
+                    "MASTER_ECU_KEY",
+                    1,
+                    "SHE",
+                    true, false, false, false, false, false
+                ]
+            }
+        ]
+    },
+    {
+        name: "SHE Key Update: all five standard flags (basic SHE)",
+        input: "0f0e0d0c0b0a09080706050403020100",
+        expectedOutput: [
+            "M1: 00000000000000000000000000000011",
+            "M2: 760e31ea400a5632847ceae6f21da30283d0b2ad58fc38c5a41cdcac955e293b",
+            "M3: 00ace4459e7e0d5ef2deadf7f65112c4",
+            "M4: 00000000000000000000000000000011b472e8d8727d70d57295e74849a27917",
+            "M5: ec4a8474b925eaae19feef74620fad7f",
+        ].join("\n"),
+        recipeConfig: [
+            {
+                op: "From Hex",
+                args: ["None"]
+            },
+            {
+                op: "SHE Key Update",
+                args: [
+                    {option: "Hex", string: "000102030405060708090a0b0c0d0e0f"},
+                    {option: "Hex", string: "000000000000000000000000000000"},
+                    "MASTER_ECU_KEY",
+                    "MASTER_ECU_KEY",
+                    1,
+                    "SHE",
+                    true, true, true, true, true, false
+                ]
+            }
+        ]
+    },
+    {
+        name: "SHE Key Update: VERIFY_ONLY flag (SHE+)",
+        input: "0f0e0d0c0b0a09080706050403020100",
+        expectedOutput: [
+            "M1: 00000000000000000000000000000141",
+            "M2: 538c2553e3f50841913a553d0b37e9b772f7d9759a682fca5447fb5d295691f9",
+            "M3: cf38b945f6b6117276ebf866fdb2e1cc",
+            "M4: 00000000000000000000000000000141b059c21adbcb938000c9805434852637",
+            "M5: e3073b876fa53173da072802bd2c8871",
+        ].join("\n"),
+        recipeConfig: [
+            {
+                op: "From Hex",
+                args: ["None"]
+            },
+            {
+                op: "SHE Key Update",
+                args: [
+                    {option: "Hex", string: "000102030405060708090a0b0c0d0e0f"},
+                    {option: "Hex", string: "000000000000000000000000000001"},
+                    "KEY_1",
+                    "MASTER_ECU_KEY",
+                    1,
+                    "SHE+",
+                    false, false, false, false, false, true
                 ]
             }
         ]
