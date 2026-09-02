@@ -54,6 +54,16 @@ export const FLAGS = {
 };
 
 /**
+ * Width of the FID field in bits, by variant. Standard SHE stops at WILDCARD;
+ * SHE+ appends VERIFY_ONLY as a sixth bit and shortens the zero fill to match.
+ * The flags beyond a variant's width are not defined for that variant.
+ */
+export const FID_WIDTHS = {
+    "SHE": 5,
+    "SHE+": 6,
+};
+
+/**
  * Memory update constants KEY_UPDATE_ENC_C and KEY_UPDATE_MAC_C, per variant.
  */
 export const CONSTANTS = {

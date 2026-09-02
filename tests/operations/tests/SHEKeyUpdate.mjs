@@ -98,6 +98,29 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "SHE Key Update: rejects the verify only flag under standard SHE",
+        input: "0f0e0d0c0b0a09080706050403020100",
+        expectedOutput: "The 'Verify only (SHE+)' flag requires the SHE+ variant (FID is 5 bits in SHE)",
+        recipeConfig: [
+            {
+                op: "From Hex",
+                args: ["None"]
+            },
+            {
+                op: "SHE Key Update",
+                args: [
+                    {option: "Hex", string: "000102030405060708090a0b0c0d0e0f"},
+                    {option: "Hex", string: "000000000000000000000000000001"},
+                    "KEY_1",
+                    "MASTER_ECU_KEY",
+                    1,
+                    "SHE",
+                    false, false, false, false, false, true
+                ]
+            }
+        ]
+    },
+    {
         name: "SHE Key Update: rejects a new key that is not 16 bytes",
         input: "0f0e0d0c0b0a0908070605040302",
         expectedOutput: "The new key (input) must be 16 bytes (currently 14 bytes)",

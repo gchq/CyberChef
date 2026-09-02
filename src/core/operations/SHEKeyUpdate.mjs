@@ -12,6 +12,7 @@ import {
     KEY_SLOTS,
     SLOT_NAMES,
     FLAGS,
+    FID_WIDTHS,
     CONSTANTS,
     MAX_COUNTER,
     strToBytes,
@@ -139,6 +140,12 @@ class SHEKeyUpdate extends Operation {
         }
 
         const flagOrder = Object.keys(FLAGS);
+        const fidWidth = FID_WIDTHS[variant];
+        const undefinedFlag = flagOrder.slice(fidWidth).find((name, i) => flagValues[fidWidth + i]);
+        if (undefinedFlag) {
+            throw new OperationError(`The '${undefinedFlag}' flag requires the SHE+ variant (FID is ${fidWidth} bits in ${variant})`);
+        }
+
         let fid = 0;
         flagValues.forEach((enabled, i) => {
             if (enabled) fid |= FLAGS[flagOrder[i]];
