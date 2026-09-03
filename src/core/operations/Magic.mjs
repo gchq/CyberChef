@@ -105,6 +105,7 @@ class Magic extends Operation {
          */
         function chooseColour(val) {
             if (val < 3) return "green";
+            if (val < 4) return "yellowgreen";
             if (val < 5) return "goldenrod";
             return "red";
         }
