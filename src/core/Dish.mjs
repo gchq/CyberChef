@@ -44,10 +44,10 @@ class Dish {
             Object.prototype.hasOwnProperty.call(dishOrInput, "type")) {
             this.set(dishOrInput.value, dishOrInput.type);
         // input and type defined separately
-        } else if (dishOrInput && type !== null) {
+        } else if (dishOrInput !== undefined && dishOrInput !== null && type !== null) {
             this.set(dishOrInput, type);
         // No type declared, so infer it.
-        } else if (dishOrInput) {
+        } else if (dishOrInput !== undefined && dishOrInput !== null) {
             const inferredType = Dish.typeEnum(dishOrInput.constructor.name);
             this.set(dishOrInput, inferredType);
         }

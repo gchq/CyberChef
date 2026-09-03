@@ -5,6 +5,7 @@ import fs from "fs";
 import BigNumber from "bignumber.js";
 
 import { Dish, toBase32, SHA3 } from "../../../src/node/index.mjs";
+import chef from "../../../src/node/index.mjs";
 import File from "../../../src/node/File.mjs";
 import TestRegister from "../../lib/TestRegister.mjs";
 
@@ -231,5 +232,17 @@ TestRegister.addApiTests([
         // cant store chars in a Uint8Array, so make it a normal one.
         const actual = Array.prototype.slice.call(dataArray).map(c => String.fromCharCode(c)).join("");
         assert.strictEqual(actual, "abcdefghijk");
+    }),
+
+    it("Dish: numeric 0 input should not be treated as an empty dish", () => {
+        const dish = new Dish(0);
+        assert.strictEqual(dish.type, Dish.NUMBER);
+        assert.strictEqual(dish.get(Dish.NUMBER), 0);
+    }),
+
+    it("chef: numeric 0 input should be preserved", async () => {
+        assert.strictEqual(chef.ADD(0, {key: "4"}).toString(), "4");
+        assert.strictEqual(chef.toHex(0).toString(), "30");
+        assert.strictEqual((await chef.bake(0, [chef.toHex])).toString(), "30");
     }),
 ]);
