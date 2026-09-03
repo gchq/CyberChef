@@ -69,7 +69,9 @@ class ToBase85 extends Operation {
             ) >>> 0;
 
             // A decoder reads 'z' as four zero bytes, so a short final group cannot use it.
-            if (encoding !== "Standard" || block > 0 || input.length < i + 4) {
+            const isPartialGroup = input.length < i + 4;
+
+            if (encoding !== "Standard" || block > 0 || isPartialGroup) {
                 let digits = [];
                 for (let j = 0; j < 5; j++) {
                     digits.push(block % 85);
@@ -78,7 +80,7 @@ class ToBase85 extends Operation {
 
                 digits = digits.reverse();
 
-                if (input.length < i + 4) {
+                if (isPartialGroup) {
                     digits.splice(input.length - (i + 4), 4);
                 }
 
