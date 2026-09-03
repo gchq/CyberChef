@@ -22,6 +22,12 @@ const WORD_REGEX = /\p{L}[\p{L}\p{M}]*/gu;
 const IDEOGRAPHIC_REGEX = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
 
 /**
+ * Matches one grapheme cluster: a base character together with any combining
+ * marks that follow it.
+ */
+const CLUSTER_REGEX = /\P{M}\p{M}*/gu;
+
+/**
  * Number of candidate scrambles generated per word before the best one is picked.
  */
 const CANDIDATES = 12;
@@ -225,19 +231,22 @@ class Typoglycemia extends Operation {
         const rnd = seed === 0 ? Math.random : mulberry32(seed);
 
         return input.replace(WORD_REGEX, (word) => {
-            const chars = Array.from(word);
-            if (chars.length < minWordLength) return word;
+            // Split into grapheme clusters rather than code points so that a
+            // combining mark always travels with the character it decorates,
+            // instead of drifting onto a different letter.
+            const clusters = word.match(CLUSTER_REGEX) ?? [];
+            if (clusters.length < minWordLength) return word;
             if (IDEOGRAPHIC_REGEX.test(word)) return word;
 
             // Scramble in lower case, then restore the original capitalisation
             // by position. Word shape is a reading cue, so "McDonald" should
             // stay front-loaded with capitals rather than move them around.
-            const lower = chars.map(c => c.toLowerCase());
+            const lower = clusters.map(c => c.toLowerCase());
             const middle = scrambleMiddle(lower.slice(1, -1), amp, floor, rnd);
-            const scrambled = [lower[0], ...middle, lower[chars.length - 1]];
+            const scrambled = [lower[0], ...middle, lower[clusters.length - 1]];
 
             return scrambled.map((c, i) => {
-                const original = chars[i];
+                const original = clusters[i];
                 const isUpper = original === original.toUpperCase() &&
                     original !== original.toLowerCase();
                 return isUpper ? c.toUpperCase() : c;
