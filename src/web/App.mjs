@@ -537,12 +537,17 @@ class App {
         if (this.uriParams.input) {
             try {
                 let inputVal;
-                const inputChrEnc = this.manager.input.getChrEnc();
                 const inputData = fromBase64(this.uriParams.input, null, "byteArray");
-                if (inputChrEnc > 0) {
-                    inputVal = cptable.utils.decode(inputChrEnc, inputData);
+                if (this.uriParams.ienc) {
+                    const inputChrEnc = this.manager.input.getChrEnc();
+                    if (inputChrEnc > 0) {
+                        inputVal = cptable.utils.decode(inputChrEnc, inputData);
+                    } else {
+                        inputVal = Utils.byteArrayToChars(inputData);
+                    }
                 } else {
                     inputVal = Utils.byteArrayToChars(inputData);
+                    this.manager.input.chrEncChange(0, true, true);
                 }
                 this.setInput(inputVal);
             } catch (err) {}
