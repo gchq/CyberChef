@@ -423,6 +423,8 @@ Q+47JAY=
         testOp(browser, "Zip", "test input", /^PK\u0003\u0004\u0014\u0000{3}/);
         // testOp(browser, "Zlib Deflate", "test input", "test_output");
         // testOp(browser, "Zlib Inflate", "test input", "test_output");
+        testOp(browser, ["Zstd Compress", "To Hex"], "The cat sat on the mat.", "28 b5 2f fd 20 17 b9 00 00 54 68 65 20 63 61 74 20 73 61 74 20 6f 6e 20 74 68 65 20 6d 61 74 2e");
+        testOp(browser, ["From Hex", "Zstd Decompress"], "28b52ffd2017b900005468652063617420736174206f6e20746865206d61742e", "The cat sat on the mat.");
     },
 
 
