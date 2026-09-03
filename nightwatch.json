@@ -16,7 +16,7 @@
       "desiredCapabilities": {
         "browserName": "chrome",
         "chromeOptions": {
-              "args" : ["no-sandbox"]
+              "args" : ["--no-sandbox"]
         }
       },
       "enable_fail_fast": true
