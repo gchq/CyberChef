@@ -14,7 +14,11 @@ runs:
       shell: bash
       run: |
         rm -rf chrome/
-        rm -f node_modules/chromedriver/lib/chromedriver/chrome
+        rm -rf node_modules/chromedriver/lib/chromedriver/chrome
         npx @puppeteer/browsers install chrome@${{ inputs.chrome-version }}
         chromepath=$(find "$(pwd)"/chrome/* -name chrome -print -quit)
+        if [ -z "$chromepath" ]; then
+          echo "Chrome binary not found after install under $(pwd)/chrome" >&2
+          exit 1
+        fi
         ln -s "$chromepath" node_modules/chromedriver/lib/chromedriver/chrome
