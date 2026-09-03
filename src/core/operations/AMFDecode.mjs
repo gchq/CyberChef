@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import "reflect-metadata"; // Required as a shim for the amf library
 import { AMF0, AMF3 } from "@astronautlabs/amf";
 
@@ -44,7 +45,16 @@ class AMFDecode extends Operation {
         const [format] = args;
         const handler = format === "AMF0" ? AMF0 : AMF3;
         const encoded = new Uint8Array(input);
-        return handler.Value.deserialize(encoded);
+
+        if (!encoded.byteLength) {
+            throw new OperationError("Input must not be empty");
+        }
+
+        try {
+            return handler.Value.deserialize(encoded);
+        } catch (err) {
+            throw new OperationError(`Invalid AMF data: ${err.message}`);
+        }
     }
 
 }

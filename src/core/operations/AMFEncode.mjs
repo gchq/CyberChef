@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import "reflect-metadata"; // Required as a shim for the amf library
 import { AMF0, AMF3 } from "@astronautlabs/amf";
 
@@ -43,7 +44,12 @@ class AMFEncode extends Operation {
     run(input, args) {
         const [format] = args;
         const handler = format === "AMF0" ? AMF0 : AMF3;
-        const output = handler.Value.any(input).serialize();
+        let output;
+        try {
+            output = handler.Value.any(input).serialize();
+        } catch (err) {
+            throw new OperationError(`Invalid AMF input: ${err.message}`);
+        }
         return output.buffer;
     }
 
