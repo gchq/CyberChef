@@ -25,7 +25,12 @@ class PEMToJWK extends Operation {
         this.infoURL = "https://datatracker.ietf.org/doc/html/rfc7517";
         this.inputType = "string";
         this.outputType = "string";
-        this.args = [];
+        this.args = [
+            {
+                name: "Set key ID (kid) to RFC 7683 thumbprint",
+                type: "boolean"
+            }
+        ];
         this.checks = [
             {
                 "pattern": "-----BEGIN ((RSA |EC )?(PRIVATE|PUBLIC) KEY|CERTIFICATE)-----",
@@ -40,6 +45,8 @@ class PEMToJWK extends Operation {
      * @returns {string}
      */
     run(input, args) {
+        const setKeyId = args[0] || false
+
         let output = "";
         let match;
         const regex = /-----BEGIN ([A-Z][A-Z ]+[A-Z])-----/g;
@@ -63,7 +70,10 @@ class PEMToJWK extends Operation {
                 if (key.type === "DSA") {
                     throw new OperationError("DSA keys are not supported for JWK");
                 }
-                const jwk = r.KEYUTIL.getJWKFromKey(key);
+                const jwk = r.KEYUTIL.getJWK(key, true, true, true, true);
+                if (setKeyId) {
+                    jwk.kid = r.KJUR.jws.JWS.getJWKthumbprint(jwk);
+                }
                 if (output.length > 0) {
                     output += "\n";
                 }
@@ -72,7 +82,10 @@ class PEMToJWK extends Operation {
                 const cert = new r.X509();
                 cert.readCertPEM(pem);
                 const key = cert.getPublicKey();
-                const jwk = r.KEYUTIL.getJWKFromKey(key);
+                const jwk = r.KEYUTIL.getJWK(key, true, true, true, true);
+                if (setKeyId) {
+                    jwk.kid = r.KJUR.jws.JWS.getJWKthumbprint(jwk);
+                }
                 if (output.length > 0) {
                     output += "\n";
                 }
