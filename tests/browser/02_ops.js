@@ -127,6 +127,7 @@ module.exports = {
         // testOp(browser, "Derive PBKDF2 key", "test input", "test_output");
         // testOp(browser, "Detect File Type", "test input", "test_output");
         testOpHtml(browser, "Diff", "The cat sat on the mat\n\nThe mat cat on the sat", "ins:first-child", "mat", ["\\n\\n", "Word", true, true, false, false]);
+        testOp(browser, "Diff", "line1\nline2\n\nline1\nline2 modified", "line1\n-line2\n+line2 modified", ["\\n\\n", "Line", true, true, false, false, true]);
         // testOp(browser, "Disassemble x86", "test input", "test_output");
         testOpImage(browser, "Dither Image", "files/Hitchhikers_Guide.jpeg");
     // testOp(browser, "Divide", "test input", "test_output");
