@@ -53,7 +53,8 @@ class AMFDecode extends Operation {
         try {
             return handler.Value.deserialize(encoded);
         } catch (err) {
-            throw new OperationError(`Invalid AMF data: ${err.message}`);
+            const reason = err instanceof Error ? err.message : String(err);
+            throw new OperationError(`Invalid AMF data: ${reason}`);
         }
     }
 

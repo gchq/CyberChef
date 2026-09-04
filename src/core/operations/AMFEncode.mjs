@@ -48,7 +48,8 @@ class AMFEncode extends Operation {
         try {
             output = handler.Value.any(input).serialize();
         } catch (err) {
-            throw new OperationError(`Invalid AMF input: ${err.message}`);
+            const reason = err instanceof Error ? err.message : String(err);
+            throw new OperationError(`Invalid AMF input: ${reason}`);
         }
         return output.buffer;
     }
