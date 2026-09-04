@@ -45,7 +45,7 @@ class PEMToJWK extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const setKeyId = args[0] || false
+        const setKeyId = args[0] || false;
 
         let output = "";
         let match;
