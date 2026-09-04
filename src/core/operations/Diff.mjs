@@ -118,7 +118,7 @@ class Diff extends Operation {
                     output += line.substring(1) + "\n";
                 }
             }
-            return output.slice(0, -1);
+            return `<pre>${Utils.escapeHtml(output.slice(0, -1))}</pre>`;
         }
 
         switch (diffBy) {

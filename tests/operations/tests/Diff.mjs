@@ -9,7 +9,7 @@ TestRegister.addTests([
     {
         "name": "Diff: Show +/- notation - true (Line mode)",
         "input": "line1\nline2\nline3\n\nline1\nline2modified\nline3",
-        "expectedOutput": "line1\n-line2\n+line2modified\nline3",
+        "expectedOutput": "<pre>line1\n-line2\n+line2modified\nline3</pre>",
         "recipeConfig": [
             {
                 "op": "Diff",
@@ -47,7 +47,7 @@ TestRegister.addTests([
     {
         "name": "Diff: Show +/- notation - with showAdded false (Line mode)",
         "input": "line1\nline2\nline3\n\nline1\nline2modified\nline3",
-        "expectedOutput": "line1\n-line2\nline3",
+        "expectedOutput": "<pre>line1\n-line2\nline3</pre>",
         "recipeConfig": [
             {
                 "op": "Diff",
@@ -66,7 +66,7 @@ TestRegister.addTests([
     {
         "name": "Diff: Show +/- notation - with showRemoved false (Line mode)",
         "input": "line1\nline2\nline3\n\nline1\nline2modified\nline3",
-        "expectedOutput": "line1\n+line2modified\nline3",
+        "expectedOutput": "<pre>line1\n+line2modified\nline3</pre>",
         "recipeConfig": [
             {
                 "op": "Diff",
@@ -85,7 +85,7 @@ TestRegister.addTests([
     {
         "name": "Diff: Show +/- notation - with showSubtraction true (Line mode)",
         "input": "line1\nline2\nline3\n\nline1\nline2modified\nline3",
-        "expectedOutput": "@@ -1,3 +1,3 @@\n-line2\n+line2modified",
+        "expectedOutput": "<pre>@@ -1,3 +1,3 @@\n-line2\n+line2modified</pre>",
         "recipeConfig": [
             {
                 "op": "Diff",
@@ -95,6 +95,25 @@ TestRegister.addTests([
                     true,
                     true,
                     true,
+                    false,
+                    true
+                ],
+            },
+        ],
+    },
+    {
+        "name": "Diff: Show +/- notation escapes HTML",
+        "input": "line<1\nold&\n\nline<1\nnew>",
+        "expectedOutput": "<pre>line&lt;1\n-old&amp;\n+new&gt;</pre>",
+        "recipeConfig": [
+            {
+                "op": "Diff",
+                "args": [
+                    "\\n\\n",
+                    "Line",
+                    true,
+                    true,
+                    false,
                     false,
                     true
                 ],
