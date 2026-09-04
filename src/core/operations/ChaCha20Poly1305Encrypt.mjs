@@ -97,8 +97,8 @@ class ChaCha20Poly1305Encrypt extends Operation {
         if (outputType === "Hex") {
             return toHexFast(ciphertext) + "\n\nTag: " + toHexFast(tag);
         }
-        return Utils.arrayBufferToStr(ciphertext.buffer) + "\n\nTag: " +
-            Utils.arrayBufferToStr(tag.buffer);
+        return Utils.arrayBufferToStr(ciphertext.buffer.slice(ciphertext.byteOffset, ciphertext.byteOffset + ciphertext.byteLength)) + "\n\nTag: " +
+            Utils.arrayBufferToStr(tag.buffer.slice(tag.byteOffset, tag.byteOffset + tag.byteLength));
     }
 
 }

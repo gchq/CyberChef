@@ -110,7 +110,7 @@ class ChaCha20Poly1305Decrypt extends Operation {
             if (outputType === "Hex") {
                 return toHexFast(plaintext);
             }
-            return Utils.arrayBufferToStr(plaintext.buffer);
+            return Utils.arrayBufferToStr(plaintext.buffer.slice(plaintext.byteOffset, plaintext.byteOffset + plaintext.byteLength));
         } catch (e) {
             throw new OperationError("Unable to decrypt: authentication failed. The ciphertext, key, nonce, AAD, or tag may be incorrect.");
         }

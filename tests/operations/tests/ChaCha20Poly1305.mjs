@@ -77,5 +77,44 @@ TestRegister.addTests([
                 ]
             }
         ],
+    },
+    {
+        name: "ChaCha20-Poly1305 Encrypt: Raw output (regression for Buffer pool leak)",
+        input: "Hello World!",
+        expectedOutput: "aaf0e531efaf1adc54287bea0a0a5461673a20a2c7899e3e61c1c4e6ba031e3f43ae22",
+        recipeConfig: [
+            {
+                op: "ChaCha20-Poly1305 Encrypt",
+                args: [
+                    {option: "Hex", string: "0000000000000000000000000000000000000000000000000000000000000001"},
+                    {option: "Hex", string: "000000000000000000000002"},
+                    {option: "UTF8", string: "additional data"},
+                    "Raw",
+                    "Raw"
+                ]
+            },
+            {
+                op: "To Hex",
+                args: ["None", 0]
+            }
+        ],
+    },
+    {
+        name: "ChaCha20-Poly1305 Decrypt: Raw output length (regression for Buffer pool leak)",
+        input: "aaf0e531efaf1adc54287bea",
+        expectedOutput: "Hello World!",
+        recipeConfig: [
+            {
+                op: "ChaCha20-Poly1305 Decrypt",
+                args: [
+                    {option: "Hex", string: "0000000000000000000000000000000000000000000000000000000000000001"},
+                    {option: "Hex", string: "000000000000000000000002"},
+                    {option: "UTF8", string: "additional data"},
+                    {option: "Hex", string: "a2c7899e3e61c1c4e6ba031e3f43ae22"},
+                    "Hex",
+                    "Raw"
+                ]
+            }
+        ],
     }
 ]);
