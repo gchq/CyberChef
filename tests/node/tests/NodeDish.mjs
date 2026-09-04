@@ -245,4 +245,14 @@ TestRegister.addApiTests([
         assert.strictEqual(chef.toHex(0).toString(), "30");
         assert.strictEqual((await chef.bake(0, [chef.toHex])).toString(), "30");
     }),
+
+    it("Dish: boolean false input should produce an empty dish, not throw", () => {
+        const dish = new Dish(false);
+        assert.strictEqual(dish.type, Dish.ARRAY_BUFFER);
+        assert.strictEqual(dish.value.byteLength, 0);
+    }),
+
+    it("chef: boolean false input should still produce an empty dish", async () => {
+        assert.strictEqual((await chef.bake(false)).toString(), "");
+    }),
 ]);
