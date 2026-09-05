@@ -36,6 +36,11 @@ import {
 import chef from "../../../src/node/index.mjs";
 import TestRegister from "../../lib/TestRegister.mjs";
 import File from "../../../src/node/File.mjs";
+import "reflect-metadata"; // Required as a shim for the amf library
+import { AMF0 } from "@astronautlabs/amf";
+import AMFDecode from "../../../src/core/operations/AMFDecode.mjs";
+import AMFEncode from "../../../src/core/operations/AMFEncode.mjs";
+import OperationError from "../../../src/core/errors/OperationError.mjs";
 
 global.File = File;
 
@@ -1199,6 +1204,53 @@ ExifImageHeight: 57`);
             });
         });
 
+    }),
+
+    it("AMF Decode: a thrown non-Error value is reported in the OperationError", () => {
+        const op = new AMFDecode();
+        const input = new ArrayBuffer(4);
+        const originalDeserialize = AMF0.Value.deserialize;
+
+        AMF0.Value.deserialize = () => {
+            throw "boom";
+        };
+        try {
+            assert.throws(() => op.run(input, ["AMF0"]), err =>
+                err instanceof OperationError && err.message === "Invalid AMF data: boom");
+
+            AMF0.Value.deserialize = () => {
+                throw null;
+            };
+            assert.throws(() => op.run(input, ["AMF0"]), err =>
+                err instanceof OperationError && err.message === "Invalid AMF data: null");
+        } finally {
+            AMF0.Value.deserialize = originalDeserialize;
+        }
+    }),
+
+    it("AMF Encode: a thrown non-Error value is reported in the OperationError", () => {
+        const op = new AMFEncode();
+        const originalAny = AMF0.Value.any;
+
+        AMF0.Value.any = () => ({
+            serialize() {
+                throw "boom";
+            }
+        });
+        try {
+            assert.throws(() => op.run({}, ["AMF0"]), err =>
+                err instanceof OperationError && err.message === "Invalid AMF input: boom");
+
+            AMF0.Value.any = () => ({
+                serialize() {
+                    throw null;
+                }
+            });
+            assert.throws(() => op.run({}, ["AMF0"]), err =>
+                err instanceof OperationError && err.message === "Invalid AMF input: null");
+        } finally {
+            AMF0.Value.any = originalAny;
+        }
     }),
 
 
