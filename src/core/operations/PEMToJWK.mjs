@@ -27,7 +27,7 @@ class PEMToJWK extends Operation {
         this.outputType = "string";
         this.args = [
             {
-                name: "Set key ID (kid) to RFC 7683 thumbprint",
+                name: "Set key ID (kid) to RFC 7638 thumbprint",
                 type: "boolean"
             }
         ];
