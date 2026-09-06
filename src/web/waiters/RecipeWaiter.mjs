@@ -26,6 +26,10 @@ class RecipeWaiter {
         this.app = app;
         this.manager = manager;
         this.removeIntent = false;
+        // Set whenever an operation is being dragged, from either the operations list or the recipe
+        // list. Both Sortable instances must maintain it: several drop targets rely on it to tell an
+        // operation drag apart from a file or text drag.
+        this.dragInProgress = false;
     }
 
 
@@ -46,7 +50,11 @@ class RecipeWaiter {
             setData: function(dataTransfer, dragEl) {
                 dataTransfer.setData("Text", dragEl.querySelector(".op-title").textContent);
             },
+            onStart: function() {
+                this.dragInProgress = true;
+            }.bind(this),
             onEnd: function(evt) {
+                this.dragInProgress = false;
                 if (this.removeIntent) {
                     evt.item.remove();
                     evt.target.dispatchEvent(this.manager.operationremove);
@@ -88,6 +96,7 @@ class RecipeWaiter {
      * @param {element} listEl - The list to initialise
      */
     createSortableSeedList(listEl) {
+        const self = this;
         Sortable.create(listEl, {
             group: {
                 name: "recipe",
@@ -99,6 +108,7 @@ class RecipeWaiter {
                 dataTransfer.setData("Text", dragEl.textContent);
             },
             onStart: function(evt) {
+                self.dragInProgress = true;
                 // Removes popover element and event bindings from the dragged operation but not the
                 // event bindings from the one left in the operations list. Without manually removing
                 // these bindings, we cannot re-initialise the popover on the stub operation.
@@ -126,6 +136,7 @@ class RecipeWaiter {
      * @param {event} evt
      */
     opSortEnd(evt) {
+        this.dragInProgress = false;
         if (this.removeIntent && evt.item.parentNode.id === "rec-list") {
             evt.item.remove();
             return;
@@ -159,7 +170,7 @@ class RecipeWaiter {
      * @param {event} e
      */
     favDragover(e) {
-        if (e.dataTransfer.effectAllowed !== "move")
+        if (!this.dragInProgress)
             return false;
 
         e.stopPropagation();
@@ -542,7 +553,7 @@ class RecipeWaiter {
      */
     textArgDragover (e) {
         // This will be set if we're dragging an operation
-        if (e.dataTransfer.effectAllowed === "move")
+        if (this.dragInProgress)
             return false;
 
         e.stopPropagation();
@@ -572,7 +583,7 @@ class RecipeWaiter {
      */
     textArgDrop(e) {
         // This will be set if we're dragging an operation
-        if (e.dataTransfer.effectAllowed === "move")
+        if (this.dragInProgress)
             return false;
 
         e.stopPropagation();
