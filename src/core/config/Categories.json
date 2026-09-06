@@ -200,7 +200,6 @@
             "Object Identifier to Hex",
             "PEM to JWK",
             "JWK to PEM",
-            "JWK Thumbprint",
             "Generate PGP Key Pair",
             "PGP Encrypt",
             "PGP Decrypt",
