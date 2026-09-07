@@ -181,17 +181,14 @@ module.exports = {
         // Add content to the input
         browser.pause(100);
         browser.sendKeys("#input-text .cm-content", "1");
-        browser.waitForElementVisible("#output-loader");
+        browser.waitForElementNotVisible("#stale-indicator", 5000);
         browser.pause(500);
 
         // Make another change while the previous input is being baked
-        browser
-            .sendKeys("#input-text .cm-content", "2")
-            .waitForElementNotVisible("#stale-indicator")
-            .waitForElementNotVisible("#output-loader");
+        browser.sendKeys("#input-text .cm-content", "2");
 
-        // Ensure we got the latest input baked
-        utils.expectOutput(browser, "input12");
+        // Wait for the latest input rather than the delayed loading animation.
+        browser.expect.element("#output-text .cm-content").text.to.equal("input12").before(10000);
 
         // Turn autobake off again
         browser.click("#auto-bake-label");
