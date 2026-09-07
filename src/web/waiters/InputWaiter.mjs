@@ -1034,7 +1034,7 @@ class InputWaiter {
      */
     inputDragover(e) {
         // This will be set if we're dragging an operation
-        if (e.dataTransfer.effectAllowed === "move")
+        if (this.manager.recipe.dragInProgress)
             return false;
 
         e.stopPropagation();
@@ -1067,7 +1067,7 @@ class InputWaiter {
      */
     async inputDrop(e) {
         // This will be set if we're dragging an operation
-        if (e.dataTransfer.effectAllowed === "move")
+        if (this.manager.recipe.dragInProgress)
             return false;
 
         e.stopPropagation();
