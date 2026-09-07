@@ -68,10 +68,12 @@ class JWTSign extends Operation {
 ${err}`);
         }
 
-        const fullHeader = { alg: algorithm, typ: "JWT" };
+        const joseAlg = algorithm === "None" ? "none" : algorithm;
+        const fullHeader = { alg: joseAlg, typ: "JWT" };
+        const headerTrimmed = (header ?? "").trim();
         try {
-            if (header !== "{}") {
-                const parsed = JSON.parse(header);
+            if (headerTrimmed && headerTrimmed !== "{}") {
+                const parsed = JSON.parse(headerTrimmed);
 
                 if (
                     parsed === null ||
