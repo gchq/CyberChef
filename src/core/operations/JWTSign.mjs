@@ -48,7 +48,7 @@ class JWTSign extends Operation {
     /**
      * @param {JSON} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {Promise<string>}
      */
     async run(input, args) {
         const [key, algorithm, header] = args;
