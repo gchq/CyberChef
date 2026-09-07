@@ -118,7 +118,7 @@ ${err}`);
 
 ${err}`);
         }
-    };
+    }
 }
 
 export default JWTSign;
