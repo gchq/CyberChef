@@ -103,6 +103,7 @@
     "@xmldom/xmldom": "^0.8.15",
     "argon2-browser": "^1.18.0",
     "arrive": "^2.5.3",
+    "asn1js": "^3.0.10",
     "assert": "^2.1.0",
     "avsc": "^5.7.9",
     "bcryptjs": "^3.0.3",
