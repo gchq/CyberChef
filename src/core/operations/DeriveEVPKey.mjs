@@ -9,8 +9,8 @@ import Utils from "../Utils.mjs";
 import CryptoJS from "crypto-js";
 
 // arbitrary max limits to prevent resource exhaustion
-const MAX_KEY_SIZE=16384;
-const MAX_ITERATIONS=100000;
+const MAX_KEY_SIZE = 16384;
+const MAX_ITERATIONS = 100000;
 
 /**
  * Derive EVP key operation
