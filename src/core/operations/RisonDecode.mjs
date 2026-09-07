@@ -28,7 +28,7 @@ class RisonDecode extends Operation {
         this.args = [
             {
                 name: "Decode Option",
-                type: "editableOption",
+                type: "option",
                 value: ["Decode", "Decode Object", "Decode Array"]
             },
         ];
