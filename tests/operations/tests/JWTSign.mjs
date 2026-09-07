@@ -92,7 +92,7 @@ TestRegister.addTests([
     {
         name: "JWT Sign: HS256, invalid header",
         input: inputObject,
-        expectedOutput: `Header must be a valid (or empty) json object.
+        expectedOutput: `Header must be a valid (or empty) JSON object.
 
 SyntaxError: Unexpected token 'h', "this is not JSON" is not valid JSON`,
         recipeConfig: [

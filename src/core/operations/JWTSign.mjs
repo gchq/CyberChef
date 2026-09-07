@@ -104,7 +104,7 @@ ${err}`);
                 }
             }
         } catch (err) {
-            throw new OperationError(`Header must be a valid (or empty) json object.
+            throw new OperationError(`Header must be a valid (or empty) JSON object.
 
 ${err}`);
         }
