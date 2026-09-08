@@ -178,19 +178,21 @@ module.exports = {
         browser.click("#auto-bake-label");
         browser.expect.element("#auto-bake").to.be.selected.before(1000);
 
-        // Add content to the input
+        // Add content to the input and wait until a bake is actually running.
+        // The output loader is deliberately delayed and is not a reliable synchronisation point.
         browser.pause(100);
         browser.sendKeys("#input-text .cm-content", "1");
-        browser.waitForElementVisible("#output-loader");
+        browser.expect.element("#bake span").text.to.equal("CANCEL").before(1000);
         browser.pause(500);
 
         // Make another change while the previous input is being baked
+        browser.sendKeys("#input-text .cm-content", "2");
+
+        // Ensure the restarted autobake completes with the latest input
+        browser.expect.element("#output-text .cm-content").text.to.equal("input12").before(10000);
         browser
-            .sendKeys("#input-text .cm-content", "2")
             .waitForElementNotVisible("#stale-indicator")
             .waitForElementNotVisible("#output-loader");
-
-        // Ensure we got the latest input baked
         utils.expectOutput(browser, "input12");
 
         // Turn autobake off again
