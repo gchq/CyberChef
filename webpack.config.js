@@ -38,13 +38,15 @@ const banner = `/**
 
 module.exports = {
     experiments: {
-        css: true
+        css: true,
+        html: true
     },
     output: {
         publicPath: "",
         globalObject: "this",
         assetModuleFilename: "assets/[hash][ext][query]",
-        cssFilename: "assets/[name].css"
+        cssFilename: "assets/[name].css",
+        htmlFilename: "index.html"
     },
     plugins: [
         new webpack.ProvidePlugin({
