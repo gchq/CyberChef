@@ -5,7 +5,6 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const glob = require("glob");
 
@@ -18,6 +17,20 @@ const nodeFlags = "--no-warnings --no-deprecation";
  * @copyright Crown Copyright 2017
  * @license Apache-2.0
  */
+
+/**
+ * Replaces build-time placeholders before webpack parses the native HTML entry.
+ *
+ * @param {string} source HTML source.
+ * @param {Object<string, string>} values Placeholder values.
+ * @returns {string} Rendered HTML source.
+ */
+function renderHtmlTemplate(source, values) {
+    return Object.entries(values).reduce(
+        (html, [key, value]) => html.replaceAll(`{{${key}}}`, value),
+        source
+    );
+}
 
 module.exports = function (grunt) {
     grunt.file.defaultEncoding = "utf8";
@@ -70,7 +83,7 @@ module.exports = function (grunt) {
 
             grunt.config.set("webpack.web.entry",
                 Object.assign({
-                    main: "./src/web/index.js"
+                    main: "./src/web/html/index.html"
                 }, moduleEntryPoints));
         });
 
@@ -132,7 +145,7 @@ module.exports = function (grunt) {
                 mode: "production",
                 target: "web",
                 entry: Object.assign({
-                    main: "./src/web/index.js"
+                    main: "./src/web/html/index.html"
                 }, moduleEntryPoints),
                 output: {
                     path: __dirname + "/build/prod",
@@ -146,24 +159,18 @@ module.exports = function (grunt) {
                         "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
                     }
                 },
+                module: {
+                    parser: {
+                        html: {
+                            template: source => renderHtmlTemplate(source, {
+                                compileYear, compileTime, version,
+                                latestReleaseVersion: pkg.version, downloadZipFilename
+                            })
+                        }
+                    }
+                },
                 plugins: [
                     new webpack.DefinePlugin(BUILD_CONSTANTS),
-                    new HtmlWebpackPlugin({
-                        filename: "index.html",
-                        template: "./src/web/html/index.html",
-                        chunks: ["main"],
-                        compileYear: compileYear,
-                        compileTime: compileTime,
-                        version: version,
-                        latestReleaseVersion: pkg.version,
-                        downloadZipFilename: downloadZipFilename,
-                        minify: {
-                            removeComments: true,
-                            collapseWhitespace: true,
-                            minifyJS: true,
-                            minifyCSS: true
-                        }
-                    }),
                     new BundleAnalyzerPlugin({
                         analyzerMode: "static",
                         reportFilename: "BundleAnalyzerReport.html",
@@ -237,11 +244,21 @@ module.exports = function (grunt) {
                 mode: "development",
                 target: "web",
                 entry: Object.assign({
-                    main: "./src/web/index.js"
+                    main: "./src/web/html/index.html"
                 }, moduleEntryPoints),
                 resolve: {
                     alias: {
                         "./config/modules/OpModules.mjs": "./config/modules/Default.mjs"
+                    }
+                },
+                module: {
+                    parser: {
+                        html: {
+                            template: source => renderHtmlTemplate(source, {
+                                compileYear, compileTime, version: pkg.version,
+                                latestReleaseVersion: pkg.version, downloadZipFilename
+                            })
+                        }
                     }
                 },
                 devServer: {
@@ -254,14 +271,6 @@ module.exports = function (grunt) {
                 },
                 plugins: [
                     new webpack.DefinePlugin(BUILD_CONSTANTS),
-                    new HtmlWebpackPlugin({
-                        filename: "index.html",
-                        template: "./src/web/html/index.html",
-                        chunks: ["main"],
-                        compileYear: compileYear,
-                        compileTime: compileTime,
-                        version: pkg.version,
-                    })
                 ]
             }
         },
