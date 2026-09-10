@@ -42,6 +42,36 @@ module.exports = {
         });
     },
 
+    "Invalid percent delimiter reaches operation validation": browser => {
+        browser
+            .url("about:blank")
+            .url(browser.launchUrl + "#recipe=To_Hex('%',0)&input=aGVsbG8")
+            .waitForElementNotPresent("#preloader", 10000)
+            .waitForElementPresent("#rec-list li.operation", 10000);
+        utils.bake(browser);
+        utils.expectOutput(browser, "Delimiter cannot be empty.");
+    },
+
+    "Query links decode valid escapes beside literal percent signs": browser => {
+        browser
+            .url("about:blank")
+            .url(browser.launchUrl + "?recipe=To_Hex('Per%63ent',0)&input=aGVsbG8&note=100%")
+            .waitForElementNotPresent("#preloader", 10000)
+            .waitForElementPresent("#rec-list li.operation", 10000);
+        utils.bake(browser);
+        utils.expectOutput(browser, "%68%65%6c%6c%6f");
+    },
+
+    "Percent signs remain usable in free-text recipe arguments": browser => {
+        browser
+            .url("about:blank")
+            .url(browser.launchUrl + "#recipe=Find_/_Replace({'option':'Simple%20string','string':'%'},'percent',true,false,true,false)&input=NTAl")
+            .waitForElementNotPresent("#preloader", 10000)
+            .waitForElementPresent("#rec-list li.operation", 10000);
+        utils.bake(browser);
+        utils.expectOutput(browser, "50percent");
+    },
+
     after: browser => {
         browser.end();
     }
