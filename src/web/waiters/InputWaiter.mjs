@@ -1062,7 +1062,10 @@ class InputWaiter {
         for (let i = 0; i < dataTransferItemList.length; i++) {
             // Note webkitGetAsEntry a non-standard feature and may change
             // Usage is necessary for handling directories
-            queue.push(dataTransferItemList[i].webkitGetAsEntry());
+            const entry = dataTransferItemList[i].webkitGetAsEntry();
+            // Items that are not files have no entry. Dragging an image out of another browser
+            // window, for instance, brings text/html and text/uri-list items along with the file.
+            if (entry) queue.push(entry);
         }
         while (queue.length > 0) {
             const entry = queue.shift();
