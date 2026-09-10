@@ -65,6 +65,18 @@ docker run -it -p 8080:8080 ghcr.io/gchq/cyberchef:latest
 
 Just like before, navigate to `http://localhost:8080` in your browser.
 
+The image includes an HTTP health check against `http://127.0.0.1:8080/` inside the
+container. View its status with `docker inspect --format '{{.State.Health.Status}}'
+<container>`. It checks that nginx serves the page; it does not run recipes or
+restart an unhealthy container automatically. Deployments that change nginx's
+internal port or path should override the check with `--health-cmd` or disable it
+with `--no-healthcheck`.
+
+To test a locally built image, run `bash tests/docker/healthcheck.sh cyberchef`.
+The test uses an isolated container to check healthy, unhealthy and recovered
+states, without publishing ports or accessing the external network.
+
+
 This image is built and published through our [GitHub Workflows](.github/workflows/releases.yml).
 
 ### From source
