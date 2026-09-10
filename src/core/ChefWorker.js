@@ -10,6 +10,7 @@ import Chef from "./Chef.mjs";
 import OperationConfig from "./config/OperationConfig.json" with { type: "json" };
 import OpModules from "./config/modules/OpModules.mjs";
 import loglevelMessagePrefix from "loglevel-message-prefix";
+import { createWorkerModuleLoader } from "./lib/WorkerModuleLoader.mjs";
 
 
 // Set up Chef instance
@@ -96,10 +97,9 @@ self.addEventListener("message", function(e) {
  * @param {Object} data
  */
 async function bake(data) {
-    // Ensure the relevant modules are loaded
-    self.loadRequiredModules(data.recipeConfig);
     try {
         self.inputNum = data.inputNum === undefined ? -1 : data.inputNum;
+        await self.loadRequiredModules(data.recipeConfig);
         const response = await self.chef.bake(
             data.input,          // The user's input
             data.recipeConfig,   // The configuration of the recipe
@@ -206,18 +206,7 @@ async function calculateHighlights(recipeConfig, direction, pos) {
  *
  * @param {Object} recipeConfig
  */
-self.loadRequiredModules = function(recipeConfig) {
-    recipeConfig.forEach(op => {
-        const module = self.OperationConfig[op.op].module;
-
-        if (!(module in OpModules)) {
-            log.info(`Loading ${module} module`);
-            self.sendStatusMessage(`Loading ${module} module`);
-            self.importScripts(`${self.docURL}/modules/${module}.js`); // lgtm [js/client-side-unvalidated-url-redirection]
-            self.sendStatusMessage("");
-        }
-    });
-};
+self.loadRequiredModules = createWorkerModuleLoader(self, OpModules, OperationConfig);
 
 
 /**

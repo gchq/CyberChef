@@ -5,6 +5,7 @@
  * @license Apache-2.0
  */
 
+import { replyWithLocalModule } from "../LocalModuleLoader.mjs";
 import ChefWorker from "worker-loader?inline=no-fallback!../../core/ChefWorker.js";
 import DishWorker from "worker-loader?inline=no-fallback!../workers/DishWorker.mjs";
 import { debounce } from "../../core/Utils.mjs";
@@ -195,6 +196,9 @@ class WorkerWaiter {
         const currentWorker = this.getChefWorker(inputNum);
 
         switch (r.action) {
+            case "loadModule":
+                replyWithLocalModule(e.target, r.data.module);
+                break;
             case "bakeComplete":
                 log.debug(`Bake ${inputNum} complete.`);
                 this.manager.timing.recordTime("bakeComplete", inputNum);
