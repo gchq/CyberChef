@@ -288,6 +288,16 @@ TestRegister.addApiTests([
         assert.strictEqual(result.toString(), "73 6f 6d 65 20 69 6e 70 75 74");
     }),
 
+    it("chef.bake: applies escaped binary string defaults when args are omitted", async () => {
+        const result = await chef.bake("mess with the best, die rest like the rest", {
+            op: chef.toTable,
+        });
+        assert.strictEqual(result.toString(),
+            "+--------------------+-------------------------+\n" +
+            "| mess with the best |  die rest like the rest |\n" +
+            "+--------------------+-------------------------+\n");
+    }),
+
     it("chef.bake: should take single JSON object describing op and args ARRAY", async () => {
         const result = await chef.bake("some input", {
             op: chef.toHex,
