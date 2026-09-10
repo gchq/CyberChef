@@ -13,6 +13,37 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [11.4.0] - 2026-08-18
+This release includes a security fix
+- Security: patch XSS in Regular expression module [@Ne0re0]
+- chore (deps): bump @codemirror/view from 6.43.8 to 6.43.9 in the patch-updates group  | [#2731]
+- chore (deps): bump @codemirror/commands from 6.10.4 to 6.11.0 in the minor-updates group  | [#2732]
+- Add XPRESS (MS-XCA) decompression operations [@MP-GOWTHAM] | [#2722]
+- Feat/node 26 support [@alleria173] | [#2699]
+- chore(root): update allowlist [@evenstensberg] | [#2713]
+- chore (deps): bump the patch-updates group across 1 directory with 7 updates  | [#2730]
+- chore (deps): bump the minor-updates group across 1 directory with 9 updates  | [#2729]
+- chore (deps): bump docker/login-action from 4.5.2 to 4.6.0 in the actions-dependencies group  | [#2716]
+- chore (deps): bump node from `a0b9bf0` to `d32cdf6` in the docker-dependencies group  | [#2723]
+- docs(root): improve docs a bit [@evenstensberg] | [#2718]
+- fix: use js-yaml for both JSON to YAML and YAML to JSON [@bartvanandel] | [#2710]
+- chore (deps): bump the patch-updates group across 1 directory with 6 updates  | [#2712]
+- chore (deps): bump the minor-updates group across 1 directory with 3 updates  | [#2705]
+- chore (deps): bump the actions-dependencies group with 2 updates  | [#2703]
+- fix: replace `shasum` / `sha256sum` / `sed` calls with node built-ins [@bartvanandel] | [#2019]
+- chore (deps): bump fast-uri from 3.1.4 to 3.1.5  | [#2709]
+- chore (deps): bump ip-address from 10.2.0 to 10.4.0  | [#2708]
+- fix: stop Parse QR Code from participating in Magic (#2610) [@Sanjays2402] | [#2613]
+- Restrict A1Z26 Magic checks to valid ranges [@vetrovk] | [#2644]
+- feat: Extend automated ingredient validation to include argSelector ingredients (#2641) [@mansiverma897993] | [#2643]
+- Add Modular Exponentiation operation [@p-leriche] | [#2149]
+- Add npm allowScripts policy for npm v12 [@zainnadeem786] | [#2682]
+- chore (deps): bump assorted vulnerable dependencies [@GCHQDeveloper581] | [#2689]
+- chore (deps): bump shell-quote from 1.8.4 to 1.10.0  | [#2690]
+- chore (deps): bump the patch-updates group across 1 directory with 9 updates  | [#2686]
+- chore (deps): bump the actions-dependencies group across 1 directory with 2 updates  | [#2685]
+- chore (deps): bump nginxinc/nginx-unprivileged from `fd3314e` to `44e3633` in the docker-dependencies group  | [#2684]
+
 ### [11.3.0] - 2026-07-24
 This release includes a security fix ([#2687])
 - Security: Fix pretty recipe parser ReDoS [@zainnadeem786] | [#2687]
@@ -787,6 +818,7 @@ Breaking changes:
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[11.4.0]: https://github.com/gchq/CyberChef/releases/tag/v11.4.0
 [11.3.0]: https://github.com/gchq/CyberChef/releases/tag/v11.3.0
 [11.2.0]: https://github.com/gchq/CyberChef/releases/tag/v11.2.0
 [11.1.0]: https://github.com/gchq/CyberChef/releases/tag/v11.1.0
@@ -1099,6 +1131,9 @@ Breaking changes:
 [@zainnadeem786]: https://github.com/zainnadeem786
 [@williballenthin]: https://github.com/williballenthin
 [@Shailendra1703]: https://github.com/Shailendra1703
+[@Ne0re0]: https://github.com/Ne0re0
+[@MP-GOWTHAM]: https://github.com/MP-GOWTHAM
+[@Sanjays2402]: https://github.com/Sanjays2402
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
@@ -1536,3 +1571,31 @@ Breaking changes:
 [#2577]: https://github.com/gchq/CyberChef/pull/2577
 [#2574]: https://github.com/gchq/CyberChef/pull/2574
 [#2573]: https://github.com/gchq/CyberChef/pull/2573
+[#2731]: https://github.com/gchq/CyberChef/pull/2731
+[#2732]: https://github.com/gchq/CyberChef/pull/2732
+[#2722]: https://github.com/gchq/CyberChef/pull/2722
+[#2699]: https://github.com/gchq/CyberChef/pull/2699
+[#2713]: https://github.com/gchq/CyberChef/pull/2713
+[#2730]: https://github.com/gchq/CyberChef/pull/2730
+[#2729]: https://github.com/gchq/CyberChef/pull/2729
+[#2716]: https://github.com/gchq/CyberChef/pull/2716
+[#2723]: https://github.com/gchq/CyberChef/pull/2723
+[#2718]: https://github.com/gchq/CyberChef/pull/2718
+[#2710]: https://github.com/gchq/CyberChef/pull/2710
+[#2712]: https://github.com/gchq/CyberChef/pull/2712
+[#2705]: https://github.com/gchq/CyberChef/pull/2705
+[#2703]: https://github.com/gchq/CyberChef/pull/2703
+[#2019]: https://github.com/gchq/CyberChef/pull/2019
+[#2709]: https://github.com/gchq/CyberChef/pull/2709
+[#2708]: https://github.com/gchq/CyberChef/pull/2708
+[#2613]: https://github.com/gchq/CyberChef/pull/2613
+[#2644]: https://github.com/gchq/CyberChef/pull/2644
+[#2643]: https://github.com/gchq/CyberChef/pull/2643
+[#2149]: https://github.com/gchq/CyberChef/pull/2149
+[#2682]: https://github.com/gchq/CyberChef/pull/2682
+[#2689]: https://github.com/gchq/CyberChef/pull/2689
+[#2690]: https://github.com/gchq/CyberChef/pull/2690
+[#2686]: https://github.com/gchq/CyberChef/pull/2686
+[#2685]: https://github.com/gchq/CyberChef/pull/2685
+[#2684]: https://github.com/gchq/CyberChef/pull/2684
+

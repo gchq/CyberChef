@@ -34,7 +34,7 @@ export function ipv4CidrRange(cidr, includeNetworkInfo, enumerateAddresses, allo
         ip2 = ip1 | ~mask;
 
     if (includeNetworkInfo) {
-        output += "Network: " + ipv4ToStr(network) + "\n";
+        output += "Network: " + ipv4ToStr(ip1) + "\n";
         output += "CIDR: " + cidrRange + "\n";
         output += "Mask: " + ipv4ToStr(mask) + "\n";
         output += "Range: " + ipv4ToStr(ip1) + " - " + ipv4ToStr(ip2) + "\n";
@@ -88,8 +88,8 @@ export function ipv6CidrRange(cidr, includeNetworkInfo) {
     }
 
     if (includeNetworkInfo) {
-        output += "Network: " + ipv6ToStr(network) + "\n";
-        output += "Shorthand: " + ipv6ToStr(network, true) + "\n";
+        output += "Network: " + ipv6ToStr(ip1) + "\n";
+        output += "Shorthand: " + ipv6ToStr(ip1, true) + "\n";
         output += "CIDR: " + cidrRange + "\n";
         output += "Mask: " + ipv6ToStr(mask) + "\n";
         output += "Range: " + ipv6ToStr(ip1) + " - " + ipv6ToStr(ip2) + "\n";
