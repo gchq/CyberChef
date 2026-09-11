@@ -45,10 +45,15 @@ class Magic {
                 (inputEntropy < check.entropyRange[0] ||
                 inputEntropy > check.entropyRange[1]))
                 return;
-            // If the input doesn't match the pattern, move on
-            if (check.pattern &&
-                !check.pattern.test(this.inputStr))
-                return;
+            // If the input doesn't match the pattern, move on. Some regex engines can
+            // throw on pathological inputs, so isolate each detector from the rest of Magic.
+            if (check.pattern) {
+                try {
+                    if (!check.pattern.test(this.inputStr)) return;
+                } catch (err) {
+                    return;
+                }
+            }
 
             matches.push(check);
         });
