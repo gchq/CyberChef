@@ -100,6 +100,24 @@ module.exports = {
             .click("#auto-bake-label");
     },
 
+    "Non-object postMessages are ignored": browser => {
+        browser.execute(function() {
+            window.cyberChefPostMessageErrors = [];
+            window.cyberChefPostMessageErrorHandler = function(e) {
+                window.cyberChefPostMessageErrors.push(e.message);
+            };
+            window.addEventListener("error", window.cyberChefPostMessageErrorHandler);
+            window.postMessage('{"args":{"frameIndex":0}}', "*");
+        });
+        browser.pause(100);
+        browser.execute(function() {
+            window.removeEventListener("error", window.cyberChefPostMessageErrorHandler);
+            return window.cyberChefPostMessageErrors;
+        }, [], function(result) {
+            browser.assert.deepEqual(result.value, []);
+        });
+    },
+
     "CodeMirror has loaded correctly": browser => {
         /* Editor has initialised */
         browser
