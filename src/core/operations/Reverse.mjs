@@ -6,6 +6,22 @@
 
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
+import {collectGraphemes} from "unicode-segmenter/grapheme";
+
+/**
+ * Splits a string into Unicode grapheme clusters.
+ *
+ * @param {string} input
+ * @returns {string[]}
+ */
+function splitGraphemes(input) {
+    if (typeof Intl !== "undefined" && typeof Intl.Segmenter === "function") {
+        const segmenter = new Intl.Segmenter(undefined, {granularity: "grapheme"});
+        return Array.from(segmenter.segment(input), ({segment}) => segment);
+    }
+
+    return collectGraphemes(input);
+}
 
 /**
  * Reverse operation
@@ -20,7 +36,7 @@ class Reverse extends Operation {
 
         this.name = "Reverse";
         this.module = "Default";
-        this.description = "Reverses the input string.";
+        this.description = "Reverses the input string. In Character mode, a character is a Unicode grapheme cluster, such as a base character with combining marks or an emoji joined with zero-width joiners.";
         this.inputType = "byteArray";
         this.outputType = "byteArray";
         this.args = [
@@ -60,23 +76,9 @@ class Reverse extends Operation {
             }
             return result.slice(0, input.length);
         } else if (args[0] === "Character") {
-            const inputString = Utils.byteArrayToUtf8(input);
-            let result = "";
-            for (let i = inputString.length - 1; i >= 0; i--) {
-                const c = inputString.charCodeAt(i);
-                if (i > 0 && 0xdc00 <= c && c <= 0xdfff) {
-                    const c2 = inputString.charCodeAt(i - 1);
-                    if (0xd800 <= c2 && c2 <= 0xdbff) {
-                        // surrogates
-                        result += inputString.charAt(i - 1);
-                        result += inputString.charAt(i);
-                        i--;
-                        continue;
-                    }
-                }
-                result += inputString.charAt(i);
-            }
-            return Utils.strToUtf8ByteArray(result);
+            const inputString = Utils.byteArrayToUtf8(input),
+                graphemes = splitGraphemes(inputString);
+            return Utils.strToUtf8ByteArray(graphemes.reverse().join(""));
         } else {
             return input.reverse();
         }
