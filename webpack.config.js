@@ -1,4 +1,5 @@
 const webpack = require("webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { ModifySourcePlugin, ReplaceOperation } = require("modify-source-webpack-plugin");
@@ -37,16 +38,10 @@ const banner = `/**
 
 
 module.exports = {
-    experiments: {
-        css: true,
-        html: true
-    },
     output: {
         publicPath: "",
         globalObject: "this",
-        assetModuleFilename: "assets/[hash][ext][query]",
-        cssFilename: "assets/[name].css",
-        htmlFilename: "index.html"
+        assetModuleFilename: "assets/[hash][ext][query]"
     },
     plugins: [
         new webpack.ProvidePlugin({
@@ -67,6 +62,9 @@ module.exports = {
         new webpack.DefinePlugin({
             // Required by Jimp to improve loading speed in browsers
             "process.browser": "true"
+        }),
+        new MiniCssExtractPlugin({
+            filename: "assets/[name].css"
         }),
         new CompressionPlugin({
             filename: "[path][base].gz",
@@ -187,19 +185,20 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                type: "css/auto",
-                use: ["postcss-loader"]
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            publicPath: "../"
+                        }
+                    },
+                    "css-loader",
+                    "postcss-loader",
+                ]
             },
             {
-                test: /\.ico$/,
+                test: /\.(ico|eot|ttf|woff|woff2)$/,
                 type: "asset/resource",
-            },
-            {
-                test: /\.(eot|ttf|woff|woff2)$/,
-                type: "asset/resource",
-                generator: {
-                    publicPath: "../"
-                }
             },
             {
                 test: /\.svg$/,
