@@ -115,4 +115,26 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "URLEncode: RFC3986 reserved characters",
+        input: "!#$&'()*+,/:;=?@[]",
+        output: " %21%23%24%26%27%28%29%2A%2B%2C%2F%3A%3B%3D%3F%40%5B%5D",
+        recipeConfig: [
+            {
+                op: "URL Encode",
+                args: [false],
+            },
+        ],
+    },
+    {
+        name: "URLEncode: RFC3986 unreserved characters",
+        input: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~",
+        output: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~",
+        recipeConfig: [
+            {
+                op: "URL Encode",
+                args: [false],
+            },
+        ],  
+    },
 ]);
