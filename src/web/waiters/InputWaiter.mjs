@@ -1686,9 +1686,10 @@ class InputWaiter {
      */
     handlePostMessage(e) {
         log.debug(e);
-        if ("data" in e && "id" in e.data && "value" in e.data) {
-            if (e.data.id === "setInput") {
-                this.setInput(e.data.value);
+        const data = e?.data;
+        if (data !== null && typeof data === "object" && "id" in data && "value" in data) {
+            if (data.id === "setInput") {
+                this.setInput(data.value);
             }
         }
     }
