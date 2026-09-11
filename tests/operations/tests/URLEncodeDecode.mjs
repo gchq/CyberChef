@@ -116,13 +116,24 @@ TestRegister.addTests([
         ],
     },
     {
-        name: "URLEncode: preserves underscores",
+        name: "URLEncode: preserves underscores in default mode",
         input: "a_b",
         expectedOutput: "a_b",
         recipeConfig: [
             {
                 op: "URL Encode",
                 args: [false],
+            },
+        ],
+    },
+    {
+        name: "URLEncode: encodes underscores in all special chars mode",
+        input: "a_b",
+        expectedOutput: "a%5Fb",
+        recipeConfig: [
+            {
+                op: "URL Encode",
+                args: [true],
             },
         ],
     },
