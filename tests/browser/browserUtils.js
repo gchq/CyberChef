@@ -341,6 +341,12 @@ async function pointFor(browser, selector, offset, index) {
     }, [selector, offset || null, index || 0]);
 }
 
+/**
+ * Set by nativeDragStart and cleared once the drag has been torn down, so that nativeDragCancel can
+ * tell whether there is anything to undo.
+ */
+let nativeDragActive = false;
+
 /** @function
  * Technique A, step 1. Begins a genuine native HTML5 drag on an element.
  *
@@ -358,16 +364,20 @@ async function pointFor(browser, selector, offset, index) {
  * @param {Object} [offset] - Offset from the source element's top left corner
  */
 function nativeDragStart(browser, sourceSelector, offset) {
-    browser.execute(function() {
-        window.__dragPayload = null;
-        window.__origSetData = DataTransfer.prototype.setData;
-        DataTransfer.prototype.setData = function(format, data) {
-            window.__dragPayload = {format: format, data: data};
-            return window.__origSetData.call(this, format, data);
-        };
-    });
-
     browser.perform(async function() {
+        nativeDragActive = true;
+
+        await browser.execute(function() {
+            window.__dragPayload = null;
+            // A drag that was never torn down leaves its wrapper in place. Saving that as the
+            // original would make the new wrapper call itself, so only ever save the real one.
+            if (!window.__origSetData) window.__origSetData = DataTransfer.prototype.setData;
+            DataTransfer.prototype.setData = function(format, data) {
+                window.__dragPayload = {format: format, data: data};
+                return window.__origSetData.call(this, format, data);
+            };
+        });
+
         const from = await pointFor(browser, sourceSelector, offset);
         await cdp(browser, "Input.setInterceptDrags", {enabled: true});
 
@@ -456,25 +466,99 @@ function nativeDragOver(browser, targetSelector, offset, steps=6) {
  */
 function nativeDrop(browser, targetSelector, offset) {
     browser.perform(async function() {
-        const to = targetSelector ?
-            await pointFor(browser, targetSelector, offset) :
-            await browser.execute(function() {
+        let to;
+        try {
+            to = targetSelector ?
+                await pointFor(browser, targetSelector, offset) :
+                await browser.execute(function() {
+                    return window.__dragLast;
+                });
+            const data = await browser.execute(function() {
+                return window.__dragData;
+            });
+
+            await cdp(browser, "Input.dispatchDragEvent", {type: "drop", x: to.x, y: to.y, data: data});
+        } finally {
+            await endNativeDrag(browser, to);
+        }
+    });
+}
+
+/** @function
+ * Technique A. Abandons the native drag nativeDragStart began, if one is still in progress, and
+ * turns drag interception back off. The page sees the drag end without a drop - dragleave then
+ * dragend, as it would if the user pressed Escape.
+ *
+ * Input.dispatchDragEvent documents a "cancel" type, but Chrome rejects it as an unexpected event
+ * type. Instead this drops with no operations allowed, which Chromium resolves as it does any drop
+ * it cannot perform (see DRAG_OPERATIONS_ALL): no drop event, just dragleave and dragend.
+ *
+ * Safe to call at any time and any number of times: with no drag in progress it does nothing. That
+ * makes it fit for an afterEach hook, which is where it is needed - a test that fails between
+ * nativeDragStart and nativeDrop never reaches the drop, and without this the interception and the
+ * setData patch would outlive it into whatever runs next, a retry of the same test included.
+ *
+ * @param {Browser} browser - Nightwatch client
+ */
+function nativeDragCancel(browser) {
+    browser.perform(async function() {
+        if (!nativeDragActive) return;
+
+        let at = null;
+        try {
+            at = await browser.execute(function() {
                 return window.__dragLast;
             });
-        const data = await browser.execute(function() {
-            return window.__dragData;
-        });
-
-        await cdp(browser, "Input.dispatchDragEvent", {type: "drop", x: to.x, y: to.y, data: data});
-        await cdp(browser, "Input.dispatchMouseEvent", {
-            type: "mouseReleased", x: to.x, y: to.y, button: "left", buttons: 0, clickCount: 1
-        });
-        await cdp(browser, "Input.setInterceptDrags", {enabled: false});
-        await browser.execute(function() {
-            if (window.__origSetData) DataTransfer.prototype.setData = window.__origSetData;
-            window.__dragLast = null;
-        });
+            const data = await browser.execute(function() {
+                return window.__dragData;
+            });
+            // nativeDragStart may have failed before recording a position or payload
+            const point = at || {x: 0, y: 0};
+            await cdp(browser, "Input.dispatchDragEvent", {
+                type: "drop", x: point.x, y: point.y,
+                data: Object.assign({items: []}, data, {dragOperationsMask: 0})
+            });
+        } catch (err) {
+            // Only likely if the page or the CDP session has gone. The teardown still has to run.
+        } finally {
+            await endNativeDrag(browser, at);
+        }
     });
+}
+
+/**
+ * Shared by nativeDrop and nativeDragCancel. Releases the mouse button nativeDragStart pressed,
+ * turns drag interception off and restores DataTransfer.prototype.setData.
+ *
+ * Every step is attempted even if an earlier one fails, and nothing is thrown: this runs after a
+ * failure as often as not, and should neither mask that failure nor leave the job half done.
+ * __dragPayload is deliberately kept, because expectDragPayload reads it after the drop.
+ *
+ * @param {Browser} browser - Nightwatch client
+ * @param {{x: number, y: number}} [at] - Where to release the mouse. Defaults to the viewport origin.
+ * @returns {Promise}
+ */
+async function endNativeDrag(browser, at) {
+    nativeDragActive = false;
+    const point = at || {x: 0, y: 0};
+    const attempt = async step => {
+        try {
+            await step();
+        } catch (err) {
+            // Carry on with the next step regardless
+        }
+    };
+
+    await attempt(() => cdp(browser, "Input.dispatchMouseEvent", {
+        type: "mouseReleased", x: point.x, y: point.y, button: "left", buttons: 0, clickCount: 1
+    }));
+    await attempt(() => cdp(browser, "Input.setInterceptDrags", {enabled: false}));
+    await attempt(() => browser.execute(function() {
+        if (window.__origSetData) DataTransfer.prototype.setData = window.__origSetData;
+        window.__origSetData = null;
+        window.__dragLast = null;
+        window.__dragData = null;
+    }));
 }
 
 /** @function
@@ -861,6 +945,7 @@ module.exports = {
     nativeDragStart: nativeDragStart,
     nativeDragOver: nativeDragOver,
     nativeDrop: nativeDrop,
+    nativeDragCancel: nativeDragCancel,
     nativeDragAndDrop: nativeDragAndDrop,
     expectDragPayload: expectDragPayload,
     setForceFallback: setForceFallback,

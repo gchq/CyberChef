@@ -80,6 +80,12 @@ module.exports = {
         });
     },
 
+    afterEach: browser => {
+        // A Technique A test that fails between nativeDragStart and nativeDrop never reaches the
+        // drop. Without this, drag interception and the setData patch would stay on for later tests.
+        utils.nativeDragCancel(browser);
+    },
+
     /**
      * T1 (Technique A). The core "get an operation into the recipe" interaction.
      */
