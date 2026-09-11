@@ -7,6 +7,9 @@ on:
   # Fires when someone comments on a PR (also fires for plain issues, filtered out below)
   issue_comment:
     types: [created]
+  # Fires when someone replies inline on a "Files changed" review thread
+  pull_request_review_comment:
+    types: [created]
 
 permissions:
   pull-requests: write
@@ -28,7 +31,9 @@ jobs:
         with:
           script: |
             const awaitingLabel = process.env.AWAITING_LABEL;
-            // Resolve the PR number for whichever event triggered this run
+            // Resolve the PR number for whichever event triggered this run.
+            // issue_comment carries it under "issue"; pull_request_target and
+            // pull_request_review_comment both carry it under "pull_request".
             const prNumber = context.eventName === 'issue_comment'
               ? context.payload.issue.number
               : context.payload.pull_request.number;
@@ -50,10 +55,12 @@ jobs:
 
             // The author pushed new commits -> treat that as their response and clear the label
             const authorPushed = context.eventName === 'pull_request_target' && context.payload.action === 'synchronize';
-            // The PR author left a comment -> treat any reply from them as a response too
+            // The PR author left a top-level comment -> treat any reply from them as a response too
             const authorCommented = context.eventName === 'issue_comment' && context.payload.comment.user.login === context.payload.issue.user.login;
+            // The PR author replied inline on a review thread -> also counts as a response
+            const authorReviewCommented = context.eventName === 'pull_request_review_comment' && context.payload.comment.user.login === context.payload.pull_request.user.login;
 
-            if (authorPushed || authorCommented) {
+            if (authorPushed || authorCommented || authorReviewCommented) {
               // If the label was already gone for some reason, that's fine, not an error
               await github.rest.issues.removeLabel({
                 owner, repo, issue_number: prNumber, name: awaitingLabel,

@@ -76,13 +76,16 @@ jobs:
               }
 
               // If the author has commented since the review, that also counts
-              // as a response.
+              // as a response - either a top-level PR comment, or an inline reply
+              // on a "Files changed" review thread (a separate comment type/API).
               const comments = await github.paginate(github.rest.issues.listComments, {
                 owner, repo, issue_number: pr.number, since: latest.submitted_at, per_page: 100,
               });
-              const authorResponded = comments.some(c =>
-                (c.user?.login || '') === pr.user.login
-              );
+              const reviewComments = await github.paginate(github.rest.pulls.listReviewComments, {
+                owner, repo, pull_number: pr.number, since: latest.submitted_at, per_page: 100,
+              });
+              const authorResponded = comments.some(c => (c.user?.login || '') === pr.user.login) ||
+                reviewComments.some(c => (c.user?.login || '') === pr.user.login);
               if (authorResponded) {
                 continue;
               }
