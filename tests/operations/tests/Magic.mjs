@@ -154,6 +154,28 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Magic: intensive mode excludes UTF-7 encode by default",
+        input: "\xff\xfe\xfd\xfc",
+        unexpectedMatch: /Encode_text\('UTF-7 \(65000\)'\)/,
+        recipeConfig: [
+            {
+                op: "Magic",
+                args: [1, true, false]
+            }
+        ]
+    },
+    {
+        name: "Magic: extensive language support allows UTF-7 encode",
+        input: "\xff\xfe\xfd\xfc",
+        expectedMatch: /Encode_text\('UTF-7 \(65000\)'\)/,
+        recipeConfig: [
+            {
+                op: "Magic",
+                args: [1, true, true]
+            }
+        ]
+    },
+    {
         name: "Magic: invalid zero A1Z26 values do not match",
         input: "0,0",
         unexpectedMatch: /A1Z26 Cipher Decode/,
