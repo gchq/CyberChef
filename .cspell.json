@@ -1,7 +1,7 @@
 {
     "version": "0.2",
     "language": "en,en-gb",
-    "words": [],
+    "words": ["AUTOSAR", "Miyaguchi", "Preneel"],
     "dictionaries": [
       "npm",
       "softwareTerms",
