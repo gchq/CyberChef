@@ -44,6 +44,8 @@ class JWTVerify extends Operation {
     async run(input, args) {
         const [key] = args;
         const algorithms = JWT_ALGORITHMS.filter(a => a !== "None");
+        const hmacAlgorithms = algorithms.filter(a => a.startsWith("HS"));
+        const asymmetricAlgorithms = algorithms.filter(a => !a.startsWith("HS"));
 
         let header;
         try {
@@ -62,16 +64,24 @@ ${err}`);
             throw new OperationError(`The token's algorithm "${header.alg}" is not supported. Supported algorithms are: ${algorithms.join(", ")}.`);
         }
 
-        let secret;
+        // Leading/trailing whitespace around a pasted PEM block is trimmed before
+        // classification so it isn't mistaken for a raw HMAC secret (see below).
+        const trimmedKey = key.trim();
+
+        let secret, allowedAlgorithms;
         try {
-            if (key.startsWith("-----BEGIN PUBLIC KEY-----")) {
-                secret = await importSPKI(key, header.alg);
-            } else if (key.startsWith("-----BEGIN RSA PUBLIC KEY-----")) {
-                secret = await importSPKI(pkcs1ToSpki(key), header.alg);
-            } else if (key.startsWith("-----BEGIN CERTIFICATE-----")) {
-                secret = await importX509(key, header.alg);
+            if (trimmedKey.startsWith("-----BEGIN PUBLIC KEY-----")) {
+                secret = await importSPKI(trimmedKey, header.alg);
+                allowedAlgorithms = asymmetricAlgorithms;
+            } else if (trimmedKey.startsWith("-----BEGIN RSA PUBLIC KEY-----")) {
+                secret = await importSPKI(pkcs1ToSpki(trimmedKey), header.alg);
+                allowedAlgorithms = asymmetricAlgorithms;
+            } else if (trimmedKey.startsWith("-----BEGIN CERTIFICATE-----")) {
+                secret = await importX509(trimmedKey, header.alg);
+                allowedAlgorithms = asymmetricAlgorithms;
             } else {
                 secret = new TextEncoder().encode(key);
+                allowedAlgorithms = hmacAlgorithms;
             }
         } catch (err) {
             throw new OperationError(`Error: Have you entered the key correctly? The key should be either the secret for HMAC algorithms or the PEM-encoded public key for RSA and ECDSA.
@@ -79,8 +89,17 @@ ${err}`);
 ${err}`);
         }
 
+        // Constrain verification to the algorithm family matching the key that was
+        // actually detected, so a public key/certificate can never be misused as an
+        // HMAC secret (or vice versa) - this is the classic JWT "algorithm confusion"
+        // attack, where a token forged with alg "HS256" is signed using bytes that
+        // are public knowledge (e.g. a PEM public key) as the HMAC secret.
+        if (!allowedAlgorithms.includes(header.alg)) {
+            throw new OperationError(`The token's algorithm "${header.alg}" is not permitted for the provided key. Public keys/certificates only support ${asymmetricAlgorithms.join(", ")}; secrets only support ${hmacAlgorithms.join(", ")}.`);
+        }
+
         try {
-            const { payload } = await jwtVerify(input, secret, { algorithms });
+            const { payload } = await jwtVerify(input, secret, { algorithms: allowedAlgorithms });
             return payload;
         } catch (err) {
             switch (err.code) {

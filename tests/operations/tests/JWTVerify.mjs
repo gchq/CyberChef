@@ -91,6 +91,12 @@ const esToken = "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW
 const hsTokenExpired = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxLCJleHAiOjF9.ZKrXhOiSg4rsEY77HurSJY1i4-cpFYkr6m_TTA2ChFM";
 // Unsigned token: header {"alg":"none"}
 const noneToken = "eyJhbGciOiJub25lIn0.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.";
+// rsPub with a leading newline, as if pasted with stray whitespace
+const rsPubWithLeadingWhitespace = "\n" + rsPub;
+// Same claims as hsToken, but signed with rsPubWithLeadingWhitespace's raw bytes used as
+// an HMAC secret - simulating an attacker who knows the (public) key text and forges an
+// "alg": "HS256" token with it, hoping the verifier misclassifies the PEM as a secret
+const forgedHsTokenFromPublicKeyBytes = "eyJhbGciOiJIUzI1NiJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.TlLEG96SAiFS5lBGK4LfkReKsENMEW9K2vmT7ShEUPU";
 
 TestRegister.addTests([
     {
@@ -176,6 +182,39 @@ TestRegister.addTests([
         name: "JWT Verify: unsigned token",
         input: noneToken,
         expectedOutput: "This token is unsigned (\"alg\": \"none\") and cannot be verified. Use the 'JWT Decode' operation to view its payload.",
+        recipeConfig: [
+            {
+                op: "JWT Verify",
+                args: [hsKey],
+            }
+        ],
+    },
+    {
+        name: "JWT Verify: RS with whitespace-padded PEM key",
+        input: rsToken,
+        expectedOutput: outputObject,
+        recipeConfig: [
+            {
+                op: "JWT Verify",
+                args: [rsPubWithLeadingWhitespace],
+            }
+        ],
+    },
+    {
+        name: "JWT Verify: algorithm confusion attack using whitespace-padded public key is rejected",
+        input: forgedHsTokenFromPublicKeyBytes,
+        expectedOutput: "Error: Have you entered the key correctly? The key should be either the secret for HMAC algorithms or the PEM-encoded public key for RSA and ECDSA.\n\nJOSENotSupported: Invalid or unsupported \"alg\" (Algorithm) value",
+        recipeConfig: [
+            {
+                op: "JWT Verify",
+                args: [rsPubWithLeadingWhitespace],
+            }
+        ],
+    },
+    {
+        name: "JWT Verify: HMAC secret cannot verify an RS-signed token",
+        input: rsToken,
+        expectedOutput: "The token's algorithm \"RS256\" is not permitted for the provided key. Public keys/certificates only support RS256, RS384, RS512, ES256, ES384, ES512; secrets only support HS256, HS384, HS512.",
         recipeConfig: [
             {
                 op: "JWT Verify",
