@@ -312,14 +312,30 @@ module.exports = {
         browser
             .expect.element(".popover-body").text.to.not.contain("Category:");
 
-        // Reset option back to enabled
+        // Reset options to default via the "Reset options to default" button, rather
+        // than toggling the checkbox back manually. This must reapply the setting to
+        // the rendered operation list immediately, without any further interaction.
         browser
             .click("#options")
             .waitForElementVisible("#options-modal", 1000)
-            .click("label[for='showOpCategories']")
+            .click("#reset-options")
             .pause(500)
             .click("#options-modal .modal-footer .btn-secondary[data-dismiss='modal']")
             .waitForElementNotVisible("#options-modal", 1000);
+
+        // Search again and verify the category line is back, with no reload/rebuild
+        // other than the Reset click above
+        browser
+            .clearValue("#search")
+            .setValue("#search", "md5")
+            .useXpath()
+            .waitForElementVisible(op, 1000)
+            .moveToElement(op, 10, 10)
+            .useCss()
+            .waitForElementVisible(".popover-body", 1000);
+
+        browser
+            .expect.element(".popover-body").text.to.contain("Category:");
 
         // Clear search
         browser
