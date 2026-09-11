@@ -38,3 +38,20 @@ With these principles in mind, any changes or additions to CyberChef should keep
  - Standalone
  - Efficient
  - As small as possible
+
+## Testing standalone module loading
+
+The production ZIP can be extracted and opened through its versioned HTML file without a
+web server. Its `local-modules` directory contains source-string wrappers for the compiled
+operation modules. The document loads these on demand with classic script elements, then
+passes the source to the requesting worker. The worker executes a temporary blob URL and
+revokes it after loading. Hosted builds continue to import the normal `modules` files.
+
+Run `tests/browser/04_worker_modules.js` against both a hosted production build and the
+extracted HTML file by setting Nightwatch's `launch_url` to the corresponding HTTP or
+`file:` URL. Use normal browser security settings. The tests exercise certificate parsing
+and compression through the worker. The Node tests in `WorkerModules.mjs` cover shared
+loads, rejected module names, failures, retries and blob cleanup.
+
+These checks cover operation-module loading. Operations that load additional external
+assets may have separate offline requirements.
