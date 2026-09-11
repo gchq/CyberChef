@@ -347,4 +347,23 @@ TestRegister.addTests([
             }
         ]
     },
+    {
+        name: "RSA Encrypt: RAW preserves binary input bytes",
+        input: "46 4c 80 ff",
+        expectedOutput: "3d5e1be4e95457390edde6800a3b34a09cf88d519396824d3df26cca134922c0927cab3136470b42e3462d98fadd1575f436851e04f9300b5b0fc087db0a7d509d22cf38670565efc55902389a9ed87022f7219bcace197485cbe6631b43e064cb41217e8f076fedfb92fea38ec5ea237b149d517f3fac88d31f050730adf9fe62b9baf316153f0ff2b5eec8881c6b2f4338ce73467dee8a77ab77647a76495b113c5ccb144c3897827fde5e5cc6d98b38d6ff172b3c03002e6cca60c73ce47fe3d1249749fc96c4c26f0c289b8a4a6d1aa93ad310c29f60d549d5606b2d2d7997f96de7b0a3aadc04407bf3d517f09dc5de9393c56013a5a471520afdd16931",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                "op": "RSA Encrypt",
+                "args": [PEM_PUB_2048, "RAW", "SHA-1"]
+            },
+            {
+                "op": "To Hex",
+                "args": ["None", 0]
+            }
+        ]
+    },
 ]);
