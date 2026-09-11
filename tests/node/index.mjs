@@ -22,6 +22,7 @@ import "./tests/PGP.mjs";
 import "./tests/File.mjs";
 import "./tests/Dish.mjs";
 import "./tests/Operation.mjs";
+import "./tests/Magic.mjs";
 import "./tests/NodeDish.mjs";
 import "./tests/Utils.mjs";
 import "./tests/Categories.mjs";

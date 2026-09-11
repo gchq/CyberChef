@@ -177,10 +177,11 @@ class Recipe  {
      *     - The index of the Operation to start executing from
      * @param {number} [forkState={}]
      *     - If this is a forked recipe, the state of the recipe up to this point
+     * @param {boolean} [suppressOperationErrors=false] - Do not log expected OperationErrors.
      * @returns {number}
      *     - The final progress through the recipe
      */
-    async execute(dish, startFrom=0, forkState={}) {
+    async execute(dish, startFrom=0, forkState={}, suppressOperationErrors=false) {
         let op, input, output,
             numJumps = 0,
             numRegisters = forkState.numRegisters || 0;
@@ -235,9 +236,12 @@ class Recipe  {
                 }
                 this.lastRunOp = op;
             } catch (err) {
-                log.error(err);
+                const isOperationError = err instanceof OperationError || err?.type === "OperationError";
+                if (!suppressOperationErrors || !isOperationError) {
+                    log.error(err);
+                }
                 // Return expected errors as output
-                if (err instanceof OperationError || err?.type === "OperationError") {
+                if (isOperationError) {
                     // Cannot rely on `err instanceof OperationError` here as extending
                     // native types is not fully supported yet.
                     dish.set(err.message, "string");
