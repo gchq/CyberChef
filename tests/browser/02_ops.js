@@ -426,6 +426,10 @@ Q+47JAY=
     },
 
 
+    "Convert WebP image format": browser => {
+        testOpImage(browser, "Convert Image Format", "files/Hitchhikers_Guide.webp");
+    },
+
     after: browser => {
         browser.end();
     }
