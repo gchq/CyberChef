@@ -119,4 +119,48 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "Cron Schedule Decoder: invalid - trailing text after number",
+        input: "1foo * * * *",
+        expectedOutput: "Invalid value '1foo' in minute field",
+        recipeConfig: [
+            {
+                op: "Cron Schedule Decoder",
+                args: [],
+            },
+        ],
+    },
+    {
+        name: "Cron Schedule Decoder: invalid - extra slash in step",
+        input: "*/2/3 * * * *",
+        expectedOutput: "Invalid step expression '*/2/3' in minute field",
+        recipeConfig: [
+            {
+                op: "Cron Schedule Decoder",
+                args: [],
+            },
+        ],
+    },
+    {
+        name: "Cron Schedule Decoder: invalid - extra dash in range",
+        input: "1-2-3 * * * *",
+        expectedOutput: "Invalid range '1-2-3' in minute field",
+        recipeConfig: [
+            {
+                op: "Cron Schedule Decoder",
+                args: [],
+            },
+        ],
+    },
+    {
+        name: "Cron Schedule Decoder: invalid - trailing text in step value",
+        input: "*/2x * * * *",
+        expectedOutput: "Invalid step value '2x' in minute field",
+        recipeConfig: [
+            {
+                op: "Cron Schedule Decoder",
+                args: [],
+            },
+        ],
+    },
 ]);

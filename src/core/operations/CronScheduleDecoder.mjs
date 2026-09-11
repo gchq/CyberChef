@@ -77,9 +77,13 @@ class CronScheduleDecoder extends Operation {
 
         for (const part of field.split(",")) {
             if (part.includes("/")) {
-                const [rangePart, stepStr] = part.split("/");
+                const slashParts = part.split("/");
+                if (slashParts.length !== 2) {
+                    throw new OperationError(`Invalid step expression '${part}' in ${fieldName} field`);
+                }
+                const [rangePart, stepStr] = slashParts;
                 const step = parseInt(stepStr, 10);
-                if (isNaN(step) || step <= 0) {
+                if (String(step) !== stepStr || isNaN(step) || step <= 0) {
                     throw new OperationError(`Invalid step value '${stepStr}' in ${fieldName} field`);
                 }
 
@@ -87,7 +91,11 @@ class CronScheduleDecoder extends Operation {
                 let rangeMax = max;
                 if (rangePart !== "*") {
                     if (rangePart.includes("-")) {
-                        const [rMin, rMax] = rangePart.split("-").map(Number);
+                        const dashParts = rangePart.split("-");
+                        if (dashParts.length !== 2) {
+                            throw new OperationError(`Invalid range '${rangePart}' in ${fieldName} field`);
+                        }
+                        const [rMin, rMax] = dashParts.map(Number);
                         if (isNaN(rMin) || isNaN(rMax) || rMin < min || rMax > max || rMin > rMax) {
                             throw new OperationError(`Invalid range '${rangePart}' in ${fieldName} field`);
                         }
@@ -95,7 +103,7 @@ class CronScheduleDecoder extends Operation {
                         rangeMax = rMax;
                     } else {
                         const val = parseInt(rangePart, 10);
-                        if (isNaN(val) || val < min || val > max) {
+                        if (String(val) !== rangePart || isNaN(val) || val < min || val > max) {
                             throw new OperationError(`Invalid value '${rangePart}' in ${fieldName} field`);
                         }
                         rangeMin = val;
@@ -107,7 +115,11 @@ class CronScheduleDecoder extends Operation {
                     values.add(i);
                 }
             } else if (part.includes("-")) {
-                const [rMin, rMax] = part.split("-").map(Number);
+                const dashParts = part.split("-");
+                if (dashParts.length !== 2) {
+                    throw new OperationError(`Invalid range '${part}' in ${fieldName} field`);
+                }
+                const [rMin, rMax] = dashParts.map(Number);
                 if (isNaN(rMin) || isNaN(rMax) || rMin < min || rMax > max || rMin > rMax) {
                     throw new OperationError(`Invalid range '${part}' in ${fieldName} field`);
                 }
@@ -120,7 +132,7 @@ class CronScheduleDecoder extends Operation {
                 }
             } else {
                 const val = parseInt(part, 10);
-                if (isNaN(val) || val < min || val > max) {
+                if (String(val) !== part || isNaN(val) || val < min || val > max) {
                     throw new OperationError(`Invalid value '${part}' in ${fieldName} field`);
                 }
                 values.add(val);
