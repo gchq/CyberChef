@@ -1,10 +1,10 @@
 <!-- htmlmin:ignore --><!--
     CyberChef - The Cyber Swiss Army Knife
 
-    @copyright Crown Copyright 2016-{{compileYear}}
+    @copyright Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %>
     @license Apache-2.0
 
-      Copyright 2016-{{compileYear}} Crown Copyright
+      Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %> Crown Copyright
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@
         <meta charset="UTF-8">
         <title>CyberChef</title>
 
-        <meta name="copyright" content="Crown Copyright 2016-{{compileYear}}" />
+        <meta name="copyright" content="Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %>" />
         <meta name="description" content="The Cyber Swiss Army Knife - a web app for encryption, encoding, compression and data analysis" />
         <meta name="keywords" content="base64, hex, decode, encode, encrypt, decrypt, compress, decompress, regex, regular expressions, hash, crypt, hexadecimal, user agent, url, certificate, x.509, parser, JSON, gzip,  md5, sha1, aes, des, blowfish, xor" />
 
-        <link rel="icon" type="image/ico" href="../static/images/favicon.ico" />
+        <link rel="icon" type="image/ico" href="<%- require('../static/images/favicon.ico') %>" />
 
         <script type="application/javascript">
             "use strict";
@@ -117,7 +117,7 @@
                     (e.colno ? "\nColumn: " + e.colno : "") +
                     (e.error ? "\nError: " + e.error : "") +
                     "\nUser-Agent: " + navigator.userAgent +
-                    "\nCyberChef version: {{version}}";
+                    "\nCyberChef version: <%= htmlWebpackPlugin.options.version %>";
 
                 clearInterval(window.loadingMsgsInt);
                 document.getElementById("preloader").remove();
@@ -205,7 +205,7 @@
                             </button>
 
                             <button type="button" class="mx-2 btn btn-lg btn-success btn-raised btn-block" id="bake" data-help-title="Baking" data-help="<p>Baking causes CyberChef to run the Recipe against your data. This involves three steps:</p><ol><li>The data in the Input is encoded into bytes using the character encoding selected in the Input status bar.</li><li>The data is run through each of the operations in the Recipe in turn with the output of one operation being fed into the next operation as its input.</li><li>The outcome of the final operation in the Recipe is decoded into Output text using the character encoding selected in the Output status bar.</li></ol><p>If there are multiple Inputs, the Bake button causes every Input to be baked simultaneously.</p>">
-                                <img aria-hidden="true" src="../static/images/cook_male-32x32.png" alt="Chef Icon"/>
+                                <img aria-hidden="true" src="<%- require('../static/images/cook_male-32x32.png') %>" alt="Chef Icon"/>
                                 <span>Bake!</span>
                             </button>
 
@@ -333,7 +333,7 @@
                             <div id="output-text"></div>
                             <div id="output-loader">
                                 <div id="output-loader-animation">
-                                    <object id="bombe" data="../static/images/bombe.svg" width="100%" height="100%" data-help-title="Loading animation" data-help="This loading animation shows an accurate representation of how rotors moved on The Bombe, an electro-mechanical device built at Bletchley Park in 1939 by Alan Turing with refinements by Gordon Welchman in 1940. The Bombe was used by the Government Code and Cipher School (the precursor to GCHQ) to discover daily settings of Enigma machines used by the German military in World War 2.<br><br>More information can be found on <a href='https://wikipedia.org/wiki/Bombe'>Wikipedia</a>."></object>
+                                    <object id="bombe" data="<%- require('../static/images/bombe.svg') %>" width="100%" height="100%" data-help-title="Loading animation" data-help="This loading animation shows an accurate representation of how rotors moved on The Bombe, an electro-mechanical device built at Bletchley Park in 1939 by Alan Turing with refinements by Gordon Welchman in 1940. The Bombe was used by the Government Code and Cipher School (the precursor to GCHQ) to discover daily settings of Enigma machines used by the German military in World War 2.<br><br>More information can be found on <a href='https://wikipedia.org/wiki/Bombe'>Wikipedia</a>."></object>
                                 </div>
                                 <div class="loading-msg"></div>
                             </div>
@@ -571,15 +571,15 @@
                         <h5 class="modal-title">CyberChef - The Cyber Swiss Army Knife</h5>
                     </div>
                     <div class="modal-body">
-                        <img aria-hidden="true" class="about-img-left" src="../static/images/cyberchef-128x128.png" alt="CyberChef Logo"/>
+                        <img aria-hidden="true" class="about-img-left" src="<%- require('../static/images/cyberchef-128x128.png') %>" alt="CyberChef Logo"/>
                         <p class="subtext">
-                            Version {{version}}<br>
-                            Compile time: {{compileTime}}
+                            Version <%= htmlWebpackPlugin.options.version %><br>
+                            Compile time: <%= htmlWebpackPlugin.options.compileTime %>
                         </p>
-                        <p>&copy; Crown Copyright 2016-{{compileYear}}.</p>
+                        <p>&copy; Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %>.</p>
                         <p>Released under the Apache Licence, Version 2.0.</p>
                         <p><a href="https://gitter.im/gchq/CyberChef">
-                            <img src="../static/images/gitter-badge.svg">
+                            <img src="<%- require('../static/images/gitter-badge.svg') %>">
                         </a></p>
 
                         <ul class="nav nav-tabs" role="tablist">
@@ -702,7 +702,7 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                     <a href="https://github.com/gchq/CyberChef">
-                        <img aria-hidden="true" style="position: absolute; top: 0; right: 0; border: 0;" src="../static/images/fork_me.png" alt="Fork me on GitHub">
+                        <img aria-hidden="true" style="position: absolute; top: 0; right: 0; border: 0;" src="<%- require('../static/images/fork_me.png') %>" alt="Fork me on GitHub">
                     </a>
                 </div>
             </div>
@@ -868,15 +868,15 @@
                             Be aware that the standalone version will never update itself, meaning it will not receive bug fixes or new features until you re-download newer versions manually.
                         </p>
 
-                        <h6>CyberChef {{version}}</h6>
+                        <h6>CyberChef <%= htmlWebpackPlugin.options.version %></h6>
                         <ul>
-                            <li>Build time: {{compileTime}}</li>
-                            <li>The changelog for this version can be viewed <a href="https://github.com/gchq/CyberChef/blob/v{{latestReleaseVersion}}/CHANGELOG.md">here</a></li>
-                            <li>&copy; Crown Copyright 2016-{{compileYear}}</li>
+                            <li>Build time: <%= htmlWebpackPlugin.options.compileTime %></li>
+                            <li>The changelog for this version can be viewed <a href="https://github.com/gchq/CyberChef/blob/v<%= htmlWebpackPlugin.options.latestReleaseVersion %>/CHANGELOG.md">here</a></li>
+                            <li>&copy; Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %></li>
                             <li>Released under the Apache Licence, Version 2.0</li>
                             <li>SHA256 hash: DOWNLOAD_HASH_PLACEHOLDER</li>
                         </ul>
-                        <a href="{{downloadZipFilename}}" download class="btn btn-outline-primary">Download ZIP file</a>
+                        <a href="<%= htmlWebpackPlugin.options.downloadZipFilename %>" download class="btn btn-outline-primary">Download ZIP file</a>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
@@ -905,6 +905,5 @@
             </div>
         </div>
 
-        <script src="../index.js"></script>
     </body>
 </html>
