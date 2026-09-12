@@ -47,6 +47,12 @@ export const HASH_DELIM_OPTIONS = ["Line feed", "CRLF", "Space", "Comma"];
 export const IP_DELIM_OPTIONS = ["Line feed", "CRLF", "Space", "Comma", "Semi-colon"];
 
 /**
+ * Date delimiters
+ */
+export const DATE_DELIM_OPTIONS = ["Line feed", "CRLF", "Comma", "Semi-colon"];
+
+
+/**
  * Split delimiters.
  */
 export const SPLIT_DELIM_OPTIONS = [
