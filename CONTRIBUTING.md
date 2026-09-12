@@ -1,8 +1,35 @@
 # Contributing
 
-Take a look through the [Wiki pages](https://github.com/gchq/CyberChef/wiki) for guides on [compiling CyberChef](https://github.com/gchq/CyberChef/wiki/Getting-started) and [adding new operations](https://github.com/gchq/CyberChef/wiki/Adding-a-new-operation).
+This file is the source of truth for contributing to CyberChef.
 
-There are lots of opportunities to contribute to CyberChef. If you want ideas, take a look at any [Issues](https://github.com/gchq/CyberChef/issues) tagged with '[help wanted](https://github.com/gchq/CyberChef/labels/help%20wanted)'.
+There are lots of opportunities to contribute to CyberChef. If you want ideas, take a look at [issues tagged `help wanted`](https://github.com/gchq/CyberChef/labels/help%20wanted).
+
+## Development setup
+
+CyberChef requires Node.js 24 or 26. From the repository root:
+
+```bash
+npm install
+npm start
+```
+
+Useful development commands are:
+
+```bash
+npm run build
+npm run lint
+npm run lint:grammar
+npm test
+npm run testui
+```
+
+To scaffold a new operation, run:
+
+```bash
+npm run newop
+```
+
+New operations should include tests under `tests/operations/tests/` and a category entry in `src/core/config/Categories.json`.
 
 Before your contributions can be accepted, you must:
 
@@ -13,6 +40,14 @@ Before your contributions can be accepted, you must:
  - Submit a pull request.
 
 Please note that we will ***reject*** pull requests from the master branch of your fork owing to the mess it makes of our own working repositories and the extra work entailed.
+
+## Testing
+
+Bug fixes should include a regression test that fails before the fix and passes afterwards. New functionality should include tests for normal use and relevant edge cases.
+
+- Operation and Node API tests: `npm test`
+- Browser UI tests: `npm run testui`
+- Browser UI tests against the development server: `npm run testuidev`
 
 ## Coding conventions
 
