@@ -162,6 +162,7 @@
             "Cetacean Cipher Encode",
             "Cetacean Cipher Decode",
             "Substitute",
+            "Multi-character Substitution",
             "Derive PBKDF2 key",
             "Derive EVP key",
             "Derive HKDF key",
