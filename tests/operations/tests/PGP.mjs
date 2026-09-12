@@ -8,6 +8,8 @@
 import TestRegister from "../../lib/TestRegister.mjs";
 import {ASCII_TEXT, UTF8_TEXT, ALL_BYTES} from "../../samples/Ciphers.mjs";
 
+const rawStringToArrayBuffer = str => Uint8Array.from(str, c => c.charCodeAt(0)).buffer;
+
 // RSA-1024
 const ALICE_PRIVATE = `-----BEGIN PGP PRIVATE KEY BLOCK-----
 Version: Keybase OpenPGP v2.1.17
@@ -168,7 +170,7 @@ TestRegister.addTests([
     },
     {
         name: "PGP Encrypt/Decrypt: RSA, All bytes",
-        input: ALL_BYTES,
+        input: rawStringToArrayBuffer(ALL_BYTES),
         expectedOutput: ALL_BYTES,
         recipeConfig: [
             {
@@ -198,7 +200,7 @@ TestRegister.addTests([
     },
     {
         name: "PGP Encrypt/Decrypt: ECC, All bytes",
-        input: ALL_BYTES,
+        input: rawStringToArrayBuffer(ALL_BYTES),
         expectedOutput: ALL_BYTES,
         recipeConfig: [
             {
@@ -213,7 +215,7 @@ TestRegister.addTests([
     },
     {
         name: "PGP Sign/Verify: RSA, All bytes",
-        input: ALL_BYTES,
+        input: rawStringToArrayBuffer(ALL_BYTES),
         expectedMatch: /Signed by PGP key ID: 2ADF8D8C\nPGP fingerprint: 7afe93ff7614167c3fe831fe1b75204b2adf8d8c\nSigned on .*\n----------------------------------\n/,
         recipeConfig: [
             {

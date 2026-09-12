@@ -52,9 +52,9 @@ class BLAKE3 extends Operation {
         const key = args[1];
         const size = args[0];
         const opts = { dkLen: size };
-        const inputBytes = new Uint8Array(Utils.strToArrayBuffer(input));
+        const inputBytes = new Uint8Array(Utils.strToUtf8ArrayBuffer(input));
         if (key !== "") {
-            const keyBytes = new Uint8Array(Utils.strToArrayBuffer(key));
+            const keyBytes = new Uint8Array(Utils.strToUtf8ArrayBuffer(key));
             if (keyBytes.length !== 32) {
                 throw new OperationError("The key must be exactly 32 bytes long");
             }
