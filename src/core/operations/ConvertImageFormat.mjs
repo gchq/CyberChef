@@ -142,7 +142,7 @@ class ConvertImageFormat extends Operation {
                     break;
             }
 
-            return buffer.buffer;
+            return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
         } catch (err) {
             throw new OperationError(`Error converting image format. (${err})`);
         }
