@@ -136,7 +136,7 @@ export function fromBase64(data, alphabet="A-Za-z0-9+/=", returnType="string", r
         enc3 = alphabet.indexOf(data.charAt(i++) || null);
         enc4 = alphabet.indexOf(data.charAt(i++) || null);
 
-        if (strictMode && (enc1 < 0 || enc2 < 0 || enc3 < 0 || enc4 < 0)) {
+        if (strictMode && (enc1 < 0 || enc2 < 0 || (enc3 < 0 && data.charAt(i - 2) !== "") ||(enc4 < 0 && data.charAt(i - 1) !== ""))) {
             throw new OperationError("Error: Base64 input contains non-alphabet char(s)");
         }
 
