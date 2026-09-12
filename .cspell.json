@@ -65,6 +65,9 @@
   "ignorePaths": [
     "package.json",
     "package-lock.json",
-    "node_modules"
+    "node_modules",
+    "src/core/vendor/**",
+    "src/web/static/images/**",
+    "src/web/static/fonts/**"
   ]
 }
