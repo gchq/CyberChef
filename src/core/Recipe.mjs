@@ -177,7 +177,7 @@ class Recipe  {
      *     - The index of the Operation to start executing from
      * @param {number} [forkState={}]
      *     - If this is a forked recipe, the state of the recipe up to this point
-     * @param {boolean} [suppressOperationErrors=false] - Do not log expected OperationErrors.
+     * @param {boolean} [suppressOperationErrors=false] - Do not log expected operation failures.
      * @returns {number}
      *     - The final progress through the recipe
      */
@@ -239,7 +239,11 @@ class Recipe  {
                 // Cannot rely on `err instanceof OperationError` here as extending
                 // native types is not fully supported yet.
                 const isOperationError = err instanceof OperationError || err?.type === "OperationError";
-                if (!suppressOperationErrors || !isOperationError) {
+                // Some legacy operations still throw strings for expected input rejection.
+                // Magic treats those candidate failures as speculative, so suppress their
+                // console noise while leaving normal recipe logging unchanged.
+                const isExpectedOperationFailure = isOperationError || typeof err === "string";
+                if (!suppressOperationErrors || !isExpectedOperationFailure) {
                     log.error(err);
                 }
                 // Return expected errors as output
