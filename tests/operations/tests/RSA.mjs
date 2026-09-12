@@ -46,7 +46,55 @@ BzTky/ohv6EGhjyqnaskTWwLWK6PdKva8rEMb8nNJvhoTJDLYUfNjB7DFnWxgWuR
 DwIDAQAB
 -----END PUBLIC KEY-----`;
 
+const PEM_PRIV_OAEP_SHA256 = `-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDBkZUqED7P4Twf
+FwwtkW45z2QYpJSfKtwlakSeanlRODnrENaAUf1qhX0jS/E0yczTwCG+NoKFOLLm
+XkXYy6krTzE3BVtR40gg9EvqUAOyoiDAOlbs2mhpydxOaqllIYGUO81z3hyjc66g
+B0+MlFlOLzZ08QWtQVjER4rFGuGSvNwG1cwCtvN1jTiPAdfU/W9t1ggvWzpwK18y
+Np2tw3vm1QUV+ULtcViD4GrJQbKRMLVvD9YAc+aELStqZYiQ0yWVlRPpF07qq/p7
+lWfGau91wWlHviHTPEW4BgugX8vTibuOJNUp54RGuN1S9A137cDMg1SHalcyjcua
+iQ77Jp0PAgMBAAECggEACFemZpwxoNLzvOFI6JPafMpX5Yn+T8fQmho03+D13o6+
+TEe6/ufJtLQRGxrUR/KkjcG7ko+V23kAmNYaS4gnf9LXa6gi8eoKO0VcGjqdli7P
+m4lIIsgc9OY6xPRq3Y1uoL1dEu/RKyg6r/Hwtz3ThX+aaLrUhE2LLlZpACqy6xh+
+bRpzhgelnPaJ9mAXzJr0nEYOqC/7nyBWNGICrknTWZuE04hKhrLI7UmmiIKmZF5f
+SCW3LuTp2cjyVJm1hcNnmnJTUkAwApEpSsSxFvjhK1bRoxbCsnBGIIrO8o6MCZf3
+NhI17PbY/8yy2GWXewfvXhyuagP0xUy8zKXY/8upeQKBgQDnocLDLW5D7aZYuwCs
+XhotHIDOMhgDMRPpPoBt8JkEa5geHWbS6cNS51A8hi7lXSLvCfWFQ5cGTwxTyFRN
+GHCIuHhC1U6wd1XP3Xi3hIdljIxV7Q8PuZ9CJlHC9/Cu8SjwVUTrGt7EhkYiMgK7
+7dkIwVz60KuwqeWy0aTcy/KDaQKBgQDV7rcp9k4cX8gn2IgFBFi/mbxJDtVK0Fa9
+WlY+NqmGcTwMFOKN1ZvWkK7U7RbMYsw7W7jlxyQjcOu4LaR1Y4uuxxg3ID7ItXwn
+0HYom0IaotR11ovsbEaKrZSbjmwRZ/l8ruOhcZ7vdT+CPwoSt8TVOVL8bpxRrQAv
+f9NqRliltwKBgG6SnLu5UzrgFpmi42ZlIY/JXH+SED5tzjh42qwgv5sJlbtCg9RJ
+PTG1NGtADuD0/fkoQukT4+NiFttj9UI8WXQaw2X8F61Luk4ZRkgs3smON2vJV3hF
+Pw4/5qXw4BdTDhz0R4sH77HW+2HVh9KYbxOr4qvksyEJaZpcU5wHS8SJAoGARTnc
+7Wg1eHsKEtK/mRgB++YshluVa4MlPlq4I6OekdGcg7BSa2Ee73ycBmy9/t9NhTu2
+Biy9pfZJYKzsVcwjjCgCzvvRNTN8/Ik5YwRyjJn6NDN7zcJvxTpMJ1Yb5DoIAm+5
+WymgK45+QZBSmyH6QKEvGF5WmRtpPvWXHQGsd9sCgYB1U5Zgb2xf9PLs5eBI3lNc
+1jKzXhsFBdMgCDM+/eQmoe2m/p+tV9tE1xIvtdm6CEhvjorgryx0dp8eldQo5Urb
+NRS5V1Pds7SIg7n5A+Lqx3DQSW7WBg+/HxIfowqBmVVeOw54A1KAi93r7tzHRCqm
+Gyfsg2sB9Y0VQspb36o9hg==
+-----END PRIVATE KEY-----`;
+
 TestRegister.addTests([
+    {
+        name: "RSA Decrypt: binary OAEP-SHA256 input and output",
+        input: "bf130206572b4091a8b29295896d84de3d445c071cdf5646b662fb76cbe9ab905fc23cca1612926d4d05fafde3bb11f5760af0bac45ce880d3fb9b56ab3f159f31049723a5b03d0262630f2f4d984aa789d1b3c9839ead4c04eefe1adec9688f61bc5c9e9a9a25c65273169e0262910a94eeca1a0cdfceca0bdb358a42ae118df0b86903566360c23fe7ea0062b8bec56e15881747ab8286b12e12ef77d5e4dbfc5f3579b8cc4235065425da51cbb02f90d4701133aa489850e4281d45c33d30ddbf492f8ab74c0532174431d39e95e1d0be77142e6863528de82d960d81e61051b2e428e30b106d7aeed1ce77c9e99072094de5d56332fcf586a36a2c31db10",
+        expectedOutput: "f89766d163f006af7d37beeee64ae9e2b071abb64fe2e2fb36e8e49ee7b5b061",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_OAEP_SHA256, "", "RSA-OAEP", "SHA-256"]
+            },
+            {
+                "op": "To Hex",
+                "args": ["None", 0]
+            }
+        ]
+    },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-1, nothing",
         input: "",
