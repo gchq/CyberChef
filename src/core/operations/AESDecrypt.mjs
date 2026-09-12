@@ -8,6 +8,9 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import forge from "node-forge";
 import OperationError from "../errors/OperationError.mjs";
+import { eaxDecrypt } from "../lib/EAX.mjs";
+import { ccmDecrypt } from "../lib/CCM.mjs";
+import { toHexFast } from "../lib/Hex.mjs";
 
 /**
  * AES Decrypt operation
@@ -22,7 +25,7 @@ class AESDecrypt extends Operation {
 
         this.name = "AES Decrypt";
         this.module = "Ciphers";
-        this.description = "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul><br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.<br><br><b>GCM Tag:</b> This field is ignored unless 'GCM' mode is used.";
+        this.description = "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul><br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.<br><br><b>Tag:</b> Required for authenticated modes (GCM, CCM, EAX). This is the authentication tag produced during encryption.<br><br><b>CCM nonce:</b> Must be 7\u201313 bytes.<br><br><b>EAX nonce:</b> Can be any length (16 bytes typical).";
         this.infoURL = "https://wikipedia.org/wiki/Advanced_Encryption_Standard";
         this.inputType = "string";
         this.outputType = "string";
@@ -50,35 +53,44 @@ class AESDecrypt extends Operation {
                 "value": [
                     {
                         name: "CBC",
-                        off: [6, 7]
+                        off: [6, 7, 9]
                     },
                     {
                         name: "CFB",
-                        off: [6, 7]
+                        off: [6, 7, 9]
                     },
                     {
                         name: "OFB",
-                        off: [6, 7]
+                        off: [6, 7, 9]
                     },
                     {
                         name: "CTR",
-                        off: [6, 7]
+                        off: [6, 7, 9]
                     },
                     {
                         name: "GCM",
-                        on: [6, 7]
+                        on: [6, 7, 9]
+                    },
+                    {
+                        name: "CCM",
+                        on: [6, 7, 9]
+                    },
+                    {
+                        name: "EAX",
+                        on: [6, 7],
+                        off: [9]
                     },
                     {
                         name: "ECB",
-                        off: [6, 7]
+                        off: [6, 7, 9]
                     },
                     {
                         name: "CBC/NoPadding",
-                        off: [6, 7]
+                        off: [6, 7, 9]
                     },
                     {
                         name: "ECB/NoPadding",
-                        off: [6, 7]
+                        off: [6, 7, 9]
                     }
                 ]
             },
@@ -93,7 +105,7 @@ class AESDecrypt extends Operation {
                 "value": ["Raw", "Hex"]
             },
             {
-                "name": "GCM Tag",
+                "name": "Tag",
                 "type": "toggleString",
                 "value": "",
                 "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
@@ -123,6 +135,14 @@ class AESDecrypt extends Operation {
                         off: [1]
                     }
                 ]
+            },
+            {
+                "name": "Tag Length",
+                "type": "number",
+                "value": 16,
+                "min": 4,
+                "max": 16,
+                "step": 2
             }
         ];
     }
@@ -143,9 +163,10 @@ class AESDecrypt extends Operation {
             noPadding = args[3].endsWith("NoPadding"),
             inputType = args[4],
             outputType = args[5],
-            gcmTag = Utils.convertToByteString(args[6].string, args[6].option),
-            aad = Utils.convertToByteString(args[7].string, args[7].option),
-            ivFromInput = args[8];
+            tag = Utils.convertToByteString(args[6].string, args[6].option),
+            aad = args[7] ? Utils.convertToByteString(args[7].string, args[7].option) : "",
+            ivFromInput = args[8],
+            tagLength = args[9] != null ? args[9] : 16;
 
 
         if ([16, 24, 32].indexOf(key.length) < 0) {
@@ -175,6 +196,30 @@ The following algorithms will be used based on the size of the key:
             iv = Utils.convertToByteString(args[1].string, args[1].option);
         }
 
+        // --- CCM ---
+        if (mode === "CCM") {
+            if (iv.length < 7 || iv.length > 13) {
+                throw new OperationError(`Invalid CCM nonce length: ${iv.length} bytes.\n\nCCM requires a nonce of 7\u201313 bytes.`);
+            }
+            try {
+                const plaintext = ccmDecrypt(key, iv, input, aad, tag, tagLength);
+                return outputType === "Hex" ? toHexFast(Utils.strToByteArray(plaintext)) : plaintext;
+            } catch (e) {
+                throw new OperationError("Unable to decrypt input with these parameters: " + e.message);
+            }
+        }
+
+        // --- EAX ---
+        if (mode === "EAX") {
+            try {
+                const plaintext = eaxDecrypt(key, iv, input, aad, tag);
+                return outputType === "Hex" ? toHexFast(Utils.strToByteArray(plaintext)) : plaintext;
+            } catch (e) {
+                throw new OperationError("Unable to decrypt input with these parameters: " + e.message);
+            }
+        }
+
+        // --- Existing modes (CBC, CFB, OFB, CTR, GCM, ECB) ---
         const decipher = forge.cipher.createDecipher("AES-" + mode, key);
 
         /* Allow for a "no padding" mode */
@@ -186,7 +231,8 @@ The following algorithms will be used based on the size of the key:
 
         decipher.start({
             iv: iv.length === 0 ? "" : iv,
-            tag: mode === "GCM" ? gcmTag : undefined,
+            tag: mode === "GCM" ? tag : undefined,
+            tagLength: mode === "GCM" ? tagLength * 8 : undefined,
             additionalData: mode === "GCM" ? aad : undefined
         });
         decipher.update(forge.util.createBuffer(input));
