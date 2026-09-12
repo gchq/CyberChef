@@ -5,6 +5,7 @@
  */
 
 import r from "jsrsasign";
+import { getPqcPublicKeyInfo } from "../lib/Pqc.mjs";
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
@@ -50,13 +51,20 @@ class PubKeyFromCert extends Operation {
             const certPem = input.substring(match.index, indexFooter + footer.length);
             const cert = new r.X509();
             cert.readCertPEM(certPem);
-            let pubKey;
+            let pubKeyPem;
             try {
-                pubKey = cert.getPublicKey();
+                const pubKey = cert.getPublicKey();
+                pubKeyPem = r.KEYUTIL.getPEM(pubKey);
             } catch {
-                throw new OperationError("Unsupported public key type");
+                const pqcPubKey = getPqcPublicKeyInfo(cert);
+                if (!pqcPubKey) {
+                    throw new OperationError("Unsupported public key type");
+                }
+                pubKeyPem = r.KJUR.asn1.ASN1Util.getPEMStringFromHex(
+                    pqcPubKey.publicKeyInfoHex,
+                    "PUBLIC KEY"
+                );
             }
-            const pubKeyPem = r.KEYUTIL.getPEM(pubKey);
 
             // PEM ends with '\n', so a new key always starts on a new line
             output += pubKeyPem;
