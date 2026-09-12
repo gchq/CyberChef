@@ -236,14 +236,14 @@ class Recipe  {
                 }
                 this.lastRunOp = op;
             } catch (err) {
+                // Cannot rely on `err instanceof OperationError` here as extending
+                // native types is not fully supported yet.
                 const isOperationError = err instanceof OperationError || err?.type === "OperationError";
                 if (!suppressOperationErrors || !isOperationError) {
                     log.error(err);
                 }
                 // Return expected errors as output
                 if (isOperationError) {
-                    // Cannot rely on `err instanceof OperationError` here as extending
-                    // native types is not fully supported yet.
                     dish.set(err.message, "string");
                     this.lastRunOp = null;
                     return i;
