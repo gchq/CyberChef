@@ -73,7 +73,7 @@ class ROT13BruteForce extends Operation {
         const cribLower = crib.toLowerCase();
         const lowerStart = "a".charCodeAt(0), upperStart = "A".charCodeAt(0), numStart = "0".charCodeAt(0);
         const result = [];
-        for (let amount = 1; amount < 26; amount++) {
+        for (let amount = 0; amount < 26; amount++) {
             const rotated = sample.slice();
             for (let i = 0; i < rotated.length; i++) {
                 if (rotateLower && lowerStart <= rotated[i] && rotated[i] < lowerStart + 26) {
