@@ -285,6 +285,11 @@ class App {
                 cat.addOperation(op);
             }
 
+            // Favourites are deliberately kept in the user's chosen order
+            if (this.options.sortOperations && catConf.name !== "Favourites") {
+                cat.sortOperations();
+            }
+
             html += cat.toHtml();
         }
 
