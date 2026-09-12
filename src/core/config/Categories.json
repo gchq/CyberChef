@@ -325,7 +325,7 @@
             "Remove ANSI Escape Codes",
             "To Upper case",
             "To Lower case",
-            "To Proper Noun Case",
+            "To Title Case",
             "Swap case",
             "Alternating Caps",
             "To Case Insensitive Regex",
