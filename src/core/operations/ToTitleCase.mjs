@@ -6,17 +6,17 @@
 import Operation from "../Operation.mjs";
 
 /**
- * To Proper Noun Case operation
+ * To Title Case operation
  */
-class ToProperNounCase extends Operation {
+class ToTitleCase extends Operation {
 
     /**
-     * ToProperNounCase constructor
+     * ToTitleCase constructor
      */
     constructor() {
         super();
 
-        this.name = "To Proper Noun Case";
+        this.name = "To Title Case";
         this.module = "Default";
         this.description = "Converts the first letter of each word to upper case and the remaining letters to lower case, while preserving punctuation and spacing.";
         this.inputType = "string";
@@ -37,4 +37,4 @@ class ToProperNounCase extends Operation {
 
 }
 
-export default ToProperNounCase;
+export default ToTitleCase;
