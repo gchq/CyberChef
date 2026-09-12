@@ -53,6 +53,7 @@ function main() {
         imagePreview:        true,
         syncTabs:            true,
         showCatCount:        false,
+        showOpCategories:    true,
     };
 
     document.removeEventListener("DOMContentLoaded", main, false);
