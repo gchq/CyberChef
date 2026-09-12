@@ -38,32 +38,29 @@ class VigenèreDecode extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const alphabet = "abcdefghijklmnopqrstuvwxyz",
+        const alphabet = "abcdefghijklmnopqrstuvwxyz0123456789",
             key = args[0].toLowerCase();
-        let output = "",
-            fail = 0,
-            keyIndex,
-            msgIndex,
-            chr;
+            let output = "";
+            let fail = 0;
+            let keyIndex,msgIndex,chr;
 
         if (!key) throw new OperationError("No key entered");
-        if (!/^[a-zA-Z]+$/.test(key)) throw new OperationError("The key must consist only of letters");
+        if (!/^[a-zA-Z0-9]+$/.test(key)) throw new OperationError("The key must consist only of letters and numbers");
 
         for (let i = 0; i < input.length; i++) {
-            if (alphabet.indexOf(input[i]) >= 0) {
+            const currentChar = input[i];
+            const lowerChar = currentChar.toLowerCase();
+            //Implementing logic
+            if (alphabet.indexOf(lowerChar) >= 0) {
                 chr = key[(i - fail) % key.length];
                 keyIndex = alphabet.indexOf(chr);
-                msgIndex = alphabet.indexOf(input[i]);
-                // Subtract indexes from each other, add 26 just in case the value is negative,
-                // modulo to remove if necessary
-                output += alphabet[(msgIndex - keyIndex + alphabet.length) % 26];
-            } else if (alphabet.indexOf(input[i].toLowerCase()) >= 0) {
-                chr = key[(i - fail) % key.length].toLowerCase();
-                keyIndex = alphabet.indexOf(chr);
-                msgIndex = alphabet.indexOf(input[i].toLowerCase());
-                output += alphabet[(msgIndex + alphabet.length - keyIndex) % 26].toUpperCase();
+                msgIndex = alphabet.indexOf(lowerChar);
+                // Decode character using the Vigenère formula
+                const decodedChar = alphabet[(msgIndex - keyIndex + alphabet.length) % alphabet.length];
+                // Preserve case for letters and add to output
+                output += currentChar === lowerChar ? decodedChar : decodedChar.toUpperCase();
             } else {
-                output += input[i];
+                output += currentChar; // Keep non-alphabetic characters as is
                 fail++;
             }
         }
