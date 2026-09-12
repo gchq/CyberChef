@@ -6,6 +6,7 @@
 
 import {operations} from "./index.mjs";
 import { sanitise } from "./apiUtils.mjs";
+import Ingredient from "../core/Ingredient.mjs";
 
 /**
  * Similar to core/Recipe, Recipe controls a list of operations and
@@ -95,7 +96,12 @@ class NodeRecipe {
                 Object.prototype.hasOwnProperty.call(curr, "args")) {
                 prev = await curr.op(prev, curr.args);
             } else {
-                prev = await curr(prev);
+                const binaryDefaults = Object.fromEntries(
+                    Object.entries(curr.args)
+                        .filter(([, arg]) => arg.type === "binaryString" || arg.type === "binaryShortString")
+                        .map(([name, arg]) => [name, Ingredient.prepare(arg.value, arg.type)])
+                );
+                prev = await curr(prev, Object.keys(binaryDefaults).length ? binaryDefaults : null);
             }
         }
         return prev;
