@@ -20,11 +20,17 @@ class ParseURI extends Operation {
 
         this.name = "Parse URI";
         this.module = "URL";
-        this.description = "Pretty prints complicated Uniform Resource Identifier (URI) strings for ease of reading. Particularly useful for Uniform Resource Locators (URLs) with a lot of arguments.";
+        this.description = "Pretty prints complicated Uniform Resource Identifier (URI) strings for ease of reading. Particularly useful for Uniform Resource Locators (URLs) with a lot of arguments.<br><br>Enable Output as JSON for structured output. Query parameter values are arrays, preserving repeated parameters and empty values.";
         this.infoURL = "https://wikipedia.org/wiki/Uniform_Resource_Identifier";
         this.inputType = "string";
         this.outputType = "string";
-        this.args = [];
+        this.args = [
+            {
+                name: "Output as JSON",
+                type: "boolean",
+                value: false
+            }
+        ];
     }
 
     /**
@@ -34,6 +40,26 @@ class ParseURI extends Operation {
      */
     run(input, args) {
         const uri = url.parse(input, false);
+
+        if (args[0]) {
+            const result = {};
+            for (const [key, value] of [
+                ["Protocol", uri.protocol], ["Auth", uri.auth], ["Hostname", uri.hostname],
+                ["Port", uri.port], ["Path name", uri.pathname]
+            ]) {
+                if (value) result[key] = value;
+            }
+            if (uri.query) {
+                const parameters = Object.create(null);
+                for (const [key, value] of new URLSearchParams(uri.query)) {
+                    if (!Object.prototype.hasOwnProperty.call(parameters, key)) parameters[key] = [];
+                    parameters[key].push(value);
+                }
+                result.Arguments = parameters;
+            }
+            if (uri.hash) result.Hash = uri.hash;
+            return JSON.stringify(result, null, 4);
+        }
 
         let output = "";
 
