@@ -111,6 +111,7 @@
     "bootstrap": "4.6.2",
     "bootstrap-colorpicker": "^3.4.0",
     "bootstrap-material-design": "^4.1.3",
+    "brotli-compress": "^2.2.2",
     "browserify-zlib": "^0.2.0",
     "bson": "^7.3.2",
     "buffer": "^6.0.3",
