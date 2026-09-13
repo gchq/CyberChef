@@ -22,7 +22,7 @@ class Fork extends Operation {
         this.name = "Fork";
         this.flowControl = true;
         this.module = "Default";
-        this.description = "Split the input data up based on the specified delimiter and run all subsequent operations on each branch separately.<br><br>For example, to decode multiple Base64 strings, enter them all on separate lines then add the 'Fork' and 'From Base64' operations to the recipe. Each string will be decoded separately.";
+        this.description = "Split the input data up based on the specified delimiter and run all subsequent operations on each branch separately. Use the 'Merge' operation to explicitly end a fork and continue with the combined output.<br><br>For example, to decode multiple Base64 strings, enter them all on separate lines then add the 'Fork' and 'From Base64' operations to the recipe. Each string will be decoded separately.";
         this.inputType = "string";
         this.outputType = "string";
         this.args = [
