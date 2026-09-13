@@ -10,6 +10,36 @@ import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
+        name: "Protobuf Decode: malformed input reports byte offset",
+        input: "08",
+        expectedOutput: "Exhausted Buffer at byte offset 1",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                "op": "Protobuf Decode",
+                "args": ["", false, false]
+            }
+        ]
+    },
+    {
+        name: "Protobuf Decode: invalid wire type reports byte offset",
+        input: "0f",
+        expectedOutput: "Unknown type 0x7 at byte offset 0",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                "op": "Protobuf Decode",
+                "args": ["", false, false]
+            }
+        ]
+    },
+    {
         name: "Protobuf Decode: no schema",
         input: "0d1c0000001203596f751a024d65202b2a0a0a066162633132331200",
         expectedOutput: JSON.stringify({
