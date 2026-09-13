@@ -242,6 +242,7 @@
             "ADD",
             "SUB",
             "Sum",
+            "Arithmetic per Element",
             "Subtract",
             "Multiply",
             "Divide",
