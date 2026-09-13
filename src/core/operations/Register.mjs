@@ -100,7 +100,7 @@ class Register extends Operation {
 
             let args = state.opList[i].ingValues;
             args = args.map(arg => {
-                if (typeof arg !== "string" && typeof arg !== "object") return arg;
+                if (arg === null || (typeof arg !== "string" && typeof arg !== "object")) return arg;
 
                 if (typeof arg === "object" && Object.prototype.hasOwnProperty.call(arg, "string")) {
                     arg.string = replaceRegister(arg.string);
