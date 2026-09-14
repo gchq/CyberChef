@@ -1,6 +1,5 @@
 const webpack = require("webpack");
 const CompressionPlugin = require("compression-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { ModifySourcePlugin, ReplaceOperation } = require("modify-source-webpack-plugin");
 const path = require("path");
 const zlib = require("zlib");
@@ -46,7 +45,26 @@ module.exports = {
         globalObject: "this",
         assetModuleFilename: "assets/[hash][ext][query]",
         cssFilename: "assets/[name].css",
-        htmlFilename: "index.html"
+        htmlFilename: "index.html",
+        copy: [
+            {
+                context: "src/core/vendor/",
+                from: "tesseract/**/*",
+                to: "assets/"
+            }, {
+                context: "node_modules/tesseract.js/dist",
+                from: "worker.min.js",
+                to: "assets/tesseract"
+            }, {
+                context: "node_modules/tesseract.js-core/",
+                from: "tesseract-core.wasm.js",
+                to: "assets/tesseract"
+            }, {
+                context: "node_modules/node-forge/dist",
+                from: "prime.worker.min.js",
+                to: "assets/forge/"
+            }
+        ]
     },
     plugins: [
         new webpack.ProvidePlugin({
@@ -82,27 +100,6 @@ module.exports = {
                     [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
                 },
             },
-        }),
-        new CopyWebpackPlugin({
-            patterns: [
-                {
-                    context: "src/core/vendor/",
-                    from: "tesseract/**/*",
-                    to: "assets/"
-                }, {
-                    context: "node_modules/tesseract.js/dist",
-                    from: "worker.min.js",
-                    to: "assets/tesseract"
-                }, {
-                    context: "node_modules/tesseract.js-core/",
-                    from: "tesseract-core.wasm.js",
-                    to: "assets/tesseract"
-                }, {
-                    context: "node_modules/node-forge/dist",
-                    from: "prime.worker.min.js",
-                    to: "assets/forge/"
-                }
-            ]
         }),
         new ModifySourcePlugin({
             rules: [
