@@ -88,5 +88,93 @@ TestRegister.addTests([
                 "args": [{"option": "Hex", "string": "0123456789ABCDEF"}, "TDES-ECB (Zeros)", 6]
             }
         ]
+    },
+    {
+        "name": "Key Check Value: output length 1 (lower bound) accepted",
+        "input": "2b7e151628aed2a6abf7158809cf4f3c",
+        "expectedOutput": "7",
+        "recipeConfig": [
+            {
+                "op": "Key Check Value",
+                "args": [{"option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c"}, "AES-ECB (Zeros)", 1]
+            }
+        ]
+    },
+    {
+        "name": "Key Check Value: output length 16 (TDES upper bound) returns full cryptogram",
+        "input": "0123456789ABCDEF23456789ABCDEF01456789ABCDEF0123",
+        "expectedOutput": "4EBA739C998BCB60",
+        "recipeConfig": [
+            {
+                "op": "Key Check Value",
+                "args": [{"option": "Hex", "string": "0123456789ABCDEF23456789ABCDEF01456789ABCDEF0123"}, "TDES-ECB (Zeros)", 16]
+            }
+        ]
+    },
+    {
+        "name": "Key Check Value: output length 32 (AES upper bound) returns full cryptogram",
+        "input": "2b7e151628aed2a6abf7158809cf4f3c",
+        "expectedOutput": "BB1D6929E95937287FA37D129B756746",
+        "recipeConfig": [
+            {
+                "op": "Key Check Value",
+                "args": [{"option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c"}, "AES-CMAC (Empty)", 32]
+            }
+        ]
+    },
+    {
+        "name": "Key Check Value: output length 0 rejected",
+        "input": "2b7e151628aed2a6abf7158809cf4f3c",
+        "expectedOutput": "Output length (hex chars) must be greater than or equal to 1.",
+        "recipeConfig": [
+            {
+                "op": "Key Check Value",
+                "args": [{"option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c"}, "AES-CMAC (Empty)", 0]
+            }
+        ]
+    },
+    {
+        "name": "Key Check Value: negative output length rejected",
+        "input": "2b7e151628aed2a6abf7158809cf4f3c",
+        "expectedOutput": "Output length (hex chars) must be greater than or equal to 1.",
+        "recipeConfig": [
+            {
+                "op": "Key Check Value",
+                "args": [{"option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c"}, "AES-CMAC (Empty)", -4]
+            }
+        ]
+    },
+    {
+        "name": "Key Check Value: fractional output length rejected",
+        "input": "2b7e151628aed2a6abf7158809cf4f3c",
+        "expectedOutput": "Output length (hex chars) must be an integer.",
+        "recipeConfig": [
+            {
+                "op": "Key Check Value",
+                "args": [{"option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c"}, "AES-CMAC (Empty)", 2.5]
+            }
+        ]
+    },
+    {
+        "name": "Key Check Value: output length beyond TDES cryptogram rejected",
+        "input": "0123456789ABCDEF23456789ABCDEF01456789ABCDEF0123",
+        "expectedOutput": "Invalid output length: 17\n\nTDES-ECB (Zeros) produces a 16 hex character cryptogram, so the output length must be between 1 and 16.",
+        "recipeConfig": [
+            {
+                "op": "Key Check Value",
+                "args": [{"option": "Hex", "string": "0123456789ABCDEF23456789ABCDEF01456789ABCDEF0123"}, "TDES-ECB (Zeros)", 17]
+            }
+        ]
+    },
+    {
+        "name": "Key Check Value: output length beyond AES cryptogram rejected",
+        "input": "2b7e151628aed2a6abf7158809cf4f3c",
+        "expectedOutput": "Output length (hex chars) must be less than or equal to 32.",
+        "recipeConfig": [
+            {
+                "op": "Key Check Value",
+                "args": [{"option": "Hex", "string": "2b7e151628aed2a6abf7158809cf4f3c"}, "AES-CMAC (Empty)", 33]
+            }
+        ]
     }
 ]);

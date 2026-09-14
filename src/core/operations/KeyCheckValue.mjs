@@ -31,7 +31,7 @@ class KeyCheckValue extends Operation {
 
         this.name = "Key Check Value";
         this.module = "Crypto";
-        this.description = "Computes a Key Check Value (KCV) for a symmetric key. A KCV lets two parties verify they hold the same key without revealing it.<br><br><ul><li><b>TDES-ECB (Zeros)</b> — ANSI X9.24-1 legacy KCV: encrypt an 8-byte zero block with the key.</li><li><b>AES-ECB (Zeros)</b> — encrypt a 16-byte zero block with the key.</li><li><b>AES-CMAC (Empty)</b> — RFC 4493 CMAC of the empty message, used by TR-31 (ANSI X9.143) KC optional blocks.</li></ul>Returns the leading N hex characters of the resulting cryptogram.";
+        this.description = "Computes a Key Check Value (KCV) for a symmetric key. A KCV lets two parties verify they hold the same key without revealing it.<br><br><ul><li><b>TDES-ECB (Zeros)</b> — ANSI X9.24-1 legacy KCV: encrypt an 8-byte zero block with the key.</li><li><b>AES-ECB (Zeros)</b> — encrypt a 16-byte zero block with the key.</li><li><b>AES-CMAC (Empty)</b> — RFC 4493 CMAC of the empty message, used by TR-31 (ANSI X9.143) KC optional blocks.</li></ul>Returns the leading N hex characters of the resulting cryptogram. N must be a whole number between 1 and the cryptogram length (16 for TDES-ECB, 32 for AES-ECB and AES-CMAC).";
         this.infoURL = "https://wikipedia.org/wiki/Key_checksum_value";
         this.inputType = "string";
         this.outputType = "string";
@@ -50,7 +50,11 @@ class KeyCheckValue extends Operation {
             {
                 "name": "Output length (hex chars)",
                 "type": "number",
-                "value": 6
+                "value": 6,
+                "min": 1,
+                "max": 32,
+                "step": 1,
+                "integer": true
             }
         ];
     }
@@ -61,14 +65,19 @@ class KeyCheckValue extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [keyArg, method, outputHexChars] = args;
+        const [keyArg, method, outputLength] = args;
         const keyBytes = Utils.convertToByteString(keyArg.string, keyArg.option);
 
         if (!keyBytes.length) {
             throw new OperationError("No key material was provided.");
         }
 
-        const truncLength = Math.max(1, Number(outputHexChars) || 6);
+        if (!Number.isInteger(outputLength) || outputLength < 1) {
+            throw new OperationError(`Invalid output length: ${outputLength}
+
+Output length must be a whole number of hex characters, 1 or greater.`);
+        }
+
         let hexOut;
 
         switch (method) {
@@ -114,7 +123,13 @@ class KeyCheckValue extends Operation {
                 throw new OperationError("Unsupported method: " + method);
         }
 
-        return hexOut.substring(0, truncLength);
+        if (outputLength > hexOut.length) {
+            throw new OperationError(`Invalid output length: ${outputLength}
+
+${method} produces a ${hexOut.length} hex character cryptogram, so the output length must be between 1 and ${hexOut.length}.`);
+        }
+
+        return hexOut.substring(0, outputLength);
     }
 
 }
