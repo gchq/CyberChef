@@ -26,7 +26,7 @@ TestRegister.addApiTests([
         }
     }),
 
-    it("Magic - speculative legacy string errors are silent", async () => {
+    it("Magic - speculative From Base85 invalid-character errors are silent", async () => {
         const input = new TextEncoder().encode(
             "-----BEGIN EC PRIVATE KEY-----\n" +
             "MHcCAQEEINtTjwUkgfAiSwqgcGAXWyE0ueIW6n2k395dmQZ3vGr4oAoGCCqGSM49\n" +
