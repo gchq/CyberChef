@@ -85,7 +85,7 @@
     "prompt": "^1.3.0",
     "sitemap": "^9.0.1",
     "terser": "^5.51.2",
-    "webpack": "^5.110.3",
+    "webpack": "^5.111.0",
     "webpack-bundle-analyzer": "^5.3.3",
     "webpack-dev-server": "^6.0.0",
     "webpack-node-externals": "^3.0.0",
