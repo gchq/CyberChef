@@ -57,7 +57,6 @@
     "cli-progress": "^3.12.0",
     "colors": "^1.4.0",
     "compression-webpack-plugin": "^12.0.0",
-    "copy-webpack-plugin": "^14.0.0",
     "core-js": "^3.50.0",
     "cspell": "^10.3.0",
     "eslint": "^10.8.1",
