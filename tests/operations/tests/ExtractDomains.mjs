@@ -62,4 +62,49 @@ TestRegister.addTests([
             }
         ],
     },
+    //DMARC test case 
+    {
+        name: "DMARC: simple domain",
+        input: "_dmarc.example.com",
+        expectedOutput: "_dmarc.example.com",
+        recipeConfig: [
+            {
+                op: "Extract domains",
+                args: []
+            }
+        ],
+    },
+    {
+        name: "DMARC: underscore in label",
+        input: "_dmarc.foo_bar.example.com",
+        expectedOutput: "_dmarc.foo_bar.example.com",
+        recipeConfig: [
+            {
+                op: "Extract domains",
+                args: []
+            }
+        ],
+    },
+    {
+        name: "DMARC: invalid TLD underscore",
+        input: "_dmarc.example._com",
+        expectedOutput: "_dmarc.example",
+        recipeConfig: [
+            {
+                op: "Extract domains",
+                args: []
+            }
+        ],
+    },
+    {
+        name: "DMARC: leading hyphen before domain",
+        input: "-_dmarc.bad.example.com",
+        expectedOutput: "_dmarc.bad.example.com",
+        recipeConfig: [
+            {
+                op: "Extract domains",
+                args: []
+            }
+        ],
+    }
 ]);
