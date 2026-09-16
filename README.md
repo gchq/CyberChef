@@ -67,6 +67,12 @@ Just like before, navigate to `http://localhost:8080` in your browser.
 
 This image is built and published through our [GitHub Workflows](.github/workflows/releases.yml).
 
+#### Option 3: Use Easypanel
+
+[Easypanel](https://easypanel.io) is a self-hosted Docker deployment platform. It has a one-click Easypanel template for CyberChef, which runs the pre-built image above.
+
+[![Deploy on Easypanel](https://easypanel.io/img/deploy-on-easypanel-40.svg)](https://easypanel.io/templates/cyberchef)
+
 ### From source
 
 If you want to develop CyberChef or run it without Docker, you can build it directly with Node.js.
