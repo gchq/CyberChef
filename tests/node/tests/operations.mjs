@@ -41,6 +41,9 @@ import { AMF0 } from "@astronautlabs/amf";
 import AMFDecode from "../../../src/core/operations/AMFDecode.mjs";
 import AMFEncode from "../../../src/core/operations/AMFEncode.mjs";
 import OperationError from "../../../src/core/errors/OperationError.mjs";
+import MarkdownIt from "markdown-it";
+import Token from "markdown-it/lib/token.mjs";
+import RenderMarkdown from "../../../src/core/operations/RenderMarkdown.mjs";
 
 global.File = File;
 
@@ -1253,6 +1256,18 @@ ExifImageHeight: 57`);
         }
     }),
 
+    it("Render Markdown: makeLinksOpenInNewTab preserves tokens with pre-existing target", () => {
+        const op = new RenderMarkdown();
+        const md = new MarkdownIt();
+        op.makeLinksOpenInNewTab(md);
+
+        const token = new Token("link_open", "a", 1);
+        token.attrs = [["href", "https://example.com"], ["target", "_self"]];
+        const tokens = [token];
+
+        const rendered = md.renderer.rules.link_open(tokens, 0, {}, {}, md.renderer);
+        assert.strictEqual(rendered, '<a href="https://example.com" target="_self">');
+    }),
 
 ]);
 
