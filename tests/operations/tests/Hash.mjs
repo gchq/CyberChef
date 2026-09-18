@@ -42,6 +42,28 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "MD5: Latin-1 text input uses UTF-8",
+        input: "á",
+        expectedOutput: "36b7148acc1b607c473a15a47fa17706",
+        recipeConfig: [
+            {
+                "op": "MD5",
+                "args": []
+            }
+        ]
+    },
+    {
+        name: "MD5: Arabic text input remains UTF-8",
+        input: "ا",
+        expectedOutput: "c86823319368792bf39bd59b9328d292",
+        recipeConfig: [
+            {
+                "op": "MD5",
+                "args": []
+            }
+        ]
+    },
+    {
         name: "MD6",
         input: "Hello, World!",
         expectedOutput: "ce5effce32637e6b8edaacc9284b873c3fd4e66f9779a79df67eb4a82dda8230",
