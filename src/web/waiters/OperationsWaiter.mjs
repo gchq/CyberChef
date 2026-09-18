@@ -26,6 +26,7 @@ class OperationsWaiter {
 
         this.options = {};
         this.removeIntent = false;
+        this.operationPointerStart = null;
     }
 
     /**
@@ -185,6 +186,9 @@ class OperationsWaiter {
      */
     opListCreate(e) {
         this.manager.recipe.createSortableSeedList(e.target);
+        e.target.addEventListener("pointerdown", this.operationPointerDown.bind(this));
+        e.target.addEventListener("pointerup", this.operationPointerUp.bind(this));
+        e.target.addEventListener("pointercancel", this.operationPointerCancel.bind(this));
 
         // Populate ops total
         document.querySelector("#operations .title .op-count").innerText = Object.keys(this.app.operations).length;
@@ -220,6 +224,49 @@ class OperationsWaiter {
                     }
                 }, 50);
             });
+    }
+
+
+    /**
+     * Records the start of a touch interaction with an operation.
+     *
+     * @param {PointerEvent} e
+     */
+    operationPointerDown(e) {
+        if (e.pointerType !== "touch") return;
+        const operation = e.target.closest("li.operation");
+        if (!operation || !e.currentTarget.contains(operation)) return;
+        this.operationPointerStart = {
+            pointerId: e.pointerId,
+            x: e.clientX,
+            y: e.clientY,
+            operation
+        };
+    }
+
+
+    /**
+     * Adds an operation when a touch interaction is a tap rather than a drag.
+     *
+     * @param {PointerEvent} e
+     */
+    operationPointerUp(e) {
+        const start = this.operationPointerStart;
+        this.operationPointerStart = null;
+        if (!start || e.pointerType !== "touch" || e.pointerId !== start.pointerId) return;
+
+        const operation = e.target.closest("li.operation");
+        if (operation !== start.operation || this.manager.recipe.dragInProgress) return;
+
+        const maxTapMovement = 10;
+        if (Math.hypot(e.clientX - start.x, e.clientY - start.y) > maxTapMovement) return;
+        this.manager.recipe.addOperation(operation.textContent);
+    }
+
+
+    /** Clear a cancelled touch interaction. */
+    operationPointerCancel() {
+        this.operationPointerStart = null;
     }
 
 
