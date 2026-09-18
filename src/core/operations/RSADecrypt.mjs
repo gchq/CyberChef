@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import forge from "node-forge";
 import { MD_ALGORITHMS } from "../lib/RSA.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * RSA Decrypt operation
@@ -24,8 +25,8 @@ class RSADecrypt extends Operation {
         this.module = "Ciphers";
         this.description = "Decrypt an RSA encrypted message with a PEM encoded private key.";
         this.infoURL = "https://wikipedia.org/wiki/RSA_(cryptosystem)";
-        this.inputType = "string";
-        this.outputType = "string";
+        this.inputType = "byteArray";
+        this.outputType = "byteArray";
         this.args = [
             {
                 name: "RSA Private Key (PEM)",
@@ -63,9 +64,9 @@ class RSADecrypt extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {byteArray}
      */
     run(input, args) {
         const [pemKey, password, scheme, md] = args;
@@ -74,8 +75,9 @@ class RSADecrypt extends Operation {
         }
         try {
             const privKey = forge.pki.decryptRsaPrivateKey(pemKey, password);
-            const dMsg = privKey.decrypt(input, scheme, {md: MD_ALGORITHMS[md].create()});
-            return forge.util.decodeUtf8(dMsg);
+            const encrypted = Utils.byteArrayToChars(input);
+            const dMsg = privKey.decrypt(encrypted, scheme, {md: MD_ALGORITHMS[md].create()});
+            return Utils.strToByteArray(dMsg);
         } catch (err) {
             throw new OperationError(err);
         }
