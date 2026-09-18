@@ -13,6 +13,44 @@ All major and minor version changes will be documented in this file. Details of 
 
 ## Details
 
+### [11.5.0] - 2026-09-18
+This release includes a security fix
+- SECURITY: prevent autobake on loaded recipe if any operation has manualBake set [@GCHQDeveloper581] | [b603905]
+- chore (deps): bump cspell from 10.2.2 to 10.3.0 in the minor-updates group across 1 directory  | [#2812]
+- chore (deps): bump docker/setup-qemu-action from 4.2.0 to 4.3.0 in the actions-dependencies group  | [#2811]
+- Revert "Use webpack native CSS and HTML support" [@GCHQDeveloper581] | [#2816]
+- Use webpack native CSS and HTML support [@sylvesterkaczmarek] | [#2794]
+- fix: prevent LM Hash crash on inputs that expand when uppercased (#1807) [@ousamabenyounes] [@ousamabenyounes] | [#2787]
+- chore (deps): bump the patch-updates group across 1 directory with 12 updates [@GCHQDeveloper581] | [#2791]
+- chore (deps): bump morgan from 1.11.0 to 1.12.0  | [#2793]
+- test: stabilise autobake UI test [@sylvesterkaczmarek] | [#2781]
+- chore (deps): bump js-yaml  | [#2790]
+- fix: support Webpack 5.110+ worker builds [@sylvesterkaczmarek] | [#2779]
+- chore (deps): bump the minor-updates group across 1 directory with 6 updates  | [#2776]
+- fix: treat numeric 0 input as a value, not an empty dish, in the Node API [@lechedesnatada23] [@lechedesnatada23] | [#2759]
+- fix: preserve anchor tags with pre-existing target attribute in RenderMarkdown [@animesh68] | [#2767]
+- chore (deps): bump the docker-dependencies group across 1 directory with 2 updates  | [#2761]
+- test: drop unreachable URL branch in wasm fetch polyfill [@lechedesnatada23] [@lechedesnatada23] | [#2758]
+- test: make JPath RCE error assertion resilient to message variants [@lechedesnatada23] [@lechedesnatada23] | [#2757]
+- test: harden XSS negative assertion in Series chart test [@lechedesnatada23] [@lechedesnatada23] | [#2756]
+- Safari drag/drop fixes [@lzandman] | [#2271]
+- [PEM to JWK] Add Opt-in `kid` via RFC 7638 JWK Thumbprint [@evan-cohen] | [#2771]
+- docs: update NodeRecipe.execute JSDoc return type to Promise<NodeDish> [@animesh68] | [#2765]
+- fix: use OperationError instead of bare Error in MOD, LuhnChecksum, a… [@animesh68] | [#2766]
+- chore (deps): bump @humanfs/node from 0.16.7 to 0.16.8  | [#2772]
+- Update chromedriver [@GCHQDeveloper581] | [#2742]
+- fix: remove duplicate RandomPrime operation file [@animesh68] | [#2764]
+- chore (deps): bump fast-uri from 3.1.5 to 3.1.7  | [#2752]
+- chore (deps): bump postcss-selector-parser from 7.1.1 to 7.1.5  | [#2750]
+- fix: use defaults for blank number ingredients [@Adamkadaban] | [#2707]
+- chore (deps): bump docker/setup-buildx-action from 4.2.0 to 4.3.0 in the actions-dependencies group across 1 directory  | [#2737]
+- chore (deps): bump nginxinc/nginx-unprivileged from `44e3633` to `9372293` in the docker-dependencies group  | [#2743]
+- chore (deps): bump the patch-updates group across 1 directory with 5 updates  | [#2744]
+- Add "Parse PGP Key" Operation [@GCHQDeveloper581] | [#2734]
+- Update major version of babel and eslint ecosystems [@GCHQDeveloper581] | [#2735]
+- fix(ParseIPRange): mask host bits in Network output for CIDR ranges [@n0liu] | [#2694]
+- fix: accept hexadecimal values for Disassemble x86 address arguments [@arjun2075] | [#2721]
+
 ### [11.4.0] - 2026-08-18
 This release includes a security fix
 - Security: patch XSS in Regular expression module [@Ne0re0]
@@ -818,6 +856,7 @@ Breaking changes:
 ## [4.0.0] - 2016-11-28
 -  Initial open source commit [@n1474335] | [b1d73a72](https://github.com/gchq/CyberChef/commit/b1d73a725dc7ab9fb7eb789296efd2b7e4b08306)
 
+[11.5.0]: https://github.com/gchq/CyberChef/releases/tag/v11.5.0
 [11.4.0]: https://github.com/gchq/CyberChef/releases/tag/v11.4.0
 [11.3.0]: https://github.com/gchq/CyberChef/releases/tag/v11.3.0
 [11.2.0]: https://github.com/gchq/CyberChef/releases/tag/v11.2.0
@@ -1134,6 +1173,13 @@ Breaking changes:
 [@Ne0re0]: https://github.com/Ne0re0
 [@MP-GOWTHAM]: https://github.com/MP-GOWTHAM
 [@Sanjays2402]: https://github.com/Sanjays2402
+[@sylvesterkaczmarek]: https://github.com/sylvesterkaczmarek
+[@ousamabenyounes]: https://github.com/ousamabenyounes
+[@lechedesnatada23]: https://github.com/lechedesnatada23
+[@animesh68]: https://github.com/animesh68
+[@evan-cohen]: https://github.com/evan-cohen
+[@n0liu]: https://github.com/n0liu
+[@arjun2075]: https://github.com/arjun2075
 
 
 [8ad18b]: https://github.com/gchq/CyberChef/commit/8ad18bc7db6d9ff184ba3518686293a7685bf7b7
@@ -1186,6 +1232,7 @@ Breaking changes:
 [47c85a1]: https://github.com/gchq/CyberChef/commit/47c85a105ddbdd4cabfa44ddddbc56e3907a8c33
 [3822c6c]: https://github.com/gchq/CyberChef/commit/3822c6c520a0b4200abc675c33f46082f5b9efc6
 [66d445c]: https://github.com/gchq/CyberChef/commit/66d445c5ef4e8bd896fd15396e3ce2d660d8ace1
+[b603905]: https://github.com/gchq/CyberChef/commit/b60390585d2b76e0720ccfb9163e5d4dc0ded7b4
 
 [#95]: https://github.com/gchq/CyberChef/pull/299
 [#173]: https://github.com/gchq/CyberChef/pull/173
@@ -1598,4 +1645,3 @@ Breaking changes:
 [#2686]: https://github.com/gchq/CyberChef/pull/2686
 [#2685]: https://github.com/gchq/CyberChef/pull/2685
 [#2684]: https://github.com/gchq/CyberChef/pull/2684
-
