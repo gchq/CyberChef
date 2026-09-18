@@ -383,6 +383,7 @@
             "Windows Filetime to UNIX Timestamp",
             "UNIX Timestamp to Windows Filetime",
             "DateTime Delta",
+            "Cron Schedule Decoder",
             "Extract dates",
             "Get Time",
             "Sleep"
