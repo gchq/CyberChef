@@ -6,6 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
+import Utils from "../Utils.mjs";
 import forge from "node-forge";
 import { MD_ALGORITHMS } from "../lib/RSA.mjs";
 
@@ -24,7 +25,7 @@ class RSAEncrypt extends Operation {
         this.module = "Ciphers";
         this.description = "Encrypt a message with a PEM encoded RSA public key.";
         this.infoURL = "https://wikipedia.org/wiki/RSA_(cryptosystem)";
-        this.inputType = "string";
+        this.inputType = "byteArray";
         this.outputType = "string";
         this.args = [
             {
@@ -58,7 +59,7 @@ class RSAEncrypt extends Operation {
     }
 
     /**
-     * @param {string} input
+     * @param {byteArray} input
      * @param {Object[]} args
      * @returns {string}
      */
@@ -71,8 +72,9 @@ class RSAEncrypt extends Operation {
         try {
             // Load public key
             const pubKey = forge.pki.publicKeyFromPem(pemKey);
-            // https://github.com/digitalbazaar/forge/issues/465#issuecomment-271097600
-            const plaintextBytes = forge.util.encodeUtf8(input);
+            // node-forge expects a byte string. Preserve CyberChef's input bytes so
+            // RAW encryption and non-UTF-8 character encodings are not re-encoded.
+            const plaintextBytes = Utils.byteArrayToChars(input);
             // Encrypt message
             const eMsg = pubKey.encrypt(plaintextBytes, scheme, {md: MD_ALGORITHMS[md].create()});
             return eMsg;
