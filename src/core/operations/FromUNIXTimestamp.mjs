@@ -73,6 +73,9 @@ class FromUNIXTimestamp extends Operation {
         if (units === "Seconds (s)") {
             d = moment.unix(input);
             return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC";
+        } else if (units === "Minutes (m)") {
+            d = moment(input * 60);
+            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
         } else if (units === "Milliseconds (ms)") {
             d = moment(input);
             return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
