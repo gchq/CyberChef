@@ -68,6 +68,8 @@
             "Swap endianness",
             "To MessagePack",
             "From MessagePack",
+            "To Python Marshal",
+            "From Python Marshal",
             "To Braille",
             "From Braille",
             "Parse TLV",
