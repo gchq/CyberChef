@@ -39,5 +39,45 @@ TestRegister.addTests([
                 args: [],
             },
         ],
+    }, {
+        name: "Defang IP: Last only — IPV4",
+        input: "192.168.1.1",
+        expectedOutput: "192.168.1[.]1",
+        recipeConfig: [
+            {
+                op: "Defang IP Addresses",
+                args: [true],
+            },
+        ],
+    }, {
+        name: "Defang IP: Last only — IPV6",
+        input: "2001:0db8:85a3:0000:0000:8a2e:0370:7343",
+        expectedOutput: "2001:0db8:85a3:0000:0000:8a2e:0370[:]7343",
+        recipeConfig: [
+            {
+                op: "Defang IP Addresses",
+                args: [true],
+            },
+        ],
+    }, {
+        name: "Defang IP: Last only — IPV6 shorthand",
+        input: "2001:db8:3c4d:15::1a2f:1a2b",
+        expectedOutput: "2001:db8:3c4d:15::1a2f[:]1a2b",
+        recipeConfig: [
+            {
+                op: "Defang IP Addresses",
+                args: [true],
+            },
+        ],
+    }, {
+        name: "Defang IP: Last only — multiple IPs in text",
+        input: "From 10.0.0.1 to 192.168.1.254",
+        expectedOutput: "From 10.0.0[.]1 to 192.168.1[.]254",
+        recipeConfig: [
+            {
+                op: "Defang IP Addresses",
+                args: [true],
+            },
+        ],
     },
 ]);
