@@ -150,7 +150,7 @@ Error: "alg" parameter "ES384" requires curve "secp384r1".`,
             },
             {
                 op: "JWT Decode",
-                args: []
+                args: [false]
             }
         ],
     },
@@ -165,7 +165,7 @@ Error: "alg" parameter "ES384" requires curve "secp384r1".`,
             },
             {
                 op: "JWT Decode",
-                args: []
+                args: [false]
             }
         ],
     },
@@ -197,7 +197,7 @@ Error: secretOrPrivateKey has a minimum key size of 2048 bits for RS256`,
             },
             {
                 op: "JWT Decode",
-                args: []
+                args: [false]
             }
         ],
     },
@@ -212,7 +212,7 @@ Error: secretOrPrivateKey has a minimum key size of 2048 bits for RS256`,
             },
             {
                 op: "JWT Decode",
-                args: []
+                args: [false]
             }
         ],
     },
@@ -227,7 +227,7 @@ Error: secretOrPrivateKey has a minimum key size of 2048 bits for RS256`,
             },
             {
                 op: "JWT Decode",
-                args: []
+                args: [false]
             }
         ],
     },
@@ -242,7 +242,7 @@ Error: secretOrPrivateKey has a minimum key size of 2048 bits for RS256`,
             },
             {
                 op: "JWT Decode",
-                args: []
+                args: [false]
             }
         ],
     }
