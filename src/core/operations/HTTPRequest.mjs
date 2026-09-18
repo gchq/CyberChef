@@ -32,7 +32,7 @@ class HTTPRequest extends Operation {
         ].join("\n");
         this.infoURL = "https://wikipedia.org/wiki/List_of_HTTP_header_fields#Request_fields";
         this.inputType = "string";
-        this.outputType = "string";
+        this.outputType = "ArrayBuffer";
         this.manualBake = true;
         this.args = [
             {
@@ -73,12 +73,12 @@ class HTTPRequest extends Operation {
     /**
      * @param {string} input
      * @param {Object[]} args
-     * @returns {string}
+     * @returns {ArrayBuffer}
      */
     run(input, args) {
         const [method, url, headersText, mode, showResponseMetadata] = args;
 
-        if (url.length === 0) return "";
+        if (url.length === 0) return new Uint8Array(0).buffer;
 
         const headers = new Headers();
         headersText.split(/\r?\n/).forEach(line => {
@@ -114,12 +114,17 @@ class HTTPRequest extends Operation {
                     for (const pair of r.headers.entries()) {
                         headers += "    " + pair[0] + ": " + pair[1] + "\n";
                     }
-                    return r.text().then(b => {
-                        return "####\n  Status: " + r.status + " " + r.statusText +
-                            "\n  Exposed headers:\n" + headers + "####\n\n" + b;
+                    return r.arrayBuffer().then(b => {
+                        const headerArray = new TextEncoder().encode(
+                            "####\n  Status: " + r.status + " " + r.statusText +
+                            "\n  Exposed headers:\n" + headers + "####\n\n");
+                        const resultArray = new Uint8Array(headerArray.byteLength + b.byteLength);
+                        resultArray.set(headerArray, 0);
+                        resultArray.set(new Uint8Array(b), headerArray.byteLength);
+                        return resultArray.buffer;
                     });
                 }
-                return r.text();
+                return r.arrayBuffer();
             })
             .catch(e => {
                 throw new OperationError(e.toString() +
