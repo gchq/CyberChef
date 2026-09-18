@@ -47,5 +47,18 @@ TestRegister.addTests([
                 args: [],
             }
         ],
+    },
+    {
+        name: "JWT Decode: malformed token",
+        input: "not a jwt",
+        expectedOutput: `Invalid JWT: could not decode token.
+
+JWTInvalid: Invalid JWT`,
+        recipeConfig: [
+            {
+                op: "JWT Decode",
+                args: [],
+            }
+        ],
     }
 ]);

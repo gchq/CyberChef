@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import jwt from "jsonwebtoken";
+import { decodeJwt } from "jose";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
@@ -42,14 +42,11 @@ class JWTDecode extends Operation {
      */
     run(input, args) {
         try {
-            const decoded = jwt.decode(input, {
-                json: true,
-                complete: true
-            });
-
-            return decoded.payload;
+            return decodeJwt(input);
         } catch (err) {
-            throw new OperationError(err);
+            throw new OperationError(`Invalid JWT: could not decode token.
+
+${err}`);
         }
     }
 
