@@ -372,7 +372,7 @@ class Magic {
         const dish = new Dish();
         dish.set(input, Dish.ARRAY_BUFFER);
 
-        if (isWorkerEnvironment()) self.loadRequiredModules(recipeConfig);
+        if (isWorkerEnvironment()) await self.loadRequiredModules(recipeConfig);
 
         const recipe = new Recipe(recipeConfig);
         try {

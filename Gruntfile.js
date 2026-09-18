@@ -32,8 +32,17 @@ module.exports = function (grunt) {
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
         [
             "eslint", "clean:prod", "clean:config", "exec:generateConfig", "findModules", "webpack:web",
-            "copy:standalone", "zip:standalone", "clean:standalone", "calcDownloadHash", "chmod"
+            "copy:standalone", "standaloneModules", "zip:standalone", "clean:standalone", "calcDownloadHash", "chmod"
         ]);
+
+    grunt.registerTask("standaloneModules", "Package module source for local workers.", function () {
+        grunt.file.expand("build/prod/modules/*.js").forEach(file => {
+            const name = path.basename(file, ".js");
+            const source = grunt.file.read(file);
+            grunt.file.write(`build/prod/local-modules/${name}.js`,
+                `globalThis.CyberChefModuleSources[${JSON.stringify(name)}] = ${JSON.stringify(source)};\n`);
+        });
+    });
 
     grunt.registerTask("node",
         "Compiles CyberChef into a single NodeJS module.",
@@ -217,7 +226,7 @@ module.exports = function (grunt) {
             node: ["build/node/*"],
             config: ["src/core/config/OperationConfig.json", "src/core/config/modules/*", "src/code/operations/index.mjs"],
             nodeConfig: ["src/node/index.mjs", "src/node/config/OperationConfig.json"],
-            standalone: ["build/prod/CyberChef*.html"]
+            standalone: ["build/prod/CyberChef*.html", "build/prod/local-modules"]
         },
         eslint: {
             configs: ["*.{js,mjs}"],

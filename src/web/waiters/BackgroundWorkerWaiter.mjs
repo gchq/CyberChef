@@ -4,6 +4,7 @@
  * @license Apache-2.0
  */
 
+import { replyWithLocalModule } from "../LocalModuleLoader.mjs";
 import ChefWorker from "worker-loader?inline=no-fallback!../../core/ChefWorker.js";
 
 /**
@@ -63,6 +64,9 @@ class BackgroundWorkerWaiter {
         log.debug(`Receiving '${r.action}' from BGChefWorker`);
 
         switch (r.action) {
+            case "loadModule":
+                replyWithLocalModule(e.target, r.data.module);
+                break;
             case "bakeComplete":
             case "bakeError":
                 if (typeof r.data.id !== "undefined") {
