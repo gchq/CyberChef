@@ -51,6 +51,28 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "To Base64: line width",
+        input: "Hello, World!",
+        expectedOutput: "SGVsbG8s\nIFdvcmxk\nIQ==",
+        recipeConfig: [
+            {
+                op: "To Base64",
+                args: ["A-Za-z0-9+/=", 8],
+            },
+        ],
+    },
+    {
+        name: "To Base64: zero line width leaves output unwrapped",
+        input: "Hello, World!",
+        expectedOutput: "SGVsbG8sIFdvcmxkIQ==",
+        recipeConfig: [
+            {
+                op: "To Base64",
+                args: ["A-Za-z0-9+/=", 0],
+            },
+        ],
+    },
+    {
         name: "To Base64: UTF-8",
         input: "ნუ პანიკას",
         expectedOutput: "4YOc4YOjIOGDnuGDkOGDnOGDmOGDmeGDkOGDoQ==",
