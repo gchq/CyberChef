@@ -8,6 +8,58 @@ import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
+        "name": "Manchester Decode: lowercase IEEE convention",
+        "input": "1001011001",
+        "expectedOutput": "01101",
+        "recipeConfig": [
+            {
+                "op": "Manchester Decode",
+                "args": [
+                    "ieee 802.3 (0 = 10, 1 = 01)"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Manchester Decode: mixed-case IEEE convention",
+        "input": "1001011001",
+        "expectedOutput": "01101",
+        "recipeConfig": [
+            {
+                "op": "Manchester Decode",
+                "args": [
+                    "IeEe 802.3 (0 = 10, 1 = 01)"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Manchester Decode: lowercase Thomas convention",
+        "input": "1001011001",
+        "expectedOutput": "10010",
+        "recipeConfig": [
+            {
+                "op": "Manchester Decode",
+                "args": [
+                    "g. e. thomas (0 = 01, 1 = 10)"
+                ]
+            }
+        ]
+    },
+    {
+        "name": "Manchester Decode: mixed-case Thomas convention",
+        "input": "1001011001",
+        "expectedOutput": "10010",
+        "recipeConfig": [
+            {
+                "op": "Manchester Decode",
+                "args": [
+                    "g. E. ThOmAs (0 = 01, 1 = 10)"
+                ]
+            }
+        ]
+    },
+    {
         "name": "Manchester Decode: empty input",
         "input": "",
         "expectedOutput": "",

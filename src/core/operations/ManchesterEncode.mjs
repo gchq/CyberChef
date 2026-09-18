@@ -45,7 +45,7 @@ class ManchesterEncode extends Operation {
             throw new OperationError("Input must contain only binary digits (0 and 1) and whitespace.");
         }
 
-        const zero = args[0] === MANCHESTER_IEEE_802_3 ? "10" : "01";
+        const zero = args[0].toLowerCase() === MANCHESTER_IEEE_802_3.toLowerCase() ? "10" : "01";
         return input.replace(/[01]/g, bit => bit === "0" ? zero : zero[1] + zero[0]);
     }
 }

@@ -49,7 +49,7 @@ class ManchesterDecode extends Operation {
             throw new OperationError("Manchester input must contain an even number of signal levels.");
         }
 
-        const zero = args[0] === MANCHESTER_IEEE_802_3 ? "10" : "01";
+        const zero = args[0].toLowerCase() === MANCHESTER_IEEE_802_3.toLowerCase() ? "10" : "01";
         let output = "";
         for (let i = 0; i < input.length; i += 2) {
             const pair = input.slice(i, i + 2);
