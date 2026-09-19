@@ -180,7 +180,17 @@ class Protobuf {
 
         try {
             message = this.parsedProto.root.nested[this.mainMessageName];
-            const packageDecode = message.toObject(message.decode(input), {
+            const reader = protobuf.Reader.create(input);
+            let decoded;
+            try {
+                decoded = message.decode(reader);
+            } catch (error) {
+                if (error && !Number.isInteger(error.byteOffset)) {
+                    error.byteOffset = reader.pos;
+                }
+                throw error;
+            }
+            const packageDecode = message.toObject(decoded, {
                 bytes: String,
                 longs: Number,
                 enums: String,
@@ -198,7 +208,11 @@ class Protobuf {
 
         } catch (error) {
             if (message) {
-                throw new Error("Input " + error);
+                const wrapped = new Error("Input " + error);
+                if (Number.isInteger(error?.byteOffset)) {
+                    wrapped.byteOffset = error.byteOffset;
+                }
+                throw wrapped;
             } else {
                 return rawDecode;
             }
@@ -372,7 +386,7 @@ class Protobuf {
         }
         // Throw an error if we have gone beyond the end of the data
         if (this.offset > this.LENGTH) {
-            throw new Error("Exhausted Buffer");
+            throw this._parseError("Exhausted Buffer", this.LENGTH);
         }
         return object;
     }
@@ -492,9 +506,7 @@ class Protobuf {
         let fieldNumber = 0;
         do {
             if (this.offset >= this.LENGTH) {
-                const error = new Error("Exhausted Buffer");
-                error.byteOffset = this.LENGTH;
-                throw error;
+                throw this._parseError("Exhausted Buffer", this.LENGTH);
             }
             fieldNumber += shift < 28 ?
                 shift === -3 ?
@@ -520,9 +532,7 @@ class Protobuf {
         // Keep reading while upper bit set
         do {
             if (this.offset >= this.LENGTH) {
-                const error = new Error("Exhausted Buffer");
-                error.byteOffset = this.LENGTH;
-                throw error;
+                throw this._parseError("Exhausted Buffer", this.LENGTH);
             }
             value += shift < 28 ?
                 (this.data[this.offset] & this.VALUE) << shift :
