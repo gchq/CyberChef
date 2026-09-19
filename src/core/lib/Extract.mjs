@@ -66,10 +66,10 @@ export const URL_REGEX = new RegExp(protocol + hostname + "(?:" + port + ")?(?:"
 /**
  * Domain name regular expression
  */
-export const DOMAIN_REGEX = /\b((?=[a-z0-9-]{1,63}\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,63}\b/ig;
+export const DOMAIN_REGEX = /\b((?=[_a-z0-9-]{1,63}\.)(xn--)?[_a-z0-9]+(-[_a-z0-9]+)*\.)+[a-z]{2,63}\b/ig;
 
 
 /**
  * DMARC Domain name regular expression
  */
-export const DMARC_DOMAIN_REGEX = /\b((?=[a-z0-9_-]{1,63}\.)(xn--)?[a-z0-9_]+(-[a-z0-9_]+)*\.)+[a-z]{2,63}\b/ig;
+export const DMARC_DOMAIN_REGEX = /\b((?=[_a-z0-9_-]{1,63}\.)(xn--)?[_a-z0-9_]+(-[_a-z0-9_]+)*\.)+[a-z]{2,63}\b/ig;
