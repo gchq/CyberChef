@@ -207,6 +207,7 @@
             "PGP Verify",
             "PGP Encrypt and Sign",
             "PGP Decrypt and Verify",
+            "Parse PGP Key",
             "Generate RSA Key Pair",
             "RSA Sign",
             "RSA Verify",
