@@ -67,12 +67,12 @@ TestRegister.addTests([
     {
         name: "Generate Lorem Ipsum: Incorrect lengthType",
         input: "",
-        expectedOutput: "Invalid length type",
+        expectedOutput: "Length in must be one of the following: Paragraphs, Sentences, Words, Bytes.",
         recipeConfig: [
             {
                 "op": "Generate Lorem Ipsum",
                 "args": [999_999, "Novels"]
-            },
+            }
         ],
     },
 

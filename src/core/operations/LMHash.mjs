@@ -8,6 +8,12 @@ import Operation from "../Operation.mjs";
 import {smbhash} from "ntlm";
 
 /**
+ * The LAN Manager hashing algorithm only uses the first 14 characters of the
+ * uppercased password.
+ */
+const LM_HASH_MAX_LENGTH = 14;
+
+/**
  * LM Hash operation
  */
 class LMHash extends Operation {
@@ -33,7 +39,14 @@ class LMHash extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        return smbhash.lmhash(input);
+        // Uppercase *before* truncating to 14 characters. Some characters
+        // expand when uppercased (e.g. "ß" -> "SS"), and the underlying ntlm
+        // library truncates first and then uppercases into a fixed 14-byte
+        // buffer, overflowing it and throwing a RangeError for such inputs
+        // (#1807). Normalising here preserves the library's 14-byte invariant
+        // and leaves every ASCII input's hash unchanged.
+        const password = input.toUpperCase().slice(0, LM_HASH_MAX_LENGTH);
+        return smbhash.lmhash(password);
     }
 
 }

@@ -88,8 +88,8 @@ module.exports = {
                     from: "tesseract/**/*",
                     to: "assets/"
                 }, {
-                    context: "node_modules/tesseract.js/",
-                    from: "dist/worker.min.js",
+                    context: "node_modules/tesseract.js/dist",
+                    from: "worker.min.js",
                     to: "assets/tesseract"
                 }, {
                     context: "node_modules/tesseract.js-core/",
@@ -221,7 +221,7 @@ module.exports = {
             },
             { // Third party images are inlined
                 test: /\.(png|jpg|gif)$/,
-                exclude: /web\/static/,
+                include: /node_modules/,
                 type: "asset/inline",
             },
         ]

@@ -26,4 +26,81 @@ TestRegister.addApiTests([
             "\x7e...",
         );
     }),
+
+    it("Utils: should parse normal pretty recipes", () => {
+        assert.deepStrictEqual(
+            Utils.parseRecipeConfig("From_Base64('A-Za-z0-9+/=',true)To_Hex('Space')"),
+            [
+                {
+                    op: "From Base64",
+                    args: ["A-Za-z0-9+/=", true],
+                },
+                {
+                    op: "To Hex",
+                    args: ["Space"],
+                },
+            ],
+        );
+    }),
+
+    it("Utils: should parse pretty recipe options", () => {
+        assert.deepStrictEqual(
+            Utils.parseRecipeConfig("A(/disabled/breakpoint)"),
+            [
+                {
+                    op: "A",
+                    args: [],
+                    disabled: true,
+                    breakpoint: true,
+                },
+            ],
+        );
+    }),
+
+    it("Utils: should parse escaped quotes and backslashes in pretty recipes", () => {
+        assert.deepStrictEqual(
+            Utils.parseRecipeConfig("A('\\'\\\\')"),
+            [
+                {
+                    op: "A",
+                    args: ["'\\"],
+                },
+            ],
+        );
+    }),
+
+    it("Utils: should parse large valid quoted pretty recipe arguments", () => {
+        const value = "x".repeat(10000);
+
+        assert.deepStrictEqual(
+            Utils.parseRecipeConfig(`A('${value}')`),
+            [
+                {
+                    op: "A",
+                    args: [value],
+                },
+            ],
+        );
+    }),
+
+    it("Utils: should reject malformed pretty recipes with unmatched quotes", () => {
+        assert.throws(
+            () => Utils.parseRecipeConfig("A(" + "'".repeat(10000)),
+            /Invalid recipe/,
+        );
+    }),
+
+    it("Utils: should reject malformed pretty recipes with malformed parentheses", () => {
+        assert.throws(
+            () => Utils.parseRecipeConfig("A("),
+            /Invalid recipe/,
+        );
+    }),
+
+    it("Utils: should reject malformed pretty recipes with malformed escapes", () => {
+        assert.throws(
+            () => Utils.parseRecipeConfig("A('" + "\\".repeat(10000)),
+            /Invalid recipe/,
+        );
+    }),
 ]);

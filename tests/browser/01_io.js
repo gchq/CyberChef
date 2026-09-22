@@ -178,20 +178,40 @@ module.exports = {
         browser.click("#auto-bake-label");
         browser.expect.element("#auto-bake").to.be.selected.before(1000);
 
+        // Record the transient loader state without polling for visibility at one instant.
+        // The loader is deliberately delayed by 200ms, so waiting to observe it directly is flaky.
+        browser.execute(function() {
+            const loader = document.getElementById("output-loader");
+            window.autobakeLoaderWasVisible = loader.style.visibility === "visible";
+            window.autobakeLoaderObserver = new MutationObserver(function() {
+                if (loader.style.visibility === "visible") {
+                    window.autobakeLoaderWasVisible = true;
+                }
+            });
+            window.autobakeLoaderObserver.observe(loader, {
+                attributes: true,
+                attributeFilter: ["style"]
+            });
+        });
+
         // Add content to the input
         browser.pause(100);
         browser.sendKeys("#input-text .cm-content", "1");
-        browser.waitForElementVisible("#output-loader");
+        browser.waitForElementNotVisible("#stale-indicator", 5000);
         browser.pause(500);
 
         // Make another change while the previous input is being baked
-        browser
-            .sendKeys("#input-text .cm-content", "2")
-            .waitForElementNotVisible("#stale-indicator")
-            .waitForElementNotVisible("#output-loader");
+        browser.sendKeys("#input-text .cm-content", "2");
 
-        // Ensure we got the latest input baked
-        utils.expectOutput(browser, "input12");
+        // Wait for the latest input rather than the delayed loading animation.
+        browser.expect.element("#output-text .cm-content").text.to.equal("input12").before(10000);
+        browser.waitForElementNotVisible("#output-loader", 10000);
+        browser.execute(function() {
+            window.autobakeLoaderObserver.disconnect();
+            return window.autobakeLoaderWasVisible;
+        }, [], function({value}) {
+            browser.expect(value).to.equal(true);
+        });
 
         // Turn autobake off again
         browser.click("#auto-bake-label");
