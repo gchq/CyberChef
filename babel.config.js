@@ -2,26 +2,19 @@ module.exports = function(api) {
     api.cache.forever();
 
     return {
-        "presets": [
-            ["@babel/preset-env", {
-                "modules": false,
-                "useBuiltIns": "entry",
-                "corejs": 3
+        "plugins": [
+            ["polyfill-corejs3", {
+                "method": "usage-pure",
+                "version": require("core-js-pure/package.json").version
             }]
         ],
-        "plugins": [
-            "dynamic-import-node",
-            "@babel/plugin-syntax-import-assertions",
-            [
-                "babel-plugin-transform-builtin-extend", {
-                    "globals": ["Error"]
-                }
-            ],
-            [
-                "@babel/plugin-transform-runtime", {
-                    "regenerator": true
-                }
-            ]
-        ]
+        "presets": [
+            ["@babel/preset-env", {
+                "modules": false
+            }]
+        ],
+        "generatorOpts": {
+            "importAttributesKeyword": "with"
+        }
     };
 };

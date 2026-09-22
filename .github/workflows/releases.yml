@@ -7,7 +7,6 @@ on:
       - "v*"
 
 permissions:
-  id-token: write
   contents: read
 
 env:
@@ -18,19 +17,21 @@ env:
 
 jobs:
   main:
+    permissions:
+      packages: write
+      contents: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set node version
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 18
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
 
       - name: Install
         run: |
-          export DETECT_CHROMEDRIVER_VERSION=true
           npm ci
           npm run setheapsize
 
@@ -45,20 +46,26 @@ jobs:
       - name: Production Build
         run: npx grunt prod
 
+      - name: Setup Chrome
+        id: setup-chrome
+        if: success()
+        uses: ./.github/actions/setup-chrome
+
       - name: UI Tests
+        if: success()
         run: |
           sudo apt-get install xvfb
           xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@1f40c72289eff860ee54a304f1438e3cff362e0a # v4.3.0
 
       - name: Image Metadata
         id: image-metadata
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
@@ -67,24 +74,24 @@ jobs:
             type=semver,pattern={{version}}
 
       - name: Log in to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ env.REGISTRY_USER }}
           password: ${{ env.REGISTRY_PASSWORD }}
 
       - name: Publish to GHCR
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           context: .
           push: true
           tags: ${{ steps.image-metadata.outputs.tags }}
           labels: ${{ steps.image-metadata.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
 
       - name: Upload Release Assets
         id: upload-release-assets
-        uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de # v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: build/prod/*.zip
@@ -92,6 +99,27 @@ jobs:
           overwrite: true
           file_glob: true
           body: "See the [CHANGELOG](https://github.com/gchq/CyberChef/blob/master/CHANGELOG.md) and [commit messages](https://github.com/gchq/CyberChef/commits/master) for details."
+
+  npm-publish:
+    permissions:
+      id-token: write
+      contents: read
+    needs: main
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set node version
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install
+        run: npm ci
+
+      - name: Create machine generated files
+        run: npm run node
 
       - name: Publish to NPM
         run: npm publish

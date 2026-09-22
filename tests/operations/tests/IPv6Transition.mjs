@@ -12,7 +12,7 @@ TestRegister.addTests([
     {
         name: "IPv6 Transition: IPv4 to IPv6",
         input: "198.51.100.7",
-        expectedOutput: "6to4: 2002:c633:6407::/48\nIPv4 Mapped: ::ffff:c633:6407\nIPv4 Translated: ::ffff:0:c633:6407\nNat 64: 64:ff9b::c633:6407",
+        expectedOutput: "6to4: 2002:c633:6407::/48\nIPv4 Mapped: ::ffff:c633:6407\nIPv4 Translated: ::ffff:0:c633:6407\nNat 64: 64:ff9b::c633:6407\n",
         recipeConfig: [
             {
                 op: "IPv6 Transition Addresses",
@@ -22,7 +22,7 @@ TestRegister.addTests([
     }, {
         name: "IPv6 Transition: IPv4 /24 Range to IPv6",
         input: "198.51.100.0/24",
-        expectedOutput: "6to4: 2002:c633:6400::/40\nIPv4 Mapped: ::ffff:c633:6400/120\nIPv4 Translated: ::ffff:0:c633:6400/120\nNat 64: 64:ff9b::c633:6400/120",
+        expectedOutput: "6to4: 2002:c633:6400::/40\nIPv4 Mapped: ::ffff:c633:6400/120\nIPv4 Translated: ::ffff:0:c633:6400/120\nNat 64: 64:ff9b::c633:6400/120\n",
         recipeConfig: [
             {
                 op: "IPv6 Transition Addresses",
@@ -32,7 +32,7 @@ TestRegister.addTests([
     }, {
         name: "IPv6 Transition: IPv4 to IPv6 Remove headers",
         input: "198.51.100.7",
-        expectedOutput: "2002:c633:6407::/48\n::ffff:c633:6407\n::ffff:0:c633:6407\n64:ff9b::c633:6407",
+        expectedOutput: "2002:c633:6407::/48\n::ffff:c633:6407\n::ffff:0:c633:6407\n64:ff9b::c633:6407\n",
         recipeConfig: [
             {
                 op: "IPv6 Transition Addresses",
@@ -42,7 +42,7 @@ TestRegister.addTests([
     }, {
         name: "IPv6 Transition: IPv6 to IPv4",
         input: "64:ff9b::c633:6407",
-        expectedOutput: "IPv4: 198.51.100.7",
+        expectedOutput: "IPv4: 198.51.100.7\n",
         recipeConfig: [
             {
                 op: "IPv6 Transition Addresses",

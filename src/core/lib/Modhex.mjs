@@ -50,6 +50,7 @@ const HEX_ALPHABET_MAP = HEX_ALPHABET.split("");
 export function toModhex(data, delim=" ", padding=2, extraDelim="", lineSize=0) {
     if (!data) return "";
     if (data instanceof ArrayBuffer) data = new Uint8Array(data);
+    if (data.length === 0) return "";
 
     const regularHexString = toHex(data, "", padding, "", 0);
 
@@ -100,6 +101,7 @@ export function toModhex(data, delim=" ", padding=2, extraDelim="", lineSize=0) 
 export function toModhexFast(data) {
     if (!data) return "";
     if (data instanceof ArrayBuffer) data = new Uint8Array(data);
+    if (data.length === 0) return "";
 
     const output = [];
 

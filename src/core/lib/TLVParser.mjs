@@ -33,20 +33,29 @@ export default class TLVParser {
      * @returns {number}
      */
     getLength() {
+        let bytesInLength = this.bytesInLength;
+        let bigEndian = false;
+
         if (this.basicEncodingRules) {
-            const bit = this.input[this.location];
-            if (bit & 0x80) {
-                this.bytesInLength = bit & ~0x80;
+            const firstLengthByte = this.input[this.location];
+            this.location++;
+
+            if (firstLengthByte & 0x80) {
+                bytesInLength = firstLengthByte & ~0x80;
+                bigEndian = true;
             } else {
-                this.location++;
-                return bit & ~0x80;
+                return firstLengthByte & ~0x80;
             }
         }
 
         let length = 0;
 
-        for (let i = 0; i < this.bytesInLength; i++) {
-            length += this.input[this.location] * Math.pow(Math.pow(2, 8), i);
+        for (let i = 0; i < bytesInLength; i++) {
+            if (bigEndian) {
+                length = (length << 8) + this.input[this.location];
+            } else {
+                length += this.input[this.location] * Math.pow(Math.pow(2, 8), i);
+            }
             this.location++;
         }
 

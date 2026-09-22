@@ -11,19 +11,24 @@ on:
 jobs:
   main:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Node 24 is the officially supported version; Node 26 is tested
+        # ahead of it becoming the active LTS release (see #2397)
+        node-version: [24, 26]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set node version
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 18
+          node-version: ${{ matrix.node-version }}
           registry-url: "https://registry.npmjs.org"
 
       - name: Install
         run: |
-          export DETECT_CHROMEDRIVER_VERSION=true
-          npm install
+          npm ci
           npm run setheapsize
 
       - name: Lint
@@ -38,20 +43,35 @@ jobs:
         if: success()
         run: npx grunt prod
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Production Image Build
-        if: success()
-        id: build-image
-        uses: docker/build-push-action@v6
+      - name: Upload Build Artefact
+        if: success() && matrix.node-version == 24
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          platforms: linux/amd64,linux/arm64
+          name: zipped-build
+          path: build/prod/*.zip
+          retention-days: 5
+
+      - name: Setup Chrome
+        id: setup-chrome
+        if: success()
+        uses: ./.github/actions/setup-chrome
+
       - name: UI Tests
         if: success()
         run: |
           sudo apt-get install xvfb
           xvfb-run --server-args="-screen 0 1200x800x24" npx grunt testui
+
+      - name: Set up Docker Buildx
+        if: success()
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@1f40c72289eff860ee54a304f1438e3cff362e0a # v4.3.0
+
+      - name: Production Image Build
+        if: success()
+        id: build-image
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        with:
+          platforms: linux/amd64,linux/arm64,linux/arm/v7

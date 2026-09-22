@@ -30,6 +30,23 @@ class UnescapeUnicodeCharacters extends Operation {
                 "value": ["\\u", "%u", "U+"]
             }
         ];
+        this.checks = [
+            {
+                pattern: "\\\\u(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["\\u"]
+            },
+            {
+                pattern: "%u(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["%u"]
+            },
+            {
+                pattern: "U\\+(?:[\\da-f]{4,6})",
+                flags: "i",
+                args: ["U+"]
+            }
+        ];
     }
 
     /**
@@ -39,7 +56,8 @@ class UnescapeUnicodeCharacters extends Operation {
      */
     run(input, args) {
         const prefix = prefixToRegex[args[0]],
-            regex = new RegExp(prefix+"([a-f\\d]{4})", "ig");
+            quantifier = args[0] === "U+" ? "{4,6}" : "{4}",
+            regex = new RegExp(prefix+"([a-f\\d]"+quantifier+")", "ig");
         let output = "",
             m,
             i = 0;

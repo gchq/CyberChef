@@ -723,6 +723,39 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "HMAC: Decimal key space-delimited matches Latin1 key (fromDecimal Auto delimiter regression)",
+        input: "Hello, World!",
+        expectedOutput: "9b641a008211bb0464a10899d5b37a24ab08ffcf839f5e74d17d99f856530957",
+        recipeConfig: [
+            {
+                "op": "HMAC",
+                "args": [{"option": "Decimal", "string": "65 65"}, "SHA256"]
+            }
+        ]
+    },
+    {
+        name: "HMAC: Latin1 key matches space-delimited Decimal key (fromDecimal Auto delimiter regression)",
+        input: "Hello, World!",
+        expectedOutput: "9b641a008211bb0464a10899d5b37a24ab08ffcf839f5e74d17d99f856530957",
+        recipeConfig: [
+            {
+                "op": "HMAC",
+                "args": [{"option": "Latin1", "string": "AA"}, "SHA256"]
+            }
+        ]
+    },
+    {
+        name: "HMAC: Decimal key comma-delimited matches Latin1 key (fromDecimal Auto delimiter regression)",
+        input: "Hello, World!",
+        expectedOutput: "9b641a008211bb0464a10899d5b37a24ab08ffcf839f5e74d17d99f856530957",
+        recipeConfig: [
+            {
+                "op": "HMAC",
+                "args": [{"option": "Decimal", "string": "65,65"}, "SHA256"]
+            }
+        ]
+    },
+    {
         name: "MD5: Complex bytes",
         input: "10dc10e32010de10d010dc10d810d910d010e12e",
         expectedOutput: "4f4f02e2646545aa8fc42f613c9aa068",
@@ -990,6 +1023,17 @@ TestRegister.addTests([
             {
                 op: "Bcrypt compare",
                 args: ["$2a$10$qyon0LQCmMxpFFjwWH6Qh.dDdhqntQh./IN0RXCc3XIMILuOYZKgK"]
+            }
+        ]
+    },
+    {
+        name: "Bcrypt compare: invalid salt version",
+        input: "password",
+        expectedOutput: "Error: Invalid salt version: $a",
+        recipeConfig: [
+            {
+                op: "Bcrypt compare",
+                args: ["$ab$04$K.H1WlFDQ/iIo/PiprT/puwluJ5rzuSE5q8D/Fk3NuLgU2aXiGR9m"]
             }
         ]
     },

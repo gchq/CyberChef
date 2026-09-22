@@ -79,10 +79,19 @@ class ToBase32 extends Operation {
                 enc8 = 32;
             }
 
-            output += alphabet.charAt(enc1) + alphabet.charAt(enc2) + alphabet.charAt(enc3) +
-                alphabet.charAt(enc4) + alphabet.charAt(enc5) + alphabet.charAt(enc6) +
-                alphabet.charAt(enc7) + alphabet.charAt(enc8);
+            // Preserve original charAt() behavior:
+            // out-of-range indexes return ""
+            output +=
+                (alphabetChars[enc1] || "") +
+                (alphabetChars[enc2] || "") +
+                (alphabetChars[enc3] || "") +
+                (alphabetChars[enc4] || "") +
+                (alphabetChars[enc5] || "") +
+                (alphabetChars[enc6] || "") +
+                (alphabetChars[enc7] || "") +
+                (alphabetChars[enc8] || "");
         }
+
         return output;
     }
 
