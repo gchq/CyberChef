@@ -31,7 +31,8 @@ class PseudoRandomNumberGenerator extends Operation {
             {
                 "name": "Number of bytes",
                 "type": "number",
-                "value": 32
+                "value": 32,
+                "min": 1
             },
             {
                 "name": "Output as",

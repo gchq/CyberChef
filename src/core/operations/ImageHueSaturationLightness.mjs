@@ -9,13 +9,12 @@ import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
 import { isWorkerEnvironment } from "../Utils.mjs";
-import Jimp from "jimp/es/index.js";
+import { Jimp, JimpMime } from "jimp";
 
 /**
  * Image Hue/Saturation/Lightness operation
  */
 class ImageHueSaturationLightness extends Operation {
-
     /**
      * ImageHueSaturationLightness constructor
      */
@@ -24,7 +23,8 @@ class ImageHueSaturationLightness extends Operation {
 
         this.name = "Image Hue/Saturation/Lightness";
         this.module = "Image";
-        this.description = "Adjusts the hue / saturation / lightness (HSL) values of an image.";
+        this.description =
+            "Adjusts the hue / saturation / lightness (HSL) values of an image.";
         this.infoURL = "";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -35,22 +35,22 @@ class ImageHueSaturationLightness extends Operation {
                 type: "number",
                 value: 0,
                 min: -360,
-                max: 360
+                max: 360,
             },
             {
                 name: "Saturation",
                 type: "number",
                 value: 0,
                 min: -100,
-                max: 100
+                max: 100,
             },
             {
                 name: "Lightness",
                 type: "number",
                 value: 0,
                 min: -100,
-                max: 100
-            }
+                max: 100,
+            },
         ];
     }
 
@@ -76,43 +76,45 @@ class ImageHueSaturationLightness extends Operation {
             if (hue !== 0) {
                 if (isWorkerEnvironment())
                     self.sendStatusMessage("Changing image hue...");
-                image.colour([
+                image.color([
                     {
                         apply: "hue",
-                        params: [hue]
-                    }
+                        params: [hue],
+                    },
                 ]);
             }
             if (saturation !== 0) {
                 if (isWorkerEnvironment())
                     self.sendStatusMessage("Changing image saturation...");
-                image.colour([
+                image.color([
                     {
                         apply: "saturate",
-                        params: [saturation]
-                    }
+                        params: [saturation],
+                    },
                 ]);
             }
             if (lightness !== 0) {
                 if (isWorkerEnvironment())
                     self.sendStatusMessage("Changing image lightness...");
-                image.colour([
+                image.color([
                     {
                         apply: "lighten",
-                        params: [lightness]
-                    }
+                        params: [lightness],
+                    },
                 ]);
             }
 
             let imageBuffer;
-            if (image.getMIME() === "image/gif") {
-                imageBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
+            if (image.mime === "image/gif") {
+                imageBuffer = await image.getBuffer(JimpMime.png);
             } else {
-                imageBuffer = await image.getBufferAsync(Jimp.AUTO);
+                imageBuffer = await image.getBuffer(image.mime);
             }
             return imageBuffer.buffer;
         } catch (err) {
-            throw new OperationError(`Error adjusting image hue / saturation / lightness. (${err})`);
+            throw new OperationError(
+                `Error adjusting image hue / saturation / lightness. (${err})`,
+            );
         }
     }
 

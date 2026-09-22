@@ -78,6 +78,11 @@
     border-left: 2px solid var(--primary-border-colour);
 }
 
+p a:focus {
+    color: #0a6ebd;
+    text-decoration: underline;
+}
+
 .checkbox label input[type=checkbox]+.checkbox-decorator .check,
 .checkbox label input[type=checkbox]+.checkbox-decorator .check::before {
     border-color: var(--input-border-colour);

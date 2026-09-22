@@ -23,7 +23,7 @@ if (!fs.existsSync(dir)) {
     console.log("Example> node --experimental-modules src/core/config/scripts/newOperation.mjs");
     process.exit(1);
 }
-
+const testDir = path.join(process.cwd() + "/tests/operations/tests/");
 const ioTypes = ["string", "byteArray", "number", "html", "ArrayBuffer", "BigNumber", "JSON", "File", "List<File>"];
 
 const schema = {
@@ -123,6 +123,30 @@ prompt.get(schema, (err, result) => {
         return txt.charAt(0).toUpperCase() + txt.substr(1);
     }).replace(/[\s-()./]/g, "");
 
+    const testTemplate = `/**
+* ${moduleName} tests
+*
+* @author ${result.authorName} [${result.authorEmail}]
+* @copyright Crown Copyright ${(new Date()).getFullYear()}
+* @license Apache-2.0
+*/
+
+import TestRegister from "../../lib/TestRegister.mjs";
+
+TestRegister.addTests([
+    {
+        name: "${result.opName}: test",
+        input: "Example input",
+        expectedOutput: "Expected output",
+        recipeConfig: [
+            {
+                op: "${result.opName}",
+                args: [],
+            },
+        ],
+    },
+]);
+`;
 
     const template = `/**
  * @author ${result.authorName} [${result.authorEmail}]
@@ -218,13 +242,16 @@ export default ${moduleName};
     }
     fs.writeFileSync(filename, template);
 
+    const testFilename = path.join(testDir, `./${moduleName}.mjs`);
+    fs.writeFileSync(testFilename, testTemplate);
+
     console.log(`\nOperation template written to ${colors.green(filename)}`);
+    console.log(`\nOperation test template written to ${colors.green(testFilename)}`);
     console.log(`\nNext steps:
 1. Add your operation to ${colors.green("src/core/config/Categories.json")}
-2. Write your operation code.
-3. Write tests in ${colors.green("tests/operations/tests/")}
+2. Write your operation code in ${colors.green(filename)}
+3. Write your operation test code in ${colors.green(testFilename)}
 4. Run ${colors.cyan("npm run lint")} and ${colors.cyan("npm run test")}
 5. Submit a Pull Request to get your operation added to the official CyberChef repository.`);
 
 });
-

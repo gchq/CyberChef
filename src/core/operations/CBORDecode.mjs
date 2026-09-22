@@ -5,7 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
-import Cbor from "cbor";
+import { decode } from "cbor2";
 
 /**
  * CBOR Decode operation
@@ -33,7 +33,7 @@ class CBORDecode extends Operation {
      * @returns {JSON}
      */
     run(input, args) {
-        return Cbor.decodeFirstSync(Buffer.from(input).toString("hex"));
+        return decode(new Uint8Array(input));
     }
 
 }

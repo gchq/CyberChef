@@ -47,7 +47,7 @@ class Bzip2Compress extends Operation {
      * @param {Object[]} args
      * @returns {File}
      */
-    run(input, args) {
+    async run(input, args) {
         const [blockSize, workFactor] = args;
         if (input.byteLength <= 0) {
             throw new OperationError("Please provide an input.");
