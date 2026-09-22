@@ -30,7 +30,11 @@ class BLAKE3 extends Operation {
         this.args = [
             {
                 "name": "Size (bytes)",
-                "type": "number"
+                "type": "number",
+                "value": 16,
+                "min": 1,
+                "max": 65535, // arbitrary limit to prevent resource exhaustion
+                "integer": true,
             }, {
                 "name": "Key",
                 "type": "string",

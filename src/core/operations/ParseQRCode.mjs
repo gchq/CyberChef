@@ -33,15 +33,11 @@ class ParseQRCode extends Operation {
                 value: false,
             },
         ];
-        this.checks = [
-            {
-                pattern:
-                    "^(?:\\xff\\xd8\\xff|\\x89\\x50\\x4e\\x47|\\x47\\x49\\x46|.{8}\\x57\\x45\\x42\\x50|\\x42\\x4d)",
-                flags: "",
-                args: [false],
-                useful: true,
-            },
-        ];
+        // No Magic checks: detecting a QR code in arbitrary image data requires
+        // actually attempting to parse one, which is expensive and produces
+        // spurious "Could not read a QR code from the image" log messages for
+        // any image input via Magic. Users can add Parse QR Code manually when
+        // they know the image contains a QR code. See issue #2610.
     }
 
     /**

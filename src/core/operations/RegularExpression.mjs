@@ -238,15 +238,23 @@ function regexHighlight(input, regex, displayTotal) {
     const captureGroups = [];
 
     output = input.replace(regex, (match, ...args) => {
+        // The replacer is called with (match, p1, ..., pn, offset, string) and, if the
+        // regex contains named capture groups, a trailing `groups` object (ES2018).
+        // Capture groups are only ever strings or undefined, so an object in the last
+        // position can only be the named groups collection.
+        if (args.length && typeof args[args.length - 1] === "object" && args[args.length - 1] !== null)
+            args.pop(); // Throw away named capture group object
         args.pop(); // Throw away full string
         const offset = args.pop(),
             groups = args;
 
-        title = `Offset: ${offset}\n`;
+        // Everything interpolated into the title attribute must be escaped, including
+        // the offset, which is not guaranteed to be a number for all regex engines.
+        title = `Offset: ${Utils.escapeHtml(String(offset))}\n`;
         if (groups.length) {
             title += "Groups:\n";
             for (let i = 0; i < groups.length; i++) {
-                title += `\t${i+1}: ${Utils.escapeHtml(groups[i] || "")}\n`;
+                title += `\t${i+1}: ${Utils.escapeHtml(String(groups[i] ?? ""))}\n`;
             }
         }
 

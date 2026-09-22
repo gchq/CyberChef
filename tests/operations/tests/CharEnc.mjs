@@ -71,7 +71,7 @@ TestRegister.addTests([
     {
         name: "Encode text: empty encoding",
         input: "hello",
-        expectedOutput: "Invalid encoding",
+        expectedOutput: "Encoding cannot be empty.",
         recipeConfig: [
             {
                 "op": "Encode text",
@@ -82,7 +82,7 @@ TestRegister.addTests([
     {
         name: "Decode text: empty encoding",
         input: "68 65 6c 6c 6f",
-        expectedOutput: "Invalid encoding",
+        expectedOutput: "Encoding cannot be empty.",
         recipeConfig: [
             {
                 "op": "From Hex",
