@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Parse colour code operation
@@ -95,11 +96,13 @@ class ParseColourCode extends Operation {
             hsla = "hsla(" + h + ", " + s + "%, " + l + "%, " + a + ")",
             cmyk = "cmyk(" + c + ", " + m + ", " + y + ", " + k + ")";
 
+        const escapedRgba = Utils.escapeHtml(rgba);
+
         // Generate output
-        return `<div class="parse-colour-code" data-parse-colour-code-picker data-initial-color="${rgba}" data-current-color="${rgba}">
+        return `<div class="parse-colour-code" data-parse-colour-code-picker data-initial-color="${escapedRgba}" data-current-color="${escapedRgba}">
     <div class="parse-colour-code-widget">
         <div class="parse-colour-code-picker" data-parse-colour-code-picker-mount></div>
-        <div class="parse-colour-code-preview" data-parse-colour-code-preview aria-label="${rgba}" style="background-color: ${rgba};"></div>
+        <div class="parse-colour-code-preview" data-parse-colour-code-preview aria-label="${escapedRgba}"></div>
     </div>
     <div class="parse-colour-code-values">
         <div>Hex:  ${hex}</div>

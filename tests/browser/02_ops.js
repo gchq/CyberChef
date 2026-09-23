@@ -500,16 +500,23 @@ function testParseColourCodePicker(browser, input, expectedCurrentColour, expect
 
     browser.waitForElementVisible("#output-html [data-parse-colour-code-picker] .picker_wrapper");
 
-    browser.execute(() => {
+    browser.execute(colour => {
         const preview = document.querySelector("#output-html [data-parse-colour-code-preview]");
         const picker = document.querySelector("#output-html [data-parse-colour-code-picker]");
+        const expectedPreview = document.createElement("div");
+        expectedPreview.style.backgroundColor = colour;
+
+        document.body.appendChild(expectedPreview);
+        const expectedBackgroundColor = window.getComputedStyle(expectedPreview).backgroundColor;
+        document.body.removeChild(expectedPreview);
 
         return {
             backgroundColor: window.getComputedStyle(preview).backgroundColor,
             currentColor: picker.dataset.currentColor,
+            expectedBackgroundColor: expectedBackgroundColor,
         };
-    }, [], ({value}) => {
-        browser.assert.strictEqual(value.backgroundColor, expectedPreviewColour);
+    }, [expectedPreviewColour], ({value}) => {
+        browser.assert.strictEqual(value.backgroundColor, value.expectedBackgroundColor);
         browser.assert.strictEqual(value.currentColor, expectedCurrentColour);
     });
 
@@ -524,16 +531,23 @@ function testParseColourCodePicker(browser, input, expectedCurrentColour, expect
 
     utils.bake(browser);
 
-    browser.execute(() => {
+    browser.execute(colour => {
         const preview = document.querySelector("#output-html [data-parse-colour-code-preview]");
         const picker = document.querySelector("#output-html [data-parse-colour-code-picker]");
+        const expectedPreview = document.createElement("div");
+        expectedPreview.style.backgroundColor = colour;
+
+        document.body.appendChild(expectedPreview);
+        const expectedBackgroundColor = window.getComputedStyle(expectedPreview).backgroundColor;
+        document.body.removeChild(expectedPreview);
 
         return {
             backgroundColor: window.getComputedStyle(preview).backgroundColor,
             currentColor: picker.dataset.currentColor,
+            expectedBackgroundColor: expectedBackgroundColor,
         };
-    }, [], ({value}) => {
-        browser.assert.strictEqual(value.backgroundColor, nextColour);
+    }, [nextColour], ({value}) => {
+        browser.assert.strictEqual(value.backgroundColor, value.expectedBackgroundColor);
         browser.assert.strictEqual(value.currentColor, nextColour);
     });
 

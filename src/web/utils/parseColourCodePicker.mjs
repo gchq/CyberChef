@@ -11,7 +11,7 @@ const ROOT_SELECTOR = "#output-html [data-parse-colour-code-picker]";
 const MOUNT_SELECTOR = "[data-parse-colour-code-picker-mount]";
 const PREVIEW_SELECTOR = "[data-parse-colour-code-preview]";
 
-let activePicker = null;
+let activePickers = [];
 
 
 /**
@@ -36,10 +36,8 @@ function updatePreview(root, rgba) {
  * Destroys the mounted Parse colour code picker, if present.
  */
 export function destroyParseColourCodePicker() {
-    if (!activePicker) return;
-
-    activePicker.destroy();
-    activePicker = null;
+    activePickers.forEach((picker) => picker.destroy());
+    activePickers = [];
 }
 
 
@@ -49,31 +47,33 @@ export function destroyParseColourCodePicker() {
 export function initialiseParseColourCodePicker() {
     destroyParseColourCodePicker();
 
-    const root = document.querySelector(ROOT_SELECTOR);
-    if (!root) return;
+    const roots = document.querySelectorAll(ROOT_SELECTOR);
+    roots.forEach((root) => {
+        const mount = root.querySelector(MOUNT_SELECTOR);
+        const initialColor = root.dataset.initialColor;
 
-    const mount = root.querySelector(MOUNT_SELECTOR);
-    const initialColor = root.dataset.initialColor;
+        if (!mount || !initialColor) return;
 
-    if (!mount || !initialColor) return;
+        updatePreview(root, initialColor);
 
-    updatePreview(root, initialColor);
+        const picker = new Picker({
+            parent: mount,
+            popup: false,
+            alpha: true,
+            editor: true,
+            editorFormat: "rgb",
+            color: initialColor,
+        });
 
-    activePicker = new Picker({
-        parent: mount,
-        popup: false,
-        alpha: true,
-        editor: true,
-        editorFormat: "rgb",
-        color: initialColor,
+        picker.onChange = function(color) {
+            const rgba = color.rgbaString;
+            if (root.dataset.currentColor === rgba) return;
+
+            updatePreview(root, rgba);
+            window.app.manager.input.setInput(rgba);
+            window.app.manager.input.inputChange(new Event("keyup"));
+        };
+
+        activePickers.push(picker);
     });
-
-    activePicker.onChange = function(color) {
-        const rgba = color.rgbaString;
-        if (root.dataset.currentColor === rgba) return;
-
-        updatePreview(root, rgba);
-        window.app.manager.input.setInput(rgba);
-        window.app.manager.input.inputChange(new Event("keyup"));
-    };
 }
