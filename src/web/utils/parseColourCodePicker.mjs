@@ -5,6 +5,7 @@
  */
 
 import Picker from "vanilla-picker/csp";
+import {debounce} from "../../core/Utils.mjs";
 
 
 const ROOT_SELECTOR = "#output-html [data-parse-colour-code-picker]";
@@ -70,8 +71,10 @@ export function initialiseParseColourCodePicker() {
             if (root.dataset.currentColor === rgba) return;
 
             updatePreview(root, rgba);
-            window.app.manager.input.setInput(rgba);
-            window.app.manager.input.inputChange(new Event("keyup"));
+            debounce(() => {
+                window.app.manager.input.setInput(rgba);
+                window.app.manager.input.inputChange(new Event("keyup"));
+            }, 75, "parseColourCodePickerInputChange")();
         };
 
         activePickers.push(picker);

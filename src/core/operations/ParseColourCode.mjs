@@ -96,7 +96,12 @@ class ParseColourCode extends Operation {
             hsla = "hsla(" + h + ", " + s + "%, " + l + "%, " + a + ")",
             cmyk = "cmyk(" + c + ", " + m + ", " + y + ", " + k + ")";
 
+        const escapedHex = Utils.escapeHtml(hex);
+        const escapedRgb = Utils.escapeHtml(rgb);
         const escapedRgba = Utils.escapeHtml(rgba);
+        const escapedHsl = Utils.escapeHtml(hsl);
+        const escapedHsla = Utils.escapeHtml(hsla);
+        const escapedCmyk = Utils.escapeHtml(cmyk);
 
         // Generate output
         return `<div class="parse-colour-code" data-parse-colour-code-picker data-initial-color="${escapedRgba}" data-current-color="${escapedRgba}">
@@ -105,12 +110,12 @@ class ParseColourCode extends Operation {
         <div class="parse-colour-code-preview" data-parse-colour-code-preview aria-label="${escapedRgba}"></div>
     </div>
     <div class="parse-colour-code-values">
-        <div>Hex:  ${hex}</div>
-        <div>RGB:  ${rgb}</div>
-        <div>RGBA: ${rgba}</div>
-        <div>HSL:  ${hsl}</div>
-        <div>HSLA: ${hsla}</div>
-        <div>CMYK: ${cmyk}</div>
+        <div>Hex:  ${escapedHex}</div>
+        <div>RGB:  ${escapedRgb}</div>
+        <div>RGBA: ${escapedRgba}</div>
+        <div>HSL:  ${escapedHsl}</div>
+        <div>HSLA: ${escapedHsla}</div>
+        <div>CMYK: ${escapedCmyk}</div>
     </div>
 </div>`;
     }

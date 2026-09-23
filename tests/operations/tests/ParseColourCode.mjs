@@ -41,5 +41,17 @@ TestRegister.addTests([
                 args: []
             }
         ]
+    },
+    {
+        name: "Parse colour code: ignores embedded markup in rgba input",
+        input: "rgba(1,2,3,1)<script>alert(1)</script>",
+        expectedMatch: /RGBA:\s+rgba\(1, 2, 3, 1\)/,
+        unexpectedMatch: /<script>/,
+        recipeConfig: [
+            {
+                op: "Parse colour code",
+                args: []
+            }
+        ]
     }
 ]);
