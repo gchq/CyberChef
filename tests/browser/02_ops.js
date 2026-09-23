@@ -266,7 +266,6 @@ module.exports = {
         // testOp(browser, "PHP Deserialize", "test input", "test_output");
         // testOp(browser, "Pad lines", "test input", "test_output");
     // testOp(browser, "Parse ASN.1 hex string", "test input", "test_output");
-        testParseColourCodePicker(browser, "#000", "rgba(0, 0, 0, 1)", "rgb(0, 0, 0)", "rgba(255, 0, 0, 0.5)");
         testOpHtml(browser, "Parse DateTime", "01/12/2000 13:00:00", "", /Date: Friday 1st December 2000/);
         // testOp(browser, "Parse IP range", "test input", "test_output");
         testOpHtml(browser, "Parse IPv4 header", "45 c0 00 c4 02 89 00 00 ff 11　1e 8c c0 a8 0c 01 c0 a8 0c 02", "tr:nth-last-child(2) td:last-child", "192.168.12.2");
@@ -423,6 +422,10 @@ Q+47JAY=
         testOp(browser, "Zip", "test input", /^PK\u0003\u0004\u0014\u0000{3}/);
         // testOp(browser, "Zlib Deflate", "test input", "test_output");
         // testOp(browser, "Zlib Inflate", "test input", "test_output");
+    },
+
+    "Parse colour code picker": browser => {
+        testParseColourCodePicker(browser, "#000", "rgba(0, 0, 0, 1)", "rgb(0, 0, 0)", "rgba(255, 0, 0, 0.5)");
     },
 
 
