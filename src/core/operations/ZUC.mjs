@@ -48,7 +48,7 @@ class ZUC extends Operation {
             {
                 "name": "Output format",
                 "type": "option",
-                "value": ["Latin1", "UTF8", "Hex", "Base64"]
+                "value": ["Hex", "Base64"]
             }
         ];
     }
@@ -65,7 +65,7 @@ class ZUC extends Operation {
             case "Hex":
                 return new Uint8Array(fromHex(input));
             case "Base64":
-                return new Uint8Array(fromBase64(input));
+                return new Uint8Array(fromBase64(input, undefined, "byteArray"));
             case "UTF8":
             case "Latin1":
             default: {
@@ -93,16 +93,6 @@ class ZUC extends Operation {
                 return toHex(bytes).replace(/\s/g, ""); // Ensure pure hex output for test vectors and CyberChef defaults
             case "Base64":
                 return toBase64(bytes);
-            case "UTF8":
-            case "Latin1":
-            default: {
-                const words = [];
-                for (let i = 0; i < bytes.length; i++) {
-                    words[i >>> 2] |= bytes[i] << (24 - (i % 4) * 8);
-                }
-                const wordObj = { words: words, sigBytes: bytes.length };
-                return format[formatType].stringify(wordObj);
-            }
         }
     }
 
