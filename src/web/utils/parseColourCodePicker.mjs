@@ -14,6 +14,12 @@ const PREVIEW_SELECTOR = "[data-parse-colour-code-preview]";
 let activePicker = null;
 
 
+/**
+ * Updates the rendered colour preview state.
+ *
+ * @param {HTMLElement} root
+ * @param {string} rgba
+ */
 function updatePreview(root, rgba) {
     const preview = root.querySelector(PREVIEW_SELECTOR);
 
@@ -26,6 +32,9 @@ function updatePreview(root, rgba) {
 }
 
 
+/**
+ * Destroys the mounted Parse colour code picker, if present.
+ */
 export function destroyParseColourCodePicker() {
     if (!activePicker) return;
 
@@ -34,6 +43,9 @@ export function destroyParseColourCodePicker() {
 }
 
 
+/**
+ * Destroys any existing Parse colour code picker and mounts the current one.
+ */
 export function initialiseParseColourCodePicker() {
     destroyParseColourCodePicker();
 
