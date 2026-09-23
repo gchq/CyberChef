@@ -96,7 +96,14 @@ class ParseColourCode extends Operation {
             cmyk = "cmyk(" + c + ", " + m + ", " + y + ", " + k + ")";
 
         // Generate output
-        return `<div id="colorpicker" style="white-space: normal;"></div>
+        return `<div id="colorpicker" style="white-space: normal;">
+<div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+    <input type="color" class="form-control form-control-color" id="colorpicker-value" value="${hex}" title="Select colour">
+    <label for="colorpicker-alpha" style="margin: 0;">Alpha</label>
+    <input type="range" class="form-range" id="colorpicker-alpha" min="0" max="1" step="0.01" value="${a}" style="max-width: 180px;">
+    <span id="colorpicker-alpha-value">${a}</span>
+</div>
+</div>
 Hex:  ${hex}
 RGB:  ${rgb}
 RGBA: ${rgba}
@@ -104,17 +111,26 @@ HSL:  ${hsl}
 HSLA: ${hsla}
 CMYK: ${cmyk}
 <script>
-    $('#colorpicker').colorpicker({
-        format: 'rgba',
-        color: '${rgba}',
-        container: true,
-        inline: true,
-        useAlpha: true
-    }).on('colorpickerChange', function(e) {
-        var color = e.color.string('rgba');
-        window.app.manager.input.setInput(color);
-        window.app.manager.input.inputChange(new Event("keyup"));
-    });
+    (function() {
+        var colorInput = document.getElementById("colorpicker-value");
+        var alphaInput = document.getElementById("colorpicker-alpha");
+        var alphaValue = document.getElementById("colorpicker-alpha-value");
+        var update = function() {
+            var colorHex = colorInput.value;
+            var red = parseInt(colorHex.slice(1, 3), 16);
+            var green = parseInt(colorHex.slice(3, 5), 16);
+            var blue = parseInt(colorHex.slice(5, 7), 16);
+            var alpha = parseFloat(alphaInput.value);
+            var alphaText = Number.isInteger(alpha) ? alpha.toString() : alpha.toFixed(2).replace(/0+$/, "").replace(/\\.$/, "");
+            var color = "rgba(" + red + ", " + green + ", " + blue + ", " + alphaText + ")";
+            alphaValue.textContent = alphaText;
+            window.app.manager.input.setInput(color);
+            window.app.manager.input.inputChange(new Event("keyup"));
+        };
+
+        colorInput.addEventListener("input", update);
+        alphaInput.addEventListener("input", update);
+    }());
 </script>`;
     }
 

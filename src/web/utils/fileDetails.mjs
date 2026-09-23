@@ -40,7 +40,7 @@ class FileDetailsPanel {
         const fileThumb = require("../static/images/file-128x128.png");
         dom.innerHTML = `
             <div class="${this.hidden ? "file-details-toggle-hidden" : "file-details-toggle-shown"}"
-                data-toggle="tooltip"
+                data-toggle="tooltip" data-mdb-tooltip-init
                 title="${this.hidden ? "Show" : "Hide"} file details">
                 ${this.hidden ? "&#10096;" : "&#10097;"}
             </div>

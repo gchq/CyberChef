@@ -49,7 +49,7 @@ class HTMLIngredient {
     toHtml() {
         let html = "",
             i, m, eventFn;
-        const hintHtml = this.hint ? `data-toggle="tooltip" title="${this.hint}"` : "";
+        const hintHtml = this.hint ? `data-toggle="tooltip" data-mdb-tooltip-init title="${this.hint}"` : "";
 
         switch (this.type) {
             case "string":
@@ -95,7 +95,7 @@ class HTMLIngredient {
                             ${this.maxLength ? `maxlength="${this.maxLength}"` : ""}>
                     </div>
                     <div class="input-group-append">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${this.toggleValues[0]}</button>
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" data-mdb-dropdown-init aria-haspopup="true" aria-expanded="false">${this.toggleValues[0]}</button>
                         <div class="dropdown-menu toggle-dropdown">`;
                 for (i = 0; i < this.toggleValues.length; i++) {
                     html += `<a class="dropdown-item" href="#">${this.toggleValues[i]}</a>`;
@@ -202,6 +202,7 @@ class HTMLIngredient {
                         <button type="button"
                             class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
                             data-toggle="dropdown"
+                            data-mdb-dropdown-init
                             data-boundary="scrollParent"
                             aria-haspopup="true"
                             aria-expanded="false">
@@ -231,6 +232,7 @@ class HTMLIngredient {
                         <button type="button"
                             class="btn btn-secondary dropdown-toggle dropdown-toggle-split"
                             data-toggle="dropdown"
+                            data-mdb-dropdown-init
                             data-boundary="scrollParent"
                             aria-haspopup="true"
                             aria-expanded="false">

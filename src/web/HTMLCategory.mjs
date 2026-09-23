@@ -40,13 +40,13 @@ class HTMLCategory {
     toHtml() {
         const catName = "cat" + this.name.replace(/[\s/\-:_]/g, "");
         let html = `<div class="panel category">
-        <a class="category-title" data-toggle="collapse" data-target="#${catName}">
+        <a class="category-title" data-toggle="collapse" data-target="#${catName}" data-mdb-collapse-init data-mdb-target="#${catName}">
             ${this.name}
             <span class="op-count hidden">
                 ${this.opList.length}
             </span>
         </a>
-        <div id="${catName}" class="panel-collapse collapse ${(this.selected ? " show" : "")}" data-parent="#categories">
+        <div id="${catName}" class="panel-collapse collapse ${(this.selected ? " show" : "")}" data-parent="#categories" data-mdb-parent="#categories">
             <ul class="op-list">`;
 
         for (let i = 0; i < this.opList.length; i++) {

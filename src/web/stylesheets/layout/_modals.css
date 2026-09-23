@@ -83,34 +83,24 @@ p a:focus {
     text-decoration: underline;
 }
 
-.checkbox label input[type=checkbox]+.checkbox-decorator .check,
-.checkbox label input[type=checkbox]+.checkbox-decorator .check::before {
-    border-color: var(--input-border-colour);
+.checkbox label input[type=checkbox] {
+    accent-color: var(--input-highlight-colour);
+}
+
+.option-item:focus-within label {
     color: var(--input-highlight-colour);
 }
 
-.checkbox label input[type=checkbox]:checked+.checkbox-decorator .check,
-.checkbox label input[type=checkbox]:checked+.checkbox-decorator .check::before {
-    border-color: var(--input-highlight-colour);
-    color: var(--input-highlight-colour);
-}
-
-.bmd-form-group.is-focused .option-item label {
-    color: var(--input-highlight-colour);
-}
-
-.bmd-form-group.is-focused [class^='bmd-label'],
-.bmd-form-group.is-focused [class*=' bmd-label'],
-.bmd-form-group.is-focused [class^='bmd-label'],
-.bmd-form-group.is-focused [class*=' bmd-label'],
-.bmd-form-group.is-focused label,
+.option-item:focus-within [class^='bmd-label'],
+.option-item:focus-within [class*=' bmd-label'],
+.option-item:focus-within label,
 .checkbox label:hover,
-.bmd-form-group.is-filled:focus-within .checkbox.option-item label {
+.checkbox.option-item label:hover {
     color: var(--input-highlight-colour);
 }
 
 
-.bmd-form-group.option-item label+.form-control{
+.option-item label + .form-control {
     background-image:
         linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(0, 0, 0, 0) 2px),
         linear-gradient(to top, var(--primary-border-colour) 1px, rgba(0, 0, 0, 0) 1px);

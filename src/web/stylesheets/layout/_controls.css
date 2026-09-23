@@ -33,14 +33,9 @@
     cursor: pointer;
 }
 
-#auto-bake-label .check,
-#auto-bake-label .check::before {
-    border-color: var(--input-highlight-colour);
-    color: var(--input-highlight-colour);
-}
-
-#auto-bake-label .checkbox-decorator {
-    position: relative;
+#auto-bake-label input[type="checkbox"] {
+    margin-bottom: 0.35rem;
+    accent-color: var(--input-highlight-colour);
 }
 
 #bake {

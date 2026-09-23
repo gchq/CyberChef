@@ -142,7 +142,7 @@ module.exports = {
         rules: [
             {
                 test: /\.m?js$/,
-                exclude: /node_modules\/(?!crypto-api|bootstrap)/,
+                exclude: /node_modules\/(?!crypto-api)/,
                 options: {
                     configFile: path.resolve(__dirname, "babel.config.js"),
                     cacheDirectory: true,
@@ -167,13 +167,6 @@ module.exports = {
             {
                 test: /prime.worker.min.js$/,
                 type: "asset/source"
-            },
-            {
-                test: /bootstrap-material-design/,
-                loader: "imports-loader",
-                options: {
-                    imports: "default popper.js/dist/umd/popper.js Popper"
-                }
             },
             {
                 test: /blueimp-load-image/,

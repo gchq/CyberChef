@@ -33,6 +33,7 @@
 }
 
 .form-group {
+    position: relative;
     margin-bottom: 0;
 }
 
@@ -82,6 +83,29 @@ a:focus {
     border-color: var(--btn-success-hover-border-colour);
 }
 
+.bmd-btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    padding: 0.35rem;
+    border-radius: 50%;
+}
+
+.bmd-help {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.875rem;
+    color: var(--subtext-font-colour);
+}
+
+label.bmd-label-floating {
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
 select.form-control,
 select.form-control:focus {
     background-color: var(--primary-background-colour) !important;
@@ -98,16 +122,25 @@ select.custom-file-control:not([size]):not([multiple]) {
 
 .checkbox label,
 .checkbox-inline,
-.is-focused .checkbox-inline,
-.is-focused .checkbox-inline:hover,
 [class^="bmd-label"],
 .form-control,
-.is-focused .form-control {
+.form-group:focus-within .form-control {
     color: var(--primary-font-colour);
 }
 
+.checkbox-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.checkbox-inline input[type="checkbox"],
+.checkbox label input[type="checkbox"] {
+    accent-color: var(--input-highlight-colour);
+}
+
 .form-control,
-.is-focused .form-control {
+.form-group:focus-within .form-control {
     background-image:
         linear-gradient(to top, var(--input-highlight-colour) 2px, rgba(0, 0, 0, 0) 2px),
         linear-gradient(to top, var(--primary-border-colour) 1px, rgba(0, 0, 0, 0) 1px);
@@ -171,11 +204,13 @@ optgroup {
     color: var(--primary-font-colour);
 }
 
-.bs-popover-right>.arrow {
+.bs-popover-auto[data-popper-placement^="right"] > .popover-arrow::before,
+.bs-popover-end > .popover-arrow::before {
     border-right-color: var(--popover-border-colour);
 }
 
-.bs-popover-right>.arrow:after {
+.bs-popover-auto[data-popper-placement^="right"] > .popover-arrow::after,
+.bs-popover-end > .popover-arrow::after {
     border-right-color: var(--popover-background);
 }
 
@@ -183,9 +218,9 @@ optgroup {
     color: var(--subtext-font-colour);
 }
 
-.nav-tabs>li>a.nav-link.active,
-.nav-tabs>li>a.nav-link.active:focus,
-.nav-tabs>li>a.nav-link.active:hover {
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-link.active:focus,
+.nav-tabs .nav-link.active:hover {
     background-color: var(--secondary-background-colour);
     border-color: var(--secondary-border-colour);
     border-bottom-color: transparent;
@@ -219,13 +254,27 @@ optgroup {
     color: var(--primary-font-colour);
 }
 
-.input-group-addon:not(:first-child):not(:last-child) {
-    border-left: 0;
-    border-right: 0;
+.input-group-append,
+.input-group-prepend {
+    display: flex;
+    align-items: stretch;
 }
 
-.input-group-btn:first-child>.btn {
-    border-right: 0;
+.input-group-prepend .input-group-text,
+.input-group-append .btn {
+    height: 100%;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 
@@ -236,21 +285,9 @@ optgroup {
 }
 
 
-/* Bootstrap Colorpicker */
-
-.colorpicker-element {
-    float: left;
-    margin-right: 15px;
-}
-
-.colorpicker-color,
-.colorpicker-color div {
-    height: 100px;
-}
-
-
 /* Bootstrap form inside CodeMirror editor */
 
+.cm-panel > .form-group,
 .cm-panel > .bmd-form-group {
     padding-top: 0;
 }
