@@ -201,8 +201,21 @@ class OperationsWaiter {
      */
     enableOpsListPopovers(el) {
         const self = this;
-        $(el).find("[data-toggle=popover]").addBack("[data-toggle=popover]")
-            .popover({trigger: "manual"})
+        const popovers = $(el).find("[data-toggle=popover]").addBack("[data-toggle=popover]");
+
+        popovers.each(function() {
+            $(this).popover({
+                animation: false,
+                trigger: "manual",
+                container: "body",
+                boundary: "viewport",
+                placement: "right",
+                html: true,
+                content: this.getAttribute("data-content") || ""
+            });
+        });
+
+        popovers
             .on("mouseenter", function(e) {
                 if (e.buttons > 0 || self.manager.recipe.dragInProgress) return; // Mouse button held down - likely dragging an operation
                 const _this = this;
@@ -213,9 +226,7 @@ class OperationsWaiter {
             }).on("mouseleave", function () {
                 const _this = this;
                 setTimeout(function() {
-                    // Determine if the popover associated with this element is being hovered over
-                    if ($(_this).data("bs.popover") &&
-                        ($(_this).data("bs.popover").tip && !$($(_this).data("bs.popover").tip).is(":hover"))) {
+                    if (!$(".popover:hover").length) {
                         $(_this).popover("hide");
                     }
                 }, 50);

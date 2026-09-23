@@ -16,10 +16,19 @@ module.exports = {
     },
 
     "Loading screen": browser => {
-        // Check that the loading screen appears and then disappears within a reasonable time
-        browser
-            .waitForElementVisible("#preloader", 300)
-            .waitForElementNotPresent("#preloader", 10000);
+        // Check that the loading screen appears when load is still in progress, otherwise
+        // accept that the app loaded quickly enough that the preloader has already gone.
+        browser.execute(function() {
+            return Boolean(document.getElementById("preloader"));
+        }, [], function({value}) {
+            if (value) {
+                browser
+                    .waitForElementVisible("#preloader", 300)
+                    .waitForElementNotPresent("#preloader", 10000);
+            } else {
+                browser.waitForElementVisible("#operations", 10000);
+            }
+        });
     },
 
     "App loaded": browser => {

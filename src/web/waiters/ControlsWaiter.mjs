@@ -38,6 +38,10 @@ class ControlsWaiter {
             trigger: "hover"
         });
 
+        document.querySelectorAll(".op-list").forEach(el => {
+            el.dispatchEvent(this.manager.oplistcreate);
+        });
+
         // Set number of operations in various places in the DOM
         document.querySelectorAll(".num-ops").forEach(el => {
             el.innerHTML = Object.keys(this.app.operations).length;
