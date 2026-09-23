@@ -266,7 +266,7 @@ module.exports = {
         // testOp(browser, "PHP Deserialize", "test input", "test_output");
         // testOp(browser, "Pad lines", "test input", "test_output");
     // testOp(browser, "Parse ASN.1 hex string", "test input", "test_output");
-        testOpHtml(browser, "Parse colour code", "#000", ".colorpicker-preview", "rgb(0, 0, 0)");
+        testOpHtml(browser, "Parse colour code", "#000", "", /RGB:\s+rgb\(0, 0, 0\)/);
         testOpHtml(browser, "Parse DateTime", "01/12/2000 13:00:00", "", /Date: Friday 1st December 2000/);
         // testOp(browser, "Parse IP range", "test input", "test_output");
         testOpHtml(browser, "Parse IPv4 header", "45 c0 00 c4 02 89 00 00 ff 11　1e 8c c0 a8 0c 01 c0 a8 0c 02", "tr:nth-last-child(2) td:last-child", "192.168.12.2");
@@ -423,6 +423,30 @@ Q+47JAY=
         testOp(browser, "Zip", "test input", /^PK\u0003\u0004\u0014\u0000{3}/);
         // testOp(browser, "Zlib Deflate", "test input", "test_output");
         // testOp(browser, "Zlib Inflate", "test input", "test_output");
+    },
+
+    "Parse colour code control updates input": browser => {
+        bakeOp(browser, "Parse colour code", "#000");
+        browser
+            .waitForElementVisible("#output-html #colorpicker-value")
+            .execute(function() {
+                const colorInput = document.querySelector("#output-html #colorpicker-value"),
+                    alphaInput = document.querySelector("#output-html #colorpicker-alpha");
+
+                colorInput.value = "#112233";
+                colorInput.dispatchEvent(new Event("input", { bubbles: true }));
+                alphaInput.value = "0.5";
+                alphaInput.dispatchEvent(new Event("input", { bubbles: true }));
+
+                return document.querySelector("#output-html #colorpicker-alpha-value").textContent;
+            }, [], function({value}) {
+                browser.expect(value).to.equal("0.5");
+            })
+            .waitForElementVisible("#stale-indicator", 5000);
+
+        utils.expectInput(browser, "rgba(17, 34, 51, 0.5)");
+        utils.bake(browser);
+        browser.expect.element("#output-html").text.that.matches(/RGB:\s+rgb\(17, 34, 51\)/);
     },
 
 

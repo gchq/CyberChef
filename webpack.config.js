@@ -178,15 +178,31 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: [
+                oneOf: [
                     {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            publicPath: "../"
-                        }
+                        include: /node_modules/,
+                        use: [
+                            {
+                                loader: MiniCssExtractPlugin.loader,
+                                options: {
+                                    publicPath: "../"
+                                }
+                            },
+                            "css-loader",
+                        ]
                     },
-                    "css-loader",
-                    "postcss-loader",
+                    {
+                        use: [
+                            {
+                                loader: MiniCssExtractPlugin.loader,
+                                options: {
+                                    publicPath: "../"
+                                }
+                            },
+                            "css-loader",
+                            "postcss-loader",
+                        ]
+                    }
                 ]
             },
             {
