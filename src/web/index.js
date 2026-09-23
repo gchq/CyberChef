@@ -11,7 +11,6 @@ import "./stylesheets/index.js";
 import "arrive";
 import "snackbarjs";
 import "bootstrap-material-design/js/index";
-import "bootstrap-colorpicker";
 import moment from "moment-timezone";
 import * as CanvasComponents from "../core/lib/CanvasComponents.mjs";
 
@@ -67,4 +66,3 @@ window.compileMessage = COMPILE_MSG;
 window.CanvasComponents = CanvasComponents;
 
 document.addEventListener("DOMContentLoaded", main, false);
-

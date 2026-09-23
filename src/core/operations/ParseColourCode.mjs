@@ -96,26 +96,20 @@ class ParseColourCode extends Operation {
             cmyk = "cmyk(" + c + ", " + m + ", " + y + ", " + k + ")";
 
         // Generate output
-        return `<div id="colorpicker" style="white-space: normal;"></div>
-Hex:  ${hex}
-RGB:  ${rgb}
-RGBA: ${rgba}
-HSL:  ${hsl}
-HSLA: ${hsla}
-CMYK: ${cmyk}
-<script>
-    $('#colorpicker').colorpicker({
-        format: 'rgba',
-        color: '${rgba}',
-        container: true,
-        inline: true,
-        useAlpha: true
-    }).on('colorpickerChange', function(e) {
-        var color = e.color.string('rgba');
-        window.app.manager.input.setInput(color);
-        window.app.manager.input.inputChange(new Event("keyup"));
-    });
-</script>`;
+        return `<div class="parse-colour-code" data-parse-colour-code-picker data-initial-color="${rgba}" data-current-color="${rgba}">
+    <div class="parse-colour-code-widget">
+        <div class="parse-colour-code-picker" data-parse-colour-code-picker-mount></div>
+        <div class="parse-colour-code-preview" data-parse-colour-code-preview aria-label="${rgba}" style="background-color: ${rgba};"></div>
+    </div>
+    <div class="parse-colour-code-values">
+        <div>Hex:  ${hex}</div>
+        <div>RGB:  ${rgb}</div>
+        <div>RGBA: ${rgba}</div>
+        <div>HSL:  ${hsl}</div>
+        <div>HSLA: ${hsla}</div>
+        <div>CMYK: ${cmyk}</div>
+    </div>
+</div>`;
     }
 
     /**

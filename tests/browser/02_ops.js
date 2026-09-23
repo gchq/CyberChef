@@ -266,7 +266,7 @@ module.exports = {
         // testOp(browser, "PHP Deserialize", "test input", "test_output");
         // testOp(browser, "Pad lines", "test input", "test_output");
     // testOp(browser, "Parse ASN.1 hex string", "test input", "test_output");
-        testOpHtml(browser, "Parse colour code", "#000", ".colorpicker-preview", "rgb(0, 0, 0)");
+        testParseColourCodePicker(browser, "#000", "rgba(0, 0, 0, 1)", "rgb(0, 0, 0)", "rgba(255, 0, 0, 0.5)");
         testOpHtml(browser, "Parse DateTime", "01/12/2000 13:00:00", "", /Date: Friday 1st December 2000/);
         // testOp(browser, "Parse IP range", "test input", "test_output");
         testOpHtml(browser, "Parse IPv4 header", "45 c0 00 c4 02 89 00 00 ff 11　1e 8c c0 a8 0c 01 c0 a8 0c 02", "tr:nth-last-child(2) td:last-child", "192.168.12.2");
@@ -481,6 +481,61 @@ function testOpHtml(browser, opName, input, cssSelector, output, args=[]) {
     } else if (output instanceof RegExp) {
         browser.expect.element("#output-html " + cssSelector).text.that.matches(output);
     }
+}
+
+/** @function
+ * Tests the Parse colour code picker output and interaction.
+ *
+ * @param {Browser} browser - Nightwatch client
+ * @param {string} input - input text
+ * @param {string} expectedCurrentColour - expected initial colour value
+ * @param {string} expectedPreviewColour - expected initial preview colour
+ * @param {string} nextColour - colour to set through the picker editor
+ */
+function testParseColourCodePicker(browser, input, expectedCurrentColour, expectedPreviewColour, nextColour) {
+    bakeOp(browser, "Parse colour code", input);
+
+    browser.waitForElementVisible("#output-html [data-parse-colour-code-picker] .picker_wrapper");
+
+    browser.execute(() => {
+        const preview = document.querySelector("#output-html [data-parse-colour-code-preview]");
+        const picker = document.querySelector("#output-html [data-parse-colour-code-picker]");
+
+        return {
+            backgroundColor: window.getComputedStyle(preview).backgroundColor,
+            currentColor: picker.dataset.currentColor,
+        };
+    }, [], ({value}) => {
+        browser.assert.strictEqual(value.backgroundColor, expectedPreviewColour);
+        browser.assert.strictEqual(value.currentColor, expectedCurrentColour);
+    });
+
+    browser.execute(colour => {
+        const editor = document.querySelector("#output-html [data-parse-colour-code-picker] .picker_editor input");
+        editor.value = colour;
+        editor.dispatchEvent(new Event("input", { bubbles: true }));
+    }, [nextColour]);
+
+    browser.waitForElementVisible("#stale-indicator", 5000);
+    browser.expect.element("#input-text .cm-content").text.that.equals(nextColour);
+
+    utils.bake(browser);
+
+    browser.execute(() => {
+        const preview = document.querySelector("#output-html [data-parse-colour-code-preview]");
+        const picker = document.querySelector("#output-html [data-parse-colour-code-picker]");
+
+        return {
+            backgroundColor: window.getComputedStyle(preview).backgroundColor,
+            currentColor: picker.dataset.currentColor,
+        };
+    }, [], ({value}) => {
+        browser.assert.strictEqual(value.backgroundColor, nextColour);
+        browser.assert.strictEqual(value.currentColor, nextColour);
+    });
+
+    browser.expect.element("#output-html .parse-colour-code-values").text.that.matches(/Hex:\s+#ff0000/);
+    browser.expect.element("#output-html .parse-colour-code-values").text.that.matches(/RGBA:\s+rgba\(255, 0, 0, 0.5\)/);
 }
 
 /** @function

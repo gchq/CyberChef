@@ -236,16 +236,39 @@ optgroup {
 }
 
 
-/* Bootstrap Colorpicker */
+/* Parse colour code */
 
-.colorpicker-element {
-    float: left;
-    margin-right: 15px;
+.parse-colour-code {
+    white-space: normal;
 }
 
-.colorpicker-color,
-.colorpicker-color div {
+.parse-colour-code-widget {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.parse-colour-code-picker .picker_wrapper {
+    box-shadow: none;
+}
+
+.parse-colour-code-picker .picker_arrow,
+.parse-colour-code-picker .picker_done,
+.parse-colour-code-picker .picker_cancel {
+    display: none;
+}
+
+.parse-colour-code-preview {
+    width: 100px;
     height: 100px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    background-image:
+        linear-gradient(45deg, #d3d3d3 25%, transparent 25%, transparent 75%, #d3d3d3 75%),
+        linear-gradient(45deg, #d3d3d3 25%, #fff 25%, #fff 75%, #d3d3d3 75%);
+    background-position: 0 0, 10px 10px;
+    background-size: 20px 20px;
 }
 
 

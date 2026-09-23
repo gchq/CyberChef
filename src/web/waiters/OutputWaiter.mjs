@@ -40,6 +40,10 @@ import {statusBar} from "../utils/statusBar.mjs";
 import {htmlPlugin} from "../utils/htmlWidget.mjs";
 import {copyOverride} from "../utils/copyOverride.mjs";
 import {eolCodeToSeq, eolCodeToName, renderSpecialChar} from "../utils/editorUtils.mjs";
+import {
+    destroyParseColourCodePicker,
+    initialiseParseColourCodePicker
+} from "../utils/parseColourCodePicker.mjs";
 
 
 /**
@@ -350,6 +354,7 @@ class OutputWaiter {
      * @param {string} html
      */
     async setHTMLOutput(html) {
+        destroyParseColourCodePicker();
         this.htmlOutput.html = html;
         this.htmlOutput.changed = true;
         // This clears the text output, but also fires a View update which
@@ -364,6 +369,8 @@ class OutputWaiter {
 
         // Add class to #output-text to change display settings
         this.outputTextEl.classList.add("html-output");
+
+        initialiseParseColourCodePicker();
 
         // Execute script sections
         const outputHTML = document.getElementById("output-html");
@@ -381,6 +388,7 @@ class OutputWaiter {
      * Clears the HTML output
      */
     clearHTMLOutput() {
+        destroyParseColourCodePicker();
         this.htmlOutput.html = "";
         this.htmlOutput.changed = true;
         // Fire a blank change to force the htmlWidget to update and remove any HTML

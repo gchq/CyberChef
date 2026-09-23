@@ -11,7 +11,7 @@ import "highlight.js/styles/vs.css";
 
 /* Frameworks */
 import "bootstrap-material-design/dist/css/bootstrap-material-design.css";
-import "bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css";
+import "vanilla-picker/dist/vanilla-picker.csp.css";
 
 /* CyberChef styles */
 import "./index.css";
