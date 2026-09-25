@@ -32,6 +32,11 @@ class JWTVerify extends Operation {
                 type: "text",
                 value: "secret"
             },
+            {
+                name: "Expected signing algorithm",
+                type: "option",
+                value: ["Auto", ...JWT_ALGORITHMS]
+            },
         ];
     }
 
@@ -41,9 +46,11 @@ class JWTVerify extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [key] = args;
-        const algos = JWT_ALGORITHMS;
-        algos[algos.indexOf("None")] = "none";
+        const [key, algorithm="Auto"] = args;
+        const expectedAlgorithm = algorithm || "Auto";
+        const algos = expectedAlgorithm === "Auto" ?
+            JWT_ALGORITHMS.map(algo => algo === "None" ? "none" : algo) :
+            [expectedAlgorithm === "None" ? "none" : expectedAlgorithm];
 
         try {
             const verified = jwt.verify(input, key, { algorithms: algos });
