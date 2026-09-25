@@ -8,7 +8,40 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
-import { Jimp, JimpMime, PNGFilterType } from "jimp";
+import {createJimp} from "@jimp/core";
+import decodeWebP, {init as initWebPDecoder} from "@jsquash/webp/decode.js";
+import {defaultFormats, JimpMime, PNGFilterType} from "jimp";
+import {isNodeEnvironment} from "../Utils.mjs";
+
+let webPDecoderInitialised = false;
+
+const webPFormat = () => ({
+    mime: "image/webp",
+    hasAlpha: true,
+    decode: async data => {
+        if (!webPDecoderInitialised) {
+            if (isNodeEnvironment()) {
+                const {readFile} = await import("fs/promises");
+                const decoderPath = "../../../node_modules/@jsquash/webp/codec/dec/webp_dec.wasm";
+                const decoderUrl = new URL(decoderPath, import.meta.url);
+                initWebPDecoder({wasmBinary: await readFile(decoderUrl)});
+            } else {
+                initWebPDecoder({
+                    locateFile: () => `${self.docURL}/assets/webp/webp_dec.wasm`
+                });
+            }
+            webPDecoderInitialised = true;
+        }
+        const result = await decodeWebP(new Uint8Array(data).buffer);
+        return {
+            data: Buffer.from(result.data.buffer, result.data.byteOffset, result.data.byteLength),
+            width: result.width,
+            height: result.height
+        };
+    }
+});
+
+const Jimp = createJimp({formats: [...defaultFormats, webPFormat]});
 
 /**
  * Convert Image Format operation
@@ -23,7 +56,7 @@ class ConvertImageFormat extends Operation {
         this.name = "Convert Image Format";
         this.module = "Image";
         this.description =
-            "Converts an image between different formats. Supported formats:<br><ul><li>Joint Photographic Experts Group (JPEG)</li><li>Portable Network Graphics (PNG)</li><li>Bitmap (BMP)</li><li>Tagged Image File Format (TIFF)</li></ul><br>Note: GIF files are supported for input, but cannot be outputted.";
+            "Converts an image between different formats. Supported output formats:<br><ul><li>Joint Photographic Experts Group (JPEG)</li><li>Portable Network Graphics (PNG)</li><li>Bitmap (BMP)</li><li>Tagged Image File Format (TIFF)</li></ul><br>GIF and WebP files are also supported for input.";
         this.infoURL = "https://wikipedia.org/wiki/Image_file_formats";
         this.inputType = "ArrayBuffer";
         this.outputType = "ArrayBuffer";
@@ -109,7 +142,7 @@ class ConvertImageFormat extends Operation {
                     break;
             }
 
-            return buffer.buffer;
+            return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
         } catch (err) {
             throw new OperationError(`Error converting image format. (${err})`);
         }
