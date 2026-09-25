@@ -89,7 +89,7 @@
     "sitemap": "^9.0.1",
     "terser": "^5.51.2",
     "webpack": "^5.110.3",
-    "webpack-bundle-analyzer": "^5.3.3",
+    "webpack-bundle-analyzer": "^5.4.0",
     "webpack-dev-server": "^6.0.0",
     "webpack-node-externals": "^3.0.0",
     "worker-loader": "^3.0.8"
