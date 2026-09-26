@@ -88,9 +88,13 @@ class App {
      * @fires Manager#apploaded
      */
     loaded() {
-        // Check that both the app and the worker have loaded successfully, and that
+        // Check that the app and the UI waiters have loaded successfully, and that
         // we haven't already loaded before attempting to remove the loading screen.
-        if (!this.workerLoaded || !this.appLoaded || !this.waitersLoaded ||
+        // The ChefWorker is deliberately not part of this gate: it only gates baking,
+        // not the UI. Bake requests raised before it is ready are queued and drained
+        // by WorkerWaiter#bakeNextInput once it loads, so waiting for it here would
+        // only delay the first interactive paint.
+        if (!this.appLoaded || !this.waitersLoaded ||
             !document.getElementById("loader-wrapper")) return;
 
         // Load state from URI
