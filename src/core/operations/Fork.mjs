@@ -107,7 +107,7 @@ class Fork extends Operation {
 
             try {
                 const branchState = Object.assign({}, state, {
-                    forkId: self.chef ? ++self.chef.forkId : 0
+                    forkId: typeof self !== "undefined" && self.chef ? ++self.chef.forkId : 0
                 });
                 progress = await recipe.execute(dish, 0, branchState);
             } catch (err) {

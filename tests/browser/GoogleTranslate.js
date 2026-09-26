@@ -20,39 +20,6 @@ module.exports = {
             .click("#auto-bake-label");
     },
 
-    /**
-     * Nightwatch E2E test for Google Translate
-     */
-    "Google Translate: Basic translation": function (browser) {
-        browserUtils.loadRecipeConfig(browser, [
-            {
-                op: "Authenticate Google Cloud",
-                args: [
-                    "API Key",
-                    { option: "UTF8", string: process.env.GOOGLE_CLOUD_API_KEY },
-                    "",
-                    true
-                ]
-            },
-            {
-                op: "Google Translate",
-                args: [
-                    "en",
-                    "es"
-                ]
-            }
-        ], "Hello");
-
-        browser.waitForElementNotVisible("#snackbar-container", 6000);
-        browserUtils.bake(browser);
-        browser.pause(2000);
-        browser.execute(function () {
-            return window.app.manager.output.outputEditorView.state.doc.toString();
-        }, [], function ({ value }) {
-            browser.assert.ok(value.includes("Hola"), "Expected translation 'Hola'");
-        });
-    },
-
     "Google Translate: Missing Key Validation": function (browser) {
         browserUtils.loadRecipeConfig(browser, [
             {

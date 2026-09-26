@@ -27,7 +27,7 @@ module.exports = {
             return;
         }
 
-        const gcsUri = "gs://cyber-chef-cloud-examples/testing/hello.txt";
+        const gcsUri = "gs://cyber-chef-cloud-examples/test.txt";
 
         browserUtils.loadRecipeConfig(browser, [
             {
@@ -52,7 +52,7 @@ module.exports = {
         browser.execute(function () {
             return window.app.manager.output.outputEditorView.state.doc.toString();
         }, [], function ({ value }) {
-            // we assume hello.txt contains some variation of hello world, so just assert it doesn't fail parsing.
+            // test.txt holds sample prose, so just assert the read succeeded.
             browser.assert.ok(
                 value.length > 0 && !value.includes("GCS API Error"),
                 `Expected successful read, got: ${value}`

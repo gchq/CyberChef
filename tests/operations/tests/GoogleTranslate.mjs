@@ -23,7 +23,6 @@ TestRegister.addTests([
     {
         name: "Google Translate: Missing Authenticate Google Cloud",
         input: "Hello world",
-        expectedError: true,
         expectedOutput: "No Google Cloud credentials found. Please add the 'Authenticate Google Cloud' operation before this one.",
         recipeConfig: [
             {

@@ -30,6 +30,18 @@ export function setGcpCredentials(credObj) {
     globalThis.__gcpAuthStore = credObj;
 }
 
+/**
+ * Returns the active GCP credentials, or throws if none have been set.
+ * @returns {Object} { authType, authString, quotaProject, defaultRegion }
+ */
+function requireGcpCredentials() {
+    const creds = getGcpCredentials();
+    if (!creds || !creds.authString) {
+        throw new OperationError("No Google Cloud credentials found. Please add the 'Authenticate Google Cloud' operation before this one.");
+    }
+    return creds;
+}
+
 
 /**
  * Validates and applies GCP authentication to a URL and Headers object
@@ -39,11 +51,7 @@ export function setGcpCredentials(credObj) {
  * @returns {Object} An object containing the modified { url, headers }
  */
 export function applyGCPAuth(url, headers) {
-    const creds = getGcpCredentials();
-
-    if (!creds || !creds.authString) {
-        throw new OperationError("No Google Cloud credentials found. Please add the 'Authenticate Google Cloud' operation before this one.");
-    }
+    const creds = requireGcpCredentials();
 
     if (creds.authType === "API Key") {
         url += `${url.includes("?") ? "&" : "?"}key=${encodeURIComponent(creds.authString)}`;
@@ -137,7 +145,10 @@ export function generateGCSDestinationUri(inputUri, destDir, suffix, extensionOv
  * @param {Headers} [options.headers] - Custom headers.
  * @returns {Promise<Object>} The parsed JSON response.
  */
-export async function gcpFetch(urlStr, { method = "GET", params = {}, body = null, headers = new Headers() } = {}) {
+export async function gcpFetch(urlStr, { method = "GET", params = {}, body = null, headers = null } = {}) {
+    // Fail on missing credentials before building any request state
+    requireGcpCredentials();
+    headers = headers || new Headers();
     const url = new URL(urlStr);
 
     // 1. Attach Query Parameters (e.g., for Maps/Geocoding)

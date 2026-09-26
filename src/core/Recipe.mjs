@@ -241,7 +241,7 @@ class Recipe {
                         stepOutputStr = String(output ?? "");
                     }
 
-                    if (self.chef && self.chef.auditLog) {
+                    if (isWorkerEnvironment() && self.chef && self.chef.auditLog) {
                         const argsObj = {};
                         if (op.args && op.ingValues) {
                             for (let j = 0; j < op.args.length; j++) {
