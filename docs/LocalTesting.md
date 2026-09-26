@@ -67,19 +67,19 @@ To prevent live API keys from being leaked in CI/CD, the Cloud API browser tests
    ```bash
    cp .env.template .env
    ```
-2. Open `.env` and replace `YOUR_API_KEY_HERE` with your actual Google Cloud API key for the `CYBERCHEF_GCP_TEST_KEY` variable. Ensure the API Key restrictions at console.cloud.google.com are set up to accept requests from `http://localhost:8080/*`.
-3. If tests require a PAT, you must update `CYBERCHEF_GCP_TEST_TOKEN` with a fresh token obtained via `gcloud auth print-access-token` before running the tests.
+2. Open `.env` and replace `YOUR_API_KEY_HERE` with your actual Google Cloud API key for the `CYBERCHEF_GCP_TEST_API_KEY` variable. Ensure the API Key restrictions at console.cloud.google.com are set up to accept requests from `http://localhost:8080/*`.
+3. For tests that use a PAT, either set `CYBERCHEF_GCP_TEST_TOKEN` to a fresh token from `gcloud auth print-access-token`, or leave it unset and the tests will call `gcloud` themselves.
 
 ### Running Nightwatch Tests
 
 Once the `.env` file is prepared, you can trigger the entire browser suite:
 ```bash
-npm run test:browser
+npm run testuidev
 ```
 
-Or just the Cloud Operations specifically:
+Or a single operation's tests:
 ```bash
-npx nightwatch tests/browser/03_cloud_ops.js
+npx nightwatch tests/browser/GoogleTranslate.js
 ```
 *Note: Make sure your local CyberChef dev server (`npm run start`) is currently running on `localhost:8080`, as Nightwatch tests require a live application target!*
 

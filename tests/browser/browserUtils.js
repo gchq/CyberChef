@@ -308,12 +308,13 @@ function getTestPAT() {
 
 /** @function
  * Helper function to retrieve a Google Cloud API Key for testing purposes.
- * Checks for CYBERCHEF_GCP_TEST_API_KEY environment variable.
+ * Checks for CYBERCHEF_GCP_TEST_API_KEY environment variable
+ * (falling back to the older CYBERCHEF_GCP_TEST_KEY name).
  *
  * @returns {string|null} The API Key string, or null if not found.
  */
 function getTestAPIKey() {
-    const testKey = process.env.CYBERCHEF_GCP_TEST_API_KEY;
+    const testKey = process.env.CYBERCHEF_GCP_TEST_API_KEY || process.env.CYBERCHEF_GCP_TEST_KEY;
     if (!testKey || testKey === "YOUR_API_KEY_HERE") {
         return null;
     }
