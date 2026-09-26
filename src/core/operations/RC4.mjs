@@ -6,7 +6,7 @@
 
 import Operation from "../Operation.mjs";
 import CryptoJS from "crypto-js";
-import { format } from "../lib/Ciphers.mjs";
+import { format, parseFormatString } from "../lib/Ciphers.mjs";
 
 /**
  * RC4 operation
@@ -52,7 +52,7 @@ class RC4 extends Operation {
      */
     run(input, args) {
         const message = format[args[1]].parse(input),
-            passphrase = format[args[0].option].parse(args[0].string),
+            passphrase = parseFormatString(args[0].string, args[0].option),
             encrypted = CryptoJS.RC4.encrypt(message, passphrase);
 
         return encrypted.ciphertext.toString(format[args[2]]);
