@@ -1,0 +1,24 @@
+name: 'Setup Chrome'
+description: 'Installs a pinned version of Chrome and links it for chromedriver'
+
+inputs:
+  chrome-version:
+    description: 'Chrome version to install'
+    required: false
+    default: '152'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Chrome
+      shell: bash
+      run: |
+        rm -rf chrome/
+        rm -rf node_modules/chromedriver/lib/chromedriver/chrome
+        npx @puppeteer/browsers install chrome@${{ inputs.chrome-version }}
+        chromepath=$(find "$(pwd)"/chrome/* -name chrome -print -quit)
+        if [ -z "$chromepath" ]; then
+          echo "Chrome binary not found after install under $(pwd)/chrome" >&2
+          exit 1
+        fi
+        ln -s "$chromepath" node_modules/chromedriver/lib/chromedriver/chrome
