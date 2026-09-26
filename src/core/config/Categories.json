@@ -18,6 +18,8 @@
             "From Float",
             "To Binary",
             "From Binary",
+            "Manchester Encode",
+            "Manchester Decode",
             "To Octal",
             "From Octal",
             "To Base32",
