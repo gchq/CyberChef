@@ -8,7 +8,7 @@ Each operation parses its input into an in-memory RDF store ([Oxigraph](https://
 | :--- | :--- |
 | Convert RDF Format | Converts between RDF serialisations, e.g. Turtle → RDF/XML for a visualiser that only accepts RDF/XML. |
 | SPARQL Query | Runs a SPARQL 1.1 SELECT / ASK / CONSTRUCT / DESCRIBE query against the input. |
-| Ontology Summary | Reports the ontology IRI, version, title and imports; counts of classes, properties, individuals and restrictions; namespaces in use; and the class hierarchy. |
+| Ontology Summary | Reports the ontology IRI, version, title and imports; counts; namespaces; the class hierarchy; and a per-class reference of descriptions, applicable properties (own and inherited) and restrictions. |
 | Ontology Graph | Draws the ontology as an interactive graph (drag, zoom, hover for full IRIs), with a 'Max nodes' limit (default 200). |
 
 All four are in the **Ontology / RDF** category. `Convert RDF Format` is also listed under **Data format**.
@@ -71,6 +71,29 @@ The same works for `Ontology Summary` with Output = 'Counts CSV'.
 
 `To Table` previously HTML-escaped its input before splitting it into cells. That broke CSV quoting, so a quoted cell such as `"Pizza, Italian"` was split in two. It now escapes each cell after parsing.
 
+## Ontology Summary: class details
+
+With **Include class details** on (the default), the summary adds one entry per class, in depth-first hierarchy order. Each entry shows:
+
+- **Path, superclasses, and equivalent-class definitions.** Class expressions are written in Protégé/Manchester style, e.g. `:Car and (:poweredBy some :Battery)`.
+- **Descriptions** from `skos:definition`, the OBO definition (`IAO_0000115`), `rdfs:comment`, `dcterms:description` and `dc:description`. These are filtered by the **Language** argument: `en` by default, several can be given as `en, fr`, and leaving it empty includes all. Untagged text is always included. Labels prefer the chosen language but fall back to others, since many ontologies label in one language only.
+- **Properties** that apply to the class, with range, kind, description and the class they are inherited from. Own properties come first, then inherited ones, nearest ancestor first.
+- **Restrictions** on the class (`subClassOf` restrictions, including those inside an intersection) and those inherited from ancestors, e.g. `:hasTopping some :TomatoTopping (from :Pizza)`.
+
+How a property is matched to classes:
+
+| Domain | Applies to |
+| :--- | :--- |
+| `rdfs:domain :A` | `:A` and all its subclasses. |
+| `rdfs:domain [ owl:unionOf (:A :B) ]` | each of `:A`, `:B` and their subclasses. |
+| Several `rdfs:domain` statements, or an intersection | only classes under all of them (RDFS semantics). If no class qualifies, the property is listed under "Properties whose domain matches no class" and not silently dropped. |
+| No domain, but a super-property has one | the super-property's domain (shown as "domain via"). The range is inherited the same way. |
+| No domain at all, or `owl:Thing` / `rdfs:Resource` | any class. Listed once under "Properties that apply to any class" and not repeated for every class. |
+
+Only asserted `rdfs:subClassOf` links are used; no reasoner runs. For example, a class defined only by `owl:equivalentClass` is not moved under its inferred superclass.
+
+For a long ontology, choose **Output: Markdown** and add **Render Markdown**. It renders as a readable document. Properties are a list rather than a table, because a table with long descriptions is squeezed unreadably in the output pane. Render Markdown disables raw HTML, so descriptions from the file cannot inject markup. The JSON output includes the same data (`classes`, `propertiesForAnyClass`, `propertiesMatchingNoClass`).
+
 ## Ontology Graph
 
 Views:
@@ -97,6 +120,7 @@ Drawing loads vis-network 10.1.2 from unpkg.com at display time, the same way 'S
 
 ## Implementation
 
+- `src/core/lib/OntologyModel.mjs`: class hierarchy, class expressions, restrictions, descriptions, and property-to-class matching for Ontology Summary.
 - `src/core/lib/RDF.mjs`: shared helpers.
   - `getOxigraph()` initialises the WASM once. In the browser, `oxigraph/web_bg.wasm` is inlined as base64 by a `base64-loader` rule in `webpack.config.js` (the same pattern as argon2) and passed to `init()`. Oxigraph's default loader resolves the file from `import.meta.url`, which fails inside the ChefWorker; a separate `.wasm` file would also break the standalone build. The Node build loads the WASM itself.
   - It also provides format detection, `loadStore`, prefix extraction, and `serialise`.

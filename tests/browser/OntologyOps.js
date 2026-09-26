@@ -70,7 +70,7 @@ module.exports = {
 
     "Ontology Summary: class hierarchy": function (browser) {
         browserUtils.loadRecipeConfig(browser, [
-            { op: "Ontology Summary", args: ["Auto", "Text report", true, 10, ""] }
+            { op: "Ontology Summary", args: ["Auto", "Text report", true, 10, false, "en", ""] }
         ], PIZZA_TTL);
         browserUtils.bake(browser);
         browser.pause(2000);

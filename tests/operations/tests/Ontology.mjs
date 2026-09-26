@@ -87,6 +87,33 @@ const PIZZA_PRETTY_TTL = `@prefix : <http://example.org/pizza#>.
   rdfs:subClassOf :Food.
 `;
 
+const VEHICLES_TTL = `@prefix : <http://example.org/v#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://example.org/v> a owl:Ontology ; rdfs:label "Vehicles" ; rdfs:comment "A small vehicle ontology."@en , "Une petite ontologie."@fr .
+
+:Vehicle a owl:Class ; rdfs:comment "Anything that transports people or goods."@en , "Tout ce qui transporte."@fr .
+:Car a owl:Class ; rdfs:subClassOf :Vehicle , [ a owl:Restriction ; owl:onProperty :hasWheel ; owl:minQualifiedCardinality "4"^^xsd:nonNegativeInteger ; owl:onClass :Wheel ] ;
+    skos:definition "A road vehicle with four wheels."@en .
+:ElectricCar a owl:Class ; rdfs:subClassOf :Car ; owl:equivalentClass [ owl:intersectionOf ( :Car [ a owl:Restriction ; owl:onProperty :poweredBy ; owl:someValuesFrom :Battery ] ) ] .
+:Boat a owl:Class ; rdfs:subClassOf :Vehicle .
+:Wheel a owl:Class .
+:Battery a owl:Class .
+:Person a owl:Class .
+
+:hasOwner a owl:ObjectProperty ; rdfs:domain :Vehicle ; rdfs:range :Person ; rdfs:comment "Who owns the vehicle."@en .
+:hasWheel a owl:ObjectProperty ; rdfs:domain :Car ; rdfs:range :Wheel .
+:hasPrimaryOwner a owl:ObjectProperty ; rdfs:subPropertyOf :hasOwner .
+:hullLength a owl:DatatypeProperty ; rdfs:domain [ owl:unionOf ( :Boat :Wheel ) ] ; rdfs:range xsd:decimal .
+:chargeLevel a owl:DatatypeProperty ; rdfs:domain :Car , :Battery ; rdfs:range xsd:decimal .
+:poweredBy a owl:ObjectProperty ; rdfs:domain :ElectricCar ; rdfs:range [ owl:unionOf ( :Battery :Person ) ] .
+:note a owl:AnnotationProperty ; rdfs:comment "Free-text note."@en .
+:colour a owl:DatatypeProperty ; rdfs:domain owl:Thing ; rdfs:range xsd:string .
+`;
+
 const DEFAULT_QUERY = "SELECT ?class ?label WHERE {\n  ?class a owl:Class .\n  OPTIONAL { ?class rdfs:label ?label }\n}\nORDER BY ?class\nLIMIT 100";
 
 /**
@@ -306,6 +333,57 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Ontology Summary: class details list own and inherited properties in hierarchy order",
+        input: VEHICLES_TTL,
+        expectedMatch: /\n {6}:ElectricCar\n {8}Subclass of: {3}:Car\n {8}Equivalent to: :Car and \(:poweredBy some :Battery\)\n {8}Properties:\n {10}:poweredBy {8}→ :Battery or :Person {2}\(object\)\n {10}:hasWheel {9}→ :Wheel {2}\(object, from :Car\)\n {10}:hasOwner {9}→ :Person {2}\(object, from :Vehicle\)\n {30}Who owns the vehicle\.\n {10}:hasPrimaryOwner {2}→ :Person \(via :hasOwner\) {2}\(object, from :Vehicle, domain via :hasOwner\)\n {8}Restrictions:\n {10}:hasWheel min 4 :Wheel {2}\(from :Car\)\n/,
+        recipeConfig: [{ op: "Ontology Summary", args: ["Auto", "Text report", false, 10, true, "en", ""] }],
+    },
+    {
+        name: "Ontology Summary: union domain applies to each member class",
+        input: VEHICLES_TTL,
+        expectedMatch: /\n {4}:Boat\n[\s\S]*?:hullLength {7}→ xsd:decimal {2}\(datatype\)[\s\S]*\n {2}:Wheel\n {4}Properties:\n {6}:hullLength {2}→ xsd:decimal {2}\(datatype\)/,
+        recipeConfig: [{ op: "Ontology Summary", args: ["Auto", "Text report", false, 10, true, "en", ""] }],
+    },
+    {
+        name: "Ontology Summary: global and unmatched properties are listed once",
+        input: VEHICLES_TTL,
+        expectedMatch: /Properties that apply to any class \(no domain, or owl:Thing\)\n {2}:colour {2}→ xsd:string {2}\(datatype, domain owl:Thing\)\n {2}:note {4}→ \(any\) {2}\(annotation\)\n {13}Free-text note\.\n\nProperties whose domain matches no class\n {2}:chargeLevel {2}→ xsd:decimal {2}\(datatype, domain :Battery and :Car\)$/,
+        recipeConfig: [{ op: "Ontology Summary", args: ["Auto", "Text report", false, 10, true, "en", ""] }],
+    },
+    {
+        name: "Ontology Summary: language filter excludes other languages",
+        input: VEHICLES_TTL,
+        unexpectedMatch: /Tout ce qui transporte|Une petite ontologie/,
+        recipeConfig: [{ op: "Ontology Summary", args: ["Auto", "Text report", false, 10, true, "en", ""] }],
+    },
+    {
+        name: "Ontology Summary: language filter selects French descriptions",
+        input: VEHICLES_TTL,
+        expectedMatch: /:Vehicle\n {4}Description: {3}Tout ce qui transporte\./,
+        recipeConfig: [{ op: "Ontology Summary", args: ["Auto", "Text report", false, 10, true, "fr", ""] }],
+    },
+    {
+        name: "Ontology Summary: Markdown class section",
+        input: VEHICLES_TTL,
+        expectedMatch: /### `:Boat`\n\n\*\*Path:\*\* `:Vehicle` › `:Boat` {2}\n\*\*Subclass of:\*\* `:Vehicle` {2}\n\*\*IRI:\*\* `http:\/\/example\.org\/v#Boat`\n\n\*\*Properties\*\*\n\n- `:hullLength` → `xsd:decimal` — datatype\n- `:hasOwner` → `:Person` — object, from `:Vehicle` {2}\n {2}Who owns the vehicle\.\n- `:hasPrimaryOwner` → `:Person` via `:hasOwner` — object, from `:Vehicle`, domain via `:hasOwner`\n/,
+        recipeConfig: [{ op: "Ontology Summary", args: ["Auto", "Markdown", true, 10, true, "en", ""] }],
+    },
+    {
+        name: "Ontology Summary: Markdown rendered with Render Markdown",
+        input: VEHICLES_TTL,
+        expectedMatch: /<h3><code>:ElectricCar<\/code><\/h3>[\s\S]*<li><code>:hasWheel<\/code> → <code>:Wheel<\/code> — object, from <code>:Car<\/code><\/li>/,
+        recipeConfig: [
+            { op: "Ontology Summary", args: ["Auto", "Markdown", true, 10, true, "en", ""] },
+            { op: "Render Markdown", args: [false, true] },
+        ],
+    },
+    {
+        name: "Ontology Summary: JSON includes class details",
+        input: VEHICLES_TTL,
+        expectedMatch: /"iri": "http:\/\/example\.org\/v#Wheel",\s+"name": ":Wheel",\s+"label": null,\s+"depth": 0,[\s\S]*"propertiesMatchingNoClass": \[\s+\{\s+"iri": "http:\/\/example\.org\/v#chargeLevel"/,
+        recipeConfig: [{ op: "Ontology Summary", args: ["Auto", "JSON", false, 10, true, "en", ""] }],
+    },
+    {
         name: "Ontology Summary: text report",
         input: PIZZA_TTL,
         expectedOutput: `Ontology
@@ -334,20 +412,20 @@ Class hierarchy
     :Mozzarella
     :Pizza "Pizza, Italian"
       :Margherita`,
-        recipeConfig: [{ op: "Ontology Summary", args: ["Auto", "Text report", true, 10, ""] }],
+        recipeConfig: [{ op: "Ontology Summary", args: ["Auto", "Text report", true, 10, false, "en", ""] }],
     },
     {
         name: "Ontology Summary: max tree depth",
         input: PIZZA_TTL,
         expectedMatch: /Class hierarchy\n {2}:Food\n {4}… \(2 subclasses below max depth\)$/,
-        recipeConfig: [{ op: "Ontology Summary", args: ["Auto", "Text report", true, 1, ""] }],
+        recipeConfig: [{ op: "Ontology Summary", args: ["Auto", "Text report", true, 1, false, "en", ""] }],
     },
     {
         name: "Ontology Summary: counts CSV rendered with To Table",
         input: PIZZA_TTL,
         expectedMatch: /^\+-+\+-+\+\n\| metric +\| count \|\n\+-+\+-+\+\n\| Triples +\| 18 +\|\n/,
         recipeConfig: [
-            { op: "Ontology Summary", args: ["Auto", "Counts CSV", false, 10, ""] },
+            { op: "Ontology Summary", args: ["Auto", "Counts CSV", false, 10, false, "en", ""] },
             { op: "To Table", args: [",", "\\r\\n", true, "ASCII"] },
         ],
     },

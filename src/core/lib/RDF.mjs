@@ -706,19 +706,37 @@ export function allPrefixes(declared) {
 }
 
 /**
+ * Tests a literal's language tag against a comma-separated list of wanted
+ * languages (e.g. "en" matches "en", "en-GB"). Untagged literals always match,
+ * as does anything when no language is wanted.
+ *
+ * @param {string} tag - the literal's language tag ("" if none)
+ * @param {string} wanted - e.g. "en" or "en, fr"; "" for all
+ * @returns {boolean}
+ */
+export function langMatches(tag, wanted) {
+    const wants = (wanted || "").split(",").map(w => w.trim().toLowerCase()).filter(Boolean);
+    if (!tag || !wants.length) return true;
+    const t = tag.toLowerCase();
+    return wants.some(w => t === w || t.startsWith(w + "-"));
+}
+
+/**
  * Returns a display label for each subject that has an rdfs:label or
- * skos:prefLabel, preferring English or untagged literals.
+ * skos:prefLabel, preferring literals in the given language (or untagged)
+ * and falling back to any language.
  *
  * @param {Object} ox
  * @param {Object} store
+ * @param {string} [language="en"]
  * @returns {Map<string, string>} term value -> label
  */
-export function preferredLabels(ox, store) {
+export function preferredLabels(ox, store, language = "en") {
     const found = new Map();
     for (const predicate of [WELL_KNOWN_PREFIXES.rdfs + "label", WELL_KNOWN_PREFIXES.skos + "prefLabel"]) {
         for (const q of store.match(null, ox.namedNode(predicate), null, null)) {
             if (q.object.termType !== "Literal") continue;
-            const preferred = !q.object.language || q.object.language.toLowerCase().startsWith("en");
+            const preferred = langMatches(q.object.language, language);
             const current = found.get(q.subject.value);
             if (!current || (preferred && !current.preferred)) found.set(q.subject.value, { value: q.object.value, preferred });
         }
