@@ -119,6 +119,17 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "SHA2 512 with 80 rounds",
+        input: "Hello, World!",
+        expectedOutput: "374d794a95cdcfd8b35993185fef9ba368f160d8daf432d08ba9f1ed1e5abe6cc69291e0fa2fe0006a52570ef18c19def4e617c33ce52ef0a6e5fbe318cb0387",
+        recipeConfig: [
+            {
+                "op": "SHA2",
+                "args": ["512", null, 80]
+            }
+        ]
+    },
+    {
         name: "SHA2 512/224",
         input: "Hello, World!",
         expectedOutput: "766745f058e8a0438f19de48ae56ea5f123fe738af39bca050a7547a",
