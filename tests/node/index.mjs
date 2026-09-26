@@ -29,6 +29,7 @@ import "./tests/ToHTMLEntity.mjs";
 import "./tests/lib/BigIntUtils.mjs";
 import "./tests/lib/ChartsProtocolPrototypePollution.mjs";
 import "./tests/ParseQRCode.mjs";
+import "./tests/Pqc.mjs";
 
 const testStatus = {
     allTestsPassing: true,
