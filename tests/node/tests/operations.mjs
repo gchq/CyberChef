@@ -39,6 +39,7 @@ import File from "../../../src/node/File.mjs";
 import MarkdownIt from "markdown-it";
 import Token from "markdown-it/lib/token.mjs";
 import RenderMarkdown from "../../../src/core/operations/RenderMarkdown.mjs";
+import RisonDecode from "../../../src/core/operations/RisonDecode.mjs";
 
 global.File = File;
 
@@ -1202,6 +1203,11 @@ ExifImageHeight: 57`);
             });
         });
 
+    }),
+
+    it("Rison Decode: decode option uses a standard option ingredient", () => {
+        const op = new RisonDecode();
+        assert.strictEqual(op.args[0].type, "option");
     }),
 
     it("Render Markdown: makeLinksOpenInNewTab preserves tokens with pre-existing target", () => {
