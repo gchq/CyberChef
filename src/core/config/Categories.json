@@ -108,6 +108,8 @@
             "RC4",
             "RC4 Drop",
             "ChaCha",
+            "ChaCha20-Poly1305 Encrypt",
+            "ChaCha20-Poly1305 Decrypt",
             "Salsa20",
             "XSalsa20",
             "Rabbit",
