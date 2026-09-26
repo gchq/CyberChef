@@ -56,8 +56,11 @@ class ToTable extends Operation {
     run(input, args) {
         const [cellDelims, rowDelims, firstRowHeader, format] = args;
 
-        // Process the input into a nested array of elements.
-        const tableData = Utils.parseCSV(Utils.escapeHtml(input), cellDelims.split(""), rowDelims.split(""));
+        // Process the input into a nested array of elements. Escape each cell
+        // after parsing: escaping first turns '"' into '&quot;', which breaks
+        // CSV quoting of cells that contain delimiters.
+        const tableData = Utils.parseCSV(input, cellDelims.split(""), rowDelims.split(""))
+            .map(row => row.map(cell => Utils.escapeHtml(cell)));
 
         if (!tableData.length) return "";
 

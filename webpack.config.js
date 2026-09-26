@@ -138,7 +138,7 @@ module.exports = {
     },
     module: {
         // argon2-browser loads argon2.wasm by itself, so Webpack should not load it
-        noParse: /argon2\.wasm$/,
+        noParse: /(argon2|oxigraph[\\/]web_bg)\.wasm$/,
         rules: [
             {
                 test: /\.m?js$/,
@@ -161,6 +161,14 @@ module.exports = {
             {
                 // Load argon2.wasm as base64-encoded binary file expected by argon2-browser
                 test: /argon2\.wasm$/,
+                loader: "base64-loader",
+                type: "javascript/auto"
+            },
+            {
+                // Inline oxigraph's WASM as base64. Its default loader resolves the
+                // .wasm URL from import.meta.url, which fails inside the ChefWorker
+                // (and fetching a separate file would break the standalone build).
+                test: /oxigraph[\\/]web_bg\.wasm$/,
                 loader: "base64-loader",
                 type: "javascript/auto"
             },

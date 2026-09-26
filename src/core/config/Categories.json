@@ -81,7 +81,8 @@
             "Rison Decode",
             "To Modhex",
             "From Modhex",
-            "MIME Decoding"
+            "MIME Decoding",
+            "Convert RDF Format"
         ]
     },
     {
@@ -574,6 +575,16 @@
             "AI Agent",
             "Cloud Convert",
             "Google HTTP Request"
+        ]
+    },
+    {
+        "name": "Ontology / RDF",
+        "ops": [
+            "Convert RDF Format",
+            "SPARQL Query",
+            "Ontology Summary",
+            "Ontology Graph",
+            "To Table"
         ]
     },
     {

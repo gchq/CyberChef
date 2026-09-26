@@ -67,4 +67,5 @@ To add a new cloud operation end to end (op, CSP, category, tests), use the **`a
 - `GCloudAuthenticationArchitecture.md`: why auth works the way it does (quota project header, toggleString).
 - `GCloudServiceAccountLessonsLearned.md`: service agents, cross-project GCS access, LRO polling URL format.
 - `Troubleshooting.md`: 401/403 IAM problems.
+- `OntologyOperations.md`: ontology/RDF ops (Oxigraph WASM store, supported formats, SPARQL, To Table chaining, vis-network graph).
 - `*_ResearchReport.md`, `GCS_SpeechToText_*`: background research and past plans.
