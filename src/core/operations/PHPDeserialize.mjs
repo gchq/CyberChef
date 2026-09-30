@@ -107,17 +107,17 @@ class PHPDeserialize extends Operation {
             function normalizeKey(key) {
                 if (typeof key !== "string") return key;
 
-                // Match private: "\0ClassName\0prop"
-                const privateMatch = key.match(/^\u0000(.+)\u0000(.+)$/);
-                if (privateMatch) {
-                    const [_, className, prop] = privateMatch; // eslint-disable-line no-unused-vars
-                    return `private:${prop}`;
-                }
-
-                // Match protected: "\0*\0prop"
+                // Match protected: "\0*\0prop" before the more general private pattern.
                 const protectedMatch = key.match(/^\u0000\*\u0000(.+)$/);
                 if (protectedMatch) {
                     return `protected:${protectedMatch[1]}`;
+                }
+
+                // Match private: "\0ClassName\0prop"
+                const privateMatch = key.match(/^\u0000(.+)\u0000(.+)$/);
+                if (privateMatch) {
+                    const [, , prop] = privateMatch;
+                    return `private:${prop}`;
                 }
 
                 return key;
@@ -173,8 +173,8 @@ class PHPDeserialize extends Operation {
 
                 case "s": {
                     expect(":");
-                    const lengthRaw = readUntil(":").trim();
-                    const length = parseInt(lengthRaw, 10);
+                    // Consume the declared length, tolerating mismatches as before.
+                    readUntil(":");
                     expect("\"");
 
                     // Read until the next quote-semicolon
@@ -186,12 +186,6 @@ class PHPDeserialize extends Operation {
                             break;
                         }
                         str += next;
-                    }
-
-                    const actualByteLength = new TextEncoder().encode(str).length;
-                    if (actualByteLength !== length) {
-                        // eslint-disable-next-line no-console
-                        console.warn(`Length mismatch: declared ${length}, got ${actualByteLength} — proceeding anyway`);
                     }
 
                     return record({ value: str, keyType: kind });
@@ -254,7 +248,7 @@ class PHPDeserialize extends Operation {
                 const jsonValue = JSON.stringify(value);
                 return `${jsonKey}:${jsonValue}`;
             });
-            return `{${entries.join(',')}}`; // eslint-disable-line quotes
+            return `{${entries.join(",")}}`;
         }
 
         if (args[0]) {
