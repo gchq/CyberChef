@@ -539,4 +539,59 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "Playfair Cipher Decode: normal",
+        input: "bmod zbx dnab ek udm uixMm ouvif",
+        expectedOutput: "hide the gold in the treXe stump",
+        recipeConfig: [
+            {
+                "op": "Playfair Cipher Decode",
+                "args": ["PLAYFAIREXAMPLE"]
+            }
+        ],
+    },
+    {
+        name: "Playfair Cipher Decode: invalid key",
+        input: "hide the gold in the tree stump",
+        expectedOutput: "The key must consist only of letters in the English alphabet",
+        recipeConfig: [
+            {
+                "op": "Playfair Cipher Decode",
+                "args": ["PLAYFAIR EXAMPLE"]
+            }
+        ],
+    },
+    {
+        name: "Playfair Cipher Decode: odd character count",
+        input: "foo",
+        expectedOutput: "Warning: ciphered text contains odd number of characters, final character truncated\n\nil",
+        recipeConfig: [
+            {
+                "op": "Playfair Cipher Decode",
+                "args": ["PLAYFAIR EXAMPLE"]
+            }
+        ],
+    },
+    {
+        name: "Playfair Cipher Encode: normal",
+        input: "hide the gold in the tree stump",
+        expectedOutput: "bmod zbx dnab ek udm uixMm ouvif",
+        recipeConfig: [
+            {
+                "op": "Playfair Cipher Encode",
+                "args": ["PLAYFAIREXAMPLE", "X"]
+            }
+        ],
+    },
+    {
+        name: "Playfair Cipher Encode: invalid key",
+        input: "hide the gold in the tree stump",
+        expectedOutput: "The key must consist only of letters in the English alphabet",
+        recipeConfig: [
+            {
+                "op": "Playfair Cipher Encode",
+                "args": ["PLAYFAIR EXAMPLE", "X"]
+            }
+        ],
+    },
 ]);
