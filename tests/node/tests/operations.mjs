@@ -887,6 +887,203 @@ pCGTErs=
             "7d17e60d9bc94b7f4095851c729e69a2");
     }),
 
+    it("ZUC: standard test vectors", () => {
+        assert.strictEqual(
+            chef.ZUC("00000000000000000000000000000000", {key: {string: "00000000000000000000000000000000", option: "Hex"}, iv: {string: "00000000000000000000000000000000", option: "Hex"}, inputFormat: "Hex", outputFormat: "Hex"}).toString(),
+            "27bede74018082da87d4e5b69f18bf66");
+        assert.strictEqual(
+            chef.ZUC("00000000000000000000000000000000", {key: {string: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", option: "Hex"}, iv: {string: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", option: "Hex"}, inputFormat: "Hex", outputFormat: "Hex"}).toString(),
+            "0657cfa07096398b734b6cb4883eedf4");
+    }),
+
+    it("ZUC: Base64 key, IV, and input regression", () => {
+        assert.strictEqual(
+            chef.ZUC("AAAAAAAAAAAAAAAAAAAAAA==", {
+                key: {string: "AAAAAAAAAAAAAAAAAAAAAA==", option: "Base64"},
+                iv: {string: "AAAAAAAAAAAAAAAAAAAAAA==", option: "Base64"},
+                inputFormat: "Base64",
+                outputFormat: "Hex"
+            }).toString(),
+            "27bede74018082da87d4e5b69f18bf66");
+    }),
+
+    it("ZUC: all key, IV, and input format combinations", () => {
+        const testCases = [
+            {
+                name: "ASCII data",
+                key: {
+                    Hex: "30313233343536373839414243444546",
+                    UTF8: "0123456789ABCDEF",
+                    Latin1: "0123456789ABCDEF",
+                    Base64: "MDEyMzQ1Njc4OUFCQ0RFRg=="
+                },
+                iv: {
+                    Hex: "46454443424139383736353433323130",
+                    UTF8: "FEDCBA9876543210",
+                    Latin1: "FEDCBA9876543210",
+                    Base64: "RkVEQ0JBOTg3NjU0MzIxMA=="
+                },
+                input: {
+                    Hex: "4379626572436865662d5a5543",
+                    UTF8: "CyberChef-ZUC",
+                    Latin1: "CyberChef-ZUC",
+                    Base64: "Q3liZXJDaGVmLVpVQw=="
+                },
+                expected: "28295357892d7b81a7aaf75a51"
+            },
+            {
+                name: "multibyte and high-byte data",
+                key: {
+                    Hex: "e5af86e7a0815a55432d323032362121",
+                    UTF8: "密码ZUC-2026!!",
+                    Latin1: "\xe5\xaf\x86\xe7\xa0\x81ZUC-2026!!",
+                    Base64: "5a+G56CBWlVDLTIwMjYhIQ=="
+                },
+                iv: {
+                    Hex: "e59091e9878f5a55432d323032362121",
+                    UTF8: "向量ZUC-2026!!",
+                    Latin1: "\xe5\x90\x91\xe9\x87\x8fZUC-2026!!",
+                    Base64: "5ZCR6YePWlVDLTIwMjYhIQ=="
+                },
+                input: {
+                    Hex: "e6b581e5af86e7a081f09f9982",
+                    UTF8: "流密码🙂",
+                    Latin1: "\xe6\xb5\x81\xe5\xaf\x86\xe7\xa0\x81\xf0\x9f\x99\x82",
+                    Base64: "5rWB5a+G56CB8J+Zgg=="
+                },
+                expected: "c3d89afcdb8002340dc38dbc60"
+            }
+        ];
+
+        for (const testCase of testCases) {
+            for (const [keyFormat, key] of Object.entries(testCase.key)) {
+                for (const [ivFormat, iv] of Object.entries(testCase.iv)) {
+                    for (const [inputFormat, input] of Object.entries(testCase.input)) {
+                        const actual = chef.ZUC(input, {
+                            key: {string: key, option: keyFormat},
+                            iv: {string: iv, option: ivFormat},
+                            inputFormat,
+                            outputFormat: "Hex"
+                        }).toString();
+
+                        assert.strictEqual(
+                            actual,
+                            testCase.expected,
+                            `${testCase.name}: ${keyFormat} key, ${ivFormat} IV, ${inputFormat} input`
+                        );
+                    }
+                }
+            }
+        }
+    }),
+
+    it("ZUC: variable input lengths and Base64 padding", () => {
+        const testCases = [
+            ["0b", "60"],
+            ["0b30", "6060"],
+            ["0b3055", "606064"],
+            ["0b30557a", "60606448"],
+            ["0b30557a9f", "6060644864"],
+            ["0b30557a9fc4e90e33587da2c7ec11", "6060644864aafaeaf2dfd0add58fac"],
+            ["0b30557a9fc4e90e33587da2c7ec1136", "6060644864aafaeaf2dfd0add58fac35"],
+            ["0b30557a9fc4e90e33587da2c7ec11365b", "6060644864aafaeaf2dfd0add58fac3502"],
+            ["0b30557a9fc4e90e33587da2c7ec11365b80a5caef14395e83a8cdf2173c61", "6060644864aafaeaf2dfd0add58fac3502803b9f4412722ebb63ef2591d9a7"],
+            ["0b30557a9fc4e90e33587da2c7ec11365b80a5caef14395e83a8cdf2173c6186", "6060644864aafaeaf2dfd0add58fac3502803b9f4412722ebb63ef2591d9a75f"],
+            ["0b30557a9fc4e90e33587da2c7ec11365b80a5caef14395e83a8cdf2173c6186ab", "6060644864aafaeaf2dfd0add58fac3502803b9f4412722ebb63ef2591d9a75f61"]
+        ];
+        const key = {string: "30313233343536373839414243444546", option: "Hex"};
+        const iv = {string: "46454443424139383736353433323130", option: "Hex"};
+
+        for (const [input, expected] of testCases) {
+            assert.strictEqual(
+                chef.ZUC(input, {key, iv, inputFormat: "Hex", outputFormat: "Hex"}).toString(),
+                expected,
+                `Hex input containing ${input.length / 2} bytes`
+            );
+            assert.strictEqual(
+                chef.ZUC(Buffer.from(input, "hex").toString("base64"), {
+                    key,
+                    iv,
+                    inputFormat: "Base64",
+                    outputFormat: "Hex"
+                }).toString(),
+                expected,
+                `Base64 input containing ${input.length / 2} bytes`
+            );
+        }
+    }),
+
+    it("ZUC: supported output formats", () => {
+        const args = {
+            key: {string: "00000000000000000000000000000000", option: "Hex"},
+            iv: {string: "00000000000000000000000000000000", option: "Hex"},
+            inputFormat: "Hex"
+        };
+        const zeroInput = "00000000000000000000000000000000";
+
+        assert.strictEqual(chef.ZUC(zeroInput, {...args, outputFormat: "Hex"}).toString(), "27bede74018082da87d4e5b69f18bf66");
+        assert.strictEqual(chef.ZUC(zeroInput, {...args, outputFormat: "Base64"}).toString(), "J77edAGAgtqH1OW2nxi/Zg==");
+    }),
+
+    it("ZUC: empty input and missing key or IV", () => {
+        const key = {string: "00000000000000000000000000000000", option: "Hex"};
+        const iv = {string: "00000000000000000000000000000000", option: "Hex"};
+
+        for (const inputFormat of ["Hex", "UTF8", "Latin1", "Base64"]) {
+            assert.strictEqual(
+                chef.ZUC("", {key, iv, inputFormat, outputFormat: "Hex"}).toString(),
+                "",
+                `${inputFormat} empty input`
+            );
+        }
+
+        assert.strictEqual(
+            chef.ZUC("unchanged", {key: {string: "", option: "Hex"}, iv, inputFormat: "UTF8", outputFormat: "Hex"}).toString(),
+            "unchanged"
+        );
+        assert.strictEqual(
+            chef.ZUC("unchanged", {key, iv: {string: "", option: "Hex"}, inputFormat: "UTF8", outputFormat: "Hex"}).toString(),
+            "unchanged"
+        );
+    }),
+
+    it("ZUC: rejects invalid key and IV lengths in every format", () => {
+        const validKey = {string: "00000000000000000000000000000000", option: "Hex"};
+        const validIV = {string: "00000000000000000000000000000000", option: "Hex"};
+
+        for (const length of [15, 17]) {
+            const values = {
+                Hex: "41".repeat(length),
+                UTF8: "A".repeat(length),
+                Latin1: "A".repeat(length),
+                Base64: Buffer.from("A".repeat(length)).toString("base64")
+            };
+
+            for (const [formatType, value] of Object.entries(values)) {
+                assert.throws(
+                    () => chef.ZUC("00", {
+                        key: {string: value, option: formatType},
+                        iv: validIV,
+                        inputFormat: "Hex",
+                        outputFormat: "Hex"
+                    }),
+                    new RegExp(`Invalid Key length: expected 16 bytes, got ${length} bytes\\.`),
+                    `${formatType} key containing ${length} bytes`
+                );
+                assert.throws(
+                    () => chef.ZUC("00", {
+                        key: validKey,
+                        iv: {string: value, option: formatType},
+                        inputFormat: "Hex",
+                        outputFormat: "Hex"
+                    }),
+                    new RegExp(`Invalid IV length: expected 16 bytes, got ${length} bytes\\.`),
+                    `${formatType} IV containing ${length} bytes`
+                );
+            }
+        }
+    }),
+
     it("RC4 Drop", () => {
         assert.strictEqual(
             chef.RC4Drop("Go Out On a Limb", {passphrase: {string: "Under Your Nose", option: "UTF8"}, inputFormat: "UTF8", outputFormat: "Hex"}).toString(),
@@ -1218,4 +1415,3 @@ ExifImageHeight: 57`);
     }),
 
 ]);
-
