@@ -46,7 +46,7 @@ TestRegister.addTests([
     {
         name: "PHP Deserialize array (JSON)",
         input: "a:2:{s:1:\"a\";i:10;i:0;a:1:{s:2:\"ab\";b:1;}}",
-        expectedOutput: "{\"a\": 10,\"0\": {\"ab\": true}}",
+        expectedOutput: '{"0":{"ab":true},"a":10}',
         recipeConfig: [
             {
                 op: "PHP Deserialize",
@@ -57,7 +57,7 @@ TestRegister.addTests([
     {
         name: "PHP Deserialize array (non-JSON)",
         input: "a:2:{s:1:\"a\";i:10;i:0;a:1:{s:2:\"ab\";b:1;}}",
-        expectedOutput: "{\"a\": 10,0: {\"ab\": true}}",
+        expectedOutput: '{0:{"ab":true},"a":10}',
         recipeConfig: [
             {
                 op: "PHP Deserialize",
@@ -65,4 +65,59 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "PHP Deserialize array with object and reference (JSON)",
+        input: 'a:1:{s:6:"navbar";O:18:"APP\\View\\Menu\\Item":3:{s:4:"name";s:16:"Secondary Navbar";s:8:"children";a:1:{s:9:"View Cart";O:18:"APP\\View\\Menu\\Item":2:{s:4:"name";s:9:"View Cart";s:6:"parent";r:2;}}s:6:"parent";N;}}',
+        expectedOutput: `{"navbar":{"__className":"APP\\\\View\\\\Menu\\\\Item","name":"Secondary Navbar","children":{"View Cart":{"__className":"APP\\\\View\\\\Menu\\\\Item","name":"View Cart","parent":"Secondary Navbar"}},"parent":null}}`,
+        recipeConfig: [
+            {
+                op: "PHP Deserialize",
+                args: [true],
+            },
+        ],
+    },
+    {
+        name: "PHP Deserialize object with private property",
+        input: 'O:4:"Test":1:{s:12:"\u0000Test\u0000secret";s:5:"value";}',
+        expectedOutput: '{"__className":"Test","private:secret":"value"}',
+        recipeConfig: [
+            {
+                op: "PHP Deserialize",
+                args: [true],
+            },
+        ],
+    },
+    {
+        name: "PHP Deserialize object with protected property",
+        input: 'O:4:"Test":1:{s:9:"\u0000*\u0000secret";s:5:"value";}',
+        expectedOutput: '{"__className":"Test","protected:secret":"value"}',
+        recipeConfig: [
+            {
+                op: "PHP Deserialize",
+                args: [true],
+            },
+        ],
+    },
+    {
+        name: "PHP Deserialize public, private and protected properties (non-JSON)",
+        input: 'O:4:"Test":3:{s:6:"secret";s:6:"public";s:12:"\u0000Test\u0000secret";s:7:"private";s:9:"\u0000*\u0000secret";s:9:"protected";}',
+        expectedOutput: '{"__className":"Test","secret":"public","private:secret":"private","protected:secret":"protected"}',
+        recipeConfig: [
+            {
+                op: "PHP Deserialize",
+                args: [false],
+            },
+        ],
+    },
+    {
+        name: "PHP Deserialize string with mismatched declared length",
+        input: 's:1:"value";',
+        expectedOutput: '"value"',
+        recipeConfig: [
+            {
+                op: "PHP Deserialize",
+                args: [true],
+            },
+        ],
+    }
 ]);
