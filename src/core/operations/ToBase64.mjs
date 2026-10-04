@@ -20,7 +20,7 @@ class ToBase64 extends Operation {
 
         this.name = "To Base64";
         this.module = "Default";
-        this.description = "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation encodes raw data into an ASCII Base64 string.<br><br>e.g. <code>hello</code> becomes <code>aGVsbG8=</code>";
+        this.description = "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation encodes raw data into an ASCII Base64 string. Set Line width to a positive value to wrap the output; 0 leaves it unwrapped.<br><br>e.g. <code>hello</code> becomes <code>aGVsbG8=</code>";
         this.infoURL = "https://wikipedia.org/wiki/Base64";
         this.inputType = "ArrayBuffer";
         this.outputType = "string";
@@ -29,6 +29,11 @@ class ToBase64 extends Operation {
                 name: "Alphabet",
                 type: "editableOption",
                 value: ALPHABET_OPTIONS
+            },
+            {
+                name: "Line width",
+                type: "number",
+                value: 0
             }
         ];
     }
@@ -40,7 +45,18 @@ class ToBase64 extends Operation {
      */
     run(input, args) {
         const alphabet = args[0];
-        return toBase64(input, alphabet);
+        const lineWidth = Math.floor(args[1]);
+        const output = toBase64(input, alphabet);
+
+        if (!Number.isFinite(lineWidth) || lineWidth <= 0) {
+            return output;
+        }
+
+        const lines = [];
+        for (let i = 0; i < output.length; i += lineWidth) {
+            lines.push(output.slice(i, i + lineWidth));
+        }
+        return lines.join("\n");
     }
 
     /**
