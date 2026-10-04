@@ -1,0 +1,3 @@
+export const MANCHESTER_IEEE_802_3 = "IEEE 802.3 (0 = 10, 1 = 01)";
+export const MANCHESTER_G_E_THOMAS = "G. E. Thomas (0 = 01, 1 = 10)";
+export const MANCHESTER_CONVENTIONS = [MANCHESTER_IEEE_802_3, MANCHESTER_G_E_THOMAS];
