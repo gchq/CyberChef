@@ -5,6 +5,45 @@
  */
 
 import r from "jsrsasign";
+
+// Register SM2 curve parameters, OID, and curve name mappings in jsrsasign
+try {
+    r.crypto.ECParameterDB.regist(
+        "sm2p256v1",
+        256,
+        "FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF", // p
+        "FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFC", // a
+        "28E9FA9E9D9F5E344D5A9E4BCF6509A7F39789F515AB8F92DDBCBD414D940E93", // b
+        "FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123", // n
+        "1", // h
+        "32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7", // gx
+        "BC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0", // gy
+        []
+    );
+} catch (e) {
+    // If it's already registered, this is fine
+}
+
+const originalGetName = r.crypto.ECDSA.getName;
+if (originalGetName) {
+    r.crypto.ECDSA.getName = function(oid) {
+        if (oid === "2a811ccf5501822d" || oid === "1.2.156.10197.1.301") {
+            return "sm2p256v1";
+        }
+        return originalGetName(oid);
+    };
+}
+
+try {
+    r.KJUR.asn1.x509.OID.registerOIDs({
+        "sm2p256v1": "1.2.156.10197.1.301",
+        "SM2": "1.2.156.10197.1.301",
+        "SM3": "1.2.156.10197.1.401",
+        "SM2-with-SM3": "1.2.156.10197.1.501"
+    });
+} catch (e) {
+    // ignore
+}
 import { fromBase64 } from "../lib/Base64.mjs";
 import { runHash } from "../lib/Hash.mjs";
 import { fromHex, toHex } from "../lib/Hex.mjs";
@@ -86,9 +125,20 @@ class ParseX509Certificate extends Operation {
             sn = cert.getSerialNumberHex(),
             issuer = cert.getIssuer(),
             subject = cert.getSubject(),
-            pk = cert.getPublicKey(),
             pkFields = [],
             sig = cert.getSignatureValueHex();
+
+        let pk;
+        let pkLoadError = null;
+        try {
+            pk = cert.getPublicKey();
+        } catch (e) {
+            pkLoadError = e.message || e.toString();
+            pk = {
+                type: "Unknown",
+                error: pkLoadError
+            };
+        }
 
         let pkStr = "",
             sigStr = "",
@@ -144,9 +194,20 @@ class ParseX509Certificate extends Operation {
                 value: pk.e + " (0x" + pk.e.toString(16) + ")"
             });
         } else {
+            let spkiHex = "";
+            try {
+                spkiHex = cert.getPublicKeyHex();
+            } catch (err) {}
+
+            if (spkiHex) {
+                pkFields.push({
+                    key: "Raw SPKI Hex",
+                    value: formatByteStr(spkiHex, 16, 18)
+                });
+            }
             pkFields.push({
                 key: "Error",
-                value: "Unknown Public Key type"
+                value: pkLoadError || "Unknown Public Key type"
             });
         }
 
