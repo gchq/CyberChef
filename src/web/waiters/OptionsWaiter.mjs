@@ -31,6 +31,7 @@ class OptionsWaiter {
         // Set options to match object
         document.querySelectorAll("#options-body input[type=checkbox]").forEach(cbox => {
             cbox.checked = this.app.options[cbox.getAttribute("option")];
+            cbox.dispatchEvent(new CustomEvent("change", {bubbles: true}));
         });
 
         document.querySelectorAll("#options-body input[type=number]").forEach(nbox => {

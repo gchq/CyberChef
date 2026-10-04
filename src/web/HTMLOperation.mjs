@@ -27,6 +27,7 @@ class HTMLOperation {
         this.manager     = manager;
 
         this.name        = name;
+        this.originalName = name;
         this.description = config.description;
         this.infoURL     = config.infoURL;
         this.manualBake  = config.manualBake || false;
@@ -56,7 +57,8 @@ class HTMLOperation {
 
         if (this.description) {
             const infoLink = this.infoURL ? `<hr>${titleFromWikiLink(this.infoURL)}` : "";
-            const content = Utils.escapeHtml(this.description + infoLink);
+            const categoryInfo = this.getCategoryInfo();
+            const content = Utils.escapeHtml(this.description + infoLink + categoryInfo);
 
             html += ` data-container='body' data-toggle='popover' data-placement='right'
                 data-content="${content}" data-html='true' data-trigger='hover'
@@ -72,6 +74,40 @@ class HTMLOperation {
         html += "</li>";
 
         return html;
+    }
+
+
+    /**
+     * Gets the category information for this operation as an HTML string.
+     *
+     * @returns {string}
+     */
+    getCategoryInfo() {
+        if (!this.app.options.showOpCategories) {
+            return "";
+        }
+
+        // Use originalName because this.name may have been modified by highlightSearchStrings
+        const categories = [];
+        for (let i = 0; i < this.app.categories.length; i++) {
+            const cat = this.app.categories[i];
+            if (cat.name !== "Favourites" && cat.ops.includes(this.originalName)) {
+                categories.push(cat.name);
+            }
+        }
+
+        if (categories.length === 0) {
+            return "";
+        }
+
+        // Build the category links. Note that Bootstrap's popover sanitizer strips
+        // custom data-* attributes, so the category name is carried in the link text
+        // and resolved to a category ID by OperationsWaiter.categoryLinkClick.
+        const categoryLinks = categories.map(catName =>
+            `<a href='#' class='op-category-link'>${Utils.escapeHtml(catName)}</a>`
+        ).join(", ");
+
+        return `<hr>Category: ${categoryLinks}`;
     }
 
 
