@@ -26,6 +26,8 @@ const ALL_BYTES = [
     "\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff",
 ].join("");
 
+const rawStringToArrayBuffer = str => Uint8Array.from(str, c => c.charCodeAt(0)).buffer;
+
 TestRegister.addTests([
     {
         name: "CRC-16: nothing",
@@ -62,7 +64,7 @@ TestRegister.addTests([
     },
     {
         name: "CRC-16: all bytes",
-        input: ALL_BYTES,
+        input: rawStringToArrayBuffer(ALL_BYTES),
         expectedOutput: "bad3",
         recipeConfig: [
             {
@@ -106,7 +108,7 @@ TestRegister.addTests([
     },
     {
         name: "CRC-32: all bytes",
-        input: ALL_BYTES,
+        input: rawStringToArrayBuffer(ALL_BYTES),
         expectedOutput: "29058c73",
         recipeConfig: [
             {

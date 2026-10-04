@@ -27,6 +27,8 @@ const ALL_BYTES = [
     "\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff",
 ].join("");
 
+const rawStringToArrayBuffer = str => Uint8Array.from(str, c => c.charCodeAt(0)).buffer;
+
 TestRegister.addTests([
     {
         name: "Comment: nothing",
@@ -60,7 +62,7 @@ TestRegister.addTests([
     },
     {
         name: "Label, Comment: Complex content",
-        input: ALL_BYTES,
+        input: rawStringToArrayBuffer(ALL_BYTES),
         expectedOutput: ALL_BYTES,
         recipeConfig: [
             {
