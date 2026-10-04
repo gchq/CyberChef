@@ -99,6 +99,10 @@ module.exports = {
                     context: "node_modules/node-forge/dist",
                     from: "prime.worker.min.js",
                     to: "assets/forge/"
+                }, {
+                    context: "node_modules/@bokuweb/zstd-wasm/dist/web/",
+                    from: "zstd.wasm",
+                    to: "assets/"
                 }
             ]
         }),
@@ -109,6 +113,20 @@ module.exports = {
                     test: /split\.es\.js$/,
                     operations: [
                         new ReplaceOperation("once", "if (pixelSize < elementMinSize)", "if (false)")
+                    ]
+                },
+                {
+                    // @bokuweb/zstd-wasm's init() unconditionally evaluates
+                    // `new URL("./zstd.wasm", import.meta.url)` before checking
+                    // whether a path was passed in. Webpack compiles that to
+                    // `new URL(<asset path>, document.baseURI || self.location.href)`,
+                    // and ChefWorker is an inlined blob worker, so in the worker
+                    // the base is a `blob:` URL, which cannot have a relative path
+                    // resolved against it and the constructor throws.
+                    // Neuter the offending line; we always pass a path from Zstd.mjs.
+                    test: /@bokuweb[/\\]zstd-wasm[/\\]dist[/\\]web[/\\]index\.web\.js$/,
+                    operations: [
+                        new ReplaceOperation("once", "new URL(`./zstd.wasm`, import.meta.url).href", "''")
                     ]
                 }
             ]

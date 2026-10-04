@@ -1534,6 +1534,32 @@ export const FILE_SIGNATURES = {
             extractor: extractZlib
         },
         {
+            name: "Zstandard (zstd)",
+            extension: "zst",
+            mime: "application/zstd",
+            description: "",
+            signature: {
+                0: 0x28,
+                1: 0xb5,
+                2: 0x2f,
+                3: 0xfd
+            },
+            extractor: null
+        },
+        {
+            name: "Zstandard skippable frame (zstd)",
+            extension: "zst",
+            mime: "application/zstd",
+            description: "",
+            signature: {
+                0: [0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x5b, 0x5c, 0x5d, 0x5e, 0x5f],
+                1: 0x2a,
+                2: 0x4d,
+                3: 0x18
+            },
+            extractor: null
+        },
+        {
             name: "xz compression",
             extension: "xz",
             mime: "application/x-xz",
