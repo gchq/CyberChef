@@ -67,4 +67,31 @@ TestRegister.addTests([
                 "args": ["!-u", true, "z"] }
         ]
     },
+    {
+        name: "To Base85: partial group of zero bytes",
+        input: "\x00\x00\x00",
+        expectedOutput: "!!!!",
+        recipeConfig: [
+            { "op": "To Base85",
+                "args": ["!-u"] }
+        ]
+    },
+    {
+        name: "To Base85: full group of zero bytes followed by a partial one",
+        input: "\x00\x00\x00\x00\x00",
+        expectedOutput: "z!!",
+        recipeConfig: [
+            { "op": "To Base85",
+                "args": ["!-u"] }
+        ]
+    },
+    {
+        name: "From Base85: partial group of zero bytes",
+        input: "z!!",
+        expectedOutput: "\x00\x00\x00\x00\x00",
+        recipeConfig: [
+            { "op": "From Base85",
+                "args": ["!-u", true, "z"] }
+        ]
+    },
 ]);
