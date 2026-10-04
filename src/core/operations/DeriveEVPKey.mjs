@@ -121,27 +121,3 @@ CryptoJS.kdf.OpenSSL.execute = function (password, keySize, ivSize, salt) {
     // Return params
     return CryptoJS.lib.CipherParams.create({ key: key, iv: iv, salt: salt });
 };
-
-
-/**
- * Override for the CryptoJS Hex encoding parser to remove whitespace before attempting to parse
- * the hex string.
- *
- * @param {string} hexStr
- * @returns {CryptoJS.lib.WordArray}
- */
-CryptoJS.enc.Hex.parse = function (hexStr) {
-    // Remove whitespace
-    hexStr = hexStr.replace(/\s/g, "");
-
-    // Shortcut
-    const hexStrLength = hexStr.length;
-
-    // Convert
-    const words = [];
-    for (let i = 0; i < hexStrLength; i += 2) {
-        words[i >>> 3] |= parseInt(hexStr.substr(i, 2), 16) << (24 - (i % 8) * 4);
-    }
-
-    return new CryptoJS.lib.WordArray.init(words, hexStrLength / 2);
-};
