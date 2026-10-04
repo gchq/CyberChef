@@ -32,7 +32,7 @@ module.exports = function (grunt) {
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
         [
             "eslint", "clean:prod", "clean:config", "exec:generateConfig", "findModules", "webpack:web",
-            "copy:standalone", "zip:standalone", "clean:standalone", "calcDownloadHash", "chmod"
+            "writeVersionEndpoint", "copy:standalone", "zip:standalone", "clean:standalone", "calcDownloadHash", "chmod"
         ]);
 
     grunt.registerTask("node",
@@ -73,6 +73,12 @@ module.exports = function (grunt) {
                     main: "./src/web/index.js"
                 }, moduleEntryPoints));
         });
+
+    grunt.registerTask("writeVersionEndpoint", "Write the package version for static deployments", function () {
+        grunt.file.mkdir("build/prod");
+        grunt.file.write("build/prod/version.txt", `${pkg.version}\n`);
+    });
+
 
     grunt.registerTask("calcDownloadHash", "Compute download hash", function () {
         const done = this.async();
