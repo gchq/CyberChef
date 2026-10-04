@@ -33,6 +33,14 @@ class HTMLCategory {
 
 
     /**
+     * Sorts the operations in this category alphabetically by name.
+     */
+    sortOperations() {
+        this.opList.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+
+    /**
      * Renders the category and all operations within it in HTML.
      *
      * @returns {string}
