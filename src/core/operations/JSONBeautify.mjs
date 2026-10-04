@@ -10,6 +10,10 @@ import OperationError from "../errors/OperationError.mjs";
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 
+const BIGINT_SENTINEL_PREFIX = "__CYBERCHEF_BIGINT__";
+const MAX_SAFE_INTEGER_BIGINT = BigInt(Number.MAX_SAFE_INTEGER);
+const MIN_SAFE_INTEGER_BIGINT = BigInt(Number.MIN_SAFE_INTEGER);
+
 /**
  * JSON Beautify operation
  */
@@ -58,14 +62,14 @@ class JSONBeautify extends Operation {
         let json = null;
 
         try {
-            json = JSON5.parse(input);
+            json = JSON5.parse(protectBigIntLiterals(input));
         } catch (err) {
             throw new OperationError("Unable to parse input as JSON.\n" + err);
         }
 
         if (sortBool) json = sortKeys(json);
 
-        return JSON.stringify(json, null, indentStr);
+        return restoreBigIntLiterals(JSON.stringify(json, null, indentStr));
     }
 
     /**
@@ -79,7 +83,7 @@ class JSONBeautify extends Operation {
         const formatted = args[2];
         if (!formatted) return Utils.escapeHtml(data);
 
-        const json = JSON5.parse(data);
+        const json = JSON5.parse(protectBigIntLiterals(data));
         const options = {
             withLinks: true,
             bigNumbers: true
@@ -156,6 +160,13 @@ function isUrl(string) {
 function json2html(json, options) {
     let html = "";
     if (typeof json === "string") {
+        const bigintLiteral = unwrapBigIntSentinel(json);
+
+        if (bigintLiteral !== null) {
+            html += `<span class="json-literal">${bigintLiteral}</span>`;
+            return html;
+        }
+
         // Escape tags and quotes
         json = Utils.escapeHtml(json);
 
@@ -239,6 +250,153 @@ function json2html(json, options) {
         }
     }
     return html;
+}
+
+/**
+ * Protect large integer literals from JSON5 number parsing.
+ *
+ * @param {string} input
+ * @returns {string}
+ */
+function protectBigIntLiterals(input) {
+    let output = "";
+    let token = "";
+    let inString = false;
+    let stringQuote = "";
+    let escapeNext = false;
+    let inLineComment = false;
+    let inBlockComment = false;
+
+    const flushToken = () => {
+        if (!token) return;
+        output += protectNumberToken(token);
+        token = "";
+    };
+
+    for (let i = 0; i < input.length; i++) {
+        const char = input[i];
+        const next = input[i + 1] || "";
+
+        if (inLineComment) {
+            output += char;
+            if (char === "\n") inLineComment = false;
+            continue;
+        }
+
+        if (inBlockComment) {
+            output += char;
+            if (char === "*" && next === "/") {
+                output += next;
+                i++;
+                inBlockComment = false;
+            }
+            continue;
+        }
+
+        if (inString) {
+            output += char;
+            if (escapeNext) {
+                escapeNext = false;
+            } else if (char === "\\") {
+                escapeNext = true;
+            } else if (char === stringQuote) {
+                inString = false;
+                stringQuote = "";
+            }
+            continue;
+        }
+
+        if (char === "\"" || char === "'") {
+            flushToken();
+            inString = true;
+            stringQuote = char;
+            output += char;
+            continue;
+        }
+
+        if (char === "/" && next === "/") {
+            flushToken();
+            output += char + next;
+            i++;
+            inLineComment = true;
+            continue;
+        }
+
+        if (char === "/" && next === "*") {
+            flushToken();
+            output += char + next;
+            i++;
+            inBlockComment = true;
+            continue;
+        }
+
+        if (/[0-9-]/.test(char) && token.length === 0) {
+            const prev = output[output.length - 1] || "";
+            if (prev === "" || /[\s[:,{[]/.test(prev)) {
+                token = char;
+                continue;
+            }
+        }
+
+        if (token) {
+            if (/[0-9]/.test(char)) {
+                token += char;
+                continue;
+            }
+
+            flushToken();
+        }
+
+        output += char;
+    }
+
+    flushToken();
+
+    return output;
+}
+
+/**
+ * Replace an unsafe integer token with a quoted sentinel.
+ *
+ * @param {string} token
+ * @returns {string}
+ */
+function protectNumberToken(token) {
+    if (!/^-?(0|[1-9]\d+)$/.test(token)) {
+        return token;
+    }
+
+    const value = BigInt(token);
+    if (value > MAX_SAFE_INTEGER_BIGINT || value < MIN_SAFE_INTEGER_BIGINT) {
+        return `"${BIGINT_SENTINEL_PREFIX}${token}"`;
+    }
+
+    return token;
+}
+
+/**
+ * Restore quoted bigint sentinels back into raw integer literals.
+ *
+ * @param {string} input
+ * @returns {string}
+ */
+function restoreBigIntLiterals(input) {
+    const bigintLiteralRegex = /"__CYBERCHEF_BIGINT__(-?[0-9]+)"/g;
+    return input.replace(bigintLiteralRegex, (match, value) => value);
+}
+
+/**
+ * Decode a bigint sentinel value into its original number literal.
+ *
+ * @param {string} value
+ * @returns {string|null}
+ */
+function unwrapBigIntSentinel(value) {
+    if (!value.startsWith(BIGINT_SENTINEL_PREFIX)) {
+        return null;
+    }
+
+    return value.slice(BIGINT_SENTINEL_PREFIX.length);
 }
 
 export default JSONBeautify;
