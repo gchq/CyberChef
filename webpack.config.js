@@ -1,7 +1,5 @@
 const webpack = require("webpack");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { ModifySourcePlugin, ReplaceOperation } = require("modify-source-webpack-plugin");
 const path = require("path");
 const zlib = require("zlib");
@@ -38,10 +36,35 @@ const banner = `/**
 
 
 module.exports = {
+    experiments: {
+        css: true,
+        html: true
+    },
     output: {
         publicPath: "",
         globalObject: "this",
-        assetModuleFilename: "assets/[hash][ext][query]"
+        assetModuleFilename: "assets/[hash][ext][query]",
+        cssFilename: "assets/[name].css",
+        htmlFilename: "index.html",
+        copy: [
+            {
+                context: "src/core/vendor/",
+                from: "tesseract/**/*",
+                to: "assets/"
+            }, {
+                context: "node_modules/tesseract.js/dist",
+                from: "worker.min.js",
+                to: "assets/tesseract"
+            }, {
+                context: "node_modules/tesseract.js-core/",
+                from: "tesseract-core.wasm.js",
+                to: "assets/tesseract"
+            }, {
+                context: "node_modules/node-forge/dist",
+                from: "prime.worker.min.js",
+                to: "assets/forge/"
+            }
+        ]
     },
     plugins: [
         new webpack.ProvidePlugin({
@@ -63,9 +86,6 @@ module.exports = {
             // Required by Jimp to improve loading speed in browsers
             "process.browser": "true"
         }),
-        new MiniCssExtractPlugin({
-            filename: "assets/[name].css"
-        }),
         new CompressionPlugin({
             filename: "[path][base].gz",
             algorithm: "gzip",
@@ -80,27 +100,6 @@ module.exports = {
                     [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
                 },
             },
-        }),
-        new CopyWebpackPlugin({
-            patterns: [
-                {
-                    context: "src/core/vendor/",
-                    from: "tesseract/**/*",
-                    to: "assets/"
-                }, {
-                    context: "node_modules/tesseract.js/dist",
-                    from: "worker.min.js",
-                    to: "assets/tesseract"
-                }, {
-                    context: "node_modules/tesseract.js-core/",
-                    from: "tesseract-core.wasm.js",
-                    to: "assets/tesseract"
-                }, {
-                    context: "node_modules/node-forge/dist",
-                    from: "prime.worker.min.js",
-                    to: "assets/forge/"
-                }
-            ]
         }),
         new ModifySourcePlugin({
             rules: [
@@ -185,20 +184,19 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            publicPath: "../"
-                        }
-                    },
-                    "css-loader",
-                    "postcss-loader",
-                ]
+                type: "css/auto",
+                use: ["postcss-loader"]
             },
             {
-                test: /\.(ico|eot|ttf|woff|woff2)$/,
+                test: /\.ico$/,
                 type: "asset/resource",
+            },
+            {
+                test: /\.(eot|ttf|woff|woff2)$/,
+                type: "asset/resource",
+                generator: {
+                    publicPath: "../"
+                }
             },
             {
                 test: /\.svg$/,
