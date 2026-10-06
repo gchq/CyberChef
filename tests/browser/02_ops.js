@@ -272,6 +272,15 @@ module.exports = {
         testOpHtml(browser, "Parse IPv4 header", "45 c0 00 c4 02 89 00 00 ff 11　1e 8c c0 a8 0c 01 c0 a8 0c 02", "tr:nth-last-child(2) td:last-child", "192.168.12.2");
         // testOp(browser, "Parse IPv6 address", "test input", "test_output");
     // testOp(browser, "Parse ObjectID timestamp", "test input", "test_output");
+        testOp(
+            browser,
+            "Parse PGP Key",
+            `-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xjMEU/NfCxYJKwYBBAHaRw8BAQdAPwmJlL3ZFu1AUxl5NOSofIBzOhKA1i+AEJku
+Q+47JAY=
+-----END PGP PUBLIC KEY BLOCK-----`,
+            /Curve {9}: ed25519Legacy/);
     // testOp(browser, "Parse QR Code", "test input", "test_output");
         // testOp(browser, "Parse SSH Host Key", "test input", "test_output");
         testOpHtml(browser, "Parse TCP", "c2eb0050a138132e70dc9fb9501804025ea70000", "tr:nth-of-type(2) td:last-child", "49899");

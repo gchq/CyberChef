@@ -180,7 +180,17 @@ class Protobuf {
 
         try {
             message = this.parsedProto.root.nested[this.mainMessageName];
-            const packageDecode = message.toObject(message.decode(input), {
+            const reader = protobuf.Reader.create(input);
+            let decoded;
+            try {
+                decoded = message.decode(reader);
+            } catch (error) {
+                if (error && !Number.isInteger(error.byteOffset)) {
+                    error.byteOffset = reader.pos;
+                }
+                throw error;
+            }
+            const packageDecode = message.toObject(decoded, {
                 bytes: String,
                 longs: Number,
                 enums: String,
@@ -198,7 +208,11 @@ class Protobuf {
 
         } catch (error) {
             if (message) {
-                throw new Error("Input " + error);
+                const wrapped = new Error("Input " + error);
+                if (Number.isInteger(error?.byteOffset)) {
+                    wrapped.byteOffset = error.byteOffset;
+                }
+                throw wrapped;
             } else {
                 return rawDecode;
             }
@@ -372,7 +386,7 @@ class Protobuf {
         }
         // Throw an error if we have gone beyond the end of the data
         if (this.offset > this.LENGTH) {
-            throw new Error("Exhausted Buffer");
+            throw this._parseError("Exhausted Buffer", this.LENGTH);
         }
         return object;
     }
@@ -401,6 +415,20 @@ class Protobuf {
     }
 
     /**
+     * Create a parse error annotated with the byte offset.
+     *
+     * @private
+     * @param {string} message
+     * @param {number} byteOffset
+     * @returns {Error}
+     */
+    _parseError(message, byteOffset) {
+        const error = new Error(message);
+        error.byteOffset = byteOffset;
+        return error;
+    }
+
+    /**
      * Parse a field and return the Object read from the record
      *
      * @private
@@ -408,6 +436,7 @@ class Protobuf {
      */
     _parseField() {
         // Get the field headers
+        const fieldOffset = this.offset;
         const header = this._fieldHeader();
         const type = header.type;
         const key = header.key;
@@ -430,8 +459,9 @@ class Protobuf {
             case 5:
                 return { "key": key, "value": this._uint32() };
             // unknown type
-            default:
-                throw new Error("Unknown type 0x" + type.toString(16));
+            default: {
+                throw this._parseError("Unknown type 0x" + type.toString(16), fieldOffset);
+            }
         }
     }
 
@@ -455,6 +485,9 @@ class Protobuf {
      * @returns {number}
      */
     _fieldType() {
+        if (this.offset >= this.LENGTH) {
+            throw this._parseError("Exhausted Buffer", this.LENGTH);
+        }
         // Field type stored in lower 3 bits of tag byte
         return this.data[this.offset] & this.TYPE;
     }
@@ -472,6 +505,9 @@ class Protobuf {
         let shift = -3;
         let fieldNumber = 0;
         do {
+            if (this.offset >= this.LENGTH) {
+                throw this._parseError("Exhausted Buffer", this.LENGTH);
+            }
             fieldNumber += shift < 28 ?
                 shift === -3 ?
                     (this.data[this.offset] & this.NUMBER) >> -shift :
@@ -495,6 +531,9 @@ class Protobuf {
         let shift = 0;
         // Keep reading while upper bit set
         do {
+            if (this.offset >= this.LENGTH) {
+                throw this._parseError("Exhausted Buffer", this.LENGTH);
+            }
             value += shift < 28 ?
                 (this.data[this.offset] & this.VALUE) << shift :
                 (this.data[this.offset] & this.VALUE) * Math.pow(2, shift);
@@ -510,6 +549,9 @@ class Protobuf {
      * @returns {number}
      */
     _uint64() {
+        if (this.offset + 8 > this.LENGTH) {
+            throw this._parseError("Exhausted Buffer", this.LENGTH);
+        }
         // Read off a Uint64 with little-endian
         const lowerHalf = this.data[this.offset++] + (this.data[this.offset++] * 0x100) + (this.data[this.offset++] * 0x10000) + this.data[this.offset++] * 0x1000000;
         const upperHalf = this.data[this.offset++] + (this.data[this.offset++] * 0x100) + (this.data[this.offset++] * 0x10000) + this.data[this.offset++] * 0x1000000;
@@ -525,6 +567,9 @@ class Protobuf {
     _lenDelim(fieldNum) {
         // Read off the field length
         const length = this._varInt();
+        if (this.offset + length > this.LENGTH) {
+            throw this._parseError("Exhausted Buffer", this.LENGTH);
+        }
         const fieldBytes = this.data.slice(this.offset, this.offset + length);
         let field;
         try {
@@ -551,6 +596,9 @@ class Protobuf {
      * @returns {number}
      */
     _uint32() {
+        if (this.offset + 4 > this.LENGTH) {
+            throw this._parseError("Exhausted Buffer", this.LENGTH);
+        }
         // Use a dataview to read off the integer
         const dataview = new DataView(new Uint8Array(this.data.slice(this.offset, this.offset + 4)).buffer);
         const value = dataview.getUint32(0, true);

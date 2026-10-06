@@ -1,10 +1,13 @@
 "use strict";
 
+const crypto = require("node:crypto");
+const fs = require("node:fs");
+const path = require("node:path");
+
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const glob = require("glob");
-const path = require("path");
 
 const nodeFlags = "--no-warnings --no-deprecation";
 
@@ -29,7 +32,7 @@ module.exports = function (grunt) {
         "Creates a production-ready build. Use the --msg flag to add a compile message.",
         [
             "eslint", "clean:prod", "clean:config", "exec:generateConfig", "findModules", "webpack:web",
-            "copy:standalone", "zip:standalone", "clean:standalone", "exec:calcDownloadHash", "chmod"
+            "copy:standalone", "zip:standalone", "clean:standalone", "calcDownloadHash", "chmod"
         ]);
 
     grunt.registerTask("node",
@@ -60,7 +63,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("findModules",
         "Finds all generated modules and updates the entry point list for Webpack",
-        function(arg1, arg2) {
+        function (arg1, arg2) {
             const moduleEntryPoints = listEntryModules();
 
             grunt.log.writeln(`Found ${Object.keys(moduleEntryPoints).length} modules.`);
@@ -70,6 +73,26 @@ module.exports = function (grunt) {
                     main: "./src/web/index.js"
                 }, moduleEntryPoints));
         });
+
+    grunt.registerTask("calcDownloadHash", "Compute download hash", function () {
+        const done = this.async();
+
+        const hash = crypto.createHash("sha256");
+
+        // Use online algorithm to calculate hash, prevents reading the entire 75+ MB zip file into memory
+        fs.createReadStream(`build/prod/${downloadZipFilename}`)
+            .on("data", (chunk) => hash.update(chunk))
+            .on("end", () => {
+                const digest = hash.digest("hex");
+                fs.writeFileSync("build/prod/sha256digest.txt", `${digest}\n`, { encoding: "utf8" });
+
+                const index = fs.readFileSync("build/prod/index.html", { encoding: "utf8" });
+                fs.writeFileSync("build/prod/index.html", index.replace(/DOWNLOAD_HASH_PLACEHOLDER/g, digest), { encoding: "utf8" });
+
+                done(true);
+            })
+            .on("error", (err) => done(false));
+    });
 
 
     // Load tasks provided by each plugin
@@ -114,7 +137,7 @@ module.exports = function (grunt) {
                 output: {
                     path: __dirname + "/build/prod",
                     filename: chunkData => {
-                        return chunkData.chunk.name === "main" ? "assets/[name].js": "[name].js";
+                        return chunkData.chunk.name === "main" ? "assets/[name].js" : "[name].js";
                     },
                     globalObject: "this"
                 },
@@ -333,22 +356,6 @@ module.exports = function (grunt) {
             }
         },
         exec: {
-            calcDownloadHash: {
-                command: function () {
-                    switch (process.platform) {
-                        case "darwin":
-                            return chainCommands([
-                                `shasum -a 256 build/prod/${downloadZipFilename} | awk '{print $1;}' > build/prod/sha256digest.txt`,
-                                `sed -i '' -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`
-                            ]);
-                        default:
-                            return chainCommands([
-                                `sha256sum build/prod/${downloadZipFilename} | awk '{print $1;}' > build/prod/sha256digest.txt`,
-                                `sed -i -e "s/DOWNLOAD_HASH_PLACEHOLDER/$(cat build/prod/sha256digest.txt)/" build/prod/index.html`
-                            ]);
-                    }
-                },
-            },
             repoSize: {
                 command: chainCommands([
                     "git ls-files | wc -l | xargs printf '\n%b\ttracked files\n'",

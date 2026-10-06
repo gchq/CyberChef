@@ -1015,6 +1015,7 @@ class Utils {
 
         // Parse bespoke recipe format
         recipe = recipe.replace(/\n/g, "");
+        Utils._validatePrettyRecipe(recipe);
         let m, args;
         const recipeRegex = /([^(]+)\(((?:'[^'\\]*(?:\\.[^'\\]*)*'|[^)/'])*)(\/[^)]+)?\)/g,
             recipeConfig = [];
@@ -1037,6 +1038,53 @@ class Utils {
             recipeConfig.push(op);
         }
         return recipeConfig;
+    }
+
+
+    /**
+     * Performs a linear structural validation pass over pretty recipe syntax.
+     *
+     * @param {string} recipe
+     * @throws {Error} if the recipe is structurally invalid
+     */
+    static _validatePrettyRecipe(recipe) {
+        let i = 0;
+
+        while (i < recipe.length) {
+            const openParen = recipe.indexOf("(", i);
+            if (openParen === -1 || openParen === i) {
+                throw new Error("Invalid recipe");
+            }
+
+            i = openParen + 1;
+            let inString = false,
+                escaped = false,
+                foundCloseParen = false;
+
+            for (; i < recipe.length; i++) {
+                const c = recipe[i];
+
+                if (inString) {
+                    if (escaped) {
+                        escaped = false;
+                    } else if (c === "\\") {
+                        escaped = true;
+                    } else if (c === "'") {
+                        inString = false;
+                    }
+                } else if (c === "'") {
+                    inString = true;
+                } else if (c === ")") {
+                    foundCloseParen = true;
+                    i++;
+                    break;
+                }
+            }
+
+            if (!foundCloseParen || inString || escaped) {
+                throw new Error("Invalid recipe");
+            }
+        }
     }
 
 

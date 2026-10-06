@@ -29,8 +29,6 @@ updates:
         versions: [ '>=0.9.0' ]
       - dependency-name: 'bootstrap'
         versions: [ '>=5.0.0' ]
-      - dependency-name: 'cbor'
-        versions: [ '>=10.0.0' ]
       - dependency-name: 'eslint'
         versions: [ '>=10.0.0' ]
       - dependency-name: 'eslint-plugin-jsdoc'
