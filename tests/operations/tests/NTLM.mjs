@@ -30,5 +30,23 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        // #1807: bytes that expand when uppercased (e.g. 0xDF -> "SS") used to
+        // overflow the library's fixed 14-byte buffer and throw a RangeError,
+        // which also broke the "Generate all hashes" operation.
+        name: "LM Hash: input with characters that expand when uppercased",
+        input: "cf df 26 2e 2d 2b 2c 30 21 25 21 53 28 2a",
+        expectedOutput: "98C1A4EB163B98D8DB93DECF17002EEE",
+        recipeConfig: [
+            {
+                op: "From Hex",
+                args: ["Auto"],
+            },
+            {
+                op: "LM Hash",
+                args: [],
+            },
+        ],
+    },
 
 ]);
