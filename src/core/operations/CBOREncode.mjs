@@ -5,7 +5,8 @@
  */
 
 import Operation from "../Operation.mjs";
-import Cbor from "cbor";
+import { encode } from "cbor2";
+import { sortCoreDeterministic } from "cbor2/sorts";
 
 /**
  * CBOR Encode operation
@@ -33,7 +34,7 @@ class CBOREncode extends Operation {
      * @returns {ArrayBuffer}
      */
     run(input, args) {
-        return new Uint8Array(Cbor.encodeCanonical(input)).buffer;
+        return new Uint8Array(encode(input, {sortKeys: sortCoreDeterministic})).buffer;
     }
 
 }

@@ -72,4 +72,40 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        // A named capture group whose name is written as a Unicode escape is passed
+        // through to the native engine verbatim, so the replacer receives an extra
+        // `groups` argument. The offset must still be resolved correctly and escaped,
+        // otherwise the input is injected raw into the title attribute.
+        name: "Regular Expression - highlight with escaped named capture group",
+        input: "~'><script>alert('1')</script>",
+        expectedOutput: "<span class='hl2' title='Offset: 0\nGroups:\n\t1: ~\n'>~</span>&#x27;&gt;&lt;script&gt;alert(&#x27;1&#x27;)&lt;/script&gt;",
+        recipeConfig: [
+            {
+                op: "Regular expression",
+                args: [
+                    "User defined",
+                    "(?<\\u0041>~)",
+                    false, false, false, false, false, false,
+                    "Highlight matches",
+                ],
+            },
+        ],
+    },
+    {
+        name: "Regular Expression - highlight with named capture group",
+        input: "ab ab",
+        expectedOutput: "<span class='hl2' title='Offset: 0\nGroups:\n\t1: a\n\t2: b\n'>ab</span> <span class='hl1' title='Offset: 3\nGroups:\n\t1: a\n\t2: b\n'>ab</span>",
+        recipeConfig: [
+            {
+                op: "Regular expression",
+                args: [
+                    "User defined",
+                    "(?<x>a)(b)",
+                    false, false, false, false, false, false,
+                    "Highlight matches",
+                ],
+            },
+        ],
+    },
 ]);
