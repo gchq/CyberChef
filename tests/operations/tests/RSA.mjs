@@ -347,4 +347,81 @@ TestRegister.addTests([
             }
         ]
     },
+    {
+        name: "RSA Sign/Verify: SHA-256 round trip",
+        input: "Hello, World!",
+        expectedOutput: "Verified OK",
+        recipeConfig: [
+            {
+                "op": "RSA Sign",
+                "args": [PEM_PRIV_2048, "", "SHA-256"]
+            },
+            {
+                "op": "RSA Verify",
+                "args": [PEM_PUB_2048, "Hello, World!", "Raw", "SHA-256"]
+            }
+        ]
+    },
+    {
+        name: "RSA Verify: valid PKCS#1 v1.5 signature",
+        input: "8d7e39505b40c05e62adac1888a9515fd9c233cb5a4741509dce1fd1938baf174301c07150afef241f9dae27f328d439cc18cff4cd774aff73f2840a9e33f2333ae05e80c84e76170906ad2a74bb19a9f6199134faa480b34c9a49bef510732643a0b2eff8f2b861c94a962f5fe3683ff5291ffc8703de7b55fe647f19b28758b9866ce5955404aac82dc60bf4465d1c6a4d3f04721dbed7c05d725f0d01966ecf1b5f50422f327f3b3299dc2de7834a240c10bf0da5c0081adfee6a7e4acbfa4bc9d109db61dd3e7344dd60a39271c5c3d3dc32cc7a3b29dcb924cadec8cb269cc207171ad78e478351ea58daeea81218043bc8095fa90b0fc14380fcd3c391",
+        expectedOutput: "Verified OK",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                "op": "RSA Verify",
+                "args": [PEM_PUB_2048, "Hello, World!", "Raw", "SHA-256"]
+            }
+        ]
+    },
+    {
+        name: "RSA Verify: wrong message",
+        input: "8d7e39505b40c05e62adac1888a9515fd9c233cb5a4741509dce1fd1938baf174301c07150afef241f9dae27f328d439cc18cff4cd774aff73f2840a9e33f2333ae05e80c84e76170906ad2a74bb19a9f6199134faa480b34c9a49bef510732643a0b2eff8f2b861c94a962f5fe3683ff5291ffc8703de7b55fe647f19b28758b9866ce5955404aac82dc60bf4465d1c6a4d3f04721dbed7c05d725f0d01966ecf1b5f50422f327f3b3299dc2de7834a240c10bf0da5c0081adfee6a7e4acbfa4bc9d109db61dd3e7344dd60a39271c5c3d3dc32cc7a3b29dcb924cadec8cb269cc207171ad78e478351ea58daeea81218043bc8095fa90b0fc14380fcd3c391",
+        expectedOutput: "Verification Failure",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                "op": "RSA Verify",
+                "args": [PEM_PUB_2048, "Hello, World?", "Raw", "SHA-256"]
+            }
+        ]
+    },
+    {
+        // GHSA-86w9-cpqp-85rv: the signature encodes a DigestInfo whose
+        // AlgorithmIdentifier carries an extra element. node-forge accepts it.
+        name: "RSA Verify: rejects DigestInfo with extra AlgorithmIdentifier elements",
+        input: "717ace30b3c1125d6bd03652c826487ea6a55ef95f55ac75bc16df066295ec7ac09ec6f0646c397bc9c3efdb20bd65b00cd8e0aba93a2c536135f593225361564e5dafb731f4735c143d73559586964359d02d3340b9cf21804a9f4c799c7a1ee87992e30f0404d08ba3fa0632ba65f0617a414968a8753feab1ad0ad70f5552709f86812fa006eb3cb64feeb4b470064f4afe542319e1647dccc69d20ffaa0396e29377a84c4aa17a7627441f8a120858d24563277e01d478e9f51eeb22892ca45785f10302c556115dcacac3b4401a5c793b4e79911f0a80961f68eb39dbec5c0355f9852fcdb317cee58acc4b6bdfac591eeb37a71c0b1c2763fbf7f0acc5",
+        expectedOutput: "Verification Failure",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                "op": "RSA Verify",
+                "args": [PEM_PUB_2048, "Hello, World!", "Raw", "SHA-256"]
+            }
+        ]
+    },
+    {
+        name: "RSA Verify: signature length mismatch",
+        input: "00010203",
+        expectedOutput: "Signature length (4) does not match expected length based on key (256).",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                "op": "RSA Verify",
+                "args": [PEM_PUB_2048, "Hello, World!", "Raw", "SHA-256"]
+            }
+        ]
+    },
 ]);
