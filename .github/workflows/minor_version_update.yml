@@ -31,12 +31,12 @@ jobs:
     if: needs.check_date.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: master
 
       - name: Set node version
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
@@ -44,19 +44,19 @@ jobs:
       - name: Bump minor version
         id: bump
         run: |
-          NEW_VERSION=$(npm version minor --no-git-tag-version)
-          echo "version=${NEW_VERSION#v}" >> "$GITHUB_OUTPUT"
+          npm run minor
+          echo "version=$(npm pkg get version | xargs)" >> "$GITHUB_OUTPUT"
 
       - name: Create pull request
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.bump.outputs.version }}
         run: |
-          BRANCH="version-bump/v${VERSION}"
+          BRANCH="release/v${VERSION}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
-          git add package.json package-lock.json
+          git add package.json package-lock.json CHANGELOG.md
           git commit -m "Bump version to v${VERSION}"
           git push origin "$BRANCH"
           gh pr create --base master --head "$BRANCH" \
