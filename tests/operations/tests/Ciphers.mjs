@@ -254,6 +254,94 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Trifid Cipher Encode: no input",
+        input: "",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Encode",
+                "args": ["nothing", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Encode: no key",
+        input: "aide-toi, le ciel t'aidera",
+        expectedOutput: "agwc-ekb, ti xbuj h'valogp",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Encode",
+                "args": ["", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Encode: invalid key (non-alphabetic)",
+        input: "aide-toi, le ciel t'aidera",
+        expectedOutput: "The key must consist only of letters in the English alphabet and the \"+\" symbol",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Encode",
+                "args": ["FELIX MARIE DELASTELLE", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Encode: normal",
+        input: "aide-toi, le ciel t'aidera",
+        expectedOutput: "fmjf-voi, ss uftf p'ufeqqc",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Encode",
+                "args": ["FELIXMARIEDELASTELLE", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Decode: no input",
+        input: "",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Decode",
+                "args": ["nothing", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Decode: no key",
+        input: "agwc-ekb, ti xbuj h'valogp",
+        expectedOutput: "aide-toi, le ciel t'aidera",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Decode",
+                "args": ["", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Decode: invalid key (non-alphabetic)",
+        input: "fmjf-voi, ss uftf p'ufeqqc",
+        expectedOutput: "The key must consist only of letters in the English alphabet and the \"+\" symbol",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Decode",
+                "args": ["FELIX MARIE DELASTELLE", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Decode: normal",
+        input: "fmjf-voi, ss uftf p'ufeqqc",
+        expectedOutput: "aide-toi, le ciel t'aidera",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Decode",
+                "args": ["FELIXMARIEDELASTELLE", 5]
+            }
+        ],
+    },
+    {
         name: "Citrix CTX1 Encode",
         input: "Password1",
         expectedOutput: "PFFAJEDBOHECJEDBODEGIMCJPOFLJKDPKLAO",
@@ -568,7 +656,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 "op": "Playfair Cipher Decode",
-                "args": ["PLAYFAIR EXAMPLE"]
+                "args": ["bar"]
             }
         ],
     },

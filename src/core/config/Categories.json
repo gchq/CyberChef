@@ -149,6 +149,8 @@
             "Bacon Cipher Decode",
             "Bifid Cipher Encode",
             "Bifid Cipher Decode",
+            "Trifid Cipher Encode",
+            "Trifid Cipher Decode",
             "Playfair Cipher Encode",
             "Playfair Cipher Decode",
             "Caesar Box Cipher",
