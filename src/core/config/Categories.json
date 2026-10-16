@@ -84,6 +84,8 @@
             "To Modhex",
             "From Modhex",
             "MIME Decoding",
+            "Thrift Serialize",
+            "Thrift Deserialize",
             "To COBS",
             "From COBS"
         ]
