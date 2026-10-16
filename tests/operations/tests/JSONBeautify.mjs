@@ -135,4 +135,19 @@ TestRegister.addTests([
             }
         ],
     },
+    {
+        name: "JSON Beautify: preserve large integer precision",
+        input: "{\"a\":1234567890123456789}",
+        expectedOutput: "{\n\t\"a\": 1234567890123456789\n}",
+        recipeConfig: [
+            {
+                op: "JSON Beautify",
+                args: ["\t", false, false],
+            },
+            {
+                op: "HTML To Text",
+                args: []
+            }
+        ],
+    },
 ]);
