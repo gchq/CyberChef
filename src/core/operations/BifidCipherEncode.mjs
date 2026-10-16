@@ -42,7 +42,7 @@ class BifidCipherEncode extends Operation {
      * @throws {OperationError} if key is invalid
      */
     run(input, args) {
-        const keywordStr = args[0].toUpperCase().replace("J", "I"),
+        const keywordStr = args[0].toUpperCase().replaceAll("J", "I"),
             keyword = keywordStr.split("").unique(),
             alpha = "ABCDEFGHIKLMNOPQRSTUVWXYZ",
             xCo = [],
@@ -58,7 +58,7 @@ class BifidCipherEncode extends Operation {
 
         const polybius = genPolybiusSquare(keywordStr);
 
-        input.replace("J", "I").split("").forEach(letter => {
+        input.replaceAll("j", "i").replaceAll("J", "I").split("").forEach(letter => {
             const alpInd = alpha.split("").indexOf(letter.toLocaleUpperCase()) >= 0;
             let polInd;
 
