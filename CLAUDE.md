@@ -2,7 +2,7 @@
 
 # 中文汉化分支约定
 
-本仓库是 CyberChef 的长期维护中文汉化版：`master` 与官方仓库保持一致，汉化工作在 `zh-CN` 分支进行，并持续合并官方更新。详见 `I18N.md`。
+本仓库（`shadowhunter1024/CyberChef-Chinese`）是 CyberChef 的长期维护中文汉化版，只有 `zh-CN` 一个分支（默认分支）。同步官方更新时直接合并官方的 `upstream/master`，不要把 `master` 分支推送到本仓库（会触发官方的 `master.yml`）。推送 `zh-CN` 会自动发布 Release 并更新 GitHub Pages 在线版。详见 `I18N.md`。
 
 ## 核心约定
 
