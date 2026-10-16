@@ -316,6 +316,7 @@ Q+47JAY=
         // testOp(browser, "Remove whitespace", "test input", "test_output");
         testOpImage(browser, "Render Image", "files/Hitchhikers_Guide.jpeg");
         testOpHtml(browser, "Render Markdown", "# test input", "h1", "test input");
+        testOpHtml(browser, "Render Mermaid", "graph TD; A-->B", ".mermaid-diagram svg + div button", "SVG");
         testOpImage(browser, "Resize Image", "files/Hitchhikers_Guide.jpeg");
         // testOp(browser, "Return", "test input", "test_output");
         // testOp(browser, "Reverse", "test input", "test_output");

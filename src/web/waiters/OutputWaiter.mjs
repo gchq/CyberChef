@@ -375,6 +375,11 @@ class OutputWaiter {
                 log.error(err);
             }
         }
+
+        // Mermaid needs a DOM, so the Render Mermaid operation leaves placeholders to be drawn here
+        if (outputHTML?.querySelector(".mermaid-diagram")) {
+            await import("../utils/mermaid.mjs").then(m => m.renderMermaid(outputHTML)).catch(err => log.error(err));
+        }
     }
 
     /**
