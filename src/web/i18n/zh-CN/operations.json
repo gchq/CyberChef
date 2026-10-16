@@ -1,4 +1,90 @@
 {
+    "A1Z26 Cipher Decode": {
+        "displayName": "A1Z26 密码解密",
+        "src_description": "Converts alphabet order numbers into their corresponding  alphabet character.<br><br>e.g. <code>1</code> becomes <code>a</code> and <code>2</code> becomes <code>b</code>.",
+        "description": "将字母表序号转换为对应的字母。<br><br>例如 <code>1</code> 变为 <code>a</code>，<code>2</code> 变为 <code>b</code>。",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
+    "A1Z26 Cipher Encode": {
+        "displayName": "A1Z26 密码加密",
+        "src_description": "Converts alphabet characters into their corresponding alphabet order number.<br><br>e.g. <code>a</code> becomes <code>1</code> and <code>b</code> becomes <code>2</code>.<br><br>Non-alphabet characters are dropped.",
+        "description": "将字母转换为其在字母表中的序号。<br><br>例如 <code>a</code> 变为 <code>1</code>，<code>b</code> 变为 <code>2</code>。<br><br>非字母字符会被丢弃。",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
+    "AES Decrypt": {
+        "displayName": "AES 解密",
+        "src_description": "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul><br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.<br><br><b>GCM Tag:</b> This field is ignored unless 'GCM' mode is used.",
+        "description": "高级加密标准（AES）是美国联邦信息处理标准（FIPS），历经 5 年、评估了 15 个候选设计后选定。<br><br><b>密钥：</b>根据密钥长度使用以下算法：<ul><li>16 字节 = AES-128</li><li>24 字节 = AES-192</li><li>32 字节 = AES-256</li></ul><br><br><b>IV：</b>初始向量应为 16 字节。未填写时默认为 16 个空字节。<br><br><b>填充：</b>在 CBC 和 ECB 模式下默认使用 PKCS#7 填充。<br><br><b>GCM 标签：</b>仅在使用“GCM”模式时生效，其他模式下忽略。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "IV Length": "IV 长度",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出",
+            "GCM Tag": "GCM 标签",
+            "Additional Authenticated Data": "附加认证数据",
+            "IV from input": "从输入中读取 IV"
+        }
+    },
+    "AES Encrypt": {
+        "displayName": "AES 加密",
+        "src_description": "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.",
+        "description": "高级加密标准（AES）是美国联邦信息处理标准（FIPS），历经 5 年、评估了 15 个候选设计后选定。<br><br><b>密钥：</b>根据密钥长度使用以下算法：<ul><li>16 字节 = AES-128</li><li>24 字节 = AES-192</li><li>32 字节 = AES-256</li></ul>可以使用某个 KDF（密钥派生函数）操作从密码生成密钥。<br><br><b>IV：</b>初始向量应为 16 字节。未填写时默认为 16 个空字节。<br><br><b>填充：</b>在 CBC 和 ECB 模式下使用 PKCS#7 填充。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出",
+            "Additional Authenticated Data": "附加认证数据",
+            "Include IV in output": "输出中包含 IV"
+        }
+    },
+    "AES Key Unwrap": {
+        "displayName": "AES 密钥解封",
+        "src_description": "Decryptor for a key wrapping algorithm defined in RFC3394, which is used to protect keys in untrusted storage or communications, using AES.<br><br>This algorithm uses an AES key (KEK: key-encryption key) and a 64-bit IV to decrypt 64-bit blocks.",
+        "description": "RFC3394 中定义的密钥封装算法的解密器，该算法使用 AES 保护在不可信存储或通信中的密钥。<br><br>该算法使用一个 AES 密钥（KEK：密钥加密密钥）和一个 64 位 IV 来解密 64 位分组。",
+        "args": {
+            "Key (KEK)": "密钥（KEK）",
+            "IV": "IV（初始向量）",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "AES Key Wrap": {
+        "displayName": "AES 密钥封装",
+        "src_description": "A key wrapping algorithm defined in RFC3394, which is used to protect keys in untrusted storage or communications, using AES.<br><br>This algorithm uses an AES key (KEK: key-encryption key) and a 64-bit IV to encrypt 64-bit blocks.",
+        "description": "RFC3394 中定义的密钥封装算法，使用 AES 保护在不可信存储或通信中的密钥。<br><br>该算法使用一个 AES 密钥（KEK：密钥加密密钥）和一个 64 位 IV 来加密 64 位分组。",
+        "args": {
+            "Key (KEK)": "密钥（KEK）",
+            "IV": "IV（初始向量）",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "Affine Cipher Decode": {
+        "displayName": "仿射密码解密",
+        "src_description": "The Affine cipher is a type of monoalphabetic substitution cipher. To decrypt, each letter in an alphabet is mapped to its numeric equivalent, decrypted by a mathematical function, and converted back to a letter.",
+        "description": "仿射密码是一种单表替换密码。解密时，把字母表中的每个字母映射为对应的数字，用数学函数解密后，再转换回字母。",
+        "args": {
+            "a": "a",
+            "b": "b"
+        }
+    },
+    "Affine Cipher Encode": {
+        "displayName": "仿射密码加密",
+        "src_description": "The Affine cipher is a type of monoalphabetic substitution cipher, wherein each letter in an alphabet is mapped to its numeric equivalent, encrypted using simple mathematical function, <code>(ax + b) % 26</code>, and converted back to a letter.",
+        "description": "仿射密码是一种单表替换密码，把字母表中的每个字母映射为对应的数字，用简单的数学函数 <code>(ax + b) % 26</code> 加密后，再转换回字母。",
+        "args": {
+            "a": "a",
+            "b": "b"
+        }
+    },
     "AMF Decode": {
         "displayName": "AMF 解码",
         "src_description": "Action Message Format (AMF) is a binary format used to serialize object graphs such as ActionScript objects and XML, or send messages between an Adobe Flash client and a remote service, usually a Flash Media Server or third party alternatives.",
@@ -15,12 +101,135 @@
             "Format": "格式"
         }
     },
+    "Ascon Decrypt": {
+        "displayName": "Ascon 解密",
+        "src_description": "Ascon-AEAD128 authenticated decryption as standardised in NIST SP 800-232. Decrypts ciphertext and verifies the authentication tag. Decryption will fail if the ciphertext or associated data has been tampered with.<br><br><b>Key:</b> Must be exactly 16 bytes (128 bits).<br><br><b>Nonce:</b> Must be exactly 16 bytes (128 bits). Must match the nonce used during encryption.<br><br><b>Associated Data:</b> Must match the associated data used during encryption. Any mismatch will cause authentication failure.",
+        "description": "按 NIST SP 800-232 标准实现的 Ascon-AEAD128 认证解密。解密密文并验证认证标签。如果密文或关联数据被篡改，解密会失败。<br><br><b>密钥：</b>必须正好为 16 字节（128 位）。<br><br><b>Nonce：</b>必须正好为 16 字节（128 位），且必须与加密时使用的 nonce 相同。<br><br><b>关联数据：</b>必须与加密时使用的关联数据相同，任何不一致都会导致认证失败。",
+        "args": {
+            "Key": "密钥",
+            "Nonce": "Nonce（随机数）",
+            "Associated Data": "关联数据",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "Ascon Encrypt": {
+        "displayName": "Ascon 加密",
+        "src_description": "Ascon-AEAD128 authenticated encryption as standardised in NIST SP 800-232. Ascon is a family of lightweight authenticated encryption algorithms designed for constrained devices such as IoT sensors and embedded systems.<br><br><b>Key:</b> Must be exactly 16 bytes (128 bits).<br><br><b>Nonce:</b> Must be exactly 16 bytes (128 bits). Should be unique for each encryption with the same key. Never reuse a nonce with the same key.<br><br><b>Associated Data:</b> Optional additional data that is authenticated but not encrypted. Useful for including metadata like headers or timestamps.<br><br>The output includes both the ciphertext and a 128-bit authentication tag.",
+        "description": "按 NIST SP 800-232 标准实现的 Ascon-AEAD128 认证加密。Ascon 是一族轻量级认证加密算法，专为物联网传感器、嵌入式系统等资源受限的设备设计。<br><br><b>密钥：</b>必须正好为 16 字节（128 位）。<br><br><b>Nonce：</b>必须正好为 16 字节（128 位）。使用同一密钥加密时，每次都应使用不同的 nonce，切勿重复使用。<br><br><b>关联数据：</b>可选的附加数据，会被认证但不会被加密，适合包含头部、时间戳等元数据。<br><br>输出同时包含密文和 128 位认证标签。",
+        "args": {
+            "Key": "密钥",
+            "Nonce": "Nonce（随机数）",
+            "Associated Data": "关联数据",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "Atbash Cipher": {
+        "displayName": "埃特巴什码",
+        "src_description": "Atbash is a mono-alphabetic substitution cipher originally used to encode the Hebrew alphabet. It has been modified here for use with the Latin alphabet.",
+        "description": "埃特巴什码（Atbash）是一种单表替换密码，最初用于编码希伯来字母表，这里已修改为适用于拉丁字母表。",
+        "args": {}
+    },
     "Avro to JSON": {
         "displayName": "Avro 转 JSON",
         "src_description": "Converts Avro encoded data into JSON.",
         "description": "将 Avro 编码的数据转换为 JSON。",
         "args": {
             "Force Valid JSON": "强制输出合法 JSON"
+        }
+    },
+    "Bacon Cipher Decode": {
+        "displayName": "培根密码解密",
+        "src_description": "Bacon's cipher or the Baconian cipher is a method of steganography devised by Francis Bacon in 1605. A message is concealed in the presentation of text, rather than its content.",
+        "description": "培根密码（Baconian cipher）是 Francis Bacon 于 1605 年发明的一种隐写方法，信息隐藏在文本的呈现方式中，而非文本内容中。",
+        "args": {
+            "Alphabet": "字母表",
+            "Translation": "转换",
+            "Invert Translation": "反向转换"
+        }
+    },
+    "Bacon Cipher Encode": {
+        "displayName": "培根密码加密",
+        "src_description": "Bacon's cipher or the Baconian cipher is a method of steganography devised by Francis Bacon in 1605. A message is concealed in the presentation of text, rather than its content.",
+        "description": "培根密码（Baconian cipher）是 Francis Bacon 于 1605 年发明的一种隐写方法，信息隐藏在文本的呈现方式中，而非文本内容中。",
+        "args": {
+            "Alphabet": "字母表",
+            "Translation": "转换",
+            "Keep extra characters": "保留额外字符",
+            "Invert Translation": "反向转换"
+        }
+    },
+    "Bcrypt": {
+        "displayName": "Bcrypt",
+        "src_description": "bcrypt is a password hashing function designed by Niels Provos and David Mazières, based on the Blowfish cipher, and presented at USENIX in 1999. Besides incorporating a salt to protect against rainbow table attacks, bcrypt is an adaptive function: over time, the iteration count (rounds) can be increased to make it slower, so it remains resistant to brute-force search attacks even with increasing computation power.<br><br>Enter the password in the input to generate its hash.",
+        "description": "bcrypt 是 Niels Provos 和 David Mazières 基于 Blowfish 密码设计的密码哈希函数，于 1999 年在 USENIX 上发表。除了加入盐值以抵御彩虹表攻击外，bcrypt 还是一种自适应函数：随着时间推移，可以增加迭代次数（轮数）使其变慢，因此即使计算能力不断提高，它仍能抵御暴力搜索攻击。<br><br>在输入中填写密码以生成其哈希。",
+        "args": {
+            "Rounds": "轮数"
+        }
+    },
+    "Bifid Cipher Decode": {
+        "displayName": "双密码解密",
+        "src_description": "The Bifid cipher is a cipher which uses a Polybius square in conjunction with transposition, which can be fairly difficult to decipher without knowing the alphabet keyword.",
+        "description": "双密码（Bifid cipher）将波利比奥斯方阵与换位结合使用，在不知道字母表关键词的情况下很难破译。",
+        "args": {
+            "Keyword": "关键词"
+        }
+    },
+    "Bifid Cipher Encode": {
+        "displayName": "双密码加密",
+        "src_description": "The Bifid cipher is a cipher which uses a Polybius square in conjunction with transposition, which can be fairly difficult to decipher without knowing the alphabet keyword.",
+        "description": "双密码（Bifid cipher）将波利比奥斯方阵与换位结合使用，在不知道字母表关键词的情况下很难破译。",
+        "args": {
+            "Keyword": "关键词"
+        }
+    },
+    "Blowfish Decrypt": {
+        "displayName": "Blowfish 解密",
+        "src_description": "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.",
+        "description": "Blowfish 是 Bruce Schneier 于 1993 年设计的对称密钥分组密码，被大量密码套件和加密产品采用。如今 AES 更受关注。<br><br><b>IV：</b>初始向量应为 8 字节。未填写时默认为 8 个空字节。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "Blowfish Encrypt": {
+        "displayName": "Blowfish 加密",
+        "src_description": "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.",
+        "description": "Blowfish 是 Bruce Schneier 于 1993 年设计的对称密钥分组密码，被大量密码套件和加密产品采用。如今 AES 更受关注。<br><br><b>IV：</b>初始向量应为 8 字节。未填写时默认为 8 个空字节。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "Bombe": {
+        "displayName": "Bombe 破译机",
+        "src_description": "Emulation of the Bombe machine used at Bletchley Park to attack Enigma, based on work by Polish and British cryptanalysts.<br><br>To run this you need to have a 'crib', which is some known plaintext for a chunk of the target ciphertext, and know the rotors used. (See the 'Bombe (multiple runs)' operation if you don't know the rotors.) The machine will suggest possible configurations of the Enigma. Each suggestion has the rotor start positions (left to right) and known plugboard pairs.<br><br>Choosing a crib: First, note that Enigma cannot encrypt a letter to itself, which allows you to rule out some positions for possible cribs. Secondly, the Bombe does not simulate the Enigma's middle rotor stepping. The longer your crib, the more likely a step happened within it, which will prevent the attack working. However, other than that, longer cribs are generally better. The attack produces a 'menu' which maps ciphertext letters to plaintext, and the goal is to produce 'loops': for example, with ciphertext ABC and crib CAB, we have the mappings A&lt;-&gt;C, B&lt;-&gt;A, and C&lt;-&gt;B, which produces a loop A-B-C-A. The more loops, the better the crib. The operation will output this: if your menu has too few loops or is too short, a large number of incorrect outputs will usually be produced. Try a different crib. If the menu seems good but the right answer isn't produced, your crib may be wrong, or you may have overlapped the middle rotor stepping - try a different crib.<br><br>Output is not sufficient to fully decrypt the data. You will have to recover the rest of the plugboard settings by inspection. And the ring position is not taken into account: this affects when the middle rotor steps. If your output is correct for a bit, and then goes wrong, adjust the ring and start position on the right-hand rotor together until the output improves. If necessary, repeat for the middle rotor.<br><br>By default this operation runs the checking machine, a manual process to verify the quality of Bombe stops, on each stop, discarding stops which fail. If you want to see how many times the hardware actually stops for a given input, disable the checking machine.<br><br>More detailed descriptions of the Enigma, Typex and Bombe operations <a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>can be found here</a>.",
+        "description": "模拟布莱切利园用于攻击 Enigma 的 Bombe 机器，该机器基于波兰和英国密码分析人员的工作。<br><br>运行此操作需要一段“crib”（目标密文中某一段对应的已知明文），并且需要知道使用了哪些转子（如果不知道转子，请参阅“多重 Bombe”操作）。机器会给出 Enigma 的可能配置，每条结果包括转子起始位置（从左到右）和已知的接线板配对。<br><br>选择 crib：首先，Enigma 不能把一个字母加密成它自己，据此可以排除某些 crib 位置。其次，Bombe 不模拟 Enigma 中间转子的步进。crib 越长，其中发生步进的可能性越大，会导致攻击失败；但除此之外，crib 一般越长越好。攻击会生成一个“菜单”，把密文字母映射到明文字母，目标是形成“环”：例如密文 ABC、crib 为 CAB 时，映射为 A&lt;-&gt;C、B&lt;-&gt;A、C&lt;-&gt;B，形成环 A-B-C-A。环越多，crib 越好。操作会输出这些信息：如果菜单中的环太少或太短，通常会产生大量错误输出，请换一个 crib。如果菜单看起来不错但没有得到正确答案，可能是 crib 错误，或者跨越了中间转子的步进——请换一个 crib。<br><br>仅凭输出不足以完全解密数据，还需要通过观察恢复其余的接线板设置。另外，结果没有考虑环位置，它会影响中间转子的步进时机。如果输出开头一段正确、之后出错，请同时调整右侧转子的环设置和起始位置，直到输出改善；必要时对中间转子重复此操作。<br><br>默认情况下，此操作会在每个停止点运行校验机（一种用于验证 Bombe 停止点质量的人工流程），并丢弃未通过校验的停止点。如果想查看硬件对给定输入实际停止了多少次，请禁用校验机。<br><br>关于 Enigma、Typex 和 Bombe 操作的更详细说明，<a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>请见此处</a>。",
+        "args": {
+            "Model": "型号",
+            "Left-most (4th) rotor": "最左侧（第 4 个）转子",
+            "Left-hand rotor": "左侧转子",
+            "Middle rotor": "中间转子",
+            "Right-hand rotor": "右侧转子",
+            "Reflector": "反射器",
+            "Crib": "Crib（已知明文）",
+            "Crib offset": "Crib 偏移",
+            "Use checking machine": "使用校验机"
+        }
+    },
+    "Caesar Box Cipher": {
+        "displayName": "凯撒方阵密码",
+        "src_description": "Caesar Box is a transposition cipher used in the Roman Empire, in which letters of the message are written in rows in a square (or a rectangle) and then, read by column.",
+        "description": "凯撒方阵是罗马帝国使用的一种换位密码，把消息的字母按行写入正方形（或长方形），再按列读出。",
+        "args": {
+            "Box Height": "方框高度"
         }
     },
     "Caret/M-decode": {
@@ -41,6 +250,31 @@
         "description": "简明二进制对象表示（CBOR）是一种大致基于 JSON 的二进制数据序列化格式。与 JSON 一样，它可以传输包含名称-值对的数据对象，但更加紧凑。这以牺牲可读性为代价，提高了处理和传输速度。它在 IETF RFC 8949 中定义。",
         "args": {}
     },
+    "Cetacean Cipher Decode": {
+        "displayName": "鲸语密码解密",
+        "src_description": "Decode Cetacean Cipher input. <br/><br/>e.g. <code>EEEEEEEEEeeEeEEEEEEEEEEEEeeEeEEe</code> becomes <code>hi</code>",
+        "description": "解码鲸语密码（Cetacean Cipher）输入。<br/><br/>例如 <code>EEEEEEEEEeeEeEEEEEEEEEEEEeeEeEEe</code> 变为 <code>hi</code>",
+        "args": {}
+    },
+    "Cetacean Cipher Encode": {
+        "displayName": "鲸语密码加密",
+        "src_description": "Converts any input into Cetacean Cipher. <br/><br/>e.g. <code>hi</code> becomes <code>EEEEEEEEEeeEeEEEEEEEEEEEEeeEeEEe</code>",
+        "description": "将任意输入转换为鲸语密码（Cetacean Cipher）。<br/><br/>例如 <code>hi</code> 变为 <code>EEEEEEEEEeeEeEEEEEEEEEEEEeeEeEEe</code>",
+        "args": {}
+    },
+    "ChaCha": {
+        "displayName": "ChaCha",
+        "src_description": "ChaCha is a stream cipher designed by Daniel J. Bernstein. It is a variant of the Salsa stream cipher. Several parameterizations exist; 'ChaCha' may refer to the original construction, or to the variant as described in RFC-8439. ChaCha is often used with Poly1305, in the ChaCha20-Poly1305 AEAD construction.<br><br><b>Key:</b> ChaCha uses a key of 16 or 32 bytes (128 or 256 bits).<br><br><b>Nonce:</b> ChaCha uses a nonce of 8 or 12 bytes (64 or 96 bits).<br><br><b>Counter:</b> ChaCha uses a counter of 4 or 8 bytes (32 or 64 bits); together, the nonce and counter must add up to 16 bytes. The counter starts at zero at the start of the keystream, and is incremented at every 64 bytes.",
+        "description": "ChaCha 是 Daniel J. Bernstein 设计的流密码，是 Salsa 流密码的变体。它有多种参数化形式，“ChaCha”可能指最初的构造，也可能指 RFC-8439 中描述的变体。ChaCha 常与 Poly1305 组合，构成 ChaCha20-Poly1305 AEAD。<br><br><b>密钥：</b>ChaCha 使用 16 或 32 字节（128 或 256 位）的密钥。<br><br><b>Nonce：</b>ChaCha 使用 8 或 12 字节（64 或 96 位）的 nonce。<br><br><b>计数器：</b>ChaCha 使用 4 或 8 字节（32 或 64 位）的计数器，nonce 与计数器的长度之和必须为 16 字节。计数器在密钥流开始时为零，每 64 字节加一。",
+        "args": {
+            "Key": "密钥",
+            "Nonce": "Nonce（随机数）",
+            "Counter": "计数器",
+            "Rounds": "轮数",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
     "Change IP format": {
         "displayName": "转换 IP 格式",
         "src_description": "Convert an IP address from one format to another, e.g. <code>172.20.23.54</code> to <code>ac141736</code>",
@@ -48,6 +282,100 @@
         "args": {
             "Input format": "输入格式",
             "Output format": "输出格式"
+        }
+    },
+    "CipherSaber2 Decrypt": {
+        "displayName": "CipherSaber2 解密",
+        "src_description": "CipherSaber is a simple symmetric encryption protocol based on the RC4 stream cipher. It gives reasonably strong protection of message confidentiality, yet it's designed to be simple enough that even novice programmers can memorize the algorithm and implement it from scratch.",
+        "description": "CipherSaber 是一种基于 RC4 流密码的简单对称加密协议。它能为消息机密性提供相当强的保护，同时设计得足够简单，即使是编程新手也能记住算法并从零实现。",
+        "args": {
+            "Key": "密钥",
+            "Rounds": "轮数"
+        }
+    },
+    "CipherSaber2 Encrypt": {
+        "displayName": "CipherSaber2 加密",
+        "src_description": "CipherSaber is a simple symmetric encryption protocol based on the RC4 stream cipher. It gives reasonably strong protection of message confidentiality, yet it's designed to be simple enough that even novice programmers can memorize the algorithm and implement it from scratch.",
+        "description": "CipherSaber 是一种基于 RC4 流密码的简单对称加密协议。它能为消息机密性提供相当强的保护，同时设计得足够简单，即使是编程新手也能记住算法并从零实现。",
+        "args": {
+            "Key": "密钥",
+            "Rounds": "轮数"
+        }
+    },
+    "Citrix CTX1 Decode": {
+        "displayName": "Citrix CTX1 解码",
+        "src_description": "Decodes strings in a Citrix CTX1 password format to plaintext.",
+        "description": "将 Citrix CTX1 密码格式的字符串解码为明文。",
+        "args": {}
+    },
+    "Citrix CTX1 Encode": {
+        "displayName": "Citrix CTX1 编码",
+        "src_description": "Encodes strings to Citrix CTX1 password format.",
+        "description": "将字符串编码为 Citrix CTX1 密码格式。",
+        "args": {}
+    },
+    "Colossus": {
+        "displayName": "Colossus 巨像计算机",
+        "src_description": "Colossus is the name of the world's first electronic computer. Ten Colossi were designed by Tommy Flowers and built at the Post Office Research Labs at Dollis Hill in 1943 during World War 2. They assisted with the breaking of the German Lorenz cipher attachment, a machine created to encipher communications between Hitler and his generals on the front lines.<br><br>To learn more, Virtual Colossus, an online, browser based simulation of a Colossus computer is available at <a href='https://virtualcolossus.co.uk' target='_blank'>virtualcolossus.co.uk</a>.<br><br>A more detailed description of this operation can be found <a href='https://github.com/gchq/CyberChef/wiki/Colossus' target='_blank'>here</a>.",
+        "description": "Colossus（巨像）是世界上第一台电子计算机。二战期间的 1943 年，Tommy Flowers 设计了十台 Colossus，在多利斯山的邮政研究实验室制造。它们协助破译了德国的 Lorenz 密码附加装置，该装置用于加密希特勒与前线将领之间的通信。<br><br>如需了解更多，可以访问基于浏览器的 Colossus 计算机在线模拟器 Virtual Colossus：<a href='https://virtualcolossus.co.uk' target='_blank'>virtualcolossus.co.uk</a>。<br><br>此操作的更详细说明<a href='https://github.com/gchq/CyberChef/wiki/Colossus' target='_blank'>请见此处</a>。",
+        "args": {
+            "Input": "输入",
+            "Pattern": "模式",
+            "QBusZ": "QBusZ",
+            "QBusΧ": "QBusΧ",
+            "QBusΨ": "QBusΨ",
+            "Limitation": "限制",
+            "K Rack Option": "K Rack 选项",
+            "Program to run": "要运行的程序",
+            "K Rack: Conditional": "K Rack：条件",
+            "R1-Q1": "R1-Q1",
+            "R1-Q2": "R1-Q2",
+            "R1-Q3": "R1-Q3",
+            "R1-Q4": "R1-Q4",
+            "R1-Q5": "R1-Q5",
+            "R1-Negate": "R1-取反",
+            "R1-Counter": "R1-计数器",
+            "R2-Q1": "R2-Q1",
+            "R2-Q2": "R2-Q2",
+            "R2-Q3": "R2-Q3",
+            "R2-Q4": "R2-Q4",
+            "R2-Q5": "R2-Q5",
+            "R2-Negate": "R2-取反",
+            "R2-Counter": "R2-计数器",
+            "R3-Q1": "R3-Q1",
+            "R3-Q2": "R3-Q2",
+            "R3-Q3": "R3-Q3",
+            "R3-Q4": "R3-Q4",
+            "R3-Q5": "R3-Q5",
+            "R3-Negate": "R3-取反",
+            "R3-Counter": "R3-计数器",
+            "Negate All": "全部取反",
+            "K Rack: Addition": "K Rack：加法",
+            "Add-Q1": "加法-Q1",
+            "Add-Q2": "加法-Q2",
+            "Add-Q3": "加法-Q3",
+            "Add-Q4": "加法-Q4",
+            "Add-Q5": "加法-Q5",
+            "Add-Equals": "加法-等于",
+            "Add-Counter1": "加法-计数器1",
+            "Add Negate All": "加法全部取反",
+            "Total Motor": "总电机",
+            "Master Control Panel": "主控制面板",
+            "Set Total": "设置总数",
+            "Fast Step": "快速步进",
+            "Slow Step": "慢速步进",
+            "Start Χ1": "Χ1 起始",
+            "Start Χ2": "Χ2 起始",
+            "Start Χ3": "Χ3 起始",
+            "Start Χ4": "Χ4 起始",
+            "Start Χ5": "Χ5 起始",
+            "Start M61": "M61 起始",
+            "Start M37": "M37 起始",
+            "Start Ψ1": "Ψ1 起始",
+            "Start Ψ2": "Ψ2 起始",
+            "Start Ψ3": "Ψ3 起始",
+            "Start Ψ4": "Ψ4 起始",
+            "Start Ψ5": "Ψ5 起始"
         }
     },
     "CSV to JSON": {
@@ -68,12 +396,95 @@
             "Encoding": "编码"
         }
     },
+    "Derive EVP key": {
+        "displayName": "派生 EVP 密钥",
+        "src_description": "This operation performs a password-based key derivation function (PBKDF) used extensively in OpenSSL. In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>If you leave the salt argument empty, a random salt will be generated.",
+        "description": "此操作执行 OpenSSL 中广泛使用的基于密码的密钥派生函数（PBKDF）。在许多密码学应用中，用户安全最终取决于密码。由于密码通常不能直接用作加密密钥，需要进行一定的处理。<br><br>盐值为同一个密码提供了大量可能的密钥，迭代次数则增加了从密码生成密钥的成本，从而提高了攻击难度。<br><br>如果盐值参数留空，会生成随机盐值。",
+        "args": {
+            "Passphrase": "口令",
+            "Key size": "密钥长度",
+            "Iterations": "迭代次数",
+            "Hashing function": "哈希函数",
+            "Salt": "盐值"
+        }
+    },
+    "Derive HKDF key": {
+        "displayName": "派生 HKDF 密钥",
+        "src_description": "A simple Hashed Message Authenticaton Code (HMAC)-based key derivation function (HKDF), defined in RFC5869.",
+        "description": "RFC5869 中定义的一种简单的、基于哈希消息认证码（HMAC）的密钥派生函数（HKDF）。",
+        "args": {
+            "Salt": "盐值",
+            "Info": "信息",
+            "Hashing function": "哈希函数",
+            "Extract mode": "提取模式",
+            "L (number of output octets)": "L（输出字节数）"
+        }
+    },
+    "Derive PBKDF2 key": {
+        "displayName": "派生 PBKDF2 密钥",
+        "src_description": "PBKDF2 is a password-based key derivation function. It is part of RSA Laboratories' Public-Key Cryptography Standards (PKCS) series, specifically PKCS #5 v2.0, also published as Internet Engineering Task Force's RFC 2898.<br><br>In many applications of cryptography, user security is ultimately dependent on a password, and because a password usually can't be used directly as a cryptographic key, some processing is required.<br><br>A salt provides a large set of keys for any given password, and an iteration count increases the cost of producing keys from a password, thereby also increasing the difficulty of attack.<br><br>If you leave the salt argument empty, a random salt will be generated.",
+        "description": "PBKDF2 是一种基于密码的密钥派生函数，属于 RSA 实验室公钥密码学标准（PKCS）系列中的 PKCS #5 v2.0，也作为 IETF 的 RFC 2898 发布。<br><br>在许多密码学应用中，用户安全最终取决于密码。由于密码通常不能直接用作加密密钥，需要进行一定的处理。<br><br>盐值为同一个密码提供了大量可能的密钥，迭代次数则增加了从密码生成密钥的成本，从而提高了攻击难度。<br><br>如果盐值参数留空，会生成随机盐值。",
+        "args": {
+            "Passphrase": "口令",
+            "Key size": "密钥长度",
+            "Iterations": "迭代次数",
+            "Hashing function": "哈希函数",
+            "Salt": "盐值"
+        }
+    },
+    "DES Decrypt": {
+        "displayName": "DES 解密",
+        "src_description": "DES is a previously dominant algorithm for encryption, and was published as an official U.S. Federal Information Processing Standard (FIPS). It is now considered to be insecure due to its small key size.<br><br><b>Key:</b> DES uses a key length of 8 bytes (64 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.",
+        "description": "DES 曾是主流的加密算法，并作为美国联邦信息处理标准（FIPS）正式发布。由于密钥过短，现在被认为是不安全的。<br><br><b>密钥：</b>DES 的密钥长度为 8 字节（64 位）。<br><br><b>IV：</b>初始向量应为 8 字节。未填写时默认为 8 个空字节。<br><br><b>填充：</b>在 CBC 和 ECB 模式下默认使用 PKCS#7 填充。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "DES Encrypt": {
+        "displayName": "DES 加密",
+        "src_description": "DES is a previously dominant algorithm for encryption, and was published as an official U.S. Federal Information Processing Standard (FIPS). It is now considered to be insecure due to its small key size.<br><br><b>Key:</b> DES uses a key length of 8 bytes (64 bits).<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.",
+        "description": "DES 曾是主流的加密算法，并作为美国联邦信息处理标准（FIPS）正式发布。由于密钥过短，现在被认为是不安全的。<br><br><b>密钥：</b>DES 的密钥长度为 8 字节（64 位）。<br><br>可以使用某个 KDF（密钥派生函数）操作从密码生成密钥。<br><br><b>IV：</b>初始向量应为 8 字节。未填写时默认为 8 个空字节。<br><br><b>填充：</b>在 CBC 和 ECB 模式下使用 PKCS#7 填充。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
     "Encode text": {
         "displayName": "文本编码",
         "src_description": "Encodes text into the chosen character encoding.\n<br><br>\nSupported charsets are:\n<ul>\n<li>UTF-8 (65001)</li>\n<li>UTF-7 (65000)</li>\n<li>UTF-16LE (1200)</li>\n<li>UTF-16BE (1201)</li>\n<li>UTF-32LE (12000)</li>\n<li>UTF-32BE (12001)</li>\n<li>IBM EBCDIC International (500)</li>\n<li>IBM EBCDIC US-Canada (37)</li>\n<li>IBM EBCDIC Multilingual/ROECE (Latin 2) (870)</li>\n<li>IBM EBCDIC Greek Modern (875)</li>\n<li>IBM EBCDIC French (1010)</li>\n<li>IBM EBCDIC Turkish (Latin 5) (1026)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047)</li>\n<li>IBM EBCDIC Lao (1132/1133/1341)</li>\n<li>IBM EBCDIC US-Canada (037 + Euro symbol) (1140)</li>\n<li>IBM EBCDIC Germany (20273 + Euro symbol) (1141)</li>\n<li>IBM EBCDIC Denmark-Norway (20277 + Euro symbol) (1142)</li>\n<li>IBM EBCDIC Finland-Sweden (20278 + Euro symbol) (1143)</li>\n<li>IBM EBCDIC Italy (20280 + Euro symbol) (1144)</li>\n<li>IBM EBCDIC Latin America-Spain (20284 + Euro symbol) (1145)</li>\n<li>IBM EBCDIC United Kingdom (20285 + Euro symbol) (1146)</li>\n<li>IBM EBCDIC France (20297 + Euro symbol) (1147)</li>\n<li>IBM EBCDIC International (500 + Euro symbol) (1148)</li>\n<li>IBM EBCDIC Icelandic (20871 + Euro symbol) (1149)</li>\n<li>IBM EBCDIC Germany (20273)</li>\n<li>IBM EBCDIC Denmark-Norway (20277)</li>\n<li>IBM EBCDIC Finland-Sweden (20278)</li>\n<li>IBM EBCDIC Italy (20280)</li>\n<li>IBM EBCDIC Latin America-Spain (20284)</li>\n<li>IBM EBCDIC United Kingdom (20285)</li>\n<li>IBM EBCDIC Japanese Katakana Extended (20290)</li>\n<li>IBM EBCDIC France (20297)</li>\n<li>IBM EBCDIC Arabic (20420)</li>\n<li>IBM EBCDIC Greek (20423)</li>\n<li>IBM EBCDIC Hebrew (20424)</li>\n<li>IBM EBCDIC Korean Extended (20833)</li>\n<li>IBM EBCDIC Thai (20838)</li>\n<li>IBM EBCDIC Icelandic (20871)</li>\n<li>IBM EBCDIC Cyrillic Russian (20880)</li>\n<li>IBM EBCDIC Turkish (20905)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047 + Euro symbol) (20924)</li>\n<li>IBM EBCDIC Cyrillic Serbian-Bulgarian (21025)</li>\n<li>OEM United States (437)</li>\n<li>OEM Greek (formerly 437G); Greek (DOS) (737)</li>\n<li>OEM Baltic; Baltic (DOS) (775)</li>\n<li>OEM Russian; Cyrillic + Euro symbol (808)</li>\n<li>OEM Multilingual Latin 1; Western European (DOS) (850)</li>\n<li>OEM Latin 2; Central European (DOS) (852)</li>\n<li>OEM Cyrillic (primarily Russian) (855)</li>\n<li>OEM Turkish; Turkish (DOS) (857)</li>\n<li>OEM Multilingual Latin 1 + Euro symbol (858)</li>\n<li>OEM Portuguese; Portuguese (DOS) (860)</li>\n<li>OEM Icelandic; Icelandic (DOS) (861)</li>\n<li>OEM Hebrew; Hebrew (DOS) (862)</li>\n<li>OEM French Canadian; French Canadian (DOS) (863)</li>\n<li>OEM Arabic; Arabic (864) (864)</li>\n<li>OEM Nordic; Nordic (DOS) (865)</li>\n<li>OEM Russian; Cyrillic (DOS) (866)</li>\n<li>OEM Modern Greek; Greek, Modern (DOS) (869)</li>\n<li>OEM Cyrillic (primarily Russian) + Euro Symbol (872)</li>\n<li>Windows-874 Thai (874)</li>\n<li>Windows-1250 Central European (1250)</li>\n<li>Windows-1251 Cyrillic (1251)</li>\n<li>Windows-1252 Latin (1252)</li>\n<li>Windows-1253 Greek (1253)</li>\n<li>Windows-1254 Turkish (1254)</li>\n<li>Windows-1255 Hebrew (1255)</li>\n<li>Windows-1256 Arabic (1256)</li>\n<li>Windows-1257 Baltic (1257)</li>\n<li>Windows-1258 Vietnam (1258)</li>\n<li>ISO-8859-1 Latin 1 Western European (28591)</li>\n<li>ISO-8859-2 Latin 2 Central European (28592)</li>\n<li>ISO-8859-3 Latin 3 South European (28593)</li>\n<li>ISO-8859-4 Latin 4 North European (28594)</li>\n<li>ISO-8859-5 Latin/Cyrillic (28595)</li>\n<li>ISO-8859-6 Latin/Arabic (28596)</li>\n<li>ISO-8859-7 Latin/Greek (28597)</li>\n<li>ISO-8859-8 Latin/Hebrew (28598)</li>\n<li>ISO 8859-8 Hebrew (ISO-Logical) (38598)</li>\n<li>ISO-8859-9 Latin 5 Turkish (28599)</li>\n<li>ISO-8859-10 Latin 6 Nordic (28600)</li>\n<li>ISO-8859-11 Latin/Thai (28601)</li>\n<li>ISO-8859-13 Latin 7 Baltic Rim (28603)</li>\n<li>ISO-8859-14 Latin 8 Celtic (28604)</li>\n<li>ISO-8859-15 Latin 9 (28605)</li>\n<li>ISO-8859-16 Latin 10 (28606)</li>\n<li>ISO 2022 JIS Japanese with no halfwidth Katakana (50220)</li>\n<li>ISO 2022 JIS Japanese with halfwidth Katakana (50221)</li>\n<li>ISO 2022 Japanese JIS X 0201-1989 (1 byte Kana-SO/SI) (50222)</li>\n<li>ISO 2022 Korean (50225)</li>\n<li>ISO 2022 Simplified Chinese (50227)</li>\n<li>ISO 6937 Non-Spacing Accent (20269)</li>\n<li>EUC Japanese (51932)</li>\n<li>EUC Simplified Chinese (51936)</li>\n<li>EUC Korean (51949)</li>\n<li>ISCII Devanagari (57002)</li>\n<li>ISCII Bengali (57003)</li>\n<li>ISCII Tamil (57004)</li>\n<li>ISCII Telugu (57005)</li>\n<li>ISCII Assamese (57006)</li>\n<li>ISCII Oriya (57007)</li>\n<li>ISCII Kannada (57008)</li>\n<li>ISCII Malayalam (57009)</li>\n<li>ISCII Gujarati (57010)</li>\n<li>ISCII Punjabi (57011)</li>\n<li>Japanese Shift-JIS (932)</li>\n<li>Simplified Chinese GBK (936)</li>\n<li>Korean (949)</li>\n<li>Traditional Chinese Big5 (950)</li>\n<li>US-ASCII (7-bit) (20127)</li>\n<li>Simplified Chinese GB2312 (20936)</li>\n<li>KOI8-R Russian Cyrillic (20866)</li>\n<li>KOI8-U Ukrainian Cyrillic (21866)</li>\n<li>Mazovia (Polish) MS-DOS (620)</li>\n<li>Arabic (ASMO 708) (708)</li>\n<li>Arabic (Transparent ASMO); Arabic (DOS) (720)</li>\n<li>Kamenický (Czech) MS-DOS (895)</li>\n<li>Korean (Johab) (1361)</li>\n<li>MAC Roman (10000)</li>\n<li>Japanese (Mac) (10001)</li>\n<li>MAC Traditional Chinese (Big5) (10002)</li>\n<li>Korean (Mac) (10003)</li>\n<li>Arabic (Mac) (10004)</li>\n<li>Hebrew (Mac) (10005)</li>\n<li>Greek (Mac) (10006)</li>\n<li>Cyrillic (Mac) (10007)</li>\n<li>MAC Simplified Chinese (GB 2312) (10008)</li>\n<li>Romanian (Mac) (10010)</li>\n<li>Ukrainian (Mac) (10017)</li>\n<li>Thai (Mac) (10021)</li>\n<li>MAC Latin 2 (Central European) (10029)</li>\n<li>Icelandic (Mac) (10079)</li>\n<li>Turkish (Mac) (10081)</li>\n<li>Croatian (Mac) (10082)</li>\n<li>CNS Taiwan (Chinese Traditional) (20000)</li>\n<li>TCA Taiwan (20001)</li>\n<li>ETEN Taiwan (Chinese Traditional) (20002)</li>\n<li>IBM5550 Taiwan (20003)</li>\n<li>TeleText Taiwan (20004)</li>\n<li>Wang Taiwan (20005)</li>\n<li>Western European IA5 (IRV International Alphabet 5) (20105)</li>\n<li>IA5 German (7-bit) (20106)</li>\n<li>IA5 Swedish (7-bit) (20107)</li>\n<li>IA5 Norwegian (7-bit) (20108)</li>\n<li>T.61 (20261)</li>\n<li>Japanese (JIS 0208-1990 and 0212-1990) (20932)</li>\n<li>Korean Wansung (20949)</li>\n<li>Extended/Ext Alpha Lowercase (21027)</li>\n<li>Europa 3 (29001)</li>\n<li>Atari ST/TT (47451)</li>\n<li>HZ-GB2312 Simplified Chinese (52936)</li>\n<li>Simplified Chinese GB18030 (54936)</li>\n</ul>",
         "description": "将文本编码为所选的字符编码。\n<br><br>\n支持的字符集：\n<ul>\n<li>UTF-8 (65001)</li>\n<li>UTF-7 (65000)</li>\n<li>UTF-16LE (1200)</li>\n<li>UTF-16BE (1201)</li>\n<li>UTF-32LE (12000)</li>\n<li>UTF-32BE (12001)</li>\n<li>IBM EBCDIC International (500)</li>\n<li>IBM EBCDIC US-Canada (37)</li>\n<li>IBM EBCDIC Multilingual/ROECE (Latin 2) (870)</li>\n<li>IBM EBCDIC Greek Modern (875)</li>\n<li>IBM EBCDIC French (1010)</li>\n<li>IBM EBCDIC Turkish (Latin 5) (1026)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047)</li>\n<li>IBM EBCDIC Lao (1132/1133/1341)</li>\n<li>IBM EBCDIC US-Canada (037 + Euro symbol) (1140)</li>\n<li>IBM EBCDIC Germany (20273 + Euro symbol) (1141)</li>\n<li>IBM EBCDIC Denmark-Norway (20277 + Euro symbol) (1142)</li>\n<li>IBM EBCDIC Finland-Sweden (20278 + Euro symbol) (1143)</li>\n<li>IBM EBCDIC Italy (20280 + Euro symbol) (1144)</li>\n<li>IBM EBCDIC Latin America-Spain (20284 + Euro symbol) (1145)</li>\n<li>IBM EBCDIC United Kingdom (20285 + Euro symbol) (1146)</li>\n<li>IBM EBCDIC France (20297 + Euro symbol) (1147)</li>\n<li>IBM EBCDIC International (500 + Euro symbol) (1148)</li>\n<li>IBM EBCDIC Icelandic (20871 + Euro symbol) (1149)</li>\n<li>IBM EBCDIC Germany (20273)</li>\n<li>IBM EBCDIC Denmark-Norway (20277)</li>\n<li>IBM EBCDIC Finland-Sweden (20278)</li>\n<li>IBM EBCDIC Italy (20280)</li>\n<li>IBM EBCDIC Latin America-Spain (20284)</li>\n<li>IBM EBCDIC United Kingdom (20285)</li>\n<li>IBM EBCDIC Japanese Katakana Extended (20290)</li>\n<li>IBM EBCDIC France (20297)</li>\n<li>IBM EBCDIC Arabic (20420)</li>\n<li>IBM EBCDIC Greek (20423)</li>\n<li>IBM EBCDIC Hebrew (20424)</li>\n<li>IBM EBCDIC Korean Extended (20833)</li>\n<li>IBM EBCDIC Thai (20838)</li>\n<li>IBM EBCDIC Icelandic (20871)</li>\n<li>IBM EBCDIC Cyrillic Russian (20880)</li>\n<li>IBM EBCDIC Turkish (20905)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047 + Euro symbol) (20924)</li>\n<li>IBM EBCDIC Cyrillic Serbian-Bulgarian (21025)</li>\n<li>OEM United States (437)</li>\n<li>OEM Greek (formerly 437G); Greek (DOS) (737)</li>\n<li>OEM Baltic; Baltic (DOS) (775)</li>\n<li>OEM Russian; Cyrillic + Euro symbol (808)</li>\n<li>OEM Multilingual Latin 1; Western European (DOS) (850)</li>\n<li>OEM Latin 2; Central European (DOS) (852)</li>\n<li>OEM Cyrillic (primarily Russian) (855)</li>\n<li>OEM Turkish; Turkish (DOS) (857)</li>\n<li>OEM Multilingual Latin 1 + Euro symbol (858)</li>\n<li>OEM Portuguese; Portuguese (DOS) (860)</li>\n<li>OEM Icelandic; Icelandic (DOS) (861)</li>\n<li>OEM Hebrew; Hebrew (DOS) (862)</li>\n<li>OEM French Canadian; French Canadian (DOS) (863)</li>\n<li>OEM Arabic; Arabic (864) (864)</li>\n<li>OEM Nordic; Nordic (DOS) (865)</li>\n<li>OEM Russian; Cyrillic (DOS) (866)</li>\n<li>OEM Modern Greek; Greek, Modern (DOS) (869)</li>\n<li>OEM Cyrillic (primarily Russian) + Euro Symbol (872)</li>\n<li>Windows-874 Thai (874)</li>\n<li>Windows-1250 Central European (1250)</li>\n<li>Windows-1251 Cyrillic (1251)</li>\n<li>Windows-1252 Latin (1252)</li>\n<li>Windows-1253 Greek (1253)</li>\n<li>Windows-1254 Turkish (1254)</li>\n<li>Windows-1255 Hebrew (1255)</li>\n<li>Windows-1256 Arabic (1256)</li>\n<li>Windows-1257 Baltic (1257)</li>\n<li>Windows-1258 Vietnam (1258)</li>\n<li>ISO-8859-1 Latin 1 Western European (28591)</li>\n<li>ISO-8859-2 Latin 2 Central European (28592)</li>\n<li>ISO-8859-3 Latin 3 South European (28593)</li>\n<li>ISO-8859-4 Latin 4 North European (28594)</li>\n<li>ISO-8859-5 Latin/Cyrillic (28595)</li>\n<li>ISO-8859-6 Latin/Arabic (28596)</li>\n<li>ISO-8859-7 Latin/Greek (28597)</li>\n<li>ISO-8859-8 Latin/Hebrew (28598)</li>\n<li>ISO 8859-8 Hebrew (ISO-Logical) (38598)</li>\n<li>ISO-8859-9 Latin 5 Turkish (28599)</li>\n<li>ISO-8859-10 Latin 6 Nordic (28600)</li>\n<li>ISO-8859-11 Latin/Thai (28601)</li>\n<li>ISO-8859-13 Latin 7 Baltic Rim (28603)</li>\n<li>ISO-8859-14 Latin 8 Celtic (28604)</li>\n<li>ISO-8859-15 Latin 9 (28605)</li>\n<li>ISO-8859-16 Latin 10 (28606)</li>\n<li>ISO 2022 JIS Japanese with no halfwidth Katakana (50220)</li>\n<li>ISO 2022 JIS Japanese with halfwidth Katakana (50221)</li>\n<li>ISO 2022 Japanese JIS X 0201-1989 (1 byte Kana-SO/SI) (50222)</li>\n<li>ISO 2022 Korean (50225)</li>\n<li>ISO 2022 Simplified Chinese (50227)</li>\n<li>ISO 6937 Non-Spacing Accent (20269)</li>\n<li>EUC Japanese (51932)</li>\n<li>EUC Simplified Chinese (51936)</li>\n<li>EUC Korean (51949)</li>\n<li>ISCII Devanagari (57002)</li>\n<li>ISCII Bengali (57003)</li>\n<li>ISCII Tamil (57004)</li>\n<li>ISCII Telugu (57005)</li>\n<li>ISCII Assamese (57006)</li>\n<li>ISCII Oriya (57007)</li>\n<li>ISCII Kannada (57008)</li>\n<li>ISCII Malayalam (57009)</li>\n<li>ISCII Gujarati (57010)</li>\n<li>ISCII Punjabi (57011)</li>\n<li>Japanese Shift-JIS (932)</li>\n<li>Simplified Chinese GBK (936)</li>\n<li>Korean (949)</li>\n<li>Traditional Chinese Big5 (950)</li>\n<li>US-ASCII (7-bit) (20127)</li>\n<li>Simplified Chinese GB2312 (20936)</li>\n<li>KOI8-R Russian Cyrillic (20866)</li>\n<li>KOI8-U Ukrainian Cyrillic (21866)</li>\n<li>Mazovia (Polish) MS-DOS (620)</li>\n<li>Arabic (ASMO 708) (708)</li>\n<li>Arabic (Transparent ASMO); Arabic (DOS) (720)</li>\n<li>Kamenický (Czech) MS-DOS (895)</li>\n<li>Korean (Johab) (1361)</li>\n<li>MAC Roman (10000)</li>\n<li>Japanese (Mac) (10001)</li>\n<li>MAC Traditional Chinese (Big5) (10002)</li>\n<li>Korean (Mac) (10003)</li>\n<li>Arabic (Mac) (10004)</li>\n<li>Hebrew (Mac) (10005)</li>\n<li>Greek (Mac) (10006)</li>\n<li>Cyrillic (Mac) (10007)</li>\n<li>MAC Simplified Chinese (GB 2312) (10008)</li>\n<li>Romanian (Mac) (10010)</li>\n<li>Ukrainian (Mac) (10017)</li>\n<li>Thai (Mac) (10021)</li>\n<li>MAC Latin 2 (Central European) (10029)</li>\n<li>Icelandic (Mac) (10079)</li>\n<li>Turkish (Mac) (10081)</li>\n<li>Croatian (Mac) (10082)</li>\n<li>CNS Taiwan (Chinese Traditional) (20000)</li>\n<li>TCA Taiwan (20001)</li>\n<li>ETEN Taiwan (Chinese Traditional) (20002)</li>\n<li>IBM5550 Taiwan (20003)</li>\n<li>TeleText Taiwan (20004)</li>\n<li>Wang Taiwan (20005)</li>\n<li>Western European IA5 (IRV International Alphabet 5) (20105)</li>\n<li>IA5 German (7-bit) (20106)</li>\n<li>IA5 Swedish (7-bit) (20107)</li>\n<li>IA5 Norwegian (7-bit) (20108)</li>\n<li>T.61 (20261)</li>\n<li>Japanese (JIS 0208-1990 and 0212-1990) (20932)</li>\n<li>Korean Wansung (20949)</li>\n<li>Extended/Ext Alpha Lowercase (21027)</li>\n<li>Europa 3 (29001)</li>\n<li>Atari ST/TT (47451)</li>\n<li>HZ-GB2312 Simplified Chinese (52936)</li>\n<li>Simplified Chinese GB18030 (54936)</li>\n</ul>",
         "args": {
             "Encoding": "编码"
+        }
+    },
+    "Enigma": {
+        "displayName": "Enigma 恩尼格玛机",
+        "src_description": "Encipher/decipher with the WW2 Enigma machine.<br><br>Enigma was used by the German military, among others, around the WW2 era as a portable cipher machine to protect sensitive military, diplomatic and commercial communications.<br><br>The standard set of German military rotors and reflectors are provided. To configure the plugboard, enter a string of connected pairs of letters, e.g. <code>AB CD EF</code> connects A to B, C to D, and E to F. This is also used to create your own reflectors. To create your own rotor, enter the letters that the rotor maps A to Z to, in order, optionally followed by <code>&lt;</code> then a list of stepping points.<br>This is deliberately fairly permissive with rotor placements etc compared to a real Enigma (on which, for example, a four-rotor Enigma uses only the thin reflectors and the beta or gamma rotor in the 4th slot).<br><br>More detailed descriptions of the Enigma, Typex and Bombe operations <a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>can be found here</a>.",
+        "description": "使用二战时期的 Enigma（恩尼格玛）密码机进行加密/解密。<br><br>二战前后，德国军方等使用 Enigma 作为便携式密码机，保护敏感的军事、外交和商业通信。<br><br>提供了德国军方的标准转子和反射器。配置接线板时，输入由成对字母组成的字符串，例如 <code>AB CD EF</code> 表示把 A 连到 B、C 连到 D、E 连到 F。同样的方法也可用于创建自定义反射器。创建自定义转子时，按顺序输入转子把 A 到 Z 映射成的字母，后面可以跟 <code>&lt;</code> 和步进点列表。<br>与真实的 Enigma 相比，这里对转子位置等的限制有意放宽（例如在真实的四转子 Enigma 上，只能使用薄反射器，第 4 个位置只能放 beta 或 gamma 转子）。<br><br>关于 Enigma、Typex 和 Bombe 操作的更详细说明，<a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>请见此处</a>。",
+        "args": {
+            "Model": "型号",
+            "Left-most (4th) rotor": "最左侧（第 4 个）转子",
+            "Left-most rotor ring setting": "最左侧转子环设置",
+            "Left-most rotor initial value": "最左侧转子初始值",
+            "Left-hand rotor": "左侧转子",
+            "Left-hand rotor ring setting": "左侧转子环设置",
+            "Left-hand rotor initial value": "左侧转子初始值",
+            "Middle rotor": "中间转子",
+            "Middle rotor ring setting": "中间转子环设置",
+            "Middle rotor initial value": "中间转子初始值",
+            "Right-hand rotor": "右侧转子",
+            "Right-hand rotor ring setting": "右侧转子环设置",
+            "Right-hand rotor initial value": "右侧转子初始值",
+            "Reflector": "反射器",
+            "Plugboard": "接线板",
+            "Strict output": "严格输出"
         }
     },
     "Escape Smart Characters": {
@@ -93,6 +504,51 @@
             "Encode all chars": "编码所有字符",
             "Padding": "填充",
             "Uppercase hex": "大写十六进制"
+        }
+    },
+    "Fernet Decrypt": {
+        "displayName": "Fernet 解密",
+        "src_description": "Fernet is a symmetric encryption method which makes sure that the message encrypted cannot be manipulated/read without the key. It uses URL safe encoding for the keys. Fernet uses 128-bit AES in CBC mode and PKCS7 padding, with HMAC using SHA256 for authentication. The IV is created from os.random().<br><br><b>Key:</b> The key must be 32 bytes (256 bits) encoded with Base64.",
+        "description": "Fernet 是一种对称加密方法，确保没有密钥就无法读取或篡改加密后的消息。密钥使用 URL 安全编码。Fernet 使用 CBC 模式的 128 位 AES 和 PKCS7 填充，并使用基于 SHA256 的 HMAC 进行认证。IV 由 os.random() 生成。<br><br><b>密钥：</b>密钥必须是经过 Base64 编码的 32 字节（256 位）数据。",
+        "args": {
+            "Key": "密钥"
+        }
+    },
+    "Fernet Encrypt": {
+        "displayName": "Fernet 加密",
+        "src_description": "Fernet is a symmetric encryption method which makes sure that the message encrypted cannot be manipulated/read without the key. It uses URL safe encoding for the keys. Fernet uses 128-bit AES in CBC mode and PKCS7 padding, with HMAC using SHA256 for authentication. The IV is created from os.random().<br><br><b>Key:</b> The key must be 32 bytes (256 bits) encoded with Base64.",
+        "description": "Fernet 是一种对称加密方法，确保没有密钥就无法读取或篡改加密后的消息。密钥使用 URL 安全编码。Fernet 使用 CBC 模式的 128 位 AES 和 PKCS7 填充，并使用基于 SHA256 的 HMAC 进行认证。IV 由 os.random() 生成。<br><br><b>密钥：</b>密钥必须是经过 Base64 编码的 32 字节（256 位）数据。",
+        "args": {
+            "Key": "密钥"
+        }
+    },
+    "Flask Session Decode": {
+        "displayName": "Flask Session 解码",
+        "src_description": "Decodes the payload of a Flask session cookie (itsdangerous) into JSON.",
+        "description": "将 Flask 会话 Cookie（itsdangerous）的载荷解码为 JSON。",
+        "args": {
+            "View TimeStamp": "查看时间戳"
+        }
+    },
+    "Flask Session Sign": {
+        "displayName": "Flask Session 签名",
+        "src_description": "Signs a JSON payload to produce a Flask session cookie (itsdangerous HMAC).",
+        "description": "对 JSON 载荷签名，生成 Flask 会话 Cookie（itsdangerous HMAC）。",
+        "args": {
+            "Key": "密钥",
+            "Salt": "盐值",
+            "Algorithm": "算法"
+        }
+    },
+    "Flask Session Verify": {
+        "displayName": "Flask Session 验证",
+        "src_description": "Verifies the HMAC signature of a Flask session cookie (itsdangerous) generated.",
+        "description": "验证生成的 Flask 会话 Cookie（itsdangerous）的 HMAC 签名。",
+        "args": {
+            "Key": "密钥",
+            "Salt": "盐值",
+            "Algorithm": "算法",
+            "View TimeStamp": "查看时间戳"
         }
     },
     "From Base": {
@@ -273,6 +729,15 @@
             "Delimiter": "分隔符"
         }
     },
+    "From Morse Code": {
+        "displayName": "摩尔斯电码解码",
+        "src_description": "Translates Morse Code into (upper case) alphanumeric characters.",
+        "description": "将摩尔斯电码转换为（大写的）字母和数字。",
+        "args": {
+            "Letter delimiter": "字母分隔符",
+            "Word delimiter": "单词分隔符"
+        }
+    },
     "From Octal": {
         "displayName": "八进制解码",
         "src_description": "Converts an octal byte string back into its raw value.<br><br>e.g. <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
@@ -294,6 +759,93 @@
         "src_description": "Converts QP-encoded text back to standard text. This format is a content transfer encoding common in email messages.<br><br>e.g. The quoted-printable encoded string <code>hello=20world</code> becomes <code>hello world</code>",
         "description": "将 QP 编码的文本还原为普通文本。这种格式是电子邮件中常见的内容传输编码。<br><br>例如 Quoted-Printable 编码的字符串 <code>hello=20world</code> 变为 <code>hello world</code>",
         "args": {}
+    },
+    "GOST Decrypt": {
+        "displayName": "GOST 解密",
+        "src_description": "The GOST block cipher (Magma), defined in the standard GOST 28147-89 (RFC 5830), is a Soviet and Russian government standard symmetric key block cipher with a block size of 64 bits. The original standard, published in 1989, did not give the cipher any name, but the most recent revision of the standard, GOST R 34.12-2015 (RFC 7801, RFC 8891), specifies that it may be referred to as Magma. The GOST hash function is based on this cipher. The new standard also specifies a new 128-bit block cipher called Kuznyechik.<br><br>Developed in the 1970s, the standard had been marked 'Top Secret' and then downgraded to 'Secret' in 1990. Shortly after the dissolution of the USSR, it was declassified and it was released to the public in 1994. GOST 28147 was a Soviet alternative to the United States standard algorithm, DES. Thus, the two are very similar in structure.",
+        "description": "GOST 分组密码（Magma）定义于 GOST 28147-89 标准（RFC 5830），是苏联及俄罗斯政府标准的对称密钥分组密码，分组大小为 64 位。1989 年发布的原始标准没有为该密码命名，但最新修订的标准 GOST R 34.12-2015（RFC 7801、RFC 8891）规定可以称其为 Magma。GOST 哈希函数就是基于该密码构建的。新标准还规定了一种新的 128 位分组密码 Kuznyechik。<br><br>该标准于 20 世纪 70 年代开发，曾被列为“绝密”，1990 年降为“机密”。苏联解体后不久即被解密，并于 1994 年公开发布。GOST 28147 是苏联对应美国标准算法 DES 的替代方案，因此两者在结构上非常相似。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Input type": "输入类型",
+            "Output type": "输出类型",
+            "Algorithm": "算法",
+            "sBox": "S 盒",
+            "Block mode": "分组模式",
+            "Key meshing mode": "密钥混合模式",
+            "Padding": "填充"
+        }
+    },
+    "GOST Encrypt": {
+        "displayName": "GOST 加密",
+        "src_description": "The GOST block cipher (Magma), defined in the standard GOST 28147-89 (RFC 5830), is a Soviet and Russian government standard symmetric key block cipher with a block size of 64 bits. The original standard, published in 1989, did not give the cipher any name, but the most recent revision of the standard, GOST R 34.12-2015 (RFC 7801, RFC 8891), specifies that it may be referred to as Magma. The GOST hash function is based on this cipher. The new standard also specifies a new 128-bit block cipher called Kuznyechik.<br><br>Developed in the 1970s, the standard had been marked 'Top Secret' and then downgraded to 'Secret' in 1990. Shortly after the dissolution of the USSR, it was declassified and it was released to the public in 1994. GOST 28147 was a Soviet alternative to the United States standard algorithm, DES. Thus, the two are very similar in structure.",
+        "description": "GOST 分组密码（Magma）定义于 GOST 28147-89 标准（RFC 5830），是苏联及俄罗斯政府标准的对称密钥分组密码，分组大小为 64 位。1989 年发布的原始标准没有为该密码命名，但最新修订的标准 GOST R 34.12-2015（RFC 7801、RFC 8891）规定可以称其为 Magma。GOST 哈希函数就是基于该密码构建的。新标准还规定了一种新的 128 位分组密码 Kuznyechik。<br><br>该标准于 20 世纪 70 年代开发，曾被列为“绝密”，1990 年降为“机密”。苏联解体后不久即被解密，并于 1994 年公开发布。GOST 28147 是苏联对应美国标准算法 DES 的替代方案，因此两者在结构上非常相似。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Input type": "输入类型",
+            "Output type": "输出类型",
+            "Algorithm": "算法",
+            "sBox": "S 盒",
+            "Block mode": "分组模式",
+            "Key meshing mode": "密钥混合模式",
+            "Padding": "填充"
+        }
+    },
+    "GOST Key Unwrap": {
+        "displayName": "GOST 密钥解封",
+        "src_description": "A decryptor for keys wrapped using one of the GOST block ciphers.",
+        "description": "对使用某种 GOST 分组密码封装的密钥进行解封。",
+        "args": {
+            "Key": "密钥",
+            "User Key Material": "用户密钥材料",
+            "Input type": "输入类型",
+            "Output type": "输出类型",
+            "Algorithm": "算法",
+            "sBox": "S 盒",
+            "Key wrapping": "密钥封装"
+        }
+    },
+    "GOST Key Wrap": {
+        "displayName": "GOST 密钥封装",
+        "src_description": "A key wrapping algorithm for protecting keys in untrusted storage using one of the GOST block cipers.",
+        "description": "使用某种 GOST 分组密码的密钥封装算法，用于在不可信的存储中保护密钥。",
+        "args": {
+            "Key": "密钥",
+            "User Key Material": "用户密钥材料",
+            "Input type": "输入类型",
+            "Output type": "输出类型",
+            "Algorithm": "算法",
+            "sBox": "S 盒",
+            "Key wrapping": "密钥封装"
+        }
+    },
+    "GOST Sign": {
+        "displayName": "GOST 签名",
+        "src_description": "Sign a plaintext message using one of the GOST block ciphers.",
+        "description": "使用某种 GOST 分组密码对明文消息进行签名。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Input type": "输入类型",
+            "Output type": "输出类型",
+            "Algorithm": "算法",
+            "sBox": "S 盒",
+            "MAC length": "MAC 长度"
+        }
+    },
+    "GOST Verify": {
+        "displayName": "GOST 验证",
+        "src_description": "Verify the signature of a plaintext message using one of the GOST block ciphers. Enter the signature in the MAC field.",
+        "description": "使用某种 GOST 分组密码验证明文消息的签名。请在 MAC 字段中输入签名。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "MAC": "MAC",
+            "Input type": "输入类型",
+            "Algorithm": "算法",
+            "sBox": "S 盒"
+        }
     },
     "Hex to PEM": {
         "displayName": "十六进制转 PEM",
@@ -328,6 +880,87 @@
         "description": "将 JSON 对象格式化为 YAML",
         "args": {}
     },
+    "JWT Decode": {
+        "displayName": "JWT 解码",
+        "src_description": "Decodes a JSON Web Token <b>without</b> checking whether the provided secret / private key is valid. Use 'JWT Verify' to check if the signature is valid as well.",
+        "description": "解码 JSON Web Token，<b>不会</b>检查提供的密钥 / 私钥是否有效。如需同时检查签名是否有效，请使用“JWT 验证”。",
+        "args": {}
+    },
+    "JWT Sign": {
+        "displayName": "JWT 签名",
+        "src_description": "Signs a JSON object as a JSON Web Token using a provided secret / private key.<br><br>The key should be either the secret for HMAC algorithms or the PEM-encoded private key for RSA and ECDSA.",
+        "description": "使用提供的密钥 / 私钥将 JSON 对象签名为 JSON Web Token。<br><br>对于 HMAC 算法，密钥应为共享密钥；对于 RSA 和 ECDSA，应为 PEM 编码的私钥。",
+        "args": {
+            "Private/Secret Key": "私钥 / 密钥",
+            "Signing algorithm": "签名算法",
+            "Header": "头部"
+        }
+    },
+    "JWT Verify": {
+        "displayName": "JWT 验证",
+        "src_description": "Verifies that a JSON Web Token is valid and has been signed with the provided secret / private key.<br><br>The key should be either the secret for HMAC algorithms or the PEM-encoded public key for RSA and ECDSA.",
+        "description": "验证 JSON Web Token 是否有效，并且是否使用提供的密钥 / 私钥签名。<br><br>对于 HMAC 算法，密钥应为共享密钥；对于 RSA 和 ECDSA，应为 PEM 编码的公钥。",
+        "args": {
+            "Public/Secret Key": "公钥 / 密钥"
+        }
+    },
+    "Lorenz": {
+        "displayName": "Lorenz 洛伦兹密码机",
+        "src_description": "The Lorenz SZ40/42 cipher attachment was a WW2 German rotor cipher machine with twelve rotors which attached in-line between remote teleprinters.<br><br>It used the Vernam cipher with two groups of five rotors (named the psi(ψ) wheels and chi(χ) wheels at Bletchley Park) to create two pseudorandom streams of five bits, encoded in ITA2, which were XOR added to the plaintext. Two other rotors, dubbed the mu(μ) or motor wheels, could hold up the stepping of the psi wheels meaning they stepped intermittently.<br><br>Each rotor has a different number of cams/lugs around their circumference which could be set active or inactive changing the key stream.<br><br>Three models of the Lorenz are emulated, SZ40, SZ42a and SZ42b and three example wheel patterns (the lug settings) are included (KH, ZMUG & BREAM) with the option to set a custom set using the letter 'x' for active or '.' for an inactive lug.<br><br>The input can either be plaintext or ITA2 when sending and ITA2 when receiving.<br><br>To learn more, Virtual Lorenz, an online, browser based simulation of the Lorenz SZ40/42 is available at <a href='https://lorenz.virtualcolossus.co.uk' target='_blank'>lorenz.virtualcolossus.co.uk</a>.<br><br>A more detailed description of this operation can be found <a href='https://github.com/gchq/CyberChef/wiki/Lorenz-SZ' target='_blank'>here</a>.",
+        "description": "Lorenz SZ40/42 密码附加装置是二战时期德国的转子密码机，有十二个转子，串接在远程电传打字机之间。<br><br>它使用维尔南密码，用两组各五个转子（在布莱切利园分别称为 psi(ψ) 轮和 chi(χ) 轮）生成两路 5 位的伪随机流，以 ITA2 编码后与明文进行异或。另外两个转子称为 mu(μ) 轮或电机轮，可以暂停 psi 轮的步进，使其间歇性步进。<br><br>每个转子圆周上有不同数量的凸轮/凸齿，可以设为启用或停用，从而改变密钥流。<br><br>这里模拟了三种 Lorenz 型号：SZ40、SZ42a 和 SZ42b，并提供三种示例轮子图案（凸齿设置）：KH、ZMUG & BREAM。也可以自定义，用字母“x”表示启用的凸齿，用“.”表示停用的凸齿。<br><br>发送时输入可以是明文或 ITA2，接收时为 ITA2。<br><br>如需了解更多，可以访问基于浏览器的 Lorenz SZ40/42 在线模拟器 Virtual Lorenz：<a href='https://lorenz.virtualcolossus.co.uk' target='_blank'>lorenz.virtualcolossus.co.uk</a>。<br><br>此操作的更详细说明<a href='https://github.com/gchq/CyberChef/wiki/Lorenz-SZ' target='_blank'>请见此处</a>。",
+        "args": {
+            "Model": "型号",
+            "Wheel Pattern": "轮子图案",
+            "KT-Schalter": "KT 开关",
+            "Mode": "模式",
+            "Input Type": "输入类型",
+            "Output Type": "输出类型",
+            "ITA2 Format": "ITA2 格式",
+            "Ψ1 start (1-43)": "Ψ1 起始（1-43）",
+            "Ψ2 start (1-47)": "Ψ2 起始（1-47）",
+            "Ψ3 start (1-51)": "Ψ3 起始（1-51）",
+            "Ψ4 start (1-53)": "Ψ4 起始（1-53）",
+            "Ψ5 start (1-59)": "Ψ5 起始（1-59）",
+            "Μ37 start (1-37)": "Μ37 起始（1-37）",
+            "Μ61 start (1-61)": "Μ61 起始（1-61）",
+            "Χ1 start (1-41)": "Χ1 起始（1-41）",
+            "Χ2 start (1-31)": "Χ2 起始（1-31）",
+            "Χ3 start (1-29)": "Χ3 起始（1-29）",
+            "Χ4 start (1-26)": "Χ4 起始（1-26）",
+            "Χ5 start (1-23)": "Χ5 起始（1-23）",
+            "Ψ1 lugs (43)": "Ψ1 凸齿（43）",
+            "Ψ2 lugs (47)": "Ψ2 凸齿（47）",
+            "Ψ3 lugs (51)": "Ψ3 凸齿（51）",
+            "Ψ4 lugs (53)": "Ψ4 凸齿（53）",
+            "Ψ5 lugs (59)": "Ψ5 凸齿（59）",
+            "Μ37 lugs (37)": "Μ37 凸齿（37）",
+            "Μ61 lugs (61)": "Μ61 凸齿（61）",
+            "Χ1 lugs (41)": "Χ1 凸齿（41）",
+            "Χ2 lugs (31)": "Χ2 凸齿（31）",
+            "Χ3 lugs (29)": "Χ3 凸齿（29）",
+            "Χ4 lugs (26)": "Χ4 凸齿（26）",
+            "Χ5 lugs (23)": "Χ5 凸齿（23）"
+        }
+    },
+    "LS47 Decrypt": {
+        "displayName": "LS47 解密",
+        "src_description": "This is a slight improvement of the ElsieFour cipher as described by Alan Kaminsky. We use 7x7 characters instead of original (barely fitting) 6x6, to be able to encrypt some structured information. We also describe a simple key-expansion algorithm, because remembering passwords is popular. Similar security considerations as with ElsieFour hold.<br>The LS47 alphabet consists of following characters: <code>_abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'()</code><br>An LS47 key is a permutation of the alphabet that is then represented in a 7x7 grid used for the encryption or decryption.",
+        "description": "这是对 Alan Kaminsky 所描述的 ElsieFour 密码的小幅改进。为了能加密一些结构化信息，我们使用 7x7 字符，而不是原来（勉强够用）的 6x6。由于人们普遍喜欢记密码，我们还描述了一个简单的密钥扩展算法。其安全性考量与 ElsieFour 类似。<br>LS47 字母表由以下字符组成：<code>_abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'()</code><br>LS47 密钥是字母表的一个排列，表示为用于加密或解密的 7x7 网格。",
+        "args": {
+            "Password": "密码",
+            "Padding": "填充"
+        }
+    },
+    "LS47 Encrypt": {
+        "displayName": "LS47 加密",
+        "src_description": "This is a slight improvement of the ElsieFour cipher as described by Alan Kaminsky. We use 7x7 characters instead of original (barely fitting) 6x6, to be able to encrypt some structured information. We also describe a simple key-expansion algorithm, because remembering passwords is popular. Similar security considerations as with ElsieFour hold.<br>The LS47 alphabet consists of following characters: <code>_abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'()</code><br>A LS47 key is a permutation of the alphabet that is then represented in a 7x7 grid used for the encryption or decryption.",
+        "description": "这是对 Alan Kaminsky 所描述的 ElsieFour 密码的小幅改进。为了能加密一些结构化信息，我们使用 7x7 字符，而不是原来（勉强够用）的 6x6。由于人们普遍喜欢记密码，我们还描述了一个简单的密钥扩展算法。其安全性考量与 ElsieFour 类似。<br>LS47 字母表由以下字符组成：<code>_abcdefghijklmnopqrstuvwxyz.0123456789,-+*/:?!'()</code><br>LS47 密钥是字母表的一个排列，表示为用于加密或解密的 7x7 网格。",
+        "args": {
+            "Password": "密码",
+            "Padding": "填充",
+            "Signature": "签名"
+        }
+    },
     "MD5": {
         "displayName": "MD5",
         "src_description": "MD5 (Message-Digest 5) is a widely used hash function. It has been used in a variety of security applications and is also commonly used to check the integrity of files.<br><br>However, MD5 is not collision resistant and it isn't suitable for applications like SSL/TLS certificates or digital signatures that rely on this property.",
@@ -339,6 +972,20 @@
         "src_description": "Enables the decoding of MIME message header extensions for non-ASCII text",
         "description": "解码 MIME 消息头中用于非 ASCII 文本的扩展编码",
         "args": {}
+    },
+    "Multiple Bombe": {
+        "displayName": "多重 Bombe",
+        "src_description": "Emulation of the Bombe machine used to attack Enigma. This version carries out multiple Bombe runs to handle unknown rotor configurations.<br><br>You should test your menu on the single Bombe operation before running it here. See the description of the Bombe operation for instructions on choosing a crib.<br><br>More detailed descriptions of the Enigma, Typex and Bombe operations <a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>can be found here</a>.",
+        "description": "模拟用于攻击 Enigma 的 Bombe 机器。此版本会执行多次 Bombe 运行，以处理未知的转子配置。<br><br>在这里运行之前，应先在单次 Bombe 操作中测试你的菜单。关于如何选择 crib，请参阅 Bombe 操作的说明。<br><br>关于 Enigma、Typex 和 Bombe 操作的更详细说明，<a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>请见此处</a>。",
+        "args": {
+            "Standard Enigmas": "标准 Enigma 型号",
+            "Main rotors": "主转子",
+            "4th rotor": "第 4 转子",
+            "Reflectors": "反射器",
+            "Crib": "Crib（已知明文）",
+            "Crib offset": "Crib 偏移",
+            "Use checking machine": "使用校验机"
+        }
     },
     "Normalise Unicode": {
         "displayName": "Unicode 规范化",
@@ -373,6 +1020,154 @@
         "description": "将 PEM（Privacy Enhanced Mail）格式转换为十六进制 DER（Distinguished Encoding Rules，可分辨编码规则）字符串。",
         "args": {}
     },
+    "PRESENT Decrypt": {
+        "displayName": "PRESENT 解密",
+        "src_description": "PRESENT is an ultra-lightweight block cipher designed for constrained environments such as RFID tags and sensor networks. It operates on 64-bit blocks and supports 80-bit or 128-bit keys with 31 rounds. Standardised in ISO/IEC 29192-2:2019.<br><br>When using CBC mode, the PKCS#7 padding scheme is used.",
+        "description": "PRESENT 是一种超轻量级分组密码，专为 RFID 标签、传感器网络等资源受限的环境设计。它以 64 位分组为单位运算，支持 80 位或 128 位密钥，共 31 轮。已纳入 ISO/IEC 29192-2:2019 标准。<br><br>使用 CBC 模式时采用 PKCS#7 填充方案。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出",
+            "Padding": "填充"
+        }
+    },
+    "PRESENT Encrypt": {
+        "displayName": "PRESENT 加密",
+        "src_description": "PRESENT is an ultra-lightweight block cipher designed for constrained environments such as RFID tags and sensor networks. It operates on 64-bit blocks and supports 80-bit or 128-bit keys with 31 rounds. Standardised in ISO/IEC 29192-2:2019.<br><br>When using CBC mode, the PKCS#7 padding scheme is used.",
+        "description": "PRESENT 是一种超轻量级分组密码，专为 RFID 标签、传感器网络等资源受限的环境设计。它以 64 位分组为单位运算，支持 80 位或 128 位密钥，共 31 轮。已纳入 ISO/IEC 29192-2:2019 标准。<br><br>使用 CBC 模式时采用 PKCS#7 填充方案。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出",
+            "Padding": "填充"
+        }
+    },
+    "Pseudo-Random Number Generator": {
+        "displayName": "伪随机数生成器",
+        "src_description": "A cryptographically-secure pseudo-random number generator (PRNG).<br><br>This operation uses the browser's built-in <code>crypto.getRandomValues()</code> method if available. If this cannot be found, it falls back to a Fortuna-based PRNG algorithm.",
+        "description": "密码学安全的伪随机数生成器（PRNG）。<br><br>此操作在可用时使用浏览器内置的 <code>crypto.getRandomValues()</code> 方法；如果找不到该方法，则退回使用基于 Fortuna 的 PRNG 算法。",
+        "args": {
+            "Number of bytes": "字节数",
+            "Output as": "输出为"
+        }
+    },
+    "Pseudo-Random Prime Generator": {
+        "displayName": "伪随机素数生成器",
+        "src_description": "Generates a random probable prime number of specified bit length using the Miller-Rabin primality test.<br><br><b>Primality guarantee:</b><br>For numbers . 3,317, the result is guaranteed prime (deterministic test).<br>For larger numbers, uses probabilistic testing:<br>- <b>Standard (7 rounds):</b> Probability of composite approx 1 in 16,000)<br><br>- <b>Crypto grade (40 rounds):</b> Probability of composite(approx 1 in 10^24)<br>Crypto grade is recommended for cryptographic applications (RSA, Diffie-Hellman, etc.).<br><br>",
+        "description": "使用 Miller-Rabin 素性测试生成指定位长的随机可能素数。<br><br><b>素性保证：</b><br>对于 . 3,317 的数，结果保证为素数（确定性测试）。<br>对于更大的数，使用概率性测试：<br>- <b>标准（7 轮）：</b>为合数的概率约为 1/16,000）<br><br>- <b>密码学安全级（40 轮）：</b>为合数的概率（约为 1/10^24）<br>密码学应用（RSA、Diffie-Hellman 等）建议使用密码学安全级。<br><br>",
+        "args": {
+            "Bit length": "位长度",
+            "Crypto grade": "密码学安全级",
+            "Output format": "输出格式"
+        }
+    },
+    "Rabbit": {
+        "displayName": "Rabbit",
+        "src_description": "Rabbit is a high-speed stream cipher introduced in 2003 and defined in RFC 4503.<br><br>The cipher uses a 128-bit key and an optional 64-bit initialization vector (IV).<br><br>big-endian: based on RFC4503 and RFC3447<br>little-endian: compatible with Crypto++",
+        "description": "Rabbit 是 2003 年提出、在 RFC 4503 中定义的高速流密码。<br><br>该密码使用 128 位密钥和可选的 64 位初始向量（IV）。<br><br>大端序：基于 RFC4503 和 RFC3447<br>小端序：与 Crypto++ 兼容",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Endianness": "字节序",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "Rail Fence Cipher Decode": {
+        "displayName": "栅栏密码解密",
+        "src_description": "Decodes Strings that were created using the Rail fence Cipher provided a key and an offset",
+        "description": "使用给定的密钥和偏移量，对栅栏密码加密的字符串进行解密",
+        "args": {
+            "Key": "密钥",
+            "Offset": "偏移量"
+        }
+    },
+    "Rail Fence Cipher Encode": {
+        "displayName": "栅栏密码加密",
+        "src_description": "Encodes Strings using the Rail fence Cipher provided a key and an offset",
+        "description": "使用给定的密钥和偏移量，以栅栏密码对字符串进行加密",
+        "args": {
+            "Key": "密钥",
+            "Offset": "偏移量"
+        }
+    },
+    "RC2 Decrypt": {
+        "displayName": "RC2 解密",
+        "src_description": "RC2 (also known as ARC2) is a symmetric-key block cipher designed by Ron Rivest in 1987. 'RC' stands for 'Rivest Cipher'.<br><br><b>Key:</b> RC2 uses a variable size key.<br><br><b>IV:</b> To run the cipher in CBC mode, the Initialization Vector should be 8 bytes long. If the IV is left blank, the cipher will run in ECB mode.<br><br><b>Padding:</b> In both CBC and ECB mode, PKCS#7 padding will be used.",
+        "description": "RC2（也称 ARC2）是 Ron Rivest 于 1987 年设计的对称密钥分组密码。“RC”代表“Rivest Cipher”。<br><br><b>密钥：</b>RC2 使用可变长度的密钥。<br><br><b>IV：</b>要在 CBC 模式下运行，初始向量应为 8 字节。IV 留空时，以 ECB 模式运行。<br><br><b>填充：</b>CBC 和 ECB 模式下均使用 PKCS#7 填充。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "RC2 Encrypt": {
+        "displayName": "RC2 加密",
+        "src_description": "RC2 (also known as ARC2) is a symmetric-key block cipher designed by Ron Rivest in 1987. 'RC' stands for 'Rivest Cipher'.<br><br><b>Key:</b> RC2 uses a variable size key.<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> To run the cipher in CBC mode, the Initialization Vector should be 8 bytes long. If the IV is left blank, the cipher will run in ECB mode.<br><br><b>Padding:</b> In both CBC and ECB mode, PKCS#7 padding will be used.",
+        "description": "RC2（也称 ARC2）是 Ron Rivest 于 1987 年设计的对称密钥分组密码。“RC”代表“Rivest Cipher”。<br><br><b>密钥：</b>RC2 使用可变长度的密钥。<br><br>可以使用某个 KDF（密钥派生函数）操作从密码生成密钥。<br><br><b>IV：</b>要在 CBC 模式下运行，初始向量应为 8 字节。IV 留空时，以 ECB 模式运行。<br><br><b>填充：</b>CBC 和 ECB 模式下均使用 PKCS#7 填充。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "RC4": {
+        "displayName": "RC4",
+        "src_description": "RC4 (also known as ARC4) is a widely-used stream cipher designed by Ron Rivest. It is used in popular protocols such as SSL and WEP. Although remarkable for its simplicity and speed, the algorithm's history doesn't inspire confidence in its security.",
+        "description": "RC4（也称 ARC4）是 Ron Rivest 设计的一种广泛使用的流密码，被 SSL、WEP 等常见协议采用。虽然它以简单和高速著称，但其历史表明它的安全性并不可靠。",
+        "args": {
+            "Passphrase": "口令",
+            "Input format": "输入格式",
+            "Output format": "输出格式"
+        }
+    },
+    "RC4 Drop": {
+        "displayName": "RC4 Drop",
+        "src_description": "It was discovered that the first few bytes of the RC4 keystream are strongly non-random and leak information about the key. We can defend against this attack by discarding the initial portion of the keystream. This modified algorithm is traditionally called RC4-drop.",
+        "description": "研究发现，RC4 密钥流的前几个字节具有很强的非随机性，会泄露密钥信息。丢弃密钥流的开头部分可以防御这种攻击，这种改进算法传统上称为 RC4-drop。",
+        "args": {
+            "Passphrase": "口令",
+            "Input format": "输入格式",
+            "Output format": "输出格式",
+            "Number of dwords to drop": "要丢弃的双字数"
+        }
+    },
+    "RC6 Decrypt": {
+        "displayName": "RC6 解密",
+        "src_description": "RC6 is a symmetric key block cipher derived from RC5. It was designed by Ron Rivest, Matt Robshaw, Ray Sidney, and Yiqun Lisa Yin to meet the requirements of the AES competition, and was one of the five finalists.<br><br>RC6 is parameterised as RC6-w/r/b where w is word size in bits (any multiple of 8 from 8-256), r is the number of rounds (1-255), and b is the key length in bytes. The standard AES submission uses w=32, r=20. Common word sizes: 8, 16, 32 (standard), 64, 128.<br><br><b>IV:</b> The Initialisation Vector should be 4*w/8 bytes (e.g. 16 bytes for w=32). If not entered, it will default to null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, the PKCS#7 padding scheme is used.",
+        "description": "RC6 是由 RC5 派生的对称密钥分组密码，由 Ron Rivest、Matt Robshaw、Ray Sidney 和 Yiqun Lisa Yin 为满足 AES 竞赛的要求而设计，是五个决赛算法之一。<br><br>RC6 的参数记为 RC6-w/r/b，其中 w 是以位为单位的字长（8 到 256 之间 8 的任意倍数），r 是轮数（1-255），b 是以字节为单位的密钥长度。标准的 AES 提交版本使用 w=32、r=20。常用字长：8、16、32（标准）、64、128。<br><br><b>IV：</b>初始向量应为 4*w/8 字节（例如 w=32 时为 16 字节）。未填写时默认为空字节。<br><br><b>填充：</b>在 CBC 和 ECB 模式下使用 PKCS#7 填充方案。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出",
+            "Padding": "填充",
+            "Word Size": "字长",
+            "Rounds": "轮数"
+        }
+    },
+    "RC6 Encrypt": {
+        "displayName": "RC6 加密",
+        "src_description": "RC6 is a symmetric key block cipher derived from RC5. It was designed by Ron Rivest, Matt Robshaw, Ray Sidney, and Yiqun Lisa Yin to meet the requirements of the AES competition, and was one of the five finalists.<br><br>RC6 is parameterised as RC6-w/r/b where w is word size in bits (any multiple of 8 from 8-256), r is the number of rounds (1-255), and b is the key length in bytes. The standard AES submission uses w=32, r=20. Common word sizes: 8, 16, 32 (standard), 64, 128.<br><br><b>IV:</b> The Initialisation Vector should be 4*w/8 bytes (e.g. 16 bytes for w=32). If not entered, it will default to null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, the PKCS#7 padding scheme is used.",
+        "description": "RC6 是由 RC5 派生的对称密钥分组密码，由 Ron Rivest、Matt Robshaw、Ray Sidney 和 Yiqun Lisa Yin 为满足 AES 竞赛的要求而设计，是五个决赛算法之一。<br><br>RC6 的参数记为 RC6-w/r/b，其中 w 是以位为单位的字长（8 到 256 之间 8 的任意倍数），r 是轮数（1-255），b 是以字节为单位的密钥长度。标准的 AES 提交版本使用 w=32、r=20。常用字长：8、16、32（标准）、64、128。<br><br><b>IV：</b>初始向量应为 4*w/8 字节（例如 w=32 时为 16 字节）。未填写时默认为空字节。<br><br><b>填充：</b>在 CBC 和 ECB 模式下使用 PKCS#7 填充方案。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出",
+            "Padding": "填充",
+            "Word Size": "字长",
+            "Rounds": "轮数"
+        }
+    },
     "Rison Decode": {
         "displayName": "Rison 解码",
         "src_description": "Rison, a data serialization format optimized for compactness in URIs. Rison is a slight variation of JSON that looks vastly superior after URI encoding. Rison still expresses exactly the same set of data structures as JSON, so data can be translated back and forth without loss or guesswork.",
@@ -389,6 +1184,87 @@
             "Encode Option": "编码选项"
         }
     },
+    "ROR13": {
+        "displayName": "ROR13",
+        "src_description": "Computes a ROR13 hash used in API hashing techniques.",
+        "description": "计算 API 哈希技术中使用的 ROR13 哈希。",
+        "args": {}
+    },
+    "ROT13": {
+        "displayName": "ROT13",
+        "src_description": "A simple caesar substitution cipher which rotates alphabet characters by the specified amount (default 13).",
+        "description": "一种简单的凯撒替换密码，把字母按指定位数（默认 13）循环移位。",
+        "args": {
+            "Rotate lower case chars": "轮换小写字母",
+            "Rotate upper case chars": "轮换大写字母",
+            "Rotate numbers": "轮换数字",
+            "Amount": "数量"
+        }
+    },
+    "ROT13 Brute Force": {
+        "displayName": "ROT13 暴力破解",
+        "src_description": "Try all meaningful amounts for ROT13.<br><br>Optionally you can enter your known plaintext (crib) to filter the result.",
+        "description": "尝试 ROT13 所有有意义的移位量。<br><br>可以输入已知明文（crib）来筛选结果。",
+        "args": {
+            "Rotate lower case chars": "轮换小写字母",
+            "Rotate upper case chars": "轮换大写字母",
+            "Rotate numbers": "轮换数字",
+            "Sample length": "样本长度",
+            "Sample offset": "样本偏移",
+            "Print amount": "显示数量",
+            "Crib (known plaintext string)": "Crib（已知明文字符串）"
+        }
+    },
+    "ROT47": {
+        "displayName": "ROT47",
+        "src_description": "A slightly more complex variation of a caesar cipher, which includes ASCII characters from 33 '!' to 126 '~'. Default rotation: 47.",
+        "description": "凯撒密码的一种稍复杂的变体，作用于从 33 '!' 到 126 '~' 的 ASCII 字符。默认移位：47。",
+        "args": {
+            "Amount": "数量"
+        }
+    },
+    "ROT47 Brute Force": {
+        "displayName": "ROT47 暴力破解",
+        "src_description": "Try all meaningful amounts for ROT47.<br><br>Optionally you can enter your known plaintext (crib) to filter the result.",
+        "description": "尝试 ROT47 所有有意义的移位量。<br><br>可以输入已知明文（crib）来筛选结果。",
+        "args": {
+            "Sample length": "样本长度",
+            "Sample offset": "样本偏移",
+            "Print amount": "显示数量",
+            "Crib (known plaintext string)": "Crib（已知明文字符串）"
+        }
+    },
+    "ROT8000": {
+        "displayName": "ROT8000",
+        "src_description": "The simple Caesar-cypher encryption that replaces each Unicode character with the one 0x8000 places forward or back along the alphabet.",
+        "description": "一种简单的凯撒密码，把每个 Unicode 字符替换为在字母表中向前或向后 0x8000 位的字符。",
+        "args": {}
+    },
+    "Salsa20": {
+        "displayName": "Salsa20",
+        "src_description": "Salsa20 is a stream cipher designed by Daniel J. Bernstein and submitted to the eSTREAM project; Salsa20/8 and Salsa20/12 are round-reduced variants. It is closely related to the ChaCha stream cipher.<br><br><b>Key:</b> Salsa20 uses a key of 16 or 32 bytes (128 or 256 bits).<br><br><b>Nonce:</b> Salsa20 uses a nonce of 8 bytes (64 bits).<br><br><b>Counter:</b> Salsa uses a counter of 8 bytes (64 bits). The counter starts at zero at the start of the keystream, and is incremented at every 64 bytes.",
+        "description": "Salsa20 是 Daniel J. Bernstein 设计并提交给 eSTREAM 项目的流密码；Salsa20/8 和 Salsa20/12 是减少轮数的变体。它与 ChaCha 流密码密切相关。<br><br><b>密钥：</b>Salsa20 使用 16 或 32 字节（128 或 256 位）的密钥。<br><br><b>Nonce：</b>Salsa20 使用 8 字节（64 位）的 nonce。<br><br><b>计数器：</b>Salsa 使用 8 字节（64 位）的计数器。计数器在密钥流开始时为零，每 64 字节加一。",
+        "args": {
+            "Key": "密钥",
+            "Nonce": "Nonce（随机数）",
+            "Counter": "计数器",
+            "Rounds": "轮数",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "Scrypt": {
+        "displayName": "Scrypt",
+        "src_description": "scrypt is a password-based key derivation function (PBKDF) created by Colin Percival. The algorithm was specifically designed to make it costly to perform large-scale custom hardware attacks by requiring large amounts of memory. In 2016, the scrypt algorithm was published by IETF as RFC 7914.<br><br>Enter the password in the input to generate its hash.",
+        "description": "scrypt 是 Colin Percival 创建的基于密码的密钥派生函数（PBKDF）。该算法专门设计为需要大量内存，从而使大规模定制硬件攻击的成本变得高昂。2016 年，IETF 将 scrypt 算法发布为 RFC 7914。<br><br>在输入中填写密码以生成其哈希。",
+        "args": {
+            "Salt": "盐值",
+            "Iterations (N)": "迭代次数（N）",
+            "Memory factor (r)": "内存因子（r）",
+            "Parallelization factor (p)": "并行因子（p）",
+            "Key length": "密钥长度"
+        }
+    },
     "Show Base64 offsets": {
         "displayName": "显示 Base64 偏移",
         "src_description": "When a string is within a block of data and the whole block is Base64'd, the string itself could be represented in Base64 in three distinct ways depending on its offset within the block.<br><br>This operation shows all possible offsets for a given string so that each possible encoding can be considered.",
@@ -399,6 +1275,88 @@
             "Input format": "输入格式"
         }
     },
+    "SIGABA": {
+        "displayName": "SIGABA 密码机",
+        "src_description": "Encipher/decipher with the WW2 SIGABA machine. <br><br>SIGABA, otherwise known as ECM Mark II, was used by the United States for message encryption during WW2 up to the 1950s. It was developed in the 1930s by the US Army and Navy, and has up to this day never been broken. Consisting of 15 rotors: 5 cipher rotors and 10 rotors (5 control rotors and 5 index rotors) controlling the stepping of the cipher rotors, the rotor stepping for SIGABA is much more complex than other rotor machines of its time, such as Enigma. All example rotor wirings are random example sets.<br><br>To configure rotor wirings, for the cipher and control rotors enter a string of letters which map from A to Z, and for the index rotors enter a sequence of numbers which map from 0 to 9. Note that encryption is not the same as decryption, so first choose the desired mode. <br><br> Note: Whilst this has been tested against other software emulators, it has not been tested against hardware.",
+        "description": "使用二战时期的 SIGABA 密码机进行加密/解密。<br><br>SIGABA 又称 ECM Mark II，在二战期间直到 20 世纪 50 年代被美国用于消息加密。它由美国陆军和海军在 20 世纪 30 年代开发，至今从未被破译。它由 15 个转子组成：5 个密码转子，以及控制密码转子步进的 10 个转子（5 个控制转子和 5 个索引转子）。SIGABA 的转子步进比同时代的其他转子密码机（如 Enigma）复杂得多。所有示例转子接线均为随机示例。<br><br>配置转子接线时，密码转子和控制转子输入从 A 到 Z 映射的字母串，索引转子输入从 0 到 9 映射的数字序列。注意加密与解密不同，请先选择所需模式。<br><br>注意：虽然已与其他软件模拟器进行过对比测试，但尚未与实际硬件进行对比测试。",
+        "args": {
+            "1st (left-hand) cipher rotor": "第 1 个（最左侧）密码转子",
+            "1st cipher rotor reversed": "第 1 个密码转子反向",
+            "1st cipher rotor initial value": "第 1 个密码转子初始值",
+            "2nd cipher rotor": "第 2 个密码转子",
+            "2nd cipher rotor reversed": "第 2 个密码转子反向",
+            "2nd cipher rotor initial value": "第 2 个密码转子初始值",
+            "3rd (middle) cipher rotor": "第 3 个（中间）密码转子",
+            "3rd cipher rotor reversed": "第 3 个密码转子反向",
+            "3rd cipher rotor initial value": "第 3 个密码转子初始值",
+            "4th cipher rotor": "第 4 个密码转子",
+            "4th cipher rotor reversed": "第 4 个密码转子反向",
+            "4th cipher rotor initial value": "第 4 个密码转子初始值",
+            "5th (right-hand) cipher rotor": "第 5 个（最右侧）密码转子",
+            "5th cipher rotor reversed": "第 5 个密码转子反向",
+            "5th cipher rotor initial value": "第 5 个密码转子初始值",
+            "1st (left-hand) control rotor": "第 1 个（最左侧）控制转子",
+            "1st control rotor reversed": "第 1 个控制转子反向",
+            "1st control rotor initial value": "第 1 个控制转子初始值",
+            "2nd control rotor": "第 2 个控制转子",
+            "2nd control rotor reversed": "第 2 个控制转子反向",
+            "2nd control rotor initial value": "第 2 个控制转子初始值",
+            "3rd (middle) control rotor": "第 3 个（中间）控制转子",
+            "3rd control rotor reversed": "第 3 个控制转子反向",
+            "3rd control rotor initial value": "第 3 个控制转子初始值",
+            "4th control rotor": "第 4 个控制转子",
+            "4th control rotor reversed": "第 4 个控制转子反向",
+            "4th control rotor initial value": "第 4 个控制转子初始值",
+            "5th (right-hand) control rotor": "第 5 个（最右侧）控制转子",
+            "5th control rotor reversed": "第 5 个控制转子反向",
+            "5th control rotor initial value": "第 5 个控制转子初始值",
+            "1st (left-hand) index rotor": "第 1 个（最左侧）索引转子",
+            "1st index rotor initial value": "第 1 个索引转子初始值",
+            "2nd index rotor": "第 2 个索引转子",
+            "2nd index rotor initial value": "第 2 个索引转子初始值",
+            "3rd (middle) index rotor": "第 3 个（中间）索引转子",
+            "3rd index rotor initial value": "第 3 个索引转子初始值",
+            "4th index rotor": "第 4 个索引转子",
+            "4th index rotor initial value": "第 4 个索引转子初始值",
+            "5th (right-hand) index rotor": "第 5 个（最右侧）索引转子",
+            "5th index rotor initial value": "第 5 个索引转子初始值",
+            "SIGABA mode": "SIGABA 模式"
+        }
+    },
+    "SM4 Decrypt": {
+        "displayName": "SM4 解密",
+        "src_description": "SM4 is a 128-bit block cipher, currently established as a national standard (GB/T 32907-2016) of China.",
+        "description": "SM4 是一种 128 位分组密码，目前是中国国家标准（GB/T 32907-2016）。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "SM4 Encrypt": {
+        "displayName": "SM4 加密",
+        "src_description": "SM4 is a 128-bit block cipher, currently established as a national standard (GB/T 32907-2016) of China. Multiple block cipher modes are supported. When using CBC or ECB mode, the PKCS#7 padding scheme is used.",
+        "description": "SM4 是一种 128 位分组密码，目前是中国国家标准（GB/T 32907-2016）。支持多种分组密码模式。使用 CBC 或 ECB 模式时采用 PKCS#7 填充方案。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "Substitute": {
+        "displayName": "字节替换",
+        "src_description": "A substitution cipher allowing you to specify bytes to replace with other byte values. This can be used to create Caesar ciphers but is more powerful as any byte value can be substituted, not just letters, and the substitution values need not be in order.<br><br>Enter the bytes you want to replace in the Plaintext field and the bytes to replace them with in the Ciphertext field.<br><br>Non-printable bytes can be specified using string escape notation. For example, a line feed character can be written as either <code>\\n</code> or <code>\\x0a</code>.<br><br>Byte ranges can be specified using a hyphen. For example, the sequence <code>0123456789</code> can be written as <code>0-9</code>.<br><br>Note that blackslash characters are used to escape special characters, so will need to be escaped themselves if you want to use them on their own (e.g.<code>\\\\</code>).",
+        "description": "一种替换密码，可以指定要替换的字节及替换后的字节值。它可以用来构造凯撒密码，但功能更强大：任何字节值都可以被替换，不限于字母，替换值也不必按顺序排列。<br><br>在“明文”栏输入要替换的字节，在“密文”栏输入替换后的字节。<br><br>不可打印的字节可以用字符串转义表示。例如换行符可以写作 <code>\\n</code> 或 <code>\\x0a</code>。<br><br>可以用连字符指定字节范围。例如序列 <code>0123456789</code> 可以写作 <code>0-9</code>。<br><br>注意反斜杠用于转义特殊字符，如果要单独使用反斜杠，需要对其本身进行转义（例如 <code>\\\\</code>）。",
+        "args": {
+            "Plaintext": "明文",
+            "Ciphertext": "密文",
+            "Ignore case": "忽略大小写"
+        }
+    },
     "Swap endianness": {
         "displayName": "交换字节序",
         "src_description": "Switches the data from big-endian to little-endian or vice-versa. Data can be read in as hexadecimal or raw bytes. It will be returned in the same format as it is entered.",
@@ -407,6 +1365,32 @@
             "Data format": "数据格式",
             "Word length (bytes)": "字长（字节）",
             "Pad incomplete words": "填充不完整的字"
+        }
+    },
+    "TEA Decrypt": {
+        "displayName": "TEA 解密",
+        "src_description": "TEA (Tiny Encryption Algorithm) is a block cipher designed by David Wheeler and Roger Needham in 1994. It operates on 64-bit blocks using a 128-bit key and performs 32 cycles (64 Feistel rounds) with the DELTA constant 0x9E3779B9 derived from the golden ratio.<br><br>TEA is notable for its simplicity and compact implementation, making it frequently encountered in malware analysis and CTF challenges. Despite its elegance, TEA has known weaknesses including equivalent keys and susceptibility to related-key attacks, leading to successors XTEA and XXTEA.<br><br><b>Key:</b> Must be exactly 16 bytes (128 bits).<br><br><b>IV:</b> The Initialisation Vector should be 8 bytes (64 bits). If not entered, it will default to null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, the PKCS#5 padding scheme is used.",
+        "description": "TEA（Tiny Encryption Algorithm，微型加密算法）是 David Wheeler 和 Roger Needham 于 1994 年设计的分组密码。它以 64 位分组为单位运算，使用 128 位密钥，执行 32 个循环（64 轮 Feistel），使用由黄金分割率得出的 DELTA 常量 0x9E3779B9。<br><br>TEA 以简单和实现紧凑著称，因此在恶意软件分析和 CTF 题目中经常出现。尽管设计优雅，TEA 存在已知弱点，包括等价密钥和易受相关密钥攻击，因此出现了后继算法 XTEA 和 XXTEA。<br><br><b>密钥：</b>必须正好为 16 字节（128 位）。<br><br><b>IV：</b>初始向量应为 8 字节（64 位）。未填写时默认为空字节。<br><br><b>填充：</b>在 CBC 和 ECB 模式下使用 PKCS#5 填充方案。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出",
+            "Padding": "填充"
+        }
+    },
+    "TEA Encrypt": {
+        "displayName": "TEA 加密",
+        "src_description": "TEA (Tiny Encryption Algorithm) is a block cipher designed by David Wheeler and Roger Needham in 1994. It operates on 64-bit blocks using a 128-bit key and performs 32 cycles (64 Feistel rounds) with the DELTA constant 0x9E3779B9 derived from the golden ratio.<br><br>TEA is notable for its simplicity and compact implementation, making it frequently encountered in malware analysis and CTF challenges. Despite its elegance, TEA has known weaknesses including equivalent keys and susceptibility to related-key attacks, leading to successors XTEA and XXTEA.<br><br><b>Key:</b> Must be exactly 16 bytes (128 bits).<br><br><b>IV:</b> The Initialisation Vector should be 8 bytes (64 bits). If not entered, it will default to null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, the PKCS#5 padding scheme is used.",
+        "description": "TEA（Tiny Encryption Algorithm，微型加密算法）是 David Wheeler 和 Roger Needham 于 1994 年设计的分组密码。它以 64 位分组为单位运算，使用 128 位密钥，执行 32 个循环（64 轮 Feistel），使用由黄金分割率得出的 DELTA 常量 0x9E3779B9。<br><br>TEA 以简单和实现紧凑著称，因此在恶意软件分析和 CTF 题目中经常出现。尽管设计优雅，TEA 存在已知弱点，包括等价密钥和易受相关密钥攻击，因此出现了后继算法 XTEA 和 XXTEA。<br><br><b>密钥：</b>必须正好为 16 字节（128 位）。<br><br><b>IV：</b>初始向量应为 8 字节（64 位）。未填写时默认为空字节。<br><br><b>填充：</b>在 CBC 和 ECB 模式下使用 PKCS#5 填充方案。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出",
+            "Padding": "填充"
         }
     },
     "Text Encoding Brute Force": {
@@ -613,6 +1597,16 @@
             "Bytes per line": "每行字节数"
         }
     },
+    "To Morse Code": {
+        "displayName": "摩尔斯电码编码",
+        "src_description": "Translates alphanumeric characters into International Morse Code.<br><br>Ignores non-Morse characters.<br><br>e.g. <code>SOS</code> becomes <code>... --- ...</code>",
+        "description": "将字母和数字转换为国际摩尔斯电码。<br><br>忽略无法用摩尔斯电码表示的字符。<br><br>例如 <code>SOS</code> 变为 <code>... --- ...</code>",
+        "args": {
+            "Format options": "格式选项",
+            "Letter delimiter": "字母分隔符",
+            "Word delimiter": "单词分隔符"
+        }
+    },
     "To Octal": {
         "displayName": "八进制编码",
         "src_description": "Converts the input string to octal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code>",
@@ -634,6 +1628,87 @@
         "src_description": "Quoted-Printable, or QP encoding, is an encoding using printable ASCII characters (alphanumeric and the equals sign '=') to transmit 8-bit data over a 7-bit data path or, generally, over a medium which is not 8-bit clean. It is defined as a MIME content transfer encoding for use in email.<br><br>QP works by using the equals sign '=' as an escape character. It also limits line length to 76, as some software has limits on line length.",
         "description": "Quoted-Printable（QP 编码）是一种使用可打印 ASCII 字符（字母、数字和等号“=”）的编码，用于通过 7 位数据通道或一般意义上不支持 8 位数据的媒介传输 8 位数据。它被定义为电子邮件中使用的 MIME 内容传输编码。<br><br>QP 使用等号“=”作为转义字符。由于部分软件限制行长，它还会把行长限制在 76 个字符以内。",
         "args": {}
+    },
+    "Triple DES Decrypt": {
+        "displayName": "3DES 解密",
+        "src_description": "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.",
+        "description": "三重 DES 对每个分组执行三次 DES，以增加密钥长度。<br><br><b>密钥：</b>三重 DES 的密钥长度为 24 字节（192 位）。<br><br><b>IV：</b>初始向量应为 8 字节。未填写时默认为 8 个空字节。<br><br><b>填充：</b>在 CBC 和 ECB 模式下默认使用 PKCS#7 填充。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "Triple DES Encrypt": {
+        "displayName": "3DES 加密",
+        "src_description": "Triple DES applies DES three times to each block to increase key size.<br><br><b>Key:</b> Triple DES uses a key length of 24 bytes (192 bits).<br><br>You can generate a password-based key using one of the KDF operations.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used.",
+        "description": "三重 DES 对每个分组执行三次 DES，以增加密钥长度。<br><br><b>密钥：</b>三重 DES 的密钥长度为 24 字节（192 位）。<br><br>可以使用某个 KDF（密钥派生函数）操作从密码生成密钥。<br><br><b>IV：</b>初始向量应为 8 字节。未填写时默认为 8 个空字节。<br><br><b>填充：</b>在 CBC 和 ECB 模式下使用 PKCS#7 填充。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "Twofish Decrypt": {
+        "displayName": "Twofish 解密",
+        "src_description": "Twofish is a symmetric key block cipher designed by Bruce Schneier. It was one of the five AES finalists. Twofish operates on 128-bit blocks and supports key sizes of 128, 192, or 256 bits with 16 rounds of a Feistel network.<br><br>When using CBC or ECB mode, the PKCS#7 padding scheme is used.",
+        "description": "Twofish 是 Bruce Schneier 设计的对称密钥分组密码，是 AES 的五个决赛算法之一。Twofish 以 128 位分组为单位运算，支持 128、192 或 256 位密钥，使用 16 轮 Feistel 网络。<br><br>使用 CBC 或 ECB 模式时采用 PKCS#7 填充方案。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出",
+            "Padding": "填充"
+        }
+    },
+    "Twofish Encrypt": {
+        "displayName": "Twofish 加密",
+        "src_description": "Twofish is a symmetric key block cipher designed by Bruce Schneier. It was one of the five AES finalists. Twofish operates on 128-bit blocks and supports key sizes of 128, 192, or 256 bits with 16 rounds of a Feistel network.<br><br>When using CBC or ECB mode, the PKCS#7 padding scheme is used.",
+        "description": "Twofish 是 Bruce Schneier 设计的对称密钥分组密码，是 AES 的五个决赛算法之一。Twofish 以 128 位分组为单位运算，支持 128、192 或 256 位密钥，使用 16 轮 Feistel 网络。<br><br>使用 CBC 或 ECB 模式时采用 PKCS#7 填充方案。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出",
+            "Padding": "填充"
+        }
+    },
+    "Typex": {
+        "displayName": "Typex 密码机",
+        "src_description": "Encipher/decipher with the WW2 Typex machine.<br><br>Typex was originally built by the British Royal Air Force prior to WW2, and is based on the Enigma machine with some improvements made, including using five rotors with more stepping points and interchangeable wiring cores. It was used across the British and Commonwealth militaries. A number of later variants were produced; here we simulate a WW2 era Mark 22 Typex with plugboards for the reflector and input. Typex rotors were changed regularly and none are public: a random example set are provided.<br><br>To configure the reflector plugboard, enter a string of connected pairs of letters in the reflector box, e.g. <code>AB CD EF</code> connects A to B, C to D, and E to F (you'll need to connect every letter). There is also an input plugboard: unlike Enigma's plugboard, it's not restricted to pairs, so it's entered like a rotor (without stepping). To create your own rotor, enter the letters that the rotor maps A to Z to, in order, optionally followed by <code>&lt;</code> then a list of stepping points.<br><br>More detailed descriptions of the Enigma, Typex and Bombe operations <a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>can be found here</a>.",
+        "description": "使用二战时期的 Typex 密码机进行加密/解密。<br><br>Typex 最初由英国皇家空军在二战前制造，基于 Enigma 并做了一些改进，包括使用五个转子、更多的步进点以及可更换的接线芯。它在英国及英联邦军队中广泛使用。后来还生产了多种变体；这里模拟的是二战时期带反射器接线板和输入接线板的 Mark 22 Typex。Typex 的转子定期更换且从未公开，这里提供的是随机的示例转子组。<br><br>配置反射器接线板时，在反射器框中输入由成对字母组成的字符串，例如 <code>AB CD EF</code> 表示把 A 连到 B、C 连到 D、E 连到 F（需要连接所有字母）。还有一个输入接线板：与 Enigma 的接线板不同，它不限于成对连接，因此按转子的方式输入（不带步进）。创建自定义转子时，按顺序输入转子把 A 到 Z 映射成的字母，后面可以跟 <code>&lt;</code> 和步进点列表。<br><br>关于 Enigma、Typex 和 Bombe 操作的更详细说明，<a href='https://github.com/gchq/CyberChef/wiki/Enigma,-the-Bombe,-and-Typex'>请见此处</a>。",
+        "args": {
+            "1st (left-hand) rotor": "第 1 个（最左侧）转子",
+            "1st rotor reversed": "第 1 个转子反向",
+            "1st rotor ring setting": "第 1 个转子环设置",
+            "1st rotor initial value": "第 1 个转子初始值",
+            "2nd rotor": "第 2 个转子",
+            "2nd rotor reversed": "第 2 个转子反向",
+            "2nd rotor ring setting": "第 2 个转子环设置",
+            "2nd rotor initial value": "第 2 个转子初始值",
+            "3rd (middle) rotor": "第 3 个（中间）转子",
+            "3rd rotor reversed": "第 3 个转子反向",
+            "3rd rotor ring setting": "第 3 个转子环设置",
+            "3rd rotor initial value": "第 3 个转子初始值",
+            "4th (static) rotor": "第 4 个（静止）转子",
+            "4th rotor reversed": "第 4 个转子反向",
+            "4th rotor ring setting": "第 4 个转子环设置",
+            "4th rotor initial value": "第 4 个转子初始值",
+            "5th (right-hand, static) rotor": "第 5 个（最右侧，静止）转子",
+            "5th rotor reversed": "第 5 个转子反向",
+            "5th rotor ring setting": "第 5 个转子环设置",
+            "5th rotor initial value": "第 5 个转子初始值",
+            "Reflector": "反射器",
+            "Plugboard": "接线板",
+            "Typex keyboard emulation": "Typex 键盘模拟",
+            "Strict output": "严格输出"
+        }
     },
     "Unescape Unicode Characters": {
         "displayName": "Unicode 字符反转义",
@@ -657,6 +1732,104 @@
         "description": "将有问题的字符编码为百分号编码，这是 URI/URL 支持的格式。<br><br>例如 <code>=</code> 变为 <code>%3d</code>",
         "args": {
             "Encode all special chars": "编码所有特殊字符"
+        }
+    },
+    "Vigenère Decode": {
+        "displayName": "维吉尼亚解密",
+        "src_description": "The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.",
+        "description": "维吉尼亚密码是一种根据关键词的字母使用一系列不同凯撒密码来加密字母文本的方法，是多表替换密码的一种简单形式。",
+        "args": {
+            "Key": "密钥"
+        }
+    },
+    "Vigenère Encode": {
+        "displayName": "维吉尼亚加密",
+        "src_description": "The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.",
+        "description": "维吉尼亚密码是一种根据关键词的字母使用一系列不同凯撒密码来加密字母文本的方法，是多表替换密码的一种简单形式。",
+        "args": {
+            "Key": "密钥"
+        }
+    },
+    "XOR": {
+        "displayName": "XOR 异或",
+        "src_description": "XOR the input with the given key.<br>e.g. <code>fe023da5</code><br><br><strong>Options</strong><br><u>Null preserving:</u> If the current byte is 0x00 or the same as the key, skip it.<br><br><u>Scheme:</u><ul><li>Standard - key is unchanged after each round</li><li>Input differential - key is set to the value of the previous unprocessed byte</li><li>Output differential - key is set to the value of the previous processed byte</li><li>Cascade - key is set to the input byte shifted by one</li></ul>",
+        "description": "用给定的密钥对输入进行异或运算。<br>例如 <code>fe023da5</code><br><br><strong>选项</strong><br><u>保留空字节：</u>如果当前字节为 0x00 或与密钥相同，则跳过。<br><br><u>方案：</u><ul><li>Standard：每轮之后密钥保持不变</li><li>Input differential：密钥设为前一个未处理字节的值</li><li>Output differential：密钥设为前一个已处理字节的值</li><li>Cascade：密钥设为输入字节移动一位后的值</li></ul>",
+        "args": {
+            "Key": "密钥",
+            "Scheme": "方案",
+            "Null preserving": "保留空字节"
+        }
+    },
+    "XOR Brute Force": {
+        "displayName": "XOR 暴力破解",
+        "src_description": "Enumerate all possible XOR solutions. Current maximum key length is 2 due to browser performance.<br><br>Optionally enter a string that you expect to find in the plaintext to filter results (crib).",
+        "description": "枚举所有可能的异或结果。受浏览器性能限制，目前最大密钥长度为 2。<br><br>可以输入你预计会在明文中出现的字符串（crib）来筛选结果。",
+        "args": {
+            "Key length": "密钥长度",
+            "Sample length": "样本长度",
+            "Sample offset": "样本偏移",
+            "Scheme": "方案",
+            "Null preserving": "保留空字节",
+            "Print key": "显示密钥",
+            "Output as hex": "以十六进制输出",
+            "Crib (known plaintext string)": "Crib（已知明文字符串）"
+        }
+    },
+    "XSalsa20": {
+        "displayName": "XSalsa20",
+        "src_description": "XSalsa20 is a variant of the Salsa20 stream cipher designed by Daniel J. Bernstein; XSalsa uses longer nonces.<br><br><b>Key:</b> XSalsa20 uses a key of 16 or 32 bytes (128 or 256 bits).<br><br><b>Nonce:</b> XSalsa20 uses a nonce of 24 bytes (192 bits).<br><br><b>Counter:</b> XSalsa uses a counter of 8 bytes (64 bits). The counter starts at zero at the start of the keystream, and is incremented at every 64 bytes.",
+        "description": "XSalsa20 是 Daniel J. Bernstein 设计的 Salsa20 流密码变体，使用更长的 nonce。<br><br><b>密钥：</b>XSalsa20 使用 16 或 32 字节（128 或 256 位）的密钥。<br><br><b>Nonce：</b>XSalsa20 使用 24 字节（192 位）的 nonce。<br><br><b>计数器：</b>XSalsa 使用 8 字节（64 位）的计数器。计数器在密钥流开始时为零，每 64 字节加一。",
+        "args": {
+            "Key": "密钥",
+            "Nonce": "Nonce（随机数）",
+            "Counter": "计数器",
+            "Rounds": "轮数",
+            "Input": "输入",
+            "Output": "输出"
+        }
+    },
+    "XTEA Decrypt": {
+        "displayName": "XTEA 解密",
+        "src_description": "XTEA (eXtended Tiny Encryption Algorithm) is a block cipher designed by David Wheeler and Roger Needham in 1997 as a successor to TEA, correcting several weaknesses identified in the original algorithm. It operates on 64-bit blocks using a 128-bit key with an improved key schedule that uses sum-dependent key word selection to resist related-key attacks.<br><br>XTEA retains the simplicity and compact implementation of TEA whilst providing significantly improved security. It is frequently encountered in malware analysis and CTF challenges due to its straightforward implementation.<br><br><b>Key:</b> Must be exactly 16 bytes (128 bits).<br><br><b>IV:</b> The Initialisation Vector should be 8 bytes (64 bits). If not entered, it will default to null bytes.<br><br><b>Rounds:</b> The recommended number of rounds is 32 (default). The reference implementation by Wheeler &amp; Needham accepts a configurable round count.<br><br><b>Padding:</b> In CBC and ECB mode, the PKCS#5 padding scheme is used.",
+        "description": "XTEA（eXtended Tiny Encryption Algorithm，扩展微型加密算法）是 David Wheeler 和 Roger Needham 于 1997 年设计的分组密码，作为 TEA 的后继算法，修正了原算法中的若干弱点。它以 64 位分组为单位运算，使用 128 位密钥，并采用改进的密钥编排（根据累加值选择密钥字）以抵御相关密钥攻击。<br><br>XTEA 保留了 TEA 简单、紧凑的实现，同时显著提高了安全性。由于实现简单，它在恶意软件分析和 CTF 题目中经常出现。<br><br><b>密钥：</b>必须正好为 16 字节（128 位）。<br><br><b>IV：</b>初始向量应为 8 字节（64 位）。未填写时默认为空字节。<br><br><b>轮数：</b>推荐轮数为 32（默认）。Wheeler &amp; Needham 的参考实现允许配置轮数。<br><br><b>填充：</b>在 CBC 和 ECB 模式下使用 PKCS#5 填充方案。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出",
+            "Padding": "填充",
+            "Rounds": "轮数"
+        }
+    },
+    "XTEA Encrypt": {
+        "displayName": "XTEA 加密",
+        "src_description": "XTEA (eXtended Tiny Encryption Algorithm) is a block cipher designed by David Wheeler and Roger Needham in 1997 as a successor to TEA, correcting several weaknesses identified in the original algorithm. It operates on 64-bit blocks using a 128-bit key with an improved key schedule that uses sum-dependent key word selection to resist related-key attacks.<br><br>XTEA retains the simplicity and compact implementation of TEA whilst providing significantly improved security. It is frequently encountered in malware analysis and CTF challenges due to its straightforward implementation.<br><br><b>Key:</b> Must be exactly 16 bytes (128 bits).<br><br><b>IV:</b> The Initialisation Vector should be 8 bytes (64 bits). If not entered, it will default to null bytes.<br><br><b>Rounds:</b> The recommended number of rounds is 32 (default). The reference implementation by Wheeler &amp; Needham accepts a configurable round count.<br><br><b>Padding:</b> In CBC and ECB mode, the PKCS#5 padding scheme is used.",
+        "description": "XTEA（eXtended Tiny Encryption Algorithm，扩展微型加密算法）是 David Wheeler 和 Roger Needham 于 1997 年设计的分组密码，作为 TEA 的后继算法，修正了原算法中的若干弱点。它以 64 位分组为单位运算，使用 128 位密钥，并采用改进的密钥编排（根据累加值选择密钥字）以抵御相关密钥攻击。<br><br>XTEA 保留了 TEA 简单、紧凑的实现，同时显著提高了安全性。由于实现简单，它在恶意软件分析和 CTF 题目中经常出现。<br><br><b>密钥：</b>必须正好为 16 字节（128 位）。<br><br><b>IV：</b>初始向量应为 8 字节（64 位）。未填写时默认为空字节。<br><br><b>轮数：</b>推荐轮数为 32（默认）。Wheeler &amp; Needham 的参考实现允许配置轮数。<br><br><b>填充：</b>在 CBC 和 ECB 模式下使用 PKCS#5 填充方案。",
+        "args": {
+            "Key": "密钥",
+            "IV": "IV（初始向量）",
+            "Mode": "模式",
+            "Input": "输入",
+            "Output": "输出",
+            "Padding": "填充",
+            "Rounds": "轮数"
+        }
+    },
+    "XXTEA Decrypt": {
+        "displayName": "XXTEA 解密",
+        "src_description": "Corrected Block TEA (often referred to as XXTEA) is a block cipher designed to correct weaknesses in the original Block TEA. XXTEA operates on variable-length blocks that are some arbitrary multiple of 32 bits in size (minimum 64 bits). The number of full cycles depends on the block size, but there are at least six (rising to 32 for small block sizes). The original Block TEA applies the XTEA round function to each word in the block and combines it additively with its leftmost neighbour. Slow diffusion rate of the decryption process was immediately exploited to break the cipher. Corrected Block TEA uses a more involved round function which makes use of both immediate neighbours in processing each word in the block.",
+        "description": "修正版 Block TEA（通常称为 XXTEA）是为修正原始 Block TEA 的弱点而设计的分组密码。XXTEA 处理可变长度的分组，长度为 32 位的任意倍数（最小 64 位）。完整循环的次数取决于分组大小，但至少为六次（分组较小时最多 32 次）。原始 Block TEA 对分组中的每个字应用 XTEA 轮函数，并以加法方式与其左侧相邻字结合；其解密过程扩散速度慢的问题很快就被利用来破解该密码。修正版 Block TEA 使用更复杂的轮函数，在处理每个字时同时利用其左右两侧的相邻字。",
+        "args": {
+            "Key": "密钥"
+        }
+    },
+    "XXTEA Encrypt": {
+        "displayName": "XXTEA 加密",
+        "src_description": "Corrected Block TEA (often referred to as XXTEA) is a block cipher designed to correct weaknesses in the original Block TEA. XXTEA operates on variable-length blocks that are some arbitrary multiple of 32 bits in size (minimum 64 bits). The number of full cycles depends on the block size, but there are at least six (rising to 32 for small block sizes). The original Block TEA applies the XTEA round function to each word in the block and combines it additively with its leftmost neighbour. Slow diffusion rate of the decryption process was immediately exploited to break the cipher. Corrected Block TEA uses a more involved round function which makes use of both immediate neighbours in processing each word in the block.",
+        "description": "修正版 Block TEA（通常称为 XXTEA）是为修正原始 Block TEA 的弱点而设计的分组密码。XXTEA 处理可变长度的分组，长度为 32 位的任意倍数（最小 64 位）。完整循环的次数取决于分组大小，但至少为六次（分组较小时最多 32 次）。原始 Block TEA 对分组中的每个字应用 XTEA 轮函数，并以加法方式与其左侧相邻字结合；其解密过程扩散速度慢的问题很快就被利用来破解该密码。修正版 Block TEA 使用更复杂的轮函数，在处理每个字时同时利用其左右两侧的相邻字。",
+        "args": {
+            "Key": "密钥"
         }
     },
     "YAML to JSON": {
