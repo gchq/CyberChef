@@ -171,6 +171,7 @@
     "openpgp": "^6.3.2",
     "otpauth": "^9.5.2",
     "path": "^0.12.7",
+    "plist": "^5.0.0",
     "popper.js": "^1.16.1",
     "process": "^0.11.10",
     "protobufjs": "^8.8.0",
