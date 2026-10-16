@@ -12,6 +12,7 @@ import HTMLOperation from "./HTMLOperation.mjs";
 import Split from "split.js";
 import moment from "moment-timezone";
 import cptable from "codepage";
+import {opName, t, localiseError} from "./i18n/i18n.mjs";
 
 
 /**
@@ -133,7 +134,7 @@ class App {
      */
     handleError(err, logToConsole) {
         if (logToConsole) log.error(err);
-        const msg = err.displayStr || err.toString();
+        const msg = localiseError(err.displayStr || err.toString()); // i18n
         this.alert(Utils.escapeHtml(msg), this.options.errorTimeout, !this.options.showErrors);
     }
 
@@ -404,8 +405,8 @@ class App {
             if (favourites[i] in this.operations) {
                 validFavs.push(favourites[i]);
             } else {
-                this.alert(`The operation "${Utils.escapeHtml(favourites[i])}" is no longer available. ` +
-                    "It has been removed from your favourites.");
+                this.alert(t("The operation \"{0}\" is no longer available. It has been removed from your favourites.",
+                    [Utils.escapeHtml(favourites[i])]));
             }
         }
         return validFavs;
@@ -451,7 +452,7 @@ class App {
         const favourites = JSON.parse(localStorage.favourites);
 
         if (favourites.indexOf(name) >= 0) {
-            this.alert(`'${name}' is already in your favourites`, 3000);
+            this.alert(t("'{0}' is already in your favourites", [Utils.escapeHtml(opName(name))]), 3000);
             return;
         }
 
@@ -809,15 +810,15 @@ class App {
         const recipeConfig = this.getRecipeConfig();
         let title = "CyberChef";
         if (recipeConfig.length === 1) {
-            title = `${recipeConfig[0].op} - ${title}`;
+            title = `${opName(recipeConfig[0].op)} - ${title}`; // i18n: display only
         } else if (recipeConfig.length > 1) {
             // See how long the full recipe is
-            const ops = recipeConfig.map(op => op.op).join(", ");
+            const ops = recipeConfig.map(op => opName(op.op)).join(", ");
             if (ops.length < 45) {
                 title = `${ops} - ${title}`;
             } else {
                 // If it's too long, just use the first one and say how many more there are
-                title = `${recipeConfig[0].op}, ${recipeConfig.length - 1} more - ${title}`;
+                title = `${opName(recipeConfig[0].op)}, ${t("{0} more", [recipeConfig.length - 1])} - ${title}`;
             }
         }
         document.title = title;

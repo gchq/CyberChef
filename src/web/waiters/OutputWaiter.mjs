@@ -37,6 +37,7 @@ import {
 } from "@codemirror/search";
 
 import {statusBar} from "../utils/statusBar.mjs";
+import {localiseError} from "../i18n/i18n.mjs";
 import {htmlPlugin} from "../utils/htmlWidget.mjs";
 import {copyOverride} from "../utils/copyOverride.mjs";
 import {eolCodeToSeq, eolCodeToName, renderSpecialChar} from "../utils/editorUtils.mjs";
@@ -590,7 +591,7 @@ class OutputWaiter {
     updateOutputError(error, inputNum, progress=0) {
         if (!this.outputExists(inputNum)) return;
 
-        const errorString = error.displayStr || error.toString();
+        const errorString = localiseError(error.displayStr || error.toString()); // i18n
 
         this.outputs[inputNum].error = errorString;
         this.outputs[inputNum].progress = progress;

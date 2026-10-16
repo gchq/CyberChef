@@ -4,6 +4,8 @@
  * @license Apache-2.0
  */
 
+import {catName as i18nCatName} from "./i18n/i18n.mjs";
+
 /**
  * Object to handle the creation of operation categories.
  */
@@ -41,7 +43,7 @@ class HTMLCategory {
         const catName = "cat" + this.name.replace(/[\s/\-:_]/g, "");
         let html = `<div class="panel category">
         <a class="category-title" data-toggle="collapse" data-target="#${catName}">
-            ${this.name}
+            ${i18nCatName(this.name)}
             <span class="op-count hidden">
                 ${this.opList.length}
             </span>

@@ -16,6 +16,7 @@ import moment from "moment-timezone";
 import * as CanvasComponents from "../core/lib/CanvasComponents.mjs";
 
 // CyberChef
+import "./i18n/index.mjs"; // i18n: must run before App setup
 import App from "./App.mjs";
 import Categories from "../core/config/Categories.json" with { type: "json" };
 import OperationConfig from "../core/config/OperationConfig.json" with { type: "json" };

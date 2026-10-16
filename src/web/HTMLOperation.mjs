@@ -6,6 +6,7 @@
 
 import HTMLIngredient from "./HTMLIngredient.mjs";
 import Utils from "../core/Utils.mjs";
+import {opName, opDescription, argName, argHint, t} from "./i18n/i18n.mjs";
 import url from "url";
 
 
@@ -26,15 +27,20 @@ class HTMLOperation {
         this.app         = app;
         this.manager     = manager;
 
-        this.name        = name;
-        this.description = config.description;
+        this.name        = name; // i18n: English identifier, never translated
+        this.displayName = opName(name);
+        this.description = opDescription(name, config.description);
         this.infoURL     = config.infoURL;
         this.manualBake  = config.manualBake || false;
         this.config      = config;
         this.ingList     = [];
 
         for (let i = 0; i < config.args.length; i++) {
-            const ing = new HTMLIngredient(config.args[i], this.app, this.manager);
+            const ing = new HTMLIngredient({ // i18n: display-only names and hints
+                ...config.args[i],
+                displayName: argName(name, config.args[i].name),
+                hint: argHint(name, config.args[i].name, config.args[i].hint)
+            }, this.app, this.manager);
             this.ingList.push(ing);
         }
     }
@@ -48,7 +54,7 @@ class HTMLOperation {
      * @returns {string}
      */
     toStubHtml(removeIcon = false, elementId = null) {
-        let html = "<li class='operation'";
+        let html = `<li class='operation' data-name="${Utils.escapeHtml(this.name)}"`;
 
         if (elementId) {
             html += ` id='${elementId}'`;
@@ -63,7 +69,7 @@ class HTMLOperation {
                 data-boundary='viewport' role='button'`;
         }
 
-        html += ">" + this.name;
+        html += ">" + this.displayName;
 
         if (removeIcon) {
             html += "<i class='material-icons remove-icon op-icon'>delete</i>";
@@ -81,7 +87,7 @@ class HTMLOperation {
      * @returns {string}
      */
     toFullHtml() {
-        let html = `<div class="op-title">${Utils.escapeHtml(this.name)}</div>
+        let html = `<div class="op-title" data-name="${Utils.escapeHtml(this.name)}">${Utils.escapeHtml(this.displayName)}</div>
         <div class="ingredients">`;
 
         for (let i = 0; i < this.ingList.length; i++) {
@@ -103,7 +109,7 @@ class HTMLOperation {
     /**
      * Highlights searched strings in the name and description of the operation.
      *
-     * @param {[[number]]} nameIdxs - Indexes of the search strings in the operation name [[start, length]]
+     * @param {[[number]]} nameIdxs - Indexes of the search strings in the operation display name [[start, length]]
      * @param {[[number]]} descIdxs - Indexes of the search strings in the operation description [[start, length]]
      */
     highlightSearchStrings(nameIdxs, descIdxs) {
@@ -114,12 +120,12 @@ class HTMLOperation {
             nameIdxs.forEach(idxs => {
                 const [start, length] = idxs;
                 if (typeof start !== "number") return;
-                opName += this.name.slice(pos, start) + "<b>" +
-                    this.name.slice(start, start + length) + "</b>";
+                opName += this.displayName.slice(pos, start) + "<b>" +
+                    this.displayName.slice(start, start + length) + "</b>";
                 pos = start + length;
             });
-            opName += this.name.slice(pos, this.name.length);
-            this.name = opName;
+            opName += this.displayName.slice(pos, this.displayName.length);
+            this.displayName = opName; // i18n: never modify this.name
         }
 
         if (this.description && descIdxs.length && descIdxs[0][0] >= 0) {
@@ -175,10 +181,13 @@ function titleFromWikiLink(urlStr) {
             break;
         default:
             // Not a wiki link, return full URL
-            return `<a href='${urlStr}' target='_blank'>More Information<i class='material-icons inline-icon'>open_in_new</i></a>`;
+            return `<a href='${urlStr}' target='_blank'>${t("More Information")}<i class='material-icons inline-icon'>open_in_new</i></a>`;
     }
 
-    return `<a href='${urlObj.href}' target='_blank'>${pageTitle}<i class='material-icons inline-icon'>open_in_new</i></a> on ${wikiName}`;
+    return t("{link} on {wiki}", {
+        link: `<a href='${urlObj.href}' target='_blank'>${pageTitle}<i class='material-icons inline-icon'>open_in_new</i></a>`,
+        wiki: wikiName
+    });
 }
 
 export default HTMLOperation;

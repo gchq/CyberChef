@@ -7,6 +7,7 @@
 import HTMLOperation from "../HTMLOperation.mjs";
 import Sortable from "sortablejs";
 import {fuzzyMatch, calcMatchRanges} from "../../core/lib/FuzzyMatch.mjs";
+import {getOpName, opName as i18nOpName, opDescription as i18nOpDescription} from "../i18n/i18n.mjs";
 
 
 /**
@@ -43,7 +44,7 @@ class OperationsWaiter {
             if (ops.length) {
                 selected = this.getSelectedOp(ops);
                 if (selected > -1) {
-                    this.manager.recipe.addOperation(ops[selected].innerHTML);
+                    this.manager.recipe.addOperation(getOpName(ops[selected])); // i18n
                 }
             }
         }
@@ -134,15 +135,32 @@ class OperationsWaiter {
             const op = this.app.operations[opName];
 
             // Match op name using fuzzy match
-            const [nameMatch, score, idxs] = fuzzyMatch(inStrNWS, opName);
+            const nameResult = fuzzyMatch(inStrNWS, opName);
+            let [nameMatch, score] = nameResult;
+            const idxs = nameResult[2];
+
+            // i18n: also match the translated display name and description
+            const displayName = i18nOpName(opName);
+            let displayMatches = displayName === opName ? idxs : [];
+            if (displayName !== opName) {
+                const [dMatch, dScore, dMatches] = fuzzyMatch(inStrNWS, displayName);
+                if (dMatch && (!nameMatch || dScore > score)) {
+                    nameMatch = true;
+                    score = dScore;
+                    displayMatches = dMatches;
+                }
+            }
 
             // Match description based on exact match
             const descPos = op.description.toLowerCase().indexOf(inStr.toLowerCase());
+            const displayDesc = i18nOpDescription(opName, op.description);
+            const displayDescPos = displayDesc === op.description ? descPos :
+                displayDesc.toLowerCase().indexOf(inStr.toLowerCase());
 
-            if (nameMatch || descPos >= 0) {
+            if (nameMatch || descPos >= 0 || displayDescPos >= 0) {
                 const operation = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
                 if (highlight) {
-                    operation.highlightSearchStrings(calcMatchRanges(idxs), [[descPos, inStr.length]]);
+                    operation.highlightSearchStrings(calcMatchRanges(displayMatches), [[displayDescPos, inStr.length]]);
                 }
 
                 if (nameMatch) {
@@ -232,7 +250,7 @@ class OperationsWaiter {
     operationDblclick(e) {
         const li = e.target;
 
-        this.manager.recipe.addOperation(li.textContent);
+        this.manager.recipe.addOperation(getOpName(li)); // i18n
     }
 
 
@@ -298,7 +316,7 @@ class OperationsWaiter {
      */
     saveFavouritesClick() {
         const favs = document.querySelectorAll("#edit-favourites-list li");
-        const favouritesList = Array.from(favs, e => e.childNodes[0].textContent);
+        const favouritesList = Array.from(favs, e => getOpName(e)); // i18n
 
         this.app.saveFavourites(favouritesList);
         this.app.loadFavourites();
