@@ -15,6 +15,22 @@
             "Delimiter": "分隔符"
         }
     },
+    "ADD": {
+        "displayName": "ADD 加",
+        "src_description": "ADD the input with the given key (e.g. <code>fe023da5</code>), MOD 255",
+        "description": "将输入与给定的密钥（例如 <code>fe023da5</code>）相加，结果模 255",
+        "args": {
+            "Key": "密钥"
+        }
+    },
+    "Add line numbers": {
+        "displayName": "添加行号",
+        "src_description": "Adds line numbers to the output.",
+        "description": "在输出中添加行号。",
+        "args": {
+            "Offset": "偏移量"
+        }
+    },
     "AES Decrypt": {
         "displayName": "AES 解密",
         "src_description": "Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS). It was selected after a 5-year process where 15 competing designs were evaluated.<br><br><b>Key:</b> The following algorithms will be used based on the size of the key:<ul><li>16 bytes = AES-128</li><li>24 bytes = AES-192</li><li>32 bytes = AES-256</li></ul><br><br><b>IV:</b> The Initialization Vector should be 16 bytes long. If not entered, it will default to 16 null bytes.<br><br><b>Padding:</b> In CBC and ECB mode, PKCS#7 padding will be used as a default.<br><br><b>GCM Tag:</b> This field is ignored unless 'GCM' mode is used.",
@@ -85,6 +101,12 @@
             "b": "b"
         }
     },
+    "Alternating Caps": {
+        "displayName": "大小写交替",
+        "src_description": "Alternating caps, also known as studly caps, sticky caps, or spongecase is a form of text notation in which the capitalization of letters varies by some pattern, or arbitrarily. An example of this would be spelling 'alternative caps' as 'aLtErNaTiNg CaPs'.",
+        "description": "大小写交替（也称 studly caps、sticky caps 或 spongecase）是一种文本写法，字母的大小写按某种规律或随意变化。例如把 'alternative caps' 写成 'aLtErNaTiNg CaPs'。",
+        "args": {}
+    },
     "AMF Decode": {
         "displayName": "AMF 解码",
         "src_description": "Action Message Format (AMF) is a binary format used to serialize object graphs such as ActionScript objects and XML, or send messages between an Adobe Flash client and a remote service, usually a Flash Media Server or third party alternatives.",
@@ -99,6 +121,14 @@
         "description": "Action Message Format（AMF）是一种二进制格式，用于序列化 ActionScript 对象、XML 等对象图，或在 Adobe Flash 客户端与远程服务（通常是 Flash Media Server 或第三方替代品）之间发送消息。",
         "args": {
             "Format": "格式"
+        }
+    },
+    "AND": {
+        "displayName": "AND 与",
+        "src_description": "AND the input with the given key.<br>e.g. <code>fe023da5</code>",
+        "description": "用给定的密钥对输入进行按位与运算。<br>例如 <code>fe023da5</code>",
+        "args": {
+            "Key": "密钥"
         }
     },
     "Ascon Decrypt": {
@@ -184,6 +214,23 @@
             "Keyword": "关键词"
         }
     },
+    "Bit shift left": {
+        "displayName": "按位左移",
+        "src_description": "Shifts the bits in each byte towards the left by the specified amount.",
+        "description": "将每个字节的位向左移动指定的位数。",
+        "args": {
+            "Amount": "数量"
+        }
+    },
+    "Bit shift right": {
+        "displayName": "按位右移",
+        "src_description": "Shifts the bits in each byte towards the right by the specified amount.<br><br><i>Logical shifts</i> replace the leftmost bits with zeros.<br><i>Arithmetic shifts</i> preserve the most significant bit (MSB) of the original byte keeping the sign the same (positive or negative).",
+        "description": "将每个字节的位向右移动指定的位数。<br><br><i>逻辑右移</i>用零填充最左侧的位。<br><i>算术右移</i>保留原字节的最高有效位（MSB），从而保持符号（正或负）不变。",
+        "args": {
+            "Amount": "数量",
+            "Type": "类型"
+        }
+    },
     "Blowfish Decrypt": {
         "displayName": "Blowfish 解密",
         "src_description": "Blowfish is a symmetric-key block cipher designed in 1993 by Bruce Schneier and included in a large number of cipher suites and encryption products. AES now receives more attention.<br><br><b>IV:</b> The Initialization Vector should be 8 bytes long. If not entered, it will default to 8 null bytes.",
@@ -237,6 +284,15 @@
         "src_description": "Decodes caret or M-encoded strings, i.e. ^M turns into a newline, M-^] turns into 0x9d. Sources such as `cat -v`.\n\nPlease be aware that when using `cat -v` ^_ (caret-underscore) will not be encoded, but represents a valid encoding (namely that of 0x1f).",
         "description": "解码脱字符（caret）或 M- 编码的字符串，即 ^M 变为换行符，M-^] 变为 0x9d。来源例如 `cat -v` 的输出。\n\n请注意，使用 `cat -v` 时 ^_（脱字符加下划线）不会被编码，但它表示一个有效的编码（即 0x1f）。",
         "args": {}
+    },
+    "Cartesian Product": {
+        "displayName": "笛卡尔积",
+        "src_description": "Calculates the cartesian product of multiple sets of data, returning all possible combinations.",
+        "description": "计算多个数据集合的笛卡尔积，返回所有可能的组合。",
+        "args": {
+            "Sample delimiter": "样本分隔符",
+            "Item delimiter": "条目分隔符"
+        }
     },
     "CBOR Decode": {
         "displayName": "CBOR 解码",
@@ -378,6 +434,86 @@
             "Start Ψ5": "Ψ5 起始"
         }
     },
+    "Convert area": {
+        "displayName": "面积单位换算",
+        "src_description": "Converts a unit of area to another format.",
+        "description": "将面积单位换算为另一种单位。",
+        "args": {
+            "Input units": "输入单位",
+            "Output units": "输出单位"
+        }
+    },
+    "Convert co-ordinate format": {
+        "displayName": "坐标格式转换",
+        "src_description": "Converts geographical coordinates between different formats.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li><li>Ordnance Survey National Grid (OSNG)</li><li>Universal Transverse Mercator (UTM)</li></ul><br>The operation can try to detect the input co-ordinate format and delimiter automatically, but this may not always work correctly.",
+        "description": "在不同格式之间转换地理坐标。<br><br>支持的格式：<ul><li>度分秒（DMS）</li><li>度十进制分（DDM）</li><li>十进制度（DD）</li><li>Geohash</li><li>军事网格参考系统（MGRS）</li><li>英国国家格网（OSNG）</li><li>通用横轴墨卡托（UTM）</li></ul><br>此操作可以尝试自动检测输入坐标格式和分隔符，但不一定总能正确识别。",
+        "args": {
+            "Input Format": "输入格式",
+            "Input Delimiter": "输入分隔符",
+            "Output Format": "输出格式",
+            "Output Delimiter": "输出分隔符",
+            "Include Compass Directions": "包含罗盘方向",
+            "Precision": "精度"
+        }
+    },
+    "Convert data units": {
+        "displayName": "数据单位换算",
+        "src_description": "Converts a unit of data to another format.",
+        "description": "将数据单位换算为另一种单位。",
+        "args": {
+            "Input units": "输入单位",
+            "Output units": "输出单位"
+        }
+    },
+    "Convert distance": {
+        "displayName": "距离单位换算",
+        "src_description": "Converts a unit of distance to another format.",
+        "description": "将距离单位换算为另一种单位。",
+        "args": {
+            "Input units": "输入单位",
+            "Output units": "输出单位"
+        }
+    },
+    "Convert Leet Speak": {
+        "displayName": "Leet 语转换",
+        "src_description": "Converts to and from Leet Speak.",
+        "description": "在 Leet 语（黑客语）与普通文本之间转换。",
+        "args": {
+            "Direction": "方向"
+        }
+    },
+    "Convert mass": {
+        "displayName": "质量单位换算",
+        "src_description": "Converts a unit of mass to another format.",
+        "description": "将质量单位换算为另一种单位。",
+        "args": {
+            "Input units": "输入单位",
+            "Output units": "输出单位"
+        }
+    },
+    "Convert speed": {
+        "displayName": "速度单位换算",
+        "src_description": "Converts a unit of speed to another format.",
+        "description": "将速度单位换算为另一种单位。",
+        "args": {
+            "Input units": "输入单位",
+            "Output units": "输出单位"
+        }
+    },
+    "Convert to NATO alphabet": {
+        "displayName": "转为北约音标字母",
+        "src_description": "Converts characters to their representation in the NATO phonetic alphabet.",
+        "description": "将字符转换为对应的北约音标字母（NATO phonetic alphabet）。",
+        "args": {}
+    },
+    "Count occurrences": {
+        "displayName": "统计出现次数",
+        "src_description": "Counts the number of times the provided string occurs in the input.",
+        "description": "统计指定字符串在输入中出现的次数。",
+        "args": {
+            "Search string": "搜索字符串"
+        }
+    },
     "CSV to JSON": {
         "displayName": "CSV 转 JSON",
         "src_description": "Converts a CSV file to JSON format.",
@@ -388,12 +524,57 @@
             "Format": "格式"
         }
     },
+    "DateTime Delta": {
+        "displayName": "日期时间加减",
+        "src_description": "Calculates a new DateTime value given an input DateTime value and a time difference (delta) from the input DateTime value.",
+        "description": "根据输入的日期时间值和时间差（delta），计算新的日期时间值。",
+        "args": {
+            "Built in formats": "内置格式",
+            "Input format string": "输入格式字符串",
+            "Time Operation": "时间运算",
+            "Days": "天",
+            "Hours": "小时",
+            "Minutes": "分钟",
+            "Seconds": "秒"
+        }
+    },
+    "Dechunk HTTP response": {
+        "displayName": "还原分块 HTTP 响应",
+        "src_description": "Parses an HTTP response transferred using Transfer-Encoding: Chunked",
+        "description": "解析使用 Transfer-Encoding: Chunked（分块传输编码）传输的 HTTP 响应",
+        "args": {}
+    },
+    "Decode NetBIOS Name": {
+        "displayName": "NetBIOS 名称解码",
+        "src_description": "NetBIOS names as seen across the client interface to NetBIOS are exactly 16 bytes long. Within the NetBIOS-over-TCP protocols, a longer representation is used.<br><br>There are two levels of encoding. The first level maps a NetBIOS name into a domain system name.  The second level maps the domain system name into the 'compressed' representation required for interaction with the domain name system.<br><br>This operation decodes the first level of encoding. See RFC 1001 for full details.",
+        "description": "在 NetBIOS 客户端接口中看到的 NetBIOS 名称长度恰好为 16 字节。在 NetBIOS-over-TCP 协议中，则使用更长的表示形式。<br><br>编码分为两级。第一级把 NetBIOS 名称映射为域名系统名称；第二级把域名系统名称映射为与域名系统交互所需的“压缩”表示。<br><br>此操作解码第一级编码。详见 RFC 1001。",
+        "args": {
+            "Offset": "偏移量"
+        }
+    },
     "Decode text": {
         "displayName": "文本解码",
         "src_description": "Decodes text from the chosen character encoding.\n<br><br>\nSupported charsets are:\n<ul>\n<li>UTF-8 (65001)</li>\n<li>UTF-7 (65000)</li>\n<li>UTF-16LE (1200)</li>\n<li>UTF-16BE (1201)</li>\n<li>UTF-32LE (12000)</li>\n<li>UTF-32BE (12001)</li>\n<li>IBM EBCDIC International (500)</li>\n<li>IBM EBCDIC US-Canada (37)</li>\n<li>IBM EBCDIC Multilingual/ROECE (Latin 2) (870)</li>\n<li>IBM EBCDIC Greek Modern (875)</li>\n<li>IBM EBCDIC French (1010)</li>\n<li>IBM EBCDIC Turkish (Latin 5) (1026)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047)</li>\n<li>IBM EBCDIC Lao (1132/1133/1341)</li>\n<li>IBM EBCDIC US-Canada (037 + Euro symbol) (1140)</li>\n<li>IBM EBCDIC Germany (20273 + Euro symbol) (1141)</li>\n<li>IBM EBCDIC Denmark-Norway (20277 + Euro symbol) (1142)</li>\n<li>IBM EBCDIC Finland-Sweden (20278 + Euro symbol) (1143)</li>\n<li>IBM EBCDIC Italy (20280 + Euro symbol) (1144)</li>\n<li>IBM EBCDIC Latin America-Spain (20284 + Euro symbol) (1145)</li>\n<li>IBM EBCDIC United Kingdom (20285 + Euro symbol) (1146)</li>\n<li>IBM EBCDIC France (20297 + Euro symbol) (1147)</li>\n<li>IBM EBCDIC International (500 + Euro symbol) (1148)</li>\n<li>IBM EBCDIC Icelandic (20871 + Euro symbol) (1149)</li>\n<li>IBM EBCDIC Germany (20273)</li>\n<li>IBM EBCDIC Denmark-Norway (20277)</li>\n<li>IBM EBCDIC Finland-Sweden (20278)</li>\n<li>IBM EBCDIC Italy (20280)</li>\n<li>IBM EBCDIC Latin America-Spain (20284)</li>\n<li>IBM EBCDIC United Kingdom (20285)</li>\n<li>IBM EBCDIC Japanese Katakana Extended (20290)</li>\n<li>IBM EBCDIC France (20297)</li>\n<li>IBM EBCDIC Arabic (20420)</li>\n<li>IBM EBCDIC Greek (20423)</li>\n<li>IBM EBCDIC Hebrew (20424)</li>\n<li>IBM EBCDIC Korean Extended (20833)</li>\n<li>IBM EBCDIC Thai (20838)</li>\n<li>IBM EBCDIC Icelandic (20871)</li>\n<li>IBM EBCDIC Cyrillic Russian (20880)</li>\n<li>IBM EBCDIC Turkish (20905)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047 + Euro symbol) (20924)</li>\n<li>IBM EBCDIC Cyrillic Serbian-Bulgarian (21025)</li>\n<li>OEM United States (437)</li>\n<li>OEM Greek (formerly 437G); Greek (DOS) (737)</li>\n<li>OEM Baltic; Baltic (DOS) (775)</li>\n<li>OEM Russian; Cyrillic + Euro symbol (808)</li>\n<li>OEM Multilingual Latin 1; Western European (DOS) (850)</li>\n<li>OEM Latin 2; Central European (DOS) (852)</li>\n<li>OEM Cyrillic (primarily Russian) (855)</li>\n<li>OEM Turkish; Turkish (DOS) (857)</li>\n<li>OEM Multilingual Latin 1 + Euro symbol (858)</li>\n<li>OEM Portuguese; Portuguese (DOS) (860)</li>\n<li>OEM Icelandic; Icelandic (DOS) (861)</li>\n<li>OEM Hebrew; Hebrew (DOS) (862)</li>\n<li>OEM French Canadian; French Canadian (DOS) (863)</li>\n<li>OEM Arabic; Arabic (864) (864)</li>\n<li>OEM Nordic; Nordic (DOS) (865)</li>\n<li>OEM Russian; Cyrillic (DOS) (866)</li>\n<li>OEM Modern Greek; Greek, Modern (DOS) (869)</li>\n<li>OEM Cyrillic (primarily Russian) + Euro Symbol (872)</li>\n<li>Windows-874 Thai (874)</li>\n<li>Windows-1250 Central European (1250)</li>\n<li>Windows-1251 Cyrillic (1251)</li>\n<li>Windows-1252 Latin (1252)</li>\n<li>Windows-1253 Greek (1253)</li>\n<li>Windows-1254 Turkish (1254)</li>\n<li>Windows-1255 Hebrew (1255)</li>\n<li>Windows-1256 Arabic (1256)</li>\n<li>Windows-1257 Baltic (1257)</li>\n<li>Windows-1258 Vietnam (1258)</li>\n<li>ISO-8859-1 Latin 1 Western European (28591)</li>\n<li>ISO-8859-2 Latin 2 Central European (28592)</li>\n<li>ISO-8859-3 Latin 3 South European (28593)</li>\n<li>ISO-8859-4 Latin 4 North European (28594)</li>\n<li>ISO-8859-5 Latin/Cyrillic (28595)</li>\n<li>ISO-8859-6 Latin/Arabic (28596)</li>\n<li>ISO-8859-7 Latin/Greek (28597)</li>\n<li>ISO-8859-8 Latin/Hebrew (28598)</li>\n<li>ISO 8859-8 Hebrew (ISO-Logical) (38598)</li>\n<li>ISO-8859-9 Latin 5 Turkish (28599)</li>\n<li>ISO-8859-10 Latin 6 Nordic (28600)</li>\n<li>ISO-8859-11 Latin/Thai (28601)</li>\n<li>ISO-8859-13 Latin 7 Baltic Rim (28603)</li>\n<li>ISO-8859-14 Latin 8 Celtic (28604)</li>\n<li>ISO-8859-15 Latin 9 (28605)</li>\n<li>ISO-8859-16 Latin 10 (28606)</li>\n<li>ISO 2022 JIS Japanese with no halfwidth Katakana (50220)</li>\n<li>ISO 2022 JIS Japanese with halfwidth Katakana (50221)</li>\n<li>ISO 2022 Japanese JIS X 0201-1989 (1 byte Kana-SO/SI) (50222)</li>\n<li>ISO 2022 Korean (50225)</li>\n<li>ISO 2022 Simplified Chinese (50227)</li>\n<li>ISO 6937 Non-Spacing Accent (20269)</li>\n<li>EUC Japanese (51932)</li>\n<li>EUC Simplified Chinese (51936)</li>\n<li>EUC Korean (51949)</li>\n<li>ISCII Devanagari (57002)</li>\n<li>ISCII Bengali (57003)</li>\n<li>ISCII Tamil (57004)</li>\n<li>ISCII Telugu (57005)</li>\n<li>ISCII Assamese (57006)</li>\n<li>ISCII Oriya (57007)</li>\n<li>ISCII Kannada (57008)</li>\n<li>ISCII Malayalam (57009)</li>\n<li>ISCII Gujarati (57010)</li>\n<li>ISCII Punjabi (57011)</li>\n<li>Japanese Shift-JIS (932)</li>\n<li>Simplified Chinese GBK (936)</li>\n<li>Korean (949)</li>\n<li>Traditional Chinese Big5 (950)</li>\n<li>US-ASCII (7-bit) (20127)</li>\n<li>Simplified Chinese GB2312 (20936)</li>\n<li>KOI8-R Russian Cyrillic (20866)</li>\n<li>KOI8-U Ukrainian Cyrillic (21866)</li>\n<li>Mazovia (Polish) MS-DOS (620)</li>\n<li>Arabic (ASMO 708) (708)</li>\n<li>Arabic (Transparent ASMO); Arabic (DOS) (720)</li>\n<li>Kamenický (Czech) MS-DOS (895)</li>\n<li>Korean (Johab) (1361)</li>\n<li>MAC Roman (10000)</li>\n<li>Japanese (Mac) (10001)</li>\n<li>MAC Traditional Chinese (Big5) (10002)</li>\n<li>Korean (Mac) (10003)</li>\n<li>Arabic (Mac) (10004)</li>\n<li>Hebrew (Mac) (10005)</li>\n<li>Greek (Mac) (10006)</li>\n<li>Cyrillic (Mac) (10007)</li>\n<li>MAC Simplified Chinese (GB 2312) (10008)</li>\n<li>Romanian (Mac) (10010)</li>\n<li>Ukrainian (Mac) (10017)</li>\n<li>Thai (Mac) (10021)</li>\n<li>MAC Latin 2 (Central European) (10029)</li>\n<li>Icelandic (Mac) (10079)</li>\n<li>Turkish (Mac) (10081)</li>\n<li>Croatian (Mac) (10082)</li>\n<li>CNS Taiwan (Chinese Traditional) (20000)</li>\n<li>TCA Taiwan (20001)</li>\n<li>ETEN Taiwan (Chinese Traditional) (20002)</li>\n<li>IBM5550 Taiwan (20003)</li>\n<li>TeleText Taiwan (20004)</li>\n<li>Wang Taiwan (20005)</li>\n<li>Western European IA5 (IRV International Alphabet 5) (20105)</li>\n<li>IA5 German (7-bit) (20106)</li>\n<li>IA5 Swedish (7-bit) (20107)</li>\n<li>IA5 Norwegian (7-bit) (20108)</li>\n<li>T.61 (20261)</li>\n<li>Japanese (JIS 0208-1990 and 0212-1990) (20932)</li>\n<li>Korean Wansung (20949)</li>\n<li>Extended/Ext Alpha Lowercase (21027)</li>\n<li>Europa 3 (29001)</li>\n<li>Atari ST/TT (47451)</li>\n<li>HZ-GB2312 Simplified Chinese (52936)</li>\n<li>Simplified Chinese GB18030 (54936)</li>\n</ul>",
         "description": "按所选的字符编码解码文本。\n<br><br>\n支持的字符集：\n<ul>\n<li>UTF-8 (65001)</li>\n<li>UTF-7 (65000)</li>\n<li>UTF-16LE (1200)</li>\n<li>UTF-16BE (1201)</li>\n<li>UTF-32LE (12000)</li>\n<li>UTF-32BE (12001)</li>\n<li>IBM EBCDIC International (500)</li>\n<li>IBM EBCDIC US-Canada (37)</li>\n<li>IBM EBCDIC Multilingual/ROECE (Latin 2) (870)</li>\n<li>IBM EBCDIC Greek Modern (875)</li>\n<li>IBM EBCDIC French (1010)</li>\n<li>IBM EBCDIC Turkish (Latin 5) (1026)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047)</li>\n<li>IBM EBCDIC Lao (1132/1133/1341)</li>\n<li>IBM EBCDIC US-Canada (037 + Euro symbol) (1140)</li>\n<li>IBM EBCDIC Germany (20273 + Euro symbol) (1141)</li>\n<li>IBM EBCDIC Denmark-Norway (20277 + Euro symbol) (1142)</li>\n<li>IBM EBCDIC Finland-Sweden (20278 + Euro symbol) (1143)</li>\n<li>IBM EBCDIC Italy (20280 + Euro symbol) (1144)</li>\n<li>IBM EBCDIC Latin America-Spain (20284 + Euro symbol) (1145)</li>\n<li>IBM EBCDIC United Kingdom (20285 + Euro symbol) (1146)</li>\n<li>IBM EBCDIC France (20297 + Euro symbol) (1147)</li>\n<li>IBM EBCDIC International (500 + Euro symbol) (1148)</li>\n<li>IBM EBCDIC Icelandic (20871 + Euro symbol) (1149)</li>\n<li>IBM EBCDIC Germany (20273)</li>\n<li>IBM EBCDIC Denmark-Norway (20277)</li>\n<li>IBM EBCDIC Finland-Sweden (20278)</li>\n<li>IBM EBCDIC Italy (20280)</li>\n<li>IBM EBCDIC Latin America-Spain (20284)</li>\n<li>IBM EBCDIC United Kingdom (20285)</li>\n<li>IBM EBCDIC Japanese Katakana Extended (20290)</li>\n<li>IBM EBCDIC France (20297)</li>\n<li>IBM EBCDIC Arabic (20420)</li>\n<li>IBM EBCDIC Greek (20423)</li>\n<li>IBM EBCDIC Hebrew (20424)</li>\n<li>IBM EBCDIC Korean Extended (20833)</li>\n<li>IBM EBCDIC Thai (20838)</li>\n<li>IBM EBCDIC Icelandic (20871)</li>\n<li>IBM EBCDIC Cyrillic Russian (20880)</li>\n<li>IBM EBCDIC Turkish (20905)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047 + Euro symbol) (20924)</li>\n<li>IBM EBCDIC Cyrillic Serbian-Bulgarian (21025)</li>\n<li>OEM United States (437)</li>\n<li>OEM Greek (formerly 437G); Greek (DOS) (737)</li>\n<li>OEM Baltic; Baltic (DOS) (775)</li>\n<li>OEM Russian; Cyrillic + Euro symbol (808)</li>\n<li>OEM Multilingual Latin 1; Western European (DOS) (850)</li>\n<li>OEM Latin 2; Central European (DOS) (852)</li>\n<li>OEM Cyrillic (primarily Russian) (855)</li>\n<li>OEM Turkish; Turkish (DOS) (857)</li>\n<li>OEM Multilingual Latin 1 + Euro symbol (858)</li>\n<li>OEM Portuguese; Portuguese (DOS) (860)</li>\n<li>OEM Icelandic; Icelandic (DOS) (861)</li>\n<li>OEM Hebrew; Hebrew (DOS) (862)</li>\n<li>OEM French Canadian; French Canadian (DOS) (863)</li>\n<li>OEM Arabic; Arabic (864) (864)</li>\n<li>OEM Nordic; Nordic (DOS) (865)</li>\n<li>OEM Russian; Cyrillic (DOS) (866)</li>\n<li>OEM Modern Greek; Greek, Modern (DOS) (869)</li>\n<li>OEM Cyrillic (primarily Russian) + Euro Symbol (872)</li>\n<li>Windows-874 Thai (874)</li>\n<li>Windows-1250 Central European (1250)</li>\n<li>Windows-1251 Cyrillic (1251)</li>\n<li>Windows-1252 Latin (1252)</li>\n<li>Windows-1253 Greek (1253)</li>\n<li>Windows-1254 Turkish (1254)</li>\n<li>Windows-1255 Hebrew (1255)</li>\n<li>Windows-1256 Arabic (1256)</li>\n<li>Windows-1257 Baltic (1257)</li>\n<li>Windows-1258 Vietnam (1258)</li>\n<li>ISO-8859-1 Latin 1 Western European (28591)</li>\n<li>ISO-8859-2 Latin 2 Central European (28592)</li>\n<li>ISO-8859-3 Latin 3 South European (28593)</li>\n<li>ISO-8859-4 Latin 4 North European (28594)</li>\n<li>ISO-8859-5 Latin/Cyrillic (28595)</li>\n<li>ISO-8859-6 Latin/Arabic (28596)</li>\n<li>ISO-8859-7 Latin/Greek (28597)</li>\n<li>ISO-8859-8 Latin/Hebrew (28598)</li>\n<li>ISO 8859-8 Hebrew (ISO-Logical) (38598)</li>\n<li>ISO-8859-9 Latin 5 Turkish (28599)</li>\n<li>ISO-8859-10 Latin 6 Nordic (28600)</li>\n<li>ISO-8859-11 Latin/Thai (28601)</li>\n<li>ISO-8859-13 Latin 7 Baltic Rim (28603)</li>\n<li>ISO-8859-14 Latin 8 Celtic (28604)</li>\n<li>ISO-8859-15 Latin 9 (28605)</li>\n<li>ISO-8859-16 Latin 10 (28606)</li>\n<li>ISO 2022 JIS Japanese with no halfwidth Katakana (50220)</li>\n<li>ISO 2022 JIS Japanese with halfwidth Katakana (50221)</li>\n<li>ISO 2022 Japanese JIS X 0201-1989 (1 byte Kana-SO/SI) (50222)</li>\n<li>ISO 2022 Korean (50225)</li>\n<li>ISO 2022 Simplified Chinese (50227)</li>\n<li>ISO 6937 Non-Spacing Accent (20269)</li>\n<li>EUC Japanese (51932)</li>\n<li>EUC Simplified Chinese (51936)</li>\n<li>EUC Korean (51949)</li>\n<li>ISCII Devanagari (57002)</li>\n<li>ISCII Bengali (57003)</li>\n<li>ISCII Tamil (57004)</li>\n<li>ISCII Telugu (57005)</li>\n<li>ISCII Assamese (57006)</li>\n<li>ISCII Oriya (57007)</li>\n<li>ISCII Kannada (57008)</li>\n<li>ISCII Malayalam (57009)</li>\n<li>ISCII Gujarati (57010)</li>\n<li>ISCII Punjabi (57011)</li>\n<li>Japanese Shift-JIS (932)</li>\n<li>Simplified Chinese GBK (936)</li>\n<li>Korean (949)</li>\n<li>Traditional Chinese Big5 (950)</li>\n<li>US-ASCII (7-bit) (20127)</li>\n<li>Simplified Chinese GB2312 (20936)</li>\n<li>KOI8-R Russian Cyrillic (20866)</li>\n<li>KOI8-U Ukrainian Cyrillic (21866)</li>\n<li>Mazovia (Polish) MS-DOS (620)</li>\n<li>Arabic (ASMO 708) (708)</li>\n<li>Arabic (Transparent ASMO); Arabic (DOS) (720)</li>\n<li>Kamenický (Czech) MS-DOS (895)</li>\n<li>Korean (Johab) (1361)</li>\n<li>MAC Roman (10000)</li>\n<li>Japanese (Mac) (10001)</li>\n<li>MAC Traditional Chinese (Big5) (10002)</li>\n<li>Korean (Mac) (10003)</li>\n<li>Arabic (Mac) (10004)</li>\n<li>Hebrew (Mac) (10005)</li>\n<li>Greek (Mac) (10006)</li>\n<li>Cyrillic (Mac) (10007)</li>\n<li>MAC Simplified Chinese (GB 2312) (10008)</li>\n<li>Romanian (Mac) (10010)</li>\n<li>Ukrainian (Mac) (10017)</li>\n<li>Thai (Mac) (10021)</li>\n<li>MAC Latin 2 (Central European) (10029)</li>\n<li>Icelandic (Mac) (10079)</li>\n<li>Turkish (Mac) (10081)</li>\n<li>Croatian (Mac) (10082)</li>\n<li>CNS Taiwan (Chinese Traditional) (20000)</li>\n<li>TCA Taiwan (20001)</li>\n<li>ETEN Taiwan (Chinese Traditional) (20002)</li>\n<li>IBM5550 Taiwan (20003)</li>\n<li>TeleText Taiwan (20004)</li>\n<li>Wang Taiwan (20005)</li>\n<li>Western European IA5 (IRV International Alphabet 5) (20105)</li>\n<li>IA5 German (7-bit) (20106)</li>\n<li>IA5 Swedish (7-bit) (20107)</li>\n<li>IA5 Norwegian (7-bit) (20108)</li>\n<li>T.61 (20261)</li>\n<li>Japanese (JIS 0208-1990 and 0212-1990) (20932)</li>\n<li>Korean Wansung (20949)</li>\n<li>Extended/Ext Alpha Lowercase (21027)</li>\n<li>Europa 3 (29001)</li>\n<li>Atari ST/TT (47451)</li>\n<li>HZ-GB2312 Simplified Chinese (52936)</li>\n<li>Simplified Chinese GB18030 (54936)</li>\n</ul>",
         "args": {
             "Encoding": "编码"
+        }
+    },
+    "Defang IP Addresses": {
+        "displayName": "IP 地址去活化",
+        "src_description": "Takes a IPv4 or IPv6 address and 'Defangs' it, meaning the IP becomes invalid, removing the risk of accidentally utilising it as an IP address.",
+        "description": "对 IPv4 或 IPv6 地址进行“去活化”（defang），使 IP 失效，消除误将其当作 IP 地址使用的风险。",
+        "args": {}
+    },
+    "Defang URL": {
+        "displayName": "URL 去活化",
+        "src_description": "Takes a Universal Resource Locator (URL) and 'Defangs' it; meaning the URL becomes invalid, neutralising the risk of accidentally clicking on a malicious link.<br><br>This is often used when dealing with malicious links or IOCs.<br><br>Works well when combined with the 'Extract URLs' operation.",
+        "description": "对统一资源定位符（URL）进行“去活化”（defang），使 URL 失效，消除误点恶意链接的风险。<br><br>常用于处理恶意链接或 IOC（失陷指标）。<br><br>与“提取 URL”操作结合使用效果很好。",
+        "args": {
+            "Escape dots": "转义点号",
+            "Escape http": "转义 http",
+            "Escape ://": "转义 ://",
+            "Process": "处理"
         }
     },
     "Derive EVP key": {
@@ -456,6 +637,97 @@
             "Output": "输出"
         }
     },
+    "Diff": {
+        "displayName": "差异比较",
+        "src_description": "Compares two inputs (separated by the specified delimiter) and highlights the differences between them.",
+        "description": "比较两个输入（以指定的分隔符分隔），并高亮显示它们之间的差异。",
+        "args": {
+            "Sample delimiter": "样本分隔符",
+            "Diff by": "比较粒度",
+            "Show added": "显示新增",
+            "Show removed": "显示删除",
+            "Show subtraction": "显示差值",
+            "Ignore whitespace": "忽略空白"
+        }
+    },
+    "Divide": {
+        "displayName": "相除",
+        "src_description": "Divides a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>2.5</code>",
+        "description": "将一组数字依次相除。字符串中不是数字的项会被排除。<br><br>例如 <code>0x0a 8 .5</code> 变为 <code>2.5</code>",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
+    "DNS over HTTPS": {
+        "displayName": "DNS over HTTPS 查询",
+        "src_description": "Takes a single domain name and performs a DNS lookup using DNS over HTTPS.\n<br><br>\nBy default, <a href='https://developers.cloudflare.com/1.1.1.1/dns-over-https/'>Cloudflare</a> and <a href='https://developers.google.com/speed/public-dns/docs/dns-over-https'>Google</a> DNS over HTTPS services are supported.\n<br><br>\nCan be used with any service that supports the GET parameters <code>name</code> and <code>type</code>.",
+        "description": "对单个域名使用 DNS over HTTPS 进行 DNS 查询。\n<br><br>\n默认支持 <a href='https://developers.cloudflare.com/1.1.1.1/dns-over-https/'>Cloudflare</a> 和 <a href='https://developers.google.com/speed/public-dns/docs/dns-over-https'>Google</a> 的 DNS over HTTPS 服务。\n<br><br>\n也可以使用任何支持 GET 参数 <code>name</code> 和 <code>type</code> 的服务。",
+        "args": {
+            "Resolver": "解析服务器",
+            "Request Type": "请求类型",
+            "Answer Data Only": "仅显示应答数据",
+            "Disable DNSSEC validation": "禁用 DNSSEC 验证"
+        }
+    },
+    "Drop bytes": {
+        "displayName": "丢弃字节",
+        "src_description": "Cuts a slice of the specified number of bytes out of the data. Negative values are allowed.",
+        "description": "从数据中切除指定数量的字节，允许使用负值。",
+        "args": {
+            "Start": "起始",
+            "Length": "长度",
+            "Apply to each line": "逐行应用"
+        }
+    },
+    "Drop nth bytes": {
+        "displayName": "每隔 n 字节丢弃",
+        "src_description": "Drops every nth byte starting with a given byte.",
+        "description": "从指定字节开始，每隔 n 个字节丢弃一个字节。",
+        "args": {
+            "Drop every": "每隔丢弃",
+            "Starting at": "起始位置",
+            "Apply to each line": "逐行应用"
+        }
+    },
+    "ECDSA Sign": {
+        "displayName": "ECDSA 签名",
+        "src_description": "Sign a plaintext message with a PEM encoded EC key.",
+        "description": "使用 PEM 编码的 EC 密钥对明文消息进行签名。",
+        "args": {
+            "ECDSA Private Key (PEM)": "ECDSA 私钥（PEM）",
+            "Message Digest Algorithm": "消息摘要算法",
+            "Output Format": "输出格式"
+        }
+    },
+    "ECDSA Signature Conversion": {
+        "displayName": "ECDSA 签名格式转换",
+        "src_description": "Convert an ECDSA signature between hex, asn1 and json.",
+        "description": "在 hex、asn1 和 json 之间转换 ECDSA 签名。",
+        "args": {
+            "Input Format": "输入格式",
+            "Output Format": "输出格式"
+        }
+    },
+    "ECDSA Verify": {
+        "displayName": "ECDSA 验证",
+        "src_description": "Verify a message against a signature and a public PEM encoded EC key.",
+        "description": "使用签名和 PEM 编码的 EC 公钥验证消息。",
+        "args": {
+            "Input Format": "输入格式",
+            "Message Digest Algorithm": "消息摘要算法",
+            "ECDSA Public Key (PEM)": "ECDSA 公钥（PEM）",
+            "Message": "消息",
+            "Message format": "消息格式"
+        }
+    },
+    "Encode NetBIOS Name": {
+        "displayName": "NetBIOS 名称编码",
+        "src_description": "NetBIOS names as seen across the client interface to NetBIOS are exactly 16 bytes long. Within the NetBIOS-over-TCP protocols, a longer representation is used.<br><br>There are two levels of encoding. The first level maps a NetBIOS name into a domain system name.  The second level maps the domain system name into the 'compressed' representation required for interaction with the domain name system.<br><br>This operation carries out the first level of encoding. See RFC 1001 for full details.",
+        "description": "在 NetBIOS 客户端接口中看到的 NetBIOS 名称长度恰好为 16 字节。在 NetBIOS-over-TCP 协议中，则使用更长的表示形式。<br><br>编码分为两级。第一级把 NetBIOS 名称映射为域名系统名称；第二级把域名系统名称映射为与域名系统交互所需的“压缩”表示。<br><br>此操作执行第一级编码。详见 RFC 1001。",
+        "args": {
+            "Offset": "偏移量"
+        }
+    },
     "Encode text": {
         "displayName": "文本编码",
         "src_description": "Encodes text into the chosen character encoding.\n<br><br>\nSupported charsets are:\n<ul>\n<li>UTF-8 (65001)</li>\n<li>UTF-7 (65000)</li>\n<li>UTF-16LE (1200)</li>\n<li>UTF-16BE (1201)</li>\n<li>UTF-32LE (12000)</li>\n<li>UTF-32BE (12001)</li>\n<li>IBM EBCDIC International (500)</li>\n<li>IBM EBCDIC US-Canada (37)</li>\n<li>IBM EBCDIC Multilingual/ROECE (Latin 2) (870)</li>\n<li>IBM EBCDIC Greek Modern (875)</li>\n<li>IBM EBCDIC French (1010)</li>\n<li>IBM EBCDIC Turkish (Latin 5) (1026)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047)</li>\n<li>IBM EBCDIC Lao (1132/1133/1341)</li>\n<li>IBM EBCDIC US-Canada (037 + Euro symbol) (1140)</li>\n<li>IBM EBCDIC Germany (20273 + Euro symbol) (1141)</li>\n<li>IBM EBCDIC Denmark-Norway (20277 + Euro symbol) (1142)</li>\n<li>IBM EBCDIC Finland-Sweden (20278 + Euro symbol) (1143)</li>\n<li>IBM EBCDIC Italy (20280 + Euro symbol) (1144)</li>\n<li>IBM EBCDIC Latin America-Spain (20284 + Euro symbol) (1145)</li>\n<li>IBM EBCDIC United Kingdom (20285 + Euro symbol) (1146)</li>\n<li>IBM EBCDIC France (20297 + Euro symbol) (1147)</li>\n<li>IBM EBCDIC International (500 + Euro symbol) (1148)</li>\n<li>IBM EBCDIC Icelandic (20871 + Euro symbol) (1149)</li>\n<li>IBM EBCDIC Germany (20273)</li>\n<li>IBM EBCDIC Denmark-Norway (20277)</li>\n<li>IBM EBCDIC Finland-Sweden (20278)</li>\n<li>IBM EBCDIC Italy (20280)</li>\n<li>IBM EBCDIC Latin America-Spain (20284)</li>\n<li>IBM EBCDIC United Kingdom (20285)</li>\n<li>IBM EBCDIC Japanese Katakana Extended (20290)</li>\n<li>IBM EBCDIC France (20297)</li>\n<li>IBM EBCDIC Arabic (20420)</li>\n<li>IBM EBCDIC Greek (20423)</li>\n<li>IBM EBCDIC Hebrew (20424)</li>\n<li>IBM EBCDIC Korean Extended (20833)</li>\n<li>IBM EBCDIC Thai (20838)</li>\n<li>IBM EBCDIC Icelandic (20871)</li>\n<li>IBM EBCDIC Cyrillic Russian (20880)</li>\n<li>IBM EBCDIC Turkish (20905)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047 + Euro symbol) (20924)</li>\n<li>IBM EBCDIC Cyrillic Serbian-Bulgarian (21025)</li>\n<li>OEM United States (437)</li>\n<li>OEM Greek (formerly 437G); Greek (DOS) (737)</li>\n<li>OEM Baltic; Baltic (DOS) (775)</li>\n<li>OEM Russian; Cyrillic + Euro symbol (808)</li>\n<li>OEM Multilingual Latin 1; Western European (DOS) (850)</li>\n<li>OEM Latin 2; Central European (DOS) (852)</li>\n<li>OEM Cyrillic (primarily Russian) (855)</li>\n<li>OEM Turkish; Turkish (DOS) (857)</li>\n<li>OEM Multilingual Latin 1 + Euro symbol (858)</li>\n<li>OEM Portuguese; Portuguese (DOS) (860)</li>\n<li>OEM Icelandic; Icelandic (DOS) (861)</li>\n<li>OEM Hebrew; Hebrew (DOS) (862)</li>\n<li>OEM French Canadian; French Canadian (DOS) (863)</li>\n<li>OEM Arabic; Arabic (864) (864)</li>\n<li>OEM Nordic; Nordic (DOS) (865)</li>\n<li>OEM Russian; Cyrillic (DOS) (866)</li>\n<li>OEM Modern Greek; Greek, Modern (DOS) (869)</li>\n<li>OEM Cyrillic (primarily Russian) + Euro Symbol (872)</li>\n<li>Windows-874 Thai (874)</li>\n<li>Windows-1250 Central European (1250)</li>\n<li>Windows-1251 Cyrillic (1251)</li>\n<li>Windows-1252 Latin (1252)</li>\n<li>Windows-1253 Greek (1253)</li>\n<li>Windows-1254 Turkish (1254)</li>\n<li>Windows-1255 Hebrew (1255)</li>\n<li>Windows-1256 Arabic (1256)</li>\n<li>Windows-1257 Baltic (1257)</li>\n<li>Windows-1258 Vietnam (1258)</li>\n<li>ISO-8859-1 Latin 1 Western European (28591)</li>\n<li>ISO-8859-2 Latin 2 Central European (28592)</li>\n<li>ISO-8859-3 Latin 3 South European (28593)</li>\n<li>ISO-8859-4 Latin 4 North European (28594)</li>\n<li>ISO-8859-5 Latin/Cyrillic (28595)</li>\n<li>ISO-8859-6 Latin/Arabic (28596)</li>\n<li>ISO-8859-7 Latin/Greek (28597)</li>\n<li>ISO-8859-8 Latin/Hebrew (28598)</li>\n<li>ISO 8859-8 Hebrew (ISO-Logical) (38598)</li>\n<li>ISO-8859-9 Latin 5 Turkish (28599)</li>\n<li>ISO-8859-10 Latin 6 Nordic (28600)</li>\n<li>ISO-8859-11 Latin/Thai (28601)</li>\n<li>ISO-8859-13 Latin 7 Baltic Rim (28603)</li>\n<li>ISO-8859-14 Latin 8 Celtic (28604)</li>\n<li>ISO-8859-15 Latin 9 (28605)</li>\n<li>ISO-8859-16 Latin 10 (28606)</li>\n<li>ISO 2022 JIS Japanese with no halfwidth Katakana (50220)</li>\n<li>ISO 2022 JIS Japanese with halfwidth Katakana (50221)</li>\n<li>ISO 2022 Japanese JIS X 0201-1989 (1 byte Kana-SO/SI) (50222)</li>\n<li>ISO 2022 Korean (50225)</li>\n<li>ISO 2022 Simplified Chinese (50227)</li>\n<li>ISO 6937 Non-Spacing Accent (20269)</li>\n<li>EUC Japanese (51932)</li>\n<li>EUC Simplified Chinese (51936)</li>\n<li>EUC Korean (51949)</li>\n<li>ISCII Devanagari (57002)</li>\n<li>ISCII Bengali (57003)</li>\n<li>ISCII Tamil (57004)</li>\n<li>ISCII Telugu (57005)</li>\n<li>ISCII Assamese (57006)</li>\n<li>ISCII Oriya (57007)</li>\n<li>ISCII Kannada (57008)</li>\n<li>ISCII Malayalam (57009)</li>\n<li>ISCII Gujarati (57010)</li>\n<li>ISCII Punjabi (57011)</li>\n<li>Japanese Shift-JIS (932)</li>\n<li>Simplified Chinese GBK (936)</li>\n<li>Korean (949)</li>\n<li>Traditional Chinese Big5 (950)</li>\n<li>US-ASCII (7-bit) (20127)</li>\n<li>Simplified Chinese GB2312 (20936)</li>\n<li>KOI8-R Russian Cyrillic (20866)</li>\n<li>KOI8-U Ukrainian Cyrillic (21866)</li>\n<li>Mazovia (Polish) MS-DOS (620)</li>\n<li>Arabic (ASMO 708) (708)</li>\n<li>Arabic (Transparent ASMO); Arabic (DOS) (720)</li>\n<li>Kamenický (Czech) MS-DOS (895)</li>\n<li>Korean (Johab) (1361)</li>\n<li>MAC Roman (10000)</li>\n<li>Japanese (Mac) (10001)</li>\n<li>MAC Traditional Chinese (Big5) (10002)</li>\n<li>Korean (Mac) (10003)</li>\n<li>Arabic (Mac) (10004)</li>\n<li>Hebrew (Mac) (10005)</li>\n<li>Greek (Mac) (10006)</li>\n<li>Cyrillic (Mac) (10007)</li>\n<li>MAC Simplified Chinese (GB 2312) (10008)</li>\n<li>Romanian (Mac) (10010)</li>\n<li>Ukrainian (Mac) (10017)</li>\n<li>Thai (Mac) (10021)</li>\n<li>MAC Latin 2 (Central European) (10029)</li>\n<li>Icelandic (Mac) (10079)</li>\n<li>Turkish (Mac) (10081)</li>\n<li>Croatian (Mac) (10082)</li>\n<li>CNS Taiwan (Chinese Traditional) (20000)</li>\n<li>TCA Taiwan (20001)</li>\n<li>ETEN Taiwan (Chinese Traditional) (20002)</li>\n<li>IBM5550 Taiwan (20003)</li>\n<li>TeleText Taiwan (20004)</li>\n<li>Wang Taiwan (20005)</li>\n<li>Western European IA5 (IRV International Alphabet 5) (20105)</li>\n<li>IA5 German (7-bit) (20106)</li>\n<li>IA5 Swedish (7-bit) (20107)</li>\n<li>IA5 Norwegian (7-bit) (20108)</li>\n<li>T.61 (20261)</li>\n<li>Japanese (JIS 0208-1990 and 0212-1990) (20932)</li>\n<li>Korean Wansung (20949)</li>\n<li>Extended/Ext Alpha Lowercase (21027)</li>\n<li>Europa 3 (29001)</li>\n<li>Atari ST/TT (47451)</li>\n<li>HZ-GB2312 Simplified Chinese (52936)</li>\n<li>Simplified Chinese GB18030 (54936)</li>\n</ul>",
@@ -495,6 +767,18 @@
             "Unmappable characters": "无法映射的字符"
         }
     },
+    "Escape string": {
+        "displayName": "字符串转义",
+        "src_description": "Escapes special characters in a string so that they do not cause conflicts. For example, <code>Don't stop me now</code> becomes <code>Don\\'t stop me now</code>.<br><br>Supports the following escape sequences:<ul><li><code>\\n</code> (Line feed/newline)</li><li><code>\\r</code> (Carriage return)</li><li><code>\\t</code> (Horizontal tab)</li><li><code>\\b</code> (Backspace)</li><li><code>\\f</code> (Form feed)</li><li><code>\\xnn</code> (Hex, where n is 0-f)</li><li><code>\\\\</code> (Backslash)</li><li><code>\\'</code> (Single quote)</li><li><code>\\&quot;</code> (Double quote)</li><li><code>\\unnnn</code> (Unicode character)</li><li><code>\\u{nnnnnn}</code> (Unicode code point)</li></ul>",
+        "description": "转义字符串中的特殊字符，避免引起冲突。例如 <code>Don't stop me now</code> 变为 <code>Don\\'t stop me now</code>。<br><br>支持以下转义序列：<ul><li><code>\\n</code>（换行符）</li><li><code>\\r</code>（回车符）</li><li><code>\\t</code>（水平制表符）</li><li><code>\\b</code>（退格符）</li><li><code>\\f</code>（换页符）</li><li><code>\\xnn</code>（十六进制，n 为 0-f）</li><li><code>\\\\</code>（反斜杠）</li><li><code>\\'</code>（单引号）</li><li><code>\\&quot;</code>（双引号）</li><li><code>\\unnnn</code>（Unicode 字符）</li><li><code>\\u{nnnnnn}</code>（Unicode 码点）</li></ul>",
+        "args": {
+            "Escape level": "转义级别",
+            "Escape quote": "转义引号",
+            "JSON compatible": "兼容 JSON",
+            "ES6 compatible": "兼容 ES6",
+            "Uppercase hex": "大写十六进制"
+        }
+    },
     "Escape Unicode Characters": {
         "displayName": "Unicode 字符转义",
         "src_description": "Converts characters to their unicode-escaped notations.<br><br>Supports the prefixes:<ul><li><code>\\u</code></li><li><code>%u</code></li><li><code>U+</code></li></ul>e.g. <code>σου</code> becomes <code>\\u03C3\\u03BF\\u03C5</code>",
@@ -504,6 +788,41 @@
             "Encode all chars": "编码所有字符",
             "Padding": "填充",
             "Uppercase hex": "大写十六进制"
+        }
+    },
+    "Expand alphabet range": {
+        "displayName": "展开字母范围",
+        "src_description": "Expand an alphabet range string into a list of the characters in that range.<br><br>e.g. <code>a-z</code> becomes <code>abcdefghijklmnopqrstuvwxyz</code>.",
+        "description": "将字母范围字符串展开为该范围内的字符列表。<br><br>例如 <code>a-z</code> 变为 <code>abcdefghijklmnopqrstuvwxyz</code>。",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
+    "Extended GCD": {
+        "displayName": "扩展欧几里得算法",
+        "src_description": "Computes the Extended Euclidean Algorithm for integers <i>a</i> and <i>b</i>.<br><br>Finds integers <i>x</i> and <i>y</i> (Bezout coefficients) such that:<br>a*x + b*y = gcd(a, b)<br><br>This is fundamental to many number theory algorithms including modular inverse, solving linear Diophantine equations, and cryptographic operations.<br><br><b>Input handling:</b> If either <i>a</i> or <i>b</i> is left blank, its value is taken from the Input field.",
+        "description": "对整数 <i>a</i> 和 <i>b</i> 执行扩展欧几里得算法。<br><br>求出满足以下等式的整数 <i>x</i> 和 <i>y</i>（贝祖系数）：<br>a*x + b*y = gcd(a, b)<br><br>这是许多数论算法的基础，包括模逆元、求解线性丢番图方程以及密码学运算。<br><br><b>输入处理：</b>如果 <i>a</i> 或 <i>b</i> 留空，则其值取自输入框。",
+        "args": {
+            "Value a": "值 a",
+            "Value b": "值 b"
+        }
+    },
+    "Extract dates": {
+        "displayName": "提取日期",
+        "src_description": "Extracts dates in the following formats<ul><li><code>yyyy-mm-dd</code></li><li><code>dd/mm/yyyy</code></li><li><code>mm/dd/yyyy</code></li></ul>Dividers can be any of /, -, . or space",
+        "description": "提取以下格式的日期<ul><li><code>yyyy-mm-dd</code></li><li><code>dd/mm/yyyy</code></li><li><code>mm/dd/yyyy</code></li></ul>分隔符可以是 /、-、. 或空格",
+        "args": {
+            "Display total": "显示总数"
+        }
+    },
+    "Fang URL": {
+        "displayName": "URL 还原",
+        "src_description": "Takes a 'Defanged' Universal Resource Locator (URL) and 'Fangs' it. Meaning, it removes the alterations (defanged) that render it useless so that it can be used again.",
+        "description": "对已“去活化”的统一资源定位符（URL）进行还原（fang），即去掉使其失效的修改，使其可以再次使用。",
+        "args": {
+            "Restore [.]": "还原 [.]",
+            "Restore hxxp": "还原 hxxp",
+            "Restore ://": "还原 ://"
         }
     },
     "Fernet Decrypt": {
@@ -520,6 +839,38 @@
         "description": "Fernet 是一种对称加密方法，确保没有密钥就无法读取或篡改加密后的消息。密钥使用 URL 安全编码。Fernet 使用 CBC 模式的 128 位 AES 和 PKCS7 填充，并使用基于 SHA256 的 HMAC 进行认证。IV 由 os.random() 生成。<br><br><b>密钥：</b>密钥必须是经过 Base64 编码的 32 字节（256 位）数据。",
         "args": {
             "Key": "密钥"
+        }
+    },
+    "File Tree": {
+        "displayName": "文件树",
+        "src_description": "Creates a file tree from a list of file paths (similar to the tree command in Linux)",
+        "description": "根据文件路径列表生成文件树（类似 Linux 的 tree 命令）",
+        "args": {
+            "File Path Delimiter": "文件路径分隔符",
+            "Delimiter": "分隔符"
+        }
+    },
+    "Filter": {
+        "displayName": "过滤",
+        "src_description": "Splits up the input using the specified delimiter and then filters each branch based on a regular expression.",
+        "description": "使用指定的分隔符拆分输入，然后根据正则表达式过滤每一项。",
+        "args": {
+            "Delimiter": "分隔符",
+            "Regex": "正则表达式",
+            "Invert condition": "反转条件"
+        }
+    },
+    "Find / Replace": {
+        "displayName": "查找 / 替换",
+        "src_description": "Replaces all occurrences of the first string with the second.<br><br>Includes support for regular expressions (regex), simple strings and extended strings (which support \\n, \\r, \\t, \\b, \\f and escaped hex bytes using \\x notation, e.g. \\x00 for a null byte).",
+        "description": "将第一个字符串的所有出现替换为第二个字符串。<br><br>支持正则表达式（regex）、普通字符串和扩展字符串（支持 \\n、\\r、\\t、\\b、\\f，以及用 \\x 表示的转义十六进制字节，例如 \\x00 表示空字节）。",
+        "args": {
+            "Find": "查找",
+            "Replace": "替换",
+            "Global match": "全局匹配",
+            "Case insensitive": "忽略大小写",
+            "Multiline matching": "多行匹配",
+            "Dot matches all": "点号匹配所有字符"
         }
     },
     "Flask Session Decode": {
@@ -549,6 +900,19 @@
             "Salt": "盐值",
             "Algorithm": "算法",
             "View TimeStamp": "查看时间戳"
+        }
+    },
+    "Format MAC addresses": {
+        "displayName": "格式化 MAC 地址",
+        "src_description": "Displays given MAC addresses in multiple different formats.<br><br>Expects addresses in a list separated by newlines, spaces or commas.<br><br>WARNING: There are no validity checks.",
+        "description": "以多种不同格式显示给定的 MAC 地址。<br><br>地址应以换行、空格或逗号分隔的列表形式输入。<br><br>警告：不进行有效性检查。",
+        "args": {
+            "Output case": "输出大小写",
+            "No delimiter": "无分隔符",
+            "Dash delimiter": "短横线分隔",
+            "Colon delimiter": "冒号分隔",
+            "Cisco style": "Cisco 格式",
+            "IPv6 interface ID": "IPv6 接口 ID"
         }
     },
     "From Base": {
@@ -653,6 +1017,12 @@
         "displayName": "盲文解码",
         "src_description": "Converts six-dot braille symbols to text.",
         "description": "将六点盲文符号转换为文本。",
+        "args": {}
+    },
+    "From Case Insensitive Regex": {
+        "displayName": "从不区分大小写的正则转换",
+        "src_description": "Converts a case-insensitive regex string to a case sensitive regex string (no guarantee on it being the proper original casing) in case the i flag wasn't available at the time but now is, or you need it to be case-sensitive again.<br><br>e.g. <code>[mM][oO][zZ][iI][lL][lL][aA]/[0-9].[0-9] .*</code> becomes <code>Mozilla/[0-9].[0-9] .*</code>",
+        "description": "当之前无法使用 i 标志但现在可以使用，或者需要再次区分大小写时，将不区分大小写的正则表达式字符串转换为区分大小写的正则表达式字符串（不保证还原为原本正确的大小写）。<br><br>例如 <code>[mM][oO][zZ][iI][lL][lL][aA]/[0-9].[0-9] .*</code> 变为 <code>Mozilla/[0-9].[0-9] .*</code>",
         "args": {}
     },
     "From Charcode": {
@@ -760,6 +1130,72 @@
         "description": "将 QP 编码的文本还原为普通文本。这种格式是电子邮件中常见的内容传输编码。<br><br>例如 Quoted-Printable 编码的字符串 <code>hello=20world</code> 变为 <code>hello world</code>",
         "args": {}
     },
+    "From UNIX Timestamp": {
+        "displayName": "从 UNIX 时间戳转换",
+        "src_description": "Converts a UNIX timestamp to a datetime string.<br><br>e.g. <code>978346800</code> becomes <code>Mon 1 January 2001 11:00:00 UTC</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).",
+        "description": "将 UNIX 时间戳转换为日期时间字符串。<br><br>例如 <code>978346800</code> 变为 <code>Mon 1 January 2001 11:00:00 UTC</code><br><br>UNIX 时间戳是一个 32 位值，表示自 1970 年 1 月 1 日 UTC（UNIX 纪元）以来的秒数。",
+        "args": {
+            "Units": "单位"
+        }
+    },
+    "Fuzzy Match": {
+        "displayName": "模糊匹配",
+        "src_description": "Conducts a fuzzy search to find a pattern within the input based on weighted criteria.<br><br>e.g. A search for <code>dpan</code> will match on <code><b>D</b>on't <b>Pan</b>ic</code>",
+        "description": "根据加权条件进行模糊搜索，在输入中查找模式。<br><br>例如搜索 <code>dpan</code> 会匹配 <code><b>D</b>on't <b>Pan</b>ic</code>",
+        "args": {
+            "Search": "搜索",
+            "Sequential bonus": "连续匹配加分",
+            "Separator bonus": "分隔符后加分",
+            "Camel bonus": "驼峰加分",
+            "First letter bonus": "首字母加分",
+            "Leading letter penalty": "前导字母扣分",
+            "Max leading letter penalty": "前导字母最大扣分",
+            "Unmatched letter penalty": "未匹配字母扣分"
+        }
+    },
+    "Generate ECDSA Key Pair": {
+        "displayName": "生成 ECDSA 密钥对",
+        "src_description": "Generate an ECDSA key pair with a given Curve.<br><br>WARNING: Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness. We advise you not to use keys generated from CyberChef in operational contexts.",
+        "description": "使用指定曲线生成 ECDSA 密钥对。<br><br>警告：在任何情况下都不应依赖 CyberChef 中的密码学操作来提供安全保障，也不保证其正确性。建议不要在实际业务环境中使用 CyberChef 生成的密钥。",
+        "args": {
+            "Elliptic Curve": "椭圆曲线",
+            "Output Format": "输出格式"
+        }
+    },
+    "Generate PGP Key Pair": {
+        "displayName": "生成 PGP 密钥对",
+        "src_description": "Generates a new public/private PGP key pair. Supports RSA and Eliptic Curve (EC) keys.<br><br>WARNING: Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness. We advise you not to use keys generated from CyberChef in operational contexts.",
+        "description": "生成新的 PGP 公钥/私钥对。支持 RSA 和椭圆曲线（EC）密钥。<br><br>警告：在任何情况下都不应依赖 CyberChef 中的密码学操作来提供安全保障，也不保证其正确性。建议不要在实际业务环境中使用 CyberChef 生成的密钥。",
+        "args": {
+            "Key type": "密钥类型",
+            "Password (optional)": "密码（可选）",
+            "Name (optional)": "名称（可选）",
+            "Email (optional)": "邮箱（可选）"
+        }
+    },
+    "Generate RSA Key Pair": {
+        "displayName": "生成 RSA 密钥对",
+        "src_description": "Generate an RSA key pair with a given number of bits.<br><br>WARNING: Cryptographic operations in CyberChef should not be relied upon to provide security in any situation. No guarantee is offered for their correctness. We advise you not to use keys generated from CyberChef in operational contexts.",
+        "description": "生成指定位数的 RSA 密钥对。<br><br>警告：在任何情况下都不应依赖 CyberChef 中的密码学操作来提供安全保障，也不保证其正确性。建议不要在实际业务环境中使用 CyberChef 生成的密钥。",
+        "args": {
+            "RSA Key Length": "RSA 密钥长度",
+            "Output Format": "输出格式"
+        }
+    },
+    "Get All Casings": {
+        "displayName": "列出所有大小写组合",
+        "src_description": "Outputs all possible casing variations of a string.",
+        "description": "输出字符串所有可能的大小写组合。",
+        "args": {}
+    },
+    "Get Time": {
+        "displayName": "获取当前时间",
+        "src_description": "Generates a timestamp showing the amount of time since the UNIX epoch (1970-01-01 00:00:00 UTC). Uses the W3C High Resolution Time API.",
+        "description": "生成一个时间戳，表示自 UNIX 纪元（1970-01-01 00:00:00 UTC）以来经过的时间。使用 W3C 高精度时间 API。",
+        "args": {
+            "Granularity": "粒度"
+        }
+    },
     "GOST Decrypt": {
         "displayName": "GOST 解密",
         "src_description": "The GOST block cipher (Magma), defined in the standard GOST 28147-89 (RFC 5830), is a Soviet and Russian government standard symmetric key block cipher with a block size of 64 bits. The original standard, published in 1989, did not give the cipher any name, but the most recent revision of the standard, GOST R 34.12-2015 (RFC 7801, RFC 8891), specifies that it may be referred to as Magma. The GOST hash function is based on this cipher. The new standard also specifies a new 128-bit block cipher called Kuznyechik.<br><br>Developed in the 1970s, the standard had been marked 'Top Secret' and then downgraded to 'Secret' in 1990. Shortly after the dissolution of the USSR, it was declassified and it was released to the public in 1994. GOST 28147 was a Soviet alternative to the United States standard algorithm, DES. Thus, the two are very similar in structure.",
@@ -847,12 +1283,122 @@
             "sBox": "S 盒"
         }
     },
+    "Group IP addresses": {
+        "displayName": "IP 地址分组",
+        "src_description": "Groups a list of IP addresses into subnets. Supports both IPv4 and IPv6 addresses.",
+        "description": "将 IP 地址列表按子网分组。支持 IPv4 和 IPv6 地址。",
+        "args": {
+            "Delimiter": "分隔符",
+            "Subnet (CIDR)": "子网（CIDR）",
+            "Only show the subnets": "仅显示子网"
+        }
+    },
+    "Hamming Distance": {
+        "displayName": "汉明距离",
+        "src_description": "In information theory, the Hamming distance between two strings of equal length is the number of positions at which the corresponding symbols are different. In other words, it measures the minimum number of substitutions required to change one string into the other, or the minimum number of errors that could have transformed one string into the other. In a more general context, the Hamming distance is one of several string metrics for measuring the edit distance between two sequences.",
+        "description": "在信息论中，两个等长字符串之间的汉明距离是对应符号不同的位置数。换言之，它衡量的是把一个字符串变成另一个字符串所需的最少替换次数，或者可能把一个字符串变成另一个字符串的最少错误数。更一般地说，汉明距离是衡量两个序列之间编辑距离的几种字符串度量之一。",
+        "args": {
+            "Delimiter": "分隔符",
+            "Unit": "单位",
+            "Input type": "输入类型"
+        }
+    },
+    "HASSH Client Fingerprint": {
+        "displayName": "HASSH 客户端指纹",
+        "src_description": "Generates a HASSH fingerprint to help identify SSH clients based on hashing together values from the Client Key Exchange Init message.<br><br>Input: A hex stream of the SSH_MSG_KEXINIT packet application layer from Client to Server.",
+        "description": "通过对客户端密钥交换初始化（Key Exchange Init）消息中的值进行哈希生成 HASSH 指纹，帮助识别 SSH 客户端。<br><br>输入：从客户端发往服务器的 SSH_MSG_KEXINIT 数据包应用层的十六进制流。",
+        "args": {
+            "Input format": "输入格式",
+            "Output format": "输出格式"
+        }
+    },
+    "HASSH Server Fingerprint": {
+        "displayName": "HASSH 服务器指纹",
+        "src_description": "Generates a HASSH fingerprint to help identify SSH servers based on hashing together values from the Server Key Exchange Init message.<br><br>Input: A hex stream of the SSH_MSG_KEXINIT packet application layer from Server to Client.",
+        "description": "通过对服务器密钥交换初始化（Key Exchange Init）消息中的值进行哈希生成 HASSH 指纹，帮助识别 SSH 服务器。<br><br>输入：从服务器发往客户端的 SSH_MSG_KEXINIT 数据包应用层的十六进制流。",
+        "args": {
+            "Input format": "输入格式",
+            "Output format": "输出格式"
+        }
+    },
+    "Head": {
+        "displayName": "取开头几行（Head）",
+        "src_description": "Like the UNIX head utility.<br>Gets the first n lines.<br>You can select all but the last n lines by entering a negative value for n.<br>The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.",
+        "description": "类似 UNIX 的 head 工具。<br>获取前 n 行。<br>n 为负数时，选择除最后 n 行以外的所有行。<br>可以更改分隔符，以选择字段（例如用逗号分隔）而不是行。",
+        "args": {
+            "Delimiter": "分隔符",
+            "Number": "数字"
+        }
+    },
+    "Hex to Object Identifier": {
+        "displayName": "十六进制转 OID",
+        "src_description": "Converts a hexadecimal string into an object identifier (OID).",
+        "description": "将十六进制字符串转换为对象标识符（OID）。",
+        "args": {}
+    },
     "Hex to PEM": {
         "displayName": "十六进制转 PEM",
         "src_description": "Converts a hexadecimal DER (Distinguished Encoding Rules) string into PEM (Privacy Enhanced Mail) format.",
         "description": "将十六进制 DER（Distinguished Encoding Rules，可分辨编码规则）字符串转换为 PEM（Privacy Enhanced Mail）格式。",
         "args": {
             "Header string": "头部字符串"
+        }
+    },
+    "HTTP request": {
+        "displayName": "HTTP 请求",
+        "src_description": "Makes an HTTP request and returns the response.\n<br><br>\nThis operation supports different HTTP verbs like GET, POST, PUT, etc.\n<br><br>\nYou can add headers line by line in the format <code>Key: Value</code>\n<br><br>\nThe status code of the response, along with a limited selection of exposed headers, can be viewed by checking the 'Show response metadata' option. Only a limited set of response headers are exposed by the browser for security reasons.",
+        "description": "发送 HTTP 请求并返回响应。\n<br><br>\n此操作支持 GET、POST、PUT 等不同的 HTTP 方法。\n<br><br>\n可以按 <code>Key: Value</code> 格式逐行添加请求头。\n<br><br>\n勾选“显示响应元数据”选项后，可以查看响应状态码以及部分可访问的响应头。出于安全原因，浏览器只开放有限的响应头。",
+        "args": {
+            "Method": "方法",
+            "URL": "URL",
+            "Headers": "请求头",
+            "Mode": "模式",
+            "Show response metadata": "显示响应元数据"
+        }
+    },
+    "IPv6 Transition Addresses": {
+        "displayName": "IPv6 过渡地址",
+        "src_description": "Converts IPv4 addresses to their IPv6 Transition addresses. IPv6 Transition addresses can also be converted back into their original IPv4 address. MAC addresses can also be converted into the EUI-64 format, this can them be appended to your IPv6 /64 range to obtain a full /128 address.<br><br>Transition technologies enable translation between IPv4 and IPv6 addresses or tunneling to allow traffic to pass through the incompatible network, allowing the two standards to coexist.<br><br>Only /24 ranges and currently handled. Remove headers to easily copy out results.",
+        "description": "将 IPv4 地址转换为对应的 IPv6 过渡地址，也可以把 IPv6 过渡地址还原为原始 IPv4 地址。还可以把 MAC 地址转换为 EUI-64 格式，附加到 IPv6 /64 范围后得到完整的 /128 地址。<br><br>过渡技术支持在 IPv4 和 IPv6 地址之间转换，或通过隧道让流量穿过不兼容的网络，使两种标准得以共存。<br><br>目前只处理 /24 范围。移除头部可以方便地复制结果。",
+        "args": {
+            "Ignore ranges": "忽略范围",
+            "Remove headers": "移除头部"
+        }
+    },
+    "JA3 Fingerprint": {
+        "displayName": "JA3 指纹",
+        "src_description": "Generates a JA3 fingerprint to help identify TLS clients based on hashing together values from the Client Hello.<br><br>Input: A hex stream of the TLS Client Hello packet application layer.",
+        "description": "通过对 Client Hello 中的值进行哈希生成 JA3 指纹，帮助识别 TLS 客户端。<br><br>输入：TLS Client Hello 数据包应用层的十六进制流。",
+        "args": {
+            "Input format": "输入格式",
+            "Output format": "输出格式"
+        }
+    },
+    "JA3S Fingerprint": {
+        "displayName": "JA3S 指纹",
+        "src_description": "Generates a JA3S fingerprint to help identify TLS servers based on hashing together values from the Server Hello.<br><br>Input: A hex stream of the TLS Server Hello record application layer.",
+        "description": "通过对 Server Hello 中的值进行哈希生成 JA3S 指纹，帮助识别 TLS 服务器。<br><br>输入：TLS Server Hello 记录应用层的十六进制流。",
+        "args": {
+            "Input format": "输入格式",
+            "Output format": "输出格式"
+        }
+    },
+    "JA4 Fingerprint": {
+        "displayName": "JA4 指纹",
+        "src_description": "Generates a JA4 fingerprint to help identify TLS clients based on hashing together values from the Client Hello.<br><br>Input: A hex stream of the TLS or QUIC Client Hello packet application layer.",
+        "description": "通过对 Client Hello 中的值进行哈希生成 JA4 指纹，帮助识别 TLS 客户端。<br><br>输入：TLS 或 QUIC Client Hello 数据包应用层的十六进制流。",
+        "args": {
+            "Input format": "输入格式",
+            "Output format": "输出格式"
+        }
+    },
+    "JA4Server Fingerprint": {
+        "displayName": "JA4Server 指纹",
+        "src_description": "Generates a JA4Server Fingerprint (JA4S) to help identify TLS servers or sessions based on hashing together values from the Server Hello.<br><br>Input: A hex stream of the TLS or QUIC Server Hello packet application layer.",
+        "description": "通过对 Server Hello 中的值进行哈希生成 JA4Server 指纹（JA4S），帮助识别 TLS 服务器或会话。<br><br>输入：TLS 或 QUIC Server Hello 数据包应用层的十六进制流。",
+        "args": {
+            "Input format": "输入格式",
+            "Output format": "输出格式"
         }
     },
     "JSON Beautify": {
@@ -880,6 +1426,12 @@
         "description": "将 JSON 对象格式化为 YAML",
         "args": {}
     },
+    "JWK to PEM": {
+        "displayName": "JWK 转 PEM",
+        "src_description": "Converts Keys in JSON Web Key format to PEM format (PKCS#8).",
+        "description": "将 JSON Web Key 格式的密钥转换为 PEM 格式（PKCS#8）。",
+        "args": {}
+    },
     "JWT Decode": {
         "displayName": "JWT 解码",
         "src_description": "Decodes a JSON Web Token <b>without</b> checking whether the provided secret / private key is valid. Use 'JWT Verify' to check if the signature is valid as well.",
@@ -902,6 +1454,17 @@
         "description": "验证 JSON Web Token 是否有效，并且是否使用提供的密钥 / 私钥签名。<br><br>对于 HMAC 算法，密钥应为共享密钥；对于 RSA 和 ECDSA，应为 PEM 编码的公钥。",
         "args": {
             "Public/Secret Key": "公钥 / 密钥"
+        }
+    },
+    "Levenshtein Distance": {
+        "displayName": "莱文斯坦距离",
+        "src_description": "Levenshtein Distance (also known as Edit Distance) is a string metric to measure a difference between two strings that counts operations (insertions, deletions, and substitutions) on single character that are required to change one string to another.",
+        "description": "莱文斯坦距离（也称编辑距离）是衡量两个字符串差异的一种字符串度量，计算把一个字符串变成另一个字符串所需的单字符操作（插入、删除和替换）的次数。",
+        "args": {
+            "Sample delimiter": "样本分隔符",
+            "Insertion cost": "插入代价",
+            "Deletion cost": "删除代价",
+            "Substitution cost": "替换代价"
         }
     },
     "Lorenz": {
@@ -967,11 +1530,55 @@
         "description": "MD5（Message-Digest 5，消息摘要算法第 5 版）是一种广泛使用的哈希函数，曾被用于多种安全应用，也常用于校验文件完整性。<br><br>但 MD5 不具备抗碰撞性，不适用于依赖该特性的场景，例如 SSL/TLS 证书或数字签名。",
         "args": {}
     },
+    "Mean": {
+        "displayName": "平均值",
+        "src_description": "Computes the mean (average) of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5 .5</code> becomes <code>4.75</code>",
+        "description": "计算一组数字的平均值。字符串中不是数字的项会被排除。<br><br>例如 <code>0x0a 8 .5 .5</code> 变为 <code>4.75</code>",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
+    "Median": {
+        "displayName": "中位数",
+        "src_description": "Computes the median of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 1 .5</code> becomes <code>4.5</code>",
+        "description": "计算一组数字的中位数。字符串中不是数字的项会被排除。<br><br>例如 <code>0x0a 8 1 .5</code> 变为 <code>4.5</code>",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
     "MIME Decoding": {
         "displayName": "MIME 解码",
         "src_description": "Enables the decoding of MIME message header extensions for non-ASCII text",
         "description": "解码 MIME 消息头中用于非 ASCII 文本的扩展编码",
         "args": {}
+    },
+    "MOD": {
+        "displayName": "MOD 取模",
+        "src_description": "Computes the modulo of each number in a list with a given modulus value. Numbers are extracted from the input based on the delimiter, and non-numeric values are ignored.<br><br>e.g. <code>15 4 7</code> with modulus <code>3</code> becomes <code>0 1 1</code>",
+        "description": "对列表中的每个数用给定的模数取模。根据分隔符从输入中提取数字，非数字值会被忽略。<br><br>例如 <code>15 4 7</code> 在模数为 <code>3</code> 时变为 <code>0 1 1</code>",
+        "args": {
+            "Modulus": "模数",
+            "Delimiter": "分隔符"
+        }
+    },
+    "Modular Exponentiation": {
+        "displayName": "模幂运算",
+        "src_description": "Performs modular exponentiation, as used in Diffie-Hellman and RSA.<br><br>Computes Base ^ Exponent mod Modulus.<br><br><b>Input handling:</b> If <i>either</i> Base <i>or</i> Exponent is left blank, its value is taken from the Input field.",
+        "description": "执行模幂运算，用于 Diffie-Hellman 和 RSA 等。<br><br>计算 底数 ^ 指数 mod 模数。<br><br><b>输入处理：</b>如果底数<i>或</i>指数<i>其中之一</i>留空，则其值取自输入框。",
+        "args": {
+            "Base": "进制",
+            "Modulus": "模数",
+            "Exponent": "指数"
+        }
+    },
+    "Modular Inverse": {
+        "displayName": "模逆元",
+        "src_description": "Computes the modular multiplicative inverse of <i>a</i> modulo <i>m</i>.<br><br>Finds <i>x</i> such that a*x = 1 (mod m).<br><br><b>Input handling:</b> If either <i>a</i> or <i>m</i> is left blank, its value is taken from the Input field.",
+        "description": "计算 <i>a</i> 模 <i>m</i> 的乘法逆元。<br><br>求出满足 a*x = 1 (mod m) 的 <i>x</i>。<br><br><b>输入处理：</b>如果 <i>a</i> 或 <i>m</i> 留空，则其值取自输入框。",
+        "args": {
+            "Value (a)": "值（a）",
+            "Modulus (m)": "模数（m）"
+        }
     },
     "Multiple Bombe": {
         "displayName": "多重 Bombe",
@@ -987,12 +1594,58 @@
             "Use checking machine": "使用校验机"
         }
     },
+    "Multiply": {
+        "displayName": "相乘",
+        "src_description": "Multiplies a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>40</code>",
+        "description": "将一组数字相乘。字符串中不是数字的项会被排除。<br><br>例如 <code>0x0a 8 .5</code> 变为 <code>40</code>",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
     "Normalise Unicode": {
         "displayName": "Unicode 规范化",
         "src_description": "Transform Unicode characters to one of the Normalisation Forms",
         "description": "将 Unicode 字符转换为某一种规范化形式",
         "args": {
             "Normal Form": "规范化形式"
+        }
+    },
+    "NOT": {
+        "displayName": "NOT 非",
+        "src_description": "Returns the inverse of each byte.",
+        "description": "返回每个字节按位取反的结果。",
+        "args": {}
+    },
+    "Object Identifier to Hex": {
+        "displayName": "OID 转十六进制",
+        "src_description": "Converts an object identifier (OID) into a hexadecimal string.",
+        "description": "将对象标识符（OID）转换为十六进制字符串。",
+        "args": {}
+    },
+    "Offset checker": {
+        "displayName": "偏移检查",
+        "src_description": "Compares multiple inputs (separated by the specified delimiter) and highlights matching characters which appear at the same position in all samples.",
+        "description": "比较多个输入（以指定的分隔符分隔），高亮显示在所有样本中处于相同位置的相同字符。",
+        "args": {
+            "Sample delimiter": "样本分隔符"
+        }
+    },
+    "OR": {
+        "displayName": "OR 或",
+        "src_description": "OR the input with the given key.<br>e.g. <code>fe023da5</code>",
+        "description": "用给定的密钥对输入进行按位或运算。<br>例如 <code>fe023da5</code>",
+        "args": {
+            "Key": "密钥"
+        }
+    },
+    "Pad lines": {
+        "displayName": "行填充",
+        "src_description": "Add the specified number of the specified character to the beginning or end of each line",
+        "description": "在每行的开头或结尾添加指定数量的指定字符",
+        "args": {
+            "Position": "位置",
+            "Length": "长度",
+            "Character": "字符"
         }
     },
     "Parse ASN.1 hex string": {
@@ -1004,6 +1657,98 @@
             "Truncate octet strings longer than": "截断超过此长度的字节串"
         }
     },
+    "Parse colour code": {
+        "displayName": "解析颜色代码",
+        "src_description": "Converts a colour code in a standard format to other standard formats and displays the colour itself.<br><br><strong>Example inputs</strong><ul><li><code>#d9edf7</code></li><li><code>rgba(217,237,247,1)</code></li><li><code>hsla(200,65%,91%,1)</code></li><li><code>cmyk(0.12, 0.04, 0.00, 0.03)</code></li></ul>",
+        "description": "将标准格式的颜色代码转换为其他标准格式，并显示颜色本身。<br><br><strong>输入示例</strong><ul><li><code>#d9edf7</code></li><li><code>rgba(217,237,247,1)</code></li><li><code>hsla(200,65%,91%,1)</code></li><li><code>cmyk(0.12, 0.04, 0.00, 0.03)</code></li></ul>",
+        "args": {}
+    },
+    "Parse CSR": {
+        "displayName": "解析 CSR",
+        "src_description": "Parse Certificate Signing Request (CSR) for an X.509 certificate",
+        "description": "解析 X.509 证书的证书签名请求（CSR）",
+        "args": {
+            "Input format": "输入格式"
+        }
+    },
+    "Parse DateTime": {
+        "displayName": "解析日期时间",
+        "src_description": "Parses a DateTime string in your specified format and displays it in whichever timezone you choose with the following information:<ul><li>Date</li><li>Time</li><li>Period (AM/PM)</li><li>Timezone</li><li>UTC offset</li><li>Daylight Saving Time</li><li>Leap year</li><li>Days in this month</li><li>Day of year</li><li>Week number</li><li>Quarter</li></ul>Run with no input to see format string examples if required.",
+        "description": "按指定格式解析日期时间字符串，并在所选时区中显示以下信息：<ul><li>日期</li><li>时间</li><li>时段（AM/PM）</li><li>时区</li><li>UTC 偏移</li><li>夏令时</li><li>闰年</li><li>本月天数</li><li>一年中的第几天</li><li>周数</li><li>季度</li></ul>如有需要，可以在无输入的情况下运行，查看格式字符串示例。",
+        "args": {
+            "Built in formats": "内置格式",
+            "Input format string": "输入格式字符串",
+            "Input timezone": "输入时区"
+        }
+    },
+    "Parse Ethernet frame": {
+        "displayName": "解析以太网帧",
+        "src_description": "Parses an Ethernet frame and either shows the deduced values (Source and destination MAC, VLANs) or returns the packet data.<br /><br />Good for use in conjunction with the Parse IPv4, and Parse TCP/UDP recipes.",
+        "description": "解析以太网帧，显示推导出的值（源 MAC、目标 MAC、VLAN），或返回数据包数据。<br /><br />适合与“解析 IPv4 头部”和“解析 TCP/UDP”配方结合使用。",
+        "args": {
+            "Input type": "输入类型",
+            "Return type": "返回类型"
+        }
+    },
+    "Parse IP range": {
+        "displayName": "解析 IP 范围",
+        "src_description": "Given a CIDR range (e.g. <code>10.0.0.0/24</code>), hyphenated range (e.g. <code>10.0.0.0 - 10.0.1.0</code>), or a list of IPs and/or CIDR ranges (separated by a new line), this operation provides network information and enumerates all IP addresses in the range.<br><br>IPv6 is supported but will not be enumerated.",
+        "description": "给定 CIDR 范围（例如 <code>10.0.0.0/24</code>）、连字符范围（例如 <code>10.0.0.0 - 10.0.1.0</code>），或 IP 和/或 CIDR 范围的列表（以换行分隔），此操作提供网络信息并列举范围内的所有 IP 地址。<br><br>支持 IPv6，但不会列举 IPv6 地址。",
+        "args": {
+            "Include network info": "包含网络信息",
+            "Enumerate IP addresses": "列举 IP 地址",
+            "Allow large queries": "允许大范围查询"
+        }
+    },
+    "Parse IPv4 header": {
+        "displayName": "解析 IPv4 头部",
+        "src_description": "Given an IPv4 header, this operations parses and displays each field in an easily readable format.",
+        "description": "给定 IPv4 头部，此操作解析并以易读的格式显示每个字段。",
+        "args": {
+            "Input format": "输入格式",
+            "Output format": "输出格式"
+        }
+    },
+    "Parse IPv6 address": {
+        "displayName": "解析 IPv6 地址",
+        "src_description": "Displays the longhand and shorthand versions of a valid IPv6 address.<br><br>Recognises all reserved ranges and parses encapsulated or tunnelled addresses including Teredo and 6to4.",
+        "description": "显示有效 IPv6 地址的完整形式和简写形式。<br><br>能识别所有保留地址范围，并解析封装或隧道地址，包括 Teredo 和 6to4。",
+        "args": {}
+    },
+    "Parse ObjectID timestamp": {
+        "displayName": "解析 ObjectID 时间戳",
+        "src_description": "Parse timestamp from MongoDB/BSON ObjectID hex string.",
+        "description": "从 MongoDB/BSON ObjectID 十六进制字符串中解析时间戳。",
+        "args": {}
+    },
+    "Parse PGP Key": {
+        "displayName": "解析 PGP 密钥",
+        "src_description": "Parse the contents of a PGP (v4 or v6) Key",
+        "description": "解析 PGP（v4 或 v6）密钥的内容",
+        "args": {}
+    },
+    "Parse SSH Host Key": {
+        "displayName": "解析 SSH 主机密钥",
+        "src_description": "Parses a SSH host key and extracts fields from it.<br>The key type can be:<ul><li>ssh-rsa</li><li>ssh-dss</li><li>ecdsa-sha2</li><li>ssh-ed25519</li></ul>The key format can be either Hex or Base64.",
+        "description": "解析 SSH 主机密钥并提取其中的字段。<br>密钥类型可以是：<ul><li>ssh-rsa</li><li>ssh-dss</li><li>ecdsa-sha2</li><li>ssh-ed25519</li></ul>密钥格式可以是 Hex 或 Base64。",
+        "args": {
+            "Input Format": "输入格式"
+        }
+    },
+    "Parse TCP": {
+        "displayName": "解析 TCP",
+        "src_description": "Parses a TCP header and payload (if present).",
+        "description": "解析 TCP 头部和载荷（如果有）。",
+        "args": {
+            "Input format": "输入格式"
+        }
+    },
+    "Parse TLS record": {
+        "displayName": "解析 TLS 记录",
+        "src_description": "Parses one or more TLS records",
+        "description": "解析一个或多个 TLS 记录",
+        "args": {}
+    },
     "Parse TLV": {
         "displayName": "解析 TLV",
         "src_description": "Converts a Type-Length-Value (TLV) encoded string into a JSON object.  Can optionally include a <code>Key</code> / <code>Type</code> entry. <br><br>Tags: Key-Length-Value, KLV, Length-Value, LV",
@@ -1014,11 +1759,129 @@
             "Use BER": "使用 BER"
         }
     },
+    "Parse UDP": {
+        "displayName": "解析 UDP",
+        "src_description": "Parses a UDP header and payload (if present).",
+        "description": "解析 UDP 头部和载荷（如果有）。",
+        "args": {
+            "Input format": "输入格式"
+        }
+    },
+    "Parse UNIX file permissions": {
+        "displayName": "解析 UNIX 文件权限",
+        "src_description": "Given a UNIX/Linux file permission string in octal or textual format, this operation explains which permissions are granted to which user groups.<br><br>Input should be in either octal (e.g. <code>755</code>) or textual (e.g. <code>drwxr-xr-x</code>) format.",
+        "description": "给定八进制或文本格式的 UNIX/Linux 文件权限字符串，此操作解释授予了哪些用户组哪些权限。<br><br>输入应为八进制（例如 <code>755</code>）或文本（例如 <code>drwxr-xr-x</code>）格式。",
+        "args": {}
+    },
+    "Parse URI": {
+        "displayName": "解析 URI",
+        "src_description": "Pretty prints complicated Uniform Resource Identifier (URI) strings for ease of reading. Particularly useful for Uniform Resource Locators (URLs) with a lot of arguments.",
+        "description": "将复杂的统一资源标识符（URI）字符串格式化输出，便于阅读，尤其适用于参数很多的 URL。",
+        "args": {}
+    },
+    "Parse User Agent": {
+        "displayName": "解析 User Agent",
+        "src_description": "Attempts to identify and categorise information contained in a user-agent string.",
+        "description": "尝试识别并分类 User-Agent 字符串中包含的信息。",
+        "args": {}
+    },
+    "Parse X.509 certificate": {
+        "displayName": "解析 X.509 证书",
+        "src_description": "X.509 is an ITU-T standard for a public key infrastructure (PKI) and Privilege Management Infrastructure (PMI). It is commonly involved with SSL/TLS security.<br><br>This operation displays the contents of a certificate in a human readable format, similar to the openssl command line tool.<br><br>Tags: X509, server hello, handshake",
+        "description": "X.509 是 ITU-T 制定的公钥基础设施（PKI）和权限管理基础设施（PMI）标准，常见于 SSL/TLS 安全场景。<br><br>此操作以易读的格式显示证书内容，类似于 openssl 命令行工具。<br><br>标签：X509、server hello、握手",
+        "args": {
+            "Input format": "输入格式"
+        }
+    },
+    "Parse X.509 certificate bundles": {
+        "displayName": "解析 X.509 证书包",
+        "src_description": "Parses a PEM file containing one or more X.509 certificates and displays the validity, issuer, subject, extensions and other details of each certificate in order.",
+        "description": "解析包含一个或多个 X.509 证书的 PEM 文件，并按顺序显示每个证书的有效期、颁发者、主体、扩展等详细信息。",
+        "args": {}
+    },
+    "Parse X.509 CRL": {
+        "displayName": "解析 X.509 CRL",
+        "src_description": "Parse Certificate Revocation List (CRL)",
+        "description": "解析证书吊销列表（CRL）",
+        "args": {
+            "Input format": "输入格式"
+        }
+    },
     "PEM to Hex": {
         "displayName": "PEM 转十六进制",
         "src_description": "Converts PEM (Privacy Enhanced Mail) format to a hexadecimal DER (Distinguished Encoding Rules) string.",
         "description": "将 PEM（Privacy Enhanced Mail）格式转换为十六进制 DER（Distinguished Encoding Rules，可分辨编码规则）字符串。",
         "args": {}
+    },
+    "PEM to JWK": {
+        "displayName": "PEM 转 JWK",
+        "src_description": "Converts Keys in PEM format to a JSON Web Key format.",
+        "description": "将 PEM 格式的密钥转换为 JSON Web Key 格式。",
+        "args": {
+            "Set key ID (kid) to RFC 7638 thumbprint": "将密钥 ID（kid）设为 RFC 7638 指纹"
+        }
+    },
+    "PGP Decrypt": {
+        "displayName": "PGP 解密",
+        "src_description": "Input: the ASCII-armoured PGP message you want to decrypt.\n<br><br>\nArguments: the ASCII-armoured PGP private key of the recipient, \n(and the private key password if necessary).\n<br><br>\nPretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.\n<br><br>\nThis function uses the Keybase implementation of PGP.",
+        "description": "输入：要解密的 ASCII 封装 PGP 消息。\n<br><br>\n参数：接收方的 ASCII 封装 PGP 私钥\n（必要时还需提供私钥密码）。\n<br><br>\nPretty Good Privacy 是一种用于加密、解密和签名消息的加密标准（OpenPGP）。\n<br><br>\n此功能使用 Keybase 的 PGP 实现。",
+        "args": {
+            "Private key of recipient": "接收方私钥",
+            "Private key passphrase": "私钥口令"
+        }
+    },
+    "PGP Decrypt and Verify": {
+        "displayName": "PGP 解密并验证",
+        "src_description": "Input: the ASCII-armoured encrypted PGP message you want to verify.\n<br><br>\nArguments: the ASCII-armoured PGP public key of the signer, \nthe ASCII-armoured private key of the recipient (and the private key password if necessary).\n<br><br>\nThis operation uses PGP to decrypt and verify an encrypted digital signature.\n<br><br>\nPretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.\n<br><br>\nThis function uses the Keybase implementation of PGP.",
+        "description": "输入：要验证的 ASCII 封装加密 PGP 消息。\n<br><br>\n参数：签名者的 ASCII 封装 PGP 公钥，\n以及接收方的 ASCII 封装私钥（必要时还需提供私钥密码）。\n<br><br>\n此操作使用 PGP 解密并验证加密的数字签名。\n<br><br>\nPretty Good Privacy 是一种用于加密、解密和签名消息的加密标准（OpenPGP）。\n<br><br>\n此功能使用 Keybase 的 PGP 实现。",
+        "args": {
+            "Public key of signer": "签名者公钥",
+            "Private key of recipient": "接收方私钥",
+            "Private key password": "私钥密码"
+        }
+    },
+    "PGP Encrypt": {
+        "displayName": "PGP 加密",
+        "src_description": "Input: the message you want to encrypt.\n<br><br>\nArguments: the ASCII-armoured PGP public key of the recipient.\n<br><br>\nPretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.\n<br><br>\nThis function uses the Keybase implementation of PGP.",
+        "description": "输入：要加密的消息。\n<br><br>\n参数：接收方的 ASCII 封装（ASCII-armoured）PGP 公钥。\n<br><br>\nPretty Good Privacy 是一种用于加密、解密和签名消息的加密标准（OpenPGP）。\n<br><br>\n此功能使用 Keybase 的 PGP 实现。",
+        "args": {
+            "Public key of recipient": "接收方公钥"
+        }
+    },
+    "PGP Encrypt and Sign": {
+        "displayName": "PGP 加密并签名",
+        "src_description": "Input: the cleartext you want to sign.\n<br><br>\nArguments: the ASCII-armoured private key of the signer (plus the private key password if necessary)\nand the ASCII-armoured PGP public key of the recipient.\n<br><br>\nThis operation uses PGP to produce an encrypted digital signature.\n<br><br>\nPretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.\n<br><br>\nThis function uses the Keybase implementation of PGP.",
+        "description": "输入：要签名的明文。\n<br><br>\n参数：签名者的 ASCII 封装私钥（必要时还需提供私钥密码）\n以及接收方的 ASCII 封装 PGP 公钥。\n<br><br>\n此操作使用 PGP 生成加密的数字签名。\n<br><br>\nPretty Good Privacy 是一种用于加密、解密和签名消息的加密标准（OpenPGP）。\n<br><br>\n此功能使用 Keybase 的 PGP 实现。",
+        "args": {
+            "Private key of signer": "签名者私钥",
+            "Private key passphrase": "私钥口令",
+            "Public key of recipient": "接收方公钥"
+        }
+    },
+    "PGP Sign": {
+        "displayName": "PGP 签名",
+        "src_description": "Input: the message you want to sign\n<br><br>\nArguments: the ASCII-armoured PGP private key of the sender.\n<br><br>\nPretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.\n<br><br>\nThis function uses the Keybase implementation of PGP.",
+        "description": "输入：要签名的消息\n<br><br>\n参数：发送方的 ASCII 封装 PGP 私钥。\n<br><br>\nPretty Good Privacy 是一种用于加密、解密和签名消息的加密标准（OpenPGP）。\n<br><br>\n此功能使用 Keybase 的 PGP 实现。",
+        "args": {
+            "Private key of signer": "签名者私钥",
+            "Private key passphrase (optional)": "私钥口令（可选）"
+        }
+    },
+    "PGP Verify": {
+        "displayName": "PGP 验证",
+        "src_description": "Input: the ASCII-armoured encrypted PGP message you want to verify.\n<br><br>\nArgument: the ASCII-armoured PGP public key of the signer\n<br><br>\nThis operation uses PGP to decrypt a clearsigned message.\n<br><br>\nPretty Good Privacy is an encryption standard (OpenPGP) used for encrypting, decrypting, and signing messages.\n<br><br>\nThis function uses the Keybase implementation of PGP.",
+        "description": "输入：要验证的 ASCII 封装加密 PGP 消息。\n<br><br>\n参数：签名者的 ASCII 封装 PGP 公钥\n<br><br>\n此操作使用 PGP 解密明文签名（clearsigned）消息。\n<br><br>\nPretty Good Privacy 是一种用于加密、解密和签名消息的加密标准（OpenPGP）。\n<br><br>\n此功能使用 Keybase 的 PGP 实现。",
+        "args": {
+            "Public key of signer": "签名者公钥"
+        }
+    },
+    "Power Set": {
+        "displayName": "幂集",
+        "src_description": "Calculates all the subsets of a set.",
+        "description": "计算一个集合的所有子集。",
+        "args": {
+            "Item delimiter": "条目分隔符"
+        }
     },
     "PRESENT Decrypt": {
         "displayName": "PRESENT 解密",
@@ -1046,6 +1909,24 @@
             "Padding": "填充"
         }
     },
+    "Protobuf Decode": {
+        "displayName": "Protobuf 解码",
+        "src_description": "Decodes any Protobuf encoded data to a JSON representation of the data using the field number as the field key.<br><br>If a .proto schema is defined, the encoded data will be decoded with reference to the schema. Only one message instance will be decoded. <br><br><u>Show Unknown Fields</u><br>When a schema is used, this option shows fields that are present in the input data but not defined in the schema.<br><br><u>Show Types</u><br>Show the type of a field next to its name. For undefined fields, the wiretype and example types are shown instead.",
+        "description": "将任意 Protobuf 编码的数据解码为 JSON 表示，以字段编号作为字段键。<br><br>如果定义了 .proto schema，会参照 schema 解码数据，只解码一个消息实例。<br><br><u>显示未知字段</u><br>使用 schema 时，此选项会显示输入数据中存在、但 schema 中未定义的字段。<br><br><u>显示类型</u><br>在字段名旁显示字段类型。对于未定义的字段，改为显示其线路类型（wiretype）和示例类型。",
+        "args": {
+            "Schema (.proto text)": "Schema（.proto 文本）",
+            "Show Unknown Fields": "显示未知字段",
+            "Show Types": "显示类型"
+        }
+    },
+    "Protobuf Encode": {
+        "displayName": "Protobuf 编码",
+        "src_description": "Encodes a valid JSON object into a protobuf byte array using the input .proto schema.",
+        "description": "使用输入的 .proto schema 将合法的 JSON 对象编码为 protobuf 字节数组。",
+        "args": {
+            "Schema (.proto text)": "Schema（.proto 文本）"
+        }
+    },
     "Pseudo-Random Number Generator": {
         "displayName": "伪随机数生成器",
         "src_description": "A cryptographically-secure pseudo-random number generator (PRNG).<br><br>This operation uses the browser's built-in <code>crypto.getRandomValues()</code> method if available. If this cannot be found, it falls back to a Fortuna-based PRNG algorithm.",
@@ -1064,6 +1945,18 @@
             "Crypto grade": "密码学安全级",
             "Output format": "输出格式"
         }
+    },
+    "Public Key from Certificate": {
+        "displayName": "从证书提取公钥",
+        "src_description": "Extracts the Public Key from a Certificate.",
+        "description": "从证书中提取公钥。",
+        "args": {}
+    },
+    "Public Key from Private Key": {
+        "displayName": "从私钥提取公钥",
+        "src_description": "Extracts the Public Key from a Private Key.",
+        "description": "从私钥中提取公钥。",
+        "args": {}
     },
     "Rabbit": {
         "displayName": "Rabbit",
@@ -1168,6 +2061,67 @@
             "Rounds": "轮数"
         }
     },
+    "Regular expression": {
+        "displayName": "正则表达式",
+        "src_description": "Define your own regular expression (regex) to search the input data with, optionally choosing from a list of pre-defined patterns.<br><br>Supports extended regex syntax including the 'dot matches all' flag, named capture groups, full unicode coverage (including <code>\\p{}</code> categories and scripts as well as astral codes) and recursive matching.",
+        "description": "自定义正则表达式（regex）来搜索输入数据，也可以从预定义模式列表中选择。<br><br>支持扩展正则语法，包括“点号匹配所有字符”标志、命名捕获组、完整的 Unicode 支持（包括 <code>\\p{}</code> 分类和书写系统，以及 Astral 平面字符）和递归匹配。",
+        "args": {
+            "Built in regexes": "内置正则表达式",
+            "Regex": "正则表达式",
+            "Case insensitive": "忽略大小写",
+            "^ and $ match at newlines": "^ 和 $ 匹配换行处",
+            "Dot matches all": "点号匹配所有字符",
+            "Unicode support": "Unicode 支持",
+            "Astral support": "Astral 平面字符支持",
+            "Display total": "显示总数",
+            "Output format": "输出格式"
+        }
+    },
+    "Remove ANSI Escape Codes": {
+        "displayName": "移除 ANSI 转义码",
+        "src_description": "Removes ANSI Escape Codes.",
+        "description": "移除 ANSI 转义码。",
+        "args": {}
+    },
+    "Remove Diacritics": {
+        "displayName": "移除变音符号",
+        "src_description": "Replaces accented characters with their latin character equivalent. Accented characters are made up of Unicode combining characters, so unicode text formatting such as strikethroughs and underlines will also be removed.",
+        "description": "将带重音的字符替换为对应的拉丁字符。重音字符由 Unicode 组合字符构成，因此删除线、下划线等 Unicode 文本格式也会被移除。",
+        "args": {}
+    },
+    "Remove line numbers": {
+        "displayName": "移除行号",
+        "src_description": "Removes line numbers from the output if they can be trivially detected.",
+        "description": "如果能简单识别出行号，则将其从输出中移除。",
+        "args": {}
+    },
+    "Remove null bytes": {
+        "displayName": "移除空字节",
+        "src_description": "Removes all null bytes (<code>0x00</code>) from the input.",
+        "description": "从输入中移除所有空字节（<code>0x00</code>）。",
+        "args": {}
+    },
+    "Remove whitespace": {
+        "displayName": "移除空白字符",
+        "src_description": "Optionally removes all spaces, carriage returns, line feeds, tabs and form feeds from the input data.<br><br>This operation also supports the removal of full stops which are sometimes used to represent non-printable bytes in ASCII output.",
+        "description": "可选择从输入数据中移除所有空格、回车符、换行符、制表符和换页符。<br><br>此操作还支持移除句点，ASCII 输出中有时会用句点表示不可打印的字节。",
+        "args": {
+            "Spaces": "空格",
+            "Carriage returns (\\r)": "回车符（\\r）",
+            "Line feeds (\\n)": "换行符（\\n）",
+            "Tabs": "制表符",
+            "Form feeds (\\f)": "换页符（\\f）",
+            "Full stops": "句点"
+        }
+    },
+    "Reverse": {
+        "displayName": "反转",
+        "src_description": "Reverses the input string.",
+        "description": "反转输入字符串。",
+        "args": {
+            "By": "依据"
+        }
+    },
     "Rison Decode": {
         "displayName": "Rison 解码",
         "src_description": "Rison, a data serialization format optimized for compactness in URIs. Rison is a slight variation of JSON that looks vastly superior after URI encoding. Rison still expresses exactly the same set of data structures as JSON, so data can be translated back and forth without loss or guesswork.",
@@ -1240,6 +2194,66 @@
         "description": "一种简单的凯撒密码，把每个 Unicode 字符替换为在字母表中向前或向后 0x8000 位的字符。",
         "args": {}
     },
+    "Rotate left": {
+        "displayName": "循环左移",
+        "src_description": "Rotates each byte to the left by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.",
+        "description": "将每个字节按指定位数循环左移，可选择把溢出的位传递到下一个字节。目前仅支持 8 位值。",
+        "args": {
+            "Amount": "数量",
+            "Carry through": "进位传递"
+        }
+    },
+    "Rotate right": {
+        "displayName": "循环右移",
+        "src_description": "Rotates each byte to the right by the number of bits specified, optionally carrying the excess bits over to the next byte. Currently only supports 8-bit values.",
+        "description": "将每个字节按指定位数循环右移，可选择把溢出的位传递到下一个字节。目前仅支持 8 位值。",
+        "args": {
+            "Amount": "数量",
+            "Carry through": "进位传递"
+        }
+    },
+    "RSA Decrypt": {
+        "displayName": "RSA 解密",
+        "src_description": "Decrypt an RSA encrypted message with a PEM encoded private key.",
+        "description": "使用 PEM 编码的私钥解密 RSA 加密的消息。",
+        "args": {
+            "RSA Private Key (PEM)": "RSA 私钥（PEM）",
+            "Key Password": "密钥密码",
+            "Encryption Scheme": "加密方案",
+            "Message Digest Algorithm": "消息摘要算法"
+        }
+    },
+    "RSA Encrypt": {
+        "displayName": "RSA 加密",
+        "src_description": "Encrypt a message with a PEM encoded RSA public key.",
+        "description": "使用 PEM 编码的 RSA 公钥加密消息。",
+        "args": {
+            "RSA Public Key (PEM)": "RSA 公钥（PEM）",
+            "Encryption Scheme": "加密方案",
+            "Message Digest Algorithm": "消息摘要算法"
+        }
+    },
+    "RSA Sign": {
+        "displayName": "RSA 签名",
+        "src_description": "Sign a plaintext message with a PEM encoded RSA key.",
+        "description": "使用 PEM 编码的 RSA 密钥对明文消息进行签名。",
+        "args": {
+            "RSA Private Key (PEM)": "RSA 私钥（PEM）",
+            "Key Password": "密钥密码",
+            "Message Digest Algorithm": "消息摘要算法"
+        }
+    },
+    "RSA Verify": {
+        "displayName": "RSA 验证",
+        "src_description": "Verify a message against a signature and a public PEM encoded RSA key.",
+        "description": "使用签名和 PEM 编码的 RSA 公钥验证消息。",
+        "args": {
+            "RSA Public Key (PEM)": "RSA 公钥（PEM）",
+            "Message": "消息",
+            "Message format": "消息格式",
+            "Message Digest Algorithm": "消息摘要算法"
+        }
+    },
     "Salsa20": {
         "displayName": "Salsa20",
         "src_description": "Salsa20 is a stream cipher designed by Daniel J. Bernstein and submitted to the eSTREAM project; Salsa20/8 and Salsa20/12 are round-reduced variants. It is closely related to the ChaCha stream cipher.<br><br><b>Key:</b> Salsa20 uses a key of 16 or 32 bytes (128 or 256 bits).<br><br><b>Nonce:</b> Salsa20 uses a nonce of 8 bytes (64 bits).<br><br><b>Counter:</b> Salsa uses a counter of 8 bytes (64 bits). The counter starts at zero at the start of the keystream, and is incremented at every 64 bytes.",
@@ -1265,6 +2279,33 @@
             "Key length": "密钥长度"
         }
     },
+    "Set Difference": {
+        "displayName": "集合差集",
+        "src_description": "Calculates the difference, or relative complement, of two sets.",
+        "description": "计算两个集合的差集（相对补集）。",
+        "args": {
+            "Sample delimiter": "样本分隔符",
+            "Item delimiter": "条目分隔符"
+        }
+    },
+    "Set Intersection": {
+        "displayName": "集合交集",
+        "src_description": "Calculates the intersection of two sets.",
+        "description": "计算两个集合的交集。",
+        "args": {
+            "Sample delimiter": "样本分隔符",
+            "Item delimiter": "条目分隔符"
+        }
+    },
+    "Set Union": {
+        "displayName": "集合并集",
+        "src_description": "Calculates the union of two sets.",
+        "description": "计算两个集合的并集。",
+        "args": {
+            "Sample delimiter": "样本分隔符",
+            "Item delimiter": "条目分隔符"
+        }
+    },
     "Show Base64 offsets": {
         "displayName": "显示 Base64 偏移",
         "src_description": "When a string is within a block of data and the whole block is Base64'd, the string itself could be represented in Base64 in three distinct ways depending on its offset within the block.<br><br>This operation shows all possible offsets for a given string so that each possible encoding can be considered.",
@@ -1273,6 +2314,24 @@
             "Alphabet": "字母表",
             "Show variable chars and padding": "显示可变字符和填充",
             "Input format": "输入格式"
+        }
+    },
+    "Show on map": {
+        "displayName": "在地图上显示",
+        "src_description": "Displays co-ordinates on a slippy map.<br><br>Co-ordinates will be converted to decimal degrees before being shown on the map.<br><br>Supported formats:<ul><li>Degrees Minutes Seconds (DMS)</li><li>Degrees Decimal Minutes (DDM)</li><li>Decimal Degrees (DD)</li><li>Geohash</li><li>Military Grid Reference System (MGRS)</li><li>Ordnance Survey National Grid (OSNG)</li><li>Universal Transverse Mercator (UTM)</li></ul><br>This operation will not work offline.",
+        "description": "在可拖动的地图上显示坐标。<br><br>坐标会先转换为十进制度，再显示在地图上。<br><br>支持的格式：<ul><li>度分秒（DMS）</li><li>度十进制分（DDM）</li><li>十进制度（DD）</li><li>Geohash</li><li>军事网格参考系统（MGRS）</li><li>英国国家格网（OSNG）</li><li>通用横轴墨卡托（UTM）</li></ul><br>此操作无法离线使用。",
+        "args": {
+            "Zoom Level": "缩放级别",
+            "Input Format": "输入格式",
+            "Input Delimiter": "输入分隔符"
+        }
+    },
+    "Shuffle": {
+        "displayName": "随机打乱",
+        "src_description": "Randomly reorders input elements.",
+        "description": "随机重新排列输入中的元素。",
+        "args": {
+            "Delimiter": "分隔符"
         }
     },
     "SIGABA": {
@@ -1323,6 +2382,35 @@
             "SIGABA mode": "SIGABA 模式"
         }
     },
+    "Sleep": {
+        "displayName": "暂停",
+        "src_description": "Sleep causes the recipe to wait for a specified number of milliseconds before continuing execution.",
+        "description": "让配方等待指定的毫秒数后再继续执行。",
+        "args": {
+            "Time (ms)": "时间（毫秒）"
+        }
+    },
+    "SM2 Decrypt": {
+        "displayName": "SM2 解密",
+        "src_description": "Decrypts a message utilizing the SM2 standard",
+        "description": "使用 SM2 标准解密消息",
+        "args": {
+            "Private Key": "私钥",
+            "Input Format": "输入格式",
+            "Curve": "曲线"
+        }
+    },
+    "SM2 Encrypt": {
+        "displayName": "SM2 加密",
+        "src_description": "Encrypts a message utilizing the SM2 standard",
+        "description": "使用 SM2 标准加密消息",
+        "args": {
+            "Public Key X": "公钥 X",
+            "Public Key Y": "公钥 Y",
+            "Output Format": "输出格式",
+            "Curve": "曲线"
+        }
+    },
     "SM4 Decrypt": {
         "displayName": "SM4 解密",
         "src_description": "SM4 is a 128-bit block cipher, currently established as a national standard (GB/T 32907-2016) of China.",
@@ -1347,6 +2435,65 @@
             "Output": "输出"
         }
     },
+    "Sort": {
+        "displayName": "排序",
+        "src_description": "Alphabetically sorts strings separated by the specified delimiter.<br><br>The IP address option supports IPv4 only.",
+        "description": "按字母顺序对以指定分隔符分隔的字符串进行排序。<br><br>IP 地址选项仅支持 IPv4。",
+        "args": {
+            "Delimiter": "分隔符",
+            "Reverse": "反向",
+            "Order": "顺序"
+        }
+    },
+    "Split": {
+        "displayName": "拆分",
+        "src_description": "Splits a string into sections around a given delimiter.",
+        "description": "按给定的分隔符将字符串拆分为多段。",
+        "args": {
+            "Split delimiter": "拆分分隔符",
+            "Join delimiter": "连接分隔符"
+        }
+    },
+    "Standard Deviation": {
+        "displayName": "标准差",
+        "src_description": "Computes the standard deviation of a number list. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>4.089281382128433</code>",
+        "description": "计算一组数字的标准差。字符串中不是数字的项会被排除。<br><br>例如 <code>0x0a 8 .5</code> 变为 <code>4.089281382128433</code>",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
+    "Strip HTTP headers": {
+        "displayName": "去除 HTTP 头部",
+        "src_description": "Removes HTTP headers from a request or response by looking for the first instance of a double newline.",
+        "description": "通过查找第一个连续两个换行的位置，从请求或响应中去除 HTTP 头部。",
+        "args": {}
+    },
+    "Strip IPv4 header": {
+        "displayName": "去除 IPv4 头部",
+        "src_description": "Strips the IPv4 header from an IPv4 packet, outputting the payload.",
+        "description": "从 IPv4 数据包中去除 IPv4 头部，输出载荷。",
+        "args": {}
+    },
+    "Strip TCP header": {
+        "displayName": "去除 TCP 头部",
+        "src_description": "Strips the TCP header from a TCP segment, outputting the payload.",
+        "description": "从 TCP 报文段中去除 TCP 头部，输出载荷。",
+        "args": {}
+    },
+    "Strip UDP header": {
+        "displayName": "去除 UDP 头部",
+        "src_description": "Strips the UDP header from a UDP datagram, outputting the payload.",
+        "description": "从 UDP 数据报中去除 UDP 头部，输出载荷。",
+        "args": {}
+    },
+    "SUB": {
+        "displayName": "SUB 减",
+        "src_description": "SUB the input with the given key (e.g. <code>fe023da5</code>), MOD 255",
+        "description": "将输入减去给定的密钥（例如 <code>fe023da5</code>），结果模 255",
+        "args": {
+            "Key": "密钥"
+        }
+    },
     "Substitute": {
         "displayName": "字节替换",
         "src_description": "A substitution cipher allowing you to specify bytes to replace with other byte values. This can be used to create Caesar ciphers but is more powerful as any byte value can be substituted, not just letters, and the substitution values need not be in order.<br><br>Enter the bytes you want to replace in the Plaintext field and the bytes to replace them with in the Ciphertext field.<br><br>Non-printable bytes can be specified using string escape notation. For example, a line feed character can be written as either <code>\\n</code> or <code>\\x0a</code>.<br><br>Byte ranges can be specified using a hyphen. For example, the sequence <code>0123456789</code> can be written as <code>0-9</code>.<br><br>Note that blackslash characters are used to escape special characters, so will need to be escaped themselves if you want to use them on their own (e.g.<code>\\\\</code>).",
@@ -1357,6 +2504,28 @@
             "Ignore case": "忽略大小写"
         }
     },
+    "Subtract": {
+        "displayName": "相减",
+        "src_description": "Subtracts a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>1.5</code>",
+        "description": "将一组数字依次相减。字符串中不是数字的项会被排除。<br><br>例如 <code>0x0a 8 .5</code> 变为 <code>1.5</code>",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
+    "Sum": {
+        "displayName": "求和",
+        "src_description": "Adds together a list of numbers. If an item in the string is not a number it is excluded from the list.<br><br>e.g. <code>0x0a 8 .5</code> becomes <code>18.5</code>",
+        "description": "将一组数字相加。字符串中不是数字的项会被排除。<br><br>例如 <code>0x0a 8 .5</code> 变为 <code>18.5</code>",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
+    "Swap case": {
+        "displayName": "大小写互换",
+        "src_description": "Converts uppercase letters to lowercase ones, and lowercase ones to uppercase ones.",
+        "description": "把大写字母转换为小写，小写字母转换为大写。",
+        "args": {}
+    },
     "Swap endianness": {
         "displayName": "交换字节序",
         "src_description": "Switches the data from big-endian to little-endian or vice-versa. Data can be read in as hexadecimal or raw bytes. It will be returned in the same format as it is entered.",
@@ -1365,6 +2534,44 @@
             "Data format": "数据格式",
             "Word length (bytes)": "字长（字节）",
             "Pad incomplete words": "填充不完整的字"
+        }
+    },
+    "Symmetric Difference": {
+        "displayName": "对称差集",
+        "src_description": "Calculates the symmetric difference of two sets.",
+        "description": "计算两个集合的对称差集。",
+        "args": {
+            "Sample delimiter": "样本分隔符",
+            "Item delimiter": "条目分隔符"
+        }
+    },
+    "Tail": {
+        "displayName": "取末尾几行（Tail）",
+        "src_description": "Like the UNIX tail utility.<br>Gets the last n lines.<br>Optionally you can select all lines after line n by entering a negative value for n.<br>The delimiter can be changed so that instead of lines, fields (i.e. commas) are selected instead.",
+        "description": "类似 UNIX 的 tail 工具。<br>获取最后 n 行。<br>n 为负数时，选择第 n 行之后的所有行。<br>可以更改分隔符，以选择字段（例如用逗号分隔）而不是行。",
+        "args": {
+            "Delimiter": "分隔符",
+            "Number": "数字"
+        }
+    },
+    "Take bytes": {
+        "displayName": "截取字节",
+        "src_description": "Takes a slice of the specified number of bytes from the data. Negative values are allowed.",
+        "description": "从数据中截取指定数量的字节，允许使用负值。",
+        "args": {
+            "Start": "起始",
+            "Length": "长度",
+            "Apply to each line": "逐行应用"
+        }
+    },
+    "Take nth bytes": {
+        "displayName": "每隔 n 字节截取",
+        "src_description": "Takes every nth byte starting with a given byte.",
+        "description": "从指定字节开始，每隔 n 个字节截取一个字节。",
+        "args": {
+            "Take every": "每隔选取",
+            "Starting at": "起始位置",
+            "Apply to each line": "逐行应用"
         }
     },
     "TEA Decrypt": {
@@ -1510,6 +2717,12 @@
         "description": "将文本转换为六点盲文符号。",
         "args": {}
     },
+    "To Case Insensitive Regex": {
+        "displayName": "转为不区分大小写的正则",
+        "src_description": "Converts a case-sensitive regex string into a case-insensitive regex string in case the i flag is unavailable to you.<br><br>e.g. <code>Mozilla/[0-9].[0-9] .*</code> becomes <code>[mM][oO][zZ][iI][lL][lL][aA]/[0-9].[0-9] .*</code>",
+        "description": "当无法使用 i 标志时，将区分大小写的正则表达式字符串转换为不区分大小写的正则表达式字符串。<br><br>例如 <code>Mozilla/[0-9].[0-9] .*</code> 变为 <code>[mM][oO][zZ][iI][lL][lL][aA]/[0-9].[0-9] .*</code>",
+        "args": {}
+    },
     "To Charcode": {
         "displayName": "字符码编码",
         "src_description": "Converts text to its unicode character code equivalent.<br><br>e.g. <code>Γειά σου</code> becomes <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code>",
@@ -1582,6 +2795,12 @@
             "Convert to": "转换为"
         }
     },
+    "To Lower case": {
+        "displayName": "转为小写",
+        "src_description": "Converts every character in the input to lower case.",
+        "description": "将输入中的每个字符转换为小写。",
+        "args": {}
+    },
     "To MessagePack": {
         "displayName": "MessagePack 编码",
         "src_description": "Converts JSON to MessagePack encoded byte buffer. MessagePack is a computer data interchange format. It is a binary form for representing simple data structures like arrays and associative arrays.",
@@ -1628,6 +2847,47 @@
         "src_description": "Quoted-Printable, or QP encoding, is an encoding using printable ASCII characters (alphanumeric and the equals sign '=') to transmit 8-bit data over a 7-bit data path or, generally, over a medium which is not 8-bit clean. It is defined as a MIME content transfer encoding for use in email.<br><br>QP works by using the equals sign '=' as an escape character. It also limits line length to 76, as some software has limits on line length.",
         "description": "Quoted-Printable（QP 编码）是一种使用可打印 ASCII 字符（字母、数字和等号“=”）的编码，用于通过 7 位数据通道或一般意义上不支持 8 位数据的媒介传输 8 位数据。它被定义为电子邮件中使用的 MIME 内容传输编码。<br><br>QP 使用等号“=”作为转义字符。由于部分软件限制行长，它还会把行长限制在 76 个字符以内。",
         "args": {}
+    },
+    "To Table": {
+        "displayName": "转为表格",
+        "src_description": "Data can be split on different characters and rendered as an HTML, ASCII or Markdown table with an optional header row.<br><br>Supports the CSV (Comma Separated Values) file format by default. Change the cell delimiter argument to <code>\\t</code> to support TSV (Tab Separated Values) or <code>|</code> for PSV (Pipe Separated Values).<br><br>You can enter as many delimiters as you like. Each character will be treat as a separate possible delimiter.",
+        "description": "可以按不同字符拆分数据，并渲染为 HTML、ASCII 或 Markdown 表格，可选表头行。<br><br>默认支持 CSV（逗号分隔值）文件格式。将单元格分隔符参数改为 <code>\\t</code> 可支持 TSV（制表符分隔值），改为 <code>|</code> 可支持 PSV（竖线分隔值）。<br><br>可以输入任意多个分隔符，每个字符都会被视为一个可能的分隔符。",
+        "args": {
+            "Cell delimiters": "单元格分隔符",
+            "Row delimiters": "行分隔符",
+            "Make first row header": "首行作为表头",
+            "Format": "格式"
+        }
+    },
+    "To UNIX Timestamp": {
+        "displayName": "转为 UNIX 时间戳",
+        "src_description": "Parses a datetime string in UTC and returns the corresponding UNIX timestamp.<br><br>e.g. <code>Mon 1 January 2001 11:00:00</code> becomes <code>978346800</code><br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).",
+        "description": "解析 UTC 日期时间字符串，返回对应的 UNIX 时间戳。<br><br>例如 <code>Mon 1 January 2001 11:00:00</code> 变为 <code>978346800</code><br><br>UNIX 时间戳是一个 32 位值，表示自 1970 年 1 月 1 日 UTC（UNIX 纪元）以来的秒数。",
+        "args": {
+            "Units": "单位",
+            "Treat as UTC": "视为 UTC",
+            "Show parsed datetime": "显示解析后的日期时间"
+        }
+    },
+    "To Upper case": {
+        "displayName": "转为大写",
+        "src_description": "Converts the input string to upper case, optionally limiting scope to only the first character in each word, sentence or paragraph.",
+        "description": "将输入字符串转换为大写，可选择只转换每个单词、句子或段落的第一个字符。",
+        "args": {
+            "Scope": "范围"
+        }
+    },
+    "Translate DateTime Format": {
+        "displayName": "转换日期时间格式",
+        "src_description": "Parses a datetime string in one format and re-writes it in another.<br><br>Run with no input to see the relevant format string examples.",
+        "description": "按一种格式解析日期时间字符串，并以另一种格式重新输出。<br><br>在无输入的情况下运行可以查看相关的格式字符串示例。",
+        "args": {
+            "Built in formats": "内置格式",
+            "Input format string": "输入格式字符串",
+            "Input timezone": "输入时区",
+            "Output format string": "输出格式字符串",
+            "Output timezone": "输出时区"
+        }
     },
     "Triple DES Decrypt": {
         "displayName": "3DES 解密",
@@ -1710,12 +2970,45 @@
             "Strict output": "严格输出"
         }
     },
+    "Unescape string": {
+        "displayName": "字符串反转义",
+        "src_description": "Unescapes characters in a string that have been escaped. For example, <code>Don\\'t stop me now</code> becomes <code>Don't stop me now</code>.<br><br>Supports the following escape sequences:<ul><li><code>\\n</code> (Line feed/newline)</li><li><code>\\r</code> (Carriage return)</li><li><code>\\t</code> (Horizontal tab)</li><li><code>\\b</code> (Backspace)</li><li><code>\\f</code> (Form feed)</li><li><code>\\nnn</code> (Octal, where n is 0-7)</li><li><code>\\xnn</code> (Hex, where n is 0-f)</li><li><code>\\\\</code> (Backslash)</li><li><code>\\'</code> (Single quote)</li><li><code>\\&quot;</code> (Double quote)</li><li><code>\\unnnn</code> (Unicode character)</li><li><code>\\u{nnnnnn}</code> (Unicode code point)</li></ul>",
+        "description": "还原字符串中被转义的字符。例如 <code>Don\\'t stop me now</code> 变为 <code>Don't stop me now</code>。<br><br>支持以下转义序列：<ul><li><code>\\n</code>（换行符）</li><li><code>\\r</code>（回车符）</li><li><code>\\t</code>（水平制表符）</li><li><code>\\b</code>（退格符）</li><li><code>\\f</code>（换页符）</li><li><code>\\nnn</code>（八进制，n 为 0-7）</li><li><code>\\xnn</code>（十六进制，n 为 0-f）</li><li><code>\\\\</code>（反斜杠）</li><li><code>\\'</code>（单引号）</li><li><code>\\&quot;</code>（双引号）</li><li><code>\\unnnn</code>（Unicode 字符）</li><li><code>\\u{nnnnnn}</code>（Unicode 码点）</li></ul>",
+        "args": {}
+    },
     "Unescape Unicode Characters": {
         "displayName": "Unicode 字符反转义",
         "src_description": "Converts unicode-escaped character notation back into raw characters.<br><br>Supports the prefixes:<ul><li><code>\\u</code></li><li><code>%u</code></li><li><code>U+</code></li></ul>e.g. <code>\\u03c3\\u03bf\\u03c5</code> becomes <code>σου</code>",
         "description": "将 Unicode 转义表示还原为原始字符。<br><br>支持以下前缀：<ul><li><code>\\u</code></li><li><code>%u</code></li><li><code>U+</code></li></ul>例如 <code>\\u03c3\\u03bf\\u03c5</code> 变为 <code>σου</code>",
         "args": {
             "Prefix": "前缀"
+        }
+    },
+    "Unicode Text Format": {
+        "displayName": "Unicode 文本格式",
+        "src_description": "Adds Unicode combining characters to change formatting of plaintext.",
+        "description": "添加 Unicode 组合字符，以改变纯文本的显示格式。",
+        "args": {
+            "Underline": "下划线",
+            "Strikethrough": "删除线"
+        }
+    },
+    "Unique": {
+        "displayName": "去重",
+        "src_description": "Removes duplicate strings from the input.",
+        "description": "移除输入中重复的字符串。",
+        "args": {
+            "Delimiter": "分隔符",
+            "Display count": "显示计数"
+        }
+    },
+    "UNIX Timestamp to Windows Filetime": {
+        "displayName": "UNIX 时间戳转 Windows Filetime",
+        "src_description": "Converts a UNIX timestamp to a Windows Filetime value.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.",
+        "description": "将 UNIX 时间戳转换为 Windows Filetime 值。<br><br>Windows Filetime 是一个 64 位值，表示自 1601 年 1 月 1 日 UTC 以来经过的 100 纳秒间隔数。<br><br>UNIX 时间戳是一个 32 位值，表示自 1970 年 1 月 1 日 UTC（UNIX 纪元）以来的秒数。<br><br>此操作也支持以毫秒、微秒和纳秒为单位的 UNIX 时间戳。",
+        "args": {
+            "Input units": "输入单位",
+            "Output format": "输出格式"
         }
     },
     "URL Decode": {
@@ -1734,6 +3027,18 @@
             "Encode all special chars": "编码所有特殊字符"
         }
     },
+    "VarInt Decode": {
+        "displayName": "VarInt 解码",
+        "src_description": "Decodes a VarInt encoded integer. VarInt is an efficient way of encoding variable length integers and is commonly used with Protobuf.",
+        "description": "解码 VarInt 编码的整数。VarInt 是一种高效的变长整数编码方式，常与 Protobuf 一起使用。",
+        "args": {}
+    },
+    "VarInt Encode": {
+        "displayName": "VarInt 编码",
+        "src_description": "Encodes a Vn integer as a VarInt. VarInt is an efficient way of encoding variable length integers and is commonly used with Protobuf.",
+        "description": "将整数编码为 VarInt。VarInt 是一种高效的变长整数编码方式，常与 Protobuf 一起使用。",
+        "args": {}
+    },
     "Vigenère Decode": {
         "displayName": "维吉尼亚解密",
         "src_description": "The Vigenere cipher is a method of encrypting alphabetic text by using a series of different Caesar ciphers based on the letters of a keyword. It is a simple form of polyalphabetic substitution.",
@@ -1748,6 +3053,23 @@
         "description": "维吉尼亚密码是一种根据关键词的字母使用一系列不同凯撒密码来加密字母文本的方法，是多表替换密码的一种简单形式。",
         "args": {
             "Key": "密钥"
+        }
+    },
+    "Windows Filetime to UNIX Timestamp": {
+        "displayName": "Windows Filetime 转 UNIX 时间戳",
+        "src_description": "Converts a Windows Filetime value to a UNIX timestamp.<br><br>A Windows Filetime is a 64-bit value representing the number of 100-nanosecond intervals since January 1, 1601 UTC.<br><br>A UNIX timestamp is a 32-bit value representing the number of seconds since January 1, 1970 UTC (the UNIX epoch).<br><br>This operation also supports UNIX timestamps in milliseconds, microseconds and nanoseconds.",
+        "description": "将 Windows Filetime 值转换为 UNIX 时间戳。<br><br>Windows Filetime 是一个 64 位值，表示自 1601 年 1 月 1 日 UTC 以来经过的 100 纳秒间隔数。<br><br>UNIX 时间戳是一个 32 位值，表示自 1970 年 1 月 1 日 UTC（UNIX 纪元）以来的秒数。<br><br>此操作也支持以毫秒、微秒和纳秒为单位的 UNIX 时间戳。",
+        "args": {
+            "Output units": "输出单位",
+            "Input format": "输入格式"
+        }
+    },
+    "Wrap": {
+        "displayName": "自动换行",
+        "src_description": "Wraps the input text at a specified number of characters per line.",
+        "description": "按每行指定的字符数对输入文本进行换行。",
+        "args": {
+            "Line Width": "行宽"
         }
     },
     "XOR": {
