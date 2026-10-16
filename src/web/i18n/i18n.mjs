@@ -47,6 +47,26 @@ const UI = new Map();
 for (const [key, value] of toMap(uiDict)) {
     if (typeof value === "string" && value.length) UI.set(normalise(key), value);
 }
+
+/** 模式匹配时固定文字（去掉占位符后）的最小长度，避免过于宽泛的模式误匹配 */
+const MIN_PATTERN_LITERAL = 4;
+
+/**
+ * 带占位符的 ui.json 键会被编译为正则，用于翻译 DOM 和提示中动态拼接的字符串，
+ * 例如键 "{0} length" 可以匹配 "Input length"。
+ */
+const PATTERNS = [];
+for (const [key, value] of UI) {
+    const names = [];
+    const literal = key.replace(/\{(\w+)\}/g, (m, name) => {
+        names.push(name);
+        return "";
+    });
+    if (!names.length || literal.length < MIN_PATTERN_LITERAL) continue;
+    const source = key.split(/\{\w+\}/).map(part => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("(.+?)");
+    PATTERNS.push({re: new RegExp(`^${source}$`), names, value});
+}
+
 const CATEGORIES = toMap(categoriesDict);
 const OPERATIONS = toMap(operationsDict);
 const ARGS = new Map();
@@ -92,6 +112,13 @@ export function setLanguage(lang, persist=true) {
 }
 
 /**
+ * @returns {string} 当前界面语言对应的 moment.js locale 名称（需由 Web 入口加载对应 locale）
+ */
+export function momentLocale() {
+    return language === "zh-CN" ? "zh-cn" : "en";
+}
+
+/**
  * @returns {boolean} 当前是否启用中文
  */
 export function isActive() {
@@ -133,7 +160,8 @@ export function t(str, params) {
 }
 
 /**
- * 查找 DOM 文本的译文，未命中返回 null（不做占位符替换）。
+ * 查找 DOM 文本或提示信息的译文，未命中返回 null。
+ * 先按原文精确匹配，再尝试带占位符的模式（捕获到的值若有译文也会被翻译）。
  *
  * @param {string} str
  * @returns {string|null}
@@ -141,7 +169,19 @@ export function t(str, params) {
 export function lookupUi(str) {
     if (!isActive()) return null;
     const key = normalise(str);
-    return key && UI.has(key) ? UI.get(key) : null;
+    if (!key) return null;
+    if (UI.has(key)) return UI.get(key);
+    for (const {re, names, value} of PATTERNS) {
+        const m = re.exec(key);
+        if (!m) continue;
+        const params = Object.create(null);
+        names.forEach((name, i) => {
+            const captured = m[i + 1];
+            params[name] = UI.has(captured) ? UI.get(captured) : captured;
+        });
+        return format(value, params);
+    }
+    return null;
 }
 
 /**

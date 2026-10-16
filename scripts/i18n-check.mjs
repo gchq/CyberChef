@@ -92,10 +92,15 @@ function isTranslatable(str) {
  */
 export function extractHtmlStrings(html) {
     const strings = new Set();
+    const PLACEHOLDER = "\u0000";
     const add = str => {
-        const s = normalise(decodeEntities(str));
-        if (s && isTranslatable(s)) strings.add(s);
+        let i = 0;
+        const s = normalise(decodeEntities(str)).replace(new RegExp(PLACEHOLDER, "g"), () => `{${i++}}`);
+        if (s && isTranslatable(s) && /[A-Za-z]/.test(s.replace(/\{\d+\}/g, ""))) strings.add(s);
     };
+
+    // EJS 输出表达式（构建时代入的版本号、编译时间等）视为占位符
+    html = html.replace(/<%[=-][\s\S]*?%>/g, PLACEHOLDER);
 
     html = html
         .replace(/<!--[\s\S]*?-->/g, "")
@@ -111,7 +116,23 @@ export function extractHtmlStrings(html) {
     }
 
     // 文本节点：先清空所有属性值，避免把 data-help 中的 HTML 当成文本
-    const stripped = html.replace(/=\s*"[^"]*"/g, "=\"\"").replace(/=\s*'[^']*'/g, "=''");
+    let stripped = html.replace(/=\s*"[^"]*"/g, "=\"\"").replace(/=\s*'[^']*'/g, "=''");
+
+    // 整句：只包含文本和简单内联元素的元素（与 dom.mjs 的 compoundKey 一致）
+    const inline = "a|b|i|u|em|strong|code|kbd|span|small|sup|sub";
+    // 允许落单的内联闭合标签（浏览器会忽略它们）
+    const compoundRe = new RegExp(`<([a-zA-Z][\\w-]*)\\b[^>]*>((?:[^<]|<(?:${inline})\\b[^>]*>[^<]*</(?:${inline})>|</(?:${inline})>)*)</\\1>`, "g");
+    stripped = stripped.replace(compoundRe, (whole, tag, inner) => {
+        if (!/<(?:a|b|i|u|em|strong|code|kbd|span|small|sup|sub)\b/.test(inner)) return whole;
+        const key = inner
+            .replace(new RegExp(`<(${inline})\\b[^>]*>`, "g"), "<$1>")
+            .replace(/<(\w+)>[^<]*<\/\1>|<\/\w+>/g, m => m.startsWith("</") ? "" : m);
+        const outside = key.replace(new RegExp(`<(${inline})>[^<]*</\\1>`, "g"), "");
+        if (!/[A-Za-z]/.test(outside)) return whole;
+        if (/<i>[a-z_0-9]+<\/i>/.test(key)) return whole; // material icons
+        add(key);
+        return `<${tag}></${tag}>`;
+    });
     const tagRe = /<([a-zA-Z][\w-]*)([^>]*)>([^<]+)/g;
     const iconTags = new Set();
     // 记录 material-icons 元素，跳过图标名
@@ -154,21 +175,48 @@ function listSourceFiles(dir) {
  */
 export function extractCodeStrings(code) {
     const strings = new Set();
-    const add = str => {
-        const s = normalise(decodeEntities(str.replace(/\\(["'\\])/g, "$1")));
-        if (s && /[A-Za-z]/.test(s)) strings.add(s);
+    const SENTINEL = "\u0000";
+    code = code.replace(/\/\*[\s\S]*?\*\//g, ""); // 忽略块注释（JSDoc 示例等）
+    // 把 ${...} 插值换成占位符；每个字符串内部从 {0} 开始编号
+    const numbered = str => {
+        let i = 0;
+        return str.replace(new RegExp(SENTINEL, "g"), () => `{${i++}}`);
     };
+    const add = str => {
+        const s = numbered(normalise(decodeEntities(str.replace(/\\(["'`\\])/g, "$1"))));
+        if (s && /[A-Za-z]/.test(s.replace(/\{\d+\}/g, ""))) strings.add(s);
+    };
+    const interp = /\$\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\}/g;
+    const literal = "(?:\"((?:[^\"\\\\]|\\\\.)*)\"|`((?:[^`\\\\]|\\\\.)*)`)";
+    const lit = m => (m[1] ?? m[2] ?? "").replace(interp, SENTINEL);
     let m;
+
     // t("...")
     const tRe = /(?<![\w.$])t\(\s*"((?:[^"\\]|\\.)*)"/g;
     while ((m = tRe.exec(code))) add(m[1]);
-    // setAttribute("title", "...")
-    const setRe = new RegExp(`setAttribute\\(\\s*"(?:${TRANSLATABLE_ATTRS.join("|")})"\\s*,\\s*"((?:[^"\\\\]|\\\\.)*)"`, "g");
-    while ((m = setRe.exec(code))) add(m[1]);
-    // 模板字符串中的 title="..." data-help="..."（不含插值）
-    const attrRe = new RegExp(`\\s(?:${TRANSLATABLE_ATTRS.join("|")})="([^"$]*)"`, "g");
-    while ((m = attrRe.exec(code))) {
-        if (isTranslatable(m[1])) add(m[1]);
+
+    // setAttribute("title", "..." 或 `...`)
+    const setRe = new RegExp(`setAttribute\\(\\s*"(?:${TRANSLATABLE_ATTRS.join("|")})"\\s*,\\s*${literal}`, "g");
+    while ((m = setRe.exec(code))) add(lit(m));
+
+    // alert(...) / confirm(...) 的第一个参数、textContent/innerText/title 赋值、statusMessage
+    const otherRe = new RegExp(`(?:\\.alert\\(\\s*|\\.(?:textContent|innerText|title)\\s*=\\s*|statusMessage:\\s*)${literal}`, "g");
+    while ((m = otherRe.exec(code))) add(lit(m));
+
+    // confirm(title, body, accept, reject, ...) 的字符串参数
+    const confirmRe = /\.confirm\(/g;
+    while ((m = confirmRe.exec(code))) {
+        const argRe = new RegExp(`\\s*${literal}\\s*,`, "y");
+        argRe.lastIndex = confirmRe.lastIndex;
+        let a;
+        while ((a = argRe.exec(code))) add(lit(a));
+    }
+
+    // 包含 HTML 的模板字符串：提取其中的文本和属性
+    const tplRe = /`((?:[^`\\]|\\.)*)`/g;
+    while ((m = tplRe.exec(code))) {
+        if (!m[1].includes("<")) continue;
+        for (const str of extractHtmlStrings(m[1].replace(interp, SENTINEL))) add(str);
     }
     return strings;
 }
@@ -182,6 +230,15 @@ export function collectUiStrings() {
     const strings = extractHtmlStrings(fs.readFileSync(PATHS.indexHtml, "utf8"));
     for (const file of listSourceFiles(PATHS.webSrc)) {
         for (const s of extractCodeStrings(fs.readFileSync(file, "utf8"))) strings.add(s);
+    }
+    // 参数的悬停提示（hint）也通过 ui.json 翻译
+    if (fs.existsSync(PATHS.operationConfig)) {
+        const config = readJson(PATHS.operationConfig);
+        for (const op of Object.values(config)) {
+            for (const arg of op.args || []) {
+                if (typeof arg.hint === "string" && arg.hint) strings.add(normalise(arg.hint));
+            }
+        }
     }
     return strings;
 }
@@ -244,6 +301,16 @@ export function compareCategories(categories, dict) {
 }
 
 /**
+ * 不需要翻译的字符串：图标名、快捷键组合。
+ *
+ * @param {string} str
+ * @returns {boolean}
+ */
+function isIgnoredUiString(str) {
+    return /^[a-z]+(_[a-z]+)+$/.test(str) || str === "clear" || /^Ctrl\+/.test(str);
+}
+
+/**
  * 对比 ui.json 与源码中的字符串。
  *
  * @param {Set<string>} strings
@@ -251,6 +318,7 @@ export function compareCategories(categories, dict) {
  * @returns {{missing: string[], unused: string[], translated: number, total: number}}
  */
 export function compareUi(strings, dict) {
+    strings = new Set([...strings].filter(s => !isIgnoredUiString(s)));
     const keys = new Set(Object.keys(dict).map(normalise));
     const missing = [...strings].filter(s => !keys.has(s)).sort();
     const unused = [...keys].filter(k => !strings.has(k)).sort();

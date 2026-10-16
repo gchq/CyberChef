@@ -1,4 +1,19 @@
 {
     "Favourites": "收藏夹",
-    "Data format": "数据格式"
+    "Data format": "数据格式",
+    "Encryption / Encoding": "加密 / 编码",
+    "Public Key": "公钥",
+    "Arithmetic / Logic": "算术 / 逻辑",
+    "Networking": "网络",
+    "Language": "语言",
+    "Utils": "实用工具",
+    "Date / Time": "日期 / 时间",
+    "Extractors": "提取器",
+    "Compression": "压缩",
+    "Hashing": "哈希",
+    "Code tidy": "代码整理",
+    "Forensics": "取证",
+    "Multimedia": "多媒体",
+    "Other": "其他",
+    "Flow control": "流程控制"
 }

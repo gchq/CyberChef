@@ -93,6 +93,20 @@ TestRegister.addApiTests([
         });
     }),
 
+    it("i18n: lookupUi matches placeholder patterns and translates captured values", () => {
+        withLanguage("zh-CN", () => {
+            assert.strictEqual(lookupUi("Input length"), "输入长度");
+            assert.strictEqual(lookupUi("Tab 12"), "标签页 12");
+            assert.strictEqual(lookupUi("Output character encoding:<br>UTF-8"), "输出字符编码：<br>UTF-8");
+            assert.strictEqual(lookupUi("Recipe saved as \"my <recipe>\"."), "配方已保存为“my <recipe>”。");
+            assert.strictEqual(lookupUi("No pattern matches this"), null);
+            assert.strictEqual(lookupUi(""), null);
+        });
+        withLanguage("en", () => {
+            assert.strictEqual(lookupUi("Input length"), null);
+        });
+    }),
+
     it("i18n: English mode returns original strings everywhere", () => {
         withLanguage("en", () => {
             assert.strictEqual(t("Save recipe"), "Save recipe");
@@ -305,5 +319,36 @@ TestRegister.addApiTests([
         assert.ok(c.has("Tpl"));
         assert.ok(!c.has("no"));
         assert.strictEqual(c.size, 3);
+    }),
+
+    it("i18n-check: compound sentences with inline elements", () => {
+        const s = extractHtmlStrings(`<p>There are <span class="num">many</span> ops, see <a href="x">here</a>.</p>
+            <li><a href="y">Only a link</a></li>
+            <p>Press <code>F1</code> now!</code></p>
+            <a href="#">Download <i class="material-icons">file_download</i></a>`);
+        assert.ok(s.has("There are <span>many</span> ops, see <a>here</a>."));
+        assert.ok(!s.has("There are"), "fragments of a compound are not listed separately");
+        assert.ok(s.has("Only a link"), "a lone inline element is translated as plain text");
+        assert.ok(s.has("Press <code>F1</code> now!"), "stray closing tags are ignored");
+        assert.ok(!s.has("Download <i>file_download</i>"), "icons are not part of compounds");
+    }),
+
+    it("i18n-check: dynamic strings in code", () => {
+        const c = extractCodeStrings(`
+            /** this.alert("Ignored example in JSDoc"); */
+            this.app.alert(\`Recipe saved as "\${name}".\`, 3000);
+            el.innerText = \`Tab \${n.toString()}\`;
+            this.app.confirm("Title", "Body<br>Line", "Yes", "No", cb, this);
+            x = { statusMessage: \`Input \${n} pending\` };
+            html = \`<td>Place cursor</td><span title="\${label} length">\${v}</span>\`;
+        `);
+        const expected = [
+            "Recipe saved as \"{0}\".", "Tab {0}", "Title", "Body<br>Line", "Yes", "No",
+            "Input {0} pending", "Place cursor", "{0} length"
+        ];
+        for (const k of expected) {
+            assert.ok(c.has(k), k);
+        }
+        assert.ok(!c.has("Ignored example in JSDoc"));
     }),
 ]);

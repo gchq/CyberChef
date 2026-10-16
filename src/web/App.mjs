@@ -12,7 +12,7 @@ import HTMLOperation from "./HTMLOperation.mjs";
 import Split from "split.js";
 import moment from "moment-timezone";
 import cptable from "codepage";
-import {opName, t, localiseError} from "./i18n/i18n.mjs";
+import {opName, t, localiseError, lookupUi, momentLocale} from "./i18n/i18n.mjs";
 
 
 /**
@@ -656,7 +656,7 @@ class App {
         // Display time since last build and compile message
         const now = new Date(),
             msSinceCompile = now.getTime() - window.compileTime,
-            timeSinceCompile = moment.duration(msSinceCompile, "milliseconds").humanize();
+            timeSinceCompile = moment.duration(msSinceCompile, "milliseconds").locale(momentLocale()).humanize(); // i18n
 
         // Calculate previous version to compare to
         const prev = PKG_VERSION.split(".").map(n => {
@@ -717,6 +717,7 @@ class App {
      */
     alert(str, timeout=0, silent=false) {
         const time = new Date();
+        str = lookupUi(str) ?? str; // i18n
 
         log.info("[" + time.toLocaleString() + "] " + str);
         if (silent) return;
@@ -749,6 +750,7 @@ class App {
      */
     confirm(title, body, accept, reject, callback, scope) {
         scope = scope || this;
+        [title, body, accept, reject] = [title, body, accept, reject].map(s => lookupUi(s) ?? s); // i18n
         document.getElementById("confirm-title").innerHTML = title;
         document.getElementById("confirm-body").innerHTML = body;
         document.getElementById("confirm-yes").innerText = accept;

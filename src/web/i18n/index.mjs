@@ -7,7 +7,12 @@
  * @license Apache-2.0
  */
 
+import moment from "moment-timezone";
+import "moment/locale/zh-cn.js";
 import {isActive, getLanguage, setLanguage} from "./i18n.mjs";
+
+// 加载 locale 会切换 moment 的全局语言，这里恢复为英文，只在显示处按需使用中文
+moment.locale("en");
 import {translateDom, observeDom} from "./dom.mjs";
 
 

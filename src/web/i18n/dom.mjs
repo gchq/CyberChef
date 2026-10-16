@@ -21,9 +21,14 @@ export const TRANSLATABLE_ATTRS = [
 ];
 
 /**
- * 这些区域内的属性和文本都不翻译（输入输出编辑器中的用户数据、显式跳过的元素）。
+ * 这些区域内的属性和文本都不翻译：
+ * - .cm-scroller：输入输出编辑器的内容区和行号栏（用户数据、HTML 输出）。
+ *   编辑器的状态栏面板不在其中，会被翻译。
+ * - [data-i18n-skip]：显式跳过的元素。
  */
-const SKIP_ALL = ".cm-editor, #input-text, #output-text, [data-i18n-skip]";
+const SKIP_ALL = ".cm-scroller, [data-i18n-skip], " +
+    // InputWaiter 读取此按钮的文字作为过滤类型（CONTENT/FILENAME），不能翻译
+    "#input-filter-button, #input-filter-content, #input-filter-filename";
 
 /**
  * 这些区域内的文本节点不翻译，但属性（title、data-help 等）仍会翻译：
@@ -71,6 +76,67 @@ function translateAttr(el, attr) {
     if (translated !== null && translated !== original) el.setAttribute(attr, translated);
 }
 
+/** 整句翻译时允许出现的内联子元素 */
+export const INLINE_TAGS = new Set(["A", "B", "I", "U", "EM", "STRONG", "CODE", "KBD", "SPAN", "SMALL", "SUP", "SUB"]);
+
+/**
+ * 若元素只包含文本和不含子元素的内联元素（且至少有一个），返回其整句键，
+ * 形如 "There are <span>hundreds of</span> operations"；否则返回 null。
+ *
+ * @param {Element} el
+ * @returns {string|null}
+ */
+function compoundKey(el) {
+    let hasElement = false;
+    let key = "";
+    for (const child of el.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE) {
+            key += child.data;
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+            if (!INLINE_TAGS.has(child.tagName) || child.children.length) return null;
+            const tag = child.tagName.toLowerCase();
+            key += `<${tag}>${child.textContent}</${tag}>`;
+            hasElement = true;
+        } else if (child.nodeType !== Node.COMMENT_NODE) {
+            return null;
+        }
+    }
+    return hasElement ? key : null;
+}
+
+/**
+ * 按整句译文重建元素的子节点。复用原有的内联子元素（保留属性和事件），
+ * 只修改它们的文字；不使用 innerHTML。
+ *
+ * @param {Element} el
+ * @param {string} translated - 形如 "CyberChef 中有<span>数百</span>个操作"
+ * @returns {boolean} 是否成功
+ */
+function applyCompound(el, translated) {
+    const pool = new Map();
+    for (const child of el.children) {
+        const tag = child.tagName.toLowerCase();
+        if (!pool.has(tag)) pool.set(tag, []);
+        pool.get(tag).push(child);
+    }
+    const nodes = [];
+    const re = /<([a-z]+)>([^<]*)<\/\1>/g;
+    let last = 0, m;
+    while ((m = re.exec(translated))) {
+        if (m.index > last) nodes.push(document.createTextNode(translated.slice(last, m.index)));
+        const list = pool.get(m[1]);
+        if (!list || !list.length) return false;
+        const child = list.shift();
+        child.textContent = m[2];
+        nodes.push(child);
+        last = re.lastIndex;
+    }
+    if (last < translated.length) nodes.push(document.createTextNode(translated.slice(last)));
+    if (/<[a-z]/.test(nodes.filter(n => n.nodeType === Node.TEXT_NODE).map(n => n.data).join(""))) return false;
+    el.replaceChildren(...nodes);
+    return true;
+}
+
 /**
  * 翻译单个元素的属性和直接子文本节点（不递归）。
  *
@@ -81,6 +147,11 @@ function translateElement(el) {
         if (el.hasAttribute(attr)) translateAttr(el, attr);
     }
     if (within(el, SKIP_TEXT)) return;
+    const key = compoundKey(el);
+    if (key !== null) {
+        const translated = lookupUi(key);
+        if (translated !== null && applyCompound(el, translated)) return;
+    }
     for (const child of el.childNodes) {
         if (child.nodeType === Node.TEXT_NODE) translateTextNode(child);
     }
