@@ -1,1 +1,44 @@
-{}
+{
+    "To Base64": {
+        "displayName": "Base64 编码",
+        "src_description": "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation encodes raw data into an ASCII Base64 string.<br><br>e.g. <code>hello</code> becomes <code>aGVsbG8=</code>",
+        "description": "Base64 是一种使用有限字符集表示任意字节数据的记法，既方便人类使用，也便于计算机处理。<br><br>此操作将原始数据编码为 ASCII Base64 字符串。<br><br>例如 <code>hello</code> 变为 <code>aGVsbG8=</code>",
+        "args": {
+            "Alphabet": "字母表"
+        }
+    },
+    "From Base64": {
+        "displayName": "Base64 解码",
+        "src_description": "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation decodes data from an ASCII Base64 string back into its raw format.<br><br>e.g. <code>aGVsbG8=</code> becomes <code>hello</code>",
+        "description": "Base64 是一种使用有限字符集表示任意字节数据的记法，既方便人类使用，也便于计算机处理。<br><br>此操作将 ASCII Base64 字符串解码还原为原始数据。<br><br>例如 <code>aGVsbG8=</code> 变为 <code>hello</code>",
+        "args": {
+            "Alphabet": "字母表",
+            "Remove non-alphabet chars": "移除非字母表字符",
+            "Strict mode": "严格模式"
+        }
+    },
+    "URL Decode": {
+        "displayName": "URL 解码",
+        "src_description": "Converts URI/URL percent-encoded characters back to their raw values.<br><br>e.g. <code>%3d</code> becomes <code>=</code>",
+        "description": "将 URI/URL 百分号编码的字符还原为原始值。<br><br>例如 <code>%3d</code> 变为 <code>=</code>",
+        "args": {
+            "Treat \"+\" as space": "将“+”视为空格"
+        }
+    },
+    "MD5": {
+        "displayName": "MD5",
+        "src_description": "MD5 (Message-Digest 5) is a widely used hash function. It has been used in a variety of security applications and is also commonly used to check the integrity of files.<br><br>However, MD5 is not collision resistant and it isn't suitable for applications like SSL/TLS certificates or digital signatures that rely on this property.",
+        "description": "MD5（Message-Digest 5，消息摘要算法第 5 版）是一种广泛使用的哈希函数，曾被用于多种安全应用，也常用于校验文件完整性。<br><br>但 MD5 不具备抗碰撞性，不适用于依赖该特性的场景，例如 SSL/TLS 证书或数字签名。",
+        "args": {}
+    },
+    "JSON Beautify": {
+        "displayName": "JSON 美化",
+        "src_description": "Indents and pretty prints JavaScript Object Notation (JSON) code.<br><br>Tags: json viewer, prettify, syntax highlighting",
+        "description": "对 JavaScript 对象表示法（JSON）代码进行缩进和格式化输出。<br><br>标签：json 查看器、美化、语法高亮",
+        "args": {
+            "Indent string": "缩进字符串",
+            "Sort Object Keys": "对象键排序",
+            "Formatted": "格式化显示"
+        }
+    }
+}
