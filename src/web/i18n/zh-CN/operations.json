@@ -1,8 +1,139 @@
 {
-    "To Base64": {
-        "displayName": "Base64 编码",
-        "src_description": "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation encodes raw data into an ASCII Base64 string.<br><br>e.g. <code>hello</code> becomes <code>aGVsbG8=</code>",
-        "description": "Base64 是一种使用有限字符集表示任意字节数据的记法，既方便人类使用，也便于计算机处理。<br><br>此操作将原始数据编码为 ASCII Base64 字符串。<br><br>例如 <code>hello</code> 变为 <code>aGVsbG8=</code>",
+    "AMF Decode": {
+        "displayName": "AMF 解码",
+        "src_description": "Action Message Format (AMF) is a binary format used to serialize object graphs such as ActionScript objects and XML, or send messages between an Adobe Flash client and a remote service, usually a Flash Media Server or third party alternatives.",
+        "description": "Action Message Format（AMF）是一种二进制格式，用于序列化 ActionScript 对象、XML 等对象图，或在 Adobe Flash 客户端与远程服务（通常是 Flash Media Server 或第三方替代品）之间发送消息。",
+        "args": {
+            "Format": "格式"
+        }
+    },
+    "AMF Encode": {
+        "displayName": "AMF 编码",
+        "src_description": "Action Message Format (AMF) is a binary format used to serialize object graphs such as ActionScript objects and XML, or send messages between an Adobe Flash client and a remote service, usually a Flash Media Server or third party alternatives.",
+        "description": "Action Message Format（AMF）是一种二进制格式，用于序列化 ActionScript 对象、XML 等对象图，或在 Adobe Flash 客户端与远程服务（通常是 Flash Media Server 或第三方替代品）之间发送消息。",
+        "args": {
+            "Format": "格式"
+        }
+    },
+    "Avro to JSON": {
+        "displayName": "Avro 转 JSON",
+        "src_description": "Converts Avro encoded data into JSON.",
+        "description": "将 Avro 编码的数据转换为 JSON。",
+        "args": {
+            "Force Valid JSON": "强制输出合法 JSON"
+        }
+    },
+    "Caret/M-decode": {
+        "displayName": "脱字符/M- 解码",
+        "src_description": "Decodes caret or M-encoded strings, i.e. ^M turns into a newline, M-^] turns into 0x9d. Sources such as `cat -v`.\n\nPlease be aware that when using `cat -v` ^_ (caret-underscore) will not be encoded, but represents a valid encoding (namely that of 0x1f).",
+        "description": "解码脱字符（caret）或 M- 编码的字符串，即 ^M 变为换行符，M-^] 变为 0x9d。来源例如 `cat -v` 的输出。\n\n请注意，使用 `cat -v` 时 ^_（脱字符加下划线）不会被编码，但它表示一个有效的编码（即 0x1f）。",
+        "args": {}
+    },
+    "CBOR Decode": {
+        "displayName": "CBOR 解码",
+        "src_description": "Concise Binary Object Representation (CBOR) is a binary data serialization format loosely based on JSON. Like JSON it allows the transmission of data objects that contain name–value pairs, but in a more concise manner. This increases processing and transfer speeds at the cost of human readability. It is defined in IETF RFC 8949.",
+        "description": "简明二进制对象表示（CBOR）是一种大致基于 JSON 的二进制数据序列化格式。与 JSON 一样，它可以传输包含名称-值对的数据对象，但更加紧凑。这以牺牲可读性为代价，提高了处理和传输速度。它在 IETF RFC 8949 中定义。",
+        "args": {}
+    },
+    "CBOR Encode": {
+        "displayName": "CBOR 编码",
+        "src_description": "Concise Binary Object Representation (CBOR) is a binary data serialization format loosely based on JSON. Like JSON it allows the transmission of data objects that contain name–value pairs, but in a more concise manner. This increases processing and transfer speeds at the cost of human readability. It is defined in IETF RFC 8949.",
+        "description": "简明二进制对象表示（CBOR）是一种大致基于 JSON 的二进制数据序列化格式。与 JSON 一样，它可以传输包含名称-值对的数据对象，但更加紧凑。这以牺牲可读性为代价，提高了处理和传输速度。它在 IETF RFC 8949 中定义。",
+        "args": {}
+    },
+    "Change IP format": {
+        "displayName": "转换 IP 格式",
+        "src_description": "Convert an IP address from one format to another, e.g. <code>172.20.23.54</code> to <code>ac141736</code>",
+        "description": "将 IP 地址从一种格式转换为另一种格式，例如将 <code>172.20.23.54</code> 转换为 <code>ac141736</code>",
+        "args": {
+            "Input format": "输入格式",
+            "Output format": "输出格式"
+        }
+    },
+    "CSV to JSON": {
+        "displayName": "CSV 转 JSON",
+        "src_description": "Converts a CSV file to JSON format.",
+        "description": "将 CSV 文件转换为 JSON 格式。",
+        "args": {
+            "Cell delimiters": "单元格分隔符",
+            "Row delimiters": "行分隔符",
+            "Format": "格式"
+        }
+    },
+    "Decode text": {
+        "displayName": "文本解码",
+        "src_description": "Decodes text from the chosen character encoding.\n<br><br>\nSupported charsets are:\n<ul>\n<li>UTF-8 (65001)</li>\n<li>UTF-7 (65000)</li>\n<li>UTF-16LE (1200)</li>\n<li>UTF-16BE (1201)</li>\n<li>UTF-32LE (12000)</li>\n<li>UTF-32BE (12001)</li>\n<li>IBM EBCDIC International (500)</li>\n<li>IBM EBCDIC US-Canada (37)</li>\n<li>IBM EBCDIC Multilingual/ROECE (Latin 2) (870)</li>\n<li>IBM EBCDIC Greek Modern (875)</li>\n<li>IBM EBCDIC French (1010)</li>\n<li>IBM EBCDIC Turkish (Latin 5) (1026)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047)</li>\n<li>IBM EBCDIC Lao (1132/1133/1341)</li>\n<li>IBM EBCDIC US-Canada (037 + Euro symbol) (1140)</li>\n<li>IBM EBCDIC Germany (20273 + Euro symbol) (1141)</li>\n<li>IBM EBCDIC Denmark-Norway (20277 + Euro symbol) (1142)</li>\n<li>IBM EBCDIC Finland-Sweden (20278 + Euro symbol) (1143)</li>\n<li>IBM EBCDIC Italy (20280 + Euro symbol) (1144)</li>\n<li>IBM EBCDIC Latin America-Spain (20284 + Euro symbol) (1145)</li>\n<li>IBM EBCDIC United Kingdom (20285 + Euro symbol) (1146)</li>\n<li>IBM EBCDIC France (20297 + Euro symbol) (1147)</li>\n<li>IBM EBCDIC International (500 + Euro symbol) (1148)</li>\n<li>IBM EBCDIC Icelandic (20871 + Euro symbol) (1149)</li>\n<li>IBM EBCDIC Germany (20273)</li>\n<li>IBM EBCDIC Denmark-Norway (20277)</li>\n<li>IBM EBCDIC Finland-Sweden (20278)</li>\n<li>IBM EBCDIC Italy (20280)</li>\n<li>IBM EBCDIC Latin America-Spain (20284)</li>\n<li>IBM EBCDIC United Kingdom (20285)</li>\n<li>IBM EBCDIC Japanese Katakana Extended (20290)</li>\n<li>IBM EBCDIC France (20297)</li>\n<li>IBM EBCDIC Arabic (20420)</li>\n<li>IBM EBCDIC Greek (20423)</li>\n<li>IBM EBCDIC Hebrew (20424)</li>\n<li>IBM EBCDIC Korean Extended (20833)</li>\n<li>IBM EBCDIC Thai (20838)</li>\n<li>IBM EBCDIC Icelandic (20871)</li>\n<li>IBM EBCDIC Cyrillic Russian (20880)</li>\n<li>IBM EBCDIC Turkish (20905)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047 + Euro symbol) (20924)</li>\n<li>IBM EBCDIC Cyrillic Serbian-Bulgarian (21025)</li>\n<li>OEM United States (437)</li>\n<li>OEM Greek (formerly 437G); Greek (DOS) (737)</li>\n<li>OEM Baltic; Baltic (DOS) (775)</li>\n<li>OEM Russian; Cyrillic + Euro symbol (808)</li>\n<li>OEM Multilingual Latin 1; Western European (DOS) (850)</li>\n<li>OEM Latin 2; Central European (DOS) (852)</li>\n<li>OEM Cyrillic (primarily Russian) (855)</li>\n<li>OEM Turkish; Turkish (DOS) (857)</li>\n<li>OEM Multilingual Latin 1 + Euro symbol (858)</li>\n<li>OEM Portuguese; Portuguese (DOS) (860)</li>\n<li>OEM Icelandic; Icelandic (DOS) (861)</li>\n<li>OEM Hebrew; Hebrew (DOS) (862)</li>\n<li>OEM French Canadian; French Canadian (DOS) (863)</li>\n<li>OEM Arabic; Arabic (864) (864)</li>\n<li>OEM Nordic; Nordic (DOS) (865)</li>\n<li>OEM Russian; Cyrillic (DOS) (866)</li>\n<li>OEM Modern Greek; Greek, Modern (DOS) (869)</li>\n<li>OEM Cyrillic (primarily Russian) + Euro Symbol (872)</li>\n<li>Windows-874 Thai (874)</li>\n<li>Windows-1250 Central European (1250)</li>\n<li>Windows-1251 Cyrillic (1251)</li>\n<li>Windows-1252 Latin (1252)</li>\n<li>Windows-1253 Greek (1253)</li>\n<li>Windows-1254 Turkish (1254)</li>\n<li>Windows-1255 Hebrew (1255)</li>\n<li>Windows-1256 Arabic (1256)</li>\n<li>Windows-1257 Baltic (1257)</li>\n<li>Windows-1258 Vietnam (1258)</li>\n<li>ISO-8859-1 Latin 1 Western European (28591)</li>\n<li>ISO-8859-2 Latin 2 Central European (28592)</li>\n<li>ISO-8859-3 Latin 3 South European (28593)</li>\n<li>ISO-8859-4 Latin 4 North European (28594)</li>\n<li>ISO-8859-5 Latin/Cyrillic (28595)</li>\n<li>ISO-8859-6 Latin/Arabic (28596)</li>\n<li>ISO-8859-7 Latin/Greek (28597)</li>\n<li>ISO-8859-8 Latin/Hebrew (28598)</li>\n<li>ISO 8859-8 Hebrew (ISO-Logical) (38598)</li>\n<li>ISO-8859-9 Latin 5 Turkish (28599)</li>\n<li>ISO-8859-10 Latin 6 Nordic (28600)</li>\n<li>ISO-8859-11 Latin/Thai (28601)</li>\n<li>ISO-8859-13 Latin 7 Baltic Rim (28603)</li>\n<li>ISO-8859-14 Latin 8 Celtic (28604)</li>\n<li>ISO-8859-15 Latin 9 (28605)</li>\n<li>ISO-8859-16 Latin 10 (28606)</li>\n<li>ISO 2022 JIS Japanese with no halfwidth Katakana (50220)</li>\n<li>ISO 2022 JIS Japanese with halfwidth Katakana (50221)</li>\n<li>ISO 2022 Japanese JIS X 0201-1989 (1 byte Kana-SO/SI) (50222)</li>\n<li>ISO 2022 Korean (50225)</li>\n<li>ISO 2022 Simplified Chinese (50227)</li>\n<li>ISO 6937 Non-Spacing Accent (20269)</li>\n<li>EUC Japanese (51932)</li>\n<li>EUC Simplified Chinese (51936)</li>\n<li>EUC Korean (51949)</li>\n<li>ISCII Devanagari (57002)</li>\n<li>ISCII Bengali (57003)</li>\n<li>ISCII Tamil (57004)</li>\n<li>ISCII Telugu (57005)</li>\n<li>ISCII Assamese (57006)</li>\n<li>ISCII Oriya (57007)</li>\n<li>ISCII Kannada (57008)</li>\n<li>ISCII Malayalam (57009)</li>\n<li>ISCII Gujarati (57010)</li>\n<li>ISCII Punjabi (57011)</li>\n<li>Japanese Shift-JIS (932)</li>\n<li>Simplified Chinese GBK (936)</li>\n<li>Korean (949)</li>\n<li>Traditional Chinese Big5 (950)</li>\n<li>US-ASCII (7-bit) (20127)</li>\n<li>Simplified Chinese GB2312 (20936)</li>\n<li>KOI8-R Russian Cyrillic (20866)</li>\n<li>KOI8-U Ukrainian Cyrillic (21866)</li>\n<li>Mazovia (Polish) MS-DOS (620)</li>\n<li>Arabic (ASMO 708) (708)</li>\n<li>Arabic (Transparent ASMO); Arabic (DOS) (720)</li>\n<li>Kamenický (Czech) MS-DOS (895)</li>\n<li>Korean (Johab) (1361)</li>\n<li>MAC Roman (10000)</li>\n<li>Japanese (Mac) (10001)</li>\n<li>MAC Traditional Chinese (Big5) (10002)</li>\n<li>Korean (Mac) (10003)</li>\n<li>Arabic (Mac) (10004)</li>\n<li>Hebrew (Mac) (10005)</li>\n<li>Greek (Mac) (10006)</li>\n<li>Cyrillic (Mac) (10007)</li>\n<li>MAC Simplified Chinese (GB 2312) (10008)</li>\n<li>Romanian (Mac) (10010)</li>\n<li>Ukrainian (Mac) (10017)</li>\n<li>Thai (Mac) (10021)</li>\n<li>MAC Latin 2 (Central European) (10029)</li>\n<li>Icelandic (Mac) (10079)</li>\n<li>Turkish (Mac) (10081)</li>\n<li>Croatian (Mac) (10082)</li>\n<li>CNS Taiwan (Chinese Traditional) (20000)</li>\n<li>TCA Taiwan (20001)</li>\n<li>ETEN Taiwan (Chinese Traditional) (20002)</li>\n<li>IBM5550 Taiwan (20003)</li>\n<li>TeleText Taiwan (20004)</li>\n<li>Wang Taiwan (20005)</li>\n<li>Western European IA5 (IRV International Alphabet 5) (20105)</li>\n<li>IA5 German (7-bit) (20106)</li>\n<li>IA5 Swedish (7-bit) (20107)</li>\n<li>IA5 Norwegian (7-bit) (20108)</li>\n<li>T.61 (20261)</li>\n<li>Japanese (JIS 0208-1990 and 0212-1990) (20932)</li>\n<li>Korean Wansung (20949)</li>\n<li>Extended/Ext Alpha Lowercase (21027)</li>\n<li>Europa 3 (29001)</li>\n<li>Atari ST/TT (47451)</li>\n<li>HZ-GB2312 Simplified Chinese (52936)</li>\n<li>Simplified Chinese GB18030 (54936)</li>\n</ul>",
+        "description": "按所选的字符编码解码文本。\n<br><br>\n支持的字符集：\n<ul>\n<li>UTF-8 (65001)</li>\n<li>UTF-7 (65000)</li>\n<li>UTF-16LE (1200)</li>\n<li>UTF-16BE (1201)</li>\n<li>UTF-32LE (12000)</li>\n<li>UTF-32BE (12001)</li>\n<li>IBM EBCDIC International (500)</li>\n<li>IBM EBCDIC US-Canada (37)</li>\n<li>IBM EBCDIC Multilingual/ROECE (Latin 2) (870)</li>\n<li>IBM EBCDIC Greek Modern (875)</li>\n<li>IBM EBCDIC French (1010)</li>\n<li>IBM EBCDIC Turkish (Latin 5) (1026)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047)</li>\n<li>IBM EBCDIC Lao (1132/1133/1341)</li>\n<li>IBM EBCDIC US-Canada (037 + Euro symbol) (1140)</li>\n<li>IBM EBCDIC Germany (20273 + Euro symbol) (1141)</li>\n<li>IBM EBCDIC Denmark-Norway (20277 + Euro symbol) (1142)</li>\n<li>IBM EBCDIC Finland-Sweden (20278 + Euro symbol) (1143)</li>\n<li>IBM EBCDIC Italy (20280 + Euro symbol) (1144)</li>\n<li>IBM EBCDIC Latin America-Spain (20284 + Euro symbol) (1145)</li>\n<li>IBM EBCDIC United Kingdom (20285 + Euro symbol) (1146)</li>\n<li>IBM EBCDIC France (20297 + Euro symbol) (1147)</li>\n<li>IBM EBCDIC International (500 + Euro symbol) (1148)</li>\n<li>IBM EBCDIC Icelandic (20871 + Euro symbol) (1149)</li>\n<li>IBM EBCDIC Germany (20273)</li>\n<li>IBM EBCDIC Denmark-Norway (20277)</li>\n<li>IBM EBCDIC Finland-Sweden (20278)</li>\n<li>IBM EBCDIC Italy (20280)</li>\n<li>IBM EBCDIC Latin America-Spain (20284)</li>\n<li>IBM EBCDIC United Kingdom (20285)</li>\n<li>IBM EBCDIC Japanese Katakana Extended (20290)</li>\n<li>IBM EBCDIC France (20297)</li>\n<li>IBM EBCDIC Arabic (20420)</li>\n<li>IBM EBCDIC Greek (20423)</li>\n<li>IBM EBCDIC Hebrew (20424)</li>\n<li>IBM EBCDIC Korean Extended (20833)</li>\n<li>IBM EBCDIC Thai (20838)</li>\n<li>IBM EBCDIC Icelandic (20871)</li>\n<li>IBM EBCDIC Cyrillic Russian (20880)</li>\n<li>IBM EBCDIC Turkish (20905)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047 + Euro symbol) (20924)</li>\n<li>IBM EBCDIC Cyrillic Serbian-Bulgarian (21025)</li>\n<li>OEM United States (437)</li>\n<li>OEM Greek (formerly 437G); Greek (DOS) (737)</li>\n<li>OEM Baltic; Baltic (DOS) (775)</li>\n<li>OEM Russian; Cyrillic + Euro symbol (808)</li>\n<li>OEM Multilingual Latin 1; Western European (DOS) (850)</li>\n<li>OEM Latin 2; Central European (DOS) (852)</li>\n<li>OEM Cyrillic (primarily Russian) (855)</li>\n<li>OEM Turkish; Turkish (DOS) (857)</li>\n<li>OEM Multilingual Latin 1 + Euro symbol (858)</li>\n<li>OEM Portuguese; Portuguese (DOS) (860)</li>\n<li>OEM Icelandic; Icelandic (DOS) (861)</li>\n<li>OEM Hebrew; Hebrew (DOS) (862)</li>\n<li>OEM French Canadian; French Canadian (DOS) (863)</li>\n<li>OEM Arabic; Arabic (864) (864)</li>\n<li>OEM Nordic; Nordic (DOS) (865)</li>\n<li>OEM Russian; Cyrillic (DOS) (866)</li>\n<li>OEM Modern Greek; Greek, Modern (DOS) (869)</li>\n<li>OEM Cyrillic (primarily Russian) + Euro Symbol (872)</li>\n<li>Windows-874 Thai (874)</li>\n<li>Windows-1250 Central European (1250)</li>\n<li>Windows-1251 Cyrillic (1251)</li>\n<li>Windows-1252 Latin (1252)</li>\n<li>Windows-1253 Greek (1253)</li>\n<li>Windows-1254 Turkish (1254)</li>\n<li>Windows-1255 Hebrew (1255)</li>\n<li>Windows-1256 Arabic (1256)</li>\n<li>Windows-1257 Baltic (1257)</li>\n<li>Windows-1258 Vietnam (1258)</li>\n<li>ISO-8859-1 Latin 1 Western European (28591)</li>\n<li>ISO-8859-2 Latin 2 Central European (28592)</li>\n<li>ISO-8859-3 Latin 3 South European (28593)</li>\n<li>ISO-8859-4 Latin 4 North European (28594)</li>\n<li>ISO-8859-5 Latin/Cyrillic (28595)</li>\n<li>ISO-8859-6 Latin/Arabic (28596)</li>\n<li>ISO-8859-7 Latin/Greek (28597)</li>\n<li>ISO-8859-8 Latin/Hebrew (28598)</li>\n<li>ISO 8859-8 Hebrew (ISO-Logical) (38598)</li>\n<li>ISO-8859-9 Latin 5 Turkish (28599)</li>\n<li>ISO-8859-10 Latin 6 Nordic (28600)</li>\n<li>ISO-8859-11 Latin/Thai (28601)</li>\n<li>ISO-8859-13 Latin 7 Baltic Rim (28603)</li>\n<li>ISO-8859-14 Latin 8 Celtic (28604)</li>\n<li>ISO-8859-15 Latin 9 (28605)</li>\n<li>ISO-8859-16 Latin 10 (28606)</li>\n<li>ISO 2022 JIS Japanese with no halfwidth Katakana (50220)</li>\n<li>ISO 2022 JIS Japanese with halfwidth Katakana (50221)</li>\n<li>ISO 2022 Japanese JIS X 0201-1989 (1 byte Kana-SO/SI) (50222)</li>\n<li>ISO 2022 Korean (50225)</li>\n<li>ISO 2022 Simplified Chinese (50227)</li>\n<li>ISO 6937 Non-Spacing Accent (20269)</li>\n<li>EUC Japanese (51932)</li>\n<li>EUC Simplified Chinese (51936)</li>\n<li>EUC Korean (51949)</li>\n<li>ISCII Devanagari (57002)</li>\n<li>ISCII Bengali (57003)</li>\n<li>ISCII Tamil (57004)</li>\n<li>ISCII Telugu (57005)</li>\n<li>ISCII Assamese (57006)</li>\n<li>ISCII Oriya (57007)</li>\n<li>ISCII Kannada (57008)</li>\n<li>ISCII Malayalam (57009)</li>\n<li>ISCII Gujarati (57010)</li>\n<li>ISCII Punjabi (57011)</li>\n<li>Japanese Shift-JIS (932)</li>\n<li>Simplified Chinese GBK (936)</li>\n<li>Korean (949)</li>\n<li>Traditional Chinese Big5 (950)</li>\n<li>US-ASCII (7-bit) (20127)</li>\n<li>Simplified Chinese GB2312 (20936)</li>\n<li>KOI8-R Russian Cyrillic (20866)</li>\n<li>KOI8-U Ukrainian Cyrillic (21866)</li>\n<li>Mazovia (Polish) MS-DOS (620)</li>\n<li>Arabic (ASMO 708) (708)</li>\n<li>Arabic (Transparent ASMO); Arabic (DOS) (720)</li>\n<li>Kamenický (Czech) MS-DOS (895)</li>\n<li>Korean (Johab) (1361)</li>\n<li>MAC Roman (10000)</li>\n<li>Japanese (Mac) (10001)</li>\n<li>MAC Traditional Chinese (Big5) (10002)</li>\n<li>Korean (Mac) (10003)</li>\n<li>Arabic (Mac) (10004)</li>\n<li>Hebrew (Mac) (10005)</li>\n<li>Greek (Mac) (10006)</li>\n<li>Cyrillic (Mac) (10007)</li>\n<li>MAC Simplified Chinese (GB 2312) (10008)</li>\n<li>Romanian (Mac) (10010)</li>\n<li>Ukrainian (Mac) (10017)</li>\n<li>Thai (Mac) (10021)</li>\n<li>MAC Latin 2 (Central European) (10029)</li>\n<li>Icelandic (Mac) (10079)</li>\n<li>Turkish (Mac) (10081)</li>\n<li>Croatian (Mac) (10082)</li>\n<li>CNS Taiwan (Chinese Traditional) (20000)</li>\n<li>TCA Taiwan (20001)</li>\n<li>ETEN Taiwan (Chinese Traditional) (20002)</li>\n<li>IBM5550 Taiwan (20003)</li>\n<li>TeleText Taiwan (20004)</li>\n<li>Wang Taiwan (20005)</li>\n<li>Western European IA5 (IRV International Alphabet 5) (20105)</li>\n<li>IA5 German (7-bit) (20106)</li>\n<li>IA5 Swedish (7-bit) (20107)</li>\n<li>IA5 Norwegian (7-bit) (20108)</li>\n<li>T.61 (20261)</li>\n<li>Japanese (JIS 0208-1990 and 0212-1990) (20932)</li>\n<li>Korean Wansung (20949)</li>\n<li>Extended/Ext Alpha Lowercase (21027)</li>\n<li>Europa 3 (29001)</li>\n<li>Atari ST/TT (47451)</li>\n<li>HZ-GB2312 Simplified Chinese (52936)</li>\n<li>Simplified Chinese GB18030 (54936)</li>\n</ul>",
+        "args": {
+            "Encoding": "编码"
+        }
+    },
+    "Encode text": {
+        "displayName": "文本编码",
+        "src_description": "Encodes text into the chosen character encoding.\n<br><br>\nSupported charsets are:\n<ul>\n<li>UTF-8 (65001)</li>\n<li>UTF-7 (65000)</li>\n<li>UTF-16LE (1200)</li>\n<li>UTF-16BE (1201)</li>\n<li>UTF-32LE (12000)</li>\n<li>UTF-32BE (12001)</li>\n<li>IBM EBCDIC International (500)</li>\n<li>IBM EBCDIC US-Canada (37)</li>\n<li>IBM EBCDIC Multilingual/ROECE (Latin 2) (870)</li>\n<li>IBM EBCDIC Greek Modern (875)</li>\n<li>IBM EBCDIC French (1010)</li>\n<li>IBM EBCDIC Turkish (Latin 5) (1026)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047)</li>\n<li>IBM EBCDIC Lao (1132/1133/1341)</li>\n<li>IBM EBCDIC US-Canada (037 + Euro symbol) (1140)</li>\n<li>IBM EBCDIC Germany (20273 + Euro symbol) (1141)</li>\n<li>IBM EBCDIC Denmark-Norway (20277 + Euro symbol) (1142)</li>\n<li>IBM EBCDIC Finland-Sweden (20278 + Euro symbol) (1143)</li>\n<li>IBM EBCDIC Italy (20280 + Euro symbol) (1144)</li>\n<li>IBM EBCDIC Latin America-Spain (20284 + Euro symbol) (1145)</li>\n<li>IBM EBCDIC United Kingdom (20285 + Euro symbol) (1146)</li>\n<li>IBM EBCDIC France (20297 + Euro symbol) (1147)</li>\n<li>IBM EBCDIC International (500 + Euro symbol) (1148)</li>\n<li>IBM EBCDIC Icelandic (20871 + Euro symbol) (1149)</li>\n<li>IBM EBCDIC Germany (20273)</li>\n<li>IBM EBCDIC Denmark-Norway (20277)</li>\n<li>IBM EBCDIC Finland-Sweden (20278)</li>\n<li>IBM EBCDIC Italy (20280)</li>\n<li>IBM EBCDIC Latin America-Spain (20284)</li>\n<li>IBM EBCDIC United Kingdom (20285)</li>\n<li>IBM EBCDIC Japanese Katakana Extended (20290)</li>\n<li>IBM EBCDIC France (20297)</li>\n<li>IBM EBCDIC Arabic (20420)</li>\n<li>IBM EBCDIC Greek (20423)</li>\n<li>IBM EBCDIC Hebrew (20424)</li>\n<li>IBM EBCDIC Korean Extended (20833)</li>\n<li>IBM EBCDIC Thai (20838)</li>\n<li>IBM EBCDIC Icelandic (20871)</li>\n<li>IBM EBCDIC Cyrillic Russian (20880)</li>\n<li>IBM EBCDIC Turkish (20905)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047 + Euro symbol) (20924)</li>\n<li>IBM EBCDIC Cyrillic Serbian-Bulgarian (21025)</li>\n<li>OEM United States (437)</li>\n<li>OEM Greek (formerly 437G); Greek (DOS) (737)</li>\n<li>OEM Baltic; Baltic (DOS) (775)</li>\n<li>OEM Russian; Cyrillic + Euro symbol (808)</li>\n<li>OEM Multilingual Latin 1; Western European (DOS) (850)</li>\n<li>OEM Latin 2; Central European (DOS) (852)</li>\n<li>OEM Cyrillic (primarily Russian) (855)</li>\n<li>OEM Turkish; Turkish (DOS) (857)</li>\n<li>OEM Multilingual Latin 1 + Euro symbol (858)</li>\n<li>OEM Portuguese; Portuguese (DOS) (860)</li>\n<li>OEM Icelandic; Icelandic (DOS) (861)</li>\n<li>OEM Hebrew; Hebrew (DOS) (862)</li>\n<li>OEM French Canadian; French Canadian (DOS) (863)</li>\n<li>OEM Arabic; Arabic (864) (864)</li>\n<li>OEM Nordic; Nordic (DOS) (865)</li>\n<li>OEM Russian; Cyrillic (DOS) (866)</li>\n<li>OEM Modern Greek; Greek, Modern (DOS) (869)</li>\n<li>OEM Cyrillic (primarily Russian) + Euro Symbol (872)</li>\n<li>Windows-874 Thai (874)</li>\n<li>Windows-1250 Central European (1250)</li>\n<li>Windows-1251 Cyrillic (1251)</li>\n<li>Windows-1252 Latin (1252)</li>\n<li>Windows-1253 Greek (1253)</li>\n<li>Windows-1254 Turkish (1254)</li>\n<li>Windows-1255 Hebrew (1255)</li>\n<li>Windows-1256 Arabic (1256)</li>\n<li>Windows-1257 Baltic (1257)</li>\n<li>Windows-1258 Vietnam (1258)</li>\n<li>ISO-8859-1 Latin 1 Western European (28591)</li>\n<li>ISO-8859-2 Latin 2 Central European (28592)</li>\n<li>ISO-8859-3 Latin 3 South European (28593)</li>\n<li>ISO-8859-4 Latin 4 North European (28594)</li>\n<li>ISO-8859-5 Latin/Cyrillic (28595)</li>\n<li>ISO-8859-6 Latin/Arabic (28596)</li>\n<li>ISO-8859-7 Latin/Greek (28597)</li>\n<li>ISO-8859-8 Latin/Hebrew (28598)</li>\n<li>ISO 8859-8 Hebrew (ISO-Logical) (38598)</li>\n<li>ISO-8859-9 Latin 5 Turkish (28599)</li>\n<li>ISO-8859-10 Latin 6 Nordic (28600)</li>\n<li>ISO-8859-11 Latin/Thai (28601)</li>\n<li>ISO-8859-13 Latin 7 Baltic Rim (28603)</li>\n<li>ISO-8859-14 Latin 8 Celtic (28604)</li>\n<li>ISO-8859-15 Latin 9 (28605)</li>\n<li>ISO-8859-16 Latin 10 (28606)</li>\n<li>ISO 2022 JIS Japanese with no halfwidth Katakana (50220)</li>\n<li>ISO 2022 JIS Japanese with halfwidth Katakana (50221)</li>\n<li>ISO 2022 Japanese JIS X 0201-1989 (1 byte Kana-SO/SI) (50222)</li>\n<li>ISO 2022 Korean (50225)</li>\n<li>ISO 2022 Simplified Chinese (50227)</li>\n<li>ISO 6937 Non-Spacing Accent (20269)</li>\n<li>EUC Japanese (51932)</li>\n<li>EUC Simplified Chinese (51936)</li>\n<li>EUC Korean (51949)</li>\n<li>ISCII Devanagari (57002)</li>\n<li>ISCII Bengali (57003)</li>\n<li>ISCII Tamil (57004)</li>\n<li>ISCII Telugu (57005)</li>\n<li>ISCII Assamese (57006)</li>\n<li>ISCII Oriya (57007)</li>\n<li>ISCII Kannada (57008)</li>\n<li>ISCII Malayalam (57009)</li>\n<li>ISCII Gujarati (57010)</li>\n<li>ISCII Punjabi (57011)</li>\n<li>Japanese Shift-JIS (932)</li>\n<li>Simplified Chinese GBK (936)</li>\n<li>Korean (949)</li>\n<li>Traditional Chinese Big5 (950)</li>\n<li>US-ASCII (7-bit) (20127)</li>\n<li>Simplified Chinese GB2312 (20936)</li>\n<li>KOI8-R Russian Cyrillic (20866)</li>\n<li>KOI8-U Ukrainian Cyrillic (21866)</li>\n<li>Mazovia (Polish) MS-DOS (620)</li>\n<li>Arabic (ASMO 708) (708)</li>\n<li>Arabic (Transparent ASMO); Arabic (DOS) (720)</li>\n<li>Kamenický (Czech) MS-DOS (895)</li>\n<li>Korean (Johab) (1361)</li>\n<li>MAC Roman (10000)</li>\n<li>Japanese (Mac) (10001)</li>\n<li>MAC Traditional Chinese (Big5) (10002)</li>\n<li>Korean (Mac) (10003)</li>\n<li>Arabic (Mac) (10004)</li>\n<li>Hebrew (Mac) (10005)</li>\n<li>Greek (Mac) (10006)</li>\n<li>Cyrillic (Mac) (10007)</li>\n<li>MAC Simplified Chinese (GB 2312) (10008)</li>\n<li>Romanian (Mac) (10010)</li>\n<li>Ukrainian (Mac) (10017)</li>\n<li>Thai (Mac) (10021)</li>\n<li>MAC Latin 2 (Central European) (10029)</li>\n<li>Icelandic (Mac) (10079)</li>\n<li>Turkish (Mac) (10081)</li>\n<li>Croatian (Mac) (10082)</li>\n<li>CNS Taiwan (Chinese Traditional) (20000)</li>\n<li>TCA Taiwan (20001)</li>\n<li>ETEN Taiwan (Chinese Traditional) (20002)</li>\n<li>IBM5550 Taiwan (20003)</li>\n<li>TeleText Taiwan (20004)</li>\n<li>Wang Taiwan (20005)</li>\n<li>Western European IA5 (IRV International Alphabet 5) (20105)</li>\n<li>IA5 German (7-bit) (20106)</li>\n<li>IA5 Swedish (7-bit) (20107)</li>\n<li>IA5 Norwegian (7-bit) (20108)</li>\n<li>T.61 (20261)</li>\n<li>Japanese (JIS 0208-1990 and 0212-1990) (20932)</li>\n<li>Korean Wansung (20949)</li>\n<li>Extended/Ext Alpha Lowercase (21027)</li>\n<li>Europa 3 (29001)</li>\n<li>Atari ST/TT (47451)</li>\n<li>HZ-GB2312 Simplified Chinese (52936)</li>\n<li>Simplified Chinese GB18030 (54936)</li>\n</ul>",
+        "description": "将文本编码为所选的字符编码。\n<br><br>\n支持的字符集：\n<ul>\n<li>UTF-8 (65001)</li>\n<li>UTF-7 (65000)</li>\n<li>UTF-16LE (1200)</li>\n<li>UTF-16BE (1201)</li>\n<li>UTF-32LE (12000)</li>\n<li>UTF-32BE (12001)</li>\n<li>IBM EBCDIC International (500)</li>\n<li>IBM EBCDIC US-Canada (37)</li>\n<li>IBM EBCDIC Multilingual/ROECE (Latin 2) (870)</li>\n<li>IBM EBCDIC Greek Modern (875)</li>\n<li>IBM EBCDIC French (1010)</li>\n<li>IBM EBCDIC Turkish (Latin 5) (1026)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047)</li>\n<li>IBM EBCDIC Lao (1132/1133/1341)</li>\n<li>IBM EBCDIC US-Canada (037 + Euro symbol) (1140)</li>\n<li>IBM EBCDIC Germany (20273 + Euro symbol) (1141)</li>\n<li>IBM EBCDIC Denmark-Norway (20277 + Euro symbol) (1142)</li>\n<li>IBM EBCDIC Finland-Sweden (20278 + Euro symbol) (1143)</li>\n<li>IBM EBCDIC Italy (20280 + Euro symbol) (1144)</li>\n<li>IBM EBCDIC Latin America-Spain (20284 + Euro symbol) (1145)</li>\n<li>IBM EBCDIC United Kingdom (20285 + Euro symbol) (1146)</li>\n<li>IBM EBCDIC France (20297 + Euro symbol) (1147)</li>\n<li>IBM EBCDIC International (500 + Euro symbol) (1148)</li>\n<li>IBM EBCDIC Icelandic (20871 + Euro symbol) (1149)</li>\n<li>IBM EBCDIC Germany (20273)</li>\n<li>IBM EBCDIC Denmark-Norway (20277)</li>\n<li>IBM EBCDIC Finland-Sweden (20278)</li>\n<li>IBM EBCDIC Italy (20280)</li>\n<li>IBM EBCDIC Latin America-Spain (20284)</li>\n<li>IBM EBCDIC United Kingdom (20285)</li>\n<li>IBM EBCDIC Japanese Katakana Extended (20290)</li>\n<li>IBM EBCDIC France (20297)</li>\n<li>IBM EBCDIC Arabic (20420)</li>\n<li>IBM EBCDIC Greek (20423)</li>\n<li>IBM EBCDIC Hebrew (20424)</li>\n<li>IBM EBCDIC Korean Extended (20833)</li>\n<li>IBM EBCDIC Thai (20838)</li>\n<li>IBM EBCDIC Icelandic (20871)</li>\n<li>IBM EBCDIC Cyrillic Russian (20880)</li>\n<li>IBM EBCDIC Turkish (20905)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047 + Euro symbol) (20924)</li>\n<li>IBM EBCDIC Cyrillic Serbian-Bulgarian (21025)</li>\n<li>OEM United States (437)</li>\n<li>OEM Greek (formerly 437G); Greek (DOS) (737)</li>\n<li>OEM Baltic; Baltic (DOS) (775)</li>\n<li>OEM Russian; Cyrillic + Euro symbol (808)</li>\n<li>OEM Multilingual Latin 1; Western European (DOS) (850)</li>\n<li>OEM Latin 2; Central European (DOS) (852)</li>\n<li>OEM Cyrillic (primarily Russian) (855)</li>\n<li>OEM Turkish; Turkish (DOS) (857)</li>\n<li>OEM Multilingual Latin 1 + Euro symbol (858)</li>\n<li>OEM Portuguese; Portuguese (DOS) (860)</li>\n<li>OEM Icelandic; Icelandic (DOS) (861)</li>\n<li>OEM Hebrew; Hebrew (DOS) (862)</li>\n<li>OEM French Canadian; French Canadian (DOS) (863)</li>\n<li>OEM Arabic; Arabic (864) (864)</li>\n<li>OEM Nordic; Nordic (DOS) (865)</li>\n<li>OEM Russian; Cyrillic (DOS) (866)</li>\n<li>OEM Modern Greek; Greek, Modern (DOS) (869)</li>\n<li>OEM Cyrillic (primarily Russian) + Euro Symbol (872)</li>\n<li>Windows-874 Thai (874)</li>\n<li>Windows-1250 Central European (1250)</li>\n<li>Windows-1251 Cyrillic (1251)</li>\n<li>Windows-1252 Latin (1252)</li>\n<li>Windows-1253 Greek (1253)</li>\n<li>Windows-1254 Turkish (1254)</li>\n<li>Windows-1255 Hebrew (1255)</li>\n<li>Windows-1256 Arabic (1256)</li>\n<li>Windows-1257 Baltic (1257)</li>\n<li>Windows-1258 Vietnam (1258)</li>\n<li>ISO-8859-1 Latin 1 Western European (28591)</li>\n<li>ISO-8859-2 Latin 2 Central European (28592)</li>\n<li>ISO-8859-3 Latin 3 South European (28593)</li>\n<li>ISO-8859-4 Latin 4 North European (28594)</li>\n<li>ISO-8859-5 Latin/Cyrillic (28595)</li>\n<li>ISO-8859-6 Latin/Arabic (28596)</li>\n<li>ISO-8859-7 Latin/Greek (28597)</li>\n<li>ISO-8859-8 Latin/Hebrew (28598)</li>\n<li>ISO 8859-8 Hebrew (ISO-Logical) (38598)</li>\n<li>ISO-8859-9 Latin 5 Turkish (28599)</li>\n<li>ISO-8859-10 Latin 6 Nordic (28600)</li>\n<li>ISO-8859-11 Latin/Thai (28601)</li>\n<li>ISO-8859-13 Latin 7 Baltic Rim (28603)</li>\n<li>ISO-8859-14 Latin 8 Celtic (28604)</li>\n<li>ISO-8859-15 Latin 9 (28605)</li>\n<li>ISO-8859-16 Latin 10 (28606)</li>\n<li>ISO 2022 JIS Japanese with no halfwidth Katakana (50220)</li>\n<li>ISO 2022 JIS Japanese with halfwidth Katakana (50221)</li>\n<li>ISO 2022 Japanese JIS X 0201-1989 (1 byte Kana-SO/SI) (50222)</li>\n<li>ISO 2022 Korean (50225)</li>\n<li>ISO 2022 Simplified Chinese (50227)</li>\n<li>ISO 6937 Non-Spacing Accent (20269)</li>\n<li>EUC Japanese (51932)</li>\n<li>EUC Simplified Chinese (51936)</li>\n<li>EUC Korean (51949)</li>\n<li>ISCII Devanagari (57002)</li>\n<li>ISCII Bengali (57003)</li>\n<li>ISCII Tamil (57004)</li>\n<li>ISCII Telugu (57005)</li>\n<li>ISCII Assamese (57006)</li>\n<li>ISCII Oriya (57007)</li>\n<li>ISCII Kannada (57008)</li>\n<li>ISCII Malayalam (57009)</li>\n<li>ISCII Gujarati (57010)</li>\n<li>ISCII Punjabi (57011)</li>\n<li>Japanese Shift-JIS (932)</li>\n<li>Simplified Chinese GBK (936)</li>\n<li>Korean (949)</li>\n<li>Traditional Chinese Big5 (950)</li>\n<li>US-ASCII (7-bit) (20127)</li>\n<li>Simplified Chinese GB2312 (20936)</li>\n<li>KOI8-R Russian Cyrillic (20866)</li>\n<li>KOI8-U Ukrainian Cyrillic (21866)</li>\n<li>Mazovia (Polish) MS-DOS (620)</li>\n<li>Arabic (ASMO 708) (708)</li>\n<li>Arabic (Transparent ASMO); Arabic (DOS) (720)</li>\n<li>Kamenický (Czech) MS-DOS (895)</li>\n<li>Korean (Johab) (1361)</li>\n<li>MAC Roman (10000)</li>\n<li>Japanese (Mac) (10001)</li>\n<li>MAC Traditional Chinese (Big5) (10002)</li>\n<li>Korean (Mac) (10003)</li>\n<li>Arabic (Mac) (10004)</li>\n<li>Hebrew (Mac) (10005)</li>\n<li>Greek (Mac) (10006)</li>\n<li>Cyrillic (Mac) (10007)</li>\n<li>MAC Simplified Chinese (GB 2312) (10008)</li>\n<li>Romanian (Mac) (10010)</li>\n<li>Ukrainian (Mac) (10017)</li>\n<li>Thai (Mac) (10021)</li>\n<li>MAC Latin 2 (Central European) (10029)</li>\n<li>Icelandic (Mac) (10079)</li>\n<li>Turkish (Mac) (10081)</li>\n<li>Croatian (Mac) (10082)</li>\n<li>CNS Taiwan (Chinese Traditional) (20000)</li>\n<li>TCA Taiwan (20001)</li>\n<li>ETEN Taiwan (Chinese Traditional) (20002)</li>\n<li>IBM5550 Taiwan (20003)</li>\n<li>TeleText Taiwan (20004)</li>\n<li>Wang Taiwan (20005)</li>\n<li>Western European IA5 (IRV International Alphabet 5) (20105)</li>\n<li>IA5 German (7-bit) (20106)</li>\n<li>IA5 Swedish (7-bit) (20107)</li>\n<li>IA5 Norwegian (7-bit) (20108)</li>\n<li>T.61 (20261)</li>\n<li>Japanese (JIS 0208-1990 and 0212-1990) (20932)</li>\n<li>Korean Wansung (20949)</li>\n<li>Extended/Ext Alpha Lowercase (21027)</li>\n<li>Europa 3 (29001)</li>\n<li>Atari ST/TT (47451)</li>\n<li>HZ-GB2312 Simplified Chinese (52936)</li>\n<li>Simplified Chinese GB18030 (54936)</li>\n</ul>",
+        "args": {
+            "Encoding": "编码"
+        }
+    },
+    "Escape Smart Characters": {
+        "displayName": "转义智能字符",
+        "src_description": "Converts smart (typographic) Unicode characters — e.g. smart quotes, em/en dashes, ellipses, ©, ®, ™, arrows — into their plain ASCII equivalents.<br><br>Characters with no ASCII mapping (e.g. <code>☣</code>) are handled according to the 'Unmappable characters' option.<br><br>e.g. <code>“Hello” — world…</code> becomes <code>\"Hello\" -- world...</code>",
+        "description": "将智能（排版用）Unicode 字符——例如弯引号、长破折号/短破折号、省略号、©、®、™、箭头——转换为对应的纯 ASCII 字符。<br><br>没有 ASCII 对应字符的字符（例如 <code>☣</code>）按“无法映射的字符”选项处理。<br><br>例如 <code>“Hello” — world…</code> 变为 <code>\"Hello\" -- world...</code>",
+        "args": {
+            "Unmappable characters": "无法映射的字符"
+        }
+    },
+    "Escape Unicode Characters": {
+        "displayName": "Unicode 字符转义",
+        "src_description": "Converts characters to their unicode-escaped notations.<br><br>Supports the prefixes:<ul><li><code>\\u</code></li><li><code>%u</code></li><li><code>U+</code></li></ul>e.g. <code>σου</code> becomes <code>\\u03C3\\u03BF\\u03C5</code>",
+        "description": "将字符转换为 Unicode 转义表示。<br><br>支持以下前缀：<ul><li><code>\\u</code></li><li><code>%u</code></li><li><code>U+</code></li></ul>例如 <code>σου</code> 变为 <code>\\u03C3\\u03BF\\u03C5</code>",
+        "args": {
+            "Prefix": "前缀",
+            "Encode all chars": "编码所有字符",
+            "Padding": "填充",
+            "Uppercase hex": "大写十六进制"
+        }
+    },
+    "From Base": {
+        "displayName": "从指定进制转换",
+        "src_description": "Converts a number to decimal from a given numerical base.",
+        "description": "将指定进制的数转换为十进制。",
+        "args": {
+            "Radix": "基数"
+        }
+    },
+    "From Base32": {
+        "displayName": "Base32 解码",
+        "src_description": "Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.",
+        "description": "Base32 是一种使用有限字符集表示任意字节数据的记法，既方便人类使用，也便于计算机处理。它使用的字符比 Base64 少，通常是大写字母和数字 2 到 7。",
+        "args": {
+            "Alphabet": "字母表",
+            "Remove non-alphabet chars": "移除非字母表字符"
+        }
+    },
+    "From Base45": {
+        "displayName": "Base45 解码",
+        "src_description": "Base45 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system. Base45 is optimized for usage with QR codes.",
+        "description": "Base45 是一种使用有限字符集表示任意字节数据的记法，既方便人类使用，也便于计算机处理。较高的进制使得结果比十进制或十六进制更短。Base45 针对二维码（QR 码）的使用场景进行了优化。",
+        "args": {
+            "Alphabet": "字母表",
+            "Remove non-alphabet chars": "移除非字母表字符"
+        }
+    },
+    "From Base58": {
+        "displayName": "Base58 解码",
+        "src_description": "Base58 (similar to Base64) is a notation for encoding arbitrary byte data. It differs from Base64 by removing easily misread characters (i.e. l, I, 0 and O) to improve human readability.<br><br>This operation decodes data from an ASCII string (with an alphabet of your choosing, presets included) back into its raw form.<br><br>e.g. <code>StV1DL6CwTryKyV</code> becomes <code>hello world</code><br><br>Base58 is commonly used in cryptocurrencies (Bitcoin, Ripple, etc).",
+        "description": "Base58（与 Base64 类似）是一种表示任意字节数据的记法。与 Base64 不同的是，它去掉了容易看错的字符（即 l、I、0 和 O），以提高可读性。<br><br>此操作将 ASCII 字符串（可选择字母表，内置预设）还原为原始数据。<br><br>例如 <code>StV1DL6CwTryKyV</code> 变为 <code>hello world</code><br><br>Base58 常用于加密货币（比特币、瑞波币等）。",
+        "args": {
+            "Alphabet": "字母表",
+            "Remove non-alphabet chars": "移除非字母表字符"
+        }
+    },
+    "From Base62": {
+        "displayName": "Base62 解码",
+        "src_description": "Base62 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system.",
+        "description": "Base62 是一种使用有限字符集表示任意字节数据的记法，既方便人类使用，也便于计算机处理。较高的进制使得结果比十进制或十六进制更短。",
         "args": {
             "Alphabet": "字母表"
         }
@@ -17,19 +148,160 @@
             "Strict mode": "严格模式"
         }
     },
-    "URL Decode": {
-        "displayName": "URL 解码",
-        "src_description": "Converts URI/URL percent-encoded characters back to their raw values.<br><br>e.g. <code>%3d</code> becomes <code>=</code>",
-        "description": "将 URI/URL 百分号编码的字符还原为原始值。<br><br>例如 <code>%3d</code> 变为 <code>=</code>",
+    "From Base85": {
+        "displayName": "Base85 解码",
+        "src_description": "Base85 (also called Ascii85) is a notation for encoding arbitrary byte data. It is usually more efficient that Base64.<br><br>This operation decodes data from an ASCII string (with an alphabet of your choosing, presets included).<br><br>e.g. <code>BOu!rD]j7BEbo7</code> becomes <code>hello world</code><br><br>Base85 is commonly used in Adobe's PostScript and PDF file formats.",
+        "description": "Base85（也称 Ascii85）是一种表示任意字节数据的记法，通常比 Base64 更高效。<br><br>此操作将 ASCII 字符串（可选择字母表，内置预设）解码为原始数据。<br><br>例如 <code>BOu!rD]j7BEbo7</code> 变为 <code>hello world</code><br><br>Base85 常用于 Adobe 的 PostScript 和 PDF 文件格式。",
         "args": {
-            "Treat \"+\" as space": "将“+”视为空格"
+            "Alphabet": "字母表",
+            "Remove non-alphabet chars": "移除非字母表字符",
+            "All-zero group char": "全零组字符"
         }
     },
-    "MD5": {
-        "displayName": "MD5",
-        "src_description": "MD5 (Message-Digest 5) is a widely used hash function. It has been used in a variety of security applications and is also commonly used to check the integrity of files.<br><br>However, MD5 is not collision resistant and it isn't suitable for applications like SSL/TLS certificates or digital signatures that rely on this property.",
-        "description": "MD5（Message-Digest 5，消息摘要算法第 5 版）是一种广泛使用的哈希函数，曾被用于多种安全应用，也常用于校验文件完整性。<br><br>但 MD5 不具备抗碰撞性，不适用于依赖该特性的场景，例如 SSL/TLS 证书或数字签名。",
+    "From Base92": {
+        "displayName": "Base92 解码",
+        "src_description": "Base92 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.",
+        "description": "Base92 是一种使用有限字符集表示任意字节数据的记法，既方便人类使用，也便于计算机处理。",
         "args": {}
+    },
+    "From BCD": {
+        "displayName": "BCD 解码",
+        "src_description": "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign.",
+        "description": "二进制编码的十进制数（BCD）是一类表示十进制数的二进制编码，每个十进制位用固定数量的比特（通常为 4 位或 8 位）表示，有时会使用特殊的位模式表示符号。",
+        "args": {
+            "Scheme": "方案",
+            "Packed": "压缩格式",
+            "Signed": "有符号",
+            "Input format": "输入格式"
+        }
+    },
+    "From Bech32": {
+        "displayName": "Bech32 解码",
+        "src_description": "Bech32 is an encoding scheme primarily used for Bitcoin SegWit addresses (BIP-0173). It uses a 32-character alphabet that excludes easily confused characters (1, b, i, o) and includes a checksum for error detection.<br><br>Bech32m (BIP-0350) is an updated version used for Bitcoin Taproot addresses.<br><br>Auto-detect will attempt Bech32 first, then Bech32m if the checksum fails.<br><br>Output format options allow you to see the Human-Readable Part (HRP) along with the decoded data.",
+        "description": "Bech32 是一种主要用于比特币 SegWit 地址的编码方案（BIP-0173）。它使用 32 个字符的字母表，排除了容易混淆的字符（1、b、i、o），并包含用于检错的校验和。<br><br>Bech32m（BIP-0350）是用于比特币 Taproot 地址的改进版本。<br><br>自动检测会先尝试 Bech32，校验和失败时再尝试 Bech32m。<br><br>通过输出格式选项，可以同时查看人类可读部分（HRP）和解码后的数据。",
+        "args": {
+            "Encoding": "编码",
+            "Output Format": "输出格式"
+        }
+    },
+    "From Binary": {
+        "displayName": "二进制解码",
+        "src_description": "Converts a binary string back into its raw form.<br><br>e.g. <code>01001000 01101001</code> becomes <code>Hi</code>",
+        "description": "将二进制字符串还原为原始数据。<br><br>例如 <code>01001000 01101001</code> 变为 <code>Hi</code>",
+        "args": {
+            "Delimiter": "分隔符",
+            "Byte Length": "字节长度"
+        }
+    },
+    "From Braille": {
+        "displayName": "盲文解码",
+        "src_description": "Converts six-dot braille symbols to text.",
+        "description": "将六点盲文符号转换为文本。",
+        "args": {}
+    },
+    "From Charcode": {
+        "displayName": "字符码解码",
+        "src_description": "Converts unicode character codes back into text.<br><br>e.g. <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code> becomes <code>Γειά σου</code>",
+        "description": "将 Unicode 字符码还原为文本。<br><br>例如 <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code> 变为 <code>Γειά σου</code>",
+        "args": {
+            "Delimiter": "分隔符",
+            "Base": "进制"
+        }
+    },
+    "From COBS": {
+        "displayName": "COBS 解码",
+        "src_description": "Decodes COBS encoded bytes",
+        "description": "解码 COBS 编码的字节",
+        "args": {}
+    },
+    "From Decimal": {
+        "displayName": "十进制解码",
+        "src_description": "Converts the data from an ordinal integer array back into its raw form.<br><br>e.g. <code>72 101 108 108 111</code> becomes <code>Hello</code>",
+        "description": "将序数整数数组还原为原始数据。<br><br>例如 <code>72 101 108 108 111</code> 变为 <code>Hello</code>",
+        "args": {
+            "Delimiter": "分隔符",
+            "Support signed values": "支持有符号数"
+        }
+    },
+    "From Float": {
+        "displayName": "从浮点数转换",
+        "src_description": "Convert from IEEE754 Floating Point Numbers",
+        "description": "从 IEEE754 浮点数转换",
+        "args": {
+            "Endianness": "字节序",
+            "Size": "大小",
+            "Delimiter": "分隔符"
+        }
+    },
+    "From Hex": {
+        "displayName": "十六进制解码",
+        "src_description": "Converts a hexadecimal byte string back into its raw value.<br><br>e.g. <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
+        "description": "将十六进制字节字符串还原为原始值。<br><br>例如 <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code> 变为 UTF-8 编码的字符串 <code>Γειά σου</code>",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
+    "From Hex Content": {
+        "displayName": "十六进制内容解码",
+        "src_description": "Translates hexadecimal bytes in text back to raw bytes. This format is used by SNORT for representing hex within ASCII text.<br><br>e.g. <code>foo|3d|bar</code> becomes <code>foo=bar</code>.",
+        "description": "将文本中的十六进制字节还原为原始字节。SNORT 使用这种格式在 ASCII 文本中表示十六进制数据。<br><br>例如 <code>foo|3d|bar</code> 变为 <code>foo=bar</code>。",
+        "args": {}
+    },
+    "From Hexdump": {
+        "displayName": "从十六进制转储还原",
+        "src_description": "Attempts to convert a hexdump back into raw data. This operation supports many different hexdump variations, but probably not all. Make sure you verify that the data it gives you is correct before continuing analysis.",
+        "description": "尝试把十六进制转储还原为原始数据。此操作支持多种不同的 hexdump 格式，但可能无法支持全部格式。继续分析前，请确认得到的数据是正确的。",
+        "args": {}
+    },
+    "From HTML Entity": {
+        "displayName": "HTML 实体解码",
+        "src_description": "Converts HTML entities back to characters<br><br>e.g. <code>&amp;<span>amp;</span></code> becomes <code>&amp;</code>",
+        "description": "将 HTML 实体还原为字符<br><br>例如 <code>&amp;<span>amp;</span></code> 变为 <code>&amp;</code>",
+        "args": {}
+    },
+    "From MessagePack": {
+        "displayName": "MessagePack 解码",
+        "src_description": "Converts MessagePack encoded data to JSON. MessagePack is a computer data interchange format. It is a binary form for representing simple data structures like arrays and associative arrays.",
+        "description": "将 MessagePack 编码的数据转换为 JSON。MessagePack 是一种计算机数据交换格式，以二进制形式表示数组、关联数组等简单数据结构。",
+        "args": {}
+    },
+    "From Modhex": {
+        "displayName": "Modhex 解码",
+        "src_description": "Converts a modhex byte string back into its raw value.",
+        "description": "将 modhex 字节字符串还原为原始值。",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
+    "From Octal": {
+        "displayName": "八进制解码",
+        "src_description": "Converts an octal byte string back into its raw value.<br><br>e.g. <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code> becomes the UTF-8 encoded string <code>Γειά σου</code>",
+        "description": "将八进制字节字符串还原为原始值。<br><br>例如 <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code> 变为 UTF-8 编码的字符串 <code>Γειά σου</code>",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
+    "From Punycode": {
+        "displayName": "Punycode 解码",
+        "src_description": "Punycode is a way to represent Unicode with the limited character subset of ASCII supported by the Domain Name System.<br><br>e.g. <code>mnchen-3ya</code> decodes to <code>münchen</code>",
+        "description": "Punycode 是一种用域名系统（DNS）所支持的有限 ASCII 字符子集来表示 Unicode 的方法。<br><br>例如 <code>mnchen-3ya</code> 解码为 <code>münchen</code>",
+        "args": {
+            "Internationalised domain name": "国际化域名"
+        }
+    },
+    "From Quoted Printable": {
+        "displayName": "Quoted-Printable 解码",
+        "src_description": "Converts QP-encoded text back to standard text. This format is a content transfer encoding common in email messages.<br><br>e.g. The quoted-printable encoded string <code>hello=20world</code> becomes <code>hello world</code>",
+        "description": "将 QP 编码的文本还原为普通文本。这种格式是电子邮件中常见的内容传输编码。<br><br>例如 Quoted-Printable 编码的字符串 <code>hello=20world</code> 变为 <code>hello world</code>",
+        "args": {}
+    },
+    "Hex to PEM": {
+        "displayName": "十六进制转 PEM",
+        "src_description": "Converts a hexadecimal DER (Distinguished Encoding Rules) string into PEM (Privacy Enhanced Mail) format.",
+        "description": "将十六进制 DER（Distinguished Encoding Rules，可分辨编码规则）字符串转换为 PEM（Privacy Enhanced Mail）格式。",
+        "args": {
+            "Header string": "头部字符串"
+        }
     },
     "JSON Beautify": {
         "displayName": "JSON 美化",
@@ -40,5 +312,357 @@
             "Sort Object Keys": "对象键排序",
             "Formatted": "格式化显示"
         }
+    },
+    "JSON to CSV": {
+        "displayName": "JSON 转 CSV",
+        "src_description": "Converts JSON data to a CSV based on the definition in RFC 4180.",
+        "description": "按照 RFC 4180 的定义将 JSON 数据转换为 CSV。",
+        "args": {
+            "Cell delimiter": "单元格分隔符",
+            "Row delimiter": "行分隔符"
+        }
+    },
+    "JSON to YAML": {
+        "displayName": "JSON 转 YAML",
+        "src_description": "Format a JSON object into YAML",
+        "description": "将 JSON 对象格式化为 YAML",
+        "args": {}
+    },
+    "MD5": {
+        "displayName": "MD5",
+        "src_description": "MD5 (Message-Digest 5) is a widely used hash function. It has been used in a variety of security applications and is also commonly used to check the integrity of files.<br><br>However, MD5 is not collision resistant and it isn't suitable for applications like SSL/TLS certificates or digital signatures that rely on this property.",
+        "description": "MD5（Message-Digest 5，消息摘要算法第 5 版）是一种广泛使用的哈希函数，曾被用于多种安全应用，也常用于校验文件完整性。<br><br>但 MD5 不具备抗碰撞性，不适用于依赖该特性的场景，例如 SSL/TLS 证书或数字签名。",
+        "args": {}
+    },
+    "MIME Decoding": {
+        "displayName": "MIME 解码",
+        "src_description": "Enables the decoding of MIME message header extensions for non-ASCII text",
+        "description": "解码 MIME 消息头中用于非 ASCII 文本的扩展编码",
+        "args": {}
+    },
+    "Normalise Unicode": {
+        "displayName": "Unicode 规范化",
+        "src_description": "Transform Unicode characters to one of the Normalisation Forms",
+        "description": "将 Unicode 字符转换为某一种规范化形式",
+        "args": {
+            "Normal Form": "规范化形式"
+        }
+    },
+    "Parse ASN.1 hex string": {
+        "displayName": "解析 ASN.1 十六进制字符串",
+        "src_description": "Abstract Syntax Notation One (ASN.1) is a standard and notation that describes rules and structures for representing, encoding, transmitting, and decoding data in telecommunications and computer networking.<br><br>This operation parses arbitrary ASN.1 data (encoded as an hex string: use the 'To Hex' operation if necessary) and presents the resulting tree.",
+        "description": "抽象语法标记一（ASN.1）是一种标准和记法，描述了在电信和计算机网络中表示、编码、传输和解码数据的规则与结构。<br><br>此操作解析任意 ASN.1 数据（以十六进制字符串形式编码，必要时可先使用“十六进制编码”操作），并以树形结构展示结果。",
+        "args": {
+            "Starting index": "起始索引",
+            "Truncate octet strings longer than": "截断超过此长度的字节串"
+        }
+    },
+    "Parse TLV": {
+        "displayName": "解析 TLV",
+        "src_description": "Converts a Type-Length-Value (TLV) encoded string into a JSON object.  Can optionally include a <code>Key</code> / <code>Type</code> entry. <br><br>Tags: Key-Length-Value, KLV, Length-Value, LV",
+        "description": "将类型-长度-值（TLV）编码的字符串转换为 JSON 对象。可选择包含 <code>Key</code> / <code>Type</code> 条目。<br><br>标签：Key-Length-Value、KLV、Length-Value、LV",
+        "args": {
+            "Type/Key size": "类型 / 密钥长度",
+            "Length size": "长度字段大小",
+            "Use BER": "使用 BER"
+        }
+    },
+    "PEM to Hex": {
+        "displayName": "PEM 转十六进制",
+        "src_description": "Converts PEM (Privacy Enhanced Mail) format to a hexadecimal DER (Distinguished Encoding Rules) string.",
+        "description": "将 PEM（Privacy Enhanced Mail）格式转换为十六进制 DER（Distinguished Encoding Rules，可分辨编码规则）字符串。",
+        "args": {}
+    },
+    "Rison Decode": {
+        "displayName": "Rison 解码",
+        "src_description": "Rison, a data serialization format optimized for compactness in URIs. Rison is a slight variation of JSON that looks vastly superior after URI encoding. Rison still expresses exactly the same set of data structures as JSON, so data can be translated back and forth without loss or guesswork.",
+        "description": "Rison 是一种为在 URI 中保持紧凑而优化的数据序列化格式。Rison 是 JSON 的一个轻微变体，经过 URI 编码后看起来要好得多。Rison 表达的数据结构与 JSON 完全相同，因此数据可以在两者之间来回转换，不会丢失信息，也无需猜测。",
+        "args": {
+            "Decode Option": "解码选项"
+        }
+    },
+    "Rison Encode": {
+        "displayName": "Rison 编码",
+        "src_description": "Rison, a data serialization format optimized for compactness in URIs. Rison is a slight variation of JSON that looks vastly superior after URI encoding. Rison still expresses exactly the same set of data structures as JSON, so data can be translated back and forth without loss or guesswork.",
+        "description": "Rison 是一种为在 URI 中保持紧凑而优化的数据序列化格式。Rison 是 JSON 的一个轻微变体，经过 URI 编码后看起来要好得多。Rison 表达的数据结构与 JSON 完全相同，因此数据可以在两者之间来回转换，不会丢失信息，也无需猜测。",
+        "args": {
+            "Encode Option": "编码选项"
+        }
+    },
+    "Show Base64 offsets": {
+        "displayName": "显示 Base64 偏移",
+        "src_description": "When a string is within a block of data and the whole block is Base64'd, the string itself could be represented in Base64 in three distinct ways depending on its offset within the block.<br><br>This operation shows all possible offsets for a given string so that each possible encoding can be considered.",
+        "description": "当一个字符串位于某个数据块中，且整个数据块经过 Base64 编码时，根据该字符串在块中的偏移不同，它会以三种不同的形式出现在 Base64 中。<br><br>此操作显示给定字符串所有可能的偏移形式，以便逐一考虑每种可能的编码。",
+        "args": {
+            "Alphabet": "字母表",
+            "Show variable chars and padding": "显示可变字符和填充",
+            "Input format": "输入格式"
+        }
+    },
+    "Swap endianness": {
+        "displayName": "交换字节序",
+        "src_description": "Switches the data from big-endian to little-endian or vice-versa. Data can be read in as hexadecimal or raw bytes. It will be returned in the same format as it is entered.",
+        "description": "在大端序和小端序之间转换数据。数据可以按十六进制或原始字节读入，并以输入时的相同格式返回。",
+        "args": {
+            "Data format": "数据格式",
+            "Word length (bytes)": "字长（字节）",
+            "Pad incomplete words": "填充不完整的字"
+        }
+    },
+    "Text Encoding Brute Force": {
+        "displayName": "文本编码暴力枚举",
+        "src_description": "Enumerates all supported text encodings for the input, allowing you to quickly spot the correct one.\n<br><br>\nSupported charsets are:\n<ul>\n<li>UTF-8 (65001)</li>\n<li>UTF-7 (65000)</li>\n<li>UTF-16LE (1200)</li>\n<li>UTF-16BE (1201)</li>\n<li>UTF-32LE (12000)</li>\n<li>UTF-32BE (12001)</li>\n<li>IBM EBCDIC International (500)</li>\n<li>IBM EBCDIC US-Canada (37)</li>\n<li>IBM EBCDIC Multilingual/ROECE (Latin 2) (870)</li>\n<li>IBM EBCDIC Greek Modern (875)</li>\n<li>IBM EBCDIC French (1010)</li>\n<li>IBM EBCDIC Turkish (Latin 5) (1026)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047)</li>\n<li>IBM EBCDIC Lao (1132/1133/1341)</li>\n<li>IBM EBCDIC US-Canada (037 + Euro symbol) (1140)</li>\n<li>IBM EBCDIC Germany (20273 + Euro symbol) (1141)</li>\n<li>IBM EBCDIC Denmark-Norway (20277 + Euro symbol) (1142)</li>\n<li>IBM EBCDIC Finland-Sweden (20278 + Euro symbol) (1143)</li>\n<li>IBM EBCDIC Italy (20280 + Euro symbol) (1144)</li>\n<li>IBM EBCDIC Latin America-Spain (20284 + Euro symbol) (1145)</li>\n<li>IBM EBCDIC United Kingdom (20285 + Euro symbol) (1146)</li>\n<li>IBM EBCDIC France (20297 + Euro symbol) (1147)</li>\n<li>IBM EBCDIC International (500 + Euro symbol) (1148)</li>\n<li>IBM EBCDIC Icelandic (20871 + Euro symbol) (1149)</li>\n<li>IBM EBCDIC Germany (20273)</li>\n<li>IBM EBCDIC Denmark-Norway (20277)</li>\n<li>IBM EBCDIC Finland-Sweden (20278)</li>\n<li>IBM EBCDIC Italy (20280)</li>\n<li>IBM EBCDIC Latin America-Spain (20284)</li>\n<li>IBM EBCDIC United Kingdom (20285)</li>\n<li>IBM EBCDIC Japanese Katakana Extended (20290)</li>\n<li>IBM EBCDIC France (20297)</li>\n<li>IBM EBCDIC Arabic (20420)</li>\n<li>IBM EBCDIC Greek (20423)</li>\n<li>IBM EBCDIC Hebrew (20424)</li>\n<li>IBM EBCDIC Korean Extended (20833)</li>\n<li>IBM EBCDIC Thai (20838)</li>\n<li>IBM EBCDIC Icelandic (20871)</li>\n<li>IBM EBCDIC Cyrillic Russian (20880)</li>\n<li>IBM EBCDIC Turkish (20905)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047 + Euro symbol) (20924)</li>\n<li>IBM EBCDIC Cyrillic Serbian-Bulgarian (21025)</li>\n<li>OEM United States (437)</li>\n<li>OEM Greek (formerly 437G); Greek (DOS) (737)</li>\n<li>OEM Baltic; Baltic (DOS) (775)</li>\n<li>OEM Russian; Cyrillic + Euro symbol (808)</li>\n<li>OEM Multilingual Latin 1; Western European (DOS) (850)</li>\n<li>OEM Latin 2; Central European (DOS) (852)</li>\n<li>OEM Cyrillic (primarily Russian) (855)</li>\n<li>OEM Turkish; Turkish (DOS) (857)</li>\n<li>OEM Multilingual Latin 1 + Euro symbol (858)</li>\n<li>OEM Portuguese; Portuguese (DOS) (860)</li>\n<li>OEM Icelandic; Icelandic (DOS) (861)</li>\n<li>OEM Hebrew; Hebrew (DOS) (862)</li>\n<li>OEM French Canadian; French Canadian (DOS) (863)</li>\n<li>OEM Arabic; Arabic (864) (864)</li>\n<li>OEM Nordic; Nordic (DOS) (865)</li>\n<li>OEM Russian; Cyrillic (DOS) (866)</li>\n<li>OEM Modern Greek; Greek, Modern (DOS) (869)</li>\n<li>OEM Cyrillic (primarily Russian) + Euro Symbol (872)</li>\n<li>Windows-874 Thai (874)</li>\n<li>Windows-1250 Central European (1250)</li>\n<li>Windows-1251 Cyrillic (1251)</li>\n<li>Windows-1252 Latin (1252)</li>\n<li>Windows-1253 Greek (1253)</li>\n<li>Windows-1254 Turkish (1254)</li>\n<li>Windows-1255 Hebrew (1255)</li>\n<li>Windows-1256 Arabic (1256)</li>\n<li>Windows-1257 Baltic (1257)</li>\n<li>Windows-1258 Vietnam (1258)</li>\n<li>ISO-8859-1 Latin 1 Western European (28591)</li>\n<li>ISO-8859-2 Latin 2 Central European (28592)</li>\n<li>ISO-8859-3 Latin 3 South European (28593)</li>\n<li>ISO-8859-4 Latin 4 North European (28594)</li>\n<li>ISO-8859-5 Latin/Cyrillic (28595)</li>\n<li>ISO-8859-6 Latin/Arabic (28596)</li>\n<li>ISO-8859-7 Latin/Greek (28597)</li>\n<li>ISO-8859-8 Latin/Hebrew (28598)</li>\n<li>ISO 8859-8 Hebrew (ISO-Logical) (38598)</li>\n<li>ISO-8859-9 Latin 5 Turkish (28599)</li>\n<li>ISO-8859-10 Latin 6 Nordic (28600)</li>\n<li>ISO-8859-11 Latin/Thai (28601)</li>\n<li>ISO-8859-13 Latin 7 Baltic Rim (28603)</li>\n<li>ISO-8859-14 Latin 8 Celtic (28604)</li>\n<li>ISO-8859-15 Latin 9 (28605)</li>\n<li>ISO-8859-16 Latin 10 (28606)</li>\n<li>ISO 2022 JIS Japanese with no halfwidth Katakana (50220)</li>\n<li>ISO 2022 JIS Japanese with halfwidth Katakana (50221)</li>\n<li>ISO 2022 Japanese JIS X 0201-1989 (1 byte Kana-SO/SI) (50222)</li>\n<li>ISO 2022 Korean (50225)</li>\n<li>ISO 2022 Simplified Chinese (50227)</li>\n<li>ISO 6937 Non-Spacing Accent (20269)</li>\n<li>EUC Japanese (51932)</li>\n<li>EUC Simplified Chinese (51936)</li>\n<li>EUC Korean (51949)</li>\n<li>ISCII Devanagari (57002)</li>\n<li>ISCII Bengali (57003)</li>\n<li>ISCII Tamil (57004)</li>\n<li>ISCII Telugu (57005)</li>\n<li>ISCII Assamese (57006)</li>\n<li>ISCII Oriya (57007)</li>\n<li>ISCII Kannada (57008)</li>\n<li>ISCII Malayalam (57009)</li>\n<li>ISCII Gujarati (57010)</li>\n<li>ISCII Punjabi (57011)</li>\n<li>Japanese Shift-JIS (932)</li>\n<li>Simplified Chinese GBK (936)</li>\n<li>Korean (949)</li>\n<li>Traditional Chinese Big5 (950)</li>\n<li>US-ASCII (7-bit) (20127)</li>\n<li>Simplified Chinese GB2312 (20936)</li>\n<li>KOI8-R Russian Cyrillic (20866)</li>\n<li>KOI8-U Ukrainian Cyrillic (21866)</li>\n<li>Mazovia (Polish) MS-DOS (620)</li>\n<li>Arabic (ASMO 708) (708)</li>\n<li>Arabic (Transparent ASMO); Arabic (DOS) (720)</li>\n<li>Kamenický (Czech) MS-DOS (895)</li>\n<li>Korean (Johab) (1361)</li>\n<li>MAC Roman (10000)</li>\n<li>Japanese (Mac) (10001)</li>\n<li>MAC Traditional Chinese (Big5) (10002)</li>\n<li>Korean (Mac) (10003)</li>\n<li>Arabic (Mac) (10004)</li>\n<li>Hebrew (Mac) (10005)</li>\n<li>Greek (Mac) (10006)</li>\n<li>Cyrillic (Mac) (10007)</li>\n<li>MAC Simplified Chinese (GB 2312) (10008)</li>\n<li>Romanian (Mac) (10010)</li>\n<li>Ukrainian (Mac) (10017)</li>\n<li>Thai (Mac) (10021)</li>\n<li>MAC Latin 2 (Central European) (10029)</li>\n<li>Icelandic (Mac) (10079)</li>\n<li>Turkish (Mac) (10081)</li>\n<li>Croatian (Mac) (10082)</li>\n<li>CNS Taiwan (Chinese Traditional) (20000)</li>\n<li>TCA Taiwan (20001)</li>\n<li>ETEN Taiwan (Chinese Traditional) (20002)</li>\n<li>IBM5550 Taiwan (20003)</li>\n<li>TeleText Taiwan (20004)</li>\n<li>Wang Taiwan (20005)</li>\n<li>Western European IA5 (IRV International Alphabet 5) (20105)</li>\n<li>IA5 German (7-bit) (20106)</li>\n<li>IA5 Swedish (7-bit) (20107)</li>\n<li>IA5 Norwegian (7-bit) (20108)</li>\n<li>T.61 (20261)</li>\n<li>Japanese (JIS 0208-1990 and 0212-1990) (20932)</li>\n<li>Korean Wansung (20949)</li>\n<li>Extended/Ext Alpha Lowercase (21027)</li>\n<li>Europa 3 (29001)</li>\n<li>Atari ST/TT (47451)</li>\n<li>HZ-GB2312 Simplified Chinese (52936)</li>\n<li>Simplified Chinese GB18030 (54936)</li>\n</ul>",
+        "description": "枚举输入在所有支持的文本编码下的结果，帮助你快速找到正确的编码。\n<br><br>\n支持的字符集：\n<ul>\n<li>UTF-8 (65001)</li>\n<li>UTF-7 (65000)</li>\n<li>UTF-16LE (1200)</li>\n<li>UTF-16BE (1201)</li>\n<li>UTF-32LE (12000)</li>\n<li>UTF-32BE (12001)</li>\n<li>IBM EBCDIC International (500)</li>\n<li>IBM EBCDIC US-Canada (37)</li>\n<li>IBM EBCDIC Multilingual/ROECE (Latin 2) (870)</li>\n<li>IBM EBCDIC Greek Modern (875)</li>\n<li>IBM EBCDIC French (1010)</li>\n<li>IBM EBCDIC Turkish (Latin 5) (1026)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047)</li>\n<li>IBM EBCDIC Lao (1132/1133/1341)</li>\n<li>IBM EBCDIC US-Canada (037 + Euro symbol) (1140)</li>\n<li>IBM EBCDIC Germany (20273 + Euro symbol) (1141)</li>\n<li>IBM EBCDIC Denmark-Norway (20277 + Euro symbol) (1142)</li>\n<li>IBM EBCDIC Finland-Sweden (20278 + Euro symbol) (1143)</li>\n<li>IBM EBCDIC Italy (20280 + Euro symbol) (1144)</li>\n<li>IBM EBCDIC Latin America-Spain (20284 + Euro symbol) (1145)</li>\n<li>IBM EBCDIC United Kingdom (20285 + Euro symbol) (1146)</li>\n<li>IBM EBCDIC France (20297 + Euro symbol) (1147)</li>\n<li>IBM EBCDIC International (500 + Euro symbol) (1148)</li>\n<li>IBM EBCDIC Icelandic (20871 + Euro symbol) (1149)</li>\n<li>IBM EBCDIC Germany (20273)</li>\n<li>IBM EBCDIC Denmark-Norway (20277)</li>\n<li>IBM EBCDIC Finland-Sweden (20278)</li>\n<li>IBM EBCDIC Italy (20280)</li>\n<li>IBM EBCDIC Latin America-Spain (20284)</li>\n<li>IBM EBCDIC United Kingdom (20285)</li>\n<li>IBM EBCDIC Japanese Katakana Extended (20290)</li>\n<li>IBM EBCDIC France (20297)</li>\n<li>IBM EBCDIC Arabic (20420)</li>\n<li>IBM EBCDIC Greek (20423)</li>\n<li>IBM EBCDIC Hebrew (20424)</li>\n<li>IBM EBCDIC Korean Extended (20833)</li>\n<li>IBM EBCDIC Thai (20838)</li>\n<li>IBM EBCDIC Icelandic (20871)</li>\n<li>IBM EBCDIC Cyrillic Russian (20880)</li>\n<li>IBM EBCDIC Turkish (20905)</li>\n<li>IBM EBCDIC Latin 1/Open System (1047 + Euro symbol) (20924)</li>\n<li>IBM EBCDIC Cyrillic Serbian-Bulgarian (21025)</li>\n<li>OEM United States (437)</li>\n<li>OEM Greek (formerly 437G); Greek (DOS) (737)</li>\n<li>OEM Baltic; Baltic (DOS) (775)</li>\n<li>OEM Russian; Cyrillic + Euro symbol (808)</li>\n<li>OEM Multilingual Latin 1; Western European (DOS) (850)</li>\n<li>OEM Latin 2; Central European (DOS) (852)</li>\n<li>OEM Cyrillic (primarily Russian) (855)</li>\n<li>OEM Turkish; Turkish (DOS) (857)</li>\n<li>OEM Multilingual Latin 1 + Euro symbol (858)</li>\n<li>OEM Portuguese; Portuguese (DOS) (860)</li>\n<li>OEM Icelandic; Icelandic (DOS) (861)</li>\n<li>OEM Hebrew; Hebrew (DOS) (862)</li>\n<li>OEM French Canadian; French Canadian (DOS) (863)</li>\n<li>OEM Arabic; Arabic (864) (864)</li>\n<li>OEM Nordic; Nordic (DOS) (865)</li>\n<li>OEM Russian; Cyrillic (DOS) (866)</li>\n<li>OEM Modern Greek; Greek, Modern (DOS) (869)</li>\n<li>OEM Cyrillic (primarily Russian) + Euro Symbol (872)</li>\n<li>Windows-874 Thai (874)</li>\n<li>Windows-1250 Central European (1250)</li>\n<li>Windows-1251 Cyrillic (1251)</li>\n<li>Windows-1252 Latin (1252)</li>\n<li>Windows-1253 Greek (1253)</li>\n<li>Windows-1254 Turkish (1254)</li>\n<li>Windows-1255 Hebrew (1255)</li>\n<li>Windows-1256 Arabic (1256)</li>\n<li>Windows-1257 Baltic (1257)</li>\n<li>Windows-1258 Vietnam (1258)</li>\n<li>ISO-8859-1 Latin 1 Western European (28591)</li>\n<li>ISO-8859-2 Latin 2 Central European (28592)</li>\n<li>ISO-8859-3 Latin 3 South European (28593)</li>\n<li>ISO-8859-4 Latin 4 North European (28594)</li>\n<li>ISO-8859-5 Latin/Cyrillic (28595)</li>\n<li>ISO-8859-6 Latin/Arabic (28596)</li>\n<li>ISO-8859-7 Latin/Greek (28597)</li>\n<li>ISO-8859-8 Latin/Hebrew (28598)</li>\n<li>ISO 8859-8 Hebrew (ISO-Logical) (38598)</li>\n<li>ISO-8859-9 Latin 5 Turkish (28599)</li>\n<li>ISO-8859-10 Latin 6 Nordic (28600)</li>\n<li>ISO-8859-11 Latin/Thai (28601)</li>\n<li>ISO-8859-13 Latin 7 Baltic Rim (28603)</li>\n<li>ISO-8859-14 Latin 8 Celtic (28604)</li>\n<li>ISO-8859-15 Latin 9 (28605)</li>\n<li>ISO-8859-16 Latin 10 (28606)</li>\n<li>ISO 2022 JIS Japanese with no halfwidth Katakana (50220)</li>\n<li>ISO 2022 JIS Japanese with halfwidth Katakana (50221)</li>\n<li>ISO 2022 Japanese JIS X 0201-1989 (1 byte Kana-SO/SI) (50222)</li>\n<li>ISO 2022 Korean (50225)</li>\n<li>ISO 2022 Simplified Chinese (50227)</li>\n<li>ISO 6937 Non-Spacing Accent (20269)</li>\n<li>EUC Japanese (51932)</li>\n<li>EUC Simplified Chinese (51936)</li>\n<li>EUC Korean (51949)</li>\n<li>ISCII Devanagari (57002)</li>\n<li>ISCII Bengali (57003)</li>\n<li>ISCII Tamil (57004)</li>\n<li>ISCII Telugu (57005)</li>\n<li>ISCII Assamese (57006)</li>\n<li>ISCII Oriya (57007)</li>\n<li>ISCII Kannada (57008)</li>\n<li>ISCII Malayalam (57009)</li>\n<li>ISCII Gujarati (57010)</li>\n<li>ISCII Punjabi (57011)</li>\n<li>Japanese Shift-JIS (932)</li>\n<li>Simplified Chinese GBK (936)</li>\n<li>Korean (949)</li>\n<li>Traditional Chinese Big5 (950)</li>\n<li>US-ASCII (7-bit) (20127)</li>\n<li>Simplified Chinese GB2312 (20936)</li>\n<li>KOI8-R Russian Cyrillic (20866)</li>\n<li>KOI8-U Ukrainian Cyrillic (21866)</li>\n<li>Mazovia (Polish) MS-DOS (620)</li>\n<li>Arabic (ASMO 708) (708)</li>\n<li>Arabic (Transparent ASMO); Arabic (DOS) (720)</li>\n<li>Kamenický (Czech) MS-DOS (895)</li>\n<li>Korean (Johab) (1361)</li>\n<li>MAC Roman (10000)</li>\n<li>Japanese (Mac) (10001)</li>\n<li>MAC Traditional Chinese (Big5) (10002)</li>\n<li>Korean (Mac) (10003)</li>\n<li>Arabic (Mac) (10004)</li>\n<li>Hebrew (Mac) (10005)</li>\n<li>Greek (Mac) (10006)</li>\n<li>Cyrillic (Mac) (10007)</li>\n<li>MAC Simplified Chinese (GB 2312) (10008)</li>\n<li>Romanian (Mac) (10010)</li>\n<li>Ukrainian (Mac) (10017)</li>\n<li>Thai (Mac) (10021)</li>\n<li>MAC Latin 2 (Central European) (10029)</li>\n<li>Icelandic (Mac) (10079)</li>\n<li>Turkish (Mac) (10081)</li>\n<li>Croatian (Mac) (10082)</li>\n<li>CNS Taiwan (Chinese Traditional) (20000)</li>\n<li>TCA Taiwan (20001)</li>\n<li>ETEN Taiwan (Chinese Traditional) (20002)</li>\n<li>IBM5550 Taiwan (20003)</li>\n<li>TeleText Taiwan (20004)</li>\n<li>Wang Taiwan (20005)</li>\n<li>Western European IA5 (IRV International Alphabet 5) (20105)</li>\n<li>IA5 German (7-bit) (20106)</li>\n<li>IA5 Swedish (7-bit) (20107)</li>\n<li>IA5 Norwegian (7-bit) (20108)</li>\n<li>T.61 (20261)</li>\n<li>Japanese (JIS 0208-1990 and 0212-1990) (20932)</li>\n<li>Korean Wansung (20949)</li>\n<li>Extended/Ext Alpha Lowercase (21027)</li>\n<li>Europa 3 (29001)</li>\n<li>Atari ST/TT (47451)</li>\n<li>HZ-GB2312 Simplified Chinese (52936)</li>\n<li>Simplified Chinese GB18030 (54936)</li>\n</ul>",
+        "args": {
+            "Mode": "模式"
+        }
+    },
+    "Text-Integer Conversion": {
+        "displayName": "文本-整数转换",
+        "src_description": "Converts between text strings and large integers (decimal or hexadecimal).<br><br>Text is interpreted as a big-endian sequence of character codes. For example:<br>ABC is 0x414243 (hex) is 4276803 (decimal)<br><b>Input format detection:</b><br>Decimal: digits 0-9 only<br>Hexadecimal: 0x... prefix<br>Quoted or unquoted text: treated as string<br><br><b>Character limitations:</b><br>Text input may only contain ASCII and Latin-1 characters (code point < 256).<br>Multi-byte Unicode characters will generate an error.<br><br>.",
+        "description": "在文本字符串和大整数（十进制或十六进制）之间互相转换。<br><br>文本被解释为大端序的字符码序列。例如：<br>ABC 即 0x414243（十六进制），即 4276803（十进制）<br><b>输入格式识别：</b><br>十进制：仅包含数字 0-9<br>十六进制：以 0x 开头<br>带引号或不带引号的文本：视为字符串<br><br><b>字符限制：</b><br>文本输入只能包含 ASCII 和 Latin-1 字符（码点 < 256）。<br>多字节 Unicode 字符会导致错误。<br><br>。",
+        "args": {
+            "Output format": "输出格式"
+        }
+    },
+    "To Base": {
+        "displayName": "转为指定进制",
+        "src_description": "Converts a decimal number to a given numerical base.",
+        "description": "将十进制数转换为指定进制。",
+        "args": {
+            "Radix": "基数"
+        }
+    },
+    "To Base32": {
+        "displayName": "Base32 编码",
+        "src_description": "Base32 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. It uses a smaller set of characters than Base64, usually the uppercase alphabet and the numbers 2 to 7.",
+        "description": "Base32 是一种使用有限字符集表示任意字节数据的记法，既方便人类使用，也便于计算机处理。它使用的字符比 Base64 少，通常是大写字母和数字 2 到 7。",
+        "args": {
+            "Alphabet": "字母表"
+        }
+    },
+    "To Base45": {
+        "displayName": "Base45 编码",
+        "src_description": "Base45 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system. Base45 is optimized for usage with QR codes.",
+        "description": "Base45 是一种使用有限字符集表示任意字节数据的记法，既方便人类使用，也便于计算机处理。较高的进制使得结果比十进制或十六进制更短。Base45 针对二维码（QR 码）的使用场景进行了优化。",
+        "args": {
+            "Alphabet": "字母表"
+        }
+    },
+    "To Base58": {
+        "displayName": "Base58 编码",
+        "src_description": "Base58 (similar to Base64) is a notation for encoding arbitrary byte data. It differs from Base64 by removing easily misread characters (i.e. l, I, 0 and O) to improve human readability.<br><br>This operation encodes data in an ASCII string (with an alphabet of your choosing, presets included).<br><br>e.g. <code>hello world</code> becomes <code>StV1DL6CwTryKyV</code><br><br>Base58 is commonly used in cryptocurrencies (Bitcoin, Ripple, etc).",
+        "description": "Base58（与 Base64 类似）是一种表示任意字节数据的记法。与 Base64 不同的是，它去掉了容易看错的字符（即 l、I、0 和 O），以提高可读性。<br><br>此操作将数据编码为 ASCII 字符串（可选择字母表，内置预设）。<br><br>例如 <code>hello world</code> 变为 <code>StV1DL6CwTryKyV</code><br><br>Base58 常用于加密货币（比特币、瑞波币等）。",
+        "args": {
+            "Alphabet": "字母表"
+        }
+    },
+    "To Base62": {
+        "displayName": "Base62 编码",
+        "src_description": "Base62 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers. The high number base results in shorter strings than with the decimal or hexadecimal system.",
+        "description": "Base62 是一种使用有限字符集表示任意字节数据的记法，既方便人类使用，也便于计算机处理。较高的进制使得结果比十进制或十六进制更短。",
+        "args": {
+            "Alphabet": "字母表"
+        }
+    },
+    "To Base64": {
+        "displayName": "Base64 编码",
+        "src_description": "Base64 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.<br><br>This operation encodes raw data into an ASCII Base64 string.<br><br>e.g. <code>hello</code> becomes <code>aGVsbG8=</code>",
+        "description": "Base64 是一种使用有限字符集表示任意字节数据的记法，既方便人类使用，也便于计算机处理。<br><br>此操作将原始数据编码为 ASCII Base64 字符串。<br><br>例如 <code>hello</code> 变为 <code>aGVsbG8=</code>",
+        "args": {
+            "Alphabet": "字母表"
+        }
+    },
+    "To Base85": {
+        "displayName": "Base85 编码",
+        "src_description": "Base85 (also called Ascii85) is a notation for encoding arbitrary byte data. It is usually more efficient that Base64.<br><br>This operation encodes data in an ASCII string (with an alphabet of your choosing, presets included).<br><br>e.g. <code>hello world</code> becomes <code>BOu!rD]j7BEbo7</code><br><br>Base85 is commonly used in Adobe's PostScript and PDF file formats.<br><br><strong>Options</strong><br><u>Alphabet</u><ul><li>Standard - The standard alphabet, referred to as Ascii85</li><li>Z85 (ZeroMQ) - A string-safe variant of Base85, which avoids quote marks and backslash characters</li><li>IPv6 - A variant of Base85 suitable for encoding IPv6 addresses (RFC 1924)</li></ul><u>Include delimiter</u><br>Adds a '<~' and '~>' delimiter to the start and end of the data. This is standard for Adobe's implementation of Base85.",
+        "description": "Base85（也称 Ascii85）是一种表示任意字节数据的记法，通常比 Base64 更高效。<br><br>此操作将数据编码为 ASCII 字符串（可选择字母表，内置预设）。<br><br>例如 <code>hello world</code> 变为 <code>BOu!rD]j7BEbo7</code><br><br>Base85 常用于 Adobe 的 PostScript 和 PDF 文件格式。<br><br><strong>选项</strong><br><u>字母表</u><ul><li>Standard：标准字母表，即 Ascii85</li><li>Z85 (ZeroMQ)：Base85 的字符串安全变体，避免使用引号和反斜杠字符</li><li>IPv6：适合编码 IPv6 地址的 Base85 变体（RFC 1924）</li></ul><u>包含定界符</u><br>在数据开头和结尾添加 '<~' 和 '~>' 定界符，这是 Adobe 实现 Base85 的标准做法。",
+        "args": {
+            "Alphabet": "字母表",
+            "Include delimiter": "包含定界符"
+        }
+    },
+    "To Base92": {
+        "displayName": "Base92 编码",
+        "src_description": "Base92 is a notation for encoding arbitrary byte data using a restricted set of symbols that can be conveniently used by humans and processed by computers.",
+        "description": "Base92 是一种使用有限字符集表示任意字节数据的记法，既方便人类使用，也便于计算机处理。",
+        "args": {}
+    },
+    "To BCD": {
+        "displayName": "BCD 编码",
+        "src_description": "Binary-Coded Decimal (BCD) is a class of binary encodings of decimal numbers where each decimal digit is represented by a fixed number of bits, usually four or eight. Special bit patterns are sometimes used for a sign",
+        "description": "二进制编码的十进制数（BCD）是一类表示十进制数的二进制编码，每个十进制位用固定数量的比特（通常为 4 位或 8 位）表示，有时会使用特殊的位模式表示符号",
+        "args": {
+            "Scheme": "方案",
+            "Packed": "压缩格式",
+            "Signed": "有符号",
+            "Output format": "输出格式"
+        }
+    },
+    "To Bech32": {
+        "displayName": "Bech32 编码",
+        "src_description": "Bech32 is an encoding scheme primarily used for Bitcoin SegWit addresses (BIP-0173). It uses a 32-character alphabet that excludes easily confused characters (1, b, i, o) and includes a checksum for error detection.<br><br>Bech32m (BIP-0350) is an updated version that fixes a weakness in the original Bech32 checksum and is used for Bitcoin Taproot addresses.<br><br>The Human-Readable Part (HRP) identifies the network or purpose (e.g., 'bc' for Bitcoin mainnet, 'tb' for testnet, 'age' for AGE encryption keys).<br><br>Maximum output length is 90 characters as per specification.",
+        "description": "Bech32 是一种主要用于比特币 SegWit 地址的编码方案（BIP-0173）。它使用 32 个字符的字母表，排除了容易混淆的字符（1、b、i、o），并包含用于检错的校验和。<br><br>Bech32m（BIP-0350）是改进版本，修复了原始 Bech32 校验和的一个缺陷，用于比特币 Taproot 地址。<br><br>人类可读部分（HRP）标识网络或用途（例如 'bc' 表示比特币主网，'tb' 表示测试网，'age' 表示 AGE 加密密钥）。<br><br>按照规范，输出最长为 90 个字符。",
+        "args": {
+            "Human-Readable Part (HRP)": "人类可读部分（HRP）",
+            "Encoding": "编码",
+            "Input Format": "输入格式",
+            "Mode": "模式",
+            "Witness Version": "见证版本"
+        }
+    },
+    "To Binary": {
+        "displayName": "二进制编码",
+        "src_description": "Displays the input data as a binary string.<br><br>e.g. <code>Hi</code> becomes <code>01001000 01101001</code>",
+        "description": "以二进制字符串形式显示输入数据。<br><br>例如 <code>Hi</code> 变为 <code>01001000 01101001</code>",
+        "args": {
+            "Delimiter": "分隔符",
+            "Byte Length": "字节长度"
+        }
+    },
+    "To Braille": {
+        "displayName": "盲文编码",
+        "src_description": "Converts text to six-dot braille symbols.",
+        "description": "将文本转换为六点盲文符号。",
+        "args": {}
+    },
+    "To Charcode": {
+        "displayName": "字符码编码",
+        "src_description": "Converts text to its unicode character code equivalent.<br><br>e.g. <code>Γειά σου</code> becomes <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code>",
+        "description": "将文本转换为对应的 Unicode 字符码。<br><br>例如 <code>Γειά σου</code> 变为 <code>0393 03b5 03b9 03ac 20 03c3 03bf 03c5</code>",
+        "args": {
+            "Delimiter": "分隔符",
+            "Base": "进制"
+        }
+    },
+    "To COBS": {
+        "displayName": "COBS 编码",
+        "src_description": "Encodes bytes in COBS format",
+        "description": "将字节编码为 COBS 格式",
+        "args": {}
+    },
+    "To Decimal": {
+        "displayName": "十进制编码",
+        "src_description": "Converts the input data to an ordinal integer array.<br><br>e.g. <code>Hello</code> becomes <code>72 101 108 108 111</code>",
+        "description": "将输入数据转换为序数整数数组。<br><br>例如 <code>Hello</code> 变为 <code>72 101 108 108 111</code>",
+        "args": {
+            "Delimiter": "分隔符",
+            "Support signed values": "支持有符号数"
+        }
+    },
+    "To Float": {
+        "displayName": "转为浮点数",
+        "src_description": "Convert to IEEE754 Floating Point Numbers",
+        "description": "转换为 IEEE754 浮点数",
+        "args": {
+            "Endianness": "字节序",
+            "Size": "大小",
+            "Delimiter": "分隔符"
+        }
+    },
+    "To Hex": {
+        "displayName": "十六进制编码",
+        "src_description": "Converts the input string to hexadecimal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code>",
+        "description": "将输入字符串转换为以指定分隔符分隔的十六进制字节。<br><br>例如 UTF-8 编码的字符串 <code>Γειά σου</code> 变为 <code>ce 93 ce b5 ce b9 ce ac 20 cf 83 ce bf cf 85 0a</code>",
+        "args": {
+            "Delimiter": "分隔符",
+            "Bytes per line": "每行字节数"
+        }
+    },
+    "To Hex Content": {
+        "displayName": "十六进制内容编码",
+        "src_description": "Converts special characters in a string to hexadecimal. This format is used by SNORT for representing hex within ASCII text.<br><br>e.g. <code>foo=bar</code> becomes <code>foo|3d|bar</code>.",
+        "description": "将字符串中的特殊字符转换为十六进制。SNORT 使用这种格式在 ASCII 文本中表示十六进制数据。<br><br>例如 <code>foo=bar</code> 变为 <code>foo|3d|bar</code>。",
+        "args": {
+            "Convert": "转换",
+            "Print spaces between bytes": "字节间显示空格"
+        }
+    },
+    "To Hexdump": {
+        "displayName": "十六进制转储",
+        "src_description": "Creates a hexdump of the input data, displaying both the hexadecimal values of each byte and an ASCII representation alongside.<br><br>The 'UNIX format' argument defines which subset of printable characters are displayed in the preview column.",
+        "description": "生成输入数据的十六进制转储（hexdump），同时显示每个字节的十六进制值和对应的 ASCII 表示。<br><br>“UNIX 格式”参数决定预览列中显示哪些可打印字符。",
+        "args": {
+            "Width": "宽度",
+            "Upper case hex": "大写十六进制",
+            "Include final length": "包含最终长度",
+            "UNIX format": "UNIX 格式"
+        }
+    },
+    "To HTML Entity": {
+        "displayName": "HTML 实体编码",
+        "src_description": "Converts characters to HTML entities<br><br>e.g. <code>&amp;</code> becomes <code>&amp;<span>amp;</span></code>",
+        "description": "将字符转换为 HTML 实体<br><br>例如 <code>&amp;</code> 变为 <code>&amp;<span>amp;</span></code>",
+        "args": {
+            "Convert all characters": "转换所有字符",
+            "Convert to": "转换为"
+        }
+    },
+    "To MessagePack": {
+        "displayName": "MessagePack 编码",
+        "src_description": "Converts JSON to MessagePack encoded byte buffer. MessagePack is a computer data interchange format. It is a binary form for representing simple data structures like arrays and associative arrays.",
+        "description": "将 JSON 转换为 MessagePack 编码的字节缓冲区。MessagePack 是一种计算机数据交换格式，以二进制形式表示数组、关联数组等简单数据结构。",
+        "args": {}
+    },
+    "To Modhex": {
+        "displayName": "Modhex 编码",
+        "src_description": "Converts the input string to modhex bytes separated by the specified delimiter.",
+        "description": "将输入字符串转换为以指定分隔符分隔的 modhex 字节。",
+        "args": {
+            "Delimiter": "分隔符",
+            "Bytes per line": "每行字节数"
+        }
+    },
+    "To Octal": {
+        "displayName": "八进制编码",
+        "src_description": "Converts the input string to octal bytes separated by the specified delimiter.<br><br>e.g. The UTF-8 encoded string <code>Γειά σου</code> becomes <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code>",
+        "description": "将输入字符串转换为以指定分隔符分隔的八进制字节。<br><br>例如 UTF-8 编码的字符串 <code>Γειά σου</code> 变为 <code>316 223 316 265 316 271 316 254 40 317 203 316 277 317 205</code>",
+        "args": {
+            "Delimiter": "分隔符"
+        }
+    },
+    "To Punycode": {
+        "displayName": "Punycode 编码",
+        "src_description": "Punycode is a way to represent Unicode with the limited character subset of ASCII supported by the Domain Name System.<br><br>e.g. <code>münchen</code> encodes to <code>mnchen-3ya</code>",
+        "description": "Punycode 是一种用域名系统（DNS）所支持的有限 ASCII 字符子集来表示 Unicode 的方法。<br><br>例如 <code>münchen</code> 编码为 <code>mnchen-3ya</code>",
+        "args": {
+            "Internationalised domain name": "国际化域名"
+        }
+    },
+    "To Quoted Printable": {
+        "displayName": "Quoted-Printable 编码",
+        "src_description": "Quoted-Printable, or QP encoding, is an encoding using printable ASCII characters (alphanumeric and the equals sign '=') to transmit 8-bit data over a 7-bit data path or, generally, over a medium which is not 8-bit clean. It is defined as a MIME content transfer encoding for use in email.<br><br>QP works by using the equals sign '=' as an escape character. It also limits line length to 76, as some software has limits on line length.",
+        "description": "Quoted-Printable（QP 编码）是一种使用可打印 ASCII 字符（字母、数字和等号“=”）的编码，用于通过 7 位数据通道或一般意义上不支持 8 位数据的媒介传输 8 位数据。它被定义为电子邮件中使用的 MIME 内容传输编码。<br><br>QP 使用等号“=”作为转义字符。由于部分软件限制行长，它还会把行长限制在 76 个字符以内。",
+        "args": {}
+    },
+    "Unescape Unicode Characters": {
+        "displayName": "Unicode 字符反转义",
+        "src_description": "Converts unicode-escaped character notation back into raw characters.<br><br>Supports the prefixes:<ul><li><code>\\u</code></li><li><code>%u</code></li><li><code>U+</code></li></ul>e.g. <code>\\u03c3\\u03bf\\u03c5</code> becomes <code>σου</code>",
+        "description": "将 Unicode 转义表示还原为原始字符。<br><br>支持以下前缀：<ul><li><code>\\u</code></li><li><code>%u</code></li><li><code>U+</code></li></ul>例如 <code>\\u03c3\\u03bf\\u03c5</code> 变为 <code>σου</code>",
+        "args": {
+            "Prefix": "前缀"
+        }
+    },
+    "URL Decode": {
+        "displayName": "URL 解码",
+        "src_description": "Converts URI/URL percent-encoded characters back to their raw values.<br><br>e.g. <code>%3d</code> becomes <code>=</code>",
+        "description": "将 URI/URL 百分号编码的字符还原为原始值。<br><br>例如 <code>%3d</code> 变为 <code>=</code>",
+        "args": {
+            "Treat \"+\" as space": "将“+”视为空格"
+        }
+    },
+    "URL Encode": {
+        "displayName": "URL 编码",
+        "src_description": "Encodes problematic characters into percent-encoding, a format supported by URIs/URLs.<br><br>e.g. <code>=</code> becomes <code>%3d</code>",
+        "description": "将有问题的字符编码为百分号编码，这是 URI/URL 支持的格式。<br><br>例如 <code>=</code> 变为 <code>%3d</code>",
+        "args": {
+            "Encode all special chars": "编码所有特殊字符"
+        }
+    },
+    "YAML to JSON": {
+        "displayName": "YAML 转 JSON",
+        "src_description": "Convert YAML to JSON",
+        "description": "将 YAML 转换为 JSON",
+        "args": {}
     }
 }
