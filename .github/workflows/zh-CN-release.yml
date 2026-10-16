@@ -1,0 +1,80 @@
+name: "zh-CN Build & Release"
+
+# 汉化分支每次推送后：测试、构建，并把离线包发布到 GitHub Releases。
+# 发布的标签以 zh-CN- 开头，不会触发官方以 v* 标签为条件的 releases.yml。
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - zh-CN
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zh-CN-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set node version
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+
+      - name: Install
+        run: |
+          npm ci
+          npm run setheapsize
+
+      - name: Lint
+        run: npx grunt lint
+
+      - name: Unit Tests
+        run: npm test
+
+      - name: Production Build
+        run: npx grunt prod --msg=""
+
+      - name: i18n coverage report
+        run: node scripts/i18n-check.mjs | tee i18n-report.txt
+
+      - name: Package
+        id: package
+        run: |
+          version=$(node -p "require('./package.json').version")
+          short_sha=$(git rev-parse --short HEAD)
+          tag="zh-CN-v${version}-${GITHUB_RUN_NUMBER}"
+          zip="CyberChef_v${version}_zh-CN.zip"
+          mv build/prod/CyberChef_*.zip "$zip"
+          {
+            echo "CyberChef v${version} 中文汉化版（提交 ${short_sha}）"
+            echo
+            echo "下载 \`${zip}\`，解压后双击 \`CyberChef_*.html\` 即可离线使用。"
+            echo
+            echo "配方、分享链接和收藏夹使用英文操作名，可与官方版本互通。"
+            echo
+            echo '```'
+            head -n 5 i18n-report.txt
+            echo '```'
+          } > release-notes.md
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          echo "zip=${zip}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.package.outputs.tag }}" "${{ steps.package.outputs.zip }}" \
+            --target "$GITHUB_SHA" \
+            --title "CyberChef v${{ steps.package.outputs.version }} 中文版 (#${GITHUB_RUN_NUMBER})" \
+            --notes-file release-notes.md \
+            --latest
