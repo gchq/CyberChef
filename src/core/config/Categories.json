@@ -49,6 +49,7 @@
             "Escape Unicode Characters",
             "Unescape Unicode Characters",
             "Normalise Unicode",
+            "Escape Smart Characters",
             "To Quoted Printable",
             "From Quoted Printable",
             "To Punycode",
@@ -82,7 +83,9 @@
             "Rison Decode",
             "To Modhex",
             "From Modhex",
-            "MIME Decoding"
+            "MIME Decoding",
+            "To COBS",
+            "From COBS"
         ]
     },
     {
@@ -112,12 +115,19 @@
             "SM4 Decrypt",
             "RC6 Encrypt",
             "RC6 Decrypt",
+            "Ascon Encrypt",
+            "Ascon Decrypt",
+            "PRESENT Encrypt",
+            "PRESENT Decrypt",
+            "Twofish Encrypt",
+            "Twofish Decrypt",
             "GOST Encrypt",
             "GOST Decrypt",
             "GOST Sign",
             "GOST Verify",
             "GOST Key Wrap",
             "GOST Key Unwrap",
+            "ROR13",
             "ROT13",
             "ROT13 Brute Force",
             "ROT47",
@@ -127,6 +137,10 @@
             "XOR Brute Force",
             "Vigenère Encode",
             "Vigenère Decode",
+            "TEA Encrypt",
+            "TEA Decrypt",
+            "XTEA Encrypt",
+            "XTEA Decrypt",
             "XXTEA Encrypt",
             "XXTEA Decrypt",
             "To Morse Code",
@@ -161,6 +175,7 @@
             "AES Key Wrap",
             "AES Key Unwrap",
             "Pseudo-Random Number Generator",
+            "Pseudo-Random Prime Generator",
             "Enigma",
             "Bombe",
             "Multiple Bombe",
@@ -177,6 +192,7 @@
         "name": "Public Key",
         "ops": [
             "Parse X.509 certificate",
+            "Parse X.509 certificate bundles",
             "Parse X.509 CRL",
             "Parse ASN.1 hex string",
             "PEM to Hex",
@@ -188,9 +204,11 @@
             "Generate PGP Key Pair",
             "PGP Encrypt",
             "PGP Decrypt",
+            "PGP Sign",
             "PGP Verify",
             "PGP Encrypt and Sign",
             "PGP Decrypt and Verify",
+            "Parse PGP Key",
             "Generate RSA Key Pair",
             "RSA Sign",
             "RSA Verify",
@@ -228,9 +246,10 @@
             "Subtract",
             "Multiply",
             "Divide",
+            "MOD",
+            "Extended GCD",
             "Modular Exponentiation",
             "Modular Inverse",
-            "Extended GCD",
             "Mean",
             "Median",
             "Standard Deviation",
@@ -238,6 +257,7 @@
             "Bit shift right",
             "Rotate left",
             "Rotate right",
+            "ROR13",
             "ROT13",
             "ROT8000"
         ]
@@ -303,6 +323,7 @@
             "Diff",
             "Remove whitespace",
             "Remove null bytes",
+            "Remove ANSI Escape Codes",
             "To Upper case",
             "To Lower case",
             "Swap case",
@@ -348,6 +369,7 @@
             "Pseudo-Random Number Generator",
             "Sleep",
             "File Tree",
+            "Wrap",
             "Take nth bytes",
             "Drop nth bytes"
         ]
@@ -413,7 +435,9 @@
             "LZMA Compress",
             "LZ4 Decompress",
             "LZ4 Compress",
-            "LZNT1 Decompress"
+            "LZNT1 Decompress",
+            "XPRESS Decompress",
+            "XPRESS LZ77+Huffman Decompress"
         ]
     },
     {
@@ -440,6 +464,8 @@
             "BLAKE2b",
             "BLAKE2s",
             "BLAKE3",
+            "Ascon Hash",
+            "Ascon MAC",
             "GOST Hash",
             "Streebog",
             "SSDEEP",
@@ -465,7 +491,8 @@
             "Luhn Checksum",
             "CRC Checksum",
             "TCP/IP Checksum",
-            "XOR Checksum"
+            "XOR Checksum",
+            "Parity Bit"
         ]
     },
     {
@@ -551,7 +578,7 @@
             "Scatter chart",
             "Series chart",
             "Heatmap chart",
-            "Extract Audio Metadata"
+            "Render PDF"
         ]
     },
     {
@@ -577,7 +604,8 @@
             "HTML To Text",
             "Generate Lorem Ipsum",
             "Numberwang",
-            "XKCD Random Number"
+            "XKCD Random Number",
+            "Automated Validation Test Op"
         ]
     },
     {

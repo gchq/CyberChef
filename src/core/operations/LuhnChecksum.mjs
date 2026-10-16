@@ -48,7 +48,7 @@ class LuhnChecksum extends Operation {
 
             // If element is not a valid number in the given radix.
             if (isNaN(temp)) {
-                throw new Error("Character: " + elem + " is not valid in radix " + radix + ".");
+                throw new OperationError("Character: " + elem + " is not valid in radix " + radix + ".");
             }
 
             // If element is in an even position

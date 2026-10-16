@@ -52,5 +52,27 @@ TestRegister.addTests([
                 args: ["z", "-"],
             },
         ],
-    }
+    },
+    {
+        name: "Set Intersection: duplicates in first set are removed",
+        input: "red,red,blue\n\nred,blue",
+        expectedOutput: "red,blue",
+        recipeConfig: [
+            {
+                op: "Set Intersection",
+                args: ["\n\n", ","],
+            },
+        ],
+    },
+    {
+        name: "Set Intersection: duplicates in both sets",
+        input: "1 1 2 2 3\n\n2 2 3 3 4",
+        expectedOutput: "2 3",
+        recipeConfig: [
+            {
+                op: "Set Intersection",
+                args: ["\n\n", " "],
+            },
+        ],
+    },
 ]);

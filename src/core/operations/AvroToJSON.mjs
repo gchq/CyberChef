@@ -39,7 +39,7 @@ class AvroToJSON extends Operation {
      * @param {Object[]} args
      * @returns {string}
      */
-    run(input, args) {
+    async run(input, args) {
         if (input.byteLength <= 0) {
             throw new OperationError("Please provide an input.");
         }

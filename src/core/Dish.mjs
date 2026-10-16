@@ -43,11 +43,13 @@ class Dish {
             Object.prototype.hasOwnProperty.call(dishOrInput, "value") &&
             Object.prototype.hasOwnProperty.call(dishOrInput, "type")) {
             this.set(dishOrInput.value, dishOrInput.type);
-        // input and type defined separately
-        } else if (dishOrInput && type !== null) {
+        // input and type defined separately. 0 is falsy but is a valid value;
+        // Boolean and other unsupported falsy inputs keep the previous
+        // empty-dish behaviour.
+        } else if ((dishOrInput || dishOrInput === 0) && type !== null) {
             this.set(dishOrInput, type);
         // No type declared, so infer it.
-        } else if (dishOrInput) {
+        } else if (dishOrInput || dishOrInput === 0) {
             const inferredType = Dish.typeEnum(dishOrInput.constructor.name);
             this.set(dishOrInput, inferredType);
         }
@@ -292,11 +294,7 @@ class Dish {
                     and reinitialise it as a BigNumber object.
                 */
                 if (Object.keys(this.value).sort().equals(["c", "e", "s"])) {
-                    const temp = new BigNumber();
-                    temp.c = this.value.c;
-                    temp.e = this.value.e;
-                    temp.s = this.value.s;
-                    this.value = temp;
+                    this.value = new BigNumber({ s: this.value.s, e: this.value.e, c: this.value.c, _isBigNumber: true});
                     return true;
                 }
                 return false;

@@ -10,7 +10,7 @@
 
 import NodeDish from "./NodeDish.mjs";
 import NodeRecipe from "./NodeRecipe.mjs";
-import OperationConfig from "../core/config/OperationConfig.json" assert {type: "json"};
+import OperationConfig from "../core/config/OperationConfig.json" with { type: "json" };
 import { sanitise, removeSubheadingsFromArray, sentenceToCamelCase } from "./apiUtils.mjs";
 import ExcludedOperationError from "../core/errors/ExcludedOperationError.mjs";
 
@@ -74,7 +74,11 @@ function transformArgs(opArgsList, newArgs) {
     return opArgs.map((arg) => {
         if (arg.type === "option") {
             // pick default option if not already chosen
-            return typeof arg.value === "string" ? arg.value : arg.value[arg.defaultIndex ?? 0];
+            return !Array.isArray(arg.value) ? arg.value : arg.value[arg.defaultIndex ?? 0];
+        }
+
+        if (arg.type === "argSelector") {
+            return !Array.isArray(arg.value) ? arg.value : (arg.value[arg.defaultIndex ?? 0]?.name || "");
         }
 
         if (arg.type === "editableOption") {
@@ -98,7 +102,7 @@ function transformArgs(opArgsList, newArgs) {
  * @param input
  */
 function ensureIsDish(input) {
-    if (!input) {
+    if (input === undefined || input === null) {
         return new NodeDish();
     }
 
@@ -193,6 +197,8 @@ export function _wrap(OpClass) {
         wrapped = async (input, args=null) => {
             const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
 
+            opInstance.validateIngredients(transformedArgs);
+
             // SPECIAL CASE for Magic. Other flowControl operations will
             // not work because the opList is not passed in.
             if (isFlowControl) {
@@ -229,6 +235,7 @@ export function _wrap(OpClass) {
          */
         wrapped = (input, args=null) => {
             const {transformedInput, transformedArgs} = prepareOp(opInstance, input, args);
+            opInstance.validateIngredients(transformedArgs);
             const result = opInstance.run(transformedInput, transformedArgs);
             return new NodeDish({
                 value: result,
@@ -324,10 +331,10 @@ export function help(input) {
  * @returns {NodeDish} of the result
  * @throws {TypeError} if invalid recipe given.
  */
-export function bake(input, recipeConfig) {
-    const recipe =  new NodeRecipe(recipeConfig);
+export async function bake(input, recipeConfig) {
+    const recipe = new NodeRecipe(recipeConfig);
     const dish = ensureIsDish(input);
-    return recipe.execute(dish);
+    return await recipe.execute(dish);
 }
 
 

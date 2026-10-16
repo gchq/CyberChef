@@ -11,6 +11,8 @@
 import Utils from "../../core/Utils.mjs";
 import loglevelMessagePrefix from "loglevel-message-prefix";
 
+const workerScope = self;
+
 loglevelMessagePrefix(log, {
     prefixes: [],
     staticPrefixes: ["InputWorker"]
@@ -525,7 +527,7 @@ self.updateInputValue = function(inputData) {
     if (!("stringSample" in inputData)) {
         inputData.stringSample = Utils.arrayBufferToStr(inputData.buffer.slice(0, 4096));
     }
-    self.inputs[inputNum].stringSample = inputData.stringSample;
+    workerScope.inputs[inputNum].stringSample = inputData.stringSample;
     self.inputs[inputNum].status = "loaded";
     self.inputs[inputNum].progress = 100;
 };
@@ -780,7 +782,7 @@ self.addInput = function(
             log.error(`Invalid input type '${type}'.`);
             return -1;
     }
-    self.inputs[inputNum] = newInputObj;
+    workerScope.inputs[inputNum] = newInputObj;
 
     // Tell the inputWaiter we've added an input, so it can create a tab to display it
     self.postMessage({

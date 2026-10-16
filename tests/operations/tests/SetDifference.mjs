@@ -53,4 +53,26 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "Set Difference: duplicates in first set are removed",
+        input: "red,red,blue\n\nblue",
+        expectedOutput: "red",
+        recipeConfig: [
+            {
+                op: "Set Difference",
+                args: ["\n\n", ","],
+            },
+        ],
+    },
+    {
+        name: "Set Difference: duplicates in both sets",
+        input: "1 1 2 2 3\n\n2 2 3 3",
+        expectedOutput: "1",
+        recipeConfig: [
+            {
+                op: "Set Difference",
+                args: ["\n\n", " "],
+            },
+        ],
+    },
 ]);

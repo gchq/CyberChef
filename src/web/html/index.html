@@ -173,7 +173,7 @@
                         Operations
                         <span class="op-count"></span>
                     </div>
-                    <input id="search" type="search" class="form-control" placeholder="Search..." autocomplete="off" tabindex="0" data-help-title="Searching for operations" data-help="<p>Use the search box to find useful operations.</p><p>Both operation names and descriptions are queried using a fuzzy matching algorithm.</p>">
+                    <input id="search" type="search" class="form-control" placeholder="Search..." autocomplete="off" tabindex="0" data-help-title="Searching for operations" data-help="<p>Use the search box to find useful operations.</p><p>Both operation names and descriptions are queried using a fuzzy matching algorithm.</p>" aria-owns="search-results">
                     <ul id="search-results" class="op-list"></ul>
                     <div id="categories" class="panel-group no-select"></div>
                 </div>
@@ -868,15 +868,15 @@
                             Be aware that the standalone version will never update itself, meaning it will not receive bug fixes or new features until you re-download newer versions manually.
                         </p>
 
-                        <h6>CyberChef v<%= htmlWebpackPlugin.options.version %></h6>
+                        <h6>CyberChef <%= htmlWebpackPlugin.options.version %></h6>
                         <ul>
                             <li>Build time: <%= htmlWebpackPlugin.options.compileTime %></li>
-                            <li>The changelog for this version can be viewed <a href="https://github.com/gchq/CyberChef/blob/v<%= htmlWebpackPlugin.options.version %>/CHANGELOG.md">here</a></li>
+                            <li>The changelog for this version can be viewed <a href="https://github.com/gchq/CyberChef/blob/v<%= htmlWebpackPlugin.options.latestReleaseVersion %>/CHANGELOG.md">here</a></li>
                             <li>&copy; Crown Copyright 2016-<%= htmlWebpackPlugin.options.compileYear %></li>
                             <li>Released under the Apache Licence, Version 2.0</li>
                             <li>SHA256 hash: DOWNLOAD_HASH_PLACEHOLDER</li>
                         </ul>
-                        <a href="CyberChef_v<%= htmlWebpackPlugin.options.version %>.zip" download class="btn btn-outline-primary">Download ZIP file</a>
+                        <a href="<%= htmlWebpackPlugin.options.downloadZipFilename %>" download class="btn btn-outline-primary">Download ZIP file</a>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>

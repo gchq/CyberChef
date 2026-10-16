@@ -35,7 +35,10 @@ class ToBinary extends Operation {
             {
                 "name": "Byte Length",
                 "type": "number",
-                "value": 8
+                "value": 8,
+                "min": 1,
+                "max": 256, // arbitrary - significantly larger than word size for any known machine ("640k ought to be enough for anybody")
+                "integer": true
             }
         ];
     }

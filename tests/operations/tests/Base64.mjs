@@ -116,4 +116,15 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "Show Base64 offsets: escapes static output",
+        input: "\x00\x10\x83\x10\x51\x87",
+        expectedOutput: "&lt;script&gt;\n&lt;AQmsBRk66\n&lt;ia1AEIM6",
+        recipeConfig: [
+            {
+                op: "Show Base64 offsets",
+                args: ["<script>ale(1)/.ABCDEFGHIJKLMNOPQRSTUVWXYZbdfghjkmnoquvwxyz023456", false, "Raw"],
+            },
+        ],
+    },
 ]);

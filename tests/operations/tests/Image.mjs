@@ -46,6 +46,17 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Generate Image: empty mode",
+        input: "",
+        expectedOutput: "Mode cannot be empty.",
+        recipeConfig: [
+            {
+                op: "Generate Image",
+                args: ["", 8, 64]
+            }
+        ]
+    },
+    {
         name: "Extract EXIF: nothing",
         input: "",
         expectedOutput: "Found 0 tags.\n",
@@ -227,6 +238,21 @@ TestRegister.addTests([
             {
                 op: "To Hex",
                 args: ["None"]
+            }
+        ]
+    },
+    {
+        name: "View Bit Plane: malformed PNG",
+        input: PNG_HEX.replace("49484452", "49424452"),
+        expectedOutput: "Error loading image. (Error: unrecognised content at end of stream)",
+        recipeConfig: [
+            {
+                op: "From Hex",
+                args: ["None"]
+            },
+            {
+                op: "View Bit Plane",
+                args: ["Red", 0]
             }
         ]
     },

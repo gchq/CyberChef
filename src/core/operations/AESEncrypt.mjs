@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 import forge from "node-forge";
 import OperationError from "../errors/OperationError.mjs";
+import { toHexFast } from "../lib/Hex.mjs";
 
 /**
  * AES Encrypt operation
@@ -92,6 +93,11 @@ class AESEncrypt extends Operation {
                 "type": "toggleString",
                 "value": "",
                 "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
+            },
+            {
+                "name": "Include IV in output",
+                "type": "option",
+                "value": ["Off", "Prepend", "Append"]
             }
         ];
     }
@@ -107,10 +113,11 @@ class AESEncrypt extends Operation {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
             iv = Utils.convertToByteString(args[1].string, args[1].option),
             mode = args[2].split("/")[0],
-            noPadding =  args[2].endsWith("NoPadding"),
+            noPadding = args[2].endsWith("NoPadding"),
             inputType = args[3],
             outputType = args[4],
-            aad = Utils.convertToByteString(args[5].string, args[5].option);
+            aad = Utils.convertToByteString(args[5].string, args[5].option),
+            includeIV = args[6];
 
         if ([16, 24, 32].indexOf(key.length) < 0) {
             throw new OperationError(`Invalid key length: ${key.length} bytes
@@ -133,26 +140,34 @@ The following algorithms will be used based on the size of the key:
             additionalData: mode === "GCM" ? aad : undefined
         });
         if (noPadding) {
-            cipher.mode.pad = function(output, options) {
+            cipher.mode.pad = function (output, options) {
                 return true;
             };
         }
         cipher.update(forge.util.createBuffer(input));
         cipher.finish();
 
+        let output = cipher.output.getBytes();
+
+        if (includeIV === "Prepend") {
+            output = iv + output;
+        } else if (includeIV === "Append") {
+            output = output + iv;
+        }
+
         if (outputType === "Hex") {
+            output = toHexFast(Utils.strToByteArray(output));
+
             if (mode === "GCM") {
-                return cipher.output.toHex() + "\n\n" +
+                return output + "\n\n" +
                     "Tag: " + cipher.mode.tag.toHex();
             }
-            return cipher.output.toHex();
-        } else {
-            if (mode === "GCM") {
-                return cipher.output.getBytes() + "\n\n" +
-                    "Tag: " + cipher.mode.tag.getBytes();
-            }
-            return cipher.output.getBytes();
+        } else if (mode === "GCM") {
+            return output + "\n\n" +
+                "Tag: " + cipher.mode.tag.getBytes();
         }
+
+        return output;
     }
 
 }

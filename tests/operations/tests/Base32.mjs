@@ -172,5 +172,27 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "To Base32: should support non-BMP Unicode alphabets",
+        input: "hello",
+        expectedOutput: "🀝🀈🀐🀔🀖🀀🀊🀟",
+        recipeConfig: [
+            {
+                op: "To Base32",
+                args: ["🀇🀈🀉🀊🀋🀌🀍🀎🀏🀙🀚🀛🀜🀝🀞🀟🀠🀡🀐🀑🀒🀓🀔🀕🀖🀗🀘🀀🀁🀂🀃🀅"],
+            },
+        ],
+    },
+    {
+        name: "To Base32: should omit padding for 32-character Unicode alphabets",
+        input: "hell",
+        expectedOutput: "🀝🀈🀐🀔🀖🀀🀇",
+        recipeConfig: [
+            {
+                op: "To Base32",
+                args: ["🀇🀈🀉🀊🀋🀌🀍🀎🀏🀙🀚🀛🀜🀝🀞🀟🀠🀡🀐🀑🀒🀓🀔🀕🀖🀗🀘🀀🀁🀂🀃🀅"],
+            },
+        ],
+    },
 ]);
 

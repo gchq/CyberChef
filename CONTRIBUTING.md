@@ -6,10 +6,13 @@ There are lots of opportunities to contribute to CyberChef. If you want ideas, t
 
 Before your contributions can be accepted, you must:
 
- - Sign the [GCHQ Contributor Licence Agreement](https://cla-assistant.io/gchq/CyberChef)
+ - Fork the CyberChef repo
+ - Create a new branch within your fork for the changes
  - Push your changes to your fork.
+ - Sign the [GCHQ Contributor Licence Agreement](https://cla-assistant.io/gchq/CyberChef)
  - Submit a pull request.
 
+Please note that we will ***reject*** pull requests from the master branch of your fork owing to the mess it makes of our own working repositories and the extra work entailed.
 
 ## Coding conventions
 

@@ -31,7 +31,10 @@ class XORBruteForce extends Operation {
             {
                 "name": "Key length",
                 "type": "number",
-                "value": 1
+                "value": 1,
+                "min": 1,
+                "max": 2,
+                "integer": true
             },
             {
                 "name": "Sample length",

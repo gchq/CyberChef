@@ -1,5 +1,5 @@
-import sm from "sitemap";
-import OperationConfig from "../../core/config/OperationConfig.json" assert { type: "json" };
+import { SitemapStream, streamToPromise } from "sitemap";
+import OperationConfig from "../../core/config/OperationConfig.json" with { type: "json" };
 
 /**
  * Generates an XML sitemap for all CyberChef operations and a number of recipes.
@@ -11,7 +11,7 @@ import OperationConfig from "../../core/config/OperationConfig.json" assert { ty
 
 const baseUrl = "https://gchq.github.io/CyberChef/";
 
-const smStream = new sm.SitemapStream({});
+const smStream = new SitemapStream({});
 
 smStream.write({
     url: baseUrl,
@@ -28,6 +28,6 @@ for (const op in OperationConfig) {
 }
 smStream.end();
 
-sm.streamToPromise(smStream).then(
+streamToPromise(smStream).then(
     (buffer) => console.log(buffer.toString()), // eslint-disable-line no-console
 );

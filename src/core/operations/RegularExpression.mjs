@@ -7,6 +7,7 @@
 import XRegExp from "xregexp";
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
+import { EMAIL_REGEX } from "../lib/Extract.mjs";
 import OperationError from "../errors/OperationError.mjs";
 
 /**
@@ -45,7 +46,7 @@ class RegularExpression extends Operation {
                     },
                     {
                         name: "Email address",
-                        value: "(?:[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9](?:[\\u00A0-\\uD7FF\\uE000-\\uFFFF-a-z0-9-]*[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9])?\\.)+[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9](?:[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9-]*[\\u00A0-\\uD7FF\\uE000-\\uFFFFa-z0-9])?|\\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\\.){3}\\])"
+                        value: EMAIL_REGEX.source // We use a different regex library, so just take the source regex string here
                     },
                     {
                         name: "URL",
@@ -237,15 +238,23 @@ function regexHighlight(input, regex, displayTotal) {
     const captureGroups = [];
 
     output = input.replace(regex, (match, ...args) => {
+        // The replacer is called with (match, p1, ..., pn, offset, string) and, if the
+        // regex contains named capture groups, a trailing `groups` object (ES2018).
+        // Capture groups are only ever strings or undefined, so an object in the last
+        // position can only be the named groups collection.
+        if (args.length && typeof args[args.length - 1] === "object" && args[args.length - 1] !== null)
+            args.pop(); // Throw away named capture group object
         args.pop(); // Throw away full string
         const offset = args.pop(),
             groups = args;
 
-        title = `Offset: ${offset}\n`;
+        // Everything interpolated into the title attribute must be escaped, including
+        // the offset, which is not guaranteed to be a number for all regex engines.
+        title = `Offset: ${Utils.escapeHtml(String(offset))}\n`;
         if (groups.length) {
             title += "Groups:\n";
             for (let i = 0; i < groups.length; i++) {
-                title += `\t${i+1}: ${Utils.escapeHtml(groups[i] || "")}\n`;
+                title += `\t${i+1}: ${Utils.escapeHtml(String(groups[i] ?? ""))}\n`;
             }
         }
 

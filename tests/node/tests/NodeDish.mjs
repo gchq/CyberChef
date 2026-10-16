@@ -5,6 +5,7 @@ import fs from "fs";
 import BigNumber from "bignumber.js";
 
 import { Dish, toBase32, SHA3 } from "../../../src/node/index.mjs";
+import chef from "../../../src/node/index.mjs";
 import File from "../../../src/node/File.mjs";
 import TestRegister from "../../lib/TestRegister.mjs";
 
@@ -63,6 +64,42 @@ TestRegister.addApiTests([
     it("Composable Dish: apply functions can be chained", () => {
         const result = new Dish("input").apply(toBase32).apply(SHA3, {size: "224"});
         assert.strictEqual(result.toString(), "493e8136b759370a415ef2cf2f7a69690441ff86592aba082bc2e2e0");
+    }),
+
+    it("Composable Dish: toBase32 should support non-BMP Unicode alphabets", () => {
+        const alphabet = "🀇🀈🀉🀊🀋🀌🀍🀎🀏🀙🀚🀛🀜🀝🀞🀟🀠🀡🀐🀑🀒🀓🀔🀕🀖🀗🀘🀀🀁🀂🀃🀅";
+
+        const result = new Dish("hello")
+            .apply(toBase32, {alphabet})
+            .toString();
+
+        // Should not contain replacement characters
+        assert.equal(result.includes("�"), false);
+
+        // Should contain only symbols from the alphabet
+        for (const ch of Array.from(result)) {
+            assert.ok(Array.from(alphabet).includes(ch));
+        }
+
+        // "hello" => 8 Base32 symbols
+        assert.equal(Array.from(result).length, 8);
+    }),
+
+    it("Composable Dish: toBase32 should omit padding for 32-character Unicode alphabets", () => {
+        const alphabet = "🀇🀈🀉🀊🀋🀌🀍🀎🀏🀙🀚🀛🀜🀝🀞🀟🀠🀡🀐🀑🀒🀓🀔🀕🀖🀗🀘🀀🀁🀂🀃🀅";
+
+        const result = new Dish("hell")
+            .apply(toBase32, {alphabet})
+            .toString();
+
+        // Should not leak undefined from array indexing
+        assert.equal(result.includes("undefined"), false);
+
+        // Should not contain replacement characters
+        assert.equal(result.includes("�"), false);
+
+        // Unpadded Base32 output for 4-byte input should be 7 symbols
+        assert.equal(Array.from(result).length, 7);
     }),
 
     it("Dish translation: ArrayBuffer to ArrayBuffer", () => {
@@ -195,5 +232,27 @@ TestRegister.addApiTests([
         // cant store chars in a Uint8Array, so make it a normal one.
         const actual = Array.prototype.slice.call(dataArray).map(c => String.fromCharCode(c)).join("");
         assert.strictEqual(actual, "abcdefghijk");
+    }),
+
+    it("Dish: numeric 0 input should not be treated as an empty dish", () => {
+        const dish = new Dish(0);
+        assert.strictEqual(dish.type, Dish.NUMBER);
+        assert.strictEqual(dish.get(Dish.NUMBER), 0);
+    }),
+
+    it("chef: numeric 0 input should be preserved", async () => {
+        assert.strictEqual(chef.ADD(0, {key: "4"}).toString(), "4");
+        assert.strictEqual(chef.toHex(0).toString(), "30");
+        assert.strictEqual((await chef.bake(0, [chef.toHex])).toString(), "30");
+    }),
+
+    it("Dish: boolean false input should produce an empty dish, not throw", () => {
+        const dish = new Dish(false);
+        assert.strictEqual(dish.type, Dish.ARRAY_BUFFER);
+        assert.strictEqual(dish.value.byteLength, 0);
+    }),
+
+    it("chef: boolean false input should still produce an empty dish", async () => {
+        assert.strictEqual((await chef.bake(false)).toString(), "");
     }),
 ]);

@@ -8,6 +8,7 @@
 
 import BigNumber from "bignumber.js";
 import {toHexFast} from "../lib/Hex.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * Recursively displays a JSON object as an HTML table
@@ -25,15 +26,16 @@ export function objToTable(obj, nested=false) {
             <th>Value</th>
         </tr>`;
 
-    for (const key in obj) {
-        if (typeof obj[key] === "function")
+    for (const key of Object.keys(obj)) {
+        const value = obj[key];
+        if (typeof value === "function")
             continue;
 
-        html += `<tr><td style='word-wrap: break-word'>${key}</td>`;
-        if (typeof obj[key] === "object")
-            html += `<td style='padding: 0'>${objToTable(obj[key], true)}</td>`;
+        html += `<tr><td style='word-wrap: break-word'>${Utils.escapeHtml(String(key))}</td>`;
+        if (value !== null && typeof value === "object")
+            html += `<td style='padding: 0'>${objToTable(value, true)}</td>`;
         else
-            html += `<td>${obj[key]}</td>`;
+            html += `<td>${Utils.escapeHtml(String(value))}</td>`;
         html += "</tr>";
     }
     html += "</table>";

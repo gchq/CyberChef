@@ -9,7 +9,7 @@ import assert from "assert";
 import chef from "cyberchef";
 import { bake, toHex, reverse, unique, multiply } from "cyberchef";
 
-const a = bake("Testing, 1 2 3", [
+const a = await bake("Testing, 1 2 3", [
     toHex,
     reverse,
     {
@@ -28,7 +28,7 @@ const a = bake("Testing, 1 2 3", [
 
 assert.equal(a.value, "630957449041920");
 
-const b = chef.bake("Testing, 1 2 3", [
+const b = await chef.bake("Testing, 1 2 3", [
     chef.toHex,
     chef.reverse,
     {

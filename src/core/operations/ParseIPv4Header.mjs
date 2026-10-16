@@ -74,7 +74,7 @@ class ParseIPv4Header extends Operation {
             checksum = input[10] << 8 | input[11],
             srcIP = input[12] << 24 | input[13] << 16 | input[14] << 8 | input[15],
             dstIP = input[16] << 24 | input[17] << 16 | input[18] << 8 | input[19],
-            checksumHeader = input.slice(0, 10).concat([0, 0]).concat(input.slice(12, 20));
+            checksumHeader = [...input.slice(0, 10), 0, 0, ...input.slice(12, 20)];
         let version = (input[0] >>> 4) & 0x0f,
             options = [];
 
@@ -138,7 +138,7 @@ class ParseIPv4Header extends Operation {
         } else if (outputFormat === "Data (hex)") {
             return toHex(data);
         } else if (outputFormat === "Data (raw)") {
-            return Utils.byteArrayToChars(data);
+            return Utils.escapeHtml(Utils.byteArrayToChars(data));
         }
     }
 

@@ -27,7 +27,10 @@ class BitShiftLeft extends Operation {
             {
                 "name": "Amount",
                 "type": "number",
-                "value": 1
+                "value": 1,
+                "min": 0,
+                "max": 7,
+                "integer": true,
             }
         ];
     }

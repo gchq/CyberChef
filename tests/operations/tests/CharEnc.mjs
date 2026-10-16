@@ -69,6 +69,32 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Encode text: empty encoding",
+        input: "hello",
+        expectedOutput: "Encoding cannot be empty.",
+        recipeConfig: [
+            {
+                "op": "Encode text",
+                "args": [""]
+            },
+        ],
+    },
+    {
+        name: "Decode text: empty encoding",
+        input: "68 65 6c 6c 6f",
+        expectedOutput: "Encoding cannot be empty.",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Space"]
+            },
+            {
+                "op": "Decode text",
+                "args": [""]
+            },
+        ],
+    },
+    {
         name: "Generate Base64 Windows PowerShell",
         input: "ZABpAHIAIAAiAGMAOgBcAHAAcgBvAGcAcgBhAG0AIABmAGkAbABlAHMAIgAgAA==",
         expectedOutput: "dir \"c:\\program files\" ",

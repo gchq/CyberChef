@@ -86,4 +86,64 @@ TestRegister.addTests([
             }
         ]
     },
+    {
+        name: "Gzip: Comment with checksum round-trips through Gunzip",
+        input: "hello hello hello",
+        expectedOutput: "hello hello hello",
+        recipeConfig: [
+            {
+                op: "Gzip",
+                args: ["Dynamic Huffman Coding", "", "test", true]
+            },
+            {
+                op: "Gunzip",
+                args: []
+            }
+        ]
+    },
+    {
+        name: "Gzip: Filename and comment with checksum round-trips through Gunzip",
+        input: "The quick brown fox jumped over the slow dog",
+        expectedOutput: "The quick brown fox jumped over the slow dog",
+        recipeConfig: [
+            {
+                op: "Gzip",
+                args: ["Dynamic Huffman Coding", "file.txt", "a comment", true]
+            },
+            {
+                op: "Gunzip",
+                args: []
+            }
+        ]
+    },
+    {
+        name: "Gzip: No comment, with checksum round-trips through Gunzip",
+        input: "The quick brown fox jumped over the slow dog",
+        expectedOutput: "The quick brown fox jumped over the slow dog",
+        recipeConfig: [
+            {
+                op: "Gzip",
+                args: ["Dynamic Huffman Coding", "", "", true]
+            },
+            {
+                op: "Gunzip",
+                args: []
+            }
+        ]
+    },
+    {
+        name: "Gzip: No options round-trips through Gunzip",
+        input: "The quick brown fox jumped over the slow dog",
+        expectedOutput: "The quick brown fox jumped over the slow dog",
+        recipeConfig: [
+            {
+                op: "Gzip",
+                args: ["Dynamic Huffman Coding", "", "", false]
+            },
+            {
+                op: "Gunzip",
+                args: []
+            }
+        ]
+    },
 ]);

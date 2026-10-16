@@ -152,5 +152,49 @@ TestRegister.addTests([
                 args: [1, false, false]
             }
         ]
+    },
+    {
+        name: "Magic: invalid zero A1Z26 values do not match",
+        input: "0,0",
+        unexpectedMatch: /A1Z26 Cipher Decode/,
+        recipeConfig: [
+            {
+                op: "Magic",
+                args: [0, false, false]
+            }
+        ]
+    },
+    {
+        name: "Magic: invalid high A1Z26 values do not match",
+        input: "27,1",
+        unexpectedMatch: /A1Z26 Cipher Decode/,
+        recipeConfig: [
+            {
+                op: "Magic",
+                args: [0, false, false]
+            }
+        ]
+    },
+    {
+        name: "Magic: valid leading-zero A1Z26 values match",
+        input: "26,01",
+        expectedMatch: /A1Z26 Cipher Decode/,
+        recipeConfig: [
+            {
+                op: "Magic",
+                args: [0, false, false]
+            }
+        ]
+    },
+    {
+        name: "Magic: valid leading-zero A1Z26 values match with two digits",
+        input: "09,10",
+        expectedMatch: /A1Z26 Cipher Decode/,
+        recipeConfig: [
+            {
+                op: "Magic",
+                args: [0, false, false]
+            }
+        ]
     }
 ]);

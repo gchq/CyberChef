@@ -75,9 +75,16 @@ class SetIntersection extends Operation {
      * @returns {Object[]}
      */
     runIntersect(a, b) {
+        const included = new Set(b);
+        const seen = new Set();
+
         return a
             .filter((item) => {
-                return b.indexOf(item) > -1;
+                if (!included.has(item) || seen.has(item)) {
+                    return false;
+                }
+                seen.add(item);
+                return true;
             })
             .join(this.itemDelimiter);
     }

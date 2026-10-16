@@ -70,4 +70,3 @@ export function modPow(base, exponent, modulus) {
 
     return result;
 }
-
