@@ -9,6 +9,7 @@ import Sortable from "sortablejs";
 import Utils from "../../core/Utils.mjs";
 import {escapeControlChars} from "../utils/editorUtils.mjs";
 import DOMPurify from "dompurify";
+import {getOpName} from "../i18n/i18n.mjs";
 
 
 /**
@@ -48,7 +49,7 @@ class RecipeWaiter {
             filter: ".arg",
             preventOnFilter: false,
             setData: function(dataTransfer, dragEl) {
-                dataTransfer.setData("Text", dragEl.querySelector(".op-title").textContent);
+                dataTransfer.setData("Text", getOpName(dragEl)); // i18n
             },
             onStart: function() {
                 this.dragInProgress = true;
@@ -105,7 +106,7 @@ class RecipeWaiter {
             },
             sort: false,
             setData: function(dataTransfer, dragEl) {
-                dataTransfer.setData("Text", dragEl.textContent);
+                dataTransfer.setData("Text", getOpName(dragEl)); // i18n
             },
             onStart: function(evt) {
                 self.dragInProgress = true;
@@ -376,7 +377,7 @@ class RecipeWaiter {
             }
 
             item = {
-                op: operations[i].querySelector(".op-title").textContent,
+                op: getOpName(operations[i]), // i18n
                 args: ingredients
             };
 
@@ -420,7 +421,8 @@ class RecipeWaiter {
      * @param {element} el - The operation stub element from the operations pane
      */
     buildRecipeOperation(el) {
-        const opName = el.textContent;
+        const opName = getOpName(el); // i18n
+        el.setAttribute("data-name", opName);
         const op = new HTMLOperation(opName, this.app.operations[opName], this.app, this.manager);
         el.innerHTML = op.toFullHtml();
 
@@ -525,7 +527,7 @@ class RecipeWaiter {
      * @param {event} e
      */
     opAdd(e) {
-        log.debug(`'${e.target.querySelector(".op-title").textContent}' added to recipe`);
+        log.debug(`'${getOpName(e.target)}' added to recipe`);
 
         this.triggerArgEvents(e.target);
         window.dispatchEvent(this.manager.statechange);

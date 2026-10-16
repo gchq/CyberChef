@@ -23,6 +23,7 @@ class HTMLIngredient {
         this.manager = manager;
 
         this.name = config.name;
+        this.displayName = config.displayName || config.name; // i18n: label text only
         this.type = config.type;
         this.value = config.value;
         this.disabled = config.disabled || false;
@@ -56,7 +57,7 @@ class HTMLIngredient {
             case "binaryString":
             case "byteArray":
                 html += `<div class="form-group ing-wide" ${hintHtml}>
-                    <label for="${this.id}" class="bmd-label-floating">${this.name}</label>
+                    <label for="${this.id}" class="bmd-label-floating">${this.displayName}</label>
                     <input type="text"
                         class="form-control arg"
                         id="${this.id}"
@@ -70,7 +71,7 @@ class HTMLIngredient {
             case "shortString":
             case "binaryShortString":
                 html += `<div class="form-group ing-short" ${hintHtml}>
-                    <label for="${this.id}" class="bmd-label-floating inline">${this.name}</label>
+                    <label for="${this.id}" class="bmd-label-floating inline">${this.displayName}</label>
                     <input type="text"
                         class="form-control arg inline"
                         id="${this.id}"
@@ -84,7 +85,7 @@ class HTMLIngredient {
             case "toggleString":
                 html += `<div class="form-group input-group ing-wide" data-help-title="Multi-type ingredients" data-help="Selecting a data type from the dropdown will change how the ingredient is interpreted by the operation." ${hintHtml}>
                     <div class="toggle-string">
-                        <label for="${this.id}" class="bmd-label-floating toggle-string">${this.name}</label>
+                        <label for="${this.id}" class="bmd-label-floating toggle-string">${this.displayName}</label>
                         <input type="text"
                             class="form-control arg toggle-string"
                             id="${this.id}"
@@ -107,7 +108,7 @@ class HTMLIngredient {
                 break;
             case "number":
                 html += `<div class="form-group inline ing-medium" ${hintHtml}>
-                    <label for="${this.id}" class="bmd-label-floating inline">${this.name}</label>
+                    <label for="${this.id}" class="bmd-label-floating inline">${this.displayName}</label>
                     <input type="number"
                         class="form-control arg inline"
                         id="${this.id}"
@@ -131,14 +132,14 @@ class HTMLIngredient {
                                 arg-name="${this.name}"
                                 ${this.value ? " checked" : ""}
                                 ${this.disabled ? " disabled" : ""}
-                                value="${this.name}"> ${this.name}
+                                value="${this.name}"> ${this.displayName}
                         </label>
                     </div>
                 </div>`;
                 break;
             case "option":
                 html += `<div class="form-group ing-medium" ${hintHtml}>
-                    <label for="${this.id}" class="bmd-label-floating inline">${this.name}</label>
+                    <label for="${this.id}" class="bmd-label-floating inline">${this.displayName}</label>
                     <select
                         class="form-control arg inline"
                         id="${this.id}"
@@ -160,7 +161,7 @@ class HTMLIngredient {
             case "populateOption":
             case "populateMultiOption":
                 html += `<div class="form-group ing-medium" data-help-title="Population dropdowns" data-help="Selecting a value from this dropdown will populate some of the other ingredients for this operation with pre-canned values." ${hintHtml}>
-                    <label for="${this.id}" class="bmd-label-floating">${this.name}</label>
+                    <label for="${this.id}" class="bmd-label-floating">${this.displayName}</label>
                     <select
                         class="form-control arg no-state-change populate-option"
                         id="${this.id}"
@@ -190,7 +191,7 @@ class HTMLIngredient {
                 break;
             case "editableOption":
                 html += `<div class="form-group input-group ing-wide" ${hintHtml}>
-                    <label for="${this.id}" class="bmd-label-floating">${this.name}</label>
+                    <label for="${this.id}" class="bmd-label-floating">${this.displayName}</label>
                     <input type="text"
                         class="form-control arg"
                         id="${this.id}"
@@ -219,7 +220,7 @@ class HTMLIngredient {
                 break;
             case "editableOptionShort":
                 html += `<div class="form-group input-group ing-short" ${hintHtml}>
-                    <label for="${this.id}" class="bmd-label-floating inline">${this.name}</label>
+                    <label for="${this.id}" class="bmd-label-floating inline">${this.displayName}</label>
                     <input type="text"
                         class="form-control arg inline"
                         id="${this.id}"
@@ -248,7 +249,7 @@ class HTMLIngredient {
                 break;
             case "text":
                 html += `<div class="form-group ing-very-wide" ${hintHtml}>
-                    <label for="${this.id}" class="bmd-label-floating">${this.name}</label>
+                    <label for="${this.id}" class="bmd-label-floating">${this.displayName}</label>
                     <textarea
                         class="form-control arg"
                         id="${this.id}"
@@ -260,7 +261,7 @@ class HTMLIngredient {
                 break;
             case "argSelector":
                 html += `<div class="form-group inline ing-medium" data-help-title="Ingredient selector" data-help="Selecting options in this dropdown will configure which operation ingredients are visible." ${hintHtml}>
-                    <label for="${this.id}" class="bmd-label-floating inline">${this.name}</label>
+                    <label for="${this.id}" class="bmd-label-floating inline">${this.displayName}</label>
                     <select
                         class="form-control arg inline arg-selector"
                         id="${this.id}"
@@ -281,7 +282,7 @@ class HTMLIngredient {
                 break;
             case "label":
                 html += `<div class="form-group ing-flexible" ${hintHtml}>
-                    <label>${this.name}</label>
+                    <label>${this.displayName}</label>
                     <input type="hidden"
                         class="form-control arg"
                         id="${this.id}"

@@ -4,6 +4,8 @@
  * @license Apache-2.0
  */
 
+import {t} from "../i18n/i18n.mjs";
+
 /**
  * Waiter to handle keybindings to CyberChef functions (i.e. Bake, Step, Save, Load etc.)
  */
@@ -293,9 +295,9 @@ class BindingsWaiter {
         let helpTitle = el.getAttribute("data-help-title");
 
         if (helpTitle)
-            helpTitle = "<span class='text-muted'>Help topic:</span> " + helpTitle;
+            helpTitle = `<span class='text-muted'>${t("Help topic:")}</span> ` + helpTitle;
         else
-            helpTitle = "<span class='text-muted'>Help topic</span>";
+            helpTitle = `<span class='text-muted'>${t("Help topic")}</span>`;
 
         document.querySelector("#help-modal .modal-body").innerHTML = helpText;
         document.querySelector("#help-modal #help-title").innerHTML = helpTitle;

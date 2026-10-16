@@ -1,0 +1,65 @@
+name: "zh-CN GitHub Pages"
+
+# 汉化分支每次推送后：构建并把中文版部署到 GitHub Pages（在线版）。
+# 首次使用前需要在仓库 Settings → Pages 中把 Source 设为 “GitHub Actions”。
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - zh-CN
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zh-CN-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set node version
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+
+      - name: Install
+        run: |
+          npm ci
+          npm run setheapsize
+
+      - name: Production Build
+        run: npx grunt prod --msg=""
+
+      - name: Prepare site
+        # 去掉预压缩文件和打包分析报告，GitHub Pages 会自行压缩传输
+        run: |
+          cp -r build/prod site
+          find site \( -name '*.gz' -o -name '*.br' -o -name 'BundleAnalyzerReport.html' \) -type f -delete
+          du -sh site
+
+      - name: Configure Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

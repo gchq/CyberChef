@@ -6,6 +6,7 @@
 
 import Utils from "../../core/Utils.mjs";
 import { eolSeqToCode } from "../utils/editorUtils.mjs";
+import {t} from "../i18n/i18n.mjs";
 
 
 /**
@@ -75,9 +76,10 @@ class ControlsWaiter {
      */
     bakeClick() {
         const btnBake = document.getElementById("bake");
-        if (btnBake.textContent.indexOf("Bake") > 0) {
+        // i18n: use the button state rather than its (translated) label
+        if (btnBake.classList.contains("btn-success")) {
             this.app.manager.input.bakeAll();
-        } else if (btnBake.textContent.indexOf("Cancel") > 0) {
+        } else if (btnBake.classList.contains("btn-danger")) {
             this.manager.worker.cancelBake(false, true);
         }
     }
@@ -516,21 +518,21 @@ ${navigator.userAgent}
 
         switch (func) {
             case "cancel":
-                btnText.innerText = "Cancel";
+                btnText.innerText = t("Cancel");
                 bakeButton.classList.remove("btn-success");
                 bakeButton.classList.remove("btn-warning");
                 bakeButton.classList.add("btn-danger");
                 break;
             case "loading":
                 bakeButton.style.background = "";
-                btnText.innerText = "Loading...";
+                btnText.innerText = t("Loading...");
                 bakeButton.classList.remove("btn-success");
                 bakeButton.classList.remove("btn-danger");
                 bakeButton.classList.add("btn-warning");
                 break;
             default:
                 bakeButton.style.background = "";
-                btnText.innerText = "Bake!";
+                btnText.innerText = t("Bake!");
                 bakeButton.classList.remove("btn-danger");
                 bakeButton.classList.remove("btn-warning");
                 bakeButton.classList.add("btn-success");
