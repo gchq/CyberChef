@@ -152,7 +152,7 @@ module.exports = function (grunt) {
                     filename: chunkData => {
                         const chunkName = chunkData.chunk.name;
                         if (chunkName === "main") return "assets/[name].js";
-                        return chunkName.startsWith("__html_") ? "gchq.[name].chunk.js" : "[name].js";
+                        return "[name].js";
                     },
                     globalObject: "this"
                 },
@@ -164,6 +164,7 @@ module.exports = function (grunt) {
                 module: {
                     parser: {
                         html: {
+                            chunkName: "gchq.[page]-[type]-[index]",
                             template: source => renderHtmlTemplate(source, {
                                 compileYear, compileTime, version,
                                 latestReleaseVersion: pkg.version, downloadZipFilename
@@ -256,6 +257,7 @@ module.exports = function (grunt) {
                 module: {
                     parser: {
                         html: {
+                            chunkName: "gchq.[page]-[type]-[index]",
                             template: source => renderHtmlTemplate(source, {
                                 compileYear, compileTime, version: pkg.version,
                                 latestReleaseVersion: pkg.version, downloadZipFilename
