@@ -26,6 +26,7 @@ import {
     AESDecrypt,
     affineCipherDecode,
     affineCipherEncode,
+    beaufortCipher,
     bifidCipherEncode,
     bitShiftRight,
     cartesianProduct,
@@ -39,6 +40,7 @@ import File from "../../../src/node/File.mjs";
 import MarkdownIt from "markdown-it";
 import Token from "markdown-it/lib/token.mjs";
 import RenderMarkdown from "../../../src/core/operations/RenderMarkdown.mjs";
+import OperationError from "../../../src/core/errors/OperationError.mjs";
 
 global.File = File;
 
@@ -196,6 +198,34 @@ Salt: $2a$10$ODeP1.6fMsb.ENk2ngPUCO
 Password hash: 7qTGVPyHA9TqDVcyupyed8FjsiF65L6
 Full hash: $2a$10$ODeP1.6fMsb.ENk2ngPUCO7qTGVPyHA9TqDVcyupyed8FjsiF65L6`;
         assert.strictEqual(result.toString(), expected);
+    }),
+
+    it("Beaufort Cipher: named/default exports and positional arguments", () => {
+        assert.strictEqual(beaufortCipher("DCODE", {key: "KEY"}).toString(), "HCKHA");
+        assert.strictEqual(chef.beaufortCipher("DcOdE", ["kEy"]).toString(), "HcKhA");
+    }),
+
+    it("Beaufort Cipher: reciprocal and independent calls", () => {
+        assert.strictEqual(chef.beaufortCipher("DCODE", {key: "KEY"}).toString(), "HCKHA");
+        assert.strictEqual(chef.beaufortCipher("HCKHA", {key: "KEY"}).toString(), "DCODE");
+        assert.strictEqual(chef.beaufortCipher("DCODE", {key: "KEY"}).toString(), "HCKHA");
+    }),
+
+    it("Beaufort Cipher: canonical recipe operation name", async () => {
+        const result = await chef.bake("DcOdE!", [{op: "Beaufort Cipher", args: ["kEy"]}]);
+        assert.strictEqual(result.toString(), "HcKhA!");
+    }),
+
+    it("Beaufort Cipher: invalid keys throw OperationError", () => {
+        assert.throws(() => chef.beaufortCipher("DCODE"),
+            err => err instanceof OperationError && err.message === "Key cannot be empty.");
+        assert.throws(() => chef.beaufortCipher("DCODE", {key: ""}),
+            err => err instanceof OperationError && err.message === "Key cannot be empty.");
+
+        for (const key of ["K", 42, true, ["KEY"], {}]) {
+            assert.throws(() => chef.beaufortCipher("DCODE", {key}),
+                err => err instanceof OperationError && err.message === "The key must consist only of letters A-Z.");
+        }
     }),
 
     it("bifid cipher decode", () => {

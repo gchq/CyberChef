@@ -137,6 +137,7 @@
             "XOR Brute Force",
             "Vigenère Encode",
             "Vigenère Decode",
+            "Beaufort Cipher",
             "TEA Encrypt",
             "TEA Decrypt",
             "XTEA Encrypt",

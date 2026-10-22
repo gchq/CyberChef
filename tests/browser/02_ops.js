@@ -67,6 +67,10 @@ module.exports = {
         testOp(browser, "Bcrypt", "test input", /^\$2b\$06\$.{53}$/, [6]);
         testOp(browser, "Bcrypt compare", "test input", "Match: test input", ["$2a$05$FCfBSVX7OeRkK.9kQVFCiOYu9XtwtIbePqUiroD1lkASW9q5QClzG"]);
         testOp(browser, "Bcrypt parse", "$2a$05$kXWtAIGB/R8VEzInoM5ocOTBtyc0m2YTIwFiBU/0XoW032f9QrkWW", /Rounds: 5/);
+        testOp(browser, "Beaufort Cipher", "DcOdE!", "HcKhA!", ["kEy"]);
+        testOp(browser, "Beaufort Cipher", "HcKhA!", "DcOdE!", ["kEy"]);
+        testOp(browser, "Beaufort Cipher", "DCODE", "Key cannot be empty.");
+        testOp(browser, "Beaufort Cipher", "DCODE", "The key must consist only of letters A-Z.", ["A1"]);
         testOp(browser, "Bifid Cipher Decode", "qblb tfovy", "test input", ["pass"]);
         testOp(browser, "Bifid Cipher Encode", "test input", "qblb tfovy", ["pass"]);
         testOp(browser, "Bit shift left", "test input", "\u00E8\u00CA\u00E6\u00E8@\u00D2\u00DC\u00E0\u00EA\u00E8");
