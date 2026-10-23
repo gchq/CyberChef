@@ -21,4 +21,5 @@ export default  [
 
     // Irrelevant in Node console
     "SyntaxHighlighter",
+    "RenderMermaid",
 ];
