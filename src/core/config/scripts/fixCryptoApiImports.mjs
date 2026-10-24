@@ -35,13 +35,23 @@ function walk(dir) {
             const content = readFileSync(fullPath, "utf8");
 
             // Add .mjs to imports if not present
-            const updated = content.replace(
+            let updated = content.replace(
                 /from "(\.[^"]*)";/g,
                 (match, p1) => {
                     if (p1.endsWith(".mjs")) return match;
                     return `from "${p1}.mjs";`;
                 }
             );
+
+            // Patch sha512.mjs default rounds and loop step logic
+            if (entry.name === "sha512.mjs") {
+                updated = updated
+                    .replace("options.rounds = options.rounds || 160;", "options.rounds = options.rounds || 80;")
+                    .replace("for (let i = 0; i < this.options.rounds; i += 2) {", "for (let i = 0; i < this.options.rounds * 2; i += 2) {")
+                    .replace("this.W = new Array(160);", "this.W = new Array(this.options.rounds * 2);")
+                    .replace("options.rounds=160", "options.rounds=80")
+                    .replace("(Must be greater than 32)", "(Must be greater than 16)");
+            }
 
             if (updated !== content) {
                 writeFileSync(fullPath, updated, "utf8");
