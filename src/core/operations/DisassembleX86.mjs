@@ -152,9 +152,11 @@ class DisassembleX86 extends Operation {
                 break;
         }
 
+        // Short offsets leave address bits from previous runs in the disassembler.
+        // Set the full 64-bit address so every recipe starts at its requested offset.
         disassemble.SetBasePosition(
             parseHexAddress(codeSegment, "Code Segment (CS)", 4) + ":" +
-            parseHexAddress(offset, "Offset (IP)")
+            parseHexAddress(offset, "Offset (IP)", 16)
         );
         disassemble.setShowInstructionHex(showInstructionHex);
         disassemble.setShowInstructionPos(showInstructionPos);
