@@ -232,6 +232,8 @@ class Manager {
         this.addDynamicListener(".option-item input[type=checkbox]#wordWrap", "change", this.options.setWordWrap, this.options);
         this.addDynamicListener(".option-item input[type=checkbox]#useMetaKey", "change", this.bindings.updateKeybList, this.bindings);
         this.addDynamicListener(".option-item input[type=checkbox]#showCatCount", "change", this.ops.setCatCount, this.ops);
+        this.addDynamicListener(".option-item input[type=checkbox]#showOpCategories", "change", this.ops.toggleOpCategories, this.ops);
+        this.addDynamicListener(".op-category-link", "click", this.ops.categoryLinkClick, this.ops);
         this.addDynamicListener(".option-item input[type=number]", "keyup", this.options.numberChange, this.options);
         this.addDynamicListener(".option-item input[type=number]", "change", this.options.numberChange, this.options);
         this.addDynamicListener(".option-item select", "change", this.options.selectChange, this.options);
