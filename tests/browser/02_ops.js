@@ -426,6 +426,10 @@ Q+47JAY=
     },
 
 
+    "Convert WebP image format": browser => {
+        testOpImage(browser, "Convert Image Format", "files/Minimal_1x1.webp");
+    },
+
     after: browser => {
         browser.end();
     }
