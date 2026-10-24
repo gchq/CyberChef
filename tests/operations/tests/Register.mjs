@@ -69,7 +69,8 @@ TestRegister.addTests([
                         "option": "Hex",
                         "string": ""
                     },
-                    "Off"
+                    "Off",
+                    16
                 ]
             }
         ]
