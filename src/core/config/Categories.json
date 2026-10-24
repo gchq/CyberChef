@@ -589,6 +589,8 @@
             "Index of Coincidence",
             "Chi Square",
             "P-list Viewer",
+            "Binary P-list to XML P-list",
+            "XML P-list to Binary P-list",
             "Disassemble x86",
             "Disassemble ARM",
             "Pseudo-Random Number Generator",
