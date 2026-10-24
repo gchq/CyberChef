@@ -104,7 +104,7 @@ class ExtractLSB extends Operation {
                 for (let row = 0; row < height; row++) {
                     rowWidth = row * pixelWidth;
                     for (const colour of colours) {
-                        i = rowWidth + (col + colour * 4);
+                        i = rowWidth + (col * 4 + colour);
                         combinedBinary += Utils.bin(rgba[i])[bit];
                     }
                 }
