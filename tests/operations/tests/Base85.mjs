@@ -7,6 +7,8 @@
  */
 import TestRegister from "../../lib/TestRegister.mjs";
 
+const rawStringToArrayBuffer = str => Uint8Array.from(str, c => c.charCodeAt(0)).buffer;
+
 // Example from Wikipedia
 const wpExample = "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure.";
 // Escape newline, quote & backslash
@@ -51,7 +53,7 @@ TestRegister.addTests([
     },
     {
         name: "To Base85",
-        input: allZeroExample,
+        input: rawStringToArrayBuffer(allZeroExample),
         expectedOutput: allZeroOutput,
         recipeConfig: [
             { "op": "To Base85",
