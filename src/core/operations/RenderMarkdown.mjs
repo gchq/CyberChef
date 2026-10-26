@@ -87,7 +87,7 @@ class RenderMarkdown extends Operation {
             const token = tokens[idx];
             if (token.attrIndex("target") >= 0) {
                 // Target attribute already set, do not replace.
-                return;
+                return defaultRender(tokens, idx, options, env, self);
             }
             token.attrPush(["target", "_blank"]); // add new attribute
 
