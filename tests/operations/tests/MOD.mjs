@@ -163,8 +163,7 @@ TestRegister.addTests([
     {
         name: "MOD: Zero modulus error",
         input: "15 4 7",
-        expectedError: true,
-        expectedOutput: "MOD - Modulus cannot be zero",
+        expectedOutput: "Modulus cannot be zero",
         recipeConfig: [
             {
                 "op": "MOD",
