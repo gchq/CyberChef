@@ -86,7 +86,7 @@ class NodeRecipe {
     /**
      * Run the dish through each operation, one at a time.
      * @param {NodeDish} dish
-     * @returns {NodeDish}
+     * @returns {Promise<NodeDish>}
      */
     async execute(dish) {
         let prev = dish;

@@ -44,7 +44,7 @@ TestRegister.addTests([
     {
         name: "Series chart escapes x-axis values in serialized SVG",
         input: `s,x"><script>globalThis.seriesChartInjected=1</script><g a=",1`,
-        unexpectedMatch: /<script>|__data__=/,
+        unexpectedMatch: /<[\s/]*script\b|__data__=/i,
         recipeConfig: [
             {
                 "op": "Series chart",

@@ -56,7 +56,9 @@ class ProtobufDecode extends Operation {
         try {
             return Protobuf.decode(input, args);
         } catch (err) {
-            throw new OperationError(err);
+            const message = err instanceof Error ? err.message : String(err);
+            const offset = Number.isInteger(err?.byteOffset) ? ` at byte offset ${err.byteOffset}` : "";
+            throw new OperationError(message + offset);
         }
     }
 

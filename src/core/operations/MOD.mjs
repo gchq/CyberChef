@@ -4,6 +4,7 @@
 
 import BigNumber from "bignumber.js";
 import Operation from "../Operation.mjs";
+import OperationError from "../errors/OperationError.mjs";
 import { createNumArray } from "../lib/Arithmetic.mjs";
 import { ARITHMETIC_DELIM_OPTIONS } from "../lib/Delim.mjs";
 
@@ -48,7 +49,7 @@ class MOD extends Operation {
         const delimiter = args[1];
 
         if (modulus.isZero()) {
-            throw new Error("Modulus cannot be zero");
+            throw new OperationError("Modulus cannot be zero");
         }
 
         const numbers = createNumArray(input, delimiter);
