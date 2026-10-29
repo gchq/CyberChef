@@ -53,6 +53,59 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "CSV to JSON: __proto__ column stays a field",
+        input: "__proto__,constructor,name\r\nsecret,Ctor,ada\r\n",
+        expectedOutput: `[
+    {
+        "__proto__": "secret",
+        "constructor": "Ctor",
+        "name": "ada"
+    }
+]`,
+        recipeConfig: [
+            {
+                op: "CSV to JSON",
+                args: [",", "\r\n", "Array of dictionaries"],
+            }
+        ],
+    },
+    {
+        name: "CSV to JSON: empty __proto__ cell and a quoted comma",
+        input: "__proto__,name\r\n,ada\r\n\"a,b\",bea\r\n",
+        expectedOutput: `[
+    {
+        "__proto__": "",
+        "name": "ada"
+    },
+    {
+        "__proto__": "a,b",
+        "name": "bea"
+    }
+]`,
+        recipeConfig: [
+            {
+                op: "CSV to JSON",
+                args: [",", "\r\n", "Array of dictionaries"],
+            }
+        ],
+    },
+    {
+        name: "CSV to JSON: a repeated header keeps the last cell",
+        input: "A,A,B\r\nfirst,second,x\r\n",
+        expectedOutput: JSON.stringify([
+            {
+                "A": "second",
+                "B": "x"
+            }
+        ], null, 4),
+        recipeConfig: [
+            {
+                op: "CSV to JSON",
+                args: [",", "\r\n", "Array of dictionaries"],
+            }
+        ],
+    },
+    {
         name: "CSV to JSON: Array of arrays",
         input: EXAMPLE_CSV,
         expectedOutput: JSON.stringify([
