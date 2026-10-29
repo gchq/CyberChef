@@ -30,6 +30,11 @@ class FromHex extends Operation {
                 name: "Delimiter",
                 type: "option",
                 value: FROM_HEX_DELIM_OPTIONS
+            },
+            {
+                name: "Remove non-alphabet chars",
+                type: "boolean",
+                value: true
             }
         ];
         this.checks = [
@@ -92,8 +97,8 @@ class FromHex extends Operation {
      * @returns {byteArray}
      */
     run(input, args) {
-        const delim = args[0] || "Auto";
-        return fromHex(input, delim, 2);
+        const [delim, removeNonAlphChars] = [args[0] || "Auto", args[1]];
+        return fromHex(input, delim, 2, removeNonAlphChars);
     }
 
     /**
