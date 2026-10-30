@@ -32,3 +32,6 @@ FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:9b87ad3dd9f431c733f19dfb27
 LABEL maintainer="GCHQ <oss@gchq.gov.uk>"
 
 COPY --from=builder /app/build/prod /usr/share/nginx/html/
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl --fail --silent --show-error --max-time 5 --noproxy '*' --output /dev/null http://127.0.0.1:8080/ || exit 1
