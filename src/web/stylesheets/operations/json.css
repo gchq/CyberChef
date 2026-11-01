@@ -29,6 +29,12 @@ ul.json-dict, ol.json-array {
 .json-literal {
     color: red;
 }
+.cm-html-search-match {
+    background-color: var(--hl1);
+}
+.cm-html-search-match-current {
+    background-color: var(--hl2);
+}
 .json-brace,
 .json-bracket,
 .json-colon,

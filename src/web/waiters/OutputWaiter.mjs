@@ -61,7 +61,9 @@ class OutputWaiter {
         // Object to handle output HTML state - used by htmlWidget extension
         this.htmlOutput = {
             html: "",
-            changed: false
+            changed: false,
+            searchable: false,
+            searchableText: ""
         };
         // Hold a copy of the currently displayed output so that we don't have to update it unnecessarily
         this.currentOutputCache = null;
@@ -349,13 +351,20 @@ class OutputWaiter {
      * Sets the value of the current output to a rendered HTML value
      * @param {string} html
      */
-    async setHTMLOutput(html) {
+    async setHTMLOutput(html, searchable=false) {
         this.htmlOutput.html = html;
+        this.htmlOutput.searchable = searchable;
+        this.htmlOutput.searchableText = "";
+        if (searchable) {
+            const textContainer = document.createElement("div");
+            textContainer.innerHTML = html;
+            this.htmlOutput.searchableText = textContainer.textContent;
+        }
         this.htmlOutput.changed = true;
         // This clears the text output, but also fires a View update which
         // triggers the htmlWidget to render the HTML. We set the force flag
         // to ensure the loader gets removed and HTML is rendered.
-        await this.setOutput("", true);
+        await this.setOutput(this.htmlOutput.searchableText, true);
 
         // Turn off drawSelection
         this.outputEditorView.dispatch({
@@ -383,6 +392,8 @@ class OutputWaiter {
     clearHTMLOutput() {
         this.htmlOutput.html = "";
         this.htmlOutput.changed = true;
+        this.htmlOutput.searchable = false;
+        this.htmlOutput.searchableText = "";
         // Fire a blank change to force the htmlWidget to update and remove any HTML
         this.outputEditorView.dispatch({
             changes: {
@@ -733,7 +744,10 @@ class OutputWaiter {
 
                 switch (output.data.type) {
                     case "html":
-                        await this.setHTMLOutput(output.data.result);
+                        await this.setHTMLOutput(
+                            output.data.result,
+                            output.data.result.includes('class="json-document"')
+                        );
                         break;
                     case "ArrayBuffer":
                     case "string":

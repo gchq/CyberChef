@@ -428,6 +428,93 @@ Q+47JAY=
 
     after: browser => {
         browser.end();
+    },
+
+    "JSON Beautify output search": browser => {
+        const input = '{"first":"apple","second":"apple","nested":{"target":"apple"},"unrelated":{"target":"banana"},"link":"https://example.com"}';
+
+        utils.loadRecipe(browser, "JSON Beautify", input, []);
+        utils.bake(browser);
+
+        browser
+            .waitForElementVisible("#output-html .json-document")
+            .click("#output-text")
+            .perform(function() {
+                const actions = this.actions({async: true});
+                return actions
+                    .keyDown(browser.Keys.META)
+                    .sendKeys("f")
+                    .keyUp(browser.Keys.META);
+            })
+            .waitForElementVisible("#output-text .cm-search input[name=search]")
+            .setValue("#output-text .cm-search input[name=search]", "apple")
+            .click("#output-text")
+            .waitForElementPresent("#output-html .cm-html-search-match")
+            .expect.elements("#output-html .cm-html-search-match").count.to.equal(3);
+
+        browser
+            .click("#output-text .cm-search input[name=case]")
+            .clearValue("#output-text .cm-search input[name=search]")
+            .setValue("#output-text .cm-search input[name=search]", "APPLE")
+            .click("#output-text")
+            .waitForElementNotPresent("#output-html .cm-html-search-match")
+            .click("#output-text .cm-search input[name=case]")
+            .clearValue("#output-text .cm-search input[name=search]")
+            .setValue("#output-text .cm-search input[name=search]", "apple")
+            .click("#output-text")
+            .waitForElementPresent("#output-html .cm-html-search-match");
+
+        browser
+            .click("#output-text .cm-search button[name=next]")
+            .waitForElementPresent("#output-html .cm-html-search-match-current")
+            .click("#output-text .cm-search button[name=next]")
+            .expect.elements("#output-html .cm-html-search-match-current").count.to.equal(1)
+            .click("#output-text .cm-search button[name=prev]")
+            .expect.elements("#output-html .cm-html-search-match-current").count.to.equal(1)
+            .clearValue("#output-text .cm-search input[name=search]")
+            .waitForElementNotPresent("#output-html .cm-html-search-match")
+            .setValue("#output-text .cm-search input[name=search]", "banana")
+            .waitForElementNotPresent("#output-html .cm-html-search-match");
+
+        browser
+            .click("#output-html .json-dict > li:nth-child(3) > .json-details > .json-summary")
+            .click("#output-html .json-dict > li:nth-child(4) > .json-details > .json-summary")
+            .expect.element("#output-html .json-dict > li:nth-child(3) > .json-details").to.not.have.attribute("open");
+
+        browser
+            .expect.element("#output-html .json-dict > li:nth-child(4) > .json-details").to.not.have.attribute("open");
+
+        browser
+            .clearValue("#output-text .cm-search input[name=search]")
+            .setValue("#output-text .cm-search input[name=search]", "apple")
+            .click("#output-text .cm-search button[name=next]")
+            .waitForElementPresent("#output-html .cm-html-search-match")
+            .expect.element("#output-html .json-dict > li:nth-child(3) > .json-details").to.have.attribute("open");
+
+        browser
+            .expect.element("#output-html .json-dict > li:nth-child(4) > .json-details").to.not.have.attribute("open");
+
+        browser
+            .expect.element("#output-html a[href='https://example.com/']").to.be.present;
+
+        browser
+            .click("#output-text .cm-search button[name=close]")
+            .click("#auto-bake-label");
+
+        utils.loadRecipe(browser, "To Upper case", "apple", []);
+        utils.bake(browser);
+        browser
+            .click("#output-text")
+            .perform(function() {
+                const actions = this.actions({async: true});
+                return actions
+                    .keyDown(browser.Keys.META)
+                    .sendKeys("f")
+                    .keyUp(browser.Keys.META);
+            })
+            .setValue("#output-text .cm-search input[name=search]", "apple")
+            .waitForElementPresent("#output-text .cm-searchMatch")
+            .expect.elements("#output-text .cm-searchMatch").count.to.equal(1);
     }
 };
 

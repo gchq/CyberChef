@@ -5,6 +5,7 @@
  */
 
 import {WidgetType, Decoration, ViewPlugin} from "@codemirror/view";
+import {getSearchQuery} from "@codemirror/search";
 import {escapeControlChars} from "./editorUtils.mjs";
 import {htmlCopyOverride} from "./copyOverride.mjs";
 import Utils from "../../core/Utils.mjs";
@@ -85,16 +86,143 @@ class HTMLWidget extends WidgetType {
  * @param {string} html
  * @returns {DecorationSet}
  */
-function decorateHTML(view, html) {
+function decorateHTML(view, htmlOutput) {
     const widgets = [];
-    if (html.length) {
-        const deco = Decoration.widget({
-            widget: new HTMLWidget(html, view),
-            side: 1
-        });
-        widgets.push(deco.range(0));
+    if (htmlOutput.html.length) {
+        const widget = new HTMLWidget(htmlOutput.html, view);
+        if (htmlOutput.searchable && view.state.doc.length) {
+            widgets.push(Decoration.replace({widget}).range(0, view.state.doc.length));
+        } else {
+            widgets.push(Decoration.widget({widget, side: 1}).range(0));
+        }
     }
     return Decoration.set(widgets);
+}
+
+/**
+ * Gets all text nodes in the HTML output and their offsets in the searchable text.
+ * @param {Element} root
+ * @returns {Object[]}
+ */
+function getTextNodes(root) {
+    const nodes = [];
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let node;
+    let offset = 0;
+    while ((node = walker.nextNode())) {
+        if (node.parentElement?.closest("script, style")) continue;
+        nodes.push({node, start: offset, end: offset + node.nodeValue.length});
+        offset += node.nodeValue.length;
+    }
+    return nodes;
+}
+
+/**
+ * Removes search match wrappers without changing the HTML output structure.
+ * @param {Element} root
+ */
+function clearSearchMatches(root) {
+    root.querySelectorAll(".cm-html-search-match").forEach(match => {
+        match.replaceWith(...match.childNodes);
+    });
+}
+
+/**
+ * Wraps the portions of one text node covered by search matches.
+ * @param {Object} textNode
+ * @param {Object[]} matches
+ */
+function wrapTextNodeMatches(textNode, matches) {
+    const nodeMatches = matches
+        .filter(match => match.to > textNode.start && match.from < textNode.end)
+        .sort((a, b) => b.from - a.from);
+
+    for (const match of nodeMatches) {
+        const start = Math.max(match.from, textNode.start) - textNode.start;
+        const end = Math.min(match.to, textNode.end) - textNode.start;
+        const matchNode = start === 0 ? textNode.node : textNode.node.splitText(start);
+        if (end - start < matchNode.nodeValue.length) matchNode.splitText(end - start);
+
+        const wrapper = document.createElement("span");
+        wrapper.className = "cm-html-search-match" +
+            (match.current ? " cm-html-search-match-current" : "");
+        matchNode.parentNode.insertBefore(wrapper, matchNode);
+        wrapper.appendChild(matchNode);
+    }
+}
+
+/**
+ * Opens closed details elements containing a match, excluding a match in a summary.
+ * @param {Node} node
+ * @param {Element} root
+ * @param {Set<Element>} autoOpenedDetails
+ */
+function openDetailsForMatch(node, root, autoOpenedDetails) {
+    let element = node.parentElement;
+    while (element && element !== root) {
+        if (element.nodeName === "DETAILS") {
+            const summary = element.firstElementChild;
+            if (summary?.nodeName !== "SUMMARY" || !summary.contains(node)) {
+                if (!element.open) {
+                    element.open = true;
+                    autoOpenedDetails.add(element);
+                }
+            }
+        }
+        element = element.parentElement;
+    }
+}
+
+/**
+ * Restores details elements opened automatically for the previous query.
+ * @param {Set<Element>} autoOpenedDetails
+ */
+function restoreAutoOpenedDetails(autoOpenedDetails) {
+    for (const details of autoOpenedDetails) {
+        if (details.isConnected) details.open = false;
+    }
+    autoOpenedDetails.clear();
+}
+
+/**
+ * Highlights the current CodeMirror search query in a searchable HTML widget.
+ * @param {EditorView} view
+ * @param {Set<Element>} autoOpenedDetails
+ */
+function updateSearchHighlights(view, autoOpenedDetails) {
+    const root = document.getElementById("output-html");
+    if (!root) {
+        autoOpenedDetails.clear();
+        return;
+    }
+
+    clearSearchMatches(root);
+    restoreAutoOpenedDetails(autoOpenedDetails);
+    const query = getSearchQuery(view.state);
+    if (!query.valid || !query.search) return;
+
+    const selection = view.state.selection.main;
+    const matches = [];
+    for (const match of query.getCursor(view.state)) {
+        if (match.from === match.to) continue;
+        matches.push({
+            from: match.from,
+            to: match.to,
+            current: match.from === selection.from && match.to === selection.to
+        });
+    }
+
+    const textNodes = getTextNodes(root);
+    textNodes.forEach(textNode => {
+        const nodeMatches = matches.filter(match =>
+            match.to > textNode.start && match.from < textNode.end
+        );
+        if (nodeMatches.length) openDetailsForMatch(textNode.node, root, autoOpenedDetails);
+        wrapTextNodeMatches(textNode, matches);
+    });
+
+    const current = root.querySelector(".cm-html-search-match-current");
+    if (current) current.scrollIntoView({block: "nearest"});
 }
 
 
@@ -112,7 +240,8 @@ export function htmlPlugin(htmlOutput) {
              */
             constructor(view) {
                 this.htmlOutput = htmlOutput;
-                this.decorations = decorateHTML(view, this.htmlOutput.html);
+                this.decorations = decorateHTML(view, this.htmlOutput);
+                this.autoOpenedDetails = new Set;
             }
 
             /**
@@ -120,10 +249,23 @@ export function htmlPlugin(htmlOutput) {
              * @param {ViewUpdate} update
              */
             update(update) {
-                if (this.htmlOutput.changed) {
-                    this.decorations = decorateHTML(update.view, this.htmlOutput.html);
+                if (this.htmlOutput.changed || (this.htmlOutput.searchable && update.docChanged)) {
+                    this.decorations = decorateHTML(update.view, this.htmlOutput);
                     this.htmlOutput.changed = false;
                 }
+                if (this.htmlOutput.searchable) {
+                    cancelAnimationFrame(this.highlightFrame);
+                    this.highlightFrame = requestAnimationFrame(() => {
+                        updateSearchHighlights(update.view, this.autoOpenedDetails);
+                    });
+                }
+            }
+
+            /**
+             * Cancels pending DOM highlighting when the plugin is destroyed.
+             */
+            destroy() {
+                cancelAnimationFrame(this.highlightFrame);
             }
         }, {
             decorations: v => v.decorations
