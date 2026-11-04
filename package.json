@@ -162,7 +162,7 @@
     "moment": "^2.31.0",
     "moment-timezone": "^0.6.4",
     "ngeohash": "^0.6.4",
-    "node-forge": "^1.4.0",
+    "node-forge": "^1.4.1",
     "node-md6": "^0.1.0",
     "nodom": "^2.4.0",
     "notepack.io": "^3.0.1",
