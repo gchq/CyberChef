@@ -317,6 +317,15 @@ class OperationsWaiter {
 
 
     /**
+     * Rebuilds the operations list so the sortOperations option takes effect immediately.
+     */
+    setSortOperations() {
+        this.app.populateOperationsList();
+        this.manager.recipe.initialiseOperationDragNDrop();
+    }
+
+
+    /**
      * Sets whether operation counts are displayed next to a category title
      */
     setCatCount() {
