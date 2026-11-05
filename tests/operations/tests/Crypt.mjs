@@ -2215,5 +2215,146 @@ Triple DES uses a key length of 24 bytes (192 bits).`,
                 ]
             }
         ],
+    },
+    /**
+     * AES-CCM and AES-EAX tests.
+     *
+     * Test vectors generated using PyCryptodome:
+     *
+     * from Crypto.Cipher import AES
+     * import binascii
+     * key = binascii.unhexlify("00112233445566778899aabbccddeeff")
+     * nonce_ccm = binascii.unhexlify("ffeeddccbbaa99887766554433")
+     * nonce_eax = binascii.unhexlify("ffeeddccbbaa99887766554433221100")
+     * pt = binascii.unhexlify("48656c6c6f20576f726c6421")
+     * aad = b"additional data"
+     */
+    {
+        name: "AES Encrypt: AES-128-CCM, with AAD",
+        input: "48656c6c6f20576f726c6421",
+        expectedOutput: `be6e18f61a74a6268456170d\n\nTag: 9da8d1e7ec430d016a0a5ed16ca7c25f`,
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
+                    {"option": "Hex", "string": "ffeeddccbbaa99887766554433"},
+                    "CCM", "Hex", "Hex",
+                    {"option": "UTF8", "string": "additional data"},
+                    "Off",
+                    16
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Encrypt: AES-128-CCM, no AAD",
+        input: "48656c6c6f20576f726c6421",
+        expectedOutput: `be6e18f61a74a6268456170d\n\nTag: 6b9e93878889fc1f58386858292191bb`,
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
+                    {"option": "Hex", "string": "ffeeddccbbaa99887766554433"},
+                    "CCM", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
+                    "Off",
+                    16
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Decrypt: AES-128-CCM, with AAD",
+        input: "be6e18f61a74a6268456170d",
+        expectedOutput: "48656c6c6f20576f726c6421",
+        recipeConfig: [
+            {
+                "op": "AES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
+                    {"option": "Hex", "string": "ffeeddccbbaa99887766554433"},
+                    16,
+                    "CCM", "Hex", "Hex",
+                    {"option": "Hex", "string": "9da8d1e7ec430d016a0a5ed16ca7c25f"},
+                    {"option": "UTF8", "string": "additional data"},
+                    "Off",
+                    16
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Encrypt: AES-128-EAX, with AAD",
+        input: "48656c6c6f20576f726c6421",
+        expectedOutput: `0b034efdf93b4f3d2f4f0e14\n\nTag: 94dca13cbbf7b840ee2a7d31301c51ad`,
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
+                    {"option": "Hex", "string": "ffeeddccbbaa99887766554433221100"},
+                    "EAX", "Hex", "Hex",
+                    {"option": "UTF8", "string": "additional data"},
+                    "Off"
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Encrypt: AES-128-EAX, no AAD",
+        input: "48656c6c6f20576f726c6421",
+        expectedOutput: `0b034efdf93b4f3d2f4f0e14\n\nTag: 63039f2d098648c5ed11d0dc32ce1df9`,
+        recipeConfig: [
+            {
+                "op": "AES Encrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
+                    {"option": "Hex", "string": "ffeeddccbbaa99887766554433221100"},
+                    "EAX", "Hex", "Hex",
+                    {"option": "Hex", "string": ""},
+                    "Off"
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Decrypt: AES-128-EAX, with AAD",
+        input: "0b034efdf93b4f3d2f4f0e14",
+        expectedOutput: "48656c6c6f20576f726c6421",
+        recipeConfig: [
+            {
+                "op": "AES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
+                    {"option": "Hex", "string": "ffeeddccbbaa99887766554433221100"},
+                    16,
+                    "EAX", "Hex", "Hex",
+                    {"option": "Hex", "string": "94dca13cbbf7b840ee2a7d31301c51ad"},
+                    {"option": "UTF8", "string": "additional data"},
+                    "Off"
+                ]
+            }
+        ],
+    },
+    {
+        name: "AES Decrypt: AES-128-EAX, tampered tag",
+        input: "0b034efdf93b4f3d2f4f0e14",
+        expectedOutput: "Unable to decrypt input with these parameters: EAX authentication failed: tag mismatch.",
+        recipeConfig: [
+            {
+                "op": "AES Decrypt",
+                "args": [
+                    {"option": "Hex", "string": "00112233445566778899aabbccddeeff"},
+                    {"option": "Hex", "string": "ffeeddccbbaa99887766554433221100"},
+                    16,
+                    "EAX", "Hex", "Hex",
+                    {"option": "Hex", "string": "00000000000000000000000000000000"},
+                    {"option": "UTF8", "string": "additional data"},
+                    "Off"
+                ]
+            }
+        ],
     }
 ]);
