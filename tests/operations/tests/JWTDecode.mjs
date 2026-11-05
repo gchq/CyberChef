@@ -14,7 +14,24 @@ const outputObject = JSON.stringify({
     iat: 1
 }, null, 4);
 
+const formattedIatOutputObject = JSON.stringify({
+    String: "SomeString",
+    Number: 42,
+    iat: "1 (Thu 1 January 1970 00:00:01 UTC)"
+}, null, 4);
+
 TestRegister.addTests([
+    {
+        name: "JWT Decode: HS with formatted iat",
+        input: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.0ha6-j4FwvEIKPVZ-hf3S_R9Hy_UtXzq4dnedXcUrXk",
+        expectedOutput: formattedIatOutputObject,
+        recipeConfig: [
+            {
+                op: "JWT Decode",
+                args: [true],
+            }
+        ],
+    },
     {
         name: "JWT Decode: HS",
         input: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.0ha6-j4FwvEIKPVZ-hf3S_R9Hy_UtXzq4dnedXcUrXk",
@@ -22,7 +39,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Decode",
-                args: [],
+                args: [false],
             }
         ],
     },
@@ -33,7 +50,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Decode",
-                args: [],
+                args: [false],
             }
         ],
     },
@@ -44,7 +61,7 @@ TestRegister.addTests([
         recipeConfig: [
             {
                 op: "JWT Decode",
-                args: [],
+                args: [false],
             }
         ],
     }
