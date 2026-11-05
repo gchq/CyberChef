@@ -84,9 +84,12 @@ class TestRegister {
                 duration: result.duration
             };
 
-            if (result.error) {
-                if (test.expectedError) {
-                    if (result.error.displayStr === test.expectedOutput) {
+            const stoppedOnHandledError = !result.error && result.progress < test.recipeConfig.length;
+
+            if (test.expectedError) {
+                if (result.error || stoppedOnHandledError) {
+                    const actualError = result.error ? result.error.displayStr : result.result;
+                    if (test.expectedOutput === undefined || actualError === test.expectedOutput) {
                         ret.status = "passing";
                     } else {
                         ret.status = "failing";
@@ -94,18 +97,18 @@ class TestRegister {
                             "Expected",
                             "\t" + test.expectedOutput.replace(/\n/g, "\n\t"),
                             "Received",
-                            "\t" + result.error.displayStr.replace(/\n/g, "\n\t"),
+                            "\t" + actualError.replace(/\n/g, "\n\t"),
                         ].join("\n");
                     }
                 } else {
-                    ret.status = "erroring";
-                    ret.output = result.error.displayStr;
-                }
-            } else {
-                if (test.expectedError) {
                     ret.status = "failing";
                     ret.output = "Expected an error but did not receive one.";
-                } else if (result.result === test.expectedOutput) {
+                }
+            } else if (result.error) {
+                ret.status = "erroring";
+                ret.output = result.error.displayStr;
+            } else {
+                if (result.result === test.expectedOutput) {
                     ret.status = "passing";
                 } else if ("expectedMatch" in test && test.expectedMatch.test(result.result)) {
                     ret.status = "passing";
