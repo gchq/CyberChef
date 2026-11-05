@@ -18,11 +18,14 @@ import {
     drawSelection,
     rectangularSelection,
     crosshairCursor,
-    dropCursor
+    dropCursor,
+    ViewPlugin,
+    Decoration
 } from "@codemirror/view";
 import {
     EditorState,
-    Compartment
+    Compartment,
+    RangeSetBuilder
 } from "@codemirror/state";
 import {
     defaultKeymap,
@@ -43,6 +46,35 @@ import {
 import {statusBar} from "../utils/statusBar.mjs";
 import {fileDetailsPanel} from "../utils/fileDetails.mjs";
 import {eolCodeToSeq, eolCodeToName, renderSpecialChar} from "../utils/editorUtils.mjs";
+
+
+/** JWT input syntax highlight colours */
+const jwtMarkHeader  = Decoration.mark({attributes: {style: "color: #e08030"}});
+const jwtMarkPayload = Decoration.mark({attributes: {style: "color: #b090d0"}});
+const jwtMarkSig     = Decoration.mark({attributes: {style: "color: #52af6d"}});
+
+/**
+ * Returns a CodeMirror ViewPlugin that colours JWT parts in the input editor.
+ * Orange = header, light-purple = payload, green = signature.
+ */
+function jwtHighlightPlugin() {
+    return ViewPlugin.fromClass(class {
+        constructor(view) { this.decorations = this._build(view); }
+        update(u) { if (u.docChanged) this.decorations = this._build(u.view); }
+        _build(view) {
+            const text = view.state.doc.toString();
+            const m = text.match(/^([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]*)$/);
+            if (!m) return Decoration.none;
+            const b = new RangeSetBuilder();
+            const d1 = m[1].length;
+            const d2 = d1 + 1 + m[2].length;
+            b.add(0,  d1,      jwtMarkHeader);
+            b.add(d1 + 1, d2, jwtMarkPayload);
+            if (m[3].length) b.add(d2 + 1, d2 + 1 + m[3].length, jwtMarkSig);
+            return b.finish();
+        }
+    }, {decorations: v => v.decorations});
+}
 
 
 /**
@@ -91,7 +123,8 @@ class InputWaiter {
         this.inputEditorConf = {
             eol: new Compartment,
             lineWrapping: new Compartment,
-            fileDetailsPanel: new Compartment
+            fileDetailsPanel: new Compartment,
+            jwtHighlight: new Compartment
         };
 
         const self = this;
@@ -126,6 +159,7 @@ class InputWaiter {
                 this.inputEditorConf.fileDetailsPanel.of([]),
                 this.inputEditorConf.lineWrapping.of(EditorView.lineWrapping),
                 this.inputEditorConf.eol.of(EditorState.lineSeparator.of("\n")),
+                this.inputEditorConf.jwtHighlight.of([]),
 
                 // Keymap
                 keymap.of([
@@ -269,6 +303,18 @@ class InputWaiter {
         this.inputEditorView.dispatch({
             effects: this.inputEditorConf.lineWrapping.reconfigure(
                 wrap ? EditorView.lineWrapping : []
+            )
+        });
+    }
+
+    /**
+     * Enables or disables JWT syntax highlighting on the input editor.
+     * @param {boolean} enable
+     */
+    setJWTHighlight(enable) {
+        this.inputEditorView.dispatch({
+            effects: this.inputEditorConf.jwtHighlight.reconfigure(
+                enable ? jwtHighlightPlugin() : []
             )
         });
     }
