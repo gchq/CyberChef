@@ -19,5 +19,9 @@ export const ALPHABET_OPTIONS = [
         name: "Hex Extended", // https://www.rfc-editor.org/rfc/rfc4648#section-7
         value: "0-9A-V=",
     },
+    {
+        name: "Crockford's alphabet", // https://www.crockford.com/base32.html
+        value: "0-9A-HJKMNP-TV-Z=",
+    },
 ];
 
