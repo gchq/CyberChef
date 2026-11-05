@@ -477,17 +477,24 @@ class WorkerWaiter {
             recipeConfig = this.recipeConfig;
 
         if (this.step) {
+            const stepProgress = Number.isInteger(this.app.progress) ? this.app.progress : 0,
+                breakpointSearchStart = Math.min(stepProgress, recipeConfig.length);
+
             // Remove all breakpoints from the recipe up to progress
-            if (nextInput.progress !== false) {
-                for (let i = 0; i < nextInput.progress; i++) {
-                    if ("breakpoint" in recipeConfig[i]) {
-                        delete recipeConfig[i].breakpoint;
-                    }
+            for (let i = 0; i < breakpointSearchStart; i++) {
+                if ("breakpoint" in recipeConfig[i]) {
+                    delete recipeConfig[i].breakpoint;
                 }
             }
 
-            // Set a breakpoint at the next operation so we stop baking there
-            if (recipeConfig[this.app.progress]) recipeConfig[this.app.progress].breakpoint = true;
+            // Set a breakpoint at the next enabled operation so disabled operations and comments do
+            // not cause the rest of the recipe to bake in a single step.
+            for (let i = breakpointSearchStart; i < recipeConfig.length; i++) {
+                if (!recipeConfig[i].disabled && recipeConfig[i].op !== "Comment") {
+                    recipeConfig[i].breakpoint = true;
+                    break;
+                }
+            }
         }
 
         let transferable;
