@@ -48,6 +48,25 @@ DwIDAQAB
 
 TestRegister.addTests([
     {
+        name: "RSA Decrypt: binary OAEP/SHA-256 from hex",
+        input: "8ebbe3e4c6315eb6791b674e969d560a7600697b268e08c92a75c2ddb37792b5e1aaa0bc011c15167e50c1af8ca7842e2025761d93e77860a26ee912ebba2f35e9a7ab183a64357bdd96c06032992b709b80cb601a23d80f282369a1c171f277a92e7ea62b6f5892633ea51fe64d720fe879402ce48065e8ea0ae280236aa32ceae5dcb60585a219b6af236b2afe868fdedb6c8d3674745c303f256c23f25d0a40e322e59bb7dfb0e010d8a83ac8c24f1df31282a3f100fb5d264ace4b17b6b4d763dfbde71b2f68258d7906e4c30346d249dd60f991e3766e0cfdd6aa0b544f71c2a65621b0436cca57ac6d5af12aae07e1346d289539475336a4f4b047f0e2",
+        expectedOutput: "f89766d163f006af7d37beeee64ae9e2b071abb64fe2e2fb36e8e49ee7b5b061",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": ["Auto"]
+            },
+            {
+                "op": "RSA Decrypt",
+                "args": [PEM_PRIV_2048, "", "RSA-OAEP", "SHA-256"]
+            },
+            {
+                "op": "To Hex",
+                "args": ["None", 0]
+            }
+        ]
+    },
+    {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-1, nothing",
         input: "",
         expectedOutput: "",

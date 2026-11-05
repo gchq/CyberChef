@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import forge from "node-forge";
 import { MD_ALGORITHMS } from "../lib/RSA.mjs";
+import Utils from "../Utils.mjs";
 
 /**
  * RSA Encrypt operation
@@ -25,7 +26,7 @@ class RSAEncrypt extends Operation {
         this.description = "Encrypt a message with a PEM encoded RSA public key.";
         this.infoURL = "https://wikipedia.org/wiki/RSA_(cryptosystem)";
         this.inputType = "string";
-        this.outputType = "string";
+        this.outputType = "byteArray";
         this.args = [
             {
                 name: "RSA Public Key (PEM)",
@@ -75,7 +76,7 @@ class RSAEncrypt extends Operation {
             const plaintextBytes = forge.util.encodeUtf8(input);
             // Encrypt message
             const eMsg = pubKey.encrypt(plaintextBytes, scheme, {md: MD_ALGORITHMS[md].create()});
-            return eMsg;
+            return Utils.strToByteArray(eMsg);
         } catch (err) {
             if (err.message === "RSAES-OAEP input message length is too long.") {
                 throw new OperationError(`RSAES-OAEP input message length (${err.length}) is longer than the maximum allowed length (${err.maxLength}).`);
