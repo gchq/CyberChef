@@ -52,5 +52,23 @@ TestRegister.addTests([
             { "op": "BLAKE2b",
                 "args": ["128", "Hex", {string: "pseudorandom key", option: "UTF8"}] }
         ]
+    },
+    {
+        name: "BLAKE2b: 224 - Hello World",
+        input: "Hello World",
+        expectedOutput: "19790463ef4ad09bdb724e3a6550c640593d4870f6e192ac8147f35d",
+        recipeConfig: [
+            { "op": "BLAKE2b",
+                "args": ["224", "Hex", {string: "", option: "UTF8"}] }
+        ]
+    },
+    {
+        name: "BLAKE2b: 192 - Hello World",
+        input: "Hello World",
+        expectedOutput: "317d59b18418b8a12623faf5ebc2072e5e70ac4b8ba6d33a",
+        recipeConfig: [
+            { "op": "BLAKE2b",
+                "args": ["192", "Hex", {string: "", option: "UTF8"}] }
+        ]
     }
 ]);
