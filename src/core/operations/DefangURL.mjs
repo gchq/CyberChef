@@ -93,7 +93,7 @@ class DefangURL extends Operation {
  */
 function defangURL(url, dots, http, slashes) {
     if (dots) url = url.replace(/\./g, "[.]");
-    if (http) url = url.replace(/http/gi, "hxxp");
+    if (http) url = url.replace(/\bhttp(?=s?:\/\/)/gi, "hxxp");
     if (slashes) url = url.replace(/:\/\//g, "[://]");
 
     return url;
