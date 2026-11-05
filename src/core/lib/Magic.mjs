@@ -376,7 +376,7 @@ class Magic {
 
         const recipe = new Recipe(recipeConfig);
         try {
-            await recipe.execute(dish);
+            await recipe.execute(dish, 0, {}, true);
             // Return an empty buffer if the recipe did not run to completion
             if (recipe.lastRunOp === recipe.opList[recipe.opList.length - 1]) {
                 return await dish.get(Dish.ARRAY_BUFFER);
