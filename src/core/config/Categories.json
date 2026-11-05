@@ -402,6 +402,7 @@
             "Extract dates",
             "Extract hashes",
             "Regular expression",
+            "Grok",
             "XPath expression",
             "JPath expression",
             "Jsonata Query",
