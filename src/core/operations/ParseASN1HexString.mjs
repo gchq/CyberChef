@@ -34,6 +34,12 @@ class ParseASN1HexString extends Operation {
                 "name": "Truncate octet strings longer than",
                 "type": "number",
                 "value": 32
+            },
+            {
+                "name": "Wrap Input in SEQUENCE",
+                "type": "boolean",
+                "value": false,
+                "hint": "Use this when there is extra data that needs to be decoded"
             }
         ];
     }
@@ -44,8 +50,34 @@ class ParseASN1HexString extends Operation {
      * @returns {string}
      */
     run(input, args) {
-        const [index, truncateLen] = args;
-        return r.ASN1HEX.dump(input.replace(/\s/g, "").toLowerCase(), {
+        const [index, truncateLen, addSequence] = args;
+        let hex = input.replace(/\s/g, "").toLowerCase();
+        if (addSequence) {
+            let sequence = "30";
+            let len = hex.length / 2;
+            if (len <= 127) {
+                // We can use the short form
+                sequence += len.toString(16).padStart(2, "0");
+            } else {
+                let bytes = 0;
+                let encoded = "";
+                // Calculate the number of bytes needed to encode the length
+                while (len > 0) {
+                    bytes++;
+                    // While we are at it, also build up the length
+                    encoded = (len & 0xff).toString(16).padStart(2, "0") + encoded;
+                    len >>= 8;
+                }
+                // encode the number of bytes needed for the length
+                sequence += (bytes | 0x80).toString(16).padStart(2, "0");
+                // add the encoded length
+                sequence += encoded;
+            }
+            // Add the sequence + length in front of the original input
+            hex = sequence + hex;
+        }
+
+        return r.ASN1HEX.dump(hex, {
             "ommit_long_octet": truncateLen
         }, index);
     }
