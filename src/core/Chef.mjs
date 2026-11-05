@@ -7,7 +7,7 @@
 import Dish from "./Dish.mjs";
 import Recipe from "./Recipe.mjs";
 import log from "loglevel";
-import { isWorkerEnvironment } from "./Utils.mjs";
+import Utils, { isWorkerEnvironment } from "./Utils.mjs";
 
 /**
  * The main controller for CyberChef.
@@ -48,7 +48,13 @@ class Chef {
         if (containsFc && isWorkerEnvironment()) self.setOption("attemptHighlight", false);
 
         // Load data
-        const type = input instanceof ArrayBuffer ? Dish.ARRAY_BUFFER : Dish.STRING;
+        let type = Dish.STRING;
+        if (input instanceof ArrayBuffer) {
+            type = Dish.ARRAY_BUFFER;
+        } else if (typeof input === "string" && recipe.firstActiveInputType() === "ArrayBuffer") {
+            input = Utils.strToUtf8ArrayBuffer(input);
+            type = Dish.ARRAY_BUFFER;
+        }
         this.dish.set(input, type);
 
         try {

@@ -8,6 +8,8 @@
 import TestRegister from "../../lib/TestRegister.mjs";
 import {ALL_BYTES, ASCII_TEXT, UTF8_TEXT} from "../../samples/Ciphers.mjs";
 
+const rawStringToArrayBuffer = str => Uint8Array.from(str, c => c.charCodeAt(0)).buffer;
+
 const SOME_HEX_BYTES = "cdb23f958e018418621d9e489b7bba0f0c481f604eba2eb1ea35e38f99490cc0";
 const SOME_BASE64_BYTES = "zbI/lY4BhBhiHZ5Im3u6DwxIH2BOui6x6jXjj5lJDMA=";
 
@@ -481,7 +483,7 @@ TestRegister.addTests([
     },
     {
         name: "ECDSA Sign/Verify: P-256 with SHA256 bytes raw",
-        input: ALL_BYTES,
+        input: rawStringToArrayBuffer(ALL_BYTES),
         expectedOutput: "Verified OK",
         recipeConfig: [
             {
