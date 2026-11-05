@@ -7,6 +7,8 @@
 
 import Operation from "../Operation.mjs";
 import forge from "node-forge";
+import { toBase64 } from "../lib/Base64.mjs";
+import { fromHex } from "../lib/Hex.mjs";
 import { cryptNotice } from "../lib/Crypt.mjs";
 
 /**
@@ -41,6 +43,7 @@ class GenerateRSAKeyPair extends Operation {
                 type: "option",
                 value: [
                     "PEM",
+                    "JWK",
                     "JSON",
                     "DER"
                 ]
@@ -70,6 +73,38 @@ class GenerateRSAKeyPair extends Operation {
                     case "PEM":
                         result = forge.pki.publicKeyToPem(keypair.publicKey) + "\n" + forge.pki.privateKeyToPem(keypair.privateKey);
                         break;
+                    case "JWK": {
+                        const base64urlUInt = function (bigInt) {
+                            let hex = bigInt.toString(16);
+                            // prepend 0 if not even
+                            if (hex.length % 2 === 1) {
+                                hex = "0" + hex;
+                            }
+                            return toBase64(fromHex(hex), "A-Za-z0-9-_");
+                        };
+                        const pubKey = {
+                            kty: "RSA",
+                            kid: "PublicKey",
+                            key_ops: ["verify", "encrypt"], // eslint-disable-line camelcase
+                            n: base64urlUInt(keypair.publicKey.n),
+                            e: base64urlUInt(keypair.publicKey.e)
+                        };
+                        const privKey = {
+                            kty: "RSA",
+                            kid: "PrivateKey",
+                            key_ops: ["sign", "decrypt"], // eslint-disable-line camelcase
+                            n: base64urlUInt(keypair.privateKey.n),
+                            e: base64urlUInt(keypair.privateKey.e),
+                            d: base64urlUInt(keypair.privateKey.d),
+                            p: base64urlUInt(keypair.privateKey.p),
+                            q: base64urlUInt(keypair.privateKey.q),
+                            dp: base64urlUInt(keypair.privateKey.dP),
+                            dq: base64urlUInt(keypair.privateKey.dQ),
+                            qi: base64urlUInt(keypair.privateKey.qInv)
+                        };
+                        result = JSON.stringify({keys: [privKey, pubKey]}, null, 4);
+                        break;
+                    }
                     case "JSON":
                         result = JSON.stringify(keypair);
                         break;
