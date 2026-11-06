@@ -9,7 +9,7 @@ import {DELIM_OPTIONS} from "../lib/Delim.mjs";
 import {fromDecimal} from "../lib/Decimal.mjs";
 
 /**
- * From Decimal delimiters, plus auto-detection. 
+ * From Decimal delimiters, plus auto-detection.
  */
 const FROM_DECIMAL_DELIM_OPTIONS = [...DELIM_OPTIONS, "Auto"];
 

@@ -1,0 +1,65 @@
+name: "Minor version update"
+
+on:
+  schedule:
+    # Every Monday at 04:00 UTC. The gate job restricts runs to the 1st and 3rd Monday of the month.
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check_date:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - id: check
+        run: |
+          DAY=$(date -u +%-d)
+          # 1st Monday: day 1-7, 3rd Monday: day 15-21
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || { [ "$DAY" -ge 1 ] && [ "$DAY" -le 7 ]; } || { [ "$DAY" -ge 15 ] && [ "$DAY" -le 21 ]; }; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  bump_minor:
+    needs: check_date
+    if: needs.check_date.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: master
+          fetch-tags: true
+
+      - name: Set node version
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Bump minor version
+        id: bump
+        run: |
+          npm run minor
+          echo "version=$(npm pkg get version | xargs)" >> "$GITHUB_OUTPUT"
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.bump.outputs.version }}
+        run: |
+          BRANCH="release/v${VERSION}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add package.json package-lock.json CHANGELOG.md
+          git commit -m "Bump version to v${VERSION}"
+          git push origin "$BRANCH"
+          gh pr create --base master --head "$BRANCH" \
+            --title "Bump version to v${VERSION}" \
+            --body "Automated minor version update to v${VERSION}."

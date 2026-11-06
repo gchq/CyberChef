@@ -65,7 +65,8 @@ IA==
             "kty": "RSA",
             "n": "8qvQOnph0i3M5-TpruZrsvgEXgud6Uxgq1ugYuuTqKG2oU9kVEs1wmLrwe-e3yy0ys_nS3qOrBZDYSMx2SPp-w",
             "e": "AQAB"
-        }
+        },
+        jwkKid: "9dBPWQMtnvqkQnK0SRr3CRZYEPzClWoBHNbtCIHayuc"
     }
 };
 
@@ -111,7 +112,8 @@ ylxt
             "crv": "P-256",
             "x": "DUc8A0EDNKoCYIPWMHz1yUzqE5mJgusgcAE8H6810fk",
             "y": "CfGZkzYggmurC4Edrw9VTYdnYoq1oCjx-D1TCmr-Xuk"
-        }
+        },
+        jwkKid: "9lv4S6bQ0EP0G5G40zHX65OuAFhKxnZLx3j2z6KchSE"
     }
 };
 
@@ -261,8 +263,84 @@ TestRegister.addTests([
             }
         ],
     },
-
-
+    {
+        name: "PEM to JWK: With key ID (kid)",
+        input: EC_P256.public.pem8,
+        expectedOutput: JSON.stringify({ ...EC_P256.public.jwk, kid: EC_P256.public.jwkKid }),
+        recipeConfig: [
+            {
+                op: "PEM to JWK",
+                args: [true],
+            }
+        ],
+    },
+    {
+        name: "PEM to JWK: EC Public Key without key ID (kid) by default",
+        input: EC_P256.public.pem8,
+        expectedOutput: JSON.stringify(EC_P256.public.jwk),
+        recipeConfig: [
+            {
+                op: "PEM to JWK",
+                args: [],
+            }
+        ],
+    },
+    {
+        name: "PEM to JWK: EC Public Key with key ID (kid)",
+        input: EC_P256.public.pem8,
+        expectedOutput: JSON.stringify({
+            ...EC_P256.public.jwk,
+            kid: EC_P256.public.jwkKid,
+        }),
+        recipeConfig: [
+            {
+                op: "PEM to JWK",
+                args: [true],
+            }
+        ],
+    },
+    {
+        name: "PEM to JWK: RSA Public Key with key ID (kid)",
+        input: RSA_512.public.pem8,
+        expectedOutput: JSON.stringify({
+            ...RSA_512.public.jwk,
+            kid: RSA_512.public.jwkKid,
+        }),
+        recipeConfig: [
+            {
+                op: "PEM to JWK",
+                args: [true],
+            }
+        ],
+    },
+    {
+        name: "PEM to JWK: RSA Private Key with key ID (kid)",
+        input: RSA_512.private.pem8,
+        expectedOutput: JSON.stringify({
+            ...RSA_512.private.jwk,
+            kid: RSA_512.public.jwkKid,
+        }),
+        recipeConfig: [
+            {
+                op: "PEM to JWK",
+                args: [true],
+            }
+        ],
+    },
+    {
+        name: "PEM to JWK: EC Private Key with key ID (kid)",
+        input: EC_P256.private.pem8,
+        expectedOutput: JSON.stringify({
+            ...EC_P256.private.jwk,
+            kid: EC_P256.public.jwkKid,
+        }),
+        recipeConfig: [
+            {
+                op: "PEM to JWK",
+                args: [true],
+            }
+        ],
+    },
     {
         name: "JWK to PEM: not a JWK",
         input: "\"foobar\"",

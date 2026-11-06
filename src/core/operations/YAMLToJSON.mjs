@@ -6,7 +6,8 @@
 
 import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
-import jsYaml from "js-yaml";
+import { load } from "js-yaml";
+
 /**
  * YAML to JSON operation
  */
@@ -34,7 +35,7 @@ class YAMLToJSON extends Operation {
      */
     run(input, args) {
         try {
-            return jsYaml.load(input);
+            return load(input);
         } catch (err) {
             throw new OperationError("Unable to parse YAML: " + err);
         }

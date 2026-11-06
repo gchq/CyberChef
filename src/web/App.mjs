@@ -105,8 +105,11 @@ class App {
             document.getElementById("loader-wrapper").remove();
             document.body.classList.remove("loaded");
 
-            // Bake initial input
-            this.manager.input.bakeAll();
+            // guard in case any of the operations in the loaded recipe have manualBake set
+            if (this.autoBake_) {
+                // Bake initial input
+                this.manager.input.bakeAll();
+            }
         }.bind(this), 1000);
 
         // Clear the loading message interval

@@ -336,7 +336,8 @@ TestRegister.addTests([
                 ]
             }
         ],
-        expectedMatch: /^Invalid JPath expression: jsonPath: Cannot read properties of {2}\(reading 'constructor'\): /    },
+        expectedMatch: /^Invalid JPath expression: jsonPath: Cannot read properties of \S* ?\(reading 'constructor'\): /
+    },
     {
         name: "CSS selector",
         input: '<div id="test">\n<p class="a">hello</p>\n<p>world</p>\n<p class="a">again</p>\n</div>',

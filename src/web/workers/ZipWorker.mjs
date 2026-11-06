@@ -18,6 +18,7 @@ loglevelMessagePrefix(log, {
 });
 
 const Zlib = zip.Zlib;
+const workerScope = self;
 
 /**
  * Respond to message from parent thread.
@@ -49,7 +50,7 @@ self.setOption = function(...args) {};
  * @param {string} filename
  * @param {string} fileExtension
  */
-self.zipFiles = async function(outputs, filename, fileExtension) {
+workerScope.zipFiles = async function(outputs, filename, fileExtension) {
     const zip = new Zlib.Zip();
     const inputNums = Object.keys(outputs);
 

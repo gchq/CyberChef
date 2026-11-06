@@ -20,6 +20,28 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Parse IPv4 CIDR with host bits set",
+        input: "10.0.0.1/30",
+        expectedOutput: "Network: 10.0.0.0\nCIDR: 30\nMask: 255.255.255.252\nRange: 10.0.0.0 - 10.0.0.3\nTotal addresses in range: 4\n\n10.0.0.0\n10.0.0.1\n10.0.0.2\n10.0.0.3",
+        recipeConfig: [
+            {
+                "op": "Parse IP range",
+                "args": [true, true, false]
+            },
+        ],
+    },
+    {
+        name: "Parse IPv6 CIDR with host bits set",
+        input: "2404:6800:4001:0001:0000:0000:0000:0000/48",
+        expectedOutput: "Network: 2404:6800:4001:0000:0000:0000:0000:0000\nShorthand: 2404:6800:4001::\nCIDR: 48\nMask: ffff:ffff:ffff:0000:0000:0000:0000:0000\nRange: 2404:6800:4001:0000:0000:0000:0000:0000 - 2404:6800:4001:ffff:ffff:ffff:ffff:ffff\nTotal addresses in range: 1.2089258196146292e+24\n\n",
+        recipeConfig: [
+            {
+                "op": "Parse IP range",
+                "args": [true, true, false]
+            },
+        ],
+    },
+    {
         name: "Parse IPv4 hyphenated",
         input: "10.0.0.0 - 10.0.0.3",
         expectedOutput: "Minimum subnet required to hold this range:\n\tNetwork: 10.0.0.0\n\tCIDR: 30\n\tMask: 255.255.255.252\n\tSubnet range: 10.0.0.0 - 10.0.0.3\n\tTotal addresses in subnet: 4\n\nRange: 10.0.0.0 - 10.0.0.3\nTotal addresses in range: 4\n\n10.0.0.0\n10.0.0.1\n10.0.0.2\n10.0.0.3",
