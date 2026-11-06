@@ -123,7 +123,7 @@ module.exports = {
             "assert": require.resolve("assert/"),
             "buffer": require.resolve("buffer/"),
             "child_process": false,
-            "crypto": require.resolve("crypto-browserify"),
+            "crypto": require.resolve("./src/core/lib/CryptoShim.js"),
             "events": require.resolve("events/"),
             "fs": false,
             "net": false,
