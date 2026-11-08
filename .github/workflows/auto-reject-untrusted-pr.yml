@@ -1,0 +1,43 @@
+name: Auto Reject Untrusted PRs
+on:
+  # Runs against the target of the PR
+  # This workflow uses the 'pull_request_target' trigger. 
+  # To use it you need to configure a custom Actions Policy. 
+  # To do this, go to your Repository, Settings, Actions, Policies. 
+  # New Policy Dropdown, Import a ruleset, 
+  # Download & import 'https://github.com/gchq/.github/blob/main/enable-pull_request_target.json'. 
+  # Make sure this workflow is located at ".github/workflows/auto-reject-untrusted-pr.yml". 
+  pull_request_target:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Close PRs from non-collaborators
+        if: >-
+          ${{
+            !(
+              github.event.pull_request.user.type == 'Bot' &&
+              (
+                github.event.pull_request.user.login == 'dependabot[bot]' ||
+                (
+                  github.event.pull_request.user.login == 'github-actions[bot]' &&
+                  github.event.pull_request.head.repo.full_name == github.repository
+                )
+              )
+            ) &&
+            !contains(
+              fromJSON('["COLLABORATOR","MEMBER","OWNER"]'),
+              github.event.pull_request.author_association
+            )
+          }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr close "$PR" --repo "$GITHUB_REPOSITORY" \
+          --comment "Thank you for your contribution - unfortunately this repository only accepts pull requests from organisation members or approved outside collaborators. Due to that, this pull request has been closed automatically."
