@@ -615,7 +615,7 @@ Top Drawer`, {
     }),
 
     it("From unix timestamp", () => {
-        assert.strictEqual(chef.fromUNIXTimestamp("978346800").toString(), "Mon 1 January 2001 11:00:00 UTC");
+        assert.strictEqual(chef.fromUNIXTimestamp("978346800", {units: "Seconds (s)", timezone: "UTC"}).toString(), "Mon 1 January 2001 11:00:00 UTC");
     }),
 
     it("Generate HOTP", () => {

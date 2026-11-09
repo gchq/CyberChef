@@ -31,6 +31,11 @@ class FromUNIXTimestamp extends Operation {
                 "name": "Units",
                 "type": "option",
                 "value": UNITS
+            },
+            {
+                "name": "Timezone",
+                "type": "option",
+                "value": moment.tz.names()
             }
         ];
         this.checks = [
@@ -66,22 +71,27 @@ class FromUNIXTimestamp extends Operation {
      */
     run(input, args) {
         const units = args[0];
+        const tz = args[1];
         let d;
 
         input = parseFloat(input);
+        
+        if (isNaN(input)) {
+            return "Invalid input. UNIX timestamps look like 1751583600"
+        }
 
         if (units === "Seconds (s)") {
             d = moment.unix(input);
-            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss") + " UTC";
+            return d.tz(tz).format("ddd D MMMM YYYY HH:mm:ss") + ` ${tz}`;
         } else if (units === "Milliseconds (ms)") {
             d = moment(input);
-            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
+            return d.tz(tz).format("ddd D MMMM YYYY HH:mm:ss.SSS") + ` ${tz}`;
         } else if (units === "Microseconds (μs)") {
             d = moment(input / 1000);
-            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
+            return d.tz(tz).format("ddd D MMMM YYYY HH:mm:ss.SSS") + ` ${tz}`;
         } else if (units === "Nanoseconds (ns)") {
             d = moment(input / 1000000);
-            return d.tz("UTC").format("ddd D MMMM YYYY HH:mm:ss.SSS") + " UTC";
+            return d.tz(tz).format("ddd D MMMM YYYY HH:mm:ss.SSS") + ` ${tz}`;
         } else {
             throw new OperationError("Unrecognised unit");
         }
