@@ -91,6 +91,7 @@ export function toHexFast(data) {
  * @param {string} data
  * @param {string} [delim]
  * @param {number} [byteLen=2]
+ * @param {boolean} [throwError=false]
  * @returns {byteArray}
  *
  * @example
@@ -100,7 +101,7 @@ export function toHexFast(data) {
  * // returns [10,20,30]
  * fromHex("0a:14:1e", "Colon");
  */
-export function fromHex(data, delim="Auto", byteLen=2) {
+export function fromHex(data, delim="Auto", byteLen=2, throwError=false) {
     if (byteLen < 1 || Math.round(byteLen) !== byteLen)
         throw new OperationError("Byte length must be a positive integer");
 
@@ -114,7 +115,11 @@ export function fromHex(data, delim="Auto", byteLen=2) {
     const output = [];
     for (let i = 0; i < data.length; i++) {
         for (let j = 0; j < data[i].length; j += byteLen) {
-            output.push(parseInt(data[i].substr(j, byteLen), 16));
+            const chunk = data[i].substr(j, byteLen);
+            if (throwError && /[^a-f\d]/i.test(chunk)) {
+                throw new OperationError(`Invalid hex character in chunk "${chunk}"`);
+            }
+            output.push(parseInt(chunk, 16));
         }
     }
     return output;
