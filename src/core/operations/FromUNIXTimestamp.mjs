@@ -75,9 +75,9 @@ class FromUNIXTimestamp extends Operation {
         let d;
 
         input = parseFloat(input);
-        
+
         if (isNaN(input)) {
-            return "Invalid input. UNIX timestamps look like 1751583600"
+            return "Invalid input. UNIX timestamps look like 1751583600";
         }
 
         if (units === "Seconds (s)") {
