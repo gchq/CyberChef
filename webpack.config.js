@@ -38,6 +38,9 @@ const banner = `/**
 
 
 module.exports = {
+    cache: {
+        type: "filesystem"
+    },
     output: {
         publicPath: "",
         globalObject: "this",
