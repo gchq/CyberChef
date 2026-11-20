@@ -8,6 +8,8 @@
 import TestRegister from "../../lib/TestRegister.mjs";
 import {ASCII_TEXT, UTF8_TEXT, ALL_BYTES} from "../../samples/Ciphers.mjs";
 
+const rawStringToArrayBuffer = str => Uint8Array.from(str, c => c.charCodeAt(0)).buffer;
+
 const PEM_PRIV_2048 = `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEAwfaUOpUEutKyU3wkCv6kYunz4MqxzSuTSckRz1IxwZtwIiqq
 +ejkM6ioXPyGadfFNvG0JVOgr1q4KQglq0vXaYG57HZ8iinXnHgy1vr8i+fWYITB
@@ -94,7 +96,7 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-1, All bytes",
-        input: ALL_BYTES.substr(0, 100),
+        input: rawStringToArrayBuffer(ALL_BYTES.substr(0, 100)),
         expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
@@ -154,7 +156,7 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/MD5, All bytes",
-        input: ALL_BYTES.substr(0, 100),
+        input: rawStringToArrayBuffer(ALL_BYTES.substr(0, 100)),
         expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
@@ -214,7 +216,7 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-256, All bytes",
-        input: ALL_BYTES.substr(0, 100),
+        input: rawStringToArrayBuffer(ALL_BYTES.substr(0, 100)),
         expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
@@ -274,7 +276,7 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-384, All bytes",
-        input: ALL_BYTES.substr(0, 100),
+        input: rawStringToArrayBuffer(ALL_BYTES.substr(0, 100)),
         expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
@@ -334,7 +336,7 @@ TestRegister.addTests([
     },
     {
         name: "RSA Encrypt/Decrypt: RSA-OAEP/SHA-512, All bytes",
-        input: ALL_BYTES.substr(0, 100),
+        input: rawStringToArrayBuffer(ALL_BYTES.substr(0, 100)),
         expectedOutput: ALL_BYTES.substr(0, 100),
         recipeConfig: [
             {
