@@ -33,6 +33,11 @@ class RC2Decrypt extends Operation {
                 "toggleValues": ["Hex", "UTF8", "Latin1", "Base64"]
             },
             {
+                name: "Effective key bits",
+                type: "number",
+                value: 128
+            },
+            {
                 "name": "IV",
                 "type": "toggleString",
                 "value": "",
@@ -58,9 +63,10 @@ class RC2Decrypt extends Operation {
      */
     run(input, args) {
         const key = Utils.convertToByteString(args[0].string, args[0].option),
-            iv = Utils.convertToByteString(args[1].string, args[1].option),
-            [,, inputType, outputType] = args,
-            decipher = forge.rc2.createDecryptionCipher(key);
+            effective = args[1],
+            iv = Utils.convertToByteString(args[2].string, args[2].option),
+            [,,, inputType, outputType] = args,
+            decipher = forge.rc2.createDecryptionCipher(key, effective);
 
         input = Utils.convertToByteString(input, inputType);
 
