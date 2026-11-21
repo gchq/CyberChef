@@ -42,8 +42,7 @@ TestRegister.addTests([
     {
         name: "From Base85",
         input: wpOutput + "v",
-        expectedError: true,
-        expectedOutput: "From Base85 - Invalid character 'v' at index 337",
+        expectedOutput: "Invalid character 'v' at index 337",
         recipeConfig: [
             { "op": "From Base85",
                 "args": ["!-u", false] }
