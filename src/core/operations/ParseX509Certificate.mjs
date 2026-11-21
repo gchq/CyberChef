@@ -13,6 +13,44 @@ import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
 
 /**
+ * The SM2 curve (GM/T 0003.5-2012, GB/T 32918.5-2017) is widely used in
+ * Chinese X.509 certificates, but jsrsasign does not know it and parsing
+ * such certificates fails with "unsupported curve name".
+ * Register the curve parameters and its OID (1.2.156.10197.1.301) with
+ * jsrsasign so that SM2 certificates can be parsed.
+ */
+const SM2_OID_HEX = "2a811ccf5501822d"; // 1.2.156.10197.1.301
+
+if (r.KJUR.crypto.OID.oidhex2name[SM2_OID_HEX] === undefined) {
+    r.KJUR.crypto.OID.oidhex2name[SM2_OID_HEX] = "sm2p256v1";
+
+    // jsrsasign resolves curve OIDs through a hardcoded lookup table
+    r.KJUR.crypto.ECDSA.getName = (function(origGetName) {
+        return function(oidOrName) {
+            const name = origGetName(oidOrName);
+            if (name !== null) return name;
+            return oidOrName === SM2_OID_HEX ? "sm2p256v1" : null;
+        };
+    })(r.KJUR.crypto.ECDSA.getName);
+
+    // Curve parameters as published in GM/T 0003.5-2012
+    r.KJUR.crypto.ECParameterDB.regist(
+        "sm2p256v1",
+        256,
+        "fffffffeffffffffffffffffffffffffffffffff00000000ffffffffffffffff", // p
+        "fffffffeffffffffffffffffffffffffffffffff00000000fffffffffffffffc", // a
+        "28e9fa9e9d9f5e344d5a9e4bcf6509a7f39789f515ab8f92ddbcbd414d940e93", // b
+        "fffffffeffffffffffffffffffffffffffffffff7203df6b21c6052b53bbf40939d54123", // n
+        "1", // h
+        "32c4ae2c1f1981195f9904466a39c9948fe30bbff2660be1715a4589334c74c7", // Gx
+        "bc3736a2f4f6779c59bdcee36b692153d0a9877cc62a474002df32e52139f0a0", // Gy
+        ["SM2"],
+        SM2_OID_HEX,
+        "SM2 curve"
+    );
+}
+
+/**
  * Parse X.509 certificate operation
  */
 class ParseX509Certificate extends Operation {
@@ -167,8 +205,9 @@ class ParseX509Certificate extends Operation {
         }
 
         if (breakoutSig) { // DSA or ECDSA
-            sigStr = `  r:              ${formatByteStr(r.ASN1HEX.getV(sig, 4), 16, 18)}
-  s:              ${formatByteStr(r.ASN1HEX.getV(sig, 48), 16, 18)}`;
+            const sigIdx = r.ASN1HEX.getChildIdx(sig, 0);
+            sigStr = `  r:              ${formatByteStr(r.ASN1HEX.getV(sig, sigIdx[0]), 16, 18)}
+  s:              ${formatByteStr(r.ASN1HEX.getV(sig, sigIdx[1]), 16, 18)}`;
         } else { // RSA or unknown
             sigStr = `  Signature:      ${formatByteStr(sig, 16, 18)}`;
         }
