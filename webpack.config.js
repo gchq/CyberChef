@@ -99,6 +99,10 @@ module.exports = {
                     context: "node_modules/node-forge/dist",
                     from: "prime.worker.min.js",
                     to: "assets/forge/"
+                }, {
+                    context: "node_modules/@jsquash/webp/codec/dec",
+                    from: "webp_dec.wasm",
+                    to: "assets/webp/"
                 }
             ]
         }),

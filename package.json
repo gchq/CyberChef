@@ -98,6 +98,8 @@
     "@alexaltea/capstone-js": "^3.0.5",
     "@astronautlabs/amf": "^0.0.6",
     "@blu3r4y/lzma": "^2.3.3",
+    "@jimp/core": "1.6.0",
+    "@jsquash/webp": "1.5.0",
     "@noble/hashes": "2.4.0",
     "@wavesenterprise/crypto-gost-js": "^2.1.0-RC1",
     "@xmldom/xmldom": "^0.8.15",
