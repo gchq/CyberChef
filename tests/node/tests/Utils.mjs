@@ -4,6 +4,22 @@ import it from "../assertionHandler.mjs";
 import assert from "assert";
 
 TestRegister.addApiTests([
+    ...[
+        ["literal percent", "#recipe=To_Hex('%',0)", {recipe: "To_Hex('%',0)"}],
+        ["short escape", "?value=%2", {value: "%2"}],
+        ["non-hex escape", "value=%GG", {value: "%GG"}],
+        ["mixed escapes", "value=50%25%20off%", {value: "50% off%"}],
+        ["invalid UTF-8", "value=%FF", {value: "\uFFFD"}],
+        ["truncated UTF-8", "value=%E0%A4", {value: "\uFFFD"}],
+        ["encoded percent", "value=%2525", {value: "%25"}],
+        ["Unicode", "value=%F0%9F%98%80", {value: "\u{1F600}"}],
+        ["plus and separators", "value=a+b%2Bc%26d%3De", {value: "a b+c&d=e"}],
+        ["flags and duplicates", "?flag&value=first&value=second&empty=", {flag: true, value: "second", empty: ""}],
+        ["empty parameters", "", {}]
+    ].map(([name, input, expected]) => it(`Utils: URI parameters handle ${name}`, () => {
+        assert.deepStrictEqual(Utils.parseURIParams(input), expected);
+    })),
+
     it("Utils: should parse six backslashes correctly", () => {
         assert.equal(Utils.parseEscapedChars("\\\\\\\\\\\\"), "\\\\\\");
     }),
