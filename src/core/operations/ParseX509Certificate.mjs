@@ -8,6 +8,7 @@ import r from "jsrsasign";
 import { fromBase64 } from "../lib/Base64.mjs";
 import { runHash } from "../lib/Hash.mjs";
 import { fromHex, toHex } from "../lib/Hex.mjs";
+import { getPqcAlgorithmName, getPqcPublicKeyInfo } from "../lib/Pqc.mjs";
 import { formatByteStr, formatDnObj } from "../lib/PublicKey.mjs";
 import Operation from "../Operation.mjs";
 import Utils from "../Utils.mjs";
@@ -86,9 +87,17 @@ class ParseX509Certificate extends Operation {
             sn = cert.getSerialNumberHex(),
             issuer = cert.getIssuer(),
             subject = cert.getSubject(),
-            pk = cert.getPublicKey(),
             pkFields = [],
             sig = cert.getSignatureValueHex();
+
+        let pk,
+            pqcPk;
+        try {
+            pk = cert.getPublicKey();
+        } catch (err) {
+            pqcPk = getPqcPublicKeyInfo(cert);
+            if (!pqcPk) throw err;
+        }
 
         let pkStr = "",
             sigStr = "",
@@ -97,10 +106,23 @@ class ParseX509Certificate extends Operation {
         // Public Key fields
         pkFields.push({
             key: "Algorithm",
-            value: pk.type
+            value: pqcPk ? pqcPk.algorithm : pk.type
         });
 
-        if (pk.type === "EC") { // ECDSA
+        if (pqcPk) {
+            pkFields.push({
+                key: "OID",
+                value: pqcPk.oid
+            });
+            pkFields.push({
+                key: "Length",
+                value: pqcPk.bitLength + " bits"
+            });
+            pkFields.push({
+                key: "Public Key",
+                value: formatByteStr(pqcPk.publicKeyHex, 16, 18)
+            });
+        } else if (pk.type === "EC") { // ECDSA
             pkFields.push({
                 key: "Curve Name",
                 value: pk.curveName
@@ -174,9 +196,13 @@ class ParseX509Certificate extends Operation {
         }
 
         // Extensions
-        try {
-            extensions = cert.getInfo().split("X509v3 Extensions:\n")[1].split("signature")[0];
-        } catch (err) {}
+        if (pqcPk) {
+            extensions = formatPqcExtensions(cert);
+        } else {
+            try {
+                extensions = cert.getInfo().split("X509v3 Extensions:\n")[1].split("signature")[0];
+            } catch (err) {}
+        }
 
         const issuerStr = formatDnObj(issuer, 2),
             nbDate = formatDate(cert.getNotBefore()),
@@ -185,7 +211,7 @@ class ParseX509Certificate extends Operation {
 
         return `Version:          ${cert.version} (0x${Utils.hex(cert.version - 1)})
 Serial number:    ${new r.BigInteger(sn, 16).toString()} (0x${sn})
-Algorithm ID:     ${cert.getSignatureAlgorithmField()}
+Algorithm ID:     ${getPqcAlgorithmName(cert.getSignatureAlgorithmField()) || cert.getSignatureAlgorithmField()}
 Validity
   Not Before:     ${nbDate} (dd-mm-yyyy hh:mm:ss) (${cert.getNotBefore()})
   Not After:      ${naDate} (dd-mm-yyyy hh:mm:ss) (${cert.getNotAfter()})
@@ -200,7 +226,7 @@ Fingerprints
 Public Key
 ${pkStr.slice(0, -1)}
 Certificate Signature
-  Algorithm:      ${cert.getSignatureAlgorithmName()}
+  Algorithm:      ${getPqcAlgorithmName(cert.getSignatureAlgorithmName()) || cert.getSignatureAlgorithmName()}
 ${sigStr}
 
 Extensions
@@ -225,6 +251,36 @@ function formatDate (dateStr) {
         dateStr[8] + dateStr[9] + ":" +
         dateStr[10] + dateStr[11] + ":" +
         dateStr[12] + dateStr[13];
+}
+
+/**
+ * Formats certificate extensions without requiring a classical key object.
+ *
+ * @param {r.X509} cert
+ * @returns {string}
+ */
+function formatPqcExtensions(cert) {
+    return cert.getExtParamArray().map(extension => {
+        const critical = extension.critical ? " CRITICAL" : "",
+            header = `  ${extension.extname}${critical}:\n`;
+
+        if (extension.extname === "subjectKeyIdentifier") {
+            return header + `    ${extension.kid.hex}\n`;
+        }
+        if (extension.extname === "authorityKeyIdentifier") {
+            return header + `    kid=${extension.kid.hex}\n`;
+        }
+        if (extension.extname === "basicConstraints") {
+            let value = `    cA=${extension.cA === true}\n`;
+            if (extension.pathLen !== undefined) {
+                value += `    pathLen=${extension.pathLen}\n`;
+            }
+            return header + value;
+        }
+
+        const value = extension.extn || JSON.stringify(extension);
+        return value ? header + `    ${value}\n` : header;
+    }).join("");
 }
 
 export default ParseX509Certificate;
