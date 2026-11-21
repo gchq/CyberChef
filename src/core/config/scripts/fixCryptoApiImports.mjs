@@ -32,10 +32,11 @@ function walk(dir) {
         if (entry.isDirectory()) {
             walk(fullPath);
         } else if (entry.isFile()) {
-            const content = readFileSync(fullPath, "utf8");
+            let content = readFileSync(fullPath, "utf8");
+            const original = content;
 
             // Add .mjs to imports if not present
-            const updated = content.replace(
+            content = content.replace(
                 /from "(\.[^"]*)";/g,
                 (match, p1) => {
                     if (p1.endsWith(".mjs")) return match;
@@ -43,8 +44,19 @@ function walk(dir) {
                 }
             );
 
-            if (updated !== content) {
-                writeFileSync(fullPath, updated, "utf8");
+            // Fix the SHA-512 round counter: the library counts 32-bit
+            // message-schedule entries (2 per round), so a SHA-512 run of
+            // 80 actual rounds was reported and configured as 160.
+            if (entry.name === "sha512.mjs") {
+                content = content
+                    .replace("options.rounds = options.rounds || 160;", "options.rounds = options.rounds || 80;")
+                    .replace("this.W = new Array(160);", "this.W = new Array(this.options.rounds * 2);")
+                    .replace("for (let i = 0; i < this.options.rounds; i += 2) {", "for (let i = 0; i < this.options.rounds * 2; i += 2) {")
+                    .replace("[options.rounds=160] - Number of rounds (Must be greater than 32)", "[options.rounds=80] - Number of rounds (Must be greater than 16)");
+            }
+
+            if (content !== original) {
+                writeFileSync(fullPath, content, "utf8");
             }
         }
     }
