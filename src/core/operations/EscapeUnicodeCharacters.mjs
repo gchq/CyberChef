@@ -53,22 +53,39 @@ class EscapeUnicodeCharacters extends Operation {
      */
     run(input, args) {
         const regexWhitelist = /[ -~]/i,
-            [prefix, encodeAll, padding, uppercaseHex] = args;
+            [prefix, encodeAll, padding, uppercaseHex] = args,
+            uPlus = prefix === "U+";
 
         let output = "",
-            character = "";
+            character = "",
+            lastDigits = 0; // hex digits in the escape just written, 0 if none
 
         for (let i = 0; i < input.length; i++) {
             character = input[i];
-            if (!encodeAll && regexWhitelist.test(character)) {
+
+            // U+ notation takes a whole code point, so do not split surrogate pairs.
+            if (uPlus && input.codePointAt(i) > 0xFFFF) {
+                character = String.fromCodePoint(input.codePointAt(i));
+                i++;
+            }
+
+            // Unescape reads 4 to 6 hex digits after U+, so a hex digit straight after
+            // a shorter U+ escape would be read as part of it. Escape it as well.
+            const followsShortEscape = uPlus && lastDigits > 0 && lastDigits < 6 &&
+                /[0-9a-f]/i.test(character);
+
+            if (!encodeAll && !followsShortEscape && regexWhitelist.test(character)) {
                 // It’s a printable ASCII character so don’t escape it.
                 output += character;
+                lastDigits = 0;
                 continue;
             }
 
             let cp = character.codePointAt(0).toString(16);
             if (uppercaseHex) cp = cp.toUpperCase();
-            output += prefix + cp.padStart(padding, "0");
+            cp = cp.padStart(padding, "0");
+            output += prefix + cp;
+            lastDigits = cp.length;
         }
 
         return output;
