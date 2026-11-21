@@ -427,6 +427,8 @@
             "Unzip",
             "Bzip2 Decompress",
             "Bzip2 Compress",
+            "Brotli Decompress",
+            "Brotli Compress",
             "Tar",
             "Untar",
             "LZString Decompress",
