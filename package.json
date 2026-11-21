@@ -187,6 +187,7 @@
     "stream-browserify": "^3.0.0",
     "tesseract.js": "^7.0.0",
     "ua-parser-js": "^2.0.10",
+    "unicode-segmenter": "^0.17.3",
     "unorm": "^1.6.0",
     "url": "^0.11.4",
     "utf8": "^3.0.0",
