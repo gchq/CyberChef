@@ -68,6 +68,8 @@ class OutputWaiter {
         this.initEditor();
 
         this.outputs = {};
+        this.tabSelections = {}; // Selection ranges to restore, keyed by inputNum
+        this.pendingSelection = null;
         this.zipWorker = null;
         this.maxTabs = this.manager.tabs.calcMaxTabs();
         this.tabTimeout = null;
@@ -276,6 +278,7 @@ class OutputWaiter {
     async setOutput(data, force=false) {
         // Don't do anything if the output hasn't changed
         if (!force && data === this.currentOutputCache) {
+            this.pendingSelection = null;
             this.manager.controls.hideStaleIndicator();
             this.toggleLoader(false);
             return;
@@ -326,6 +329,9 @@ class OutputWaiter {
         // We use setTimeout here to delay the editor dispatch until the next event cycle,
         // ensuring all async actions have completed before attempting to set the contents
         // of the editor. This is mainly with the above call to setWordWrap() in mind.
+        const selection = this.pendingSelection;
+        this.pendingSelection = null;
+
         setTimeout(() => {
             this.docChanging = true;
             // Insert data into editor, overwriting any previous contents
@@ -336,6 +342,18 @@ class OutputWaiter {
                     insert: data
                 }
             });
+
+            // Restore the selection saved when this tab was last left
+            if (selection) {
+                const len = this.outputEditorView.state.doc.length;
+                this.outputEditorView.dispatch({
+                    selection: {
+                        anchor: Math.min(selection.anchor, len),
+                        head: Math.min(selection.head, len)
+                    },
+                    scrollIntoView: true
+                });
+            }
 
             // If turning word wrap on, do it after we populate the editor
             if (wrap)
@@ -652,6 +670,7 @@ class OutputWaiter {
         if (!this.outputExists(inputNum)) return;
 
         delete this.outputs[inputNum];
+        delete this.tabSelections[inputNum];
     }
 
     /**
@@ -1078,6 +1097,16 @@ class OutputWaiter {
     changeTab(inputNum, changeInput = false) {
         if (!this.outputExists(inputNum)) return;
         const currentNum = this.manager.tabs.getActiveTab("output");
+
+        // Remember the selection in the tab we are leaving, and queue the
+        // selection of the tab we are going to for when its output is set
+        if (currentNum !== inputNum) {
+            if (currentNum !== -1) {
+                const {anchor, head} = this.outputEditorView.state.selection.main;
+                this.tabSelections[currentNum] = {anchor, head};
+            }
+            this.pendingSelection = this.tabSelections[inputNum] || null;
+        }
 
         this.hideMagicButton();
 

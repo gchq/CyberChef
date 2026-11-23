@@ -73,6 +73,8 @@ class InputWaiter {
         this.callbacks = {};
         this.callbackID = 0;
         this.fileDetails = {};
+        this.tabSelections = {}; // Selection ranges to restore, keyed by inputNum
+        this.pendingSelection = null;
 
         this.maxWorkers = 1;
         if (navigator.hardwareConcurrency !== undefined &&
@@ -306,6 +308,9 @@ class InputWaiter {
         // If turning word wrap off, do it before we populate the editor for performance reasons
         if (!wrap) this.setWordWrap(wrap);
 
+        const selection = this.pendingSelection;
+        this.pendingSelection = null;
+
         // We use setTimeout here to delay the editor dispatch until the next event cycle,
         // ensuring all async actions have completed before attempting to set the contents
         // of the editor. This is mainly with the above call to setWordWrap() in mind.
@@ -319,6 +324,18 @@ class InputWaiter {
                     insert: data
                 }
             });
+
+            // Restore the selection saved when this tab was last left
+            if (selection) {
+                const len = this.inputEditorView.state.doc.length;
+                this.inputEditorView.dispatch({
+                    selection: {
+                        anchor: Math.min(selection.anchor, len),
+                        head: Math.min(selection.head, len)
+                    },
+                    scrollIntoView: true
+                });
+            }
 
             // If turning word wrap on, do it after we populate the editor
             if (wrap)
@@ -1260,6 +1277,17 @@ class InputWaiter {
      * @param {boolean} [changeOutput=false] - If true, also changes the output
      */
     changeTab(inputNum, changeOutput=false) {
+        // Remember the selection in the tab we are leaving, and queue the
+        // selection of the tab we are going to for when its contents are set
+        const currentTab = this.manager.tabs.getActiveTab("input");
+        if (currentTab !== inputNum) {
+            if (currentTab !== -1) {
+                const {anchor, head} = this.inputEditorView.state.selection.main;
+                this.tabSelections[currentTab] = {anchor, head};
+            }
+            this.pendingSelection = this.tabSelections[inputNum] || null;
+        }
+
         if (this.manager.tabs.getTabItem(inputNum, "input") !== null) {
             this.manager.tabs.changeTab(inputNum, "input");
             this.inputWorker.postMessage({
@@ -1393,6 +1421,7 @@ class InputWaiter {
      * @param {number} inputNum - The new inputNum
      */
     inputAdded(changeTab, inputNum) {
+        delete this.tabSelections[inputNum];
         this.addTab(inputNum, changeTab);
 
         this.manager.output.addOutput(inputNum, changeTab);
