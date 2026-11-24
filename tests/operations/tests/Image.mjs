@@ -244,7 +244,7 @@ TestRegister.addTests([
     {
         name: "View Bit Plane: malformed PNG",
         input: PNG_HEX.replace("49484452", "49424452"),
-        expectedOutput: "Error loading image. (Error: unrecognised content at end of stream)",
+        expectedOutput: "Error loading image. (Error: Could not find MIME for Buffer)",
         recipeConfig: [
             {
                 op: "From Hex",
