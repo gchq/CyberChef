@@ -104,6 +104,10 @@ export function fromHex(data, delim="Auto", byteLen=2) {
     if (byteLen < 1 || Math.round(byteLen) !== byteLen)
         throw new OperationError("Byte length must be a positive integer");
 
+    if (delim === "0x" || delim === "\\x" || delim === "Percent") {
+        return fromPrefixedHex(data, delim, byteLen);
+    }
+
     if (delim !== "None") {
         const delimRegex = delim === "Auto" ? /[^a-f\d]|0x/gi : Utils.regexRep(delim);
         data = data.split(delimRegex);
@@ -117,6 +121,32 @@ export function fromHex(data, delim="Auto", byteLen=2) {
             output.push(parseInt(data[i].substr(j, byteLen), 16));
         }
     }
+    return output;
+}
+
+
+/**
+ * Convert prefixed hex escapes into bytes while preserving non-prefixed text.
+ *
+ * @param {string} data
+ * @param {string} delim
+ * @param {number} byteLen
+ * @returns {byteArray}
+ */
+function fromPrefixedHex(data, delim, byteLen) {
+    const prefixRegex = new RegExp(Utils.regexRep(delim).source + `([a-f\\d]{${byteLen}})`, "ig");
+    const output = [];
+    let match;
+    let index = 0;
+
+    while ((match = prefixRegex.exec(data))) {
+        output.push(...Utils.strToByteArray(data.slice(index, match.index)));
+        output.push(parseInt(match[1], 16));
+        index = prefixRegex.lastIndex;
+    }
+
+    output.push(...Utils.strToByteArray(data.slice(index)));
+
     return output;
 }
 

@@ -135,6 +135,31 @@ TestRegister.addTests([
                 ]
             }
         ]
-
+    },
+    {
+        name: "Mixed \\\\x and \\\\u escapes decode without extra nulls",
+        input: "\\x41\\u0042",
+        expectedOutput: "41 42",
+        recipeConfig: [
+            {
+                "op": "From Hex",
+                "args": [
+                    "\\x"
+                ]
+            },
+            {
+                "op": "Unescape Unicode Characters",
+                "args": [
+                    "\\u"
+                ]
+            },
+            {
+                "op": "To Hex",
+                "args": [
+                    "Space",
+                    0
+                ]
+            }
+        ]
     },
 ]);
