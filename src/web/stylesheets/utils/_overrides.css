@@ -13,6 +13,7 @@
     font-family: 'Material Icons';
     font-style: normal;
     font-weight: 400;
+    font-display: swap;
     src: url("../static/fonts/MaterialIcons-Regular.ttf") format('truetype');
 }
 
