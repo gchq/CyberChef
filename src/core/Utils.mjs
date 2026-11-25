@@ -490,6 +490,17 @@ class Utils {
 
 
     /**
+     * Converts a Uint8Array/Buffer view to a tightly sliced ArrayBuffer.
+     *
+     * @param {Uint8Array} view
+     * @returns {ArrayBuffer}
+     */
+    static viewToArrayBuffer(view) {
+        return view.buffer.slice(view.byteOffset, view.byteOffset + view.byteLength);
+    }
+
+
+    /**
      * Converts a string to a UTF-8 ArrayBuffer.
      *
      * @param {string} str

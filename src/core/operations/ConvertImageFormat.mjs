@@ -8,6 +8,7 @@ import Operation from "../Operation.mjs";
 import OperationError from "../errors/OperationError.mjs";
 import { isImage } from "../lib/FileType.mjs";
 import { toBase64 } from "../lib/Base64.mjs";
+import Utils from "../Utils.mjs";
 import { Jimp, JimpMime, PNGFilterType } from "jimp";
 
 /**
@@ -109,7 +110,7 @@ class ConvertImageFormat extends Operation {
                     break;
             }
 
-            return buffer.buffer;
+            return Utils.viewToArrayBuffer(buffer);
         } catch (err) {
             throw new OperationError(`Error converting image format. (${err})`);
         }

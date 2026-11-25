@@ -655,6 +655,35 @@ Password: 282760`;
         assert.ok(analysis.startsWith("Version:\n4\n"), `Expected output to start with "Version:\\n4\\n", got: ${analysis}`);
     }),
 
+    it("Generate Image followed by To Hex via chef.bake", async () => {
+        const result = await chef.bake("Hello world!", [
+            {
+                op: "Generate Image",
+                args: ["Greyscale", 1, 4]
+            },
+            {
+                op: "To Hex",
+                args: ["Space", 0]
+            }
+        ]);
+        assert.strictEqual(result.toString().slice(0, 23), "89 50 4e 47 0d 0a 1a 0a");
+    }),
+
+    it("Convert Image Format produces real PNG bytes in Node API", async () => {
+        const generated = await chef.generateImage("Hello world!", {
+            mode: "Greyscale",
+            pixelScaleFactor: 1,
+            pixelsPerRow: 4
+        });
+        const converted = await chef.convertImageFormat(generated, {
+            outputFormat: "PNG",
+            jpegQuality: 80,
+            pngFilterType: "Auto",
+            pngDeflateLevel: 9
+        });
+        assert.strictEqual(chef.toHex(converted, {delimiter: "Space"}).toString().slice(0, 23), "89 50 4e 47 0d 0a 1a 0a");
+    }),
+
     it("Gzip, Gunzip", () => {
         assert.strictEqual(chef.gunzip(chef.gzip("Down To The Wire")).toString(), "Down To The Wire");
     }),
