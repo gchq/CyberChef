@@ -55,5 +55,16 @@ TestRegister.addTests([
                 "args": ["User defined", "\\pS", true, true, false, false, true, false, "List matches"]
             }
         ],
+    },
+    {
+        name: "Regex: built-in domain ignores email local parts",
+        input: "name.lastname@domain.com support@sub.domain.example test.example",
+        expectedOutput: "domain.com\nsub.domain.example\ntest.example",
+        recipeConfig: [
+            {
+                "op": "Regular expression",
+                "args": ["Domain", "\\b((?=[a-z0-9-]{1,63}\\.)(xn--)?[a-z0-9]+(-[a-z0-9]+)*\\.)+[a-z]{2,63}\\b(?!@)", true, true, false, false, false, false, "List matches"]
+            }
+        ],
     }
 ]);
