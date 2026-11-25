@@ -5,6 +5,7 @@
  */
 
 import Operation from "../Operation.mjs";
+import Utils from "../Utils.mjs";
 import moment from "moment-timezone";
 import {DATETIME_FORMATS, FORMAT_EXAMPLES} from "../lib/DateTime.mjs";
 
@@ -100,7 +101,7 @@ class DateTimeDelta extends Operation {
                 .add(-minutesDelta, "minutes")
                 .add(-secondsDelta, "seconds");
         }
-        return newDate.tz(inputTimezone).format(inputFormat.replace(/[<>]/g, ""));
+        return Utils.escapeHtml(newDate.tz(inputTimezone).format(inputFormat));
     }
 }
 

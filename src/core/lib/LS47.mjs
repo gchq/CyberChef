@@ -223,8 +223,19 @@ export function encryptPad(key, plaintext, signature, paddingSize) {
     initTiles();
     checkKey(key);
     let padding = "";
+
+    // Padding must come from a cryptographically secure source; fail closed rather than fall back to Math.random
+    const getSecureRandom = () => {
+        if (typeof crypto === "undefined" || !crypto.getRandomValues) {
+            throw new OperationError("A cryptographically secure random number generator is required for LS47 padding.");
+        }
+        const array = new Uint32Array(1);
+        crypto.getRandomValues(array);
+        return array[0] / (0xFFFFFFFF + 1);
+    };
+
     for (let i = 0; i < paddingSize; i++) {
-        padding += letters.charAt(Math.floor(Math.random() * letters.length));
+        padding += letters.charAt(Math.floor(getSecureRandom() * letters.length));
     }
     return encrypt(key, padding+plaintext+"---"+signature);
 }

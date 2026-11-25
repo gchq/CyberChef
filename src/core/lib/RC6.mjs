@@ -370,9 +370,9 @@ function applyPadding(message, padding, blockSize) {
             break;
 
         case "RANDOM":
-            for (let i = 0; i < nPadding; i++) {
-                paddedMessage.push(Math.floor(Math.random() * 256));
-            }
+            if (typeof crypto === "undefined" || !crypto.getRandomValues)
+                throw new OperationError("A cryptographically secure random number generator is required for random padding.");
+            paddedMessage.push(...crypto.getRandomValues(new Uint8Array(nPadding)));
             break;
 
         case "BIT":

@@ -53,4 +53,15 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "DateTime Delta: HTML-significant characters in the format are escaped",
+        input: "20/02/2024 13:36:00",
+        expectedOutput: "20/02/2024 13:37:00 &lt;b&gt;&amp;",
+        recipeConfig: [
+            {
+                op: "DateTime Delta",
+                args: ["Standard date and time", "DD/MM/YYYY HH:mm:ss [<b>&]", "Add", 0, 0, 1, 0],
+            },
+        ],
+    },
 ]);
