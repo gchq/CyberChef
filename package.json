@@ -196,6 +196,14 @@
     "xregexp": "^5.1.3",
     "zlibjs": "^0.3.1"
   },
+  "overrides": {
+      "grunt-chmod": {
+        "shelljs": "^0.10.0"
+      },
+      "nightwatch": {
+        "mocha": "^12.0.3"
+      }
+  },
   "allowScripts": {
     "@nightwatch/nightwatch-inspector@1.0.1": true,
     "chromedriver@152.0.3": true,
