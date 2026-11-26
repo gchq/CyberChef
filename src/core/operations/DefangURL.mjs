@@ -72,7 +72,7 @@ class DefangURL extends Operation {
                 });
                 break;
             case "Everything":
-                input = defangURL(input, dots, http, slashes);
+                input = defangURL(input, dots, http, slashes, true);
                 break;
         }
 
@@ -89,11 +89,16 @@ class DefangURL extends Operation {
  * @param {boolean} dots
  * @param {boolean} http
  * @param {boolean} slashes
+ * @param {boolean} [escapeHttpGlobally=false]
  * @returns {string}
  */
-function defangURL(url, dots, http, slashes) {
+function defangURL(url, dots, http, slashes, escapeHttpGlobally=false) {
     if (dots) url = url.replace(/\./g, "[.]");
-    if (http) url = url.replace(/http/gi, "hxxp");
+    if (http) {
+        url = escapeHttpGlobally ?
+            url.replace(/http/gi, "hxxp") :
+            url.replace(/^https?:\/\//i, scheme => scheme.replace(/http/i, "hxxp"));
+    }
     if (slashes) url = url.replace(/:\/\//g, "[://]");
 
     return url;
