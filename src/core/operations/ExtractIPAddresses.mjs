@@ -80,7 +80,26 @@ class ExtractIPAddresses extends Operation {
 
             // Then we allow IPv4 addresses to be expressed either entirely in decimal or entirely in Octal
             ipv4 = "(?:" + ipv4Decimal + "|" + ipv4Octal + ")",
-            ipv6 = "((?=.*::)(?!.*::.+::)(::)?([\\dA-F]{1,4}:(:|\\b)|){5}|([\\dA-F]{1,4}:){6})(([\\dA-F]{1,4}((?!\\3)::|:\\b|(?![\\dA-F])))|(?!\\2\\3)){2}";
+
+            // RFC 3986 IPv6 grammar bounded so lookaheads/lookbehinds stay local to each candidate address
+            h16 = "[\\da-f]{1,4}",
+            ipv4EmbeddedByte = "(?:25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)",
+            ipv4Embedded = `(?:${ipv4EmbeddedByte}\\.){3}${ipv4EmbeddedByte}`,
+            ls32 = `(?:${h16}:${h16}|${ipv4Embedded})`,
+            ipv6LookBehind = "(?<![\\w:]|\\d\\.)",
+            ipv6LookAhead = "(?![\\w:]|\\.\\d)",
+            ipv6Body = [
+                `(?:${h16}:){6}${ls32}`,
+                `::(?:${h16}:){5}${ls32}`,
+                `(?:${h16})?::(?:${h16}:){4}${ls32}`,
+                `(?:(?:${h16}:)?${h16})?::(?:${h16}:){3}${ls32}`,
+                `(?:(?:${h16}:){0,2}${h16})?::(?:${h16}:){2}${ls32}`,
+                `(?:(?:${h16}:){0,3}${h16})?::${h16}:${ls32}`,
+                `(?:(?:${h16}:){0,4}${h16})?::${ls32}`,
+                `(?:(?:${h16}:){0,5}${h16})?::${h16}`,
+                `(?:(?:${h16}:){0,6}${h16})?::`,
+            ].join("|"),
+            ipv6 = `${ipv6LookBehind}(?:${ipv6Body})${ipv6LookAhead}`;
         let ips  = "";
 
         if (includeIpv4 && includeIpv6) {

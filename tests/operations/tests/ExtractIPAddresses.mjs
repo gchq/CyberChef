@@ -129,5 +129,60 @@ TestRegister.addTests([
             },
         ],
     },
+    {
+        name: "ExtractIPAddress IPv6 full and compressed on same line",
+        input: "2001:0db8:0001:0000:0000:0ab9:C0A8:0102 can be compressed as follows: 2001:db8:1::ab9:C0A8:102.",
+        expectedOutput: "2001:0db8:0001:0000:0000:0ab9:C0A8:0102\n2001:db8:1::ab9:C0A8:102",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [false, true, false, false, false, false]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress multiple compressed IPv6 on same line",
+        input: "2001:db8::1 and 2001:db8::2 and ::1",
+        expectedOutput: "2001:db8::1\n2001:db8::2\n::1",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [false, true, false, false, false, false]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress IPv6 valid forms and boundaries",
+        input: ":: ::1 fe80:: ::1:2:3:4:5:6:7 1:2:3:4:5:6:7:: ::ffff:192.0.2.128 2001:db8::192.0.2.1 [2001:db8::1]:8080 2001:db8::1/64",
+        expectedOutput: "::\n::1\nfe80::\n::1:2:3:4:5:6:7\n1:2:3:4:5:6:7::\n::ffff:192.0.2.128\n2001:db8::192.0.2.1\n2001:db8::1\n2001:db8::1",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [false, true, false, false, false, false]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress mixed IPv4 and IPv6 on same line",
+        input: "192.0.2.1 2001:db8::1 ::ffff:10.0.0.1 10.0.0.2",
+        expectedOutput: "192.0.2.1\n2001:db8::1\n::ffff:10.0.0.1\n10.0.0.2",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [true, true, false, false, false, false]
+            },
+        ],
+    },
+    {
+        name: "ExtractIPAddress IPv6 invalid and non-IPv6 strings",
+        input: "1:2:3:4:5:6:7:8:9 1:2:3:4:5:6:7::8 ::1:2:3:4:5:6:7:8 2001:db8::1::2 12345::1 ::12345 foo::1 std::vector ::: ::ffff:192.0.2.256 192.168.1.1 00:11:22:33:44:55",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Extract IP addresses",
+                "args": [false, true, false, false, false, false]
+            },
+        ],
+    },
 ]);
 
