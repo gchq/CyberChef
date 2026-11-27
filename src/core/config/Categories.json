@@ -64,6 +64,7 @@
             "Change IP format",
             "Encode text",
             "Decode text",
+            "PowerShell -e Encode/Decode",
             "Text Encoding Brute Force",
             "Swap endianness",
             "To MessagePack",
