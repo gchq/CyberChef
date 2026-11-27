@@ -121,7 +121,7 @@ export function ipv4HyphenatedRange(range, includeNetworkInfo, enumerateAddresse
         mask = 0;
 
     while (diff !== 0) {
-        diff >>= 1;
+        diff >>>= 1;
         cidr--;
         mask = (mask << 1) | 1;
     }
@@ -165,25 +165,15 @@ Total addresses in range: ${(((ip2 - ip1) >>> 0) + 1)}
 export function ipv6HyphenatedRange(range, includeNetworkInfo) {
     const ip1 = strToIpv6(range[0].split("-")[0].trim()),
         ip2 = strToIpv6(range[0].split("-")[1].trim()),
-        total = new Array(128).fill();
+        toBigInt = ip => ip.reduce((acc, block) => (acc << 16n) | BigInt(block), 0n),
+        total = toBigInt(ip2) - toBigInt(ip1) + 1n;
 
-    let output = "",
-        t = "",
-        i;
-
-    for (i = 0; i < 8; i++) {
-        t = (ip2[i] - ip1[i]).toString(2);
-        if (t !== "0") {
-            for (let n = 0; n < t.length; n++) {
-                total[i*16 + 16-(t.length-n)] = t[n];
-            }
-        }
-    }
+    let output = "";
 
     if (includeNetworkInfo) {
         output += "Range: " + ipv6ToStr(ip1) + " - " + ipv6ToStr(ip2) + "\n";
         output += "Shorthand range: " + ipv6ToStr(ip1, true) + " - " + ipv6ToStr(ip2, true) + "\n";
-        output += "Total addresses in range: " + (parseInt(total.join(""), 2) + 1) + "\n\n";
+        output += "Total addresses in range: " + Number(total) + "\n\n";
     }
 
     return output;
@@ -296,7 +286,7 @@ export function strToIpv4(ipStr) {
     result += numBlocks[2] << 8;
     result += numBlocks[3];
 
-    return result;
+    return result >>> 0;
 
     /**
      * Converts a list of 4 numeric strings in the range 0-255 to a list of numbers.

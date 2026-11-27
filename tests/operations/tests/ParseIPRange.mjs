@@ -64,6 +64,28 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Parse IPv4 hyphenated across 128.0.0.0",
+        input: "127.255.255.254 - 128.0.0.1",
+        expectedOutput: "Minimum subnet required to hold this range:\n\tNetwork: 0.0.0.0\n\tCIDR: 0\n\tMask: 0.0.0.0\n\tSubnet range: 0.0.0.0 - 255.255.255.255\n\tTotal addresses in subnet: 4294967296\n\nRange: 127.255.255.254 - 128.0.0.1\nTotal addresses in range: 4\n\n127.255.255.254\n127.255.255.255\n128.0.0.0\n128.0.0.1",
+        recipeConfig: [
+            {
+                "op": "Parse IP range",
+                "args": [true, true, false]
+            },
+        ],
+    },
+    {
+        name: "Parse IPv4 list across 128.0.0.0",
+        input: "128.0.0.1\n127.255.255.255",
+        expectedOutput: "Minimum subnet required to hold this range:\n\tNetwork: 0.0.0.0\n\tCIDR: 0\n\tMask: 0.0.0.0\n\tSubnet range: 0.0.0.0 - 255.255.255.255\n\tTotal addresses in subnet: 4294967296\n\nRange: 127.255.255.255 - 128.0.0.1\nTotal addresses in range: 3\n\n127.255.255.255\n128.0.0.0\n128.0.0.1",
+        recipeConfig: [
+            {
+                "op": "Parse IP range",
+                "args": [true, true, false]
+            },
+        ],
+    },
+    {
         name: "Parse IPv6 CIDR - full",
         input: "2404:6800:4001:0000:0000:0000:0000:0000/48",
         expectedOutput: "Network: 2404:6800:4001:0000:0000:0000:0000:0000\nShorthand: 2404:6800:4001::\nCIDR: 48\nMask: ffff:ffff:ffff:0000:0000:0000:0000:0000\nRange: 2404:6800:4001:0000:0000:0000:0000:0000 - 2404:6800:4001:ffff:ffff:ffff:ffff:ffff\nTotal addresses in range: 1.2089258196146292e+24\n\n",
@@ -100,6 +122,28 @@ TestRegister.addTests([
         name: "Parse IPv6 list",
         input: "2404:6800:4001:ffff:ffff:ffff:ffff:ffff\n2404:6800:4001::ffff\n2404:6800:4001:ffff:ffff::1111\n2404:6800:4001::/64",
         expectedOutput: "Range: 2404:6800:4001:0000:0000:0000:0000:0000 - 2404:6800:4001:ffff:ffff:ffff:ffff:ffff\nShorthand range: 2404:6800:4001:: - 2404:6800:4001:ffff:ffff:ffff:ffff:ffff\nTotal addresses in range: 1.2089258196146292e+24\n\n",
+        recipeConfig: [
+            {
+                "op": "Parse IP range",
+                "args": [true, true, false]
+            },
+        ],
+    },
+    {
+        name: "Parse IPv6 hyphenated with zero low block",
+        input: "::1:0 - ::2:0",
+        expectedOutput: "Range: 0000:0000:0000:0000:0000:0000:0001:0000 - 0000:0000:0000:0000:0000:0000:0002:0000\nShorthand range: ::1:0 - ::2:0\nTotal addresses in range: 65537\n\n",
+        recipeConfig: [
+            {
+                "op": "Parse IP range",
+                "args": [true, true, false]
+            },
+        ],
+    },
+    {
+        name: "Parse IPv6 hyphenated with borrow between blocks",
+        input: "2001:db8::ffff - 2001:db8::1:0",
+        expectedOutput: "Range: 2001:0db8:0000:0000:0000:0000:0000:ffff - 2001:0db8:0000:0000:0000:0000:0001:0000\nShorthand range: 2001:db8::ffff - 2001:db8::1:0\nTotal addresses in range: 2\n\n",
         recipeConfig: [
             {
                 "op": "Parse IP range",
