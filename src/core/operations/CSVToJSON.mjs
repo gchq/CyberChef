@@ -65,6 +65,16 @@ class CSVToJSON extends Operation {
                 return json.slice(1).map(row => {
                     const obj = {};
                     header.forEach((h, i) => {
+                        // A plain assignment uses the __proto__ setter and the cell is lost.
+                        if (h === "__proto__") {
+                            Object.defineProperty(obj, h, {
+                                value: row[i],
+                                writable: true,
+                                enumerable: true,
+                                configurable: true
+                            });
+                            return;
+                        }
                         obj[h] = row[i];
                     });
                     return obj;
