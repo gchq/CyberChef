@@ -74,6 +74,17 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "JWT Verify: rejects unexpected algorithm",
+        input: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.0ha6-j4FwvEIKPVZ-hf3S_R9Hy_UtXzq4dnedXcUrXk",
+        expectedOutput: "JsonWebTokenError: invalid algorithm",
+        recipeConfig: [
+            {
+                op: "JWT Verify",
+                args: [hsKey, "RS256"],
+            }
+        ],
+    },
+    {
         name: "JWT Verify: ES",
         input: "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdHJpbmciOiJTb21lU3RyaW5nIiwiTnVtYmVyIjo0MiwiaWF0IjoxfQ.WkECT51jSfpRkcpQ4x0h5Dwe7CFBI6u6Et2gWp91HC7mpN_qCFadRpsvJLtKubm6cJTLa68xtei0YrDD8fxIUA",
         expectedOutput: outputObject,
