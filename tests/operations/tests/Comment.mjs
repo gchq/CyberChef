@@ -59,6 +59,25 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "Comment: preserves byte array dish type",
+        input: "00 ff 80 41",
+        expectedOutput: "00 ff 80 41",
+        recipeConfig: [
+            {
+                op: "From Hex",
+                args: ["Space"]
+            },
+            {
+                op: "Comment",
+                args: ["Must not translate the byte array to a string"]
+            },
+            {
+                op: "To Hex",
+                args: ["Space", 0]
+            }
+        ]
+    },
+    {
         name: "Label, Comment: Complex content",
         input: ALL_BYTES,
         expectedOutput: ALL_BYTES,
