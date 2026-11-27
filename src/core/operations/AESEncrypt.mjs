@@ -136,7 +136,7 @@ The following algorithms will be used based on the size of the key:
         }
         const cipher = forge.cipher.createCipher("AES-" + mode, key);
         cipher.start({
-            iv: iv,
+            iv: (iv.length === 0 && mode !== "GCM") ? "\x00".repeat(16) : iv,
             additionalData: mode === "GCM" ? aad : undefined
         });
         if (noPadding) {
