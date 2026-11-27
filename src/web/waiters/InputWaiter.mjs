@@ -656,10 +656,9 @@ class InputWaiter {
             this.setInput(inputVal, silent);
 
             // Set URL to current input
-            if (inputVal.length >= 0 && inputVal.length <= 51200) {
-                const inputStr = toBase64(inputVal, "A-Za-z0-9+/");
-                this.app.updateURL(true, inputStr);
-            }
+            const inputStr = inputData.buffer.byteLength < 51200 ? toBase64(inputData.buffer, "A-Za-z0-9+/") : "";
+            const includeInput = inputStr.length > 0 && inputData.buffer.byteLength < 51200;
+            this.app.updateURL(includeInput, inputStr);
         }.bind(this));
     }
 

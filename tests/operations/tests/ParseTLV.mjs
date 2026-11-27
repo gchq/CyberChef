@@ -8,6 +8,8 @@
 
 import TestRegister from "../../lib/TestRegister.mjs";
 
+const rawStringToArrayBuffer = str => Uint8Array.from(str, c => c.charCodeAt(0)).buffer;
+
 TestRegister.addTests([
     {
         name: "Parse TLV: LengthValue",
@@ -55,7 +57,7 @@ TestRegister.addTests([
     },
     {
         name: "Parse TLV: BER long-form length (two-byte length encoding)",
-        input: "\x01\x82\x01\x00" + "A".repeat(256) + "\x02\x03\x41\x42\x43",
+        input: rawStringToArrayBuffer("\x01\x82\x01\x00" + "A".repeat(256) + "\x02\x03\x41\x42\x43"),
         expectedOutput: JSON.stringify([
             {"key": [1], "length": 256, "value": Array(256).fill(65)},
             {"key": [2], "length": 3, "value": [65, 66, 67]}
@@ -69,7 +71,7 @@ TestRegister.addTests([
     },
     {
         name: "Parse TLV: BER long-form length (one-byte length encoding)",
-        input: "\x01\x81\x80" + "B".repeat(128),
+        input: rawStringToArrayBuffer("\x01\x81\x80" + "B".repeat(128)),
         expectedOutput: JSON.stringify([
             {"key": [1], "length": 128, "value": Array(128).fill(66)}
         ], null, 4),
@@ -82,7 +84,7 @@ TestRegister.addTests([
     },
     {
         name: "Parse TLV: BER multiple entries with mixed short and long-form lengths",
-        input: "\x01\x05\x48\x65\x6c\x6c\x6f\x02\x81\x05\x57\x6f\x72\x6c\x64",
+        input: rawStringToArrayBuffer("\x01\x05\x48\x65\x6c\x6c\x6f\x02\x81\x05\x57\x6f\x72\x6c\x64"),
         expectedOutput: JSON.stringify([
             {"key": [1], "length": 5, "value": [72, 101, 108, 108, 111]},
             {"key": [2], "length": 5, "value": [87, 111, 114, 108, 100]}

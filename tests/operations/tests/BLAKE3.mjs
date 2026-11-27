@@ -26,6 +26,15 @@ TestRegister.addTests([
         ]
     },
     {
+        name: "BLAKE3: 16 - Latin-1 text input uses UTF-8",
+        input: "á",
+        expectedOutput: "bb9c95e4b863990afb5259512240f785",
+        recipeConfig: [
+            { "op": "BLAKE3",
+                "args": [16, ""] }
+        ]
+    },
+    {
         name: "BLAKE3: 32 - Hello world",
         input: "Hello world",
         expectedOutput: "e7e6fb7d2869d109b62cdb1227208d4016cdaa0af6603d95223c6a698137d945",
