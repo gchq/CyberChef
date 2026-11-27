@@ -137,9 +137,10 @@ class Magic {
     /**
      * Generate various simple brute-forced encodings of the data (trucated to 100 bytes).
      *
+     * @param {boolean} [extLang=false] - Whether extensive language support is enabled.
      * @returns {Object[]} - The encoded data and an operation config to generate it.
      */
-    async bruteForce() {
+    async bruteForce(extLang=false) {
         const sample = new Uint8Array(this.inputBuffer).slice(0, 100);
         const results = [];
 
@@ -173,6 +174,10 @@ class Magic {
          */
         const testEnc = async op => {
             for (let i = 0; i < encodings.length; i++) {
+                if (!extLang && op === "Encode text" && encodings[i] === "UTF-7 (65000)") {
+                    continue;
+                }
+
                 const conf = {
                     op: op,
                     args: [encodings[i]]
@@ -301,7 +306,7 @@ class Magic {
 
         if (intensive) {
             // Run brute forcing of various types on the data and create a new branch for each option
-            const bfEncodings = await this.bruteForce();
+            const bfEncodings = await this.bruteForce(extLang);
 
             await Promise.all(bfEncodings.map(async enc => {
                 const magic = new Magic(enc.data, this.opCriteria, undefined),
