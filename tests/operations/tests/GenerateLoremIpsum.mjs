@@ -9,6 +9,17 @@ import TestRegister from "../../lib/TestRegister.mjs";
 
 TestRegister.addTests([
     {
+        name: "Generate Lorem Ipsum: expected OperationError",
+        input: "",
+        expectedError: true,
+        recipeConfig: [
+            {
+                "op": "Generate Lorem Ipsum",
+                "args": [0, "Words"]
+            },
+        ],
+    },
+    {
         name: "Generate Lorem Ipsum: Exceeds Word Limit",
         input: "",
         expectedOutput: "Length must be less than 100000",
