@@ -254,6 +254,94 @@ TestRegister.addTests([
         ],
     },
     {
+        name: "Trifid Cipher Encode: no input",
+        input: "",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Encode",
+                "args": ["nothing", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Encode: no key",
+        input: "aide-toi, le ciel t'aidera",
+        expectedOutput: "agwc-ekb, ti xbuj h'valogp",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Encode",
+                "args": ["", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Encode: invalid key (non-alphabetic)",
+        input: "aide-toi, le ciel t'aidera",
+        expectedOutput: "The key must consist only of letters in the English alphabet and the \"+\" symbol",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Encode",
+                "args": ["FELIX MARIE DELASTELLE", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Encode: normal",
+        input: "aide-toi, le ciel t'aidera",
+        expectedOutput: "fmjf-voi, ss uftf p'ufeqqc",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Encode",
+                "args": ["FELIXMARIEDELASTELLE", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Decode: no input",
+        input: "",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Decode",
+                "args": ["nothing", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Decode: no key",
+        input: "agwc-ekb, ti xbuj h'valogp",
+        expectedOutput: "aide-toi, le ciel t'aidera",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Decode",
+                "args": ["", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Decode: invalid key (non-alphabetic)",
+        input: "fmjf-voi, ss uftf p'ufeqqc",
+        expectedOutput: "The key must consist only of letters in the English alphabet and the \"+\" symbol",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Decode",
+                "args": ["FELIX MARIE DELASTELLE", 5]
+            }
+        ],
+    },
+    {
+        name: "Trifid Cipher Decode: normal",
+        input: "fmjf-voi, ss uftf p'ufeqqc",
+        expectedOutput: "aide-toi, le ciel t'aidera",
+        recipeConfig: [
+            {
+                "op": "Trifid Cipher Decode",
+                "args": ["FELIXMARIEDELASTELLE", 5]
+            }
+        ],
+    },
+    {
         name: "Citrix CTX1 Encode",
         input: "Password1",
         expectedOutput: "PFFAJEDBOHECJEDBODEGIMCJPOFLJKDPKLAO",
@@ -536,6 +624,61 @@ TestRegister.addTests([
             {
                 "op": "Rail Fence Cipher Encode",
                 "args": [3, 2]
+            }
+        ],
+    },
+    {
+        name: "Playfair Cipher Decode: normal",
+        input: "bmod zbx dnab ek udm uixMm ouvif",
+        expectedOutput: "hide the gold in the treXe stump",
+        recipeConfig: [
+            {
+                "op": "Playfair Cipher Decode",
+                "args": ["PLAYFAIREXAMPLE"]
+            }
+        ],
+    },
+    {
+        name: "Playfair Cipher Decode: invalid key",
+        input: "hide the gold in the tree stump",
+        expectedOutput: "The key must consist only of letters in the English alphabet",
+        recipeConfig: [
+            {
+                "op": "Playfair Cipher Decode",
+                "args": ["PLAYFAIR EXAMPLE"]
+            }
+        ],
+    },
+    {
+        name: "Playfair Cipher Decode: odd character count",
+        input: "foo",
+        expectedOutput: "Warning: ciphered text contains odd number of characters, final character truncated\n\nil",
+        recipeConfig: [
+            {
+                "op": "Playfair Cipher Decode",
+                "args": ["bar"]
+            }
+        ],
+    },
+    {
+        name: "Playfair Cipher Encode: normal",
+        input: "hide the gold in the tree stump",
+        expectedOutput: "bmod zbx dnab ek udm uixMm ouvif",
+        recipeConfig: [
+            {
+                "op": "Playfair Cipher Encode",
+                "args": ["PLAYFAIREXAMPLE", "X"]
+            }
+        ],
+    },
+    {
+        name: "Playfair Cipher Encode: invalid key",
+        input: "hide the gold in the tree stump",
+        expectedOutput: "The key must consist only of letters in the English alphabet",
+        recipeConfig: [
+            {
+                "op": "Playfair Cipher Encode",
+                "args": ["PLAYFAIR EXAMPLE", "X"]
             }
         ],
     },
