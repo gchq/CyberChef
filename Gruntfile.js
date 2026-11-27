@@ -112,7 +112,10 @@ module.exports = function (grunt) {
     const compileYear = grunt.template.today("UTC:yyyy"),
         compileTime = grunt.template.today("UTC:dd/mm/yyyy HH:MM:ss") + " UTC",
         pkg = grunt.file.readJSON("package.json"),
-        version = process.env.GITHUB_SHA || `v${pkg.version}`,
+        // Match the package release tag; retain commit IDs for development builds.
+        version = process.env.GITHUB_REF === `refs/tags/v${pkg.version}` ?
+            `v${pkg.version}` :
+            process.env.GITHUB_SHA || `v${pkg.version}`,
         downloadZipFilename = `CyberChef_${version}.zip`,
         webpackConfig = require("./webpack.config.js"),
         BUILD_CONSTANTS = {
