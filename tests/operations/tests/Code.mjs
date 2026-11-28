@@ -339,6 +339,94 @@ TestRegister.addTests([
         expectedMatch: /^Invalid JPath expression: jsonPath: Cannot read properties of \S* ?\(reading 'constructor'\): /
     },
     {
+        name: "JPath Expression: Falsy root 0 with $",
+        input: "0",
+        expectedOutput: "0",
+        recipeConfig: [
+            {
+                "op": "JPath expression",
+                "args": ["$", "\n"]
+            }
+        ],
+    },
+    {
+        name: "JPath Expression: Falsy root 0 with $.a",
+        input: "0",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "JPath expression",
+                "args": ["$.a", "\n"]
+            }
+        ],
+    },
+    {
+        name: "JPath Expression: Falsy root false with $",
+        input: "false",
+        expectedOutput: "false",
+        recipeConfig: [
+            {
+                "op": "JPath expression",
+                "args": ["$", "\n"]
+            }
+        ],
+    },
+    {
+        name: "JPath Expression: Falsy root false with $.a",
+        input: "false",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "JPath expression",
+                "args": ["$.a", "\n"]
+            }
+        ],
+    },
+    {
+        name: "JPath Expression: Falsy root null with $",
+        input: "null",
+        expectedOutput: "null",
+        recipeConfig: [
+            {
+                "op": "JPath expression",
+                "args": ["$", "\n"]
+            }
+        ],
+    },
+    {
+        name: "JPath Expression: Falsy root null with $.a",
+        input: "null",
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "JPath expression",
+                "args": ["$.a", "\n"]
+            }
+        ],
+    },
+    {
+        name: "JPath Expression: Falsy root empty string with $",
+        input: '""',
+        expectedOutput: '""',
+        recipeConfig: [
+            {
+                "op": "JPath expression",
+                "args": ["$", "\n"]
+            }
+        ],
+    },
+    {
+        name: "JPath Expression: Falsy root empty string with $.a",
+        input: '""',
+        expectedOutput: "",
+        recipeConfig: [
+            {
+                "op": "JPath expression",
+                "args": ["$.a", "\n"]
+            }
+        ],
+    },
+    {
         name: "CSS selector",
         input: '<div id="test">\n<p class="a">hello</p>\n<p>world</p>\n<p class="a">again</p>\n</div>',
         expectedOutput: '<p class="a">hello</p>\n<p class="a">again</p>',

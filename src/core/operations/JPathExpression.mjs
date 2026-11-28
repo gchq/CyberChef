@@ -63,6 +63,14 @@ class JPathExpression extends Operation {
             throw new OperationError(`Invalid JPath expression: ${err.message}`);
         }
 
+        // jsonpath-plus returns undefined (instead of an array of matches) when the
+        // JSON root is falsy: 0, false, null or "". Mirror truthy scalars such as
+        // true, 5 and "x": return the root for "$" (and the equivalent "$." / "$.."
+        // paths). Other queries, including whitespace-padded "$", are empty.
+        if (results === undefined) {
+            results = (query === "$" || query === "$." || query === "$..") ? [jsonObj] : [];
+        }
+
         return results.map(result => JSON.stringify(result)).join(delimiter);
     }
 
